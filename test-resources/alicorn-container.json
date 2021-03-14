@@ -1,0 +1,7 @@
+{
+  "root": "./",
+  "mods-root": "./mods",
+  "versions-root": "./versions",
+  "assets-root": "./assets",
+  "format": "MinecraftX"
+}

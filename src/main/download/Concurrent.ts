@@ -39,17 +39,13 @@ export class Concurrent extends AbstractDownloader {
         }
       }
       const fileSize = await getSize(meta.url);
-      console.log("File size is " + fileSize);
       if (fileSize <= 0) {
         // Use serial instead
         return await Serial.getInstance().downloadFile(meta);
       }
       const allChunks = generateChunks(fileSize);
-      console.log("Total " + allChunks.length + " chunks.");
       await Promise.all(getAllPromises(meta, fileSize, allChunks));
-      console.log("Sealing!");
       await sealAndVerify(meta.savePath, allChunks, meta.sha1);
-      console.log(new Date().toLocaleString() + ": Done!");
       return DownloadStatus.RESOLVED;
     } catch {
       return DownloadStatus.FAILED;
@@ -65,20 +61,16 @@ async function sealAndVerify(savePath: string, chunks: Chunk[], hash: string) {
       TEMP_SAVE_PATH_ROOT,
       generatePath(objectHash(savePath), c.start, c.end)
     );
-    console.log("Writing from " + pt);
     await new Promise<void>((resolve, reject) => {
       const rStream = fs.createReadStream(pt);
       rStream.pipe(wStream, { end: false });
       rStream.on("end", () => {
-        console.log("Finished from " + pt);
         resolve();
       });
       rStream.on("error", (e) => {
-        console.log(e);
         reject(e);
       });
     });
-    console.log("Unlinked " + pt);
     await fs.unlink(pt);
   }
 
@@ -87,7 +79,6 @@ async function sealAndVerify(savePath: string, chunks: Chunk[], hash: string) {
     return;
   }
   const isMatch = await validate(savePath, hash);
-  console.log("Is match? " + isMatch);
   if (!isMatch) {
     throw new Error("File hash mismatch for " + savePath);
   }
@@ -135,7 +126,6 @@ async function downloadSingleChunk(
   tmpSavePath: string,
   chunk: Chunk
 ) {
-  console.log(`Ready to pipe chunk ${chunk.start}-${chunk.end}`);
   const buffer = (
     await got.get(url, {
       timeout: TIME_OUT,
@@ -146,7 +136,6 @@ async function downloadSingleChunk(
     })
   ).rawBody;
   await fs.writeFile(tmpSavePath, buffer);
-  console.log(`Chunk ${chunk.start}-${chunk.end} written.`);
 }
 
 class Chunk {

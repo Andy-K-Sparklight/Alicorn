@@ -23,5 +23,6 @@ module.exports = {
     "no-empty-function": "warn",
     "no-empty": "warn",
     "prefer-const": "warn",
+    "@typescript-eslint/no-empty-interface": "warn",
   },
 };
