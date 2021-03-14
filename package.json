@@ -1,8 +1,12 @@
 {
   "private": true,
   "scripts": {
-    "pretest": "npx webpack --config webpack.config.main.js&&npx webpack --config webpack.config.renderer.js",
-    "test": "cd dist&&npx electron ."
+    "build-main": "npx webpack --config webpack.config.main.js",
+    "build-renderer": "npx webpack --config webpack.config.renderer.js",
+    "build-preload": "npx webpack --config webpack.config.preload.js",
+    "build-full": "npm run build-main&&npm run build-preload&&npm run build-renderer",
+    "quick-test": "cd dist&&npx electron .",
+    "full-test": "npm run build-full&&npm run quick-test"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.8",
@@ -10,6 +14,7 @@
     "@types/object-hash": "^1.3.4",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.2",
+    "@types/react-router": "^5.1.12",
     "@types/sha": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^4.17.0",
     "@typescript-eslint/parser": "^4.17.0",
@@ -36,6 +41,7 @@
     "object-hash": "^2.1.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-router": "^5.2.0",
     "semver": "^7.3.4",
     "sha": "^3.0.0",
     "toml": "^3.0.0"

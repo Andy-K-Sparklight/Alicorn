@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-function App() {
-  return <div>Hello World!</div>;
+function RendererBootstrap() {
+  return <div />;
 }
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
