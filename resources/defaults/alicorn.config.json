@@ -1,0 +1,5 @@
+{
+  "download.concurrent.chunk-size": 128,
+  "download.concurrent.timeout": 5000,
+  "download.concurrent.tries-per-chunk": 3
+}
