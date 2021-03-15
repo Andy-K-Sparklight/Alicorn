@@ -3,7 +3,7 @@ const path = require("path");
 
 // noinspection JSValidateTypes
 module.exports = {
-  entry: "./src/preload/Preload.ts",
+  entry: "./src/preload/Preload.js",
   output: {
     filename: "Preload.js",
     path: path.resolve(__dirname, "dist"),
@@ -13,6 +13,11 @@ module.exports = {
       {
         test: /\.tsx?$/,
         use: "ts-loader",
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/,
+        use: "css-loader",
         exclude: /node_modules/,
       },
     ],

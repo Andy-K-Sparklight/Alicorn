@@ -4,7 +4,7 @@
     "build-main": "npx webpack --config webpack.config.main.js",
     "build-renderer": "npx webpack --config webpack.config.renderer.js",
     "build-preload": "npx webpack --config webpack.config.preload.js",
-    "build-full": "npm run build-main&&npm run build-preload&&npm run build-renderer",
+    "build-full": "npm run build-main&&npm run build-renderer&&npm run build-preload",
     "quick-test": "cd dist&&npx electron .",
     "full-test": "npm run build-full&&npm run quick-test"
   },
@@ -43,7 +43,6 @@
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",
     "semver": "^7.3.4",
-    "sha": "^3.0.0",
-    "toml": "^3.0.0"
+    "sha": "^3.0.0"
   }
 }

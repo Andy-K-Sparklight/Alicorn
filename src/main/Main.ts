@@ -12,9 +12,12 @@ app.on("ready", async () => {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    webPreferences: { preload: path.resolve("Preload.js") },
+    webPreferences: {
+      preload: path.resolve("Preload.js"),
+    },
   });
   mainWindow.loadFile("Renderer.html");
+  mainWindow.webContents.openDevTools();
 });
 
 app.on("window-all-closed", async () => {
