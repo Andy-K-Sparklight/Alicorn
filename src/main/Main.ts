@@ -18,6 +18,7 @@ app.on("ready", async () => {
   });
   mainWindow.loadFile("Renderer.html");
   mainWindow.webContents.openDevTools();
+  console.log(process.versions.chrome);
 });
 
 app.on("window-all-closed", async () => {
