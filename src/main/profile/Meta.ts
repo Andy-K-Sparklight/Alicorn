@@ -32,19 +32,46 @@ export class ArtifactMeta {
   url: string;
   sha1: string;
   path: string;
-  private static readonly EMPTY_INSTANCE = new ArtifactMeta("", "", "");
+  size: number;
+  private static readonly EMPTY_INSTANCE = new ArtifactMeta("", "", "", 0);
 
   static emptyArtifactMeta(): ArtifactMeta {
     return ArtifactMeta.EMPTY_INSTANCE;
   }
 
-  constructor(url: string, sha1: string, path: string) {
+  constructor(url: string, sha1: string, path: string, size: number) {
     this.url = url;
     this.sha1 = sha1;
     this.path = path;
+    this.size = size;
   }
 
-  // TODO fromObject
+  static fromObject(obj: Record<string, unknown>): ArtifactMeta {
+    let sz = obj["size"] || 0;
+    if (typeof sz !== "number") {
+      sz = parseInt(String(sz));
+    }
+    // Ugh! Just trying to avoid ignoring ts
+    if (typeof sz === "number") {
+      if (isNaN(sz)) {
+        sz = 0;
+      }
+    }
+    if (typeof sz === "number") {
+      return new ArtifactMeta(
+        String(obj["url"]),
+        String(obj["sha1"]),
+        String(obj["path"] || obj["id"]),
+        sz
+      );
+    }
+    return new ArtifactMeta(
+      String(obj["url"]),
+      String(obj["sha1"]),
+      String(obj["path"] || obj["id"]),
+      0
+    );
+  }
 }
 
 export class LibraryMeta {
@@ -52,20 +79,62 @@ export class LibraryMeta {
   classifiers: ClassifiersMeta;
   isNative: boolean;
   rules: RuleSet;
+  name: string;
 
   constructor(
     artifact: ArtifactMeta,
     cf: ClassifiersMeta,
     isNative: boolean,
-    rules: RuleSet
+    rules: RuleSet,
+    name: string
   ) {
     this.artifact = artifact;
     this.classifiers = cf;
     this.isNative = isNative;
     this.rules = rules;
+    this.name = name;
   }
 
-  // TODO fromObject
+  static fromObject(obj: Record<string, unknown>): LibraryMeta {
+    // We'll do this violently
+    let isNative = false;
+    let rules = RuleSet.emptyRuleSet();
+    let artifact = ArtifactMeta.emptyArtifactMeta();
+    let classifiers = ClassifiersMeta.emptyClassifiersMeta();
+    // There should be 'downloads' key
+    // We'll convert the profile of Forge/Fabric/OptiFine/Others before invoking this
+    if (obj["downloads"]) {
+      // Assume that 'downloads' must be object
+      const downloads = obj["downloads"] as Record<string, unknown>;
+      // Nonnull
+      if (downloads["classifiers"]) {
+        isNative = true;
+        classifiers = ClassifiersMeta.fromObject(
+          // Forceful!
+          // I'm sorry, Twilight
+          downloads["classifiers"] as Record<string, unknown>
+        );
+      }
+      if (downloads["artifact"]) {
+        artifact = ArtifactMeta.fromObject(
+          // Let go!
+          downloads["artifact"] as Record<string, unknown>
+        );
+      }
+    }
+
+    if (obj["rules"] instanceof Array) {
+      // Simply parse
+      rules = RuleSet.fromArray(obj["rules"]);
+    }
+    return new LibraryMeta(
+      artifact,
+      classifiers,
+      isNative,
+      rules,
+      String(obj["name"]) || ""
+    );
+  }
 
   canApply(): boolean {
     return this.rules.judge();
@@ -225,7 +294,39 @@ export class ClassifiersMeta {
     this.sources = src;
   }
 
-  // TODO fromObject
+  static fromObject(obj: Record<string, unknown>) {
+    // No solution for thus type check
+    // {} -> Record<string, unknown>
+    // We'll just stick our necks out
+    // Give it a try
+    const javadoc =
+      obj["javadoc"] === undefined || obj["javadoc"] === null
+        ? ArtifactMeta.emptyArtifactMeta()
+        : // @ts-ignore
+          ArtifactMeta.fromObject(obj["javadoc"]);
+    const nL =
+      obj["natives-linux"] === undefined || obj["natives-linux"] === null
+        ? ArtifactMeta.emptyArtifactMeta()
+        : // @ts-ignore
+          ArtifactMeta.fromObject(obj["natives-linux"]);
+    const nM =
+      obj["natives-macos"] === undefined || obj["natives-macos"] === null
+        ? ArtifactMeta.emptyArtifactMeta()
+        : // @ts-ignore
+          ArtifactMeta.fromObject(obj["natives-macos"]);
+    const nW =
+      obj["natives-windows"] === undefined || obj["natives-windows"] === null
+        ? ArtifactMeta.emptyArtifactMeta()
+        : // @ts-ignore
+          ArtifactMeta.fromObject(obj["natives-windows"]);
+    const sources =
+      obj["sources"] === undefined || obj["sources"] === null
+        ? ArtifactMeta.emptyArtifactMeta()
+        : // @ts-ignore
+          ArtifactMeta.fromObject(obj["sources"]);
+
+    return new ClassifiersMeta(javadoc, nL, nM, nW, sources);
+  }
 }
 
 export class AssetIndexArtifactMeta {
@@ -249,7 +350,7 @@ export class AssetIndexArtifactMeta {
     this.url = url;
   }
 
-  // TODO fromObject
+  // We don't actually need 'fromObject' here
 }
 
 export class AssetIndexFileMeta {
@@ -259,7 +360,15 @@ export class AssetIndexFileMeta {
     this.objects = objects;
   }
 
-  // TODO fromObject
+  static fromObject(obj: Record<string, unknown>): AssetIndexFileMeta {
+    const objs: AssetMeta[] = [];
+    if (obj["objects"] instanceof Array) {
+      for (const x of obj["objects"]) {
+        objs.push(AssetMeta.fromObject(x));
+      }
+    }
+    return new AssetIndexFileMeta(objs);
+  }
 }
 
 export class AssetMeta {
