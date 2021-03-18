@@ -1,7 +1,5 @@
 import os from "os";
 
-// This file is UNCHECKED!
-
 export class OptionalArgument {
   rules: RuleSet;
   value: string[];
@@ -168,7 +166,10 @@ export class RuleSet {
   }
 
   judge(): boolean {
-    let originState = true;
+    let originState = false; // This MUST BE false
+    if (this.rules.length === 0) {
+      return true; // No rules means true
+    }
     for (const r of this.rules) {
       if (r.shouldApply()) {
         originState = r.isAllow;
@@ -350,7 +351,30 @@ export class AssetIndexArtifactMeta {
     this.url = url;
   }
 
-  // We don't actually need 'fromObject' here
+  static fromObject(obj: unknown): AssetIndexArtifactMeta {
+    if (typeof obj === "object") {
+      // @ts-ignore
+      const sz = String(obj["size"]);
+      // @ts-ignore
+      const tsz = String(obj["totalSize"]);
+      let szInt = parseInt(sz);
+      let tszInt = parseInt(tsz);
+      szInt = isNaN(szInt) ? szInt : 0;
+      tszInt = isNaN(tszInt) ? tszInt : 0;
+
+      return new AssetIndexArtifactMeta(
+        // @ts-ignore
+        String(obj["id"]),
+        // @ts-ignore
+        String(obj["sha1"]),
+        szInt,
+        tszInt,
+        // @ts-ignore
+        String(obj["url"])
+      );
+    }
+    return new AssetIndexArtifactMeta("", "", 0, 0, "");
+  }
 }
 
 export class AssetIndexFileMeta {

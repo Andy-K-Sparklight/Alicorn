@@ -4,9 +4,12 @@
     "build-main": "npx webpack --config webpack.config.main.js",
     "build-renderer": "npx webpack --config webpack.config.renderer.js",
     "build-preload": "npx webpack --config webpack.config.preload.js",
-    "build-full": "npm run build-main&&npm run build-renderer&&npm run build-preload",
+    "build-full": "yarn build-main&&yarn build-renderer&&yarn build-preload",
     "quick-test": "cd dist&&npx electron .",
-    "full-test": "npm run build-full&&npm run quick-test"
+    "full-test": "yarn build-full&&yarn quick-test",
+    "main-test": "yarn build-main&&yarn quick-test",
+    "renderer-test": "yarn build-renderer&&yarn quick-test",
+    "preload-test": "yarn build-preload&&yarn quick-test"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.8",

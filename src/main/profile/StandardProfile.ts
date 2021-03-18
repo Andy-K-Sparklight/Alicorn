@@ -1,16 +1,14 @@
 import {
   ArtifactMeta,
-  AssetIndexFileMeta,
+  AssetIndexArtifactMeta,
   LibraryMeta,
   OptionalArgument,
 } from "./Meta";
 
-// This file is UNCHECKED!
-
-export class AbstractProfile {
+export class StandardProfile {
   gameArgs: string[] = [];
   jvmArgs: OptionalArgument[] = [];
-  assetIndex: AssetIndexFileMeta;
+  assetIndex: AssetIndexArtifactMeta;
   clientArtifact: ArtifactMeta;
   // The 'path' property in 'client' and 'server' will be reassigned before downloading
   id: string;
@@ -71,9 +69,9 @@ export class AbstractProfile {
         this.jvmArgs = actArgsJ;
       }
 
-      this.assetIndex = AssetIndexFileMeta.fromObject(
-        obj["assetIndex"] as Record<string, unknown>
-      );
+      const asIndex = obj["assetIndex"];
+      this.assetIndex = AssetIndexArtifactMeta.fromObject(asIndex);
+
       this.clientArtifact = ArtifactMeta.fromObject(
         Object.assign(
           safeGet(obj, ["downloads", "client"]) || {},
