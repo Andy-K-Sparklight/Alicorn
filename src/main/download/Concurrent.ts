@@ -3,7 +3,7 @@ import {
   DownloadMeta,
   DownloadStatus,
 } from "./AbstractDownloader";
-import { getNumber } from "../config/ConfigSupport";
+import { getNumber, isFileExist } from "../config/ConfigSupport";
 import got from "got";
 import fs from "fs-extra";
 import objectHash from "object-hash";
@@ -33,7 +33,7 @@ export class Concurrent extends AbstractDownloader {
   async downloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
     try {
       // If file already exists then check if HASH matches
-      if (meta.sha1 !== "" && fs.existsSync(meta.savePath)) {
+      if (meta.sha1 !== "" && (await isFileExist(meta.savePath))) {
         if (await validate(meta.savePath, meta.sha1)) {
           return DownloadStatus.RESOLVED;
         }

@@ -49,7 +49,7 @@ export function getNumber(key: string, def: number): number {
 
 export async function loadConfig(): Promise<void> {
   try {
-    if (!fs.existsSync(CONFIG_FILE)) {
+    if (!(await isFileExist(CONFIG_FILE))) {
       await saveDefaultConfig();
     }
     cachedConfig = JSON.parse((await fs.readFile(CONFIG_FILE)).toString());
@@ -61,6 +61,15 @@ export async function loadConfig(): Promise<void> {
 export async function saveConfig(): Promise<void> {
   await fs.ensureDir(path.dirname(CONFIG_FILE));
   await fs.writeFile(CONFIG_FILE, JSON.stringify(cachedConfig));
+}
+
+export async function isFileExist(pt: string): Promise<boolean> {
+  try {
+    await fs.access(pt);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 async function saveDefaultConfig() {

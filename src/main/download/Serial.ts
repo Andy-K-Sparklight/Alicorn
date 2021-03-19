@@ -9,6 +9,7 @@ import { validate } from "./Verify";
 import got from "got";
 import { promisify } from "util";
 import stream from "stream";
+import { isFileExist } from "../config/ConfigSupport";
 
 const pipeline = promisify(stream.pipeline);
 
@@ -22,12 +23,11 @@ export class Serial extends AbstractDownloader {
   async downloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
     try {
       // If file already exists then check if HASH matches
-      if (meta.sha1 !== "" && fs.existsSync(meta.savePath)) {
+      if (meta.sha1 !== "" && (await isFileExist(meta.savePath))) {
         if (await validate(meta.savePath, meta.sha1)) {
           return DownloadStatus.RESOLVED;
         }
       }
-
       // Ensure directory
       await fs.ensureDir(path.dirname(meta.savePath));
 
