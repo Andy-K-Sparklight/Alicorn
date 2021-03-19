@@ -3,14 +3,20 @@ import childProcess from "child_process";
 import fs from "fs-extra";
 import path from "path";
 
+// This function is VERY SLOW!
+// It searches the whole os directory to find 'javaw.exe'(or 'javaw' on unix-liked)
+
 export async function whereJava(): Promise<string[]> {
   let all: string[] = [];
-  all = all
-    .concat(await findJavaViaCommand())
-    .concat(await findJavaInProgramFilesWin32())
-    .concat(await findJavaUNIX());
+  all = all.concat(await findJavaViaCommand());
   all.push(await findJavaInPATH());
+  if (os.platform() === "win32") {
+    all = all.concat(await findJavaInProgramFilesWin32());
+  } else {
+    all = all.concat(await findJavaUNIX());
+  }
   const res: string[] = [];
+
   for (const a of all) {
     const trimA = a.trim();
     if (trimA !== "" && !res.includes(trimA)) {
@@ -50,18 +56,23 @@ async function findJavaInProgramFilesWin32(): Promise<string[]> {
   if (os.platform() !== "win32") {
     return [];
   }
-  const programBase = "C:\\Program Files";
+  const programBaseMain = "C:\\Program Files";
+  const programBase86 = "C:\\Program Files (x86)";
   const all: string[] = [];
-  await diveSearch("javaw.exe", programBase, all);
+
+  await diveSearch("javaw.exe", programBaseMain, all);
+  await diveSearch("javaw.exe", programBase86, all);
+  // Find 32 bit, diveSearch can 'afford' error
   return all;
 }
 
+// Use command to locate
 async function findJavaViaCommand(): Promise<string[]> {
   let command = "which javaw";
   if (os.platform() === "win32") {
     command = "where javaw";
   }
-  return await new Promise<string[]>((resolve, reject) => {
+  return await new Promise<string[]>((resolve) => {
     childProcess.exec(
       command,
       {
@@ -79,18 +90,19 @@ async function findJavaViaCommand(): Promise<string[]> {
           }
           resolve(result);
         } else {
-          reject();
+          resolve([]);
         }
       }
     );
   });
 }
 
+// SLOW reclusive function
 async function diveSearch(
   fileName: string,
   rootDir: string,
   concatArray: string[]
-) {
+): Promise<void> {
   try {
     const all = await fs.readdir(rootDir);
     if (all.includes(fileName)) {
@@ -102,7 +114,7 @@ async function diveSearch(
         await diveSearch(fileName, currentBase, concatArray);
       }
     }
-
-    // eslint-disable-next-line no-empty
-  } catch {}
+  } catch {
+    return;
+  }
 }
