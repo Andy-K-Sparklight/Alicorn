@@ -3,11 +3,13 @@ import { loadConfig, saveConfig } from "./config/ConfigSupport";
 import { initConcurrentDownloader } from "./download/Concurrent";
 import os from "os";
 import path from "path";
+import { loadGDT, saveGDT } from "./container/AbstractContainer";
 
 let mainWindow;
 
 app.on("ready", async () => {
   await loadConfig();
+  await loadGDT();
   await initConcurrentDownloader();
   mainWindow = new BrowserWindow({
     width: 800,
@@ -22,6 +24,7 @@ app.on("ready", async () => {
 
 app.on("window-all-closed", async () => {
   await saveConfig();
+  await saveGDT();
   if (os.platform() !== "darwin") {
     app.quit();
   }

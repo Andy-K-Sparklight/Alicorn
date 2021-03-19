@@ -1,23 +1,25 @@
-// UNCHECKED
+import os from "os";
 
-export function parseStringMap(obj: unknown): Map<string, string> {
-  const res: Map<string, string> = new Map();
-  if (typeof obj === "object") {
-    const allProperties = Object.getOwnPropertyNames(obj);
-    for (const p of allProperties) {
-      // @ts-ignore
-      res.set(p, String(obj[p]));
-    }
+const ALICORN_SEPARATOR = "\u2764\u2764";
+
+// Separator '❤❤' is just a choice
+// MapUtil will only be used in our code, not for plugins or user data
+// In that case, we shall use JSON instead
+
+export function parseMap(str: string): Map<string, string> {
+  const entries = str.trim().split(os.EOL);
+  const freshMap: Map<string, string> = new Map();
+  for (const e of entries) {
+    const entTuple = e.trim().split(ALICORN_SEPARATOR);
+    freshMap.set(entTuple[0] || "", entTuple[1] || "");
   }
-  return res;
+  return freshMap;
 }
 
-export function buildStringMap(
-  map: Map<string, string>
-): Record<string, string> {
-  const obj: Record<string, string> = {};
+export function buildMap(map: Map<string, string>): string {
+  const stringGroup = [];
   for (const [k, v] of map.entries()) {
-    obj[k] = v;
+    stringGroup.push(k + ALICORN_SEPARATOR + v);
   }
-  return obj;
+  return stringGroup.join(os.EOL);
 }
