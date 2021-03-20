@@ -9,9 +9,10 @@ let GlobalContainerDescriptorTable: Map<string, string> = new Map();
 const GDT_NAME = "global-container-descriptor.ald";
 
 // '.ald' stands for Alicorn Data
+
 export abstract class AbstractContainer {
-  protected id: string;
-  protected rootDir: string;
+  id: string;
+  rootDir: string;
 
   protected constructor(id: string, rootDir: string) {
     this.id = id;
@@ -25,8 +26,20 @@ export abstract class AbstractContainer {
   }
 }
 
+export function getAllContainers(): string[] {
+  return Array.from(GlobalContainerDescriptorTable.keys());
+}
+
 export function rootOf(containerID: string): string {
   return GlobalContainerDescriptorTable.get(containerID) || path.resolve();
+}
+
+export function registerContainer(container: AbstractContainer): void {
+  GlobalContainerDescriptorTable.set(container.id, container.rootDir);
+}
+
+export function unregisterContainer(id: string): void {
+  GlobalContainerDescriptorTable.delete(id);
 }
 
 export async function loadGDT(): Promise<void> {

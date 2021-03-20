@@ -24,6 +24,8 @@ module.exports = {
     "no-empty": "warn",
     "prefer-const": "warn",
     "@typescript-eslint/no-empty-interface": "warn",
-    "@typescript-eslint/ban-ts-comment":"off"
+    "@typescript-eslint/ban-ts-comment": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "off",
   },
 };
