@@ -18,7 +18,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  plugins: ["react", "@typescript-eslint"],
+  plugins: ["react", "@typescript-eslint", "react-hooks"],
   rules: {
     "no-empty-function": "warn",
     "no-empty": "warn",
@@ -27,5 +27,6 @@ module.exports = {
     "@typescript-eslint/ban-ts-comment": "off",
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "off",
+    "react-hooks/rules-of-hooks": "error",
   },
 };

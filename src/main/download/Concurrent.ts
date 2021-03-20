@@ -10,7 +10,7 @@ import objectHash from "object-hash";
 import os from "os";
 import path from "path";
 import { Serial } from "./Serial";
-import { validate } from "./Verify";
+import { validate } from "./Validate";
 
 let TIME_OUT: number;
 let CHUNK_SIZE: number;

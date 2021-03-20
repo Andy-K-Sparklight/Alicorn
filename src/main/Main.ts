@@ -3,7 +3,7 @@ import { loadConfig, saveConfig } from "./config/ConfigSupport";
 import { initConcurrentDownloader } from "./download/Concurrent";
 import os from "os";
 import path from "path";
-import { loadGDT, saveGDT } from "./container/AbstractContainer";
+import { loadGDT, saveGDT } from "./container/Container";
 
 let mainWindow;
 

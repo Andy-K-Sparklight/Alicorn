@@ -5,7 +5,7 @@ import {
 } from "./AbstractDownloader";
 import fs from "fs-extra";
 import path from "path";
-import { validate } from "./Verify";
+import { validate } from "./Validate";
 import got from "got";
 import { promisify } from "util";
 import stream from "stream";
