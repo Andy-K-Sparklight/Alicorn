@@ -4,16 +4,18 @@ import { initConcurrentDownloader } from "./download/Concurrent";
 import os from "os";
 import path from "path";
 import { loadGDT, saveGDT } from "./container/Container";
+import { loadMirror, saveMirror } from "./download/Mirror";
 
 let mainWindow;
 
 app.on("ready", async () => {
   await loadConfig();
   await loadGDT();
+  await loadMirror();
   await initConcurrentDownloader();
   mainWindow = new BrowserWindow({
     width: 800,
-    height: 600,
+    height: 450,
     webPreferences: {
       preload: path.resolve("Preload.js"),
     },
@@ -23,9 +25,12 @@ app.on("ready", async () => {
 });
 
 app.on("window-all-closed", async () => {
-  await saveConfig();
-  await saveGDT();
   if (os.platform() !== "darwin") {
     app.quit();
   }
+});
+app.on("will-quit", async () => {
+  await saveConfig();
+  await saveGDT();
+  await saveMirror();
 });

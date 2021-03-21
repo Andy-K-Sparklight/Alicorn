@@ -37,8 +37,7 @@ export function unregisterContainer(id: string): void {
 
 export async function loadGDT(): Promise<void> {
   await saveDefaultData(GDT_NAME);
-  const gdtData = await loadData(GDT_NAME);
-  GlobalContainerDescriptorTable = parseMap(gdtData);
+  GlobalContainerDescriptorTable = parseMap(await loadData(GDT_NAME));
 }
 
 export async function saveGDT(): Promise<void> {

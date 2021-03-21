@@ -5,7 +5,7 @@ import {
   OptionalArgument,
 } from "./Meta";
 
-export class StandardProfile {
+export class GameProfile {
   gameArgs: string[] = [];
   jvmArgs: OptionalArgument[] = [];
   assetIndex: AssetIndexArtifactMeta;

@@ -1,4 +1,4 @@
-import { StandardProfile } from "../profile/StandardProfile";
+import { GameProfile } from "../profile/GameProfile";
 import { Trio } from "../commons/Collections";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import os from "os";
@@ -13,7 +13,7 @@ const SPACE = " ";
 // Generate static arguments, including jvm and game, but not GCs or something else
 // Append a java executable before it to start a game
 export function generateStaticArgs(
-  profile: StandardProfile,
+  profile: GameProfile,
   container: MinecraftContainer,
   authData: Trio<string, string, string>
 ): string {

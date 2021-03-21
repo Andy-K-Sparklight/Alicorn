@@ -13,6 +13,8 @@ const META_INF = "META-INF";
 const GIT_SUFFIX = ".git";
 const CHECKSUM_SUFFIX = ".sha1";
 
+// Extracts one native library and remove '.git' and '.sha1' files
+// We should validate hash, but it's unnecessary
 export async function extractNativeLocalAndTrim(
   container: MinecraftContainer,
   nativeArtifact: ArtifactMeta
@@ -32,11 +34,12 @@ export async function extractNativeLocalAndTrim(
     } catch {}
     const filesToTrim = await fs.readdir(dest);
     for (const f of filesToTrim) {
-      if (f === META_INF) {
+      if (
+        f === META_INF ||
+        f.endsWith(GIT_SUFFIX) ||
+        f.endsWith(CHECKSUM_SUFFIX)
+      ) {
         await fs.remove(path.join(dest, f));
-      }
-      if (f.endsWith(GIT_SUFFIX) || f.endsWith(CHECKSUM_SUFFIX)) {
-        await fs.unlink(path.join(dest, f));
       }
     }
   } catch {
@@ -44,6 +47,8 @@ export async function extractNativeLocalAndTrim(
   }
 }
 
+// Get the native artifact of a library according to the 'osName'
+// If the library is not a native library, this will return an empty one
 export function getNativeArtifact(
   libraryMeta: LibraryMeta,
   osName?: string
