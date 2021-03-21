@@ -1,5 +1,7 @@
 import { contextBridge, ipcRenderer } from "electron";
 
+// NATIVE
+
 // This is UNSAFE!!!
 // We should always check those arguments.
 // We'll deal with that after dealing with the game profiles.
