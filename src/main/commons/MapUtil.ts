@@ -10,6 +10,9 @@ export function parseMap(str: string): Map<string, string> {
   const entries = str.trim().split(os.EOL);
   const freshMap: Map<string, string> = new Map();
   for (const e of entries) {
+    if (e.trim() === "") {
+      continue;
+    }
     const entTuple = e.trim().split(ALICORN_SEPARATOR);
     freshMap.set(entTuple[0] || "", entTuple[1] || "");
   }
