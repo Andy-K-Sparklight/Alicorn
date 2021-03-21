@@ -10,9 +10,8 @@ const LAUNCHER_VERSION = "Rainbow";
 const FILE_SEPARATOR = os.platform() === "win32" ? ";" : ":";
 const SPACE = " ";
 
-// Generate static arguments, including jvm and game, but not GCs or something else
-// Append a java executable before it to start a game
-export function generateStaticArgs(
+// Generate game arguments
+export function generateGameArgs(
   profile: GameProfile,
   container: MinecraftContainer,
   authData: Trio<string, string, string>
@@ -27,7 +26,15 @@ export function generateStaticArgs(
   vMap.set("auth_access_token", authData.getSecondValue());
   vMap.set("user_type", MOJANG_USER_TYPE);
   vMap.set("version_type", ALICORN_VERSION_TYPE);
+  return applyVars(vMap, profile.gameArgs.join(SPACE));
+}
 
+// Generate vm arguments, not for GCs or anything else
+export function generateVMArgs(
+  profile: GameProfile,
+  container: MinecraftContainer
+): string {
+  const vMap = new Map<string, string>();
   vMap.set("launcher_name", LAUNCHER_NAME);
   vMap.set("launcher_version", LAUNCHER_VERSION);
   const usingLibs: string[] = [];
@@ -62,7 +69,7 @@ export function generateStaticArgs(
       staticArgs = staticArgs.concat(a.value);
     }
   }
-  staticArgs = staticArgs.concat(profile.mainClass).concat(profile.gameArgs);
+  staticArgs = staticArgs.concat(profile.mainClass);
   return applyVars(vMap, staticArgs.join(SPACE));
 }
 
@@ -81,7 +88,31 @@ function applyVars(map: Map<string, string>, str: string): string {
   return str;
 }
 
-// Apply java to args
-export function applyJava(jPath: string, args: string): string {
-  return wrap(jPath) + SPACE + args;
+// Add a server to join in directly
+export function useServer(connection: string): string {
+  const sp = connection.split(":");
+  const svHost = sp[0];
+  const port = sp[1] || "25565";
+  return `--server ${svHost} --port ${port}`;
+}
+
+// Add a custom resolution
+export function useResolution(width: number, height: number): string {
+  let s = "";
+  if (!isNaN(width) && width > 0) {
+    s += `--width ${width}`;
+  }
+  if (!isNaN(height) && height > 0) {
+    s += `--height ${height}`;
+  }
+  return s;
+}
+
+// Authlib Injector
+export function useAJ(ajPath: string, verifyHost: string): string {
+  return `-javaagent:${wrap(ajPath)}=${verifyHost}`;
+  // To be honest, we want to show 'Alicorn' rather than the name of the auth server
+  // But since some servers auth their players by reading this value('--versionType')
+  // We should let this off
+  // return `-javaagent:${wrap(ajPath)}=${verifyHost} -Dauthlibinjector.noShowServerName`
 }

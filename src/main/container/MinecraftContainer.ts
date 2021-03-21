@@ -42,6 +42,15 @@ export class MinecraftContainer extends Container {
     return this.versionsBase;
   }
 
+  getAssetsIndexPath(index: string): string {
+    return path.resolve(path.join(this.assetsRoot, "indexes", index + ".json"));
+  }
+
+  getAssetPath(hash: string): string {
+    const header = hash.slice(0, 2);
+    return path.resolve(path.join(this.assetsRoot, "objects", header, hash));
+  }
+
   getSavesRoot(): string {
     return this.savesRoot;
   }

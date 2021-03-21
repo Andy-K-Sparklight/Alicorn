@@ -3,6 +3,8 @@ import { Concurrent } from "./Concurrent";
 import { Serial } from "./Serial";
 import { applyMirror } from "./Mirror";
 
+// Download one file
+// Mirror will be applied here
 // There are no options for user to choose downloader
 // Concurrent will always be used first
 // If file already exists, downloader will resolve if hash matches
