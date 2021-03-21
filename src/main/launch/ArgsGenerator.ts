@@ -27,20 +27,33 @@ export function generateStaticArgs(
   vMap.set("auth_access_token", authData.getSecondValue());
   vMap.set("user_type", MOJANG_USER_TYPE);
   vMap.set("version_type", ALICORN_VERSION_TYPE);
-  vMap.set("natives_directory", wrap(container.getNativesRoot(profile.id)));
+
   vMap.set("launcher_name", LAUNCHER_NAME);
   vMap.set("launcher_version", LAUNCHER_VERSION);
   const usingLibs: string[] = [];
+  const nativesLibs: string[] = [];
   for (const l of profile.libraries) {
+    if (!l.canApply()) {
+      continue;
+    }
     const tPath = l.artifact.path.trim();
-    if (tPath !== "" && l.canApply()) {
+    if (tPath !== "") {
       usingLibs.push(container.getLibraryPath(tPath));
+    }
+    if (l.isNative) {
+      nativesLibs.push(container.getNativeLibraryExtractedRoot(l));
     }
   }
   // Specialize for 'client.jar'
   usingLibs.push(container.getClientJarPath(profile.id));
 
+  // All natives directories put together
+  vMap.set("natives_directory", wrap(nativesLibs.join(FILE_SEPARATOR)));
+
+  // All class paths put together
   vMap.set("classpath", wrap(usingLibs.join(FILE_SEPARATOR)));
+
+  // Log4j argument
   vMap.set("path", wrap(container.getLog4j2FilePath(profile.logFile.path)));
 
   let staticArgs: string[] = [];

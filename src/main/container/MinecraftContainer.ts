@@ -1,5 +1,7 @@
 import { Container } from "./Container";
 import path from "path";
+import { LibraryMeta } from "../profile/Meta";
+import { getNativeArtifact, JAR_SUFFIX } from "../lint/NativesLint";
 
 // TODO more support
 
@@ -18,6 +20,18 @@ export class MinecraftContainer extends Container {
 
   getGlobalLog4j2Root(): string {
     return this.log4j2Root;
+  }
+
+  getNativeLibraryExtractedRoot(library: LibraryMeta): string {
+    const nativeLibraryPath = getNativeArtifact(library).path;
+    return path.resolve(
+      this.getLibraryPath(
+        path.join(
+          path.dirname(nativeLibraryPath),
+          path.basename(nativeLibraryPath, JAR_SUFFIX)
+        )
+      )
+    );
   }
 
   getLog4j2FilePath(xmlName: string): string {
@@ -78,10 +92,6 @@ export class MinecraftContainer extends Container {
 
   getGlobalNativesRoot(): string {
     return this.nativesBase;
-  }
-
-  getNativesRoot(id: string): string {
-    return path.resolve(path.join(this.nativesBase, id));
   }
 
   resolvePath(relativePath: string): string {

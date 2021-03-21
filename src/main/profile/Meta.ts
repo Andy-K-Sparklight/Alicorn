@@ -250,7 +250,7 @@ export class Rule {
   }
 }
 
-function getCurrentOSNameAsMojang(): string {
+export function getCurrentOSNameAsMojang(): string {
   const currentOSName = os.platform();
   switch (currentOSName) {
     case "win32":
@@ -295,7 +295,7 @@ export class ClassifiersMeta {
     this.sources = src;
   }
 
-  static fromObject(obj: Record<string, unknown>) {
+  static fromObject(obj: Record<string, unknown>): ClassifiersMeta {
     // No solution for thus type check
     // {} -> Record<string, unknown>
     // We'll just stick our necks out
