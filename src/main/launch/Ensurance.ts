@@ -5,12 +5,16 @@ import {
   extractNativeLocalAndTrim,
   getNativeArtifact,
 } from "../lint/NativesLint";
-import { DownloadMeta } from "../download/AbstractDownloader";
+import { DownloadMeta, DownloadStatus } from "../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../download/DownloadWrapper";
 // Ensure that native libraries(*.dll) exists
 // This is only a try, no GUARANTEE
 // DO perform this AFTER 'ensureLibraries'!
-// This function DOES NOT check if file already exists, it only decompress
+// This function DOES NOT check if file already exists
+// It only decompress
+// We don't count how much resolved
+// Because EEXIST will be treated as rejection
+// While there actually has no problem
 export async function ensureNatives(
   profile: GameProfile,
   container: MinecraftContainer
@@ -38,10 +42,12 @@ export async function ensureNatives(
   );
 }
 
+// Ensure libraries
+// The return value is the number of failed tasks
 export async function ensureLibraries(
   profile: GameProfile,
   container: MinecraftContainer
-): Promise<void> {
+): Promise<number> {
   const allLibrariesToCheck: ArtifactMeta[] = [];
   for (const l of profile.libraries) {
     if (!l.canApply()) {
@@ -52,23 +58,33 @@ export async function ensureLibraries(
       allLibrariesToCheck.push(getNativeArtifact(l));
     }
   }
-  await Promise.all(
+  const values = await Promise.all(
     (() => {
       return allLibrariesToCheck.map((artifact) => {
         return performSingleCheck(artifact, container);
       });
     })()
   );
+  let failedCount = 0;
+  for (const x of values) {
+    if (x == DownloadStatus.FAILED) {
+      failedCount++;
+    }
+  }
+  return failedCount;
 }
 
+// Check one library
+// Downloader will check if file already exists
+// So, we, don't, care!
 async function performSingleCheck(
   artifact: ArtifactMeta,
   container: MinecraftContainer
-): Promise<void> {
+): Promise<DownloadStatus> {
   const downloadMeta = new DownloadMeta(
     artifact.url,
     container.getLibraryPath(artifact.path),
     artifact.sha1
   );
-  await wrappedDownloadFile(downloadMeta);
+  return await wrappedDownloadFile(downloadMeta);
 }
