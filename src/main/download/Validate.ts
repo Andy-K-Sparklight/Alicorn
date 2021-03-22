@@ -11,3 +11,15 @@ export function validate(file: string, expected: string): Promise<boolean> {
     });
   });
 }
+
+export function getHash(f: string): Promise<string> {
+  return new Promise<string>((resolve) => {
+    sha.get(f, (e, d) => {
+      if (e) {
+        resolve("");
+      } else {
+        resolve(d);
+      }
+    });
+  });
+}

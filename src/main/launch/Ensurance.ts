@@ -2,13 +2,12 @@ import { GameProfile } from "../profile/GameProfile";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { ArtifactMeta, AssetIndexFileMeta, AssetMeta } from "../profile/Meta";
 import {
-  extractNativeLocalAndTrim,
+  checkExtractTrimNativeLocal,
   getNativeArtifact,
 } from "../lint/NativesLint";
 import { DownloadMeta, DownloadStatus } from "../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../download/DownloadWrapper";
 import fs from "fs-extra";
-
 // UNCHECKED
 // This file can not only check resources, but also download packages when installing!
 
@@ -38,7 +37,7 @@ export async function ensureNatives(
       for (const s of toEnsureLibraries) {
         allPromises.push(
           new Promise<void>((resolve) => {
-            extractNativeLocalAndTrim(container, s).then(() => {
+            checkExtractTrimNativeLocal(container, s).then(() => {
               resolve();
             });
           })

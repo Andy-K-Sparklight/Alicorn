@@ -10,11 +10,17 @@ export function parseMap(str: string): Map<string, string> {
   const entries = str.trim().split(os.EOL);
   const freshMap: Map<string, string> = new Map();
   for (const e of entries) {
-    if (e.trim() === "") {
-      continue;
-    }
-    const entTuple = e.trim().split(ALICORN_SEPARATOR);
-    freshMap.set(entTuple[0] || "", entTuple[1] || "");
+    try {
+      if (e.trim() === "") {
+        continue;
+      }
+      const entTuple = e.trim().split(ALICORN_SEPARATOR);
+      if (entTuple.length < 2) {
+        continue;
+      }
+      freshMap.set(entTuple[0] || "", entTuple[1] || "");
+      // eslint-disable-next-line no-empty
+    } catch {}
   }
   return freshMap;
 }
