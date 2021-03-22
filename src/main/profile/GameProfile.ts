@@ -41,7 +41,7 @@ export class GameProfile {
 
       // I'm so sorry ponies
       this.logFile = ArtifactMeta.fromObject(
-          safeGet(obj, ["logging", "client", "file"]) as Record<string, unknown>
+        safeGet(obj, ["logging", "client", "file"]) as Record<string, unknown>
       );
       const rawArgsGame = safeGet(obj, ["arguments", "game"]);
       if (rawArgsGame instanceof Array) {
@@ -62,7 +62,7 @@ export class GameProfile {
             actArgsJ.push(OptionalArgument.fromString(r));
           } else {
             actArgsJ.push(
-                OptionalArgument.fromObject(r as Record<string, unknown>)
+              OptionalArgument.fromObject(r as Record<string, unknown>)
             );
           }
         }
@@ -73,10 +73,10 @@ export class GameProfile {
       this.assetIndex = AssetIndexArtifactMeta.fromObject(asIndex);
 
       this.clientArtifact = ArtifactMeta.fromObject(
-          Object.assign(
-              safeGet(obj, ["downloads", "client"]) || {},
-              {path: this.id + ".jar"} // Only a temporary assignment
-          )
+        Object.assign(
+          safeGet(obj, ["downloads", "client"]) || {},
+          { path: this.id + ".jar" } // Only a temporary assignment
+        )
       );
 
       const allLibraries = obj["libraries"];
