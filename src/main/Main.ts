@@ -5,10 +5,6 @@ import os from "os";
 import path from "path";
 import { loadGDT, saveGDT } from "./container/Container";
 import { loadMirror, saveMirror } from "./download/Mirror";
-import { GameProfile } from "./profile/GameProfile";
-import fs from "fs-extra";
-import { ensureNatives } from "./launch/Ensurance";
-import { MinecraftContainer } from "./container/MinecraftContainer";
 
 let mainWindow;
 
@@ -17,14 +13,6 @@ app.on("ready", async () => {
   await loadGDT();
   await loadMirror();
   await initConcurrentDownloader();
-
-  const testProfile = new GameProfile(
-    await fs.readJSON("F:/.minecraft/versions/1.16.5/1.16.5.json")
-  );
-  await ensureNatives(
-    testProfile,
-    new MinecraftContainer("F:/.minecraft", "P:")
-  );
 
   mainWindow = new BrowserWindow({
     width: 800,

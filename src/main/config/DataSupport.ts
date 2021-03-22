@@ -6,10 +6,13 @@ import { isFileExist } from "./ConfigSupport";
 const DATA_ROOT = path.resolve(os.homedir(), "alicorn");
 const DEFAULTS_ROOT = path.resolve("defaults");
 
+export function resolveDataFilePath(dataPath: string): string {
+  return path.join(DATA_ROOT, dataPath);
+}
+
 export async function loadData(dataPath: string): Promise<string> {
   try {
-    const dest = path.join(DATA_ROOT, dataPath);
-    return (await fs.readFile(dest)).toString();
+    return (await fs.readFile(resolveDataFilePath(dataPath))).toString();
   } catch {
     return "";
   }
@@ -19,7 +22,7 @@ export async function saveData(
   relativePath: string,
   data: string
 ): Promise<void> {
-  const dest = path.join(DATA_ROOT, relativePath);
+  const dest = resolveDataFilePath(relativePath);
   await fs.ensureDir(path.dirname(dest));
   await fs.writeFile(dest, data);
 }
@@ -28,7 +31,7 @@ export async function saveData(
 // 'No permission', I don't know why, but we have to do this manually
 
 export async function saveDefaultData(dfPath: string): Promise<void> {
-  const dest = path.join(DATA_ROOT, dfPath);
+  const dest = resolveDataFilePath(dfPath);
   if (await isFileExist(dest)) {
     return;
   }
