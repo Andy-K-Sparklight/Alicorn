@@ -19,7 +19,7 @@ const TEMP_SAVE_PATH_ROOT = path.join(os.tmpdir(), "alicorn-download");
 
 export async function initConcurrentDownloader(): Promise<void> {
   TIME_OUT = getNumber("download.concurrent.timeout", 5000);
-  CHUNK_SIZE = getNumber("download.concurrent.chunk-size", 512) * 1024;
+  CHUNK_SIZE = getNumber("download.concurrent.chunk-size", 1024) * 1024;
   await fs.ensureDir(TEMP_SAVE_PATH_ROOT);
 }
 
@@ -39,8 +39,8 @@ export class Concurrent extends AbstractDownloader {
         }
       }
       const fileSize = await getSize(meta.url);
-      if (fileSize <= 0) {
-        // Use serial instead
+      if (fileSize <= CHUNK_SIZE) {
+        // Too small or invalid, use serial instead
         return await Serial.getInstance().downloadFile(meta);
       }
       const allChunks = generateChunks(fileSize);

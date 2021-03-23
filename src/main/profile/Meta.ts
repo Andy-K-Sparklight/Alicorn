@@ -1,4 +1,5 @@
 import os from "os";
+import { safeGet } from "./GameProfile";
 
 export class OptionalArgument {
   rules: RuleSet;
@@ -386,9 +387,9 @@ export class AssetIndexFileMeta {
 
   static fromObject(obj: Record<string, unknown>): AssetIndexFileMeta {
     const objs: AssetMeta[] = [];
-    if (obj["objects"] instanceof Array) {
-      for (const x of obj["objects"]) {
-        objs.push(AssetMeta.fromObject(x));
+    if (typeof obj["objects"] === "object") {
+      for (const x of Object.getOwnPropertyNames(obj["objects"])) {
+        objs.push(AssetMeta.fromObject(safeGet(obj, ["objects", x])));
       }
     }
     return new AssetIndexFileMeta(objs);
@@ -404,21 +405,27 @@ export class AssetMeta {
     this.size = size;
   }
 
-  static fromObject(obj: Record<string, unknown>): AssetMeta {
+  static fromObject(obj: unknown): AssetMeta {
     let hash = "";
     let size = 0;
+    // @ts-ignore
     if (typeof obj["hash"] === "string") {
+      // @ts-ignore
       hash = obj["hash"];
     }
+    // @ts-ignore
     if (typeof obj["size"] === "string") {
-      const pInt = parseInt(obj["size"]);
+      // @ts-ignore
+      const pInt = parseInt(String(obj["size"]));
       {
         if (!isNaN(pInt)) {
           size = pInt;
         }
       }
     }
+    // @ts-ignore
     if (typeof obj["size"] === "number") {
+      // @ts-ignore
       size = obj["size"];
     }
     return new AssetMeta(hash, size);
