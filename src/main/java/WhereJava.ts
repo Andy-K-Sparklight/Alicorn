@@ -20,7 +20,8 @@ export async function whereJava(): Promise<string[]> {
   for (const a of all) {
     const trimA = a.trim();
     if (trimA !== "" && !res.includes(trimA)) {
-      res.push(a);
+      res.push(path.resolve(path.dirname(path.dirname(a))));
+      // Get Java home
     }
   }
   return res;
