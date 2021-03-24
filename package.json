@@ -44,8 +44,8 @@
     "got": "^11.8.2",
     "node-machine-id": "^1.1.12",
     "object-hash": "^2.1.1",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-router": "^5.2.0",
     "semver": "^7.3.4",
     "sha": "^3.0.0"
