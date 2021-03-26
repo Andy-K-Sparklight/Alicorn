@@ -7,7 +7,7 @@ const ALICORN_SEPARATOR = "\u2764\u2764";
 // In that case, we shall use JSON instead
 
 export function parseMap(str: string): Map<string, string> {
-  const entries = str.trim().split(os.EOL);
+  const entries = str.trim().split("\n");
   const freshMap: Map<string, string> = new Map();
   for (const e of entries) {
     try {

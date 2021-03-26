@@ -1,11 +1,7 @@
-import os from "os";
-
-// UNCHECKED
-
 // Read properties from '%JAVA_HOME%/release'
 export function loadProperties(str: string): Map<string, string> {
   const tMap = new Map<string, string>();
-  const all = str.split(os.EOL);
+  const all = str.split("\n");
   for (const x of all) {
     const ent = x.trim();
     if (ent !== "") {

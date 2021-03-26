@@ -6,7 +6,7 @@ import path from "path";
 // This function is VERY SLOW!
 // It searches the whole os directory to find 'javaw.exe'(or 'javaw' on unix-liked)
 
-export async function WhereJava(): Promise<string[]> {
+export async function whereJava(): Promise<string[]> {
   let all: string[] = [];
   all = all.concat(await findJavaViaCommand());
   all.push(await findJavaInPATH());
