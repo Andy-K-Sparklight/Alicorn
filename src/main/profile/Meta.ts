@@ -1,5 +1,6 @@
 import os from "os";
 import { safeGet } from "./GameProfile";
+import { isNull } from "./InheritedProfileAdaptor";
 
 export class OptionalArgument {
   rules: RuleSet;
@@ -46,6 +47,9 @@ export class ArtifactMeta {
   }
 
   static fromObject(obj: Record<string, unknown>): ArtifactMeta {
+    if (isNull(obj)) {
+      return ArtifactMeta.emptyArtifactMeta();
+    }
     let sz = obj["size"] || 0;
     if (typeof sz !== "number") {
       sz = parseInt(String(sz));
@@ -337,6 +341,17 @@ export class AssetIndexArtifactMeta {
   size: number;
   totalSize: number;
   url: string;
+  private static readonly EMPTY_INSTANCE = AssetIndexArtifactMeta.fromObject({
+    id: "",
+    sha1: "",
+    size: 0,
+    totalSize: 0,
+    url: "",
+  });
+
+  static emptyAssetIndexArtifactMeta(): AssetIndexArtifactMeta {
+    return AssetIndexArtifactMeta.EMPTY_INSTANCE;
+  }
 
   constructor(
     id: string,
@@ -360,8 +375,8 @@ export class AssetIndexArtifactMeta {
       const tsz = String(obj["totalSize"]);
       let szInt = parseInt(sz);
       let tszInt = parseInt(tsz);
-      szInt = isNaN(szInt) ? szInt : 0;
-      tszInt = isNaN(tszInt) ? tszInt : 0;
+      szInt = isNaN(szInt) ? 0 : szInt;
+      tszInt = isNaN(tszInt) ? 0 : tszInt;
 
       return new AssetIndexArtifactMeta(
         // @ts-ignore

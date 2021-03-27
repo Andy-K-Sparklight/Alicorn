@@ -2,13 +2,16 @@ import { GameProfile } from "../profile/GameProfile";
 import { Trio } from "../commons/Collections";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import os from "os";
+import { isNull } from "../profile/InheritedProfileAdaptor";
+import path from "path";
 
 const ALICORN_VERSION_TYPE = "Alicorn";
 const MOJANG_USER_TYPE = "mojang";
 const LAUNCHER_NAME = "Alicorn";
 const LAUNCHER_VERSION = "Rainbow";
+const VERSIONS_ROOT = "versions";
 const FILE_SEPARATOR = os.platform() === "win32" ? ";" : ":";
-const SPACE = " ";
+export const SPACE = " ";
 
 // Generate game arguments
 export function generateGameArgs(
@@ -52,7 +55,13 @@ export function generateVMArgs(
     }
   }
   // Specialize for 'client.jar'
-  usingLibs.push(container.getClientJarPath(profile.id));
+  if (!isNull(profile.clientArtifact)) {
+    usingLibs.push(
+      container.resolvePath(
+        path.join(VERSIONS_ROOT, profile.clientArtifact.path)
+      )
+    );
+  }
 
   // All natives directories put together
   vMap.set("natives_directory", wrap(nativesLibs.join(FILE_SEPARATOR)));
@@ -98,14 +107,14 @@ export function useServer(connection: string): string {
 
 // Add a custom resolution
 export function useResolution(width: number, height: number): string {
-  let s = "";
+  const s = [];
   if (!isNaN(width) && width > 0) {
-    s += `--width ${width}`;
+    s.push(`--width ${width}`);
   }
   if (!isNaN(height) && height > 0) {
-    s += `--height ${height}`;
+    s.push(`--height ${height}`);
   }
-  return s;
+  return s.join(SPACE);
 }
 
 // Authlib Injector

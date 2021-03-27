@@ -4,21 +4,23 @@ import {
   LibraryMeta,
   OptionalArgument,
 } from "./Meta";
+import { isNull } from "./InheritedProfileAdaptor";
+import path from "path";
 
 export class GameProfile {
   gameArgs: string[] = [];
   jvmArgs: OptionalArgument[] = [];
-  assetIndex: AssetIndexArtifactMeta;
-  clientArtifact: ArtifactMeta;
+  assetIndex = AssetIndexArtifactMeta.emptyAssetIndexArtifactMeta();
+  clientArtifact = ArtifactMeta.emptyArtifactMeta();
   // The 'path' property in 'client' and 'server' will be reassigned before downloading
-  id: string;
+  id = "";
   libraries: LibraryMeta[] = [];
-  logArg: string;
-  logFile: ArtifactMeta;
-  mainClass: string;
-  releaseTime: Date;
-  time: Date;
-  type: ReleaseType;
+  logArg = "";
+  logFile = ArtifactMeta.emptyArtifactMeta();
+  mainClass = "";
+  releaseTime = new Date();
+  time = new Date();
+  type: ReleaseType = ReleaseType.RELEASE;
 
   // Also 'fromObject'
   constructor(obj: Record<string, unknown>) {
@@ -34,15 +36,25 @@ export class GameProfile {
         default:
           this.type = ReleaseType.MODIFIED;
       }
-      this.releaseTime = new Date(String(obj["releaseTime"]));
-      this.time = new Date(String(obj["time"]));
+      if (!isNull(obj["releaseTime"])) {
+        this.releaseTime = new Date(String(obj["releaseTime"]));
+      }
+      if (!isNull(obj["time"])) {
+        this.time = new Date(String(obj["time"]));
+      }
       this.mainClass = String(obj["mainClass"]);
-      this.logArg = String(safeGet(obj, ["logging", "client", "argument"]));
+      const tLogArg = safeGet(obj, ["logging", "client", "argument"]);
+      if (!isNull(tLogArg)) {
+        this.logArg = String(tLogArg);
+      }
+      const tLogObj = safeGet(obj, ["logging", "client", "file"]) as Record<
+        string,
+        unknown
+      >;
 
-      // I'm so sorry ponies
-      this.logFile = ArtifactMeta.fromObject(
-        safeGet(obj, ["logging", "client", "file"]) as Record<string, unknown>
-      );
+      if (!isNull(tLogObj)) {
+        this.logFile = ArtifactMeta.fromObject(tLogObj);
+      }
       const rawArgsGame = safeGet(obj, ["arguments", "game"]);
       if (rawArgsGame instanceof Array) {
         const actArgsGame = [];
@@ -70,14 +82,19 @@ export class GameProfile {
       }
 
       const asIndex = obj["assetIndex"];
-      this.assetIndex = AssetIndexArtifactMeta.fromObject(asIndex);
+      if (!isNull(asIndex)) {
+        this.assetIndex = AssetIndexArtifactMeta.fromObject(asIndex);
+      }
 
-      this.clientArtifact = ArtifactMeta.fromObject(
-        Object.assign(
-          safeGet(obj, ["downloads", "client"]) || {},
-          { path: this.id + ".jar" } // Only a temporary assignment
-        )
-      );
+      const tClientObj = safeGet(obj, ["downloads", "client"]);
+      if (!isNull(tClientObj)) {
+        this.clientArtifact = ArtifactMeta.fromObject(
+          Object.assign(tClientObj, {
+            path: path.join(this.id, this.id + ".jar"),
+            // Relative to %ROOT%/versions/
+          })
+        );
+      }
 
       const allLibraries = obj["libraries"];
       if (allLibraries instanceof Array) {
@@ -86,7 +103,7 @@ export class GameProfile {
         }
       }
     } catch (e) {
-      throw new Error("Invalid Profile! Caused by: " + e);
+      throw new Error("Invalid profile! Caused by: " + e);
     }
   }
 }
@@ -110,4 +127,4 @@ enum ReleaseType {
   MODIFIED = "modified", // Nonofficial profiles
 }
 
-// TODO WIP
+export { ReleaseType };
