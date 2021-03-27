@@ -1,6 +1,7 @@
-// Forge Profile Adaptor
+// Inherited Profile Adaptor
+// For Forge, Fabric and OptiFine
 
-// Alicorn DON'T WANT to support Forge! That's simply ridiculous!
+// Alicorn DON'T WANT to support Forge! Non-automating is simply ridiculous!
 // Why not automate? We need it!
 // You builds FREE software rather than SPONSOR ones, thank you very much!
 // Anyway, we'll keep on supporting Forge since there are tremendous requirements.
@@ -16,7 +17,10 @@ registerNullObject(ArtifactMeta.emptyArtifactMeta());
 registerNullObject(AssetIndexArtifactMeta.emptyAssetIndexArtifactMeta());
 registerNullObject(ClassifiersMeta.emptyClassifiersMeta());
 
-function makeInherit(gfBase: GameProfile, gfHead: GameProfile): GameProfile {
+export function makeInherit(
+  gfBase: GameProfile,
+  gfHead: GameProfile
+): GameProfile {
   const retGF = Object.assign({}, gfBase);
   // Though you might call yourself 'release', we suggest that this is a modified one.
   retGF.type = ReleaseType.MODIFIED;
@@ -63,29 +67,19 @@ export class InheritedProfile extends GameProfile {
   }
 
   async productInherited(container: MinecraftContainer): Promise<GameProfile> {
-    return makeInherit(await loadProfile(this.inheritsFrom, container), this);
+    return makeInherit(
+      await loadProfileDirectly(this.inheritsFrom, container),
+      this
+    );
   }
 }
 
-export async function loadProfile(
+async function loadProfileDirectly(
   id: string,
   container: MinecraftContainer
 ): Promise<GameProfile> {
   try {
     return new GameProfile(await fs.readJSON(container.getProfilePath(id)));
-  } catch (e) {
-    throw new Error("Cannot load profile! Caused by: " + e);
-  }
-}
-
-export async function loadInheritedProfile(
-  id: string,
-  container: MinecraftContainer
-): Promise<GameProfile> {
-  try {
-    return new InheritedProfile(
-      await fs.readJSON(container.getProfilePath(id))
-    ).productInherited(container);
   } catch (e) {
     throw new Error("Cannot load profile! Caused by: " + e);
   }
