@@ -1,8 +1,16 @@
 import path from "path";
 import fs from "fs-extra";
 import { loadProperties } from "../commons/PropertiesUtil";
+import os from "os";
 
 const JAVA_RELEASE = "release";
+const JAVAW = (() => {
+  if (os.platform() === "win32") {
+    return path.join("bin", "javaw.exe");
+  } else {
+    return path.join("bin", "javaw");
+  }
+})();
 const CACHE_MAP = new Map<string, Map<string, string>>();
 
 export async function getJavaInfo(
@@ -19,4 +27,8 @@ export async function getJavaInfo(
   const rMap = loadProperties(releaseContent);
   CACHE_MAP.set(jRPath, rMap);
   return rMap;
+}
+
+export function getJavaRunnable(jHome: string): string {
+  return path.resolve(path.join(jHome, JAVAW));
 }

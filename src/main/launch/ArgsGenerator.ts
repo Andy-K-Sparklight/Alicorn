@@ -3,12 +3,12 @@ import { Trio } from "../commons/Collections";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import path from "path";
 import {
+  ALICORN_TEMP_SEPARATOR,
   ALICORN_VERSION_TYPE,
   FILE_SEPARATOR,
   LAUNCHER_NAME,
   LAUNCHER_VERSION,
   MOJANG_USER_TYPE,
-  SPACE,
   VERSIONS_ROOT,
 } from "../commons/Constants";
 import { isNull } from "../commons/Null";
@@ -18,7 +18,7 @@ export function generateGameArgs(
   profile: GameProfile,
   container: MinecraftContainer,
   authData: Trio<string, string, string>
-): string {
+): string[] {
   const vMap = new Map<string, string>();
   vMap.set("version_name", wrap(profile.id));
   vMap.set("game_directory", wrap(container.rootDir));
@@ -29,14 +29,14 @@ export function generateGameArgs(
   vMap.set("auth_access_token", authData.getSecondValue());
   vMap.set("user_type", MOJANG_USER_TYPE);
   vMap.set("version_type", ALICORN_VERSION_TYPE);
-  return applyVars(vMap, profile.gameArgs.join(SPACE));
+  return applyVars(vMap, profile.gameArgs);
 }
 
 // Generate vm arguments, not for GCs or anything else
 export function generateVMArgs(
   profile: GameProfile,
   container: MinecraftContainer
-): string {
+): string[] {
   const vMap = new Map<string, string>();
   vMap.set("launcher_name", LAUNCHER_NAME);
   vMap.set("launcher_version", LAUNCHER_VERSION);
@@ -79,7 +79,7 @@ export function generateVMArgs(
     }
   }
   staticArgs = staticArgs.concat(profile.mainClass);
-  return applyVars(vMap, staticArgs.join(SPACE));
+  return applyVars(vMap, staticArgs);
 }
 
 // Add quotes
@@ -90,23 +90,26 @@ function wrap(strIn: string): string {
   return strIn;
 }
 
-function applyVars(map: Map<string, string>, str: string): string {
+function applyVars(map: Map<string, string>, str: string[]): string[] {
+  let dt = str.join(ALICORN_TEMP_SEPARATOR);
+
   for (const [k, v] of map.entries()) {
-    str = str.replace("${" + k + "}", v);
+    dt = dt.replace("${" + k + "}", v);
   }
-  return str;
+
+  return dt.split(ALICORN_TEMP_SEPARATOR);
 }
 
 // Add a server to join in directly
-export function useServer(connection: string): string {
+export function useServer(connection: string): string[] {
   const sp = connection.split(":");
   const svHost = sp[0];
   const port = sp[1] || "25565";
-  return `--server ${svHost} --port ${port}`;
+  return ["--server", svHost, "--port", port];
 }
 
 // Add a custom resolution
-export function useResolution(width: number, height: number): string {
+export function useResolution(width: number, height: number): string[] {
   const s = [];
   if (!isNaN(width) && width > 0) {
     s.push(`--width ${width}`);
@@ -114,12 +117,12 @@ export function useResolution(width: number, height: number): string {
   if (!isNaN(height) && height > 0) {
     s.push(`--height ${height}`);
   }
-  return s.join(SPACE);
+  return s;
 }
 
 // Authlib Injector
-export function useAJ(ajPath: string, verifyHost: string): string {
-  return `-javaagent:${wrap(ajPath)}=${verifyHost}`;
+export function useAJ(ajPath: string, verifyHost: string): string[] {
+  return [`-javaagent:${wrap(ajPath)}=${verifyHost}`];
   // To be honest, we want to show 'Alicorn' rather than the name of the auth server
   // But since some servers auth their players by reading this value('--versionType')
   // We should let this off

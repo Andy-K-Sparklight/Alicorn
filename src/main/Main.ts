@@ -7,8 +7,9 @@ import { loadGDT, saveGDT } from "./container/Container";
 import { loadMirror, saveMirror } from "./download/Mirror";
 import { initDownloadWrapper } from "./download/DownloadWrapper";
 import { isDev } from "./dev/DevSupport";
+import { btoa } from "js-base64";
 
-let mainWindow;
+let mainWindow: BrowserWindow;
 let IS_DEV = false;
 let INITIALIZED_BIT = false;
 app.on("ready", async () => {
@@ -19,7 +20,8 @@ app.on("ready", async () => {
       preload: path.resolve("Preload.js"),
     },
   });
-  mainWindow.loadFile("Renderer.html");
+  mainWindow.setMenu(null);
+  await mainWindow.loadFile("Renderer.html");
   await runDelayedInitTask();
   if (IS_DEV) {
     mainWindow.webContents.openDevTools();
@@ -46,3 +48,9 @@ async function runDelayedInitTask(): Promise<void> {
   await loadConfig();
   INITIALIZED_BIT = true;
 }
+
+process.on("unhandledRejection", async (r) => {
+  await mainWindow.webContents.loadFile("Error.html", {
+    hash: btoa(escape(String(r))),
+  });
+});
