@@ -20,10 +20,10 @@ export function generateGameArgs(
   authData: Trio<string, string, string>
 ): string[] {
   const vMap = new Map<string, string>();
-  vMap.set("version_name", wrap(profile.id));
-  vMap.set("game_directory", wrap(container.rootDir));
-  vMap.set("auth_player_name", wrap(authData.getFirstValue()));
-  vMap.set("assets_root", wrap(container.getAssetsRoot()));
+  vMap.set("version_name", profile.id);
+  vMap.set("game_directory", container.rootDir);
+  vMap.set("auth_player_name", authData.getFirstValue());
+  vMap.set("assets_root", container.getAssetsRoot());
   vMap.set("assets_index_name", profile.assetIndex.id);
   vMap.set("auth_uuid", authData.getThirdValue());
   vMap.set("auth_access_token", authData.getSecondValue());
@@ -64,13 +64,13 @@ export function generateVMArgs(
   }
 
   // All natives directories put together
-  vMap.set("natives_directory", wrap(nativesLibs.join(FILE_SEPARATOR)));
+  vMap.set("natives_directory", nativesLibs.join(FILE_SEPARATOR));
 
   // All class paths put together
-  vMap.set("classpath", wrap(usingLibs.join(FILE_SEPARATOR)));
+  vMap.set("classpath", usingLibs.join(FILE_SEPARATOR));
 
   // Log4j argument
-  vMap.set("path", wrap(container.getLog4j2FilePath(profile.logFile.path)));
+  vMap.set("path", container.getLog4j2FilePath(profile.logFile.path));
 
   let staticArgs: string[] = [];
   for (const a of profile.jvmArgs) {
@@ -78,7 +78,12 @@ export function generateVMArgs(
       staticArgs = staticArgs.concat(a.value);
     }
   }
-  staticArgs = staticArgs.concat(profile.mainClass);
+  const logArgs: string[] = [];
+  const tArg = profile.logArg.trim();
+  if (!isNull(tArg)) {
+    logArgs.push(tArg);
+  }
+  staticArgs = staticArgs.concat(logArgs).concat(profile.mainClass);
   return applyVars(vMap, staticArgs);
 }
 
@@ -101,7 +106,10 @@ function applyVars(map: Map<string, string>, str: string[]): string[] {
 }
 
 // Add a server to join in directly
-export function useServer(connection: string): string[] {
+export function applyServer(connection: string): string[] {
+  if (isNull(connection.trim())) {
+    return [];
+  }
   const sp = connection.split(":");
   const svHost = sp[0];
   const port = sp[1] || "25565";
@@ -109,7 +117,7 @@ export function useServer(connection: string): string[] {
 }
 
 // Add a custom resolution
-export function useResolution(width: number, height: number): string[] {
+export function applyResolution(width: number, height: number): string[] {
   const s = [];
   if (!isNaN(width) && width > 0) {
     s.push(`--width ${width}`);
@@ -121,8 +129,13 @@ export function useResolution(width: number, height: number): string[] {
 }
 
 // Authlib Injector
-export function useAJ(ajPath: string, verifyHost: string): string[] {
-  return [`-javaagent:${wrap(ajPath)}=${verifyHost}`];
+export function applyAJ(ajPath: string, verifyHost: string): string[] {
+  const tPath = ajPath.trim();
+  const vHost = verifyHost.trim();
+  if (isNull(tPath) || isNull(vHost)) {
+    return [];
+  }
+  return [`-javaagent:${wrap(tPath)}=${vHost}`];
   // To be honest, we want to show 'Alicorn' rather than the name of the auth server
   // But since some servers auth their players by reading this value('--versionType')
   // We should let this off

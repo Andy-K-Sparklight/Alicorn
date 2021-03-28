@@ -1,10 +1,7 @@
 import { GameProfile } from "../profile/GameProfile";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { ArtifactMeta, AssetIndexFileMeta, AssetMeta } from "../profile/Meta";
-import {
-  checkExtractTrimNativeLocal,
-  getNativeArtifact,
-} from "../lint/NativesLint";
+import { checkExtractTrimNativeLocal, getNativeArtifact } from "./NativesLint";
 import { DownloadMeta, DownloadStatus } from "../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../download/DownloadWrapper";
 import fs from "fs-extra";

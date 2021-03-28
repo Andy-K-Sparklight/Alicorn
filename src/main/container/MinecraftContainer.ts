@@ -1,7 +1,7 @@
 import { Container } from "./Container";
 import path from "path";
 import { LibraryMeta } from "../profile/Meta";
-import { getNativeArtifact, JAR_SUFFIX } from "../lint/NativesLint";
+import { getNativeArtifact, JAR_SUFFIX } from "../launch/NativesLint";
 
 // TODO more support
 

@@ -50,3 +50,7 @@ export async function getLatestAJ(): Promise<boolean> {
     return false;
   }
 }
+
+export function whereAJ(): string {
+  return resolveDataFilePath(AJ_FILE_BASE);
+}

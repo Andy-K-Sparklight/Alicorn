@@ -10,7 +10,6 @@ import { isDev } from "./dev/DevSupport";
 import { btoa } from "js-base64";
 
 let mainWindow: BrowserWindow;
-let IS_DEV = false;
 let INITIALIZED_BIT = false;
 app.on("ready", async () => {
   mainWindow = new BrowserWindow({
@@ -23,7 +22,7 @@ app.on("ready", async () => {
   mainWindow.setMenu(null);
   await mainWindow.loadFile("Renderer.html");
   await runDelayedInitTask();
-  if (IS_DEV) {
+  if (await isDev()) {
     mainWindow.webContents.openDevTools();
   }
 });
@@ -40,7 +39,6 @@ app.on("will-quit", async () => {
 });
 
 async function runDelayedInitTask(): Promise<void> {
-  IS_DEV = await isDev();
   await loadGDT();
   await loadMirror();
   await initConcurrentDownloader();
@@ -49,7 +47,14 @@ async function runDelayedInitTask(): Promise<void> {
   INITIALIZED_BIT = true;
 }
 
+process.on("uncaughtException", async (e) => {
+  await mainWindow.webContents.loadFile("Error.html", {
+    hash: btoa(escape(String(e.message))),
+  });
+});
+
 process.on("unhandledRejection", async (r) => {
+  console.log(String(r));
   await mainWindow.webContents.loadFile("Error.html", {
     hash: btoa(escape(String(r))),
   });
