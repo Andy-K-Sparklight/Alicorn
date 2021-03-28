@@ -1,6 +1,6 @@
 import os from "os";
 import { safeGet } from "./GameProfile";
-import { isNull } from "./InheritedProfileAdaptor";
+import { isNull, registerNullObject } from "../commons/Null";
 
 export class OptionalArgument {
   rules: RuleSet;
@@ -33,7 +33,11 @@ export class ArtifactMeta {
   sha1: string;
   path: string;
   size: number;
-  private static readonly EMPTY_INSTANCE = new ArtifactMeta("", "", "", 0);
+  private static readonly EMPTY_INSTANCE = (() => {
+    const ept = new ArtifactMeta("", "", "", 0);
+    registerNullObject(ept);
+    return ept;
+  })();
 
   static emptyArtifactMeta(): ArtifactMeta {
     return ArtifactMeta.EMPTY_INSTANCE;
@@ -274,13 +278,17 @@ export class ClassifiersMeta {
   nativesWindows: ArtifactMeta;
   sources: ArtifactMeta;
 
-  private static readonly EMPTY_INSTANCE = new ClassifiersMeta(
-    ArtifactMeta.emptyArtifactMeta(),
-    ArtifactMeta.emptyArtifactMeta(),
-    ArtifactMeta.emptyArtifactMeta(),
-    ArtifactMeta.emptyArtifactMeta(),
-    ArtifactMeta.emptyArtifactMeta()
-  );
+  private static readonly EMPTY_INSTANCE = (() => {
+    const ept = new ClassifiersMeta(
+      ArtifactMeta.emptyArtifactMeta(),
+      ArtifactMeta.emptyArtifactMeta(),
+      ArtifactMeta.emptyArtifactMeta(),
+      ArtifactMeta.emptyArtifactMeta(),
+      ArtifactMeta.emptyArtifactMeta()
+    );
+    registerNullObject(ept);
+    return ept;
+  })();
 
   static emptyClassifiersMeta(): ClassifiersMeta {
     return ClassifiersMeta.EMPTY_INSTANCE;
@@ -341,13 +349,17 @@ export class AssetIndexArtifactMeta {
   size: number;
   totalSize: number;
   url: string;
-  private static readonly EMPTY_INSTANCE = AssetIndexArtifactMeta.fromObject({
-    id: "",
-    sha1: "",
-    size: 0,
-    totalSize: 0,
-    url: "",
-  });
+  private static readonly EMPTY_INSTANCE = (() => {
+    const ept = AssetIndexArtifactMeta.fromObject({
+      id: "",
+      sha1: "",
+      size: 0,
+      totalSize: 0,
+      url: "",
+    });
+    registerNullObject(ept);
+    return ept;
+  })();
 
   static emptyAssetIndexArtifactMeta(): AssetIndexArtifactMeta {
     return AssetIndexArtifactMeta.EMPTY_INSTANCE;

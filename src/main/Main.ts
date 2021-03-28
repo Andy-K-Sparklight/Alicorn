@@ -6,15 +6,12 @@ import path from "path";
 import { loadGDT, saveGDT } from "./container/Container";
 import { loadMirror, saveMirror } from "./download/Mirror";
 import { initDownloadWrapper } from "./download/DownloadWrapper";
+import { isDev } from "./dev/DevSupport";
 
 let mainWindow;
-
+let IS_DEV = false;
+let INITIALIZED_BIT = false;
 app.on("ready", async () => {
-  await loadConfig();
-  await loadGDT();
-  await loadMirror();
-  await initConcurrentDownloader();
-  initDownloadWrapper();
   mainWindow = new BrowserWindow({
     width: 800,
     height: 450,
@@ -23,7 +20,10 @@ app.on("ready", async () => {
     },
   });
   mainWindow.loadFile("Renderer.html");
-  mainWindow.webContents.openDevTools();
+  await runDelayedInitTask();
+  if (IS_DEV) {
+    mainWindow.webContents.openDevTools();
+  }
 });
 
 app.on("window-all-closed", async () => {
@@ -36,3 +36,13 @@ app.on("will-quit", async () => {
   await saveGDT();
   await saveMirror();
 });
+
+async function runDelayedInitTask(): Promise<void> {
+  IS_DEV = await isDev();
+  await loadGDT();
+  await loadMirror();
+  await initConcurrentDownloader();
+  initDownloadWrapper();
+  await loadConfig();
+  INITIALIZED_BIT = true;
+}

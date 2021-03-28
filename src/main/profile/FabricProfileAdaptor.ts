@@ -1,4 +1,4 @@
-import { isNull } from "./InheritedProfileAdaptor";
+import { isNull } from "../commons/Null";
 
 const JAR_SUFFIX = ".jar";
 const SPOILER = ":";

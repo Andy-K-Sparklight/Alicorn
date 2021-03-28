@@ -18,6 +18,10 @@ export async function loadData(dataPath: string): Promise<string> {
   }
 }
 
+export function getPathInDefaults(pt: string): string {
+  return path.resolve(path.join(DEFAULTS_ROOT, pt));
+}
+
 export async function saveData(
   relativePath: string,
   data: string

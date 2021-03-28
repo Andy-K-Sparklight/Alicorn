@@ -8,18 +8,15 @@
 
 import { GameProfile, ReleaseType } from "./GameProfile";
 import { MinecraftContainer } from "../container/MinecraftContainer";
-import fs from "fs-extra";
-import { SPACE } from "../launch/ArgsGenerator";
-import { ArtifactMeta, AssetIndexArtifactMeta, ClassifiersMeta } from "./Meta";
+import { loadProfile } from "./ProfileLoader";
+import { SPACE } from "../commons/Constants";
+import { isNull } from "../commons/Null";
 
-const NULL_OBJECTS = new Set<unknown>();
-registerNullObject(ArtifactMeta.emptyArtifactMeta());
-registerNullObject(AssetIndexArtifactMeta.emptyAssetIndexArtifactMeta());
-registerNullObject(ClassifiersMeta.emptyClassifiersMeta());
-
+// gfBase <- gfHead, just like merge in git
 export function makeInherit(
   gfBase: GameProfile,
-  gfHead: GameProfile
+  gfHead: GameProfile,
+  legacyBit = false
 ): GameProfile {
   const retGF = Object.assign({}, gfBase);
   // Though you might call yourself 'release', we suggest that this is a modified one.
@@ -33,17 +30,29 @@ export function makeInherit(
   if (!isNull(gfHead.time)) {
     retGF.time = gfHead.time;
   }
+
   if (!isNull(gfHead.jvmArgs)) {
-    retGF.jvmArgs = retGF.jvmArgs.concat(gfHead.jvmArgs);
+    retGF.jvmArgs = noDuplicateConcat(retGF.jvmArgs, gfHead.jvmArgs);
   }
   if (!isNull(gfHead.gameArgs)) {
-    retGF.gameArgs = retGF.gameArgs.concat(gfHead.gameArgs);
+    if (legacyBit) {
+      retGF.gameArgs = gfHead.gameArgs;
+    } else {
+      retGF.gameArgs = noDuplicateConcat(retGF.gameArgs, gfHead.gameArgs);
+    }
   }
   if (!isNull(gfHead.id)) {
     retGF.id = gfHead.id;
   }
   if (!isNull(gfHead.logArg)) {
-    retGF.logArg += SPACE + gfHead.logArg;
+    if (isNull(retGF.logArg)) {
+      retGF.logArg = gfHead.logArg;
+    } else {
+      retGF.logArg += SPACE + gfHead.logArg;
+    }
+  }
+  if (!isNull(gfHead.logFile)) {
+    retGF.logFile = gfHead.logFile;
   }
   if (!isNull(gfHead.assetIndex)) {
     retGF.assetIndex = gfHead.assetIndex;
@@ -58,48 +67,38 @@ export function makeInherit(
   return retGF;
 }
 
+export function noDuplicateConcat<T>(a1: T[], a2: T[]): T[] {
+  const copy = a1.concat();
+  for (const x of a2) {
+    if (!a1.includes(x)) {
+      copy.push(x);
+    }
+  }
+  return copy;
+}
+
 export class InheritedProfile extends GameProfile {
   inheritsFrom = "";
 
   constructor(obj: Record<string, unknown>) {
     super(obj);
-    this.inheritsFrom = String(obj["inheritsFrom"]);
+    this.inheritsFrom = String(obj["inheritsFrom"] || "");
   }
 
-  async productInherited(container: MinecraftContainer): Promise<GameProfile> {
+  async produceInherited(
+    container: MinecraftContainer,
+    legacyBit = false
+  ): Promise<GameProfile> {
+    if (isNull(this.inheritsFrom)) {
+      return this;
+    }
+    if (this.inheritsFrom === this.id) {
+      return this;
+    }
     return makeInherit(
-      await loadProfileDirectly(this.inheritsFrom, container),
-      this
+      await loadProfile(this.inheritsFrom, container),
+      this,
+      legacyBit
     );
-  }
-}
-
-async function loadProfileDirectly(
-  id: string,
-  container: MinecraftContainer
-): Promise<GameProfile> {
-  try {
-    return new GameProfile(await fs.readJSON(container.getProfilePath(id)));
-  } catch (e) {
-    throw new Error("Cannot load profile! Caused by: " + e);
-  }
-}
-
-export function registerNullObject(obj: unknown): void {
-  NULL_OBJECTS.add(obj);
-}
-
-export function isNull(obj: unknown): boolean {
-  try {
-    return (
-      obj === undefined ||
-      obj === null ||
-      obj === "" ||
-      NULL_OBJECTS.has(obj) ||
-      // @ts-ignore
-      obj.length === 0
-    );
-  } catch {
-    return false;
   }
 }

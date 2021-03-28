@@ -1,17 +1,17 @@
 import { GameProfile } from "../profile/GameProfile";
 import { Trio } from "../commons/Collections";
 import { MinecraftContainer } from "../container/MinecraftContainer";
-import os from "os";
-import { isNull } from "../profile/InheritedProfileAdaptor";
 import path from "path";
-
-const ALICORN_VERSION_TYPE = "Alicorn";
-const MOJANG_USER_TYPE = "mojang";
-const LAUNCHER_NAME = "Alicorn";
-const LAUNCHER_VERSION = "Rainbow";
-const VERSIONS_ROOT = "versions";
-const FILE_SEPARATOR = os.platform() === "win32" ? ";" : ":";
-export const SPACE = " ";
+import {
+  ALICORN_VERSION_TYPE,
+  FILE_SEPARATOR,
+  LAUNCHER_NAME,
+  LAUNCHER_VERSION,
+  MOJANG_USER_TYPE,
+  SPACE,
+  VERSIONS_ROOT,
+} from "../commons/Constants";
+import { isNull } from "../commons/Null";
 
 // Generate game arguments
 export function generateGameArgs(

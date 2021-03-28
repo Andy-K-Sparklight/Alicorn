@@ -4,8 +4,8 @@ import {
   LibraryMeta,
   OptionalArgument,
 } from "./Meta";
-import { isNull } from "./InheritedProfileAdaptor";
 import path from "path";
+import { isNull } from "../commons/Null";
 
 export class GameProfile {
   gameArgs: string[] = [];

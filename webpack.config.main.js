@@ -2,6 +2,8 @@
 const path = require("path");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { ContextReplacementPlugin } = require("webpack");
 
 // noinspection JSValidateTypes
 module.exports = {
@@ -23,6 +25,7 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js", ".css"],
   },
   plugins: [
+    new ContextReplacementPlugin(/keyv/),
     new CopyWebpackPlugin({
       patterns: [
         {
