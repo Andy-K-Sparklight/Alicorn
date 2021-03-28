@@ -8,10 +8,12 @@ import { loadMirror, saveMirror } from "./download/Mirror";
 import { initDownloadWrapper } from "./download/DownloadWrapper";
 import { isDev } from "./dev/DevSupport";
 import { btoa } from "js-base64";
+import { initEncrypt } from "./security/Encrypt";
 
 let mainWindow: BrowserWindow;
 let INITIALIZED_BIT = false;
 app.on("ready", async () => {
+  // Open window as soon as possible
   mainWindow = new BrowserWindow({
     width: 800,
     height: 450,
@@ -21,10 +23,10 @@ app.on("ready", async () => {
   });
   mainWindow.setMenu(null);
   await mainWindow.loadFile("Renderer.html");
-  await runDelayedInitTask();
   if (await isDev()) {
     mainWindow.webContents.openDevTools();
   }
+  await runDelayedInitTask();
 });
 
 app.on("window-all-closed", async () => {
@@ -40,6 +42,7 @@ app.on("will-quit", async () => {
 
 async function runDelayedInitTask(): Promise<void> {
   await loadGDT();
+  await initEncrypt();
   await loadMirror();
   await initConcurrentDownloader();
   initDownloadWrapper();

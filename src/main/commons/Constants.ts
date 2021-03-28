@@ -7,4 +7,10 @@ export const LAUNCHER_VERSION = "Rainbow";
 export const VERSIONS_ROOT = "versions";
 export const FILE_SEPARATOR = os.platform() === "win32" ? ";" : ":";
 export const SPACE = " ";
-export const ALICORN_TEMP_SEPARATOR = "\u0106\u1033\u2259";
+export const ALICORN_SEPARATOR = "\u2764\u2764";
+export const PROCESS_END_GATE = "END";
+export const PROCESS_LOG_GATE = "LOG";
+// Stands for 'Alicorn Data'
+export const ALICORN_DATA_SUFFIX = ".ald";
+// Stands for 'Alicorn Pinkie Promise'
+export const ALICORN_ENCRYPTED_DATA_SUFFIX = ".alpp";

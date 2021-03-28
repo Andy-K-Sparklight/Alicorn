@@ -3,7 +3,7 @@ import { Trio } from "../commons/Collections";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import path from "path";
 import {
-  ALICORN_TEMP_SEPARATOR,
+  ALICORN_SEPARATOR,
   ALICORN_VERSION_TYPE,
   FILE_SEPARATOR,
   LAUNCHER_NAME,
@@ -96,13 +96,13 @@ function wrap(strIn: string): string {
 }
 
 function applyVars(map: Map<string, string>, str: string[]): string[] {
-  let dt = str.join(ALICORN_TEMP_SEPARATOR);
+  let dt = str.join(ALICORN_SEPARATOR);
 
   for (const [k, v] of map.entries()) {
     dt = dt.replace("${" + k + "}", v);
   }
 
-  return dt.split(ALICORN_TEMP_SEPARATOR);
+  return dt.split(ALICORN_SEPARATOR);
 }
 
 // Add a server to join in directly

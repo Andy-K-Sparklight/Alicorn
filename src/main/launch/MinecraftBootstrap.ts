@@ -3,10 +3,9 @@ import { ChildProcess, spawn } from "child_process";
 import objectHash from "object-hash";
 import { Pair } from "../commons/Collections";
 import EventEmitter from "events";
+import { PROCESS_END_GATE, PROCESS_LOG_GATE } from "../commons/Constants";
 
-export const POOL = new Map<string, RunningMinecraft>();
-const END_GATE = "END";
-const LOG_GATE = "LOG";
+const POOL = new Map<string, RunningMinecraft>();
 
 export class RunningMinecraft {
   readonly args: string[];
@@ -37,15 +36,17 @@ export class RunningMinecraft {
     this.process.on("exit", (code, signal) => {
       this.status = RunningStatus.STOPPING;
       this.exitCode = String(code || signal);
-      this.emitter?.emit(END_GATE);
+      this.emitter?.emit(PROCESS_END_GATE);
     });
     this.process.stdout?.on("data", (d) => {
-      this.logs.getFirstValue().push(d);
-      this.emitter?.emit(LOG_GATE);
+      const strD = d.toString();
+      this.logs.getFirstValue().push(strD);
+      this.emitter?.emit(PROCESS_LOG_GATE, strD, false);
     });
     this.process.stderr?.on("data", (d) => {
-      this.logs.getSecondValue().push(d);
-      this.emitter?.emit(LOG_GATE);
+      const strD = d.toString();
+      this.logs.getSecondValue().push(strD);
+      this.emitter?.emit(PROCESS_LOG_GATE, strD, true);
     });
     const id = objectHash([this.executable, this.args, this.process]);
     POOL.set(id, this);
@@ -54,15 +55,29 @@ export class RunningMinecraft {
   }
 
   kill(): void {
+    this.status = RunningStatus.STOPPING;
     this.process?.kill(0);
   }
 
   disconnect(): void {
+    this.status = RunningStatus.UNKNOWN;
     this.process?.disconnect();
   }
 
-  on(channel: string, fn: () => void): void {
-    this.emitter?.on(channel, fn);
+  onEnd(fn: (exitCode: string) => unknown): void {
+    this.emitter?.on(PROCESS_END_GATE, (c) => {
+      fn(c);
+    });
+  }
+
+  onLog(fnLog: (s: string) => unknown, fnErr: (s: string) => unknown): void {
+    this.emitter?.on(PROCESS_LOG_GATE, (s, isErr) => {
+      if (isErr) {
+        fnErr(s);
+      } else {
+        fnLog(s);
+      }
+    });
   }
 }
 
@@ -70,6 +85,7 @@ enum RunningStatus {
   STARTING,
   RUNNING,
   STOPPING,
+  UNKNOWN,
 }
 
 export function runMinecraft(
@@ -95,22 +111,45 @@ export function disconnectMinecraft(runID: string): void {
   POOL.get(runID)?.disconnect();
 }
 
-export function whenFinished(
-  runID: string,
-  fn: (exitCode: string) => void
-): void {
+export function onEnd(runID: string, fn: (exitCode: string) => void): void {
   const ins = POOL.get(runID);
-  ins?.on(END_GATE, () => {
-    fn(String(ins.exitCode));
+  ins?.onEnd((c) => {
+    fn(String(c));
   });
 }
 
-export function onLog(
-  runID: string,
-  fn: (log: Pair<string[], string[]>) => void
-): void {
+export function onInfo(runID: string, fn: (data: string) => void): void {
   const ins = POOL.get(runID);
-  ins?.on(LOG_GATE, () => {
-    fn(ins.logs);
-  });
+  ins?.onLog(
+    (s) => {
+      fn(s);
+    },
+    () => {
+      return;
+    }
+  );
+}
+
+export function onError(runID: string, fn: (data: string) => void): void {
+  const ins = POOL.get(runID);
+  ins?.onLog(
+    () => {
+      return;
+    },
+    (s) => {
+      fn(s);
+    }
+  );
+}
+
+export function getLogPair(id: string): Pair<string[], string[]> {
+  return POOL.get(id)?.logs || new Pair<string[], string[]>([], []);
+}
+
+export function getExitCode(id: string): string {
+  return POOL.get(id)?.exitCode || "";
+}
+
+export function getStatus(id: string): RunningStatus {
+  return POOL.get(id)?.status || RunningStatus.UNKNOWN;
 }

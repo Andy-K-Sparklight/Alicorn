@@ -1,6 +1,5 @@
 import os from "os";
-
-const ALICORN_SEPARATOR = "\u2764\u2764";
+import { ALICORN_SEPARATOR } from "./Constants";
 
 // Separator '❤❤' is just a choice
 // MapUtil will only be used in our code, not for plugins or user data
