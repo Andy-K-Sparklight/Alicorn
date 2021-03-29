@@ -24,7 +24,7 @@ export abstract class Account {
 
   abstract buildAccessData(): Promise<Trio<string, string, string>>;
 
-  // TODO save account data
+  abstract getAccountIdentifier(): string;
 
   lastUsedUsername: string;
   password: string;

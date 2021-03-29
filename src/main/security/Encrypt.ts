@@ -14,3 +14,15 @@ export function encryptByMachine(data: string): string {
 export function decryptByMachine(data: string): string {
   return CryptoJS.AES.decrypt(data, MACHINE_ID_32).toString(CryptoJS.enc.Utf8);
 }
+
+export function encryptObject(obj: unknown): string {
+  return encryptByMachine(JSON.stringify(obj));
+}
+
+export function decryptObject(objSrc: string): unknown {
+  try {
+    return JSON.parse(decryptByMachine(objSrc));
+  } catch {
+    return {};
+  }
+}

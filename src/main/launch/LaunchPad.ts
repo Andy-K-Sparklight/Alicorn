@@ -50,8 +50,8 @@ export async function launchProfile(
     : [];
   const resolutions = !isNull(policies.resolution)
     ? applyResolution(
-        policies.resolution?.getFirstValue() || 800,
-        policies.resolution?.getSecondValue() || 540
+        policies.resolution?.getFirstValue(),
+        policies.resolution?.getSecondValue()
       )
     : [];
   const serverArgs = policies.useServer

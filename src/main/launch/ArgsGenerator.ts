@@ -117,13 +117,14 @@ export function applyServer(connection: string): string[] {
 }
 
 // Add a custom resolution
-export function applyResolution(width: number, height: number): string[] {
+export function applyResolution(width?: number, height?: number): string[] {
   const s = [];
-  if (!isNaN(width) && width > 0) {
-    s.push(`--width ${width}`);
+  // Cannot use 'isNull' because TS doesn't know
+  if (width !== undefined && width !== null && !isNaN(width) && width > 0) {
+    s.push("--width", width.toString());
   }
-  if (!isNaN(height) && height > 0) {
-    s.push(`--height ${height}`);
+  if (height !== undefined && width !== null && !isNaN(height) && height > 0) {
+    s.push("--height", height.toString());
   }
   return s;
 }

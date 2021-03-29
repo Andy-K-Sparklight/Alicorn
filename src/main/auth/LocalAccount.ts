@@ -48,6 +48,10 @@ export class LocalAccount extends Account {
     this.lastUsedUUID = buildOfflinePlayerUUID(this.accountName);
     return true;
   }
+
+  getAccountIdentifier(): string {
+    return objectHash(this.accountName);
+  }
 }
 
 function fakeToken(): string {

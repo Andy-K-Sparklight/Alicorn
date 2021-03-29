@@ -34,9 +34,14 @@ export class RunningMinecraft {
       cwd: this.container.resolvePath("/"),
     });
     this.process.on("exit", (code, signal) => {
+      console.log("Exit code: " + code);
+      console.log("Exit signal: " + signal);
       this.status = RunningStatus.STOPPING;
-      this.exitCode = String(code || signal);
-      this.emitter?.emit(PROCESS_END_GATE);
+      if (code === undefined || code === null) {
+        this.exitCode = String(signal);
+      }
+      this.exitCode = String(code);
+      this.emitter?.emit(PROCESS_END_GATE, this.exitCode);
     });
     this.process.stdout?.on("data", (d) => {
       const strD = d.toString();
