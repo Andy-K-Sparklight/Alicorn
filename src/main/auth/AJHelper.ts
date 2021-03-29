@@ -4,8 +4,8 @@ import { resolveDataFilePath } from "../config/DataSupport";
 import { DownloadMeta, DownloadStatus } from "../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../download/DownloadWrapper";
 import fs from "fs-extra";
-import { safeGet } from "../profile/GameProfile";
 import objectHash from "object-hash";
+import { safeGet } from "../commons/Null";
 
 const AJ_MANIFEST = "https://authlib-injector.yushi.moe/artifacts.json";
 const AJ_ARTIFACT_ROOT =

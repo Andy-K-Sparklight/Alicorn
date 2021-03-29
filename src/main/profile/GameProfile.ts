@@ -5,7 +5,8 @@ import {
   OptionalArgument,
 } from "./Meta";
 import path from "path";
-import { isNull } from "../commons/Null";
+import { isNull, safeGet } from "../commons/Null";
+import { ReleaseType } from "../commons/Constants";
 
 export class GameProfile {
   gameArgs: string[] = [];
@@ -32,6 +33,12 @@ export class GameProfile {
           break;
         case "snapshot":
           this.type = ReleaseType.SNAPSHOT;
+          break;
+        case "old_beta":
+          this.type = ReleaseType.OLG_BETA;
+          break;
+        case "old_alpha":
+          this.type = ReleaseType.OLD_ALPHA;
           break;
         default:
           this.type = ReleaseType.MODIFIED;
@@ -107,24 +114,3 @@ export class GameProfile {
     }
   }
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
-export function safeGet(obj: any, properties: string[]): unknown {
-  try {
-    let node = obj;
-    for (const x of properties) {
-      node = node[x];
-    }
-    return node;
-  } catch {
-    return null;
-  }
-}
-
-enum ReleaseType {
-  RELEASE = "release",
-  SNAPSHOT = "snapshot",
-  MODIFIED = "modified", // Nonofficial profiles
-}
-
-export { ReleaseType };

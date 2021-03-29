@@ -1,6 +1,5 @@
 import os from "os";
-import { safeGet } from "./GameProfile";
-import { isNull, registerNullObject } from "../commons/Null";
+import { isNull, registerNullObject, safeGet } from "../commons/Null";
 
 export class OptionalArgument {
   rules: RuleSet;

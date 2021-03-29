@@ -24,6 +24,9 @@ export abstract class Account {
 
   abstract buildAccessData(): Promise<Trio<string, string, string>>;
 
+  // AccessData(or AuthData) is a Trio
+  // Username, AccessToken, UUID
+
   abstract getAccountIdentifier(): string;
 
   lastUsedUsername: string;

@@ -6,10 +6,10 @@
 // You builds FREE software rather than SPONSOR ones, thank you very much!
 // Anyway, we'll keep on supporting Forge since there are tremendous requirements.
 
-import { GameProfile, ReleaseType } from "./GameProfile";
+import { GameProfile } from "./GameProfile";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { loadProfile } from "./ProfileLoader";
-import { SPACE } from "../commons/Constants";
+import { ReleaseType, SPACE } from "../commons/Constants";
 import { isNull } from "../commons/Null";
 
 // gfBase <- gfHead, just like merge in git

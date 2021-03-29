@@ -14,3 +14,16 @@ export const PROCESS_LOG_GATE = "LOG";
 export const ALICORN_DATA_SUFFIX = ".ald";
 // Stands for 'Alicorn Pinkie Promise'
 export const ALICORN_ENCRYPTED_DATA_SUFFIX = ".alpp";
+
+export const VERSIONS_MANIFEST =
+  "https://launchermeta.mojang.com/mc/game/version_manifest.json";
+
+enum ReleaseType {
+  RELEASE = "release",
+  SNAPSHOT = "snapshot",
+  OLD_ALPHA = "old_alpha",
+  OLG_BETA = "old_beta",
+  MODIFIED = "modified", // Nonofficial profiles
+}
+
+export { ReleaseType };

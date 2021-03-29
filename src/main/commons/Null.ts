@@ -18,3 +18,20 @@ export function isNull(obj: unknown): boolean {
     return false;
   }
 }
+
+export function safeGet(
+  obj: unknown,
+  properties: string[],
+  def: unknown = null
+): unknown {
+  try {
+    let node = obj;
+    for (const x of properties) {
+      // @ts-ignore
+      node = node[x];
+    }
+    return node;
+  } catch {
+    return def;
+  }
+}

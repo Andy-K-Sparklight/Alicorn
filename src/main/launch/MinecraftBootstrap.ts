@@ -34,8 +34,6 @@ export class RunningMinecraft {
       cwd: this.container.resolvePath("/"),
     });
     this.process.on("exit", (code, signal) => {
-      console.log("Exit code: " + code);
-      console.log("Exit signal: " + signal);
       this.status = RunningStatus.STOPPING;
       if (code === undefined || code === null) {
         this.exitCode = String(signal);
