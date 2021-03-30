@@ -6,13 +6,15 @@ import path from "path";
 import { loadGDT, saveGDT } from "./container/Container";
 import { loadMirror, saveMirror } from "./download/Mirror";
 import { initDownloadWrapper } from "./download/DownloadWrapper";
-import { isDev } from "./dev/DevSupport";
 import { btoa } from "js-base64";
 import { initEncrypt } from "./security/Encrypt";
+import { loadJDT, saveJDT } from "./java/JInfo";
 
+console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow;
 let INITIALIZED_BIT = false;
 app.on("ready", async () => {
+  console.log("App is ready, opening window...");
   // Open window as soon as possible
   mainWindow = new BrowserWindow({
     width: 800,
@@ -22,35 +24,41 @@ app.on("ready", async () => {
     },
   });
   mainWindow.setMenu(null);
+  console.log("Loading resources...");
   await mainWindow.loadFile("Renderer.html");
-  if (await isDev()) {
-    mainWindow.webContents.openDevTools();
-  }
+  console.log("Running delayed init tasks...");
   await runDelayedInitTask();
+  console.log("All caught up! Alicorn is now initialized.");
 });
 
 app.on("window-all-closed", async () => {
   if (os.platform() !== "darwin") {
+    console.log("Stopping!");
     app.quit();
   }
 });
 app.on("will-quit", async () => {
+  console.log("Saving data...");
   await saveConfig();
   await saveGDT();
+  await saveJDT();
   await saveMirror();
 });
 
 async function runDelayedInitTask(): Promise<void> {
+  console.log("Loading data and initializing modules...");
+  await loadConfig();
   await loadGDT();
+  await loadJDT();
   await initEncrypt();
   await loadMirror();
   await initConcurrentDownloader();
   initDownloadWrapper();
-  await loadConfig();
   INITIALIZED_BIT = true;
 }
 
 process.on("uncaughtException", async (e) => {
+  console.log(e);
   await mainWindow.webContents.loadFile("Error.html", {
     hash: btoa(escape(String(e.message))),
   });

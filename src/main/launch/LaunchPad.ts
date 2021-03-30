@@ -5,6 +5,7 @@ import {
   ensureAllAssets,
   ensureAssetsIndex,
   ensureLibraries,
+  ensureLog4jFile,
   ensureNatives,
 } from "./Ensurance";
 import { runMinecraft } from "./MinecraftBootstrap";
@@ -34,11 +35,13 @@ export async function launchProfile(
     server?: string;
   }
 ): Promise<string> {
+  // As we need tracking, we cannot use 'fillProfile'
   emitter.getFirstValue().emit(LaunchSeqSignal.PROFILE_LOADING);
   const tFile = await loadProfile(id, container);
   emitter.getFirstValue().emit(LaunchSeqSignal.LIBRARIES_FILLING);
   await ensureLibraries(tFile, container);
   await ensureNatives(tFile, container);
+  await ensureLog4jFile(tFile, container); // Just resolve it with libraries
   emitter.getFirstValue().emit(LaunchSeqSignal.ASSETS_FILLING);
   await ensureAssetsIndex(tFile, container);
   await ensureAllAssets(tFile, container);

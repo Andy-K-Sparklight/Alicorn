@@ -27,3 +27,5 @@ enum ReleaseType {
 }
 
 export { ReleaseType };
+
+export const PLACE_HOLDER = "?PLACE-HOLDER>>";

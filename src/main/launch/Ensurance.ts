@@ -5,6 +5,8 @@ import { checkExtractTrimNativeLocal, getNativeArtifact } from "./NativesLint";
 import { DownloadMeta, DownloadStatus } from "../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../download/DownloadWrapper";
 import fs from "fs-extra";
+import { Progresser } from "../commons/Progresser";
+import { isNull } from "../commons/Null";
 // UNCHECKED
 // This file can not only check resources, but also download packages when installing!
 
@@ -20,8 +22,10 @@ const ASSET_WEB_ROOT = "https://resources.download.minecraft.net/";
 // While there actually has no problem
 export async function ensureNatives(
   profile: GameProfile,
-  container: MinecraftContainer
+  container: MinecraftContainer,
+  progresser?: Progresser
 ): Promise<void> {
+  progresser?.setResolved("Collecting information...");
   const toEnsureLibraries: ArtifactMeta[] = [];
   for (const l of profile.libraries) {
     if (l.isNative && l.canApply()) {
@@ -35,6 +39,7 @@ export async function ensureNatives(
         allPromises.push(
           new Promise<void>((resolve) => {
             checkExtractTrimNativeLocal(container, s).then(() => {
+              progresser?.markUpdate("Resolved native library " + s.path);
               resolve();
             });
           })
@@ -43,14 +48,17 @@ export async function ensureNatives(
       return allPromises;
     })()
   );
+  progresser?.markEnd("All native libraries are resolved.");
 }
 
 // Ensure libraries
 // The return value is the number of failed tasks
 export async function ensureLibraries(
   profile: GameProfile,
-  container: MinecraftContainer
+  container: MinecraftContainer,
+  progresser?: Progresser
 ): Promise<number> {
+  progresser?.setResolved("Collecting information...");
   const allLibrariesToCheck: ArtifactMeta[] = [];
   for (const l of profile.libraries) {
     if (!l.canApply()) {
@@ -61,10 +69,14 @@ export async function ensureLibraries(
       allLibrariesToCheck.push(getNativeArtifact(l));
     }
   }
+  // Special support
+  if (!isNull(profile.clientArtifact)) {
+    allLibrariesToCheck.push(profile.clientArtifact);
+  }
   const values = await Promise.all(
     (() => {
       return allLibrariesToCheck.map((artifact) => {
-        return performSingleCheck(artifact, container);
+        return performSingleCheck(artifact, container, progresser);
       });
     })()
   );
@@ -74,6 +86,7 @@ export async function ensureLibraries(
       failedCount++;
     }
   }
+  progresser?.markEnd("All libraries are checked.");
   return failedCount;
 }
 
@@ -82,14 +95,17 @@ export async function ensureLibraries(
 // So, we, don't, care!
 async function performSingleCheck(
   artifact: ArtifactMeta,
-  container: MinecraftContainer
+  container: MinecraftContainer,
+  progresser?: Progresser
 ): Promise<DownloadStatus> {
   const downloadMeta = new DownloadMeta(
     artifact.url,
     container.getLibraryPath(artifact.path),
     artifact.sha1
   );
-  return await wrappedDownloadFile(downloadMeta);
+  const t = await wrappedDownloadFile(downloadMeta);
+  progresser?.markUpdate("Resolved library " + artifact.path);
+  return t;
 }
 
 // Ensure assets index file
@@ -110,9 +126,11 @@ export async function ensureAssetsIndex(
 // Call this AFTER 'ensureAssetsIndex'! This function are NOT automatically called!
 export async function ensureAllAssets(
   profile: GameProfile,
-  container: MinecraftContainer
+  container: MinecraftContainer,
+  progresser?: Progresser
 ): Promise<number> {
   try {
+    progresser?.setResolved("Collecting information...");
     const obj = await fs.readJSON(
       container.getAssetsIndexPath(profile.assetIndex.id)
     );
@@ -122,6 +140,7 @@ export async function ensureAllAssets(
       allObjects.map((o) => {
         return new Promise<boolean>((resolve) => {
           ensureAsset(o, container).then((b) => {
+            progresser?.markUpdate("Resolved asset " + o.hash);
             resolve(b);
           });
         });
@@ -133,6 +152,7 @@ export async function ensureAllAssets(
         failedCount++;
       }
     }
+    progresser?.markEnd("All assets are checked.");
     return failedCount;
   } catch {
     return -1; // Which means operation failed
@@ -155,4 +175,25 @@ export async function ensureAsset(
 
 export function generateAssetURL(assetMeta: AssetMeta): string {
   return ASSET_WEB_ROOT + assetMeta.hash.slice(0, 2) + "/" + assetMeta.hash;
+}
+
+export async function ensureLog4jFile(
+  profile: GameProfile,
+  container: MinecraftContainer
+): Promise<boolean> {
+  try {
+    if (isNull(profile.logFile)) {
+      return true;
+    }
+    const log4jPath = container.getLog4j2FilePath(profile.logFile.path);
+    const dMeta = new DownloadMeta(
+      profile.logFile.url,
+      log4jPath,
+      profile.logFile.sha1
+    );
+    await wrappedDownloadFile(dMeta);
+    return true;
+  } catch {
+    return false;
+  }
 }

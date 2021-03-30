@@ -3,6 +3,8 @@ import { ReleaseType, VERSIONS_MANIFEST } from "../../commons/Constants";
 import { safeGet } from "../../commons/Null";
 import { applyMirror } from "../../download/Mirror";
 
+// UNCHECKED
+
 export async function getAllMojangCores(
   filter = ReleaseType.RELEASE
 ): Promise<string[]> {
@@ -56,5 +58,18 @@ export async function getProfileURLById(id: string): Promise<string> {
     return "";
   } catch {
     return "";
+  }
+}
+
+export async function getProfile(
+  url: string
+): Promise<Record<string, unknown>> {
+  try {
+    return Object.assign(
+      {},
+      (await got.get(applyMirror(url), { responseType: "json" })).body
+    );
+  } catch {
+    return {};
   }
 }
