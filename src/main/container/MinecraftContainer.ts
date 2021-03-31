@@ -1,11 +1,12 @@
-import { Container } from "./Container";
 import path from "path";
 import { LibraryMeta } from "../profile/Meta";
 import { getNativeArtifact, JAR_SUFFIX } from "../launch/NativesLint";
 
 // TODO more support
 
-export class MinecraftContainer extends Container {
+export class MinecraftContainer {
+  id: string;
+  rootDir: string;
   private assetsRoot = this.resolvePath("assets");
   private nativesBase = this.resolvePath("$natives");
   private librariesBase = this.resolvePath("libraries");
@@ -107,7 +108,8 @@ export class MinecraftContainer extends Container {
     return path.resolve(path.join(this.rootDir, relativePath));
   }
 
-  constructor(rootDir: string, containerID: string) {
-    super(rootDir, containerID);
+  constructor(rootDir: string, id: string) {
+    this.id = id;
+    this.rootDir = rootDir;
   }
 }

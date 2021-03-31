@@ -1,23 +1,13 @@
 import path from "path";
-import { loadData, saveData, saveDefaultData } from "../config/DataSupport";
+import { loadData, saveData } from "../config/DataSupport";
 import { buildMap, parseMap } from "../commons/MapUtil";
+import { ALICORN_DATA_SUFFIX } from "../commons/Constants";
+import { MinecraftContainer } from "./MinecraftContainer";
 
 let GlobalContainerDescriptorTable: Map<string, string> = new Map();
-const GDT_NAME = "global-container-descriptor.ald";
+const GDT_NAME = "global-container-descriptor" + ALICORN_DATA_SUFFIX;
 
-// '.ald' stands for Alicorn Data
-
-export abstract class Container {
-  id: string;
-  rootDir: string;
-
-  protected constructor(rootDir: string, id: string) {
-    this.id = id;
-    this.rootDir = rootDir;
-  }
-
-  abstract resolvePath(relativePath: string): string;
-}
+// GDT stands for Global container Descriptor Table
 
 export function getAllContainers(): string[] {
   return Array.from(GlobalContainerDescriptorTable.keys());
@@ -27,7 +17,11 @@ export function rootOf(containerID: string): string {
   return GlobalContainerDescriptorTable.get(containerID) || path.resolve();
 }
 
-export function registerContainer(container: Container): void {
+export function getContainer(containerID: string): MinecraftContainer {
+  return new MinecraftContainer(containerID, rootOf(containerID));
+}
+
+export function registerContainer(container: MinecraftContainer): void {
   GlobalContainerDescriptorTable.set(container.id, container.rootDir);
 }
 
@@ -36,7 +30,6 @@ export function unregisterContainer(id: string): void {
 }
 
 export async function loadGDT(): Promise<void> {
-  await saveDefaultData(GDT_NAME);
   GlobalContainerDescriptorTable = parseMap(await loadData(GDT_NAME));
 }
 
