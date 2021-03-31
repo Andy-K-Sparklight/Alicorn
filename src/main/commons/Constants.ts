@@ -15,8 +15,11 @@ export const ALICORN_DATA_SUFFIX = ".ald";
 // Stands for 'Alicorn Pinkie Promise'
 export const ALICORN_ENCRYPTED_DATA_SUFFIX = ".alpp";
 
-export const VERSIONS_MANIFEST =
+export const MOJANG_VERSIONS_MANIFEST =
   "https://launchermeta.mojang.com/mc/game/version_manifest.json";
+
+export const FORGE_MAVEN_ROOT = "https://files.minecraftforge.net/maven";
+export const FORGE_VERSIONS_MANIFEST = `${FORGE_MAVEN_ROOT}/net/minecraftforge/forge/promotions_slim.json`;
 
 enum ReleaseType {
   RELEASE = "release",

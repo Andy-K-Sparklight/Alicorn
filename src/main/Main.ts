@@ -19,7 +19,7 @@ app.on("ready", async () => {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 450,
-    backgroundColor: "#ffe0f0",
+    backgroundColor: "#ffe0f0", // Cute pink~
     webPreferences: {
       preload: path.resolve("Preload.js"),
     },

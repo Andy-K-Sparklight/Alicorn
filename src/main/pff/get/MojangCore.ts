@@ -1,5 +1,5 @@
 import got from "got";
-import { ReleaseType, VERSIONS_MANIFEST } from "../../commons/Constants";
+import { MOJANG_VERSIONS_MANIFEST, ReleaseType } from "../../commons/Constants";
 import { safeGet } from "../../commons/Null";
 import { applyMirror } from "../../download/Mirror";
 
@@ -9,7 +9,7 @@ export async function getAllMojangCores(
   filter = ReleaseType.RELEASE
 ): Promise<string[]> {
   try {
-    const mObj = await got.get(applyMirror(VERSIONS_MANIFEST), {
+    const mObj = await got.get(applyMirror(MOJANG_VERSIONS_MANIFEST), {
       responseType: "json",
     });
     const arr = safeGet(mObj.body, ["versions"], []);
@@ -33,7 +33,7 @@ export async function getLatestMojangCore(
   filter = ReleaseType.RELEASE
 ): Promise<string> {
   try {
-    const mObj = await got.get(applyMirror(VERSIONS_MANIFEST), {
+    const mObj = await got.get(applyMirror(MOJANG_VERSIONS_MANIFEST), {
       responseType: "json",
     });
     return String(safeGet(mObj.body, ["latest", filter], ""));
@@ -44,7 +44,7 @@ export async function getLatestMojangCore(
 
 export async function getProfileURLById(id: string): Promise<string> {
   try {
-    const mObj = await got.get(applyMirror(VERSIONS_MANIFEST), {
+    const mObj = await got.get(applyMirror(MOJANG_VERSIONS_MANIFEST), {
       responseType: "json",
     });
     const arr = safeGet(mObj.body, ["versions"], []);

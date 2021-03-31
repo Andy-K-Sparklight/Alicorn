@@ -18,9 +18,14 @@ export class MinecraftContainer {
   private crashReportsRoot = this.resolvePath("crash-reports");
   private savesRoot = this.resolvePath("saves");
   private log4j2Root = this.resolvePath("log4j2-xml");
+  private tempFileRoot = this.resolvePath("alicorn-temp");
 
   getGlobalLog4j2Root(): string {
     return this.log4j2Root;
+  }
+
+  getTempFileStorePath(relativePath: string): string {
+    return path.resolve(path.join(this.tempFileRoot, relativePath));
   }
 
   getNativeLibraryExtractedRoot(library: LibraryMeta): string {
