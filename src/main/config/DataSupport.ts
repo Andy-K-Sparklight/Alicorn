@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import os from "os";
-import { isFileExist } from "./ConfigSupport";
+import { copyFileStream, isFileExist } from "./FileUtil";
 
 const DATA_ROOT = path.resolve(os.homedir(), "alicorn");
 const DEFAULTS_ROOT = path.resolve("defaults");
@@ -22,6 +22,10 @@ export function getPathInDefaults(pt: string): string {
   return path.resolve(path.join(DEFAULTS_ROOT, pt));
 }
 
+export function getActualDataPath(pt: string): string {
+  return path.resolve(path.join(DATA_ROOT, pt));
+}
+
 export async function saveData(
   relativePath: string,
   data: string
@@ -39,16 +43,5 @@ export async function saveDefaultData(dfPath: string): Promise<void> {
   if (await isFileExist(dest)) {
     return;
   }
-  await fs.ensureDir(path.dirname(dest));
-  const stream = fs
-    .createReadStream(path.join(DEFAULTS_ROOT, dfPath))
-    .pipe(fs.createWriteStream(dest));
-  return new Promise<void>((resolve, reject) => {
-    stream.on("finish", () => {
-      resolve();
-    });
-    stream.on("error", (e) => {
-      reject(e);
-    });
-  });
+  await copyFileStream(path.join(DEFAULTS_ROOT, dfPath), dest);
 }

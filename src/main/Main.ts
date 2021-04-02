@@ -9,6 +9,7 @@ import { initDownloadWrapper } from "./download/DownloadWrapper";
 import { btoa } from "js-base64";
 import { initEncrypt } from "./security/Encrypt";
 import { loadJDT, saveJDT } from "./java/JInfo";
+import { initForgeInstallModule } from "./pff/install/ForgeInstall";
 
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow;
@@ -19,7 +20,7 @@ app.on("ready", async () => {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 450,
-    backgroundColor: "#ffe0f0", // Cute pink~
+    transparent: true,
     webPreferences: {
       preload: path.resolve("Preload.js"),
     },
@@ -29,13 +30,13 @@ app.on("ready", async () => {
   mainWindow.setMenu(null);
   console.log("Loading resources...");
   await mainWindow.loadFile("Renderer.html");
-  mainWindow.on("ready-to-show", () => {
+  mainWindow.once("ready-to-show", async () => {
     console.log("Creating window!");
     mainWindow.show();
+    console.log("Running delayed init tasks...");
+    await runDelayedInitTask();
+    console.log("All caught up! Alicorn is now initialized.");
   });
-  console.log("Running delayed init tasks...");
-  await runDelayedInitTask();
-  console.log("All caught up! Alicorn is now initialized.");
 });
 
 app.on("window-all-closed", async () => {
@@ -62,6 +63,7 @@ async function runDelayedInitTask(): Promise<void> {
   await loadMirror();
   await initConcurrentDownloader();
   initDownloadWrapper();
+  await initForgeInstallModule();
   INITIALIZED_BIT = true;
 }
 

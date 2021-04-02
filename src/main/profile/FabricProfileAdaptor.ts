@@ -18,7 +18,9 @@ export function convertFromFabric(
   return obj;
 }
 
-function makeLibrary(obj: Record<string, unknown>) {
+export function makeLibrary(
+  obj: Record<string, unknown>
+): Record<string, unknown> {
   if (!isNull(obj["url"])) {
     const name = String(obj["name"]) || "";
     return {

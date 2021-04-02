@@ -3,7 +3,7 @@ import {
   DownloadMeta,
   DownloadStatus,
 } from "./AbstractDownloader";
-import { getNumber, isFileExist } from "../config/ConfigSupport";
+import { getNumber } from "../config/ConfigSupport";
 import got from "got";
 import fs from "fs-extra";
 import objectHash from "object-hash";
@@ -11,6 +11,7 @@ import os from "os";
 import path from "path";
 import { Serial } from "./Serial";
 import { validate } from "./Validate";
+import { isFileExist } from "../config/FileUtil";
 
 let TIME_OUT: number;
 let CHUNK_SIZE: number;

@@ -2,9 +2,10 @@ import { DownloadMeta, DownloadStatus } from "./AbstractDownloader";
 import { Concurrent } from "./Concurrent";
 import { Serial } from "./Serial";
 import { applyMirror } from "./Mirror";
-import { getNumber, isFileExist } from "../config/ConfigSupport";
+import { getNumber } from "../config/ConfigSupport";
 import EventEmitter from "events";
 import { validate } from "./Validate";
+import { isFileExist } from "../config/FileUtil";
 
 const PENDING_TASKS: DownloadMeta[] = [];
 const RUNNING_TASKS = new Set<DownloadMeta>();

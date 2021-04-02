@@ -1,6 +1,7 @@
 import path from "path";
 import os from "os";
 import fs from "fs-extra";
+import { isFileExist } from "./FileUtil";
 
 const CONFIG_FILE = path.resolve(
   os.homedir(),
@@ -61,15 +62,6 @@ export async function loadConfig(): Promise<void> {
 export async function saveConfig(): Promise<void> {
   await fs.ensureDir(path.dirname(CONFIG_FILE));
   await fs.writeFile(CONFIG_FILE, JSON.stringify(cachedConfig));
-}
-
-export async function isFileExist(pt: string): Promise<boolean> {
-  try {
-    await fs.access(pt);
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 async function saveDefaultConfig() {

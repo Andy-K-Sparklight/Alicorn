@@ -7,9 +7,9 @@ import { MinecraftContainer } from "../container/MinecraftContainer";
 import path from "path";
 import fs from "fs-extra";
 import { zip } from "compressing";
-import { isFileExist } from "../config/ConfigSupport";
 import { buildMap, parseMap } from "../commons/MapUtil";
 import { getHash, validate } from "../download/Validate";
+import { isFileExist } from "../config/FileUtil";
 
 export const JAR_SUFFIX = ".jar";
 const META_INF = "META-INF";

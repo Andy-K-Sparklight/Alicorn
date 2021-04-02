@@ -2,23 +2,21 @@ import path from "path";
 import { LibraryMeta } from "../profile/Meta";
 import { getNativeArtifact, JAR_SUFFIX } from "../launch/NativesLint";
 
-// TODO more support
-
 export class MinecraftContainer {
-  id: string;
-  rootDir: string;
-  private assetsRoot = this.resolvePath("assets");
-  private nativesBase = this.resolvePath("$natives");
-  private librariesBase = this.resolvePath("libraries");
-  private versionsBase = this.resolvePath("versions");
-  private modsRoot = this.resolvePath("mods");
-  private resourcePacksRoot = this.resolvePath("resourcepacks");
-  private shaderPacksRoot = this.resolvePath("shaderpacks");
-  private logsRoot = this.resolvePath("logs");
-  private crashReportsRoot = this.resolvePath("crash-reports");
-  private savesRoot = this.resolvePath("saves");
-  private log4j2Root = this.resolvePath("log4j2-xml");
-  private tempFileRoot = this.resolvePath("alicorn-temp");
+  id = "";
+  rootDir = "";
+  private readonly assetsRoot;
+  private readonly nativesBase;
+  private readonly librariesBase;
+  private readonly versionsBase;
+  private readonly modsRoot;
+  private readonly resourcePacksRoot;
+  private readonly shaderPacksRoot;
+  private readonly logsRoot;
+  private readonly crashReportsRoot;
+  private readonly savesRoot;
+  private readonly log4j2Root;
+  private readonly tempFileRoot;
 
   getGlobalLog4j2Root(): string {
     return this.log4j2Root;
@@ -116,5 +114,17 @@ export class MinecraftContainer {
   constructor(rootDir: string, id: string) {
     this.id = id;
     this.rootDir = rootDir;
+    this.assetsRoot = this.resolvePath("assets");
+    this.nativesBase = this.resolvePath("$natives");
+    this.librariesBase = this.resolvePath("libraries");
+    this.versionsBase = this.resolvePath("versions");
+    this.modsRoot = this.resolvePath("mods");
+    this.resourcePacksRoot = this.resolvePath("resourcepacks");
+    this.shaderPacksRoot = this.resolvePath("shaderpacks");
+    this.logsRoot = this.resolvePath("logs");
+    this.crashReportsRoot = this.resolvePath("crash-reports");
+    this.savesRoot = this.resolvePath("saves");
+    this.log4j2Root = this.resolvePath("log4j2-xml");
+    this.tempFileRoot = this.resolvePath("alicorn-temp");
   }
 }

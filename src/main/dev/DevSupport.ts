@@ -1,6 +1,6 @@
 import { resolveDataFilePath, saveDefaultData } from "../config/DataSupport";
 import fs from "fs-extra";
-import { isFileExist } from "../config/ConfigSupport";
+import { isFileExist } from "../config/FileUtil";
 
 export const DEV_NAME = "dev.lock.ald";
 let DEV_MODE: boolean | null = null;
