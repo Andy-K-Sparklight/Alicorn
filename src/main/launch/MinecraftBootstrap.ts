@@ -5,7 +5,14 @@ import { Pair } from "../commons/Collections";
 import EventEmitter from "events";
 import { PROCESS_END_GATE, PROCESS_LOG_GATE } from "../commons/Constants";
 
+// UNCHECKED
+
 const POOL = new Map<string, RunningMinecraft>();
+const REV_POOL = new Map<RunningMinecraft, string>();
+
+export function getRunningInstanceCount(): number {
+  return POOL.size;
+}
 
 export class RunningMinecraft {
   readonly args: string[];
@@ -32,6 +39,7 @@ export class RunningMinecraft {
   run(): string {
     this.process = spawn(this.executable, this.args, {
       cwd: this.container.resolvePath("/"),
+      detached: true,
     });
     this.process.on("exit", (code, signal) => {
       this.status = RunningStatus.STOPPING;
@@ -40,6 +48,11 @@ export class RunningMinecraft {
       }
       this.exitCode = String(code);
       this.emitter?.emit(PROCESS_END_GATE, this.exitCode);
+      const id = REV_POOL.get(this);
+      if (id !== undefined) {
+        POOL.delete(id);
+      }
+      REV_POOL.delete(this);
     });
     this.process.stdout?.on("data", (d) => {
       const strD = d.toString();
@@ -53,6 +66,7 @@ export class RunningMinecraft {
     });
     const id = objectHash([this.executable, this.args, this.process]);
     POOL.set(id, this);
+    REV_POOL.set(this, id);
     this.status = RunningStatus.RUNNING;
     return id;
   }

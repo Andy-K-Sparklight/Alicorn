@@ -107,8 +107,8 @@ export class MinecraftContainer {
     return this.nativesBase;
   }
 
-  resolvePath(relativePath: string): string {
-    return path.resolve(path.join(this.rootDir, relativePath));
+  resolvePath(relativePath?: string): string {
+    return path.resolve(path.join(this.rootDir, relativePath || ""));
   }
 
   constructor(rootDir: string, id: string) {
