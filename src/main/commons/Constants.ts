@@ -21,7 +21,9 @@ export const FORGE_MAVEN_ROOT = "https://files.minecraftforge.net/maven";
 export const FORGE_VERSIONS_MANIFEST = `${FORGE_MAVEN_ROOT}/net/minecraftforge/forge/promotions_slim.json`;
 
 export const FABRIC_META_ROOT = "https://meta.fabricmc.net/v2";
+export const CODE_32_SPECIAL = "61096da20861084f1e6a442d939717a8";
 
+// MD5 of the following text (excluding quotes): "The developer of Alicorn Launcher is really a cute filly!"
 enum ReleaseType {
   RELEASE = "release",
   SNAPSHOT = "snapshot",

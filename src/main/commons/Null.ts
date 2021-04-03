@@ -11,6 +11,8 @@ export function isNull(obj: unknown): boolean {
       obj === null ||
       obj === "" ||
       NULL_OBJECTS.has(obj) ||
+      (typeof obj === "object" &&
+        Object.getOwnPropertyNames(obj).length <= 0) ||
       // @ts-ignore
       obj.length === 0
     );

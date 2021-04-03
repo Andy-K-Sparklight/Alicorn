@@ -2,13 +2,11 @@ import { Account } from "./Account";
 import { Trio } from "../commons/Collections";
 import objectHash from "object-hash";
 
-// UNCHECKED
-
 const OFFLINE_PLAYER_PREFIX = "OfflinePlayer:";
 
 export class LocalAccount extends Account {
   constructor(name: string) {
-    super(name, "");
+    super(name);
     this.lastUsedUUID = buildOfflinePlayerUUID(name);
   }
 
@@ -29,28 +27,22 @@ export class LocalAccount extends Account {
     return true;
   }
 
-  async refresh(): Promise<boolean> {
-    await this.flushUsername();
-    await this.flushToken();
-    return true;
-  }
-
   async requireUserOperation(): Promise<boolean> {
-    return true;
-  }
-
-  async flushUsername(): Promise<boolean> {
-    this.lastUsedUsername = this.accountName;
-    return true;
-  }
-
-  async flushUUID(): Promise<boolean> {
-    this.lastUsedUUID = buildOfflinePlayerUUID(this.accountName);
     return true;
   }
 
   getAccountIdentifier(): string {
     return objectHash(this.accountName);
+  }
+
+  serialize(): string {
+    return JSON.stringify({
+      lastUsedUUID: this.lastUsedUUID,
+      lastUsedAccessToken: this.lastUsedAccessToken,
+      accountName: this.accountName,
+      lastUsedUserName: this.lastUsedUsername,
+      avatarURL: this.avatarURL,
+    });
   }
 }
 
@@ -61,3 +53,5 @@ function fakeToken(): string {
 function buildOfflinePlayerUUID(p: string): string {
   return objectHash(OFFLINE_PLAYER_PREFIX + p);
 }
+
+// TODO load account

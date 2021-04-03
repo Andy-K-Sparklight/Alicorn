@@ -1,10 +1,9 @@
 import { Trio } from "../commons/Collections";
 
 export abstract class Account {
-  protected constructor(accountName: string, password: string) {
+  protected constructor(accountName: string) {
     this.lastUsedUsername = "";
     this.accountName = accountName;
-    this.password = password;
     this.lastUsedUUID = "";
     this.lastUsedAccessToken = "";
     this.avatarURL = "";
@@ -14,13 +13,7 @@ export abstract class Account {
 
   abstract isAccessTokenValid(): Promise<boolean>;
 
-  abstract flushUUID(): Promise<boolean>;
-
-  abstract refresh(): Promise<boolean>;
-
   abstract flushToken(): Promise<boolean>;
-
-  abstract flushUsername(): Promise<boolean>;
 
   abstract buildAccessData(): Promise<Trio<string, string, string>>;
 
@@ -29,10 +22,11 @@ export abstract class Account {
 
   abstract getAccountIdentifier(): string;
 
+  abstract serialize(): string;
+
   lastUsedUsername: string;
-  password: string;
   lastUsedUUID: string;
   lastUsedAccessToken: string;
   avatarURL: string;
-  readonly accountName: string;
+  accountName: string;
 }

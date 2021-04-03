@@ -1,10 +1,15 @@
 import CryptoJS from "crypto-js";
 import { getMachineUniqueID } from "./Unique";
+import { CODE_32_SPECIAL } from "../commons/Constants";
 
 let MACHINE_ID_32: string;
 
 export async function initEncrypt(): Promise<void> {
   MACHINE_ID_32 = (await getMachineUniqueID()).slice(0, 32);
+}
+
+export function getUniqueID32(): string {
+  return MACHINE_ID_32 || CODE_32_SPECIAL;
 }
 
 export function encryptByMachine(data: string): string {
