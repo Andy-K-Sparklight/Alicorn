@@ -1,12 +1,13 @@
 /*
-CLAIM ABOUT EXTERNAL RESOURCE LICENSING
+CLAIM FOR EXTERNAL RESOURCE
 
-This modules uses ForgeInstallerWrapper(forge.iw.jar).
-That is my personal project, not for public using.
-Anyway, you may use that to do anything you want.
-It's a free software, though I don't have time to publish its source code.
-The implementation is really easy, just decompile it.
- */
+This modules (ForgeInstall.ts) uses HarmonyForgeInstallerCLI (forge.iw.jar), which is my work.
+HarmonyForgeInstallerCLI is licensed under the GNU GENERAL PUBLIC LICENSE 3.0 (aka. GPL-3.0) and it's a free software (free as in freedom).
+It's license is compatible with ours, since we use GPL-3.0 too.
+For details, please see https://bitbucket.org/RarityEG/harmonyforgeinstallercli/src/main/LICENSE
+
+A copy of forge.iw.jar will be saved to the root dir of alicorn data.
+*/
 import { getActualDataPath, saveDefaultData } from "../../config/DataSupport";
 import { ALICORN_DATA_SUFFIX, FILE_SEPARATOR } from "../../commons/Constants";
 import { copyFileStream, wrappedLoadJSON } from "../../config/FileUtil";
@@ -24,16 +25,13 @@ import { noDuplicateConcat } from "../../profile/InheritedProfileAdaptor";
 import childProcess from "child_process";
 import { ensureLibraries } from "../../launch/Ensurance";
 
-// UNCHECKED
-
 const FORGE_INSTALLER_HEADLESS = "forge.iw.jar";
 const CP_ARG = "-cp";
 const LAUNCHER_PROFILES = "launcher_profiles.json";
 const LP_BACKUP = "lp.backup" + ALICORN_DATA_SUFFIX;
-// Not sure whether this runs well, seems great on 1.13 and above
-// While it cannot product bootable core on 1.12.2-14.23.5.2768, neither can other launchers (after installing)
-// Other launchers told me that this might caused by my jvm version
-// I'll figure that out
+// Figured out! Java problem
+// Okay we shall suggest 8 for 1.12.2 or earlier and 11 for 1.13 or later
+// This runs well!
 const PONY_KING_MAIN_CLASS = "rarityeg.alicorn.ForgeInstallerWrapper";
 const VERSION_PROFILE = "version.json";
 const INSTALL_PROFILE = "install_profile.json";
@@ -43,6 +41,7 @@ export async function initForgeInstallModule(): Promise<void> {
   await saveDefaultData(FORGE_INSTALLER_HEADLESS);
 }
 
+// Run this AFTER downloaded the installer!
 export async function performForgeInstall(
   jExecutable: string,
   forgeJar: string,
