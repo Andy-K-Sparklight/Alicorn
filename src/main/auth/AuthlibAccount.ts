@@ -5,7 +5,9 @@ import { getUniqueID32 } from "../security/Encrypt";
 import { isNull, safeGet } from "../commons/Null";
 import objectHash from "object-hash";
 
+// Account using Authlib Injector
 export class AuthlibAccount extends Account {
+  // Only gather information, this function doesn't do any authentication!
   async buildAccessData(): Promise<Trio<string, string, string>> {
     return new Trio<string, string, string>(
       this.lastUsedUsername,
@@ -14,13 +16,24 @@ export class AuthlibAccount extends Account {
     );
   }
 
+  // Get a new token
   async flushToken(): Promise<boolean> {
-    this.lastUsedAccessToken = await refreshToken(
+    const p = await refreshToken(
       this.lastUsedAccessToken,
       this.authServer,
       this.selectedProfile
     );
-    return true;
+    if (p.success) {
+      this.lastUsedAccessToken = p.accessToken;
+      this.selectedProfile = p.selectedProfile;
+      this.availableProfiles = p.availableProfiles;
+      if (p.selectedProfile) {
+        this.lastUsedUUID = p.selectedProfile?.id;
+        this.lastUsedUsername = p.selectedProfile?.name;
+      }
+    }
+
+    return p.success;
   }
 
   getAccountIdentifier(): string {
@@ -79,7 +92,7 @@ async function refreshToken(
   acToken: string,
   authServer: string,
   selectedProfile?: RemoteUserProfile
-): Promise<string> {
+): Promise<AuthenticateDataCallback> {
   try {
     const rtt = (
       await got.post(trimURL(authServer) + "/authserver/refresh", {
@@ -98,9 +111,25 @@ async function refreshToken(
       })
     ).body;
 
-    return String(safeGet(rtt, ["accessToken"], acToken));
+    const tk = String(safeGet(rtt, ["accessToken"], acToken));
+    const sp = safeGet(rtt, ["selectedProfile"]);
+    const all = safeGet(rtt, ["availableProfiles"]);
+    const ava = [];
+    if (all instanceof Array) {
+      for (const a of all) {
+        if (!isNull(a)) {
+          ava.push(toUserProfile(a));
+        }
+      }
+    }
+    return {
+      success: true,
+      availableProfiles: ava,
+      selectedProfile: isNull(sp) ? selectedProfile : toUserProfile(sp),
+      accessToken: tk,
+    };
   } catch {
-    return acToken;
+    return { success: false, accessToken: "", availableProfiles: [] };
   }
 }
 

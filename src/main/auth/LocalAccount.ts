@@ -40,7 +40,7 @@ export class LocalAccount extends Account {
       lastUsedUUID: this.lastUsedUUID,
       lastUsedAccessToken: this.lastUsedAccessToken,
       accountName: this.accountName,
-      lastUsedUserName: this.lastUsedUsername,
+      lastUsedUsername: this.lastUsedUsername,
       avatarURL: this.avatarURL,
     });
   }
