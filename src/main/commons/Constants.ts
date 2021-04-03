@@ -4,7 +4,6 @@ export const ALICORN_VERSION_TYPE = "Alicorn";
 export const MOJANG_USER_TYPE = "mojang";
 export const LAUNCHER_NAME = "Alicorn";
 export const LAUNCHER_VERSION = "Rainbow";
-export const VERSIONS_ROOT = "versions";
 export const FILE_SEPARATOR = os.platform() === "win32" ? ";" : ":";
 export const SPACE = " ";
 export const ALICORN_SEPARATOR = "\u2764\u2764";
@@ -21,6 +20,8 @@ export const MOJANG_VERSIONS_MANIFEST =
 export const FORGE_MAVEN_ROOT = "https://files.minecraftforge.net/maven";
 export const FORGE_VERSIONS_MANIFEST = `${FORGE_MAVEN_ROOT}/net/minecraftforge/forge/promotions_slim.json`;
 
+export const FABRIC_META_ROOT = "https://meta.fabricmc.net/v2";
+
 enum ReleaseType {
   RELEASE = "release",
   SNAPSHOT = "snapshot",
@@ -31,4 +32,4 @@ enum ReleaseType {
 
 export { ReleaseType };
 
-export const PLACE_HOLDER = "?PLACE-HOLDER>>";
+export const PLACE_HOLDER = "#//!?PH>>";

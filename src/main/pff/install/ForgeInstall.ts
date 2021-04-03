@@ -54,7 +54,7 @@ export async function performForgeInstall(
 
     await ensureLibraries(ret.getFirstValue(), container);
     await bootForgeInstaller(jExecutable, forgeJar, container);
-  } catch (e) {
+  } catch {
     failBit = false;
   } finally {
     await restoreLP(container);
@@ -70,12 +70,16 @@ export async function bootForgeInstaller(
 ): Promise<void> {
   const fihPt = getActualDataPath(FORGE_INSTALLER_HEADLESS);
   const fgPt = container.getTempFileStorePath(forgeJar);
-  const rcp = childProcess.spawn(jExecutable, [
-    CP_ARG,
-    fihPt + FILE_SEPARATOR + fgPt,
-    PONY_KING_MAIN_CLASS,
-    container.resolvePath(""),
-  ]);
+  const rcp = childProcess.spawn(
+    jExecutable,
+    [
+      CP_ARG,
+      fihPt + FILE_SEPARATOR + fgPt,
+      PONY_KING_MAIN_CLASS,
+      container.resolvePath(""),
+    ],
+    { cwd: container.resolvePath() }
+  );
   return new Promise<void>((resolve, reject) => {
     rcp.on("close", (code) => {
       if (code === 0) {
@@ -134,7 +138,7 @@ async function rmTempForgeFiles(
 }
 
 // Create a empty 'launcher_profile.json' for the silly installer
-async function makeTempLP(container: MinecraftContainer): Promise<void> {
+export async function makeTempLP(container: MinecraftContainer): Promise<void> {
   try {
     await copyFileStream(
       container.resolvePath(LAUNCHER_PROFILES),
@@ -146,7 +150,7 @@ async function makeTempLP(container: MinecraftContainer): Promise<void> {
 }
 
 // Restore the earlier 'launcher_profiles.json', though Alicorn don't need it
-async function restoreLP(container: MinecraftContainer): Promise<void> {
+export async function restoreLP(container: MinecraftContainer): Promise<void> {
   try {
     await copyFileStream(
       container.resolvePath(LP_BACKUP),

@@ -1,4 +1,3 @@
-import got from "got";
 import { applyMirror } from "../../download/Mirror";
 import {
   FORGE_MAVEN_ROOT,
@@ -11,23 +10,22 @@ import {
   DownloadStatus,
 } from "../../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../../download/DownloadWrapper";
+import fs from "fs-extra";
+import { JAR_SUFFIX } from "../../launch/NativesLint";
+import { xgot } from "../../download/GotWrapper";
 
 // Forge Getter
 
 const FORGE_WEB_ROOT = "/net/minecraftforge/forge";
 
-const SUFFIX = "installer.jar";
+const SUFFIX = "installer" + JAR_SUFFIX;
 
 export async function getForgeVersionByMojang(
   id: string,
   filter = ForgeFilter.RECOMMENDED
 ): Promise<string> {
   try {
-    const tBody = (
-      await got.get(applyMirror(FORGE_VERSIONS_MANIFEST), {
-        responseType: "json",
-      })
-    ).body;
+    const tBody = await xgot(FORGE_VERSIONS_MANIFEST);
     const d = safeGet(tBody, ["promos", `${id}-${filter}`], "");
     if (isNull(d)) {
       if (filter === ForgeFilter.LATEST) {
@@ -78,5 +76,19 @@ export async function getForgeInstaller(
     return (await wrappedDownloadFile(meta)) !== DownloadStatus.FAILED;
   } catch {
     return false;
+  }
+}
+
+export async function removeForgeInstaller(
+  container: MinecraftContainer,
+  mcv: string,
+  fgv: string
+): Promise<void> {
+  try {
+    await fs.remove(
+      container.getTempFileStorePath(generateForgeInstallerName(mcv, fgv))
+    );
+  } catch {
+    return;
   }
 }

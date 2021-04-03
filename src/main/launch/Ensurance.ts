@@ -1,12 +1,17 @@
 import { GameProfile } from "../profile/GameProfile";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { ArtifactMeta, AssetIndexFileMeta, AssetMeta } from "../profile/Meta";
-import { checkExtractTrimNativeLocal, getNativeArtifact } from "./NativesLint";
+import {
+  checkExtractTrimNativeLocal,
+  getNativeArtifact,
+  JAR_SUFFIX,
+} from "./NativesLint";
 import { DownloadMeta, DownloadStatus } from "../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../download/DownloadWrapper";
 import fs from "fs-extra";
 import { Progresser } from "../commons/Progresser";
 import { isNull } from "../commons/Null";
+import path from "path";
 // UNCHECKED
 // This file can not only check resources, but also download packages when installing!
 
@@ -71,7 +76,15 @@ export async function ensureLibraries(
   }
   // Special support
   if (!isNull(profile.clientArtifact)) {
-    allLibrariesToCheck.push(profile.clientArtifact);
+    allLibrariesToCheck.push(
+      Object.assign(profile.clientArtifact, {
+        // Reassign path
+        path: path.join(
+          container.getVersionRoot(profile.id),
+          profile.id + JAR_SUFFIX
+        ),
+      })
+    );
   }
   const values = await Promise.all(
     (() => {

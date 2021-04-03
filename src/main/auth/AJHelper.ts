@@ -1,11 +1,10 @@
-import got from "got";
-import { applyMirror } from "../download/Mirror";
 import { resolveDataFilePath } from "../config/DataSupport";
 import { DownloadMeta, DownloadStatus } from "../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../download/DownloadWrapper";
 import fs from "fs-extra";
 import objectHash from "object-hash";
 import { safeGet } from "../commons/Null";
+import { xgot } from "../download/GotWrapper";
 
 const AJ_MANIFEST = "https://authlib-injector.yushi.moe/artifacts.json";
 const AJ_ARTIFACT_ROOT =
@@ -15,23 +14,11 @@ export const AJ_FILE_BASE = "authlib-injector.alicorn.jar";
 // Download the latest Authlib Injector
 export async function getLatestAJ(): Promise<boolean> {
   try {
-    const manifest = (
-      await got.get(applyMirror(AJ_MANIFEST), {
-        cache: false,
-        responseType: "json",
-      })
-    ).body;
+    const manifest = await xgot(AJ_MANIFEST);
     // @ts-ignore
     const latestBuild = String(manifest["latest_build_number"]);
-    const index = (
-      await got.get(
-        applyMirror(AJ_ARTIFACT_ROOT.replace("${build}", latestBuild)),
-        {
-          cache: false,
-          responseType: "json",
-        }
-      )
-    ).body;
+    const index = await xgot(AJ_ARTIFACT_ROOT.replace("${build}", latestBuild));
+
     // @ts-ignore
     const url = String(index["download_url"]);
     const checkSum = String(safeGet(index, ["checksums", "sha256"]));

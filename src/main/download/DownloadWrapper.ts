@@ -37,7 +37,7 @@ export function initDownloadWrapper(): void {
 // There are no options for user to choose downloader
 // Concurrent will always be used first
 // If file already exists, downloader will resolve if hash matches
-export function wrappedDownloadFile(
+export async function wrappedDownloadFile(
   meta: DownloadMeta
 ): Promise<DownloadStatus> {
   const mirroredMeta = new DownloadMeta(
@@ -45,13 +45,20 @@ export function wrappedDownloadFile(
     meta.savePath,
     meta.sha1
   );
+  if ((await _wrappedDownloadFile(mirroredMeta)) === DownloadStatus.RESOLVED) {
+    return DownloadStatus.RESOLVED;
+  }
+  return await _wrappedDownloadFile(meta);
+}
+
+function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
   return new Promise<DownloadStatus>((resolve) => {
-    existsAndValidate(mirroredMeta).then((b) => {
+    existsAndValidate(meta).then((b) => {
       if (b) {
         resolve(DownloadStatus.RESOLVED);
       } else {
-        WAITING_RESOLVES_MAP.set(mirroredMeta, resolve);
-        PENDING_TASKS.push(mirroredMeta);
+        WAITING_RESOLVES_MAP.set(meta, resolve);
+        PENDING_TASKS.push(meta);
         scheduleNextTask();
       }
     });

@@ -4,7 +4,6 @@ import {
   LibraryMeta,
   OptionalArgument,
 } from "./Meta";
-import path from "path";
 import { isNull, safeGet } from "../commons/Null";
 import { ReleaseType } from "../commons/Constants";
 
@@ -16,6 +15,7 @@ export class GameProfile {
   // The 'path' property in 'client' and 'server' will be reassigned before downloading
   id = "";
   libraries: LibraryMeta[] = [];
+  clientMappings: ArtifactMeta = ArtifactMeta.emptyArtifactMeta();
   logArg = "";
   logFile = ArtifactMeta.emptyArtifactMeta();
   mainClass = "";
@@ -54,13 +54,10 @@ export class GameProfile {
       if (!isNull(tLogArg)) {
         this.logArg = String(tLogArg);
       }
-      const tLogObj = safeGet(obj, ["logging", "client", "file"]) as Record<
-        string,
-        unknown
-      >;
 
+      const tLogObj = safeGet(obj, ["logging", "client", "file"]);
       if (!isNull(tLogObj)) {
-        this.logFile = ArtifactMeta.fromObject(tLogObj);
+        this.logFile = ArtifactMeta.fromObject(Object.assign({}, tLogObj));
       }
       const rawArgsGame = safeGet(obj, ["arguments", "game"]);
       if (rawArgsGame instanceof Array) {
@@ -96,10 +93,7 @@ export class GameProfile {
       const tClientObj = safeGet(obj, ["downloads", "client"]);
       if (!isNull(tClientObj)) {
         this.clientArtifact = ArtifactMeta.fromObject(
-          Object.assign(tClientObj, {
-            path: path.join(this.id, this.id + ".jar"),
-            // Relative to %ROOT%/versions/
-          })
+          Object.assign({}, tClientObj)
         );
       }
 
