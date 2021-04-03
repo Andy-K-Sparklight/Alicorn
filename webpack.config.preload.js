@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
-
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 // noinspection JSValidateTypes
 module.exports = {
   entry: "./src/preload/Preload.js",
@@ -28,4 +29,14 @@ module.exports = {
   devtool: "source-map",
   mode: "development",
   target: "electron-preload",
+  plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "resources"),
+          to: path.resolve(__dirname, "dist"),
+        },
+      ],
+    }),
+  ],
 };
