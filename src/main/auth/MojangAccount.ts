@@ -8,9 +8,15 @@ import {
 import { Trio } from "../commons/Collections";
 import objectHash from "object-hash";
 
-// Account using Authlib Injector
-export class AuthlibAccount extends Account {
-  // Only gather information, this function doesn't do any authentication!
+const MJ_AUTH_SERVER_ROOT = "https://authserver.mojang.com";
+
+// UNCHECKED
+// Because I don't have a Mojang Account!
+// I only have a Microsoft Account :(
+
+// Mojang Account
+// Simply forked from AuthlibAccount
+export class MojangAccount extends Account {
   async buildAccessData(): Promise<Trio<string, string, string>> {
     return new Trio<string, string, string>(
       this.lastUsedUsername,
@@ -19,11 +25,10 @@ export class AuthlibAccount extends Account {
     );
   }
 
-  // Get a new token
   async flushToken(): Promise<boolean> {
     const p = await refreshToken(
       this.lastUsedAccessToken,
-      this.authServer + "/authserver",
+      MJ_AUTH_SERVER_ROOT,
       this.selectedProfile
     );
     if (p.success) {
@@ -44,17 +49,14 @@ export class AuthlibAccount extends Account {
   }
 
   async isAccessTokenValid(): Promise<boolean> {
-    return await validateToken(
-      this.lastUsedAccessToken,
-      this.authServer + "/authserver"
-    );
+    return await validateToken(this.lastUsedAccessToken, MJ_AUTH_SERVER_ROOT);
   }
 
   async performAuth(password: string): Promise<boolean> {
     const st = await authenticate(
       this.accountName,
       password,
-      this.authServer + "/authserver"
+      MJ_AUTH_SERVER_ROOT
     );
     if (!st.success) {
       return false;
@@ -84,16 +86,13 @@ export class AuthlibAccount extends Account {
       accountName: this.accountName,
       lastUsedUserName: this.lastUsedUsername,
       avatarURL: this.avatarURL,
-      authServer: this.authServer,
     });
   }
 
-  authServer: string;
   availableProfiles: RemoteUserProfile[] = [];
   selectedProfile: RemoteUserProfile | undefined;
 
-  constructor(accountName: string, authServer: string) {
+  constructor(accountName: string) {
     super(accountName);
-    this.authServer = authServer;
   }
 }
