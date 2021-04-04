@@ -6,7 +6,6 @@ import {
   validateToken,
 } from "./Account";
 import { Trio } from "../commons/Collections";
-import objectHash from "object-hash";
 
 const MJ_AUTH_SERVER_ROOT = "https://authserver.mojang.com";
 
@@ -42,10 +41,6 @@ export class MojangAccount extends Account {
     }
 
     return p.success;
-  }
-
-  getAccountIdentifier(): string {
-    return objectHash(this.accountName);
   }
 
   async isAccessTokenValid(): Promise<boolean> {

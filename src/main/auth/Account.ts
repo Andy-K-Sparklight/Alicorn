@@ -2,6 +2,7 @@ import { Trio } from "../commons/Collections";
 import got from "got";
 import { isNull, safeGet } from "../commons/Null";
 import { getUniqueID32 } from "../security/Encrypt";
+import objectHash from "object-hash";
 
 export abstract class Account {
   protected constructor(accountName: string) {
@@ -12,7 +13,7 @@ export abstract class Account {
     this.avatarURL = "";
   }
 
-  abstract requireUserOperation(): Promise<boolean>;
+  abstract performAuth(password: string): Promise<boolean>;
 
   abstract isAccessTokenValid(): Promise<boolean>;
 
@@ -23,7 +24,9 @@ export abstract class Account {
   // AccessData(or AuthData) is a Trio
   // Username, AccessToken, UUID
 
-  abstract getAccountIdentifier(): string;
+  getAccountIdentifier(): string {
+    return objectHash(this.accountName);
+  }
 
   abstract serialize(): string;
 

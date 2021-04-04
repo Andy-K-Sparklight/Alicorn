@@ -7,6 +7,7 @@ import { getActualDataPath, loadData, saveData } from "../config/DataSupport";
 import path from "path";
 import { decryptByMachine, encryptByMachine } from "../security/Encrypt";
 import fs from "fs-extra";
+import { MojangAccount } from "./MojangAccount";
 
 // Account Prefix
 // $AL! Alicorn Local Account
@@ -53,6 +54,8 @@ export async function loadAccount(fName: string): Promise<Account> {
     switch (p.getFirstValue()) {
       case AccountType.AUTHLIB_INJECTOR:
         return loadAJAccount(p.getSecondValue());
+      case AccountType.MOJANG:
+        return loadMJAccount(p.getSecondValue());
       // TODO other types
       case AccountType.ALICORN:
       default:
@@ -84,10 +87,22 @@ function loadAJAccount(obj: Record<string, unknown>): AuthlibAccount {
   return la;
 }
 
+function loadMJAccount(obj: Record<string, unknown>): MojangAccount {
+  const la = new MojangAccount(String(obj["accountName"] || ""));
+  la.lastUsedUsername = String(obj["lastUsedUsername"] || "");
+  la.lastUsedAccessToken = String(obj["lastUsedAccessToken"] || "");
+  la.lastUsedUUID = String(obj["lastUsedUUID"] || "");
+  la.avatarURL = String(obj["avatarURL"] || "");
+  return la;
+}
+
 function decideWhichAccountByCls(a: Account): AccountType {
   // TODO not finished
   if (a instanceof AuthlibAccount) {
     return AccountType.AUTHLIB_INJECTOR;
+  }
+  if (a instanceof MojangAccount) {
+    return AccountType.MOJANG;
   }
   return AccountType.ALICORN;
 }

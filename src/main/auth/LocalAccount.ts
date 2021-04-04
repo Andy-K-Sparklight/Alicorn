@@ -27,12 +27,8 @@ export class LocalAccount extends Account {
     return true;
   }
 
-  async requireUserOperation(): Promise<boolean> {
+  async performAuth(password: string): Promise<boolean> {
     return true;
-  }
-
-  getAccountIdentifier(): string {
-    return objectHash(this.accountName);
   }
 
   serialize(): string {
