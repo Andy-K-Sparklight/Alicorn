@@ -51,7 +51,6 @@ export async function loadAccount(fName: string): Promise<Account> {
   try {
     const s = await loadData(path.join(ACCOUNT_ROOT, fName));
     const deS = decryptByMachine(s);
-    console.log(deS);
     const p = decideWhichAccountByHead(deS);
     switch (p.getFirstValue()) {
       case AccountType.AUTHLIB_INJECTOR:

@@ -104,7 +104,7 @@ async function checkLockFile(dir: string): Promise<boolean> {
           if (!b) {
             resolve(false);
           }
-          validate(cPath, s).then((b2) => {
+          validate(cPath, String(s)).then((b2) => {
             resolve(b2);
           });
         });

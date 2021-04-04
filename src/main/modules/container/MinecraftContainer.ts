@@ -22,6 +22,10 @@ export class MinecraftContainer {
     return this.log4j2Root;
   }
 
+  getVersionBase(): string {
+    return path.resolve(this.versionsBase);
+  }
+
   getTempFileStorePath(relativePath: string): string {
     return path.resolve(path.join(this.tempFileRoot, relativePath));
   }

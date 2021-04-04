@@ -1,15 +1,15 @@
 import { app, BrowserWindow } from "electron";
-import { loadConfig, saveConfig } from "./config/ConfigSupport";
-import { initConcurrentDownloader } from "./download/Concurrent";
+import { loadConfig, saveConfig } from "./modules/config/ConfigSupport";
+import { initConcurrentDownloader } from "./modules/download/Concurrent";
 import os from "os";
 import path from "path";
-import { loadGDT, saveGDT } from "./container/ContainerUtil";
-import { loadMirror, saveMirror } from "./download/Mirror";
-import { initDownloadWrapper } from "./download/DownloadWrapper";
+import { loadGDT, saveGDT } from "./modules/container/ContainerUtil";
+import { loadMirror, saveMirror } from "./modules/download/Mirror";
+import { initDownloadWrapper } from "./modules/download/DownloadWrapper";
 import { btoa } from "js-base64";
-import { initEncrypt } from "./security/Encrypt";
-import { loadJDT, saveJDT } from "./java/JInfo";
-import { initForgeInstallModule } from "./pff/install/ForgeInstall";
+import { initEncrypt } from "./modules/security/Encrypt";
+import { loadJDT, saveJDT } from "./modules/java/JInfo";
+import { initForgeInstallModule } from "./modules/pff/install/ForgeInstall";
 
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow;
@@ -23,6 +23,8 @@ app.on("ready", async () => {
     transparent: true,
     webPreferences: {
       preload: path.resolve("Preload.js"),
+      nodeIntegration: true,
+      contextIsolation: false,
     },
     frame: false,
     show: false,
