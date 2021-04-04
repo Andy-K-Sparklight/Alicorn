@@ -8,6 +8,7 @@ import path from "path";
 import { decryptByMachine, encryptByMachine } from "../security/Encrypt";
 import fs from "fs-extra";
 import { MojangAccount } from "./MojangAccount";
+import { MicrosoftAccount } from "./MicrosoftAccount";
 
 // Account Prefix
 // $AL! Alicorn Local Account
@@ -50,13 +51,15 @@ export async function loadAccount(fName: string): Promise<Account> {
   try {
     const s = await loadData(path.join(ACCOUNT_ROOT, fName));
     const deS = decryptByMachine(s);
+    console.log(deS);
     const p = decideWhichAccountByHead(deS);
     switch (p.getFirstValue()) {
       case AccountType.AUTHLIB_INJECTOR:
         return loadAJAccount(p.getSecondValue());
       case AccountType.MOJANG:
         return loadMJAccount(p.getSecondValue());
-      // TODO other types
+      case AccountType.MICROSOFT:
+        return loadMSAccount(p.getSecondValue());
       case AccountType.ALICORN:
       default:
         return loadLocalAccount(p.getSecondValue());
@@ -71,7 +74,6 @@ function loadLocalAccount(obj: Record<string, unknown>): LocalAccount {
   la.lastUsedUsername = String(obj["lastUsedUsername"] || "");
   la.lastUsedAccessToken = String(obj["lastUsedAccessToken"] || "");
   la.lastUsedUUID = String(obj["lastUsedUUID"] || "");
-  la.avatarURL = String(obj["avatarURL"] || "");
   return la;
 }
 
@@ -83,7 +85,6 @@ function loadAJAccount(obj: Record<string, unknown>): AuthlibAccount {
   la.lastUsedUsername = String(obj["lastUsedUsername"] || "");
   la.lastUsedAccessToken = String(obj["lastUsedAccessToken"] || "");
   la.lastUsedUUID = String(obj["lastUsedUUID"] || "");
-  la.avatarURL = String(obj["avatarURL"] || "");
   return la;
 }
 
@@ -92,17 +93,27 @@ function loadMJAccount(obj: Record<string, unknown>): MojangAccount {
   la.lastUsedUsername = String(obj["lastUsedUsername"] || "");
   la.lastUsedAccessToken = String(obj["lastUsedAccessToken"] || "");
   la.lastUsedUUID = String(obj["lastUsedUUID"] || "");
-  la.avatarURL = String(obj["avatarURL"] || "");
+  return la;
+}
+
+function loadMSAccount(obj: Record<string, unknown>): MicrosoftAccount {
+  const la = new MicrosoftAccount(String(obj["accountName"] || ""));
+  la.lastUsedUsername = String(obj["lastUsedUsername"] || "");
+  la.lastUsedAccessToken = String(obj["lastUsedAccessToken"] || "");
+  la.lastUsedUUID = String(obj["lastUsedUUID"] || "");
+  la.refreshToken = String(obj["refreshToken"] || "");
   return la;
 }
 
 function decideWhichAccountByCls(a: Account): AccountType {
-  // TODO not finished
   if (a instanceof AuthlibAccount) {
     return AccountType.AUTHLIB_INJECTOR;
   }
   if (a instanceof MojangAccount) {
     return AccountType.MOJANG;
+  }
+  if (a instanceof MicrosoftAccount) {
+    return AccountType.MICROSOFT;
   }
   return AccountType.ALICORN;
 }
@@ -113,7 +124,7 @@ function decideWhichAccountByHead(
   try {
     let p1;
     const p2 = JSON.parse(str.slice(4));
-    switch (str.slice(4)) {
+    switch (str.slice(0, 4)) {
       case AccountType.MICROSOFT:
         p1 = AccountType.MICROSOFT;
         break;

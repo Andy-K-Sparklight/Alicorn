@@ -10,7 +10,6 @@ export abstract class Account {
     this.accountName = accountName;
     this.lastUsedUUID = "";
     this.lastUsedAccessToken = "";
-    this.avatarURL = "";
   }
 
   abstract performAuth(password: string): Promise<boolean>;
@@ -33,7 +32,6 @@ export abstract class Account {
   lastUsedUsername: string;
   lastUsedUUID: string;
   lastUsedAccessToken: string;
-  avatarURL: string;
   accountName: string;
 }
 

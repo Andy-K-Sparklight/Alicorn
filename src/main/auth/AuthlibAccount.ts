@@ -83,7 +83,6 @@ export class AuthlibAccount extends Account {
       lastUsedAccessToken: this.lastUsedAccessToken,
       accountName: this.accountName,
       lastUsedUserName: this.lastUsedUsername,
-      avatarURL: this.avatarURL,
       authServer: this.authServer,
     });
   }

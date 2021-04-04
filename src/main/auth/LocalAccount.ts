@@ -37,7 +37,6 @@ export class LocalAccount extends Account {
       lastUsedAccessToken: this.lastUsedAccessToken,
       accountName: this.accountName,
       lastUsedUsername: this.lastUsedUsername,
-      avatarURL: this.avatarURL,
     });
   }
 }

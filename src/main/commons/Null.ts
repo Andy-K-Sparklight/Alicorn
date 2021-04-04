@@ -10,6 +10,8 @@ export function isNull(obj: unknown): boolean {
       obj === undefined ||
       obj === null ||
       obj === "" ||
+      obj === "null" ||
+      obj === "undefined" ||
       NULL_OBJECTS.has(obj) ||
       (typeof obj === "object" &&
         Object.getOwnPropertyNames(obj).length <= 0) ||
@@ -23,7 +25,7 @@ export function isNull(obj: unknown): boolean {
 
 export function safeGet(
   obj: unknown,
-  properties: string[],
+  properties: (string | number)[],
   def: unknown = null
 ): unknown {
   try {

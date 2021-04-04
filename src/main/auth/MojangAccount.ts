@@ -70,17 +70,12 @@ export class MojangAccount extends Account {
     return !!this.selectedProfile;
   }
 
-  async requireUserOperation(): Promise<boolean> {
-    return true;
-  }
-
   serialize(): string {
     return JSON.stringify({
       lastUsedUUID: this.lastUsedUUID,
       lastUsedAccessToken: this.lastUsedAccessToken,
       accountName: this.accountName,
       lastUsedUserName: this.lastUsedUsername,
-      avatarURL: this.avatarURL,
     });
   }
 
