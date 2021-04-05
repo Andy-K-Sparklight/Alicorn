@@ -1,8 +1,2 @@
-import { contextBridge, ipcRenderer } from "electron";
-
-// NATIVE
-
-// This is UNSAFE!!!
-// We should always check those arguments.
-// We'll deal with that after dealing with the game profiles.
-contextBridge.exposeInMainWorld("_alicorn_internal_ipc_renderer", ipcRenderer);
+// Since we've disabled context isolation and enabled node integration
+// This file is only considered as a placeholder.

@@ -32,7 +32,6 @@ app.on("ready", async () => {
   });
   mainWindow.setMenu(null);
   console.log("Loading resources...");
-  await mainWindow.loadFile("Renderer.html");
   mainWindow.once("ready-to-show", async () => {
     console.log("Creating window!");
     mainWindow.show();
@@ -40,6 +39,7 @@ app.on("ready", async () => {
     await runDelayedInitTask();
     console.log("All caught up! Alicorn is now initialized.");
   });
+  await mainWindow.loadFile("Renderer.html");
 });
 
 app.on("window-all-closed", () => {
