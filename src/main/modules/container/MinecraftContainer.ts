@@ -22,6 +22,10 @@ export class MinecraftContainer {
     return this.log4j2Root;
   }
 
+  getModJar(modJar: string): string {
+    return path.resolve(path.join(this.getModsRoot(), modJar));
+  }
+
   getVersionBase(): string {
     return path.resolve(this.versionsBase);
   }

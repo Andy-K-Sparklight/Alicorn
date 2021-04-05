@@ -2,5 +2,6 @@
   "download.concurrent.chunk-size": 1024,
   "download.concurrent.timeout": 5000,
   "download.concurrent.tries-per-chunk": 3,
-  "download.concurrent.max-tasks": 20
+  "download.concurrent.max-tasks": 20,
+  "modx.default-save-path": "${DEFAULT}"
 }

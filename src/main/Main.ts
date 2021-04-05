@@ -10,6 +10,7 @@ import { btoa } from "js-base64";
 import { initEncrypt } from "./modules/security/Encrypt";
 import { loadJDT, saveJDTSync } from "./modules/java/JInfo";
 import { initForgeInstallModule } from "./modules/pff/install/ForgeInstall";
+import { initModInfo } from "./modules/modx/ModInfo";
 
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow;
@@ -67,6 +68,7 @@ async function runDelayedInitTask(): Promise<void> {
   await loadMirror();
   await initConcurrentDownloader();
   initDownloadWrapper();
+  initModInfo();
   await initForgeInstallModule();
   INITIALIZED_BIT = true;
 }
