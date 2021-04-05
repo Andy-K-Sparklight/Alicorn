@@ -156,6 +156,7 @@ export async function restoreLP(container: MinecraftContainer): Promise<void> {
       container.resolvePath(LP_BACKUP),
       container.resolvePath(LAUNCHER_PROFILES)
     );
+    await fs.remove(LP_BACKUP);
   } catch {
     return;
   }
