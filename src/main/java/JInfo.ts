@@ -19,7 +19,14 @@ const JAVAW = (() => {
 })();
 const CACHE_MAP = new Map<string, Map<string, string>>();
 
-export async function getJavaInfo(
+export async function getJavaInfoSummary(
+  jHome: string,
+  reload = false
+): Promise<JRESummary> {
+  return generateSummaryInfo(await getJavaInfoRaw(jHome, reload));
+}
+
+export async function getJavaInfoRaw(
   jHome: string,
   reload = false
 ): Promise<Map<string, string>> {
@@ -69,4 +76,22 @@ export function setLastUsedJavaHome(jHome: string): void {
 
 export function saveJDTSync(): void {
   saveDataSync(JAVA_RECORD_BASE, buildMap(JDT));
+}
+
+export interface JRESummary {
+  semanticVersion: string;
+  javaVersion: string;
+  jvmType: string;
+  jvmVersion: string;
+  implementor: string;
+}
+
+function generateSummaryInfo(ji: Map<string, string>): JRESummary {
+  return {
+    semanticVersion: String(ji.get("SEMANTIC_VERSION") || ""),
+    javaVersion: String(ji.get("JAVA_VERSION") || ""),
+    jvmType: String(ji.get("JVM_VARIANT") || ""),
+    jvmVersion: String(ji.get("JVM_VERSION") || ""),
+    implementor: String(ji.get("IMPLEMENTOR") || ""),
+  };
 }
