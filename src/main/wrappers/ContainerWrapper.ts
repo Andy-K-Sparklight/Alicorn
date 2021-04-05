@@ -10,7 +10,7 @@ import {
 // UNCHECKED
 
 // Create a container at specified dir
-export async function createMinecraftContainer(
+export async function createNewContainer(
   rootDir: string,
   name: string
 ): Promise<void> {
@@ -25,6 +25,7 @@ export async function createMinecraftContainer(
     } catch {
       await fs.ensureDir(d);
       registerContainer(new MinecraftContainer(d, name));
+      return;
     }
   } catch (e) {
     throw new Error("Cannot create container. Caused by: " + e);
