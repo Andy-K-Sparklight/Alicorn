@@ -4,6 +4,7 @@ import objectHash from "object-hash";
 import { Pair } from "../commons/Collections";
 import EventEmitter from "events";
 import { PROCESS_END_GATE, PROCESS_LOG_GATE } from "../commons/Constants";
+import { mount, unmount } from "../container/ContainerUtil";
 
 // UNCHECKED
 
@@ -37,11 +38,13 @@ export class RunningMinecraft {
   }
 
   run(): string {
+    unmount(this.container.id); // Unmount so that user won't operate it
     this.process = spawn(this.executable, this.args, {
       cwd: this.container.resolvePath("/"),
       detached: true,
     });
     this.process.on("exit", (code, signal) => {
+      mount(this.container.id); // Remount after exit
       this.status = RunningStatus.STOPPING;
       if (code === undefined || code === null) {
         this.exitCode = String(signal);

@@ -19,7 +19,11 @@ export function get(key: string, def: unknown): unknown {
   return cachedConfig[key] || def;
 }
 
-export function getString(key: string, def: string): string {
+export function getBoolean(key: string, def = false): boolean {
+  return !!get(key, def);
+}
+
+export function getString(key: string, def = ""): string {
   const val = get(key, def);
   if (typeof val === "string") {
     return val;

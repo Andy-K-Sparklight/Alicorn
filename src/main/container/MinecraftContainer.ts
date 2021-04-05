@@ -17,6 +17,7 @@ export class MinecraftContainer {
   private readonly savesRoot;
   private readonly log4j2Root;
   private readonly tempFileRoot;
+  private readonly dynamicModsRoot;
 
   getGlobalLog4j2Root(): string {
     return this.log4j2Root;
@@ -119,6 +120,14 @@ export class MinecraftContainer {
     return path.resolve(path.join(this.rootDir, relativePath || ""));
   }
 
+  getDynamicModsRoot(): string {
+    return this.dynamicModsRoot;
+  }
+
+  getDynamicModJar(modJar: string): string {
+    return path.resolve(path.join(this.getDynamicModsRoot(), modJar));
+  }
+
   constructor(rootDir: string, id: string) {
     this.id = id;
     this.rootDir = rootDir;
@@ -134,5 +143,6 @@ export class MinecraftContainer {
     this.savesRoot = this.resolvePath("saves");
     this.log4j2Root = this.resolvePath("log4j2-xml");
     this.tempFileRoot = this.resolvePath("alicorn-temp");
+    this.dynamicModsRoot = this.resolvePath("alicorn-mods-dyn");
   }
 }

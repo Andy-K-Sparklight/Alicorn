@@ -1,4 +1,6 @@
 import semver from "semver";
+import { GameProfile } from "../profile/GameProfile";
+import { ProfileType, whatProfile } from "../profile/WhatProfile";
 
 interface TrimmedVersion {
   min?: string;
@@ -18,8 +20,9 @@ function trimVersionRange(vstr: string): TrimmedVersion {
   l = l.map((v) => {
     return v.trim();
   });
-  tv.min = l[0].slice(1);
-  tv.max = l[1].slice(0, -1);
+  tv.min = semver.valid(semver.coerce(l[0].slice(1))) || "1.0.0";
+  tv.max = semver.valid(semver.coerce(l[1].slice(0, -1))) || "1.0.0";
+
   tv.includeMin = !l[0].startsWith("(");
   tv.includeMax = !l[1].endsWith(")");
   return tv;
@@ -27,11 +30,11 @@ function trimVersionRange(vstr: string): TrimmedVersion {
 
 function cmpVersion(modVersion: TrimmedVersion, mcVersion: string): boolean {
   let pMax = "";
-  if (modVersion.max !== "") {
+  if (modVersion.max !== "" && modVersion.max !== "*") {
     pMax = `<${modVersion.includeMax ? "=" : ""} ${modVersion.max}`;
   }
   let pMin = "";
-  if (modVersion.min !== "") {
+  if (modVersion.min !== "" && modVersion.min !== "*") {
     pMin = `>${modVersion.includeMin ? "=" : ""} ${modVersion.min}`;
   }
   let final = "*";
@@ -46,9 +49,18 @@ function cmpVersion(modVersion: TrimmedVersion, mcVersion: string): boolean {
       final = `${pMin} && ${pMax}`;
     }
   }
-  return semver.satisfies(mcVersion, final);
+  return semver.satisfies(
+    semver.valid(semver.coerce(mcVersion)) || "1.0.0",
+    final
+  );
 }
 
-export function canModApply(mod: string, mc: string): boolean {
+export function canModVersionApply(mod: string, mc: string): boolean {
   return cmpVersion(trimVersionRange(mod), mc);
+}
+
+export function gatherVersionInfo(
+  profile: GameProfile
+): { type: ProfileType; version: string } {
+  return { type: whatProfile(profile.id), version: profile.baseVersion };
 }

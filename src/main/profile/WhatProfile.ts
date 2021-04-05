@@ -4,11 +4,19 @@ const FABRIC_NAME = /fabric/i;
 const FORGE_NAME = /forge/i;
 const MOJANG_NAME_RELEASE = /^[0-9]+?\.[0-9]+?(\.)?[0-9]*$/i;
 const MOJANG_NAME_SNAPSHOT = /^[0-9]+?w[0-9]+?[a-z]$/i;
-const LEGACY_VERSIONS = /1\.([0-9]|1[0-2])\.[0-9]+?/i;
+const LEGACY_VERSIONS = /^1\.([0-9]|1[0-2])\.[0-9]+?/i;
+const MOJANG_OLD_AB = /^[ab][0-9]+?\.[0-9]+?.*$/i;
+const MOJANG_OLD_CX = /^c[0-9_.]+?[a-z]*?$/i;
+const MOJANG_OLD_RD = /^rd-[0-9]+?$/i;
 
-export function whatProfile(obj: Record<string, unknown>): ProfileType {
-  const id = String(obj["id"]);
-  if (MOJANG_NAME_RELEASE.test(id) || MOJANG_NAME_SNAPSHOT.test(id)) {
+export function whatProfile(id: string): ProfileType {
+  if (
+    MOJANG_NAME_RELEASE.test(id) ||
+    MOJANG_NAME_SNAPSHOT.test(id) ||
+    MOJANG_OLD_AB.test(id) ||
+    MOJANG_OLD_CX.test(id) ||
+    MOJANG_OLD_RD.test(id)
+  ) {
     return ProfileType.MOJANG;
   }
   if (FABRIC_NAME.test(id)) {
@@ -21,10 +29,10 @@ export function whatProfile(obj: Record<string, unknown>): ProfileType {
 }
 
 enum ProfileType {
-  MOJANG,
-  FORGE,
-  FABRIC,
-  UNIVERSAL,
+  MOJANG = "Mojang",
+  FORGE = "Forge",
+  FABRIC = "Fabric",
+  UNIVERSAL = "Universial",
 }
 
 export { ProfileType };

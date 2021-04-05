@@ -12,7 +12,7 @@ export class GameProfile {
   jvmArgs: OptionalArgument[] = [];
   assetIndex = AssetIndexArtifactMeta.emptyAssetIndexArtifactMeta();
   clientArtifact = ArtifactMeta.emptyArtifactMeta();
-  // The 'path' property in 'client' and 'server' will be reassigned before downloading
+  // The 'path' property in 'client' will be reassigned before downloading
   id = "";
   libraries: LibraryMeta[] = [];
   clientMappings: ArtifactMeta = ArtifactMeta.emptyArtifactMeta();
@@ -22,11 +22,13 @@ export class GameProfile {
   releaseTime = new Date();
   time = new Date();
   type: ReleaseType = ReleaseType.RELEASE;
+  baseVersion: string;
 
   // Also 'fromObject'
   constructor(obj: Record<string, unknown>) {
     try {
       this.id = String(obj["id"]);
+      this.baseVersion = String(obj["inheritsFrom"] || this.id);
       switch (obj["type"]) {
         case "release":
           this.type = ReleaseType.RELEASE;

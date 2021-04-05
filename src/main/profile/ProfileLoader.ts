@@ -22,7 +22,7 @@ export async function loadProfile(
   container: MinecraftContainer
 ): Promise<GameProfile> {
   let jsonObj = await fs.readJSON(container.getProfilePath(id));
-  const vType = whatProfile(jsonObj);
+  const vType = whatProfile(String(jsonObj["id"]));
   let legacyBit = false;
   if (isLegacy(jsonObj)) {
     legacyBit = true;

@@ -1,12 +1,8 @@
-import { MinecraftContainer } from "../modules/container/MinecraftContainer";
+import { MinecraftContainer } from "./MinecraftContainer";
 import fs from "fs-extra";
 import path from "path";
-import {
-  getAllContainers,
-  getContainer,
-  isMounted,
-} from "../modules/container/ContainerUtil";
-import { GameProfile } from "../modules/profile/GameProfile";
+import { getAllContainers, getContainer, isMounted } from "./ContainerUtil";
+import { GameProfile } from "../profile/GameProfile";
 
 export async function scanCoresIn(c: MinecraftContainer): Promise<string[]> {
   const cRoot = c.getVersionBase();

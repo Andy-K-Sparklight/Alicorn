@@ -1,11 +1,11 @@
 import path from "path";
 import fs from "fs-extra";
-import { MinecraftContainer } from "../modules/container/MinecraftContainer";
+import { MinecraftContainer } from "./MinecraftContainer";
 import {
   getContainer,
   registerContainer,
   unregisterContainer,
-} from "../modules/container/ContainerUtil";
+} from "./ContainerUtil";
 
 // Create a container at specified dir
 export async function createNewContainer(

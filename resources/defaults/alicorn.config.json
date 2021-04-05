@@ -1,7 +1,11 @@
 {
+  "_comment1": "Do you pinkie promise that you edit this file properly?",
+  "_comment2": "Invalid config will cause boot failure!",
   "download.concurrent.chunk-size": 1024,
   "download.concurrent.timeout": 5000,
   "download.concurrent.tries-per-chunk": 3,
   "download.concurrent.max-tasks": 20,
-  "modx.default-save-path": "${DEFAULT}"
+  "modx.default-save-path": "${DEFAULT}",
+  "modx.ignore-non-standard-mods": true,
+  "modx.global-dynamic-load-mods": true
 }

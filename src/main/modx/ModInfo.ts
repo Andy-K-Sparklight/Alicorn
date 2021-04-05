@@ -38,7 +38,7 @@ enum ModMetaHeaders {
   FABRIC = "$FB!",
 }
 
-interface ModInfo {
+export interface ModInfo {
   id?: string;
   displayName?: string;
   loader?: ModLoader;
@@ -59,12 +59,14 @@ enum ModLoader {
 
 export { ModLoader };
 
-export function initModInfo(): void {
+export async function initModInfo(): Promise<void> {
   MOD_INFO_DIR = getString("modx.default-save-path", "${DEFAULT}")
     .replace("${DEFAULT}", DEFAULT_DIR)
     .replace("${USER_HOME}", os.homedir());
   MOD_CACHE_DIR = path.join(MOD_INFO_DIR, "mods");
   MOD_META_DIR = path.join(MOD_INFO_DIR, "metas");
+  await fs.ensureDir(MOD_META_DIR);
+  await fs.ensureDir(MOD_CACHE_DIR);
 }
 
 // Save that mod file
@@ -179,27 +181,33 @@ async function cacheMeta(
   origin: string
 ): Promise<void> {
   try {
-    await fs.writeFile(
-      path.join(MOD_META_DIR, hash + MOD_META_SUFFIX),
-      header + (await fs.readFile(origin)).toString()
-    );
+    const d = path.join(MOD_META_DIR, hash + MOD_META_SUFFIX);
+    await fs.copyFile(origin, d);
+    await fs.appendFile(d, header);
   } catch {}
 }
 
 function loadCachedMeta(data: string): ModInfo {
-  const body = data.slice(4);
-  const head = data.slice(0, 4);
+  const body = data.slice(0, -4);
+  const head = data.slice(-4);
   const t: ModInfo = {};
   switch (head) {
     case ModMetaHeaders.FABRIC:
+      t.loader = ModLoader.FABRIC;
       loadFabricInfo(JSON.parse(body), t);
       return t;
     case ModMetaHeaders.FORGE_LEGACY:
+      t.loader = ModLoader.FORGE;
       loadMCMODInfo(JSON.parse(body), t);
       return t;
-    default:
+
     case ModMetaHeaders.FORGE_MODERN:
+      t.loader = ModLoader.FORGE;
       loadTomlInfo(toml.parse(body), t);
+      return t;
+    default:
+      // This should not happen
+      t.loader = ModLoader.UNKNOWN;
       return t;
   }
 }
@@ -229,7 +237,7 @@ function loadMCMODInfo(obj: Record<string, unknown>, rawInfo: ModInfo): void {
   const tObj = obj.pop();
   rawInfo.id = String(safeGet(tObj, ["modid"]));
   rawInfo.displayName = String(safeGet(tObj, ["name"], rawInfo.id));
-  const tAuthors = safeGet(tObj, ["authors"], []);
+  const tAuthors = safeGet(tObj, ["authorList"], []);
   rawInfo.authors = tAuthors instanceof Array ? tAuthors : [];
   rawInfo.logo = String(safeGet(tObj, ["logoFile"], ""));
   rawInfo.mcversion = String(safeGet(tObj, ["mcversion"], "*"));
@@ -251,7 +259,7 @@ function loadTomlInfo(obj: Record<string, unknown>, rawInfo: ModInfo): void {
   if (tAuthors instanceof Array) {
     rawInfo.authors = tAuthors;
   } else {
-    rawInfo.authors = [String(tAuthors)];
+    rawInfo.authors = [String(tAuthors || "")];
   }
   rawInfo.url = String(
     safeGet(obj, ["displayURL"], "https://www.minecraft.net/zh-hans/")

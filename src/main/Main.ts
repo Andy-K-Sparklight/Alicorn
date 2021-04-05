@@ -1,16 +1,16 @@
 import { app, BrowserWindow } from "electron";
-import { loadConfig, saveConfigSync } from "./modules/config/ConfigSupport";
-import { initConcurrentDownloader } from "./modules/download/Concurrent";
+import { loadConfig, saveConfigSync } from "./config/ConfigSupport";
+import { initConcurrentDownloader } from "./download/Concurrent";
 import os from "os";
 import path from "path";
-import { loadGDT, saveGDTSync } from "./modules/container/ContainerUtil";
-import { loadMirror, saveMirrorSync } from "./modules/download/Mirror";
-import { initDownloadWrapper } from "./modules/download/DownloadWrapper";
+import { loadGDT, saveGDTSync } from "./container/ContainerUtil";
+import { loadMirror, saveMirrorSync } from "./download/Mirror";
+import { initDownloadWrapper } from "./download/DownloadWrapper";
 import { btoa } from "js-base64";
-import { initEncrypt } from "./modules/security/Encrypt";
-import { loadJDT, saveJDTSync } from "./modules/java/JInfo";
-import { initForgeInstallModule } from "./modules/pff/install/ForgeInstall";
-import { initModInfo } from "./modules/modx/ModInfo";
+import { initEncrypt } from "./security/Encrypt";
+import { loadJDT, saveJDTSync } from "./java/JInfo";
+import { initForgeInstallModule } from "./pff/install/ForgeInstall";
+import { initModInfo } from "./modx/ModInfo";
 
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow;
@@ -68,7 +68,7 @@ async function runDelayedInitTask(): Promise<void> {
   await loadMirror();
   await initConcurrentDownloader();
   initDownloadWrapper();
-  initModInfo();
+  await initModInfo();
   await initForgeInstallModule();
   INITIALIZED_BIT = true;
 }
