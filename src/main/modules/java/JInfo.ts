@@ -3,10 +3,8 @@ import fs from "fs-extra";
 import { loadProperties } from "../commons/PropertiesUtil";
 import os from "os";
 import { ALICORN_DATA_SUFFIX, PLACE_HOLDER } from "../commons/Constants";
-import { loadData, saveData } from "../config/DataSupport";
+import { loadData, saveDataSync } from "../config/DataSupport";
 import { buildMap, parseMap } from "../commons/MapUtil";
-
-// UNCHECKED
 
 const JAVA_RECORD_BASE = "java.record" + ALICORN_DATA_SUFFIX;
 const JAVA_RELEASE = "release";
@@ -62,13 +60,13 @@ export function addJava(jHome: string): void {
 }
 
 export function getLastUsedJavaHome(): string {
-  return JDT.get(LATEST_TAG) || "";
+  return JDT.get(LATEST_TAG) || getAllJava()[0] || "";
 }
 
 export function setLastUsedJavaHome(jHome: string): void {
   JDT.set(LATEST_TAG, jHome);
 }
 
-export async function saveJDT(): Promise<void> {
-  await saveData(JAVA_RECORD_BASE, buildMap(JDT));
+export function saveJDTSync(): void {
+  saveDataSync(JAVA_RECORD_BASE, buildMap(JDT));
 }

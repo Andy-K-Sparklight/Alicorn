@@ -3,7 +3,12 @@ import { Pair } from "../commons/Collections";
 import { AuthlibAccount } from "./AuthlibAccount";
 import { Account } from "./Account";
 import { ALICORN_ENCRYPTED_DATA_SUFFIX } from "../commons/Constants";
-import { getActualDataPath, loadData, saveData } from "../config/DataSupport";
+import {
+  getActualDataPath,
+  loadData,
+  saveData,
+  saveDataSync,
+} from "../config/DataSupport";
 import path from "path";
 import { decryptByMachine, encryptByMachine } from "../security/Encrypt";
 import fs from "fs-extra";
@@ -30,6 +35,19 @@ export async function saveAccount(a: Account): Promise<boolean> {
   try {
     const fName = a.getAccountIdentifier() + ALICORN_ENCRYPTED_DATA_SUFFIX;
     await saveData(
+      path.join(ACCOUNT_ROOT, fName),
+      encryptByMachine(decideWhichAccountByCls(a) + a.serialize())
+    );
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function saveAccountSync(a: Account): boolean {
+  try {
+    const fName = a.getAccountIdentifier() + ALICORN_ENCRYPTED_DATA_SUFFIX;
+    saveDataSync(
       path.join(ACCOUNT_ROOT, fName),
       encryptByMachine(decideWhichAccountByCls(a) + a.serialize())
     );

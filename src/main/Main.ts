@@ -1,14 +1,14 @@
 import { app, BrowserWindow } from "electron";
-import { loadConfig, saveConfig } from "./modules/config/ConfigSupport";
+import { loadConfig, saveConfigSync } from "./modules/config/ConfigSupport";
 import { initConcurrentDownloader } from "./modules/download/Concurrent";
 import os from "os";
 import path from "path";
-import { loadGDT, saveGDT } from "./modules/container/ContainerUtil";
-import { loadMirror, saveMirror } from "./modules/download/Mirror";
+import { loadGDT, saveGDTSync } from "./modules/container/ContainerUtil";
+import { loadMirror, saveMirrorSync } from "./modules/download/Mirror";
 import { initDownloadWrapper } from "./modules/download/DownloadWrapper";
 import { btoa } from "js-base64";
 import { initEncrypt } from "./modules/security/Encrypt";
-import { loadJDT, saveJDT } from "./modules/java/JInfo";
+import { loadJDT, saveJDTSync } from "./modules/java/JInfo";
 import { initForgeInstallModule } from "./modules/pff/install/ForgeInstall";
 
 console.log("Starting Alicorn!");
@@ -41,18 +41,20 @@ app.on("ready", async () => {
   });
 });
 
-app.on("window-all-closed", async () => {
+app.on("window-all-closed", () => {
   if (os.platform() !== "darwin") {
     console.log("Stopping!");
     app.quit();
   }
 });
-app.on("will-quit", async () => {
+// This function doesn't support async!
+// Use sync functions.
+app.on("will-quit", () => {
   console.log("Saving data...");
-  await saveConfig();
-  await saveGDT();
-  await saveJDT();
-  await saveMirror();
+  saveConfigSync();
+  saveGDTSync();
+  saveJDTSync();
+  saveMirrorSync();
   console.log("Finalizing and exiting...");
 });
 

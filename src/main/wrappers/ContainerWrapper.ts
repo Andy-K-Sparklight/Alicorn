@@ -7,8 +7,6 @@ import {
   unregisterContainer,
 } from "../modules/container/ContainerUtil";
 
-// UNCHECKED
-
 // Create a container at specified dir
 export async function createNewContainer(
   rootDir: string,

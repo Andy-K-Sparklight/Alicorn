@@ -35,6 +35,12 @@ export async function saveData(
   await fs.writeFile(dest, data);
 }
 
+export function saveDataSync(relativePath: string, data: string): void {
+  const dest = resolveDataFilePath(relativePath);
+  fs.ensureDirSync(path.dirname(dest));
+  fs.writeFileSync(dest, data);
+}
+
 // Hint: NEVER use 'fs.copyFile'!
 // 'No permission', I don't know why, but we have to do this manually
 

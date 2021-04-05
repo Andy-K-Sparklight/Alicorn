@@ -21,7 +21,7 @@ module.exports = {
   plugins: ["react", "@typescript-eslint", "react-hooks"],
   rules: {
     "no-empty-function": "warn",
-    "no-empty": "warn",
+    "no-empty": "off",
     "prefer-const": "warn",
     "@typescript-eslint/no-empty-interface": "warn",
     "@typescript-eslint/ban-ts-comment": "off",
