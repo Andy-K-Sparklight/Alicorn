@@ -2,20 +2,24 @@ import React, { useState } from "react";
 import {
   AppBar,
   createStyles,
+  IconButton,
   makeStyles,
   Theme,
   Toolbar,
   Typography,
 } from "@material-ui/core";
 import { tr } from "./Translator";
+import { Close } from "@material-ui/icons";
+import { callSystemSide } from "./Remote";
+import { SystemCommand } from "../shared/Structures";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
     },
-    menuButton: {
-      marginRight: theme.spacing(2),
+    exitButton: {
+      marginRight: theme.spacing(1),
     },
     title: {
       flexGrow: 1,
@@ -33,6 +37,15 @@ export function App(): JSX.Element {
           <Typography variant={"h6"} className={classes.title}>
             {tr(page)}
           </Typography>
+          <div
+            onClick={() => {
+              callSystemSide({ command: SystemCommand.CloseWindow });
+            }}
+          >
+            <IconButton className={classes.exitButton} color="inherit">
+              <Close />
+            </IconButton>
+          </div>
         </Toolbar>
       </AppBar>
     </div>

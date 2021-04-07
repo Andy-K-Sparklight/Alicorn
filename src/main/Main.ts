@@ -11,9 +11,10 @@ import { initEncrypt } from "./security/Encrypt";
 import { loadJDT, saveJDTSync } from "./java/JInfo";
 import { initForgeInstallModule } from "./pff/install/ForgeInstall";
 import { initModInfo } from "./modx/ModInfo";
+import { registerSystemCall } from "./listener/SystemCall";
 
 console.log("Starting Alicorn!");
-let mainWindow: BrowserWindow;
+let mainWindow: BrowserWindow | null = null;
 let INITIALIZED_BIT = false;
 app.on("ready", async () => {
   console.log("App is ready, preparing window...");
@@ -34,7 +35,9 @@ app.on("ready", async () => {
   console.log("Loading resources...");
   mainWindow.once("ready-to-show", async () => {
     console.log("Creating window!");
-    mainWindow.show();
+    mainWindow?.show();
+    console.log("Registering event handlers...");
+    registerSystemCall();
     console.log("Running delayed init tasks...");
     await runDelayedInitTask();
     console.log("All caught up! Alicorn is now initialized.");
@@ -75,14 +78,18 @@ async function runDelayedInitTask(): Promise<void> {
 
 process.on("uncaughtException", async (e) => {
   console.log(e);
-  await mainWindow.webContents.loadFile("Error.html", {
+  await mainWindow?.webContents.loadFile("Error.html", {
     hash: btoa(escape(String(e.message))),
   });
 });
 
 process.on("unhandledRejection", async (r) => {
   console.log(String(r));
-  await mainWindow.webContents.loadFile("Error.html", {
+  await mainWindow?.webContents.loadFile("Error.html", {
     hash: btoa(escape(String(r))),
   });
 });
+
+export function getMainWindow(): BrowserWindow | null {
+  return mainWindow;
+}
