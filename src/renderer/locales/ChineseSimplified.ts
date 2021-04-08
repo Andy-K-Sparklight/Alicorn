@@ -3,4 +3,5 @@ export default {
   LaunchPad: "启动台",
   Installer: "软件安装器",
   Containers: "容器管理器",
+  "Home.ExitButton.Label": "退出",
 };

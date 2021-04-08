@@ -4,22 +4,21 @@ import {
   createStyles,
   IconButton,
   makeStyles,
-  Theme,
   Toolbar,
   Typography,
 } from "@material-ui/core";
 import { tr } from "./Translator";
-import { Close } from "@material-ui/icons";
+import { PowerSettingsNew } from "@material-ui/icons";
 import { callSystemSide } from "./Remote";
 import { SystemCommand } from "../shared/Structures";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       flexGrow: 1,
     },
     exitButton: {
-      marginRight: theme.spacing(1),
+      marginRight: 0,
     },
     title: {
       flexGrow: 1,
@@ -43,7 +42,7 @@ export function App(): JSX.Element {
             }}
           >
             <IconButton className={classes.exitButton} color="inherit">
-              <Close />
+              <PowerSettingsNew />
             </IconButton>
           </div>
         </Toolbar>

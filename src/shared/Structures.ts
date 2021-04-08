@@ -1,6 +1,6 @@
 export interface SystemCall {
   command: SystemCommand;
-  data?: string[];
+  args?: string[];
 }
 
 enum SystemCommand {
