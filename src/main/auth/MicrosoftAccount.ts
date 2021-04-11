@@ -9,7 +9,7 @@ import { isNull, safeGet } from "../commons/Null";
 // Code -> MS Token
 // MS Token -> Xbox Token & Xbox uhs
 // Xbox Token -> XSTS Token
-// XSTS uhs & XSTS Token -> MC Token (AuthData 2)
+// Xbox uhs & XSTS Token -> MC Token (AuthData 2)
 // MC Token -> MC uuid & MC Username (Auth Data 3 & AuthData 1)
 // Rainboom!
 
@@ -77,7 +77,9 @@ export class MicrosoftAccount extends Account {
 
   async isAccessTokenValid(): Promise<boolean> {
     try {
-      await this.flushToken();
+      if (!(await this.flushToken())) {
+        return await this.flushToken(); // Give it another try
+      }
       return true;
     } catch {
       return false;
@@ -92,7 +94,10 @@ export class MicrosoftAccount extends Account {
         return false;
       }
       this.refreshToken = String(r.refreshToken);
-      return await this.flushToken();
+      if (!(await this.flushToken())) {
+        return await this.flushToken();
+      }
+      return true;
     } catch {
       return false;
     }

@@ -2,7 +2,6 @@ import { app, BrowserWindow } from "electron";
 import { loadConfig, saveConfigSync } from "./config/ConfigSupport";
 import { initConcurrentDownloader } from "./download/Concurrent";
 import os from "os";
-import path from "path";
 import { loadGDT, saveGDTSync } from "./container/ContainerUtil";
 import { loadMirror, saveMirrorSync } from "./download/Mirror";
 import { initDownloadWrapper } from "./download/DownloadWrapper";
@@ -12,6 +11,7 @@ import { loadJDT, saveJDTSync } from "./java/JInfo";
 import { initForgeInstallModule } from "./pff/install/ForgeInstall";
 import { initModInfo } from "./modx/ModInfo";
 import { registerSystemCall } from "./listener/SystemCall";
+import { MicrosoftAccount } from "./auth/MicrosoftAccount";
 
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow | null = null;
@@ -24,7 +24,6 @@ app.on("ready", async () => {
     height: 450,
     transparent: true,
     webPreferences: {
-      preload: path.resolve("Preload.js"),
       nodeIntegration: true,
       contextIsolation: false,
     },
@@ -41,6 +40,10 @@ app.on("ready", async () => {
     console.log("Running delayed init tasks...");
     await runDelayedInitTask();
     console.log("All caught up! Alicorn is now initialized.");
+    const acc = new MicrosoftAccount("");
+    await acc.performAuth("");
+    console.log(await acc.buildAccessData());
+    console.log(await acc.isAccessTokenValid());
   });
   await mainWindow.loadFile("Renderer.html");
 });

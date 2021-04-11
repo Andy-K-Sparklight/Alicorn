@@ -3,13 +3,11 @@
   "scripts": {
     "build-main": "npx webpack --config webpack.config.main.js",
     "build-renderer": "npx webpack --config webpack.config.renderer.js",
-    "build-preload": "npx webpack --config webpack.config.preload.js",
-    "build-full": "npx yarn build-main&&npx yarn build-renderer&&npx yarn build-preload",
+    "build-full": "npx yarn build-main&&npx yarn build-renderer",
     "quick-test": "cd dist&&npx electron .",
     "full-test": "npx yarn build-full&&npx yarn quick-test",
     "main-test": "npx yarn build-main&&npx yarn quick-test",
-    "renderer-test": "npx yarn build-renderer&&npx yarn quick-test",
-    "preload-test": "npx yarn build-preload&&npx yarn quick-test"
+    "renderer-test": "npx yarn build-renderer&&npx yarn quick-test"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.0.1",
