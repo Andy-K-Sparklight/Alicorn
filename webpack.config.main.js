@@ -7,9 +7,9 @@ const { ContextReplacementPlugin } = require("webpack");
 
 // noinspection JSValidateTypes
 module.exports = {
-  entry: "./src/main/Main.ts",
+  entry: "./src/main/Bootstrap.ts",
   output: {
-    filename: "Main.js",
+    filename: "Bootstrap.js",
     path: path.resolve(__dirname, "dist"),
   },
   module: {

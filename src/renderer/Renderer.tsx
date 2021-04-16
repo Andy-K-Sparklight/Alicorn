@@ -3,7 +3,8 @@ import ReactDOM from "react-dom";
 import { App } from "./App";
 import { initTranslator } from "./Translator";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
-import { loadData, saveDefaultData } from "../main/config/DataSupport";
+import { loadData, saveDefaultData } from "../modules/config/DataSupport";
+import { HashRouter } from "react-router-dom";
 
 const ALICORN_THEME_FILE = "alicorn.theme.json";
 const GLOBAL_STYLES: React.CSSProperties = {
@@ -37,7 +38,9 @@ function RendererBootstrap(): JSX.Element {
   return (
     <div style={GLOBAL_STYLES}>
       <MuiThemeProvider theme={theme}>
-        <App />
+        <HashRouter>
+          <App />
+        </HashRouter>
       </MuiThemeProvider>
     </div>
   );

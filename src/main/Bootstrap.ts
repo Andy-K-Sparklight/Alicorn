@@ -1,17 +1,16 @@
 import { app, BrowserWindow } from "electron";
-import { loadConfig, saveConfigSync } from "./config/ConfigSupport";
-import { initConcurrentDownloader } from "./download/Concurrent";
+import { loadConfig, saveConfigSync } from "../modules/config/ConfigSupport";
+import { initConcurrentDownloader } from "../modules/download/Concurrent";
 import os from "os";
-import { loadGDT, saveGDTSync } from "./container/ContainerUtil";
-import { loadMirror, saveMirrorSync } from "./download/Mirror";
-import { initDownloadWrapper } from "./download/DownloadWrapper";
+import { loadGDT, saveGDTSync } from "../modules/container/ContainerUtil";
+import { loadMirror, saveMirrorSync } from "../modules/download/Mirror";
+import { initDownloadWrapper } from "../modules/download/DownloadWrapper";
 import { btoa } from "js-base64";
-import { initEncrypt } from "./security/Encrypt";
-import { loadJDT, saveJDTSync } from "./java/JInfo";
-import { initForgeInstallModule } from "./pff/install/ForgeInstall";
-import { initModInfo } from "./modx/ModInfo";
-import { registerSystemCall } from "./listener/SystemCall";
-import { MicrosoftAccount } from "./auth/MicrosoftAccount";
+import { initEncrypt } from "../modules/security/Encrypt";
+import { loadJDT, saveJDTSync } from "../modules/java/JInfo";
+import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
+import { initModInfo } from "../modules/modx/ModInfo";
+import { registerBackgroundListeners } from "./Background";
 
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow | null = null;
@@ -35,15 +34,12 @@ app.on("ready", async () => {
   mainWindow.once("ready-to-show", async () => {
     console.log("Creating window!");
     mainWindow?.show();
-    console.log("Registering event handlers...");
-    registerSystemCall();
+    console.log("Registering event listeners...");
+    registerBackgroundListeners();
     console.log("Running delayed init tasks...");
     await runDelayedInitTask();
     console.log("All caught up! Alicorn is now initialized.");
-    const acc = new MicrosoftAccount("");
-    await acc.performAuth("");
-    console.log(await acc.buildAccessData());
-    console.log(await acc.isAccessTokenValid());
+    mainWindow?.webContents.openDevTools();
   });
   await mainWindow.loadFile("Renderer.html");
 });
