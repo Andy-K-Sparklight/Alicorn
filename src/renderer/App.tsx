@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   AppBar,
+  Box,
   createStyles,
   IconButton,
   makeStyles,
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) =>
     },
     floatButton: {
       float: "right",
+      marginRight: theme.spacing(2),
     },
     title: {
       flexGrow: 1,
@@ -35,51 +37,54 @@ let EVENT_LISTENED_FLAG = false;
 
 export function App(): JSX.Element {
   const classes = useStyles();
-  const [page, setPage] = useState(Pages.Today);
+  const [page, setPage] = useState(Pages.Today.toString());
   useEffect(() => {
     if (!EVENT_LISTENED_FLAG) {
       EVENT_LISTENED_FLAG = true;
       document.addEventListener("setPage", (e) => {
-        setPage(safeGet(e, ["detail"], Pages.Today) as Pages);
+        setPage(String(safeGet(e, ["detail"], Pages.Today)));
       });
     }
   });
   return (
-    <div className={classes.root}>
+    <Box className={classes.root}>
       <AppBar position={"static"}>
         <Toolbar>
-          <Typography variant={"h6"} className={classes.title}>
-            {tr(page)}
-          </Typography>
-          <div
+          <Box className={"window-drag" + " " + classes.title}>
+            {/* Drag our window with title */}
+            <Typography variant={"h6"}>{tr(page)}</Typography>
+          </Box>
+          <Box
+            className={classes.floatButton}
             onClick={() => {
               remoteOpenDevTools();
             }}
           >
-            <IconButton className={classes.floatButton} color={"inherit"}>
+            <IconButton color={"inherit"}>
               <Code />
             </IconButton>
-          </div>
-          <div
+          </Box>
+          <Box
+            className={classes.floatButton}
             onClick={() => {
               jumpTo("/LaunchPad");
               triggerSetPage(Pages.LaunchPad);
             }}
           >
-            <IconButton className={classes.floatButton} color={"inherit"}>
+            <IconButton color={"inherit"}>
               <FlightTakeoff />
             </IconButton>
-          </div>
-          <div onClick={remoteCloseWindow}>
+          </Box>
+          <Box onClick={remoteCloseWindow}>
             <IconButton className={classes.exitButton} color={"inherit"}>
               <PowerSettingsNew />
             </IconButton>
-          </div>
+          </Box>
         </Toolbar>
       </AppBar>
 
       <Route path={"/LaunchPad"} component={LaunchPad} />
-    </div>
+    </Box>
   );
 }
 

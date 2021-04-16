@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { App } from "./App";
 import { initTranslator } from "./Translator";
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
+import { Box, createMuiTheme, MuiThemeProvider } from "@material-ui/core";
 import { loadData, saveDefaultData } from "../modules/config/DataSupport";
 import { HashRouter } from "react-router-dom";
 
@@ -36,13 +36,13 @@ function RendererBootstrap(): JSX.Element {
     })();
   });
   return (
-    <div style={GLOBAL_STYLES}>
+    <Box style={GLOBAL_STYLES}>
       <MuiThemeProvider theme={theme}>
         <HashRouter>
           <App />
         </HashRouter>
       </MuiThemeProvider>
-    </div>
+    </Box>
   );
 }
 

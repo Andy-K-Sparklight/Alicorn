@@ -39,7 +39,6 @@ app.on("ready", async () => {
     console.log("Running delayed init tasks...");
     await runDelayedInitTask();
     console.log("All caught up! Alicorn is now initialized.");
-    mainWindow?.webContents.openDevTools();
   });
   await mainWindow.loadFile("Renderer.html");
 });
