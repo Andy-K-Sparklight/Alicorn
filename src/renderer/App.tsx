@@ -6,20 +6,30 @@ import {
   IconButton,
   makeStyles,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
-import { tr } from "./Translator";
-import { Code, FlightTakeoff, PowerSettingsNew } from "@material-ui/icons";
 import { ipcRenderer } from "electron";
-import { Route } from "react-router";
-import { LaunchPad } from "./LaunchPad";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 import { safeGet } from "../modules/commons/Null";
+import { saveConfigSync } from "../modules/config/ConfigSupport";
+import { saveGDTSync } from "../modules/container/ContainerUtil";
+import { saveJDTSync } from "../modules/java/JInfo";
+import { saveMirrorSync } from "../modules/download/Mirror";
+import { Code, FlightTakeoff, PowerSettingsNew } from "@material-ui/icons";
+import { LaunchPad } from "./LaunchPad";
+import { tr } from "./Translator";
+import { Route } from "react-router";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      width: "100%",
+      backgroundColor: theme.palette.secondary.light,
+    },
+    content: {
+      marginTop: theme.spacing(10),
     },
     exitButton: {
       marginRight: 0,
@@ -48,7 +58,7 @@ export function App(): JSX.Element {
   });
   return (
     <Box className={classes.root}>
-      <AppBar position={"static"}>
+      <AppBar>
         <Toolbar>
           <Box className={"window-drag" + " " + classes.title}>
             {/* Drag our window with title */}
@@ -60,9 +70,11 @@ export function App(): JSX.Element {
               remoteOpenDevTools();
             }}
           >
-            <IconButton color={"inherit"}>
-              <Code />
-            </IconButton>
+            <Tooltip title={tr("MainMenu.OpenDevTools")}>
+              <IconButton color={"inherit"}>
+                <Code />
+              </IconButton>
+            </Tooltip>
           </Box>
           <Box
             className={classes.floatButton}
@@ -71,27 +83,43 @@ export function App(): JSX.Element {
               triggerSetPage(Pages.LaunchPad);
             }}
           >
-            <IconButton color={"inherit"}>
-              <FlightTakeoff />
-            </IconButton>
+            <Tooltip title={tr("MainMenu.QuickLaunchPad")}>
+              <IconButton color={"inherit"}>
+                <FlightTakeoff />
+              </IconButton>
+            </Tooltip>
           </Box>
           <Box onClick={remoteCloseWindow}>
-            <IconButton className={classes.exitButton} color={"inherit"}>
-              <PowerSettingsNew />
-            </IconButton>
+            <Tooltip title={tr("MainMenu.Exit")}>
+              <IconButton className={classes.exitButton} color={"inherit"}>
+                <PowerSettingsNew />
+              </IconButton>
+            </Tooltip>
           </Box>
         </Toolbar>
       </AppBar>
-
-      <Route path={"/LaunchPad"} component={LaunchPad} />
+      <Box className={classes.content}>
+        <Route path={"/LaunchPad"} component={LaunchPad} />
+      </Box>
     </Box>
   );
 }
 
 function remoteCloseWindow(): void {
+  console.log("Closing!");
+  prepareToQuit();
   ipcRenderer.send("closeWindow");
 }
 
 function remoteOpenDevTools(): void {
   ipcRenderer.send("openDevTools");
+}
+
+function prepareToQuit(): void {
+  console.log("Preparing to quit...");
+  saveConfigSync();
+  saveGDTSync();
+  saveJDTSync();
+  saveMirrorSync();
+  console.log("All chunks are saved.");
 }

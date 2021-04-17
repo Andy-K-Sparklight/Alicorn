@@ -18,11 +18,28 @@ export function parseMap<T = boolean | string | number>(
       if (entTuple.length < 2) {
         continue;
       }
-      freshMap.set(entTuple[0] || "", JSON.parse(entTuple[1] || ""));
-      // eslint-disable-next-line no-empty
+      freshMap.set(
+        entTuple[0] || "",
+        (manualParse(entTuple[1] || "") as unknown) as T
+      );
     } catch {}
   }
   return freshMap;
+}
+
+function manualParse(source: string): boolean | number | string {
+  if (source === "true") {
+    return true;
+  }
+  if (source === "false") {
+    return false;
+  }
+
+  const floatParse = parseFloat(source);
+  if (!isNaN(floatParse)) {
+    return floatParse;
+  }
+  return source;
 }
 
 export function buildMap(map: Map<string, unknown>): string {

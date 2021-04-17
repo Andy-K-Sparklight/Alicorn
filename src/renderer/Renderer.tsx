@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { App } from "./App";
 import { initTranslator } from "./Translator";
 import { Box, createMuiTheme, MuiThemeProvider } from "@material-ui/core";
 import { loadData, saveDefaultData } from "../modules/config/DataSupport";
+import { loadConfig } from "../modules/config/ConfigSupport";
+import { loadGDT } from "../modules/container/ContainerUtil";
+import { loadJDT } from "../modules/java/JInfo";
+import { initEncrypt } from "../modules/security/Encrypt";
+import { loadMirror } from "../modules/download/Mirror";
+import { initConcurrentDownloader } from "../modules/download/Concurrent";
+import { initDownloadWrapper } from "../modules/download/DownloadWrapper";
+import { initModInfo } from "../modules/modx/ModInfo";
+import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
 import { HashRouter } from "react-router-dom";
+import { App } from "./App";
+import { parseMap } from "../modules/commons/MapUtil";
 
 const ALICORN_THEME_FILE = "alicorn.theme.json";
 const GLOBAL_STYLES: React.CSSProperties = {
@@ -47,4 +57,18 @@ function RendererBootstrap(): JSX.Element {
 }
 
 initTranslator();
+console.log(parseMap("X:❤❤F:/.minecraft"));
+(async () => {
+  console.log("Initializing modules...");
+  await loadConfig();
+  await loadGDT();
+  await loadJDT();
+  await initEncrypt();
+  await loadMirror();
+  await initConcurrentDownloader();
+  initDownloadWrapper();
+  await initModInfo();
+  await initForgeInstallModule();
+  console.log("Delayed init tasks finished.");
+})();
 ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));

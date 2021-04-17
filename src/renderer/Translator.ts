@@ -16,7 +16,7 @@ export function setLocale(code: string): void {
 
 // Main translate function
 export function tr(key: string): string {
-  return (localesMap.get(currentLocale) || {})[key];
+  return (localesMap.get(currentLocale) || {})[key] || key;
 }
 
 export function initTranslator(): void {

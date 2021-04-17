@@ -1,3 +1,11 @@
 .window-drag {
     -webkit-app-region: drag;
 }
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+html {
+    background-color: #ffe0f0;
+}

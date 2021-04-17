@@ -6,7 +6,7 @@ cache:
     - node_modules
 
 script:
-  - yarn build-full
+  - yarn build-full-ci
 
 
 

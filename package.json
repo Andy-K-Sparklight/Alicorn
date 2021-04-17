@@ -1,9 +1,12 @@
 {
   "private": true,
   "scripts": {
-    "build-main": "npx webpack --config webpack.config.main.js",
-    "build-renderer": "npx webpack --config webpack.config.renderer.js",
+    "build-main": "npx webpack --config webpack.config.main.js --progress",
+    "build-main-ci": "npx webpack --config webpack.config.main.js",
+    "build-renderer": "npx webpack --config webpack.config.renderer.js --progress",
+    "build-renderer-ci": "npx webpack --config webpack.config.renderer.js",
     "build-full": "npx yarn build-main&&npx yarn build-renderer",
+    "build-full-ci": "npx yarn build-main-ci&&npx yarn build-renderer-ci",
     "quick-test": "cd dist&&npx electron .",
     "full-test": "npx yarn build-full&&npx yarn quick-test",
     "main-test": "npx yarn build-main&&npx yarn quick-test",
@@ -41,6 +44,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "compressing": "^1.5.1",
     "crypto-js": "^4.0.0",
     "fs-extra": "^9.1.0",

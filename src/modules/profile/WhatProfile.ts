@@ -32,7 +32,7 @@ enum ProfileType {
   MOJANG = "Mojang",
   FORGE = "Forge",
   FABRIC = "Fabric",
-  UNIVERSAL = "Universial",
+  UNIVERSAL = "Universal",
 }
 
 export { ProfileType };
