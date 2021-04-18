@@ -17,9 +17,11 @@ import { saveGDTSync } from "../modules/container/ContainerUtil";
 import { saveJDTSync } from "../modules/java/JInfo";
 import { saveMirrorSync } from "../modules/download/Mirror";
 import { Code, FlightTakeoff, PowerSettingsNew } from "@material-ui/icons";
-import { LaunchPad } from "./LaunchPad";
+import { LaunchPad, setDirty } from "./LaunchPad";
 import { tr } from "./Translator";
 import { Route } from "react-router";
+import { CoreDetail } from "./CoreDetailView";
+import { ReadyToLaunch } from "./ReadyToLaunch";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -64,42 +66,51 @@ export function App(): JSX.Element {
             {/* Drag our window with title */}
             <Typography variant={"h6"}>{tr(page)}</Typography>
           </Box>
-          <Box
-            className={classes.floatButton}
-            onClick={() => {
-              remoteOpenDevTools();
-            }}
-          >
-            <Tooltip title={tr("MainMenu.OpenDevTools")}>
-              <IconButton color={"inherit"}>
-                <Code />
-              </IconButton>
-            </Tooltip>
-          </Box>
-          <Box
-            className={classes.floatButton}
-            onClick={() => {
-              jumpTo("/LaunchPad");
-              triggerSetPage(Pages.LaunchPad);
-            }}
-          >
-            <Tooltip title={tr("MainMenu.QuickLaunchPad")}>
-              <IconButton color={"inherit"}>
-                <FlightTakeoff />
-              </IconButton>
-            </Tooltip>
-          </Box>
-          <Box onClick={remoteCloseWindow}>
-            <Tooltip title={tr("MainMenu.Exit")}>
-              <IconButton className={classes.exitButton} color={"inherit"}>
-                <PowerSettingsNew />
-              </IconButton>
-            </Tooltip>
-          </Box>
+
+          <Tooltip title={tr("MainMenu.OpenDevTools")}>
+            <IconButton
+              color={"inherit"}
+              className={classes.floatButton}
+              onClick={() => {
+                remoteOpenDevTools();
+              }}
+            >
+              <Code />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title={tr("MainMenu.QuickLaunchPad")}>
+            <IconButton
+              color={"inherit"}
+              className={classes.floatButton}
+              onClick={() => {
+                setDirty();
+                jumpTo("/LaunchPad");
+                triggerSetPage(Pages.LaunchPad);
+              }}
+            >
+              <FlightTakeoff />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title={tr("MainMenu.Exit")}>
+            <IconButton
+              className={classes.exitButton}
+              onClick={remoteCloseWindow}
+              color={"inherit"}
+            >
+              <PowerSettingsNew />
+            </IconButton>
+          </Tooltip>
         </Toolbar>
       </AppBar>
       <Box className={classes.content}>
         <Route path={"/LaunchPad"} component={LaunchPad} />
+        <Route path={"/CoreDetail/:container/:id"} component={CoreDetail} />
+        <Route
+          path={"/ReadyToLaunch/:container/:id"}
+          component={ReadyToLaunch}
+        />
       </Box>
     </Box>
   );

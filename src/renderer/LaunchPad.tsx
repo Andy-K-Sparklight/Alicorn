@@ -4,21 +4,26 @@ import {
   Card,
   CardContent,
   createStyles,
+  IconButton,
+  LinearProgress,
   makeStyles,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { whatProfile } from "../modules/profile/WhatProfile";
 import { tr } from "./Translator";
-import { ErrorOutline } from "@material-ui/icons";
 import objectHash from "object-hash";
+import { Info, Sync } from "@material-ui/icons";
+import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 
-const cachedAllCores: SimplifiedCoreInfo[] = [];
+let cachedAllCores: SimplifiedCoreInfo[] = [];
 let coresCacheBit = false;
 
 interface SimplifiedCoreInfo {
   location: string;
+  container: string;
   id: string;
   corrupted: boolean;
   versionType: string;
@@ -38,6 +43,7 @@ const usePadStyles = makeStyles((theme) =>
 
 export function LaunchPad(): JSX.Element {
   const classes = usePadStyles();
+
   return (
     <Box className={classes.para}>
       <CoresDisplay />
@@ -47,11 +53,15 @@ export function LaunchPad(): JSX.Element {
 
 function CoresDisplay(): JSX.Element {
   const [cores, setCores] = useState([] as SimplifiedCoreInfo[]);
+  const [isLoading, setLoading] = useState(true);
+  const [refreshBit, setRefresh] = useState(true);
   useEffect(() => {
     if (!coresCacheBit) {
+      setLoading(true);
+      cachedAllCores = [];
       coresCacheBit = true;
       (async () => {
-        const rMap = await scanCoresInAllMountedContainers();
+        const rMap = await scanCoresInAllMountedContainers(true);
         for (const [c, ids] of rMap.entries()) {
           for (const id of ids) {
             try {
@@ -62,6 +72,7 @@ function CoresDisplay(): JSX.Element {
                 location: c.id + "/" + id,
                 versionType: whatProfile(id),
                 corrupted: false,
+                container: c.id,
               });
             } catch {
               cachedAllCores.push({
@@ -70,16 +81,42 @@ function CoresDisplay(): JSX.Element {
                 location: c.id + "/" + id,
                 versionType: "???????",
                 baseVersion: "???????",
+                container: c.id,
               });
             }
           }
         }
         setCores(cachedAllCores);
+        setLoading(false);
       })();
     }
   });
+
   return (
     <Box>
+      <Box style={{ textAlign: "right", marginRight: "18%" }}>
+        <Tooltip title={tr("CoreInfo.Reload")}>
+          <IconButton
+            color={"inherit"}
+            onClick={() => {
+              setDirty();
+              setRefresh(!refreshBit);
+            }}
+          >
+            <Sync />
+          </IconButton>
+        </Tooltip>
+      </Box>
+
+      <LinearProgress
+        color={"secondary"}
+        style={Object.assign(
+          { width: "80%" },
+          isLoading ? {} : { display: "none" }
+        )}
+      />
+      {}
+      <br />
       {cores.map((c) => {
         return <SingleCoreDisplay key={objectHash(c)} profile={c} />;
       })}
@@ -99,6 +136,9 @@ const useCardStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.primary.main,
       width: "80%",
     },
+    operateButton: {
+      float: "right",
+    },
   })
 );
 
@@ -110,6 +150,28 @@ function SingleCoreDisplay(props: {
     <Box>
       <Card className={classes.card}>
         <CardContent>
+          {props.profile.corrupted ? (
+            {}
+          ) : (
+            <Tooltip title={tr("CoreInfo.Detail")}>
+              <IconButton
+                color={"inherit"}
+                className={classes.operateButton}
+                onClick={() => {
+                  jumpTo(
+                    "/CoreDetail/" +
+                      props.profile.container +
+                      "/" +
+                      props.profile.id
+                  );
+                  triggerSetPage(Pages.CoreDetail);
+                }}
+              >
+                <Info />
+              </IconButton>
+            </Tooltip>
+          )}
+
           <Typography
             className={classes.text}
             color={"textSecondary"}
@@ -157,11 +219,7 @@ function getDescriptionFor(type: string): string {
 function CorruptedCoreWarning(): JSX.Element {
   return (
     <Box>
-      <Typography
-        style={{ fontSize: "x-small", color: "#ff5100" }}
-        gutterBottom
-      >
-        <ErrorOutline fontSize={"inherit"} />
+      <Typography style={{ fontSize: "small", color: "#ff8400" }} gutterBottom>
         {tr("CoreInfo.CorruptedWarning")}
       </Typography>
     </Box>

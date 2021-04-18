@@ -11,6 +11,7 @@ export enum Pages {
   Today = "Today",
   Containers = "Containers",
   LaunchPad = "LaunchPad",
+  ReadyToLaunch = "ReadyToLaunch",
   CrashAnalyze = "CrashAnalyze",
   CoreDetail = "CoreDetail",
   ModDetail = "ModDetail",

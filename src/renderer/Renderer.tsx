@@ -14,7 +14,6 @@ import { initModInfo } from "../modules/modx/ModInfo";
 import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
 import { HashRouter } from "react-router-dom";
 import { App } from "./App";
-import { parseMap } from "../modules/commons/MapUtil";
 
 const ALICORN_THEME_FILE = "alicorn.theme.json";
 const GLOBAL_STYLES: React.CSSProperties = {
@@ -57,7 +56,6 @@ function RendererBootstrap(): JSX.Element {
 }
 
 initTranslator();
-console.log(parseMap("X:❤❤F:/.minecraft"));
 (async () => {
   console.log("Initializing modules...");
   await loadConfig();

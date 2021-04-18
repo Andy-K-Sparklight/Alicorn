@@ -4,7 +4,10 @@ import path from "path";
 import { getAllContainers, getContainer, isMounted } from "./ContainerUtil";
 import { GameProfile } from "../profile/GameProfile";
 
-export async function scanCoresIn(c: MinecraftContainer): Promise<string[]> {
+export async function scanCoresIn(
+  c: MinecraftContainer,
+  unsafe = false
+): Promise<string[]> {
   const cRoot = c.getVersionBase();
   try {
     const allV = await fs.readdir(cRoot);
@@ -12,6 +15,11 @@ export async function scanCoresIn(c: MinecraftContainer): Promise<string[]> {
     await Promise.all(
       allV.map((v) => {
         return new Promise<void>((resolve) => {
+          if (unsafe) {
+            tArr.push(v);
+            resolve();
+            return;
+          }
           isValidCore(path.join(cRoot, v)).then((i) => {
             if (i) {
               tArr.push(v);
@@ -38,9 +46,9 @@ async function isValidCore(profileRoot: string): Promise<boolean> {
   }
 }
 
-export async function scanCoresInAllMountedContainers(): Promise<
-  Map<MinecraftContainer, string[]>
-> {
+export async function scanCoresInAllMountedContainers(
+  unsafe = false
+): Promise<Map<MinecraftContainer, string[]>> {
   const rMap = new Map<MinecraftContainer, string[]>();
   for (const c of getAllContainers()) {
     try {
@@ -48,7 +56,7 @@ export async function scanCoresInAllMountedContainers(): Promise<
         continue;
       }
       const container = getContainer(c);
-      rMap.set(container, await scanCoresIn(container));
+      rMap.set(container, await scanCoresIn(container, unsafe));
     } catch {}
   }
   return rMap;

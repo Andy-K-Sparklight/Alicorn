@@ -40,6 +40,6 @@ module.exports = {
     }),
   ],
   devtool: "source-map",
-  mode: "development",
+  mode: "production",
   target: "electron-renderer",
 };
