@@ -35,14 +35,18 @@ const ALICORN_DEFAULT_THEME = createMuiTheme({
 
 function RendererBootstrap(): JSX.Element {
   const [theme, setTheme] = useState(ALICORN_DEFAULT_THEME);
+  const [themeLoadedBit, setLoaded] = useState(false);
   useEffect(() => {
-    (async () => {
-      try {
-        await saveDefaultData(ALICORN_THEME_FILE);
-        const themeFile = JSON.parse(await loadData(ALICORN_THEME_FILE));
-        setTheme(createMuiTheme(themeFile));
-      } catch {}
-    })();
+    if (!themeLoadedBit) {
+      setLoaded(true);
+      (async () => {
+        try {
+          await saveDefaultData(ALICORN_THEME_FILE);
+          const themeFile = JSON.parse(await loadData(ALICORN_THEME_FILE));
+          setTheme(createMuiTheme(themeFile));
+        } catch {}
+      })();
+    }
   });
   return (
     <Box style={GLOBAL_STYLES}>

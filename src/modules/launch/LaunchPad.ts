@@ -1,13 +1,5 @@
 import { MinecraftContainer } from "../container/MinecraftContainer";
-import { loadProfile } from "../profile/ProfileLoader";
 import EventEmitter from "events";
-import {
-  ensureAllAssets,
-  ensureAssetsIndex,
-  ensureLibraries,
-  ensureLog4jFile,
-  ensureNatives,
-} from "./Ensurance";
 import { runMinecraft } from "./MinecraftBootstrap";
 import {
   applyAJ,
@@ -19,14 +11,15 @@ import {
 import { Pair, Trio } from "../commons/Collections";
 import { whereAJ } from "../auth/AJHelper";
 import { isNull } from "../commons/Null";
+import { GameProfile } from "../profile/GameProfile";
 
-export async function launchProfile(
-  id: string,
+// Launch and return ID
+export function launchProfile(
+  profile: GameProfile,
   container: MinecraftContainer,
   jExecutable: string,
   authData: Trio<string, string, string>,
-  // First emitter for launching, second for process
-  emitter: Pair<EventEmitter, EventEmitter>,
+  emitter: EventEmitter,
   policies: {
     useAj?: boolean;
     resolution?: Pair<number, number>;
@@ -34,20 +27,9 @@ export async function launchProfile(
     useServer?: boolean;
     server?: string;
   }
-): Promise<string> {
-  // As we need tracking, we cannot use 'fillProfile'
-  emitter.getFirstValue().emit(LaunchSeqSignal.PROFILE_LOADING);
-  const tFile = await loadProfile(id, container);
-  emitter.getFirstValue().emit(LaunchSeqSignal.LIBRARIES_FILLING);
-  await ensureLibraries(tFile, container);
-  await ensureNatives(tFile, container);
-  await ensureLog4jFile(tFile, container); // Just resolve it with libraries
-  emitter.getFirstValue().emit(LaunchSeqSignal.ASSETS_FILLING);
-  await ensureAssetsIndex(tFile, container);
-  await ensureAllAssets(tFile, container);
-  emitter.getFirstValue().emit(LaunchSeqSignal.ARGS_GENERATING);
-  const vmArgs = generateVMArgs(tFile, container);
-  const gameArgs = generateGameArgs(tFile, container, authData);
+): string {
+  const vmArgs = generateVMArgs(profile, container);
+  const gameArgs = generateGameArgs(profile, container, authData);
   const ajArgs = policies.useAj
     ? applyAJ(whereAJ(), policies.ajHost || "")
     : [];
@@ -65,21 +47,6 @@ export async function launchProfile(
     .concat(gameArgs)
     .concat(serverArgs)
     .concat(resolutions);
-  emitter.getFirstValue().emit(LaunchSeqSignal.DONE);
-  return runMinecraft(
-    totalArgs,
-    jExecutable,
-    container,
-    emitter.getSecondValue()
-  );
+  console.log(totalArgs.join(" "));
+  return runMinecraft(totalArgs, jExecutable, container, emitter);
 }
-
-enum LaunchSeqSignal {
-  PROFILE_LOADING = "PROFILE_LOADING",
-  LIBRARIES_FILLING = "LIBRARIES_FILLING",
-  ASSETS_FILLING = "ASSETS_FILLING",
-  ARGS_GENERATING = "ARGS_GENERATING",
-  DONE = "DONE",
-}
-
-export { LaunchSeqSignal };

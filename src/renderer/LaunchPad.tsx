@@ -15,7 +15,7 @@ import { loadProfile } from "../modules/profile/ProfileLoader";
 import { whatProfile } from "../modules/profile/WhatProfile";
 import { tr } from "./Translator";
 import objectHash from "object-hash";
-import { Info, Sync } from "@material-ui/icons";
+import { FlightTakeoff, Info, Sync } from "@material-ui/icons";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 
 let cachedAllCores: SimplifiedCoreInfo[] = [];
@@ -153,23 +153,42 @@ function SingleCoreDisplay(props: {
           {props.profile.corrupted ? (
             {}
           ) : (
-            <Tooltip title={tr("CoreInfo.Detail")}>
-              <IconButton
-                color={"inherit"}
-                className={classes.operateButton}
-                onClick={() => {
-                  jumpTo(
-                    "/CoreDetail/" +
-                      props.profile.container +
-                      "/" +
-                      props.profile.id
-                  );
-                  triggerSetPage(Pages.CoreDetail);
-                }}
-              >
-                <Info />
-              </IconButton>
-            </Tooltip>
+            <Box>
+              <Tooltip title={tr("CoreInfo.Detail")}>
+                <IconButton
+                  color={"inherit"}
+                  className={classes.operateButton}
+                  onClick={() => {
+                    jumpTo(
+                      "/CoreDetail/" +
+                        props.profile.container +
+                        "/" +
+                        props.profile.id
+                    );
+                    triggerSetPage(Pages.CoreDetail);
+                  }}
+                >
+                  <Info />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={tr("CoreInfo.Launch")}>
+                <IconButton
+                  color={"inherit"}
+                  className={classes.operateButton}
+                  onClick={() => {
+                    jumpTo(
+                      "/ReadyToLaunch/" +
+                        props.profile.container +
+                        "/" +
+                        props.profile.id
+                    );
+                    triggerSetPage(Pages.ReadyToLaunch);
+                  }}
+                >
+                  <FlightTakeoff />
+                </IconButton>
+              </Tooltip>
+            </Box>
           )}
 
           <Typography

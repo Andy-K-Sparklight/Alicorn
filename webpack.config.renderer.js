@@ -4,6 +4,8 @@ const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { ContextReplacementPlugin } = require("webpack");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const DllReferencePlugin = require("webpack/lib/DllReferencePlugin");
 // noinspection JSValidateTypes
 module.exports = {
   entry: "./src/renderer/Renderer.tsx",
@@ -29,6 +31,13 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js", ".css"],
   },
   plugins: [
+    new DllReferencePlugin({
+      manifest: require(path.resolve(
+        __dirname,
+        "dist",
+        "Twilight.manifest.json"
+      )),
+    }),
     new ContextReplacementPlugin(/keyv/),
     new CopyWebpackPlugin({
       patterns: [
@@ -40,6 +49,6 @@ module.exports = {
     }),
   ],
   devtool: "source-map",
-  mode: "production",
+  mode: "development",
   target: "electron-renderer",
 };

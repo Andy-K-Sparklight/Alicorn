@@ -11,7 +11,6 @@ import {
   MOJANG_USER_TYPE,
 } from "../commons/Constants";
 import { isNull } from "../commons/Null";
-import { JAR_SUFFIX } from "./NativesLint";
 
 // Generate game arguments
 export function generateGameArgs(
@@ -56,10 +55,7 @@ export function generateVMArgs(
   }
   // Specialize for 'client.jar'
   if (!isNull(profile.clientArtifact)) {
-    usingLibs.push(
-      // Reassign path
-      path.join(container.getVersionRoot(profile.id), profile.id + JAR_SUFFIX)
-    );
+    usingLibs.push(profile.clientArtifact.path);
   }
 
   // All natives directories put together

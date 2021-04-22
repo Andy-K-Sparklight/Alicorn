@@ -24,7 +24,7 @@ export function getIconFor(type: ProfileType): string {
       return MOJANG;
     case ProfileType.FORGE:
       return FORGE;
-    case ProfileType.UNIVERSAL:
+    default:
       return UNIVERSIAL;
   }
 }

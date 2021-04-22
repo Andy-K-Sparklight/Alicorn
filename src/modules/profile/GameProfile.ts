@@ -15,7 +15,6 @@ export class GameProfile {
   // The 'path' property in 'client' will be reassigned before downloading
   id = "";
   libraries: LibraryMeta[] = [];
-  clientMappings: ArtifactMeta = ArtifactMeta.emptyArtifactMeta();
   logArg = "";
   logFile = ArtifactMeta.emptyArtifactMeta();
   mainClass = "";

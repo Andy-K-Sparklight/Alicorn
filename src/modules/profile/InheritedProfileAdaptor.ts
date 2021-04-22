@@ -11,6 +11,7 @@ import { MinecraftContainer } from "../container/MinecraftContainer";
 import { loadProfile } from "./ProfileLoader";
 import { ReleaseType, SPACE } from "../commons/Constants";
 import { isNull } from "../commons/Null";
+import { ClassifiersMeta, LibraryMeta, RuleSet } from "./Meta";
 
 // gfBase <- gfHead, just like merge in git
 export function makeInherit(
@@ -61,9 +62,17 @@ export function makeInherit(
     retGF.libraries = retGF.libraries.concat(gfHead.libraries);
   }
   if (!isNull(gfHead.clientArtifact)) {
+    retGF.libraries.push(
+      new LibraryMeta(
+        gfBase.clientArtifact,
+        ClassifiersMeta.emptyClassifiersMeta(),
+        false,
+        RuleSet.emptyRuleSet(),
+        gfBase.id
+      )
+    );
     retGF.clientArtifact = gfHead.clientArtifact;
   }
-
   return retGF;
 }
 
@@ -89,6 +98,7 @@ export class InheritedProfile extends GameProfile {
     container: MinecraftContainer,
     legacyBit = false
   ): Promise<GameProfile> {
+    console.log("Inheriting profile");
     if (isNull(this.inheritsFrom)) {
       return this;
     }

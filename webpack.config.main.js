@@ -36,6 +36,6 @@ module.exports = {
     }),
   ],
   devtool: "source-map",
-  mode: "production",
+  mode: "development",
   target: "electron-main",
 };

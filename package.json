@@ -1,6 +1,8 @@
 {
   "private": true,
   "scripts": {
+    "build-dll": "npx webpack --config webpack.config.dll.js --progress",
+    "build-dll-ci": "npx webpack --config webpack.config.dll.js",
     "build-main": "npx webpack --config webpack.config.main.js --progress",
     "build-main-ci": "npx webpack --config webpack.config.main.js",
     "build-renderer": "npx webpack --config webpack.config.renderer.js --progress",

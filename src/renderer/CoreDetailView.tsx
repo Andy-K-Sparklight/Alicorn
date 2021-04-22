@@ -6,7 +6,7 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GameProfile } from "../modules/profile/GameProfile";
 import { useParams } from "react-router";
 import { loadProfile } from "../modules/profile/ProfileLoader";
@@ -16,6 +16,7 @@ import { tr } from "./Translator";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { Cancel, CheckCircle } from "@material-ui/icons";
 import { ReleaseType } from "../modules/commons/Constants";
+import { getIconFor } from "../modules/profile/Icons";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -31,6 +32,10 @@ const useStyles = makeStyles((theme) =>
       flexGrow: 1,
       color: theme.palette.primary.main,
     },
+    icon: {
+      float: "right",
+      marginRight: theme.spacing(4),
+    },
   })
 );
 
@@ -39,17 +44,26 @@ export function CoreDetail(): JSX.Element {
   const [profileLoadedBit, setLoaded] = useState(0);
   // 0: Not loaded 1: OK 2: Error
   const { id, container } = useParams<{ id: string; container: string }>();
+  const mounted = useRef<boolean>();
   useEffect(() => {
+    mounted.current = true;
     if (!profileLoadedBit) {
       (async () => {
         try {
-          setProfile(await loadProfile(id, getContainer(container)));
-          setLoaded(1);
+          if (mounted.current) {
+            setProfile(await loadProfile(id, getContainer(container)));
+            setLoaded(1);
+          }
         } catch {
-          setLoaded(2);
+          if (mounted.current) {
+            setLoaded(2);
+          }
         }
       })();
     }
+    return () => {
+      mounted.current = false;
+    };
   });
   return profileLoadedBit === 1 ? (
     <CoreDetailView profile={coreProfile} container={getContainer(container)} />
@@ -65,6 +79,7 @@ function CoreDetailView(props: {
   const classes = useStyles();
   const type = whatProfile(props.profile.id);
   const modAble = [ProfileType.FABRIC, ProfileType.FORGE].includes(type);
+  const icon = getIconFor(type);
   let finalKey = "CoreDetail.ReleaseType.";
   switch (props.profile.type) {
     case ReleaseType.RELEASE:
@@ -82,6 +97,13 @@ function CoreDetailView(props: {
   }
   return (
     <Box className={classes.root}>
+      <img
+        src={icon}
+        alt={"ICON"}
+        width={"72px"}
+        height={"72px"}
+        className={classes.icon}
+      />
       <Typography className={classes.text} color={"textSecondary"} gutterBottom>
         {props.profile.id}
       </Typography>
