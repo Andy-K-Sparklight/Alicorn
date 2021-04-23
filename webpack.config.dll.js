@@ -5,7 +5,7 @@ const DllPlugin = require("webpack/lib/DllPlugin");
 
 module.exports = {
   entry: {
-    Twilight: ["react", "react-dom", "@material-ui/core"],
+    Twilight: ["react", "react-dom", "@material-ui/core", "object-hash"],
   },
   output: {
     filename: "[name].dll.js",

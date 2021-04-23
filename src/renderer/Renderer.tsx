@@ -14,6 +14,7 @@ import { initModInfo } from "../modules/modx/ModInfo";
 import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
 import { HashRouter } from "react-router-dom";
 import { App } from "./App";
+import { initVF } from "../modules/container/ValidateRecord";
 
 const ALICORN_THEME_FILE = "alicorn.theme.json";
 const GLOBAL_STYLES: React.CSSProperties = {
@@ -71,6 +72,7 @@ initTranslator();
   initDownloadWrapper();
   await initModInfo();
   await initForgeInstallModule();
+  await initVF();
   console.log("Delayed init tasks finished.");
 })();
 ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));

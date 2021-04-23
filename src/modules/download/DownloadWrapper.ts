@@ -4,8 +4,13 @@ import { Serial } from "./Serial";
 import { applyMirror } from "./Mirror";
 import { getNumber } from "../config/ConfigSupport";
 import EventEmitter from "events";
+import { getModifiedDate, isFileExist } from "../config/FileUtil";
 import { validate } from "./Validate";
-import { isFileExist } from "../config/FileUtil";
+import {
+  deleteRecord,
+  getLastValidateModified,
+  updateRecord,
+} from "../container/ValidateRecord";
 
 const PENDING_TASKS: DownloadMeta[] = [];
 const RUNNING_TASKS = new Set<DownloadMeta>();
@@ -91,11 +96,26 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
     });
 }
 
+// If no sha provided, we'll ignore it
 async function existsAndValidate(meta: DownloadMeta): Promise<boolean> {
-  if (meta.sha1 !== "" && (await isFileExist(meta.savePath))) {
-    if (await validate(meta.savePath, meta.sha1)) {
-      return true;
-    }
+  if (!(await isFileExist(meta.savePath))) {
+    deleteRecord(meta.savePath);
+    return false;
   }
-  return false;
+  if (meta.sha1.trim() === "") {
+    // This might be a wrong SHA, we should not cache it
+    return true;
+  }
+  const lastValidated = await getLastValidateModified(meta.savePath);
+  const actualModifiedDate = await getModifiedDate(meta.savePath);
+  if (actualModifiedDate <= lastValidated) {
+    return true;
+  }
+  const res = await validate(meta.savePath, meta.sha1);
+  if (res) {
+    updateRecord(meta.savePath);
+  } else {
+    deleteRecord(meta.savePath);
+  }
+  return res;
 }

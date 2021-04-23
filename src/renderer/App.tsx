@@ -22,6 +22,7 @@ import { tr } from "./Translator";
 import { Route } from "react-router";
 import { CoreDetail } from "./CoreDetailView";
 import { ReadyToLaunch } from "./ReadyToLaunch";
+import { saveVFSync } from "../modules/container/ValidateRecord";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -132,5 +133,6 @@ function prepareToQuit(): void {
   saveGDTSync();
   saveJDTSync();
   saveMirrorSync();
+  saveVFSync();
   console.log("All chunks are saved.");
 }

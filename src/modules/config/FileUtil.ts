@@ -10,6 +10,14 @@ export async function isFileExist(pt: string): Promise<boolean> {
   }
 }
 
+export async function getModifiedDate(f: string): Promise<Date> {
+  try {
+    return (await fs.stat(path.resolve(f))).mtime;
+  } catch {
+    return new Date();
+  }
+}
+
 export async function copyFileStream(
   from: string,
   dest: string
