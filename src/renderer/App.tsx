@@ -16,13 +16,19 @@ import { saveConfigSync } from "../modules/config/ConfigSupport";
 import { saveGDTSync } from "../modules/container/ContainerUtil";
 import { saveJDTSync } from "../modules/java/JInfo";
 import { saveMirrorSync } from "../modules/download/Mirror";
-import { Code, FlightTakeoff, PowerSettingsNew } from "@material-ui/icons";
-import { LaunchPad, setDirty } from "./LaunchPad";
+import {
+  Code,
+  FlightTakeoff,
+  Info,
+  PowerSettingsNew,
+} from "@material-ui/icons";
+import { LaunchPad } from "./LaunchPad";
 import { tr } from "./Translator";
 import { Route } from "react-router";
 import { CoreDetail } from "./CoreDetailView";
 import { ReadyToLaunch } from "./ReadyToLaunch";
 import { saveVFSync } from "../modules/container/ValidateRecord";
+import { VersionView } from "./VersionView";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -67,7 +73,6 @@ export function App(): JSX.Element {
             {/* Drag our window with title */}
             <Typography variant={"h6"}>{tr(page)}</Typography>
           </Box>
-
           <Tooltip title={tr("MainMenu.OpenDevTools")}>
             <IconButton
               color={"inherit"}
@@ -79,13 +84,24 @@ export function App(): JSX.Element {
               <Code />
             </IconButton>
           </Tooltip>
+          <Tooltip title={tr("MainMenu.Version")}>
+            <IconButton
+              className={classes.floatButton}
+              onClick={() => {
+                jumpTo("/Version");
+                triggerSetPage(Pages.Version);
+              }}
+              color={"inherit"}
+            >
+              <Info />
+            </IconButton>
+          </Tooltip>
 
           <Tooltip title={tr("MainMenu.QuickLaunchPad")}>
             <IconButton
               color={"inherit"}
               className={classes.floatButton}
               onClick={() => {
-                setDirty();
                 jumpTo("/LaunchPad");
                 triggerSetPage(Pages.LaunchPad);
               }}
@@ -112,6 +128,7 @@ export function App(): JSX.Element {
           path={"/ReadyToLaunch/:container/:id"}
           component={ReadyToLaunch}
         />
+        <Route path={"/Version"} component={VersionView} />
       </Box>
     </Box>
   );

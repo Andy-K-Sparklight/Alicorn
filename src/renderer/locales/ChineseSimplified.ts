@@ -5,7 +5,9 @@ export default {
   Containers: "容器管理器",
   CoreDetail: "核心详细信息",
   ReadyToLaunch: "出发吧",
+  Version: "版本信息",
   "MainMenu.Exit": "退出",
+  "MainMenu.Version": "版本信息",
   "MainMenu.OpenDevTools": "打开开发者工具",
   "MainMenu.QuickLaunchPad": "打开启动台",
   "CoreInfo.Introduction.Minecraft": "享受原汁原味的原版 Minecraft",
@@ -60,4 +62,10 @@ export default {
     "让您在这里等待确实很不礼貌，但是我们更不想让您的游戏崩溃！",
     "友谊就是魔法！",
   ],
+  "VersionView.Version": "发行版",
+  "VersionView.Name": "Alicorn 启动器",
+  "VersionView.AuthorName": "作者",
+  "VersionView.Authors": "RarityEG",
+  "VersionView.Description":
+    "这是 Alicorn 的测试版本，可能存在重大问题，请谨慎使用。",
 };

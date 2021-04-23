@@ -1,4 +1,7 @@
+import { setDirty } from "./LaunchPad";
+
 export function jumpTo(target: string): void {
+  setDirty();
   window.location.hash = target;
 }
 
@@ -19,4 +22,5 @@ export enum Pages {
   Accounts = "Accounts",
   AccountDetail = "AccountDetail",
   InstallConfiguration = "InstallConfiguration",
+  Version = "Version",
 }
