@@ -1,0 +1,10 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/source-code",
+      "destination": "https://bitbucket.org/RarityEG/alicorn/"
+    }
+  ]
+}

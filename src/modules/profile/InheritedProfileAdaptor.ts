@@ -98,7 +98,6 @@ export class InheritedProfile extends GameProfile {
     container: MinecraftContainer,
     legacyBit = false
   ): Promise<GameProfile> {
-    console.log("Inheriting profile");
     if (isNull(this.inheritsFrom)) {
       return this;
     }

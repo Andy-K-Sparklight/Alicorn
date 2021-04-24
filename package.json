@@ -4,6 +4,7 @@
   "sideEffects": false,
   "scripts": {
     "build-dll": "npx webpack --config webpack.config.dll.js --progress",
+    "build-vercel": "npx yarn build-dll-ci&&npx yarn release-full-ci&&npx yarn build-full-ci",
     "build-dll-ci": "npx webpack --config webpack.config.dll.js",
     "build-main": "npx webpack --config webpack.config.main.js --progress",
     "build-main-ci": "npx webpack --config webpack.config.main.js",
@@ -35,6 +36,7 @@
     "@types/sha": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.18.0",
+    "@vercel/node": "^1.10.0",
     "copy-webpack-plugin": "^8.1.0",
     "css-loader": "^5.2.0",
     "electron": "^12.0.2",

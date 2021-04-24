@@ -39,6 +39,7 @@ import { isFileExist } from "../modules/config/FileUtil";
 import fs from "fs-extra";
 import path from "path";
 import { ipcRenderer } from "electron";
+import { scanCoresIn } from "../modules/container/ContainerScanner";
 
 export function setContainerListDirty(): void {
   window.dispatchEvent(new CustomEvent("setContainerListDirty"));
@@ -122,9 +123,24 @@ function SingleContainerDisplay(props: {
   isMounted: boolean;
 }): JSX.Element {
   const classes = useCardStyles();
+  const mounted = useRef<boolean>(true);
   const [deleteAskOpen, setOpen] = useState(false);
   const [clearAskOpen, setClearOpen] = useState(false);
   const [operating, setOperating] = useState(false);
+  const [coreCount, setCount] = useState(-1);
+  useEffect(() => {
+    if (coreCount < 0 && props.isMounted) {
+      (async () => {
+        const cores = (await scanCoresIn(props.container)).length;
+        if (mounted.current) {
+          setCount(cores);
+        }
+      })();
+    }
+    return () => {
+      mounted.current = false;
+    };
+  });
   return (
     <Box>
       <OperatingHint open={operating} />
@@ -256,6 +272,19 @@ function SingleContainerDisplay(props: {
           >
             {tr("ContainerManager.RootDir") + " " + props.container.rootDir}
           </Typography>
+          {props.isMounted ? (
+            <Typography
+              color={"textSecondary"}
+              className={classes.text}
+              gutterBottom
+            >
+              {coreCount >= 0
+                ? coreCount + " " + tr("ContainerManager.Cores")
+                : tr("ContainerManager.CoresLoading")}
+            </Typography>
+          ) : (
+            ""
+          )}
         </CardContent>
       </Card>
       <br />

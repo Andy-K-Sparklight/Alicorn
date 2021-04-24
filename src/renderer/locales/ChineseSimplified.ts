@@ -109,6 +109,8 @@ export default {
   "ContainerManager.Mount": "装载容器",
   "ContainerManager.Unmount": "卸载容器",
   "ContainerManager.Clear": "抹掉容器",
+  "ContainerManager.Cores": "个核心",
+  "ContainerManager.CoresLoading": "清点核心中",
   "ContainerManager.AskRemove": "解除链接此容器？",
   "ContainerManager.AskRemoveDetail":
     "这不会修改磁盘上的文件，您可以稍后重新导入该容器。",
