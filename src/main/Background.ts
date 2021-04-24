@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain } from "electron";
+import { BrowserWindow, dialog, ipcMain } from "electron";
 import { getMainWindow } from "./Bootstrap";
 
 const LOGIN_START =
@@ -15,6 +15,20 @@ export function registerBackgroundListeners(): void {
   });
   ipcMain.on("openDevTools", () => {
     getMainWindow()?.webContents.openDevTools();
+  });
+  ipcMain.handle("selectDir", async () => {
+    const r = await dialog.showOpenDialog({
+      properties: [
+        "openDirectory",
+        "createDirectory",
+        "promptToCreate",
+        "dontAddToRecent",
+      ],
+    });
+    if (r.canceled) {
+      return "";
+    }
+    return r.filePaths[0] || "";
   });
   // Auth helper in background
   ipcMain.handle("msBrowserCode", async () => {

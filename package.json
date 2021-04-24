@@ -1,6 +1,7 @@
 {
   "private": true,
   "version": "Inside 2",
+  "sideEffects": false,
   "scripts": {
     "build-dll": "npx webpack --config webpack.config.dll.js --progress",
     "build-dll-ci": "npx webpack --config webpack.config.dll.js",
@@ -13,7 +14,13 @@
     "quick-test": "cd dist&&npx electron .",
     "full-test": "npx yarn build-full&&npx yarn quick-test",
     "main-test": "npx yarn build-main&&npx yarn quick-test",
-    "renderer-test": "npx yarn build-renderer&&npx yarn quick-test"
+    "renderer-test": "npx yarn build-renderer&&npx yarn quick-test",
+    "release-main": "npx webpack --config webpack.config.main.release.js --progress",
+    "release-main-ci": "npx webpack --config webpack.config.main.release.js",
+    "release-renderer": "npx webpack --config webpack.config.renderer.release.js --progress",
+    "release-renderer-ci": "npx webpack --config webpack.config.renderer.release.js",
+    "release-full": "npx yarn release-main&&npx yarn release-renderer",
+    "release-full-ci": "npx yarn release-main-ci&&npx yarn release-renderer-ci"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.0.1",

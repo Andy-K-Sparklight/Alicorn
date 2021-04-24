@@ -2,15 +2,13 @@
 const path = require("path");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { ContextReplacementPlugin } = require("webpack");
 
 // noinspection JSValidateTypes
 module.exports = {
   entry: "./src/main/Bootstrap.ts",
   output: {
     filename: "Bootstrap.js",
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "dist", "release"),
   },
   module: {
     rules: [
@@ -25,21 +23,19 @@ module.exports = {
     extensions: [".ts", ".js"],
   },
   plugins: [
-    new ContextReplacementPlugin(/keyv/),
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: path.resolve(__dirname, "resources", "dev"),
-          to: path.resolve(__dirname, "dist"),
+          from: path.resolve(__dirname, "resources", "release"),
+          to: path.resolve(__dirname, "dist", "release"),
         },
         {
           from: path.resolve(__dirname, "resources", "shared"),
-          to: path.resolve(__dirname, "dist"),
+          to: path.resolve(__dirname, "dist", "release"),
         },
       ],
     }),
   ],
-  devtool: "source-map",
-  mode: "development",
+  mode: "production",
   target: "electron-main",
 };

@@ -51,6 +51,24 @@ export async function ensureNatives(
   progresser?.markEnd("All native libraries are resolved.");
 }
 
+// Ensure Client
+// This function will do nothing if there isn't a valid client
+export async function ensureClient(profile: GameProfile): Promise<void> {
+  if (isNull(profile.clientArtifact)) {
+    return;
+  }
+  if (isNull(profile.clientArtifact.path)) {
+    return;
+  }
+  await wrappedDownloadFile(
+    new DownloadMeta(
+      profile.clientArtifact.url,
+      profile.clientArtifact.path,
+      profile.clientArtifact.sha1
+    )
+  );
+}
+
 // Ensure libraries
 // The return value is the number of failed tasks
 export async function ensureLibraries(
@@ -68,10 +86,6 @@ export async function ensureLibraries(
     if (l.isNative) {
       allLibrariesToCheck.push(getNativeArtifact(l));
     }
-  }
-  // Special support
-  if (!isNull(profile.clientArtifact)) {
-    allLibrariesToCheck.push(profile.clientArtifact);
   }
   const values = await Promise.all(
     (() => {

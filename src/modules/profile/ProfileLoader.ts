@@ -46,14 +46,6 @@ function fixProfileClient<T extends GameProfile>(
   profile: T,
   container: MinecraftContainer
 ): T {
-  console.log("Fixing profile " + profile.id);
-  console.log(
-    "Correct path is " +
-      path.resolve(
-        container.getVersionRoot(profile.id),
-        profile.id + JAR_SUFFIX
-      )
-  );
   profile.clientArtifact.path = path.resolve(
     container.getVersionRoot(profile.id),
     profile.id + JAR_SUFFIX

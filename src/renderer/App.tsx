@@ -17,6 +17,7 @@ import { saveGDTSync } from "../modules/container/ContainerUtil";
 import { saveJDTSync } from "../modules/java/JInfo";
 import { saveMirrorSync } from "../modules/download/Mirror";
 import {
+  AllInbox,
   Code,
   FlightTakeoff,
   Info,
@@ -29,6 +30,7 @@ import { CoreDetail } from "./CoreDetailView";
 import { ReadyToLaunch } from "./ReadyToLaunch";
 import { saveVFSync } from "../modules/container/ValidateRecord";
 import { VersionView } from "./VersionView";
+import { ContainerManager } from "./ContainerManager";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -96,6 +98,18 @@ export function App(): JSX.Element {
               <Info />
             </IconButton>
           </Tooltip>
+          <Tooltip title={tr("MainMenu.QuickManageContainer")}>
+            <IconButton
+              className={classes.floatButton}
+              onClick={() => {
+                jumpTo("/ContainerManager");
+                triggerSetPage(Pages.ContainerManager);
+              }}
+              color={"inherit"}
+            >
+              <AllInbox />
+            </IconButton>
+          </Tooltip>
 
           <Tooltip title={tr("MainMenu.QuickLaunchPad")}>
             <IconButton
@@ -109,7 +123,6 @@ export function App(): JSX.Element {
               <FlightTakeoff />
             </IconButton>
           </Tooltip>
-
           <Tooltip title={tr("MainMenu.Exit")}>
             <IconButton
               className={classes.exitButton}
@@ -129,6 +142,7 @@ export function App(): JSX.Element {
           component={ReadyToLaunch}
         />
         <Route path={"/Version"} component={VersionView} />
+        <Route path={"/ContainerManager"} component={ContainerManager} />
       </Box>
     </Box>
   );

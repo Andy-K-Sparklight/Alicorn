@@ -40,15 +40,14 @@ export function unlinkContainer(name: string): void {
   unregisterContainer(name);
 }
 
-// Remove files, then unlink
-export async function deleteContainer(name: string): Promise<void> {
-  unlinkContainer(name);
+// Remove files, don't unlink
+export async function clearContainer(name: string): Promise<void> {
   const dir = getContainer(name).resolvePath();
   if (dir === path.resolve()) {
     throw new Error("Invalid target! Cannot operate cwd.");
   }
   try {
-    await fs.remove(dir);
+    await fs.emptydir(dir);
   } catch (e) {
     throw new Error("Cannot delete container. Caused by: " + e);
   }

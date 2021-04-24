@@ -22,6 +22,10 @@ export function getContainer(containerID: string): MinecraftContainer {
   return new MinecraftContainer(rootOf(containerID), containerID);
 }
 
+export function hasContainerPt(s: string): boolean {
+  return Array.from(GlobalContainerDescriptorTable.values()).includes(s);
+}
+
 export function registerContainer(container: MinecraftContainer): void {
   GlobalContainerDescriptorTable.set(container.id, container.rootDir);
   GlobalMountDescriptorTable.set(container.id, true);
@@ -34,7 +38,11 @@ export function unregisterContainer(id: string): void {
 }
 
 export function isMounted(id: string): boolean {
-  return GlobalMountDescriptorTable.get(id) || true;
+  const ret = GlobalMountDescriptorTable.get(id);
+  if (ret === undefined) {
+    return true;
+  }
+  return ret;
 }
 
 export function mount(id: string): void {

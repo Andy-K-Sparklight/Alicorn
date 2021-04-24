@@ -92,6 +92,9 @@ async function moveModsTo(
 export async function restoreMods(
   container: MinecraftContainer
 ): Promise<void> {
+  if (!getBoolean("modx.global-dynamic-load-mods")) {
+    return;
+  }
   try {
     const all = await fs.readdir(container.getDynamicModsRoot());
     await Promise.all(
@@ -115,6 +118,9 @@ export async function prepareModsCheckFor(
   profile: GameProfile,
   container: MinecraftContainer
 ): Promise<void> {
+  if (!getBoolean("modx.global-dynamic-load-mods")) {
+    return;
+  }
   try {
     const stat = gatherVersionInfo(profile);
     await moveModsTo(

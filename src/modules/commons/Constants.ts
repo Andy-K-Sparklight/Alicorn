@@ -1,6 +1,9 @@
 import os from "os";
 import pkg from "../../../package.json";
 
+// DO NOT EDIT THE FOLLOWING VALUES
+// They are very important for already installed Alicorns!
+
 export const ALICORN_VERSION_TYPE = "Alicorn";
 export const MOJANG_USER_TYPE = "mojang";
 export const LAUNCHER_NAME = "Alicorn";

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Card,
@@ -17,6 +17,7 @@ import { tr } from "./Translator";
 import objectHash from "object-hash";
 import { FlightTakeoff, Info, Sync } from "@material-ui/icons";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
+import { useCardStyles } from "./Stylex";
 
 let cachedAllCores: SimplifiedCoreInfo[] = [];
 let coresCacheBit = false;
@@ -52,12 +53,21 @@ export function LaunchPad(): JSX.Element {
 }
 
 function CoresDisplay(): JSX.Element {
-  const [cores, setCores] = useState([] as SimplifiedCoreInfo[]);
+  const mountedBit = useRef<boolean>(true);
+  const [cores, setCores] = useState<SimplifiedCoreInfo[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [refreshBit, setRefresh] = useState(true);
   useEffect(() => {
+    mountedBit.current = true;
+    return () => {
+      mountedBit.current = false;
+    };
+  });
+  useEffect(() => {
     if (!coresCacheBit) {
-      setLoading(true);
+      if (mountedBit.current) {
+        setLoading(true);
+      }
       cachedAllCores = [];
       coresCacheBit = true;
       (async () => {
@@ -86,8 +96,10 @@ function CoresDisplay(): JSX.Element {
             }
           }
         }
-        setCores(cachedAllCores);
-        setLoading(false);
+        if (mountedBit.current) {
+          setCores(cachedAllCores);
+          setLoading(false);
+        }
       })();
     }
   });
@@ -100,7 +112,9 @@ function CoresDisplay(): JSX.Element {
             color={"inherit"}
             onClick={() => {
               setDirty();
-              setRefresh(!refreshBit);
+              if (mountedBit.current) {
+                setRefresh(!refreshBit);
+              }
             }}
           >
             <Sync />
@@ -123,24 +137,6 @@ function CoresDisplay(): JSX.Element {
     </Box>
   );
 }
-
-const useCardStyles = makeStyles((theme) =>
-  createStyles({
-    text: {
-      fontSize: "medium",
-    },
-    desc: {
-      fontSize: "small",
-    },
-    card: {
-      backgroundColor: theme.palette.primary.main,
-      width: "80%",
-    },
-    operateButton: {
-      float: "right",
-    },
-  })
-);
 
 function SingleCoreDisplay(props: {
   profile: SimplifiedCoreInfo;

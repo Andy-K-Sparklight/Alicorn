@@ -42,7 +42,11 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: path.resolve(__dirname, "resources"),
+          from: path.resolve(__dirname, "resources", "dev"),
+          to: path.resolve(__dirname, "dist"),
+        },
+        {
+          from: path.resolve(__dirname, "resources", "shared"),
           to: path.resolve(__dirname, "dist"),
         },
       ],

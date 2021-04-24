@@ -7,6 +7,7 @@ import {
   Step,
   StepLabel,
   Stepper,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import { GameProfile } from "../modules/profile/GameProfile";
@@ -23,14 +24,18 @@ import objectHash from "object-hash";
 import {
   ensureAllAssets,
   ensureAssetsIndex,
+  ensureClient,
   ensureLibraries,
   ensureNatives,
 } from "../modules/launch/Ensurance";
 import { launchProfile } from "../modules/launch/LaunchPad";
 import EventEmitter from "events";
-import { PROCESS_LOG_GATE } from "../modules/commons/Constants";
-
-// UNCHECKED
+import {
+  PROCESS_END_GATE,
+  PROCESS_LOG_GATE,
+  ReleaseType,
+} from "../modules/commons/Constants";
+import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -38,6 +43,7 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.secondary.light,
     },
     textSP: {
+      fontSize: "small",
       color: theme.palette.secondary.main,
     },
     text: {
@@ -46,7 +52,6 @@ const useStyles = makeStyles((theme) =>
       color: theme.palette.secondary.main,
     },
     root: {
-      marginLeft: theme.spacing(4),
       textAlign: "center",
     },
     primaryText: {
@@ -114,6 +119,7 @@ function Launching(props: {
     "PerformingAuth",
     "CheckingLibs",
     "CheckingAssets",
+    "PreparingMods",
     "GeneratingArgs",
     "Finished",
   ];
@@ -122,8 +128,9 @@ function Launching(props: {
     PerformingAuth: 1,
     CheckingLibs: 2,
     CheckingAssets: 3,
-    GeneratingArgs: 4,
-    Finished: 5,
+    PreparingMods: 4,
+    GeneratingArgs: 5,
+    Finished: 6,
   };
   return (
     <Box className={classes.root}>
@@ -161,26 +168,34 @@ function Launching(props: {
       <Typography className={classes.text} gutterBottom>
         {hint}
       </Typography>
-      <Fab
-        color={"primary"}
-        disabled={
-          status !== LaunchingStatus.PENDING &&
-          status !== LaunchingStatus.FINISHED
+      <Tooltip
+        title={
+          status === LaunchingStatus.FINISHED
+            ? tr("ReadyToLaunch.Restart")
+            : tr("ReadyToLaunch.Start")
         }
-        onClick={async () => {
-          await startBoot(
-            (st) => {
-              setStatus(st);
-              setActiveStep(REV_LAUNCH_STEPS[st]);
-            },
-            props.profile,
-            props.container,
-            setID
-          );
-        }}
       >
-        <FlightTakeoff />
-      </Fab>
+        <Fab
+          color={"primary"}
+          disabled={
+            status !== LaunchingStatus.PENDING &&
+            status !== LaunchingStatus.FINISHED
+          }
+          onClick={async () => {
+            await startBoot(
+              (st) => {
+                setStatus(st);
+                setActiveStep(REV_LAUNCH_STEPS[st]);
+              },
+              props.profile,
+              props.container,
+              setID
+            );
+          }}
+        >
+          <FlightTakeoff />
+        </Fab>
+      </Tooltip>
     </Box>
   );
 }
@@ -193,19 +208,22 @@ async function startBoot(
   container: MinecraftContainer,
   setID: (id: string) => void
 ): Promise<void> {
-  // TODO wrong profile
-  console.log(profile);
   const jRunnable = getJavaRunnable(getLastUsedJavaHome());
   setStatus(LaunchingStatus.ACCOUNT_AUTHING);
   // Virtual
   const account = new MicrosoftAccount("");
   await account.performAuth("");
   setStatus(LaunchingStatus.LIBRARIES_FILLING);
+  await ensureClient(profile);
   await ensureLibraries(profile, container);
   await ensureNatives(profile, container);
   setStatus(LaunchingStatus.ASSETS_FILLING);
   await ensureAssetsIndex(profile, container);
   await ensureAllAssets(profile, container);
+  setStatus(LaunchingStatus.MODS_PREPARING);
+  if (profile.type === ReleaseType.MODIFIED) {
+    await prepareModsCheckFor(profile, container);
+  }
   setStatus(LaunchingStatus.ARGS_GENERATING);
   const em = new EventEmitter();
   const runID = launchProfile(
@@ -221,8 +239,15 @@ async function startBoot(
   );
   setID(runID);
   setStatus(LaunchingStatus.FINISHED);
+  console.log(`A new Minecraft instance (${runID}) has been launched.`);
   em.on(PROCESS_LOG_GATE, (d) => {
     console.log(d);
+  });
+  em.on(PROCESS_END_GATE, async (c) => {
+    console.log(`Minecraft(${runID}) exited with exit code ${c}.`);
+    console.log("Restoring mods...");
+    await restoreMods(container);
+    console.log("Done!");
   });
 }
 
@@ -231,6 +256,7 @@ enum LaunchingStatus {
   ACCOUNT_AUTHING = "PerformingAuth",
   LIBRARIES_FILLING = "CheckingLibs",
   ASSETS_FILLING = "CheckingAssets",
+  MODS_PREPARING = "PreparingMods",
   ARGS_GENERATING = "GeneratingArgs",
   FINISHED = "Finished",
 }

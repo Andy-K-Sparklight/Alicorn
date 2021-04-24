@@ -1,7 +1,9 @@
 import { setDirty } from "./LaunchPad";
+import { setContainerListDirty } from "./ContainerManager";
 
 export function jumpTo(target: string): void {
   setDirty();
+  setContainerListDirty();
   window.location.hash = target;
 }
 
@@ -12,7 +14,7 @@ export function triggerSetPage(page: string): void {
 export enum Pages {
   Settings = "Settings",
   Today = "Today",
-  Containers = "Containers",
+  ContainerManager = "ContainerManager",
   LaunchPad = "LaunchPad",
   ReadyToLaunch = "ReadyToLaunch",
   CrashAnalyze = "CrashAnalyze",
