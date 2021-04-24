@@ -21,10 +21,6 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: path.resolve(__dirname, "src", "al-online"),
-          to: path.resolve(__dirname, "dist", "api"),
-        },
-        {
           from: path.resolve(__dirname, "resources", "vercel"),
           to: path.resolve(__dirname, "dist"),
         },
