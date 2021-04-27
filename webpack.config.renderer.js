@@ -1,11 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { ContextReplacementPlugin } = require("webpack");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const DllReferencePlugin = require("webpack/lib/DllReferencePlugin");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const BuildInfoPlugin = require("./BuildInfoPlugin");
 // noinspection JSValidateTypes
 module.exports = {
   entry: "./src/renderer/Renderer.tsx",
@@ -31,6 +31,7 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js", ".css"],
   },
   plugins: [
+    new BuildInfoPlugin("RendererBuild.json"),
     new DllReferencePlugin({
       manifest: require(path.resolve(
         __dirname,
@@ -39,18 +40,6 @@ module.exports = {
       )),
     }),
     new ContextReplacementPlugin(/keyv/),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.resolve(__dirname, "resources", "dev"),
-          to: path.resolve(__dirname, "dist"),
-        },
-        {
-          from: path.resolve(__dirname, "resources", "shared"),
-          to: path.resolve(__dirname, "dist"),
-        },
-      ],
-    }),
   ],
   devtool: "source-map",
   mode: "development",

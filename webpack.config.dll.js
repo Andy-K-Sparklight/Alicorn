@@ -3,10 +3,16 @@ const path = require("path");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const DllPlugin = require("webpack/lib/DllPlugin");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+const BuildInfoPlugin = require("./BuildInfoPlugin");
 module.exports = {
   entry: {
-    Twilight: ["react", "react-dom", "@material-ui/core", "object-hash"],
+    Twilight: [
+      "react",
+      "react-dom",
+      "@material-ui/core",
+      "object-hash",
+      "@material-ui/icons",
+    ],
   },
   output: {
     filename: "[name].dll.js",
@@ -14,17 +20,10 @@ module.exports = {
     library: "[name]",
   },
   plugins: [
+    new BuildInfoPlugin("DllBuild.json"),
     new DllPlugin({
       name: "[name]",
       path: path.join(__dirname, "dist", "[name].manifest.json"),
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.resolve(__dirname, "resources", "vercel"),
-          to: path.resolve(__dirname, "dist"),
-        },
-      ],
     }),
   ],
   mode: "development",

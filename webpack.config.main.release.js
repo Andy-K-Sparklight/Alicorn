@@ -2,7 +2,8 @@
 const path = require("path");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const BuildInfoPlugin = require("./BuildInfoPlugin");
 // noinspection JSValidateTypes
 module.exports = {
   entry: "./src/main/Bootstrap.ts",
@@ -23,6 +24,7 @@ module.exports = {
     extensions: [".ts", ".js"],
   },
   plugins: [
+    new BuildInfoPlugin("MainBuild.json"),
     new CopyWebpackPlugin({
       patterns: [
         {
