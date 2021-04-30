@@ -34,6 +34,9 @@ export class Serial extends AbstractDownloader {
       // Pipe data
       await pipeline(got.stream(meta.url), fs.createWriteStream(meta.savePath));
 
+      if (meta.sha1 === "") {
+        return DownloadStatus.RESOLVED;
+      }
       if (await validate(meta.savePath, meta.sha1)) {
         // No error is ok
         return DownloadStatus.RESOLVED;

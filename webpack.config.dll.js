@@ -4,6 +4,8 @@ const path = require("path");
 const DllPlugin = require("webpack/lib/DllPlugin");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const BuildInfoPlugin = require("./BuildInfoPlugin");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Version = require("./package.json").version;
 module.exports = {
   entry: {
     Twilight: [
@@ -20,7 +22,7 @@ module.exports = {
     library: "[name]",
   },
   plugins: [
-    new BuildInfoPlugin("DllBuild.json"),
+    new BuildInfoPlugin("DllBuild.json", Version),
     new DllPlugin({
       name: "[name]",
       path: path.join(__dirname, "dist", "[name].manifest.json"),

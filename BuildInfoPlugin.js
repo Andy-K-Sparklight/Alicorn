@@ -1,6 +1,7 @@
 class BuildInfoPlugin {
-  constructor(output) {
+  constructor(output, version) {
     this.output = output;
+    this.version = version;
   }
 
   apply(compiler) {
@@ -18,6 +19,7 @@ class BuildInfoPlugin {
           const bInfo = {};
           bInfo.date = new Date().toUTCString();
           bInfo.files = Array.from(Object.keys(assets));
+          bInfo.version = this.version;
           compilation.emitAsset(
             this.output,
             new RawSource(JSON.stringify(bInfo))

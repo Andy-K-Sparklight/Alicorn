@@ -2,6 +2,8 @@ import { app, BrowserWindow } from "electron";
 import os from "os";
 import { btoa } from "js-base64";
 import { registerBackgroundListeners } from "./Background";
+import { checkUpdate } from "./Updator";
+import { getBoolean, loadConfig } from "../modules/config/ConfigSupport";
 
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow | null = null;
@@ -23,8 +25,16 @@ app.on("ready", async () => {
   mainWindow.once("ready-to-show", async () => {
     console.log("Creating window!");
     mainWindow?.show();
+    console.log("Loading config...");
+    await loadConfig();
     console.log("Registering event listeners...");
     registerBackgroundListeners();
+    if (getBoolean("updator.use-update")) {
+      console.log("Checking updates...");
+      await checkUpdate();
+    } else {
+      console.log("Skipped update checking due to user settings.");
+    }
     console.log("All caught up! Alicorn is now initialized.");
   });
   await mainWindow.loadFile("Renderer.html");

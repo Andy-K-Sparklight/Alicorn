@@ -6,6 +6,8 @@ const { ContextReplacementPlugin } = require("webpack");
 const DllReferencePlugin = require("webpack/lib/DllReferencePlugin");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const BuildInfoPlugin = require("./BuildInfoPlugin");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Version = require("./package.json").version;
 // noinspection JSValidateTypes
 module.exports = {
   entry: "./src/renderer/Renderer.tsx",
@@ -31,7 +33,7 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js", ".css"],
   },
   plugins: [
-    new BuildInfoPlugin("RendererBuild.json"),
+    new BuildInfoPlugin("RendererBuild.json", Version),
     new DllReferencePlugin({
       manifest: require(path.resolve(
         __dirname,

@@ -6,6 +6,8 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { ContextReplacementPlugin } = require("webpack");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const BuildInfoPlugin = require("./BuildInfoPlugin");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Version = require("./package.json").version;
 // noinspection JSValidateTypes
 module.exports = {
   entry: "./src/main/Bootstrap.ts",
@@ -26,7 +28,7 @@ module.exports = {
     extensions: [".ts", ".js"],
   },
   plugins: [
-    new BuildInfoPlugin("MainBuild.json"),
+    new BuildInfoPlugin("MainBuild.json", Version),
     new ContextReplacementPlugin(/keyv/),
     new CopyWebpackPlugin({
       patterns: [
