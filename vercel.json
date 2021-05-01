@@ -1,6 +1,4 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": true,
   "redirects": [
     {
       "source": "/source-code",

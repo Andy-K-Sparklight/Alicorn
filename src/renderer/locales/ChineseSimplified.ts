@@ -1,9 +1,8 @@
 import pkg from "../../../package.json";
 
 export default {
-  Today: "时下",
   LaunchPad: "启动台",
-  Installer: "软件安装器",
+  InstallCore: "核心安装器",
   ContainerManager: "容器管理器",
   CoreDetail: "核心详细信息",
   ReadyToLaunch: "出发吧",
@@ -11,9 +10,20 @@ export default {
   "MainMenu.Exit": "退出",
   "MainMenu.Version": "版本信息",
   "MainMenu.OpenDevTools": "打开开发者工具",
+  "MainMenu.QuickInstallCore": "安装核心",
   "MainMenu.QuickLaunchPad": "打开启动台",
   "MainMenu.QuickManageContainer": "管理容器",
   "Operating.PleaseWait": "请稍等",
+  "Operating.Failed": "操作失败……",
+  "Operating.FailedConfirm": "好",
+  "Operating.FailedInfo":
+    "进行操作时遇到问题，请重试，如果问题依然存在，请向我们反馈。",
+  "Operating.FailedSayings": [
+    "毁灭是重生的开始。",
+    "为什么会变成这样呢？",
+    "我想到了无序可能会背叛我们，但没想到这一天这么快就来了……",
+    "对不起。谢谢你。",
+  ],
   "Operating.PleaseWaitDetail": "正在进行操作……这可能需要几分钟。",
   "CoreInfo.Introduction.Minecraft": "享受原汁原味的原版 Minecraft",
   "CoreInfo.Introduction.Forge": "加载 Mod 大作，或是烧烧显卡",
@@ -92,9 +102,7 @@ export default {
   "VersionView.Copyright1":
     "Alicorn 启动器是自由软件，复制、修改和重新分发等行为应遵循 GNU GENERAL PUBLIC LICENSE Version 3.0 许可证。",
   "VersionView.Copyright2": `Copyright (C) 2021 RarityEG from MCBBS
-  
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3.
-    
     This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.`,
   "ContainerManager.RootDir": "挂载于",
   "ContainerManager.Add": "添加容器",
@@ -121,4 +129,16 @@ export default {
   "ContainerManager.No": "不，不要这样做",
   "ContainerManager.Continue": "继续",
   "ContainerManager.Cancel": "取消",
+  "InstallCore.InstallMinecraft": "安装 Minecraft",
+  "InstallCore.TargetContainer": "目标容器",
+  "InstallCore.Release": "Minecraft 稳定版",
+  "InstallCore.Snapshot": "Minecraft 快照",
+  "InstallCore.OldAlpha": "早期 Alpha 版",
+  "InstallCore.OldBeta": "早期 Beta 版",
+  "InstallCore.MinecraftArch": "Minecraft 类型",
+  "InstallCore.Start": "开始安装",
+  "InstallCore.Confirm.Ready": "准备开始安装",
+  "InstallCore.Confirm.Hint": "将安装以下核心到指定的容器中：",
+  "InstallCore.Confirm.OK": "开始操作",
+  "InstallCore.MinecraftVersion": "版本号",
 };

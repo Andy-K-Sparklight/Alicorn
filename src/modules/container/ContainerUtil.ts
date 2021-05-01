@@ -14,6 +14,10 @@ export function getAllContainers(): string[] {
   return Array.from(GlobalContainerDescriptorTable.keys());
 }
 
+export function getAllContainerPaths(): string[] {
+  return Array.from(GlobalContainerDescriptorTable.values());
+}
+
 export function rootOf(containerID: string): string {
   return GlobalContainerDescriptorTable.get(containerID) || "";
 }
@@ -22,13 +26,19 @@ export function getContainer(containerID: string): MinecraftContainer {
   return new MinecraftContainer(rootOf(containerID), containerID);
 }
 
-export function hasContainerPt(s: string): boolean {
-  return Array.from(GlobalContainerDescriptorTable.values()).includes(s);
-}
-
 export function registerContainer(container: MinecraftContainer): void {
   GlobalContainerDescriptorTable.set(container.id, container.rootDir);
   GlobalMountDescriptorTable.set(container.id, true);
+}
+
+export function getAllMounted(): string[] {
+  const r = [];
+  for (const c of GlobalContainerDescriptorTable.keys()) {
+    if (isMounted(c)) {
+      r.push(c);
+    }
+  }
+  return r;
 }
 
 export function unregisterContainer(id: string): void {

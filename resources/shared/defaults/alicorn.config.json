@@ -2,7 +2,7 @@
   "_comment1": "Do you pinkie promise that you edit this file properly?",
   "_comment2": "Invalid config will cause boot failure!",
   "updator.dev": true,
-  "updator.use-update": true,
+  "updator.use-update": false,
   "download.concurrent.chunk-size": 1024,
   "download.concurrent.timeout": 5000,
   "download.concurrent.tries-per-chunk": 3,

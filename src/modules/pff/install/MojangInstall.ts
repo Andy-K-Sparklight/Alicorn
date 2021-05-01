@@ -13,11 +13,12 @@ import {
 // UNCHECKED
 
 export async function installProfile(
-  profile: GameProfile,
+  id: string,
+  profile: unknown,
   container: MinecraftContainer
 ): Promise<boolean> {
   try {
-    const td = container.getProfilePath(profile.id);
+    const td = container.getProfilePath(id);
     await fs.ensureDir(path.dirname(td));
     await fs.writeFile(td, JSON.stringify(profile));
     return true;

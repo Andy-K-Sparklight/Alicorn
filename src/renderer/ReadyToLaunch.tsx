@@ -206,7 +206,7 @@ async function startBoot(
   setStatus: (status: LaunchingStatus) => void,
   profile: GameProfile,
   container: MinecraftContainer,
-  setID: (id: string) => void
+  setID: (id: string) => unknown
 ): Promise<void> {
   const jRunnable = getJavaRunnable(getLastUsedJavaHome());
   setStatus(LaunchingStatus.ACCOUNT_AUTHING);
@@ -245,6 +245,7 @@ async function startBoot(
   });
   em.on(PROCESS_END_GATE, async (c) => {
     console.log(`Minecraft(${runID}) exited with exit code ${c}.`);
+    setStatus(LaunchingStatus.PENDING);
     console.log("Restoring mods...");
     await restoreMods(container);
     console.log("Done!");

@@ -13,14 +13,13 @@ export function triggerSetPage(page: string): void {
 
 export enum Pages {
   Settings = "Settings",
-  Today = "Today",
   ContainerManager = "ContainerManager",
   LaunchPad = "LaunchPad",
   ReadyToLaunch = "ReadyToLaunch",
   CrashAnalyze = "CrashAnalyze",
   CoreDetail = "CoreDetail",
   ModDetail = "ModDetail",
-  Installer = "Installer",
+  InstallCore = "InstallCore",
   Accounts = "Accounts",
   AccountDetail = "AccountDetail",
   InstallConfiguration = "InstallConfiguration",

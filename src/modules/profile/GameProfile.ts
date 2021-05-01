@@ -36,7 +36,7 @@ export class GameProfile {
           this.type = ReleaseType.SNAPSHOT;
           break;
         case "old_beta":
-          this.type = ReleaseType.OLG_BETA;
+          this.type = ReleaseType.OLD_BETA;
           break;
         case "old_alpha":
           this.type = ReleaseType.OLD_ALPHA;

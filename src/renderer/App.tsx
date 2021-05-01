@@ -20,6 +20,7 @@ import {
   AllInbox,
   Code,
   FlightTakeoff,
+  GetApp,
   Info,
   PowerSettingsNew,
 } from "@material-ui/icons";
@@ -31,6 +32,7 @@ import { ReadyToLaunch } from "./ReadyToLaunch";
 import { saveVFSync } from "../modules/container/ValidateRecord";
 import { VersionView } from "./VersionView";
 import { ContainerManager } from "./ContainerManager";
+import { InstallCore } from "./InstallCore";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -58,12 +60,12 @@ let EVENT_LISTENED_FLAG = false;
 
 export function App(): JSX.Element {
   const classes = useStyles();
-  const [page, setPage] = useState(Pages.Today.toString());
+  const [page, setPage] = useState(Pages.Version.toString());
   useEffect(() => {
     if (!EVENT_LISTENED_FLAG) {
       EVENT_LISTENED_FLAG = true;
       document.addEventListener("setPage", (e) => {
-        setPage(String(safeGet(e, ["detail"], Pages.Today)));
+        setPage(String(safeGet(e, ["detail"], Pages.Version)));
       });
     }
   });
@@ -110,6 +112,18 @@ export function App(): JSX.Element {
               <AllInbox />
             </IconButton>
           </Tooltip>
+          <Tooltip title={tr("MainMenu.QuickInstallCore")}>
+            <IconButton
+              className={classes.floatButton}
+              onClick={() => {
+                jumpTo("/InstallCore");
+                triggerSetPage(Pages.InstallCore);
+              }}
+              color={"inherit"}
+            >
+              <GetApp />
+            </IconButton>
+          </Tooltip>
 
           <Tooltip title={tr("MainMenu.QuickLaunchPad")}>
             <IconButton
@@ -135,7 +149,9 @@ export function App(): JSX.Element {
         </Toolbar>
       </AppBar>
       <Box className={classes.content}>
+        <Route path={"/"} component={VersionView} exact />
         <Route path={"/LaunchPad"} component={LaunchPad} />
+        <Route path={"/InstallCore"} component={InstallCore} />
         <Route path={"/CoreDetail/:container/:id"} component={CoreDetail} />
         <Route
           path={"/ReadyToLaunch/:container/:id"}

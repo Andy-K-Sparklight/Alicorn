@@ -33,7 +33,7 @@ enum ReleaseType {
   RELEASE = "release",
   SNAPSHOT = "snapshot",
   OLD_ALPHA = "old_alpha",
-  OLG_BETA = "old_beta",
+  OLD_BETA = "old_beta",
   MODIFIED = "modified", // Nonofficial profiles
 }
 

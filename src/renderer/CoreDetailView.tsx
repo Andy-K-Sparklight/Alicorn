@@ -89,7 +89,7 @@ function CoreDetailView(props: {
       finalKey += "Snapshot";
       break;
     case ReleaseType.OLD_ALPHA:
-    case ReleaseType.OLG_BETA:
+    case ReleaseType.OLD_BETA:
       finalKey += "Old";
       break;
     default:

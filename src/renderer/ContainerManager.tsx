@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import {
+  getAllContainerPaths,
   getAllContainers,
   getContainer,
-  hasContainerPt,
   isMounted,
   mount,
   unmount,
@@ -306,7 +306,7 @@ async function validateDir(n: string): Promise<boolean> {
     return true;
   }
   n = path.resolve(n);
-  if (hasContainerPt(n)) {
+  if (getAllContainerPaths().includes(n)) {
     return false;
   }
   if (!(await isFileExist(n))) {
@@ -375,7 +375,7 @@ function AddNewContainer(props: {
           margin={"dense"}
           onChange={(e) => {
             setSelected(e.target.value);
-            validateDir(selectedDir).then((b) => {
+            validateDir(e.target.value).then((b) => {
               setDirError(!b);
             });
           }}
@@ -397,8 +397,9 @@ function AddNewContainer(props: {
           type={"button"}
           variant={"outlined"}
           onClick={async () => {
-            setSelected(await remoteSelectDir());
-            validateDir(selectedDir).then((b) => {
+            const d = await remoteSelectDir();
+            setSelected(d);
+            validateDir(d).then((b) => {
               setDirError(!b);
             });
           }}
@@ -445,6 +446,4 @@ async function remoteSelectDir(): Promise<string> {
 
 async function createContainer(id: string, dir: string): Promise<void> {
   await createNewContainer(dir, id);
-  console.log("Operated.");
-  console.log(getAllContainers());
 }

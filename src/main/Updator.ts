@@ -3,7 +3,7 @@ import { getBoolean } from "../modules/config/ConfigSupport";
 import got from "got";
 import BuildInfoSchema from "./BuildInfoSchema.json";
 import { getMainWindow } from "./Bootstrap";
-import { dialog } from "electron";
+import { app, dialog } from "electron";
 import pkg from "../../package.json";
 import {
   DownloadMeta,
@@ -44,11 +44,9 @@ export async function checkUpdate(): Promise<void> {
     HEAD = MAIN_BUILD_FILE_RELEASE;
     BASE = RELEASE_FOLDER;
   }
-  console.log("Head url judged.");
   const res = await got.get(HEAD, { cache: false, responseType: "json" });
   let d: BuildInfo;
   if (AJV.validate(BuildInfoSchema, res.body)) {
-    console.log("Received valid main build info");
     d = res.body as BuildInfo;
     if (await isFileExist(LOCK_FILE)) {
       if (
@@ -63,7 +61,6 @@ export async function checkUpdate(): Promise<void> {
       date: new Date(d.date).toLocaleDateString(),
     };
     if (getBoolean("updator.dev")) {
-      console.log("Using dev");
       const res_dll = await got.get(DLL_BUILD_FILE_DEV, {
         cache: false,
         responseType: "json",
@@ -89,7 +86,6 @@ export async function checkUpdate(): Promise<void> {
       }
       await hintUpdate(u);
     } else {
-      console.log("Using prod");
       const res_rend = await got.get(RENDERER_BUILD_FILE_RELEASE, {
         cache: false,
         responseType: "json",
@@ -134,7 +130,7 @@ export async function doUpdate(
     for (const v of info.files) {
       const meta = new DownloadMeta(
         baseUrl + v,
-        path.resolve(process.cwd(), v),
+        path.resolve(app.getAppPath(), v),
         ""
       );
       if (
