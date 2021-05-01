@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "Inside 2",
+  "version": "InDev",
   "sideEffects": false,
   "scripts": {
     "build-dll": "npx webpack --config webpack.config.dll.js --progress",
