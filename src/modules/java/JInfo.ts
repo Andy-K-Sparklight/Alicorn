@@ -3,13 +3,16 @@ import fs from "fs-extra";
 import { loadProperties } from "../commons/PropertiesUtil";
 import os from "os";
 import { ALICORN_DATA_SUFFIX, PLACE_HOLDER } from "../commons/Constants";
-import { loadData, saveDataSync } from "../config/DataSupport";
-import { buildMap, parseMap } from "../commons/MapUtil";
+import { saveDataSync } from "../config/DataSupport";
+import { buildMap } from "../commons/MapUtil";
+import { whereJava } from "./WhereJava";
+
+// UNCHECKED
 
 const JAVA_RECORD_BASE = "java.record" + ALICORN_DATA_SUFFIX;
 const JAVA_RELEASE = "release";
 const LATEST_TAG = "?LATEST>>";
-let JDT = new Map<string, string>();
+const JDT = new Map<string, string>();
 const JAVAW = (() => {
   if (os.platform() === "win32") {
     return path.join("bin", "javaw.exe");
@@ -46,8 +49,13 @@ export function getJavaRunnable(jHome: string): string {
   return path.resolve(path.join(jHome, JAVAW));
 }
 
+// FIXME Only for emergency
 export async function loadJDT(): Promise<void> {
-  JDT = parseMap(await loadData(JAVA_RECORD_BASE));
+  const all = await whereJava();
+  for (const x of all) {
+    JDT.set(x, PLACE_HOLDER);
+  }
+  // JDT = parseMap(await loadData(JAVA_RECORD_BASE));
 }
 
 export function getAllJava(): string[] {
