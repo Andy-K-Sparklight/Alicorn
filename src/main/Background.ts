@@ -43,11 +43,11 @@ export function registerBackgroundListeners(): void {
       show: false,
     });
     await window.loadURL(LOGIN_START);
-    return new Promise<string>((resolve, reject) => {
+    return new Promise<string>((resolve) => {
       window?.on("close", () => {
         if (sCode === "") {
           console.log("Unexpected window closing, what have you done?");
-          reject();
+          resolve("");
         }
       });
       window?.webContents.on("did-stop-loading", () => {
@@ -73,7 +73,7 @@ export function registerBackgroundListeners(): void {
           }
           console.log("Error occurred. Closing login window.");
           window?.close();
-          reject();
+          resolve("");
         } else {
           console.log("Not a callback URL, showing window...");
           window?.show();

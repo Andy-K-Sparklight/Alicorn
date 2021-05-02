@@ -36,6 +36,8 @@ import {
   ReleaseType,
 } from "../modules/commons/Constants";
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
+import { LocalAccount } from "../modules/auth/LocalAccount";
+import { Account } from "../modules/auth/Account";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -211,8 +213,11 @@ async function startBoot(
   const jRunnable = getJavaRunnable(getLastUsedJavaHome());
   setStatus(LaunchingStatus.ACCOUNT_AUTHING);
   // Virtual
-  const account = new MicrosoftAccount("");
-  await account.performAuth("");
+  let account: Account = new MicrosoftAccount("");
+  const s = await account.performAuth("");
+  if (!s) {
+    account = new LocalAccount("Demo");
+  }
   setStatus(LaunchingStatus.LIBRARIES_FILLING);
   await ensureClient(profile);
   await ensureLibraries(profile, container);

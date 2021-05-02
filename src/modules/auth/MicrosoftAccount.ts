@@ -83,6 +83,9 @@ export class MicrosoftAccount extends Account {
   async performAuth(password: string): Promise<boolean> {
     try {
       const code = await browserGetCode();
+      if (code.trim().length === 0) {
+        return false;
+      }
       const r = await getTokenByCode(code);
       if (!r.success) {
         return false;

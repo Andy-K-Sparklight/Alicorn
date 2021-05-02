@@ -11,6 +11,7 @@ export class LocalAccount extends Account {
   }
 
   async buildAccessData(): Promise<Trio<string, string, string>> {
+    await this.flushToken();
     return new Trio(
       this.lastUsedUsername,
       this.lastUsedAccessToken,

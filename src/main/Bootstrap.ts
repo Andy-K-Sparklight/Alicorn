@@ -29,7 +29,6 @@ app.on("ready", async () => {
   mainWindow.once("ready-to-show", async () => {
     console.log("Creating window!");
     mainWindow?.show();
-    mainWindow?.webContents.openDevTools();
     if (getBoolean("updator.use-update")) {
       console.log("Checking updates...");
       await checkUpdate();
