@@ -2,6 +2,7 @@ import path from "path";
 import os from "os";
 import fs from "fs-extra";
 import { isFileExist } from "./FileUtil";
+import { getBasePath } from "./PathSolve";
 
 const CONFIG_FILE = path.resolve(
   os.homedir(),
@@ -9,7 +10,11 @@ const CONFIG_FILE = path.resolve(
   "alicorn.config.json"
 );
 
-const DEFAULT_CONFIG_FILE = path.resolve("defaults", "alicorn.config.json");
+const DEFAULT_CONFIG_FILE = path.resolve(
+  getBasePath(),
+  "defaults",
+  "alicorn.config.json"
+);
 
 let cachedConfig = {};
 

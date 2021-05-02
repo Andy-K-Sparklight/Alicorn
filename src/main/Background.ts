@@ -1,4 +1,4 @@
-import { BrowserWindow, dialog, ipcMain } from "electron";
+import { app, BrowserWindow, dialog, ipcMain } from "electron";
 import { getMainWindow } from "./Bootstrap";
 
 const LOGIN_START =
@@ -12,6 +12,9 @@ export function registerBackgroundListeners(): void {
   ipcMain.on("closeWindow", () => {
     console.log("Closing window!");
     getMainWindow()?.close();
+  });
+  ipcMain.on("getAppPath", (e) => {
+    e.returnValue = app.getAppPath();
   });
   ipcMain.on("openDevTools", () => {
     getMainWindow()?.webContents.openDevTools();

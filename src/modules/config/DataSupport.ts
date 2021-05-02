@@ -2,9 +2,10 @@ import fs from "fs-extra";
 import path from "path";
 import os from "os";
 import { copyFileStream, isFileExist } from "./FileUtil";
+import { getBasePath } from "./PathSolve";
 
 const DATA_ROOT = path.resolve(os.homedir(), "alicorn");
-const DEFAULTS_ROOT = path.resolve("defaults");
+const DEFAULTS_ROOT = path.resolve(getBasePath(), "defaults");
 
 export function resolveDataFilePath(dataPath: string): string {
   return path.join(DATA_ROOT, dataPath);

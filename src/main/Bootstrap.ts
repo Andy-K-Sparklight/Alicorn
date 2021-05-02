@@ -22,13 +22,14 @@ app.on("ready", async () => {
   });
   mainWindow.setMenu(null);
   console.log("Loading resources...");
+  console.log("Registering event listeners...");
+  registerBackgroundListeners();
+  console.log("Loading config...");
+  await loadConfig();
   mainWindow.once("ready-to-show", async () => {
     console.log("Creating window!");
     mainWindow?.show();
-    console.log("Loading config...");
-    await loadConfig();
-    console.log("Registering event listeners...");
-    registerBackgroundListeners();
+    mainWindow?.webContents.openDevTools();
     if (getBoolean("updator.use-update")) {
       console.log("Checking updates...");
       await checkUpdate();
@@ -37,6 +38,7 @@ app.on("ready", async () => {
     }
     console.log("All caught up! Alicorn is now initialized.");
   });
+  console.log("Preparing window!");
   await mainWindow.loadFile("Renderer.html");
 });
 

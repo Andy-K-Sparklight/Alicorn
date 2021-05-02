@@ -3,6 +3,8 @@ const path = require("path");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+const { ContextReplacementPlugin } = require("webpack");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const BuildInfoPlugin = require("./BuildInfoPlugin");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Version = require("./package.json").version;
@@ -39,6 +41,7 @@ module.exports = {
         },
       ],
     }),
+    new ContextReplacementPlugin(/keyv/),
   ],
   mode: "production",
   target: "electron-main",
