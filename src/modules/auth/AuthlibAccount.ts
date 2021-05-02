@@ -7,6 +7,7 @@ import {
 } from "./Account";
 import { Trio } from "../commons/Collections";
 import objectHash from "object-hash";
+import { AccountType } from "./AccountUtil";
 
 // Account using Authlib Injector
 export class AuthlibAccount extends Account {
@@ -92,7 +93,7 @@ export class AuthlibAccount extends Account {
   selectedProfile: RemoteUserProfile | undefined;
 
   constructor(accountName: string, authServer: string) {
-    super(accountName);
+    super(accountName, AccountType.AUTHLIB_INJECTOR);
     this.authServer = authServer;
   }
 }

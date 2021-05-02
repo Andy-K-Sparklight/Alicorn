@@ -3,13 +3,17 @@ import got from "got";
 import { isNull, safeGet } from "../commons/Null";
 import { getUniqueID32 } from "../security/Encrypt";
 import objectHash from "object-hash";
+import { AccountType } from "./AccountUtil";
 
 export abstract class Account {
-  protected constructor(accountName: string) {
+  type: AccountType;
+
+  protected constructor(accountName: string, accountType: AccountType) {
     this.lastUsedUsername = "";
     this.accountName = accountName;
     this.lastUsedUUID = "";
     this.lastUsedAccessToken = "";
+    this.type = accountType;
   }
 
   abstract performAuth(password: string): Promise<boolean>;

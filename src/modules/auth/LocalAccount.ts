@@ -1,12 +1,13 @@
 import { Account } from "./Account";
 import { Trio } from "../commons/Collections";
 import objectHash from "object-hash";
+import { AccountType } from "./AccountUtil";
 
 const OFFLINE_PLAYER_PREFIX = "OfflinePlayer:";
 
 export class LocalAccount extends Account {
   constructor(name: string) {
-    super(name);
+    super(name, AccountType.ALICORN);
     this.lastUsedUUID = buildOfflinePlayerUUID(name);
   }
 

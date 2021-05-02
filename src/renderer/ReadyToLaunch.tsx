@@ -219,6 +219,7 @@ async function startBoot(
     account = new LocalAccount("Demo");
   }
   setStatus(LaunchingStatus.LIBRARIES_FILLING);
+
   await ensureClient(profile);
   await ensureLibraries(profile, container);
   await ensureNatives(profile, container);

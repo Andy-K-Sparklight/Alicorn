@@ -30,8 +30,8 @@ export async function scanCoresIn(
       })
     );
     return tArr;
-  } catch (e) {
-    throw new Error("Cannot read container. Caused by: " + e);
+  } catch {
+    return [];
   }
 }
 

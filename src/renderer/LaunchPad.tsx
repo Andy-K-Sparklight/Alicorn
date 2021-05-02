@@ -3,10 +3,8 @@ import {
   Box,
   Card,
   CardContent,
-  createStyles,
   IconButton,
   LinearProgress,
-  makeStyles,
   Tooltip,
   Typography,
 } from "@material-ui/core";
@@ -17,7 +15,7 @@ import { tr } from "./Translator";
 import objectHash from "object-hash";
 import { FlightTakeoff, Info, Sync } from "@material-ui/icons";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
-import { useCardStyles } from "./Stylex";
+import { useCardStyles, usePadStyles } from "./Stylex";
 
 let cachedAllCores: SimplifiedCoreInfo[] = [];
 let coresCacheBit = false;
@@ -30,17 +28,6 @@ interface SimplifiedCoreInfo {
   versionType: string;
   baseVersion: string;
 }
-
-const usePadStyles = makeStyles((theme) =>
-  createStyles({
-    para: {
-      flexGrow: 1,
-      marginTop: theme.spacing(4),
-      color: theme.palette.primary.main,
-      marginLeft: "16%",
-    },
-  })
-);
 
 export function LaunchPad(): JSX.Element {
   const classes = usePadStyles();

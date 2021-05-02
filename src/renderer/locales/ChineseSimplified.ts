@@ -141,4 +141,12 @@ export default {
   "InstallCore.Confirm.Hint": "将安装以下核心到指定的容器中：",
   "InstallCore.Confirm.OK": "开始操作",
   "InstallCore.MinecraftVersion": "版本号",
+  "AccountManager.Remove": "移除帐户",
+  "InstallCore.Success": "成功安装了核心",
+  "AccountManager.Refresh": "刷新令牌",
+  "AccountManager.EnterPassword": "输入密码",
+  "AccountManager.Password": "您的密码",
+  "AccountManager.EnterPasswordHint": "为您的帐户输入密码",
+  "AccountManager.Failed": "验证失败 - 我们无法验证您的帐户，请稍后再试",
+  "AccountManager.Validate": "验证",
 };

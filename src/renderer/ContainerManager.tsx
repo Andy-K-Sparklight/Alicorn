@@ -26,7 +26,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import objectHash from "object-hash";
-import { useCardStyles } from "./Stylex";
+import { useCardStyles, useInputStyles } from "./Stylex";
 import { tr } from "./Translator";
 import { Add, Eject, Input, LayersClear, LinkOff } from "@material-ui/icons";
 import {
@@ -324,16 +324,7 @@ function AddNewContainer(props: {
   const [usedName, setName] = useState("");
   const [nameError, setNameError] = useState(false);
   const [dirError, setDirError] = useState(false);
-  const classes = makeStyles((theme) =>
-    createStyles({
-      input: {
-        color: theme.palette.secondary.light,
-      },
-      border: {
-        color: theme.palette.secondary.light,
-      },
-    })
-  )();
+  const classes = useInputStyles();
   return (
     <Dialog
       open={props.open}

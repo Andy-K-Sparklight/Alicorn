@@ -22,15 +22,10 @@ module.exports = {
         use: "ts-loader",
         exclude: /node_modules/,
       },
-      {
-        test: /\.css$/,
-        use: "css-loader",
-        exclude: /node_modules/,
-      },
     ],
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js", ".css"],
+    extensions: [".tsx", ".ts", ".js"],
   },
   plugins: [
     new BuildInfoPlugin("RendererBuild.json", Version),

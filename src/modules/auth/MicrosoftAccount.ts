@@ -3,6 +3,7 @@ import { Trio } from "../commons/Collections";
 import { ipcRenderer } from "electron";
 import got from "got";
 import { isNull, safeGet } from "../commons/Null";
+import { AccountType } from "./AccountUtil";
 
 // The auth progress for MS accounts:
 // User -> Code (Browser)
@@ -30,7 +31,7 @@ export class MicrosoftAccount extends Account {
   }
 
   constructor(accountName: string) {
-    super(accountName);
+    super(accountName, AccountType.MICROSOFT);
   }
 
   async flushToken(): Promise<boolean> {

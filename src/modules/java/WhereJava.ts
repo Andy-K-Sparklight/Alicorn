@@ -4,7 +4,7 @@ import fs from "fs-extra";
 import path from "path";
 
 // This function is VERY SLOW!
-// It searches the whole os directory to find 'javaw.exe'(or 'javaw' on unix-liked)
+// It searches the whole os directory to find 'java.exe'(or 'java' on unix-liked)
 
 export async function whereJava(): Promise<string[]> {
   let all: string[] = [];
@@ -33,7 +33,7 @@ async function findJavaUNIX(): Promise<string[]> {
   }
   const programBase = "/";
   const all: string[] = [];
-  await diveSearch("javaw", programBase, all);
+  await diveSearch("java", programBase, all);
   return all;
 }
 
@@ -42,9 +42,9 @@ async function findJavaInPATH(): Promise<string> {
   if (javaPath === undefined) {
     return "";
   }
-  let javaName = "javaw";
+  let javaName = "java";
   if (os.platform() === "win32") {
-    javaName = "javaw.exe";
+    javaName = "java.exe";
   }
   const testJavaPath = path.join(javaPath, "bin", javaName);
   if (fs.existsSync(testJavaPath)) {
@@ -61,17 +61,17 @@ async function findJavaInProgramFilesWin32(): Promise<string[]> {
   const programBase86 = "C:\\Program Files (x86)";
   const all: string[] = [];
 
-  await diveSearch("javaw.exe", programBaseMain, all);
-  await diveSearch("javaw.exe", programBase86, all);
+  await diveSearch("java.exe", programBaseMain, all);
+  await diveSearch("java.exe", programBase86, all);
   // Find 32 bit, diveSearch can 'afford' error
   return all;
 }
 
 // Use command to locate
 async function findJavaViaCommand(): Promise<string[]> {
-  let command = "which javaw";
+  let command = "which java";
   if (os.platform() === "win32") {
-    command = "where javaw";
+    command = "where java";
   }
   return await new Promise<string[]>((resolve) => {
     childProcess.exec(

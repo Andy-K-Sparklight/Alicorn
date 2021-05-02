@@ -29,3 +29,23 @@ makeStyles((theme) =>
     },
   })
 );
+export const usePadStyles = makeStyles((theme) =>
+  createStyles({
+    para: {
+      flexGrow: 1,
+      marginTop: theme.spacing(4),
+      color: theme.palette.primary.main,
+      marginLeft: "16%",
+    },
+  })
+);
+export const useInputStyles = makeStyles((theme) =>
+  createStyles({
+    input: {
+      color: theme.palette.secondary.light,
+    },
+    border: {
+      color: theme.palette.secondary.light,
+    },
+  })
+);

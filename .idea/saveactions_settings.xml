@@ -7,7 +7,7 @@
         <option value="activateOnShortcut" />
         <option value="activateOnBatch" />
         <option value="organizeImports" />
-        <option value="reformat" />
+        <option value="reformatChangedCode" />
       </set>
     </option>
   </component>

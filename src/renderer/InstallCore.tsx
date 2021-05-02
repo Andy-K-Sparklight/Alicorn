@@ -13,6 +13,7 @@ import {
   makeStyles,
   MenuItem,
   Select,
+  Snackbar,
   Typography,
 } from "@material-ui/core";
 import { tr } from "./Translator";
@@ -36,6 +37,9 @@ const useStyles = makeStyles((theme) =>
     root: {
       marginLeft: theme.spacing(4),
       textAlign: "center",
+    },
+    formControl: {
+      margin: theme.spacing(1),
     },
     input: {
       color: theme.palette.secondary.light,
@@ -69,6 +73,7 @@ export function InstallCore(): JSX.Element {
   const [mojangOpen, setMojangOpen] = useState<boolean>(false);
   const [operating, setOperating] = useState<boolean>(false);
   const [failed, setFailed] = useState<boolean>(false);
+  const [openNotice, setOpenNotice] = useState<boolean>(false);
   useEffect(() => {
     (async () => {
       if (!isLoaded.current) {
@@ -87,6 +92,14 @@ export function InstallCore(): JSX.Element {
   });
   return (
     <Box className={classes.root}>
+      <Snackbar
+        open={openNotice}
+        message={tr("InstallCore.Success")}
+        autoHideDuration={3000}
+        onClose={() => {
+          setOpenNotice(false);
+        }}
+      />
       <FailedHint
         open={failed}
         closeFunc={() => {
@@ -104,6 +117,7 @@ export function InstallCore(): JSX.Element {
         confirmFunc={async () => {
           setMojangOpen(false);
           setOperating(true);
+          setFailed(false);
           const u = await getProfileURLById(selectedVersion);
           if (u.length === 0) {
             if (mounted.current) {
@@ -126,6 +140,8 @@ export function InstallCore(): JSX.Element {
             );
             if (mounted.current) {
               setOperating(false);
+              setFailed(false);
+              setOpenNotice(true);
             }
           } catch {
             if (mounted.current) {
@@ -139,7 +155,7 @@ export function InstallCore(): JSX.Element {
         <Typography variant={"h5"} className={classes.title} gutterBottom>
           {tr("InstallCore.InstallMinecraft")}
         </Typography>
-        <FormControl>
+        <FormControl className={classes.formControl}>
           <InputLabel
             id={"CoreInstall-Mojang-SelectArch"}
             className={classes.label}
@@ -171,7 +187,7 @@ export function InstallCore(): JSX.Element {
             </MenuItem>
           </Select>
         </FormControl>
-        <FormControl>
+        <FormControl className={classes.formControl}>
           <InputLabel
             id={"CoreInstall-Mojang-SelectVersion"}
             className={classes.label}
@@ -197,7 +213,7 @@ export function InstallCore(): JSX.Element {
             })}
           </Select>
         </FormControl>
-        <FormControl>
+        <FormControl className={classes.formControl}>
           <InputLabel
             id={"CoreInstall-Mojang-TargetContainer"}
             className={classes.label}

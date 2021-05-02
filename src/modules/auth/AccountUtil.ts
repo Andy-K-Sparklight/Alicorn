@@ -16,6 +16,7 @@ import { MojangAccount } from "./MojangAccount";
 import { MicrosoftAccount } from "./MicrosoftAccount";
 
 // Account Prefix
+// DO NOT EDIT THIS - VALUES ARE VERY ESSENTIAL
 // $AL! Alicorn Local Account
 // $MZ! Microsoft Account
 // $BJ! Mojang Account
@@ -65,7 +66,7 @@ export async function getAllAccounts(): Promise<string[]> {
   }
 }
 
-export async function loadAccount(fName: string): Promise<Account> {
+export async function loadAccount(fName: string): Promise<Account | null> {
   try {
     const s = await loadData(path.join(ACCOUNT_ROOT, fName));
     const deS = decryptByMachine(s);
@@ -82,7 +83,7 @@ export async function loadAccount(fName: string): Promise<Account> {
         return loadLocalAccount(p.getSecondValue());
     }
   } catch {
-    return new LocalAccount("");
+    return null;
   }
 }
 
@@ -163,4 +164,10 @@ function decideWhichAccountByHead(
       {}
     );
   }
+}
+
+export async function removeAccount(fName: string): Promise<void> {
+  try {
+    await fs.remove(getActualDataPath(path.join(ACCOUNT_ROOT, fName)));
+  } catch {}
 }

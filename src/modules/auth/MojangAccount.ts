@@ -6,6 +6,7 @@ import {
   validateToken,
 } from "./Account";
 import { Trio } from "../commons/Collections";
+import { AccountType } from "./AccountUtil";
 
 const MJ_AUTH_SERVER_ROOT = "https://authserver.mojang.com";
 
@@ -83,6 +84,6 @@ export class MojangAccount extends Account {
   selectedProfile: RemoteUserProfile | undefined;
 
   constructor(accountName: string) {
-    super(accountName);
+    super(accountName, AccountType.MOJANG);
   }
 }

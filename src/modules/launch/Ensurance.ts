@@ -54,22 +54,12 @@ export async function ensureNatives(
 // Ensure Client
 // This function will do nothing if there isn't a valid client
 export async function ensureClient(profile: GameProfile): Promise<void> {
-  console.log("Ensuring client for " + profile.id);
-  console.log(profile);
   if (isNull(profile.clientArtifact)) {
     return;
   }
-  if (isNull(profile.clientArtifact.path)) {
+  if (isNull(profile.clientArtifact.url)) {
     return;
   }
-  console.log("Downloading!");
-  console.log(
-    new DownloadMeta(
-      profile.clientArtifact.url,
-      profile.clientArtifact.path,
-      profile.clientArtifact.sha1
-    )
-  );
   await wrappedDownloadFile(
     new DownloadMeta(
       profile.clientArtifact.url,
