@@ -9,8 +9,10 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControlLabel,
   IconButton,
   LinearProgress,
+  Switch,
   TextField,
   Tooltip,
   Typography,
@@ -18,65 +20,161 @@ import {
 import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
 import {
   AccountType,
+  copyAccount,
   getAllAccounts,
   loadAccount,
   removeAccount,
+  saveAccount,
 } from "../modules/auth/AccountUtil";
 import { Account } from "../modules/auth/Account";
 import { tr } from "./Translator";
-import { DeleteForever } from "@material-ui/icons";
+import { Add, DeleteForever, Refresh } from "@material-ui/icons";
 import { ALICORN_ENCRYPTED_DATA_SUFFIX } from "../modules/commons/Constants";
-
-// UNCHECKED
+import { YNDialog } from "./OperatingHint";
+import { MojangAccount } from "../modules/auth/MojangAccount";
+import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
 
 export function AccountManager(): JSX.Element {
   const classes = usePadStyles();
   const mountedBit = useRef<boolean>(true);
-  const [accounts, setAccounts] = useState<Account[]>([]);
+  const accountsLoaded = useRef<boolean>(false);
+  const [accounts, setAccounts] = useState<Set<Account>>(new Set<Account>());
+  const [isAdding, isAddingUpdate] = useState<boolean>(false);
   useEffect(() => {
     mountedBit.current = true;
-    (async () => {
-      const a = await getAllAccounts();
-      const builtAccount: Account[] = [];
-      for (const accountFile of a) {
-        const r = await loadAccount(accountFile);
-        if (r) {
-          builtAccount.push(r);
+    if (!accountsLoaded.current) {
+      accountsLoaded.current = true;
+      (async () => {
+        const a = await getAllAccounts();
+        const builtAccount: Set<Account> = new Set<Account>();
+        for (const accountFile of a) {
+          const r = await loadAccount(accountFile);
+          if (r) {
+            builtAccount.add(r);
+          }
         }
-      }
-      if (mountedBit.current) {
-        setAccounts(builtAccount);
-      }
-    })();
+        if (mountedBit.current) {
+          setAccounts(builtAccount);
+        }
+      })();
+    }
+
     return () => {
       mountedBit.current = false;
     };
   });
 
-  return <Box className={classes.para}></Box>;
+  return (
+    <Box className={classes.para}>
+      <Box style={{ textAlign: "right", marginRight: "18%" }}>
+        <Tooltip title={tr("AccountManager.Reload")}>
+          <IconButton
+            color={"inherit"}
+            onClick={() => {
+              accountsLoaded.current = false;
+              setAccounts(new Set<Account>());
+            }}
+          >
+            <Refresh />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={tr("AccountManager.AddYggdrasil")}>
+          <IconButton
+            color={"inherit"}
+            onClick={() => {
+              isAddingUpdate(true);
+            }}
+          >
+            <Add />
+          </IconButton>
+        </Tooltip>
+      </Box>
+      <AddAccountWrapper
+        open={isAdding}
+        onClose={() => {
+          isAddingUpdate(false);
+        }}
+        handleNewAccount={(a) => {
+          isAddingUpdate(false);
+          const s1 = new Set(accounts.keys());
+          s1.add(a);
+          setAccounts(s1);
+        }}
+      />
+      {(() => {
+        const components: JSX.Element[] = [];
+        for (const a of accounts) {
+          components.push(
+            <SingleAccountDisplay
+              key={a.getAccountIdentifier()}
+              account={a}
+              updateAccount={(n) => {
+                const aCopy = new Set(accounts.keys());
+                aCopy.delete(a);
+                aCopy.add(n);
+                setAccounts(aCopy);
+              }}
+              deleteAccount={(c) => {
+                const aCopy = new Set(accounts.keys());
+                aCopy.delete(c);
+                setAccounts(aCopy);
+              }}
+            />
+          );
+        }
+        return components;
+      })()}
+    </Box>
+  );
 }
 
 export function SingleAccountDisplay(props: {
   account: Account;
   updateAccount: (origin: Account, newAccount: Account) => unknown;
+  deleteAccount: (origin: Account) => unknown;
 }): JSX.Element {
-  const accountCopy = Object.assign({}, props.account);
+  const accountCopy = copyAccount(props.account);
   const classes = useCardStyles();
   const [isOperating, setOperating] = useState<boolean>(false);
   const [mjLWOpening, setMjLWOpen] = useState<boolean>(false);
   const usingAccount = useRef<Account>(accountCopy);
+  const [isAsking, isAskingUpdate] = useState<boolean>(false);
   return (
     <Box>
+      {/* Confirm delete */}
+      {isAsking ? (
+        <YNDialog
+          onClose={() => {
+            isAskingUpdate(false);
+          }}
+          onAccept={async () => {
+            isAskingUpdate(false);
+            await removeAccount(
+              usingAccount.current.getAccountIdentifier() +
+                ALICORN_ENCRYPTED_DATA_SUFFIX
+            );
+            props.deleteAccount(props.account);
+          }}
+          title={tr("AccountManager.DeleteTitle")}
+          content={tr("AccountManager.DeleteMsg")}
+          yes={tr("AccountManager.Yes")}
+          no={tr("AccountManager.No")}
+        />
+      ) : (
+        ""
+      )}
       {/* This is for Mojang */}
       <YggdrasilForm
         onClose={() => {
           setMjLWOpen(false);
+          setOperating(false);
         }}
         open={mjLWOpening}
         account={usingAccount.current}
         updateAccount={(a) => {
           setMjLWOpen(false);
           props.updateAccount(props.account, a);
+          setOperating(false);
         }}
       />
       <Card className={classes.card}>
@@ -89,11 +187,7 @@ export function SingleAccountDisplay(props: {
                 className={classes.operateButton}
                 onClick={() => {
                   (async () => {
-                    await removeAccount(
-                      usingAccount.current.getAccountIdentifier() +
-                        ALICORN_ENCRYPTED_DATA_SUFFIX
-                    );
-                    props.updateAccount(props.account, usingAccount.current);
+                    isAskingUpdate(true);
                   })();
                 }}
               >
@@ -113,20 +207,14 @@ export function SingleAccountDisplay(props: {
                       if (status) {
                         setOperating(false);
                       } else {
-                        if (
-                          usingAccount.current.type === AccountType.MICROSOFT ||
-                          usingAccount.current.type === AccountType.ALICORN
-                        ) {
-                        } else {
-                          setMjLWOpen(true);
-                        }
+                        setMjLWOpen(true);
                       }
                       props.updateAccount(props.account, usingAccount.current);
                     }
                   })();
                 }}
               >
-                <DeleteForever />
+                <Refresh />
               </IconButton>
             </Tooltip>
           </Box>
@@ -157,7 +245,7 @@ export function SingleAccountDisplay(props: {
   );
 }
 
-function toReadableType(t: AccountType): string {
+export function toReadableType(t: AccountType): string {
   switch (t) {
     case AccountType.ALICORN:
       return "Alicorn";
@@ -175,12 +263,12 @@ function toReadableType(t: AccountType): string {
 function YggdrasilForm(props: {
   onClose: () => unknown;
   open: boolean;
-  account: Account;
+  account: Account | undefined;
   updateAccount: (a: Account) => unknown;
 }): JSX.Element {
   const classes = useInputStyles();
   const [pwd, setPwd] = useState<string>("");
-  const isRunning = useRef<boolean>(false);
+  const [isRunning, isRunningUpdate] = useState<boolean>(false);
   const [hasError, setError] = useState<boolean>(false);
   return (
     <Dialog open={props.open} onClose={props.onClose}>
@@ -199,7 +287,8 @@ function YggdrasilForm(props: {
           label={tr("AccountManager.Password")}
           type={"password"}
           spellCheck={false}
-          disabled={isRunning.current}
+          color={"secondary"}
+          disabled={isRunning}
           fullWidth
           variant={"outlined"}
           value={pwd}
@@ -214,18 +303,19 @@ function YggdrasilForm(props: {
       </DialogContent>
       <DialogActions>
         <Button
-          disabled={pwd.length === 0 || isRunning.current}
+          disabled={pwd.length === 0 || isRunning}
           onClick={() => {
+            isRunningUpdate(true);
             (async () => {
               setError(false);
-              const acc = Object.assign({}, props.account);
+              const acc = copyAccount(props.account);
               if (await acc.performAuth(pwd)) {
                 props.updateAccount(acc);
-                isRunning.current = false;
-                setPwd("");
               } else {
                 setError(true);
               }
+              isRunningUpdate(false);
+              setPwd("");
             })();
           }}
         >
@@ -233,5 +323,142 @@ function YggdrasilForm(props: {
         </Button>
       </DialogActions>
     </Dialog>
+  );
+}
+
+// Add Yggdrasil
+// Need to be closed manually when handleNewAccount is called
+function AddAccount(props: {
+  open: boolean;
+  onClose: () => unknown;
+  handleNewAccount: (a: Account) => unknown;
+}): JSX.Element {
+  const [email, emailUpdate] = useState<string>("");
+  const [authHost, authHostUpdate] = useState<string>("");
+  const [isCustom, isCustomUpdate] = useState<boolean>(false);
+  const classes = useInputStyles();
+  return (
+    <Box>
+      <Dialog
+        open={props.open}
+        onClose={() => {
+          props.onClose();
+          emailUpdate("");
+        }}
+      >
+        <DialogContent>
+          <DialogTitle>{tr("AccountManager.AddTitle")}</DialogTitle>
+          <TextField
+            autoFocus
+            className={classes.input}
+            margin={"dense"}
+            color={"secondary"}
+            onChange={(e) => {
+              emailUpdate(e.target.value);
+            }}
+            label={tr("AccountManager.Email")}
+            type={"email"}
+            spellCheck={false}
+            fullWidth
+            variant={"outlined"}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={isCustom}
+                onChange={(e) => {
+                  isCustomUpdate(e.target.checked);
+                }}
+              />
+            }
+            label={tr("AccountManager.UseCustomHost")}
+          />
+          <TextField
+            disabled={!isCustom}
+            className={classes.input}
+            margin={"dense"}
+            color={"secondary"}
+            onChange={(e) => {
+              authHostUpdate(e.target.value);
+            }}
+            label={tr("AccountManager.Host")}
+            type={"url"}
+            spellCheck={false}
+            fullWidth
+            variant={"outlined"}
+          />
+          {isCustom ? (
+            <DialogContentText style={{ fontSize: "small", color: "#ff8400" }}>
+              {tr("AccountManager.Warn")}
+            </DialogContentText>
+          ) : (
+            ""
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            disabled={
+              email.length === 0 || (isCustom && authHost.trim().length === 0)
+            }
+            onClick={() => {
+              if (isCustom) {
+                props.handleNewAccount(
+                  new AuthlibAccount(
+                    email,
+                    authHost.endsWith("/") ? authHost.slice(0, -1) : authHost
+                  )
+                );
+              } else {
+                props.handleNewAccount(new MojangAccount(email));
+              }
+            }}
+          >
+            {tr("AccountManager.Next")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
+}
+
+function AddAccountWrapper(props: {
+  open: boolean;
+  onClose: () => unknown;
+  handleNewAccount: (a: Account) => unknown;
+}): JSX.Element {
+  const [isPwdOpen, isPwdOpenUpdate] = useState<boolean>(false);
+  const [isEmailOpen, isEmailOpenUpdate] = useState<boolean>(true);
+  const [tmpAccount, tmpAccountUpdate] = useState<Account>();
+  return (
+    <Box>
+      <YggdrasilForm
+        onClose={() => {
+          isPwdOpenUpdate(false);
+          isEmailOpenUpdate(true);
+        }}
+        open={props.open && isPwdOpen}
+        account={tmpAccount}
+        updateAccount={async (a) => {
+          tmpAccountUpdate(a);
+          await saveAccount(a);
+          isPwdOpenUpdate(false);
+          isEmailOpenUpdate(false);
+          props.handleNewAccount(a);
+        }}
+      />
+      <AddAccount
+        open={props.open && isEmailOpen}
+        onClose={() => {
+          isEmailOpenUpdate(true);
+          isPwdOpenUpdate(false);
+          props.onClose();
+        }}
+        handleNewAccount={(a) => {
+          isEmailOpenUpdate(false);
+          isPwdOpenUpdate(true);
+          tmpAccountUpdate(a);
+        }}
+      />
+    </Box>
   );
 }

@@ -20,8 +20,7 @@ export enum Pages {
   CoreDetail = "CoreDetail",
   ModDetail = "ModDetail",
   InstallCore = "InstallCore",
-  Accounts = "Accounts",
-  AccountDetail = "AccountDetail",
+  AccountManager = "AccountManager",
   InstallConfiguration = "InstallConfiguration",
   Version = "Version",
 }

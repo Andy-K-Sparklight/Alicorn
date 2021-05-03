@@ -13,20 +13,18 @@ import {
   Button,
   Card,
   CardContent,
-  createStyles,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   IconButton,
-  makeStyles,
   TextField,
   Tooltip,
   Typography,
 } from "@material-ui/core";
 import objectHash from "object-hash";
-import { useCardStyles, useInputStyles } from "./Stylex";
+import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
 import { Add, Eject, Input, LayersClear, LinkOff } from "@material-ui/icons";
 import {
@@ -50,16 +48,7 @@ export function ContainerManager(): JSX.Element {
   const [refreshTrigger, triggerRefresh] = useState(true);
   const [operating, setOpen] = useState(false);
   const [opening, setCreating] = useState(false);
-  const classes2 = makeStyles((theme) =>
-    createStyles({
-      para: {
-        flexGrow: 1,
-        marginTop: theme.spacing(4),
-        color: theme.palette.primary.main,
-        marginLeft: "16%",
-      },
-    })
-  )();
+  const classes2 = usePadStyles();
   useEffect(() => {
     isEleMounted.current = true;
     const fun = () => {

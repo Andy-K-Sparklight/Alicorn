@@ -1,12 +1,25 @@
 import {
   Box,
+  Button,
   createStyles,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Fab,
+  FormControlLabel,
+  InputLabel,
   LinearProgress,
   makeStyles,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  Select,
   Step,
   StepLabel,
   Stepper,
+  TextField,
   Tooltip,
   Typography,
 } from "@material-ui/core";
@@ -38,6 +51,17 @@ import {
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { LocalAccount } from "../modules/auth/LocalAccount";
 import { Account } from "../modules/auth/Account";
+import { useInputStyles } from "./Stylex";
+import { isNull } from "../modules/commons/Null";
+import {
+  AccountType,
+  fillAccessData,
+  getAllAccounts,
+  loadAccount,
+} from "../modules/auth/AccountUtil";
+import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
+import { prefetchData } from "../modules/auth/AJHelper";
+import { toReadableType } from "./AccountManager";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -103,19 +127,38 @@ function Launching(props: {
   container: MinecraftContainer;
 }): JSX.Element {
   const classes = useStyles();
+  const mountedBit = useRef<boolean>(true);
   const [runID, setID] = useState("");
   const [status, setStatus] = useState(LaunchingStatus.PENDING);
   const [hint, setHint] = useState(randsl("ReadyToLaunch.WaitingText"));
   const [activeStep, setActiveStep] = useState(0);
+  const [selectedAccount, setSelectedAccount] = useState<Account>();
+  const [selecting, setSelecting] = useState<boolean>(false);
+  const [allAccounts, setAccounts] = useState<Set<Account>>(new Set<Account>());
   useEffect(() => {
     const timer = setInterval(() => {
       setHint(randsl("ReadyToLaunch.WaitingText"));
     }, 5000);
-
     return () => {
       clearInterval(timer);
     };
   });
+  useEffect(() => {
+    mountedBit.current = true;
+    (async () => {
+      const a = await getAllAccounts();
+      const builtAccount: Set<Account> = new Set<Account>();
+      for (const accountFile of a) {
+        const r = await loadAccount(accountFile);
+        if (r) {
+          builtAccount.add(r);
+        }
+      }
+      if (mountedBit.current) {
+        setAccounts(builtAccount);
+      }
+    })();
+  }, []);
   const LAUNCH_STEPS = [
     "Pending",
     "PerformingAuth",
@@ -136,6 +179,28 @@ function Launching(props: {
   };
   return (
     <Box className={classes.root}>
+      <AccountChoose
+        open={selecting}
+        closeFunc={() => {
+          setSelecting(false);
+        }}
+        onChose={(a) => {
+          setSelectedAccount(a);
+          (async () => {
+            await startBoot(
+              (st) => {
+                setStatus(st);
+                setActiveStep(REV_LAUNCH_STEPS[st]);
+              },
+              props.profile,
+              props.container,
+              setID,
+              a
+            );
+          })();
+        }}
+        allAccounts={allAccounts}
+      />
       <Typography className={classes.text} gutterBottom>
         {tr("ReadyToLaunch.Hint") + " " + props.profile.id}
       </Typography>
@@ -184,15 +249,20 @@ function Launching(props: {
             status !== LaunchingStatus.FINISHED
           }
           onClick={async () => {
-            await startBoot(
-              (st) => {
-                setStatus(st);
-                setActiveStep(REV_LAUNCH_STEPS[st]);
-              },
-              props.profile,
-              props.container,
-              setID
-            );
+            if (selectedAccount !== undefined) {
+              await startBoot(
+                (st) => {
+                  setStatus(st);
+                  setActiveStep(REV_LAUNCH_STEPS[st]);
+                },
+                props.profile,
+                props.container,
+                setID,
+                selectedAccount
+              );
+            } else {
+              setSelecting(true);
+            }
           }}
         >
           <FlightTakeoff />
@@ -202,22 +272,26 @@ function Launching(props: {
   );
 }
 
-// Account unknown
-// TODO support account choose
+// TODO support java select
 async function startBoot(
   setStatus: (status: LaunchingStatus) => void,
   profile: GameProfile,
   container: MinecraftContainer,
-  setID: (id: string) => unknown
+  setID: (id: string) => unknown,
+  account: Account
 ): Promise<void> {
   const jRunnable = getJavaRunnable(getLastUsedJavaHome());
   setStatus(LaunchingStatus.ACCOUNT_AUTHING);
-  // Virtual
-  let account: Account = new MicrosoftAccount("");
-  const s = await account.performAuth("");
-  if (!s) {
-    account = new LocalAccount("Demo");
+  const acData = await fillAccessData(await account.buildAccessData());
+  let useAj = false;
+  let ajHost = "";
+  let prefetch = "";
+  if (account.type === AccountType.AUTHLIB_INJECTOR) {
+    useAj = true;
+    ajHost = (account as AuthlibAccount).authServer;
+    prefetch = await prefetchData((account as AuthlibAccount).authServer);
   }
+
   setStatus(LaunchingStatus.LIBRARIES_FILLING);
 
   await ensureClient(profile);
@@ -232,17 +306,13 @@ async function startBoot(
   }
   setStatus(LaunchingStatus.ARGS_GENERATING);
   const em = new EventEmitter();
-  const runID = launchProfile(
-    profile,
-    container,
-    jRunnable,
-    await account.buildAccessData(),
-    em,
-    {
-      useAj: false,
-      useServer: false,
-    }
-  );
+
+  const runID = launchProfile(profile, container, jRunnable, acData, em, {
+    useAj: useAj,
+    ajHost: ajHost,
+    ajPrefetch: prefetch,
+    useServer: false,
+  });
   setID(runID);
   setStatus(LaunchingStatus.FINISHED);
   console.log(`A new Minecraft instance (${runID}) has been launched.`);
@@ -266,4 +336,129 @@ enum LaunchingStatus {
   MODS_PREPARING = "PreparingMods",
   ARGS_GENERATING = "GeneratingArgs",
   FINISHED = "Finished",
+}
+
+// FIXME what's the matter with aj?
+// Just crashed because java cannot load it!
+function AccountChoose(props: {
+  open: boolean;
+  closeFunc: () => void;
+  onChose: (a: Account) => unknown;
+  allAccounts: Set<Account>;
+}): JSX.Element {
+  const classes = useInputStyles();
+  const [choice, setChoice] = useState<"MZ" | "AL" | "YG">("MZ");
+  const [pName, setName] = useState<string>("Demo");
+  const [sAccount, setAccount] = useState<string>("");
+  const accountMap: Record<string, Account> = {};
+  for (const a of props.allAccounts) {
+    accountMap[objectHash(a)] = a;
+  }
+  return (
+    <Dialog
+      open={props.open}
+      onClose={() => {
+        setChoice("MZ");
+        props.closeFunc();
+      }}
+    >
+      <DialogContent>
+        <DialogTitle>{tr("ReadyToLaunch.StartAuthTitle")}</DialogTitle>
+        <DialogContentText>
+          {tr("ReadyToLaunch.StartAuthMsg")}
+        </DialogContentText>
+        <RadioGroup
+          row
+          onChange={(e) => {
+            if (["MZ", "AL", "YG"].includes(e.target.value)) {
+              // @ts-ignore
+              setChoice(e.target.value);
+            }
+          }}
+        >
+          <FormControlLabel
+            value={"MZ"}
+            control={<Radio />}
+            label={tr("ReadyToLaunch.UseMZ")}
+          />
+          <FormControlLabel
+            value={"YG"}
+            control={<Radio />}
+            label={tr("ReadyToLaunch.UseYG")}
+          />
+          <FormControlLabel
+            value={"AL"}
+            control={<Radio />}
+            label={tr("ReadyToLaunch.UseAL")}
+          />
+        </RadioGroup>
+        <TextField
+          className={classes.input}
+          autoFocus
+          style={choice === "AL" ? {} : { display: "none" }}
+          margin={"dense"}
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+          label={tr("ReadyToLaunch.UseALName")}
+          type={"text"}
+          spellCheck={false}
+          fullWidth
+          color={"secondary"}
+          variant={"outlined"}
+          value={pName}
+        />
+        {choice === "YG" ? (
+          <Box>
+            <InputLabel id={"Select-Account"}>
+              {tr("ReadyToLaunch.UseYGChoose")}
+            </InputLabel>
+            <Select
+              fullWidth
+              labelId={"Select-Account"}
+              onChange={(e) => {
+                setAccount(String(e.target.value));
+              }}
+            >
+              {Array.from(props.allAccounts.keys()).map((a) => {
+                const hash = objectHash(a);
+                return (
+                  <MenuItem key={hash} value={hash}>
+                    {a.accountName + " - " + toReadableType(a.type)}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </Box>
+        ) : (
+          ""
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button
+          disabled={
+            (choice === "YG" &&
+              (sAccount.length === 0 || isNull(accountMap[sAccount]))) ||
+            (choice === "AL" && pName.trim().length === 0)
+          }
+          onClick={() => {
+            props.closeFunc();
+            switch (choice) {
+              case "MZ":
+                props.onChose(new MicrosoftAccount(""));
+                return;
+              case "YG":
+                props.onChose(accountMap[sAccount]);
+                return;
+              case "AL":
+              default:
+                props.onChose(new LocalAccount(pName));
+            }
+          }}
+        >
+          {tr("ReadyToLaunch.Next")}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 }

@@ -57,3 +57,46 @@ export function FailedHint(props: {
     </Dialog>
   );
 }
+
+export function YNDialog(props: {
+  onClose: () => unknown;
+  onAccept: () => unknown;
+  title: string;
+  content: string;
+  yes: string;
+  no: string;
+}): JSX.Element {
+  const [open, setOpen] = useState<boolean>(true);
+  return (
+    <Dialog
+      open={open}
+      onClose={() => {
+        setOpen(false);
+        props.onClose();
+      }}
+    >
+      <DialogTitle>{props.title}</DialogTitle>
+      <DialogContent>
+        <DialogContentText>{props.content}</DialogContentText>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              props.onAccept();
+              setOpen(false);
+            }}
+          >
+            {props.yes}
+          </Button>
+          <Button
+            onClick={() => {
+              setOpen(false);
+              props.onClose();
+            }}
+          >
+            {props.no}
+          </Button>
+        </DialogActions>
+      </DialogContent>
+    </Dialog>
+  );
+}

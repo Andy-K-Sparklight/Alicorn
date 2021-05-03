@@ -1,5 +1,5 @@
 import { LocalAccount } from "./LocalAccount";
-import { Pair } from "../commons/Collections";
+import { Pair, Trio } from "../commons/Collections";
 import { AuthlibAccount } from "./AuthlibAccount";
 import { Account } from "./Account";
 import { ALICORN_ENCRYPTED_DATA_SUFFIX } from "../commons/Constants";
@@ -170,4 +170,35 @@ export async function removeAccount(fName: string): Promise<void> {
   try {
     await fs.remove(getActualDataPath(path.join(ACCOUNT_ROOT, fName)));
   } catch {}
+}
+
+export function copyAccount(aIn: Account | undefined): Account {
+  if (aIn === undefined) {
+    return new LocalAccount("Demo");
+  }
+  switch (aIn.type) {
+    case AccountType.MICROSOFT:
+      return new MicrosoftAccount(aIn.accountName);
+    case AccountType.MOJANG:
+      return new MojangAccount(aIn.accountName);
+    case AccountType.AUTHLIB_INJECTOR:
+      return new AuthlibAccount(
+        aIn.accountName,
+        (aIn as AuthlibAccount).authServer
+      );
+    case AccountType.ALICORN:
+    default:
+      return new LocalAccount(aIn.accountName);
+  }
+}
+
+export async function fillAccessData(
+  acData: Trio<string, string, string>
+): Promise<Trio<string, string, string>> {
+  for (const v of acData.get()) {
+    if (v.trim().length === 0) {
+      return await new LocalAccount("Demo").buildAccessData();
+    }
+  }
+  return acData;
 }

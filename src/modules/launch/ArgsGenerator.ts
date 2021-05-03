@@ -125,13 +125,21 @@ export function applyResolution(width?: number, height?: number): string[] {
 }
 
 // Authlib Injector
-export function applyAJ(ajPath: string, verifyHost: string): string[] {
+export function applyAJ(
+  ajPath: string,
+  verifyHost: string,
+  prefetch: string
+): string[] {
   const tPath = ajPath.trim();
   const vHost = verifyHost.trim();
-  if (isNull(tPath) || isNull(vHost)) {
+  if (isNull(tPath) || isNull(vHost) || isNull(prefetch)) {
     return [];
   }
-  return [`-javaagent:${wrap(tPath)}=${vHost}`];
+  // Prefetch is essential
+  return [
+    `-javaagent:${wrap(tPath)}=${vHost}`,
+    `-Dauthlibinjector.yggdrasil.prefetched=${prefetch}`,
+  ];
   // To be honest, we want to show 'Alicorn' rather than the name of the auth server
   // But since some servers auth their players by reading this value('--versionType')
   // We should let this off

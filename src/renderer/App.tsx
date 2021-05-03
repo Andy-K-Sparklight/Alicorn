@@ -17,6 +17,7 @@ import { saveGDTSync } from "../modules/container/ContainerUtil";
 import { saveJDTSync } from "../modules/java/JInfo";
 import { saveMirrorSync } from "../modules/download/Mirror";
 import {
+  AccountCircle,
   AllInbox,
   Code,
   FlightTakeoff,
@@ -33,6 +34,7 @@ import { saveVFSync } from "../modules/container/ValidateRecord";
 import { VersionView } from "./VersionView";
 import { ContainerManager } from "./ContainerManager";
 import { InstallCore } from "./InstallCore";
+import { AccountManager } from "./AccountManager";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -100,6 +102,18 @@ export function App(): JSX.Element {
               <Info />
             </IconButton>
           </Tooltip>
+          <Tooltip title={tr("MainMenu.QuickManageAccount")}>
+            <IconButton
+              className={classes.floatButton}
+              onClick={() => {
+                jumpTo("/AccountManager");
+                triggerSetPage(Pages.AccountManager);
+              }}
+              color={"inherit"}
+            >
+              <AccountCircle />
+            </IconButton>
+          </Tooltip>
           <Tooltip title={tr("MainMenu.QuickManageContainer")}>
             <IconButton
               className={classes.floatButton}
@@ -159,6 +173,7 @@ export function App(): JSX.Element {
         />
         <Route path={"/Version"} component={VersionView} />
         <Route path={"/ContainerManager"} component={ContainerManager} />
+        <Route path={"/AccountManager"} component={AccountManager} />
       </Box>
     </Box>
   );

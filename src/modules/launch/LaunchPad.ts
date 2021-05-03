@@ -26,12 +26,13 @@ export function launchProfile(
     ajHost?: string;
     useServer?: boolean;
     server?: string;
+    ajPrefetch?: string;
   }
 ): string {
   const vmArgs = generateVMArgs(profile, container);
   const gameArgs = generateGameArgs(profile, container, authData);
   const ajArgs = policies.useAj
-    ? applyAJ(whereAJ(), policies.ajHost || "")
+    ? applyAJ(whereAJ(), policies.ajHost || "", policies.ajPrefetch || "")
     : [];
   const resolutions = !isNull(policies.resolution)
     ? applyResolution(

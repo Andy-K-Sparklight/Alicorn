@@ -51,14 +51,9 @@ export async function refreshToken(
           "Content-Type": "application/json",
         },
         responseType: "json",
-        body: JSON.stringify(
-          Object.assign(
-            {
-              accessToken: acToken,
-            },
-            selectedProfile ? { selectedProfile } : {}
-          )
-        ),
+        body: JSON.stringify({
+          accessToken: acToken,
+        }),
       })
     ).body;
 
@@ -130,7 +125,8 @@ export async function authenticate(
       accessToken,
       success: true,
     };
-  } catch {
+  } catch (e) {
+    console.log(e);
     return {
       success: false,
       accessToken: "",
