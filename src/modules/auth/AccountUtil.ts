@@ -96,8 +96,6 @@ function loadLocalAccount(obj: Record<string, unknown>): LocalAccount {
 }
 
 function loadAJAccount(obj: Record<string, unknown>): AuthlibAccount {
-  console.log("Loading an authlib account!");
-  console.log(obj);
   const la = new AuthlibAccount(
     String(obj["accountName"] || ""),
     String(obj["authServer"] || "")
@@ -105,7 +103,6 @@ function loadAJAccount(obj: Record<string, unknown>): AuthlibAccount {
   la.lastUsedUsername = String(obj["lastUsedUsername"] || "");
   la.lastUsedAccessToken = String(obj["lastUsedAccessToken"] || "");
   la.lastUsedUUID = String(obj["lastUsedUUID"] || "");
-  console.log(la);
   return la;
 }
 

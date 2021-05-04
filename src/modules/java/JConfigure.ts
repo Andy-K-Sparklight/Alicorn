@@ -1,4 +1,10 @@
-import { addJava, getAllJava, removeJava, setLastUsedJavaHome } from "./JInfo";
+import {
+  addJava,
+  getAllJava,
+  getLastUsedJavaHome,
+  removeJava,
+  setLastUsedJavaHome,
+} from "./JInfo";
 
 export async function jconf(
   w: string,
@@ -25,12 +31,18 @@ export async function jconf(
       setLastUsedJavaHome(pt);
       log("Selected java home: " + pt);
       return;
-    case "list":
+    case "list": {
+      const lj = getLastUsedJavaHome().trim();
+      if (lj.length > 0) {
+        log("Selected java home:");
+        log("* " + lj);
+      }
       log("All java homes:");
       for (const a of getAllJava()) {
         log("- " + a);
       }
       return;
+    }
     case "add":
       if (pt.trim().length === 0) {
         log("Invalid java path!");

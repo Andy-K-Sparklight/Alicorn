@@ -17,8 +17,8 @@ export function Terminal(): JSX.Element {
           width: "98%",
           resize: "none",
         }}
-        rowsMin={20}
-        rowsMax={20}
+        rowsMin={21}
+        rowsMax={21}
         value={logs.join("\n")}
         disabled
         onChange={(e) => {
@@ -37,12 +37,12 @@ export function Terminal(): JSX.Element {
           if (
             !(await handleCommand(c, (m) => {
               lx.push(m);
-              shiftUntil20(lx);
+              shiftUntil21(lx);
               setLogs(lx);
             }))
           ) {
             const l = lx.concat(["Unknown command!"]);
-            shiftUntil20(l);
+            shiftUntil21(l);
             setLogs(l);
           }
         }}
@@ -51,8 +51,8 @@ export function Terminal(): JSX.Element {
   );
 }
 
-function shiftUntil20(arr: string[]): void {
-  while (arr.length > 20) {
+function shiftUntil21(arr: string[]): void {
+  while (arr.length > 21) {
     arr.shift();
   }
 }
@@ -67,9 +67,9 @@ export function TerminalInput(props: {
         style={{
           position: "fixed",
           bottom: "2px",
+          width: "98%",
           color: "#5d2391",
           backgroundColor: "#d796f0",
-          paddingRight: "10px",
         }}
         spellCheck={"false"}
         InputProps={{
