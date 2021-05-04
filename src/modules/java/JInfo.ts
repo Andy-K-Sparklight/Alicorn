@@ -12,11 +12,11 @@ const JAVA_RECORD_BASE = "java.record" + ALICORN_DATA_SUFFIX;
 const JAVA_RELEASE = "release";
 const LATEST_TAG = "?LATEST>>";
 let JDT = new Map<string, string>();
-const JAVAW = (() => {
+const JAVA = (() => {
   if (os.platform() === "win32") {
-    return path.join("bin", "javaw.exe");
+    return path.join("bin", "java.exe");
   } else {
-    return path.join("bin", "javaw");
+    return path.join("bin", "java");
   }
 })();
 const CACHE_MAP = new Map<string, Map<string, string>>();
@@ -45,7 +45,7 @@ export async function getJavaInfoRaw(
 }
 
 export function getJavaRunnable(jHome: string): string {
-  return path.resolve(path.join(jHome, JAVAW));
+  return path.resolve(path.join(jHome, JAVA));
 }
 
 // FIXME Only for emergency

@@ -35,11 +35,11 @@ import { installProfile } from "../modules/pff/install/MojangInstall";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      marginLeft: theme.spacing(4),
       textAlign: "center",
     },
     formControl: {
-      margin: theme.spacing(1),
+      minWidth: 120,
+      margin: theme.spacing(4),
     },
     input: {
       color: theme.palette.secondary.light,
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) =>
     selector: {
       borderColor: theme.palette.primary.main,
       color: theme.palette.primary.main,
-      width: theme.spacing(30),
+      width: theme.spacing(25),
       marginLeft: theme.spacing(2),
     },
     label: {
@@ -172,6 +172,7 @@ export function InstallCore(): JSX.Element {
               setSelectedVersion("");
               setFilter(e.target.value as ReleaseType);
             }}
+            value={filter || ReleaseType.RELEASE}
           >
             <MenuItem value={ReleaseType.RELEASE}>
               {tr("InstallCore.Release")}

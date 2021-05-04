@@ -39,11 +39,16 @@ export class RunningMinecraft {
 
   run(): string {
     unmount(this.container.id); // Unmount so that user won't operate it
-    this.process = spawn(this.executable, this.args, {
-      cwd: this.container.resolvePath("/"),
-      detached: true,
-    });
-    this.process.on("exit", (code, signal) => {
+    try {
+      this.process = spawn(this.executable, this.args, {
+        cwd: this.container.resolvePath("/"),
+        detached: true,
+      });
+    } catch (e) {
+      console.log(e);
+      mount(this.container.id); // Remount after exit
+    }
+    this.process?.on("exit", (code, signal) => {
       mount(this.container.id); // Remount after exit
       this.status = RunningStatus.STOPPING;
       if (code === undefined || code === null) {
@@ -57,12 +62,12 @@ export class RunningMinecraft {
       }
       REV_POOL.delete(this);
     });
-    this.process.stdout?.on("data", (d) => {
+    this.process?.stdout?.on("data", (d) => {
       const strD = d.toString();
       this.logs.getFirstValue().push(strD);
       this.emitter?.emit(PROCESS_LOG_GATE, strD, false);
     });
-    this.process.stderr?.on("data", (d) => {
+    this.process?.stderr?.on("data", (d) => {
       const strD = d.toString();
       this.logs.getSecondValue().push(strD);
       this.emitter?.emit(PROCESS_LOG_GATE, strD, true);
