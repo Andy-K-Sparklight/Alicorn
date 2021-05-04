@@ -179,13 +179,28 @@ export function copyAccount(aIn: Account | undefined): Account {
   switch (aIn.type) {
     case AccountType.MICROSOFT:
       return new MicrosoftAccount(aIn.accountName);
-    case AccountType.MOJANG:
-      return new MojangAccount(aIn.accountName);
-    case AccountType.AUTHLIB_INJECTOR:
-      return new AuthlibAccount(
-        aIn.accountName,
-        (aIn as AuthlibAccount).authServer
-      );
+    case AccountType.MOJANG: {
+      const ac = new MojangAccount(aIn.accountName);
+      const ai = aIn as MojangAccount;
+      ac.availableProfiles = ai.availableProfiles;
+      ac.accountName = ai.accountName;
+      ac.lastUsedUUID = ai.lastUsedUUID;
+      ac.lastUsedAccessToken = ai.lastUsedAccessToken;
+      ac.lastUsedUsername = ai.lastUsedUsername;
+      ac.selectedProfile = ai.selectedProfile;
+      return ac;
+    }
+    case AccountType.AUTHLIB_INJECTOR: {
+      const ai = aIn as AuthlibAccount;
+      const ac = new AuthlibAccount(aIn.accountName, ai.authServer);
+      ac.availableProfiles = ai.availableProfiles;
+      ac.accountName = ai.accountName;
+      ac.lastUsedUUID = ai.lastUsedUUID;
+      ac.lastUsedAccessToken = ai.lastUsedAccessToken;
+      ac.lastUsedUsername = ai.lastUsedUsername;
+      ac.selectedProfile = ai.selectedProfile;
+      return ac;
+    }
     case AccountType.ALICORN:
     default:
       return new LocalAccount(aIn.accountName);

@@ -174,6 +174,7 @@ export function SingleAccountDisplay(props: {
         updateAccount={async (a) => {
           setMjLWOpen(false);
           await saveAccount(a);
+          usingAccount.current = a;
           props.updateAccount(props.account, a);
           setOperating(false);
         }}
@@ -203,16 +204,14 @@ export function SingleAccountDisplay(props: {
                 onClick={() => {
                   setOperating(true);
                   (async () => {
-                    if (!(await usingAccount.current.isAccessTokenValid())) {
-                      const status = await usingAccount.current.flushToken();
-                      if (status) {
-                        await saveAccount(usingAccount.current);
-                        setOperating(false);
-                      } else {
-                        setMjLWOpen(true);
-                      }
-                      props.updateAccount(props.account, usingAccount.current);
+                    const status = await usingAccount.current.flushToken();
+                    if (status) {
+                      await saveAccount(usingAccount.current);
+                      setOperating(false);
+                    } else {
+                      setMjLWOpen(true);
                     }
+                    props.updateAccount(props.account, usingAccount.current);
                   })();
                 }}
               >

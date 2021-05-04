@@ -38,7 +38,12 @@ export async function jconf(
         log("* " + lj);
       }
       log("All java homes:");
-      for (const a of getAllJava()) {
+      const all = getAllJava();
+      if (all.length === 0) {
+        log("No java home found!");
+        return;
+      }
+      for (const a of all) {
         log("- " + a);
       }
       return;

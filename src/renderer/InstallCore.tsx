@@ -35,11 +35,10 @@ import { installProfile } from "../modules/pff/install/MojangInstall";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      textAlign: "center",
+      marginLeft: theme.spacing(4),
     },
     formControl: {
       minWidth: 120,
-      margin: theme.spacing(4),
     },
     input: {
       color: theme.palette.secondary.light,
@@ -54,10 +53,14 @@ const useStyles = makeStyles((theme) =>
       borderColor: theme.palette.primary.main,
       color: theme.palette.primary.main,
       width: theme.spacing(25),
-      marginLeft: theme.spacing(2),
     },
     label: {
+      marginLeft: theme.spacing(1),
       color: theme.palette.primary.main,
+    },
+    btn: {
+      marginLeft: theme.spacing(1),
+      marginTop: theme.spacing(1),
     },
   })
 );
@@ -163,7 +166,6 @@ export function InstallCore(): JSX.Element {
             {tr("InstallCore.MinecraftArch")}
           </InputLabel>
           <Select
-            variant={"outlined"}
             labelId={"CoreInstall-Mojang-SelectArch"}
             color={"primary"}
             className={classes.selector}
@@ -196,7 +198,6 @@ export function InstallCore(): JSX.Element {
             {tr("InstallCore.MinecraftVersion")}
           </InputLabel>
           <Select
-            variant={"outlined"}
             labelId={"CoreInstall-Mojang-SelectVersion"}
             color={"primary"}
             className={classes.selector}
@@ -224,7 +225,6 @@ export function InstallCore(): JSX.Element {
           <Select
             labelId={"CoreInstall-Mojang-TargetContainer"}
             color={"primary"}
-            variant={"outlined"}
             className={classes.selector}
             onChange={(e) => {
               setContainer(String(e.target.value || ""));
@@ -240,9 +240,8 @@ export function InstallCore(): JSX.Element {
             })}
           </Select>
         </FormControl>
-        <br />
-        <br />
         <Button
+          className={classes.btn}
           variant={"outlined"}
           color={"primary"}
           disabled={isNull(selectedVersion) || isNull(selectedContainer)}

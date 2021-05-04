@@ -76,7 +76,9 @@ export async function refreshToken(
       selectedProfile: isNull(sp) ? selectedProfile : toUserProfile(sp),
       accessToken: tk,
     };
-  } catch {
+  } catch (e) {
+    console.log(e);
+    console.log(e.response);
     return { success: false, accessToken: "", availableProfiles: [] };
   }
 }
@@ -129,6 +131,7 @@ export async function authenticate(
     };
   } catch (e) {
     console.log(e);
+    console.log(e.response);
     return {
       success: false,
       accessToken: "",

@@ -46,16 +46,7 @@ export class MojangAccount extends Account {
       password,
       MJ_AUTH_SERVER_ROOT
     );
-    if (!st.success) {
-      return false;
-    }
-    this.lastUsedAccessToken = st.accessToken;
-    this.selectedProfile = st.selectedProfile;
-    this.availableProfiles = st.availableProfiles;
-    if (this.selectedProfile) {
-      this.lastUsedUUID = this.selectedProfile.id;
-      this.lastUsedUsername = this.selectedProfile.name;
-    }
+    updateAccount(this, st);
     return true;
   }
 

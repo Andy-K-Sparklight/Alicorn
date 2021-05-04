@@ -9,7 +9,6 @@ import {
 import { Trio } from "../commons/Collections";
 import objectHash from "object-hash";
 import { AccountType } from "./AccountUtil";
-import { isNull } from "../commons/Null";
 
 // Account using Authlib Injector
 export class AuthlibAccount extends Account {
@@ -24,12 +23,14 @@ export class AuthlibAccount extends Account {
 
   // Get a new token
   async flushToken(): Promise<boolean> {
+    console.log("Flushing token!");
     const p = await refreshToken(
       this.lastUsedAccessToken,
       this.authServer + "/authserver",
       this.selectedProfile
     );
     updateAccount(this, p);
+    console.log(p.success);
     return p.success;
   }
 
@@ -45,28 +46,12 @@ export class AuthlibAccount extends Account {
   }
 
   async performAuth(password: string): Promise<boolean> {
-    console.log("Performing auth!");
     const st = await authenticate(
       this.accountName,
       password,
       this.authServer + "/authserver"
     );
-    if (!st.success) {
-      return false;
-    }
-    console.log("Successfully received data!");
-    console.log(st);
-    this.lastUsedAccessToken = st.accessToken;
-    this.selectedProfile = st.selectedProfile;
-    this.availableProfiles = st.availableProfiles;
-    if (!isNull(st.selectedProfile)) {
-      console.log("Gotcha!");
-      console.log(st.selectedProfile);
-      // @ts-ignore
-      this.lastUsedUUID = st.selectedProfile.id;
-      // @ts-ignore
-      this.lastUsedUsername = st.selectedProfile.name;
-    }
+    updateAccount(this, st);
     return true;
   }
 
