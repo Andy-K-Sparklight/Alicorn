@@ -171,8 +171,9 @@ export function SingleAccountDisplay(props: {
         }}
         open={mjLWOpening}
         account={usingAccount.current}
-        updateAccount={(a) => {
+        updateAccount={async (a) => {
           setMjLWOpen(false);
+          await saveAccount(a);
           props.updateAccount(props.account, a);
           setOperating(false);
         }}
@@ -205,6 +206,7 @@ export function SingleAccountDisplay(props: {
                     if (!(await usingAccount.current.isAccessTokenValid())) {
                       const status = await usingAccount.current.flushToken();
                       if (status) {
+                        await saveAccount(usingAccount.current);
                         setOperating(false);
                       } else {
                         setMjLWOpen(true);

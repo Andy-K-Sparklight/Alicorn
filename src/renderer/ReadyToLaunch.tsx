@@ -280,6 +280,7 @@ async function startBoot(
   setID: (id: string) => unknown,
   account: Account
 ): Promise<void> {
+  console.log(account);
   const jRunnable = getJavaRunnable(getLastUsedJavaHome());
   setStatus(LaunchingStatus.ACCOUNT_AUTHING);
   const acData = await fillAccessData(await account.buildAccessData());
@@ -419,6 +420,7 @@ function AccountChoose(props: {
               onChange={(e) => {
                 setAccount(String(e.target.value));
               }}
+              value={sAccount}
             >
               {Array.from(props.allAccounts.keys()).map((a) => {
                 const hash = objectHash(a);

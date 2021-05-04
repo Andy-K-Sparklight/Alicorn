@@ -76,7 +76,7 @@ export class MojangAccount extends Account {
       lastUsedUUID: this.lastUsedUUID,
       lastUsedAccessToken: this.lastUsedAccessToken,
       accountName: this.accountName,
-      lastUsedUserName: this.lastUsedUsername,
+      lastUsedUsername: this.lastUsedUsername,
     });
   }
 

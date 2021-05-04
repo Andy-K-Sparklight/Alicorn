@@ -82,14 +82,6 @@ export function generateVMArgs(
   return applyVars(vMap, staticArgs);
 }
 
-// Add quotes
-function wrap(strIn: string): string {
-  if (!(strIn.startsWith('"') && strIn.endsWith('"'))) {
-    return '"' + strIn + '"';
-  }
-  return strIn;
-}
-
 function applyVars(map: Map<string, string>, str: string[]): string[] {
   let dt = str.join(ALICORN_SEPARATOR);
 
@@ -137,11 +129,11 @@ export function applyAJ(
   }
   // Prefetch is essential
   return [
-    `-javaagent:${wrap(tPath)}=${vHost}`,
+    `-javaagent:${tPath}=${vHost}`,
     `-Dauthlibinjector.yggdrasil.prefetched=${prefetch}`,
   ];
   // To be honest, we want to show 'Alicorn' rather than the name of the auth server
   // But since some servers auth their players by reading this value('--versionType')
   // We should let this off
-  // return `-javaagent:${wrap(ajPath)}=${verifyHost} -Dauthlibinjector.noShowServerName`
+  // return `-javaagent:${ajPath}=${verifyHost} -Dauthlibinjector.noShowServerName`
 }

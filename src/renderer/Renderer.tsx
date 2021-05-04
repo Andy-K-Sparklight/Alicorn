@@ -15,7 +15,7 @@ import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
 import { HashRouter } from "react-router-dom";
 import { App } from "./App";
 import { initVF } from "../modules/container/ValidateRecord";
-import { getLatestAJ } from "../modules/auth/AJHelper";
+import { prepareAJ } from "../modules/auth/AJHelper";
 
 const ALICORN_THEME_FILE = "alicorn.theme.json";
 const GLOBAL_STYLES: React.CSSProperties = {
@@ -73,7 +73,7 @@ initTranslator();
   await initModInfo();
   await initForgeInstallModule();
   await initVF();
-  await getLatestAJ(); // Authlib Injector
+  await prepareAJ(); // Authlib Injector
   await loadJDT();
   console.log("Delayed init tasks finished.");
 })();

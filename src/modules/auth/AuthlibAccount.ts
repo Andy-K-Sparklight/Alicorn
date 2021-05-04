@@ -8,6 +8,7 @@ import {
 import { Trio } from "../commons/Collections";
 import objectHash from "object-hash";
 import { AccountType } from "./AccountUtil";
+import { isNull } from "../commons/Null";
 
 // Account using Authlib Injector
 export class AuthlibAccount extends Account {
@@ -52,6 +53,7 @@ export class AuthlibAccount extends Account {
   }
 
   async performAuth(password: string): Promise<boolean> {
+    console.log("Performing auth!");
     const st = await authenticate(
       this.accountName,
       password,
@@ -60,21 +62,19 @@ export class AuthlibAccount extends Account {
     if (!st.success) {
       return false;
     }
+    console.log("Successfully received data!");
+    console.log(st);
     this.lastUsedAccessToken = st.accessToken;
     this.selectedProfile = st.selectedProfile;
     this.availableProfiles = st.availableProfiles;
-    if (this.selectedProfile) {
-      this.lastUsedUUID = this.selectedProfile.id;
-      this.lastUsedUsername = this.selectedProfile.name;
+    if (!isNull(st.selectedProfile)) {
+      console.log("Gotcha!");
+      console.log(st.selectedProfile);
+      // @ts-ignore
+      this.lastUsedUUID = st.selectedProfile.id;
+      // @ts-ignore
+      this.lastUsedUsername = st.selectedProfile.name;
     }
-    return true;
-  }
-
-  isAccountReady(): boolean {
-    return !!this.selectedProfile;
-  }
-
-  async requireUserOperation(): Promise<boolean> {
     return true;
   }
 
@@ -83,7 +83,7 @@ export class AuthlibAccount extends Account {
       lastUsedUUID: this.lastUsedUUID,
       lastUsedAccessToken: this.lastUsedAccessToken,
       accountName: this.accountName,
-      lastUsedUserName: this.lastUsedUsername,
+      lastUsedUsername: this.lastUsedUsername,
       authServer: this.authServer,
     });
   }

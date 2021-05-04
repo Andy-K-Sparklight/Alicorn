@@ -8,6 +8,7 @@ const OFFLINE_PLAYER_PREFIX = "OfflinePlayer:";
 export class LocalAccount extends Account {
   constructor(name: string) {
     super(name, AccountType.ALICORN);
+    this.lastUsedUsername = name;
     this.lastUsedUUID = buildOfflinePlayerUUID(name);
   }
 
