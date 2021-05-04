@@ -3,6 +3,7 @@ import {
   authenticate,
   refreshToken,
   RemoteUserProfile,
+  updateAccount,
   validateToken,
 } from "./Account";
 import { Trio } from "../commons/Collections";
@@ -28,16 +29,7 @@ export class AuthlibAccount extends Account {
       this.authServer + "/authserver",
       this.selectedProfile
     );
-    if (p.success) {
-      this.lastUsedAccessToken = p.accessToken;
-      this.selectedProfile = p.selectedProfile;
-      this.availableProfiles = p.availableProfiles;
-      if (p.selectedProfile) {
-        this.lastUsedUUID = p.selectedProfile?.id;
-        this.lastUsedUsername = p.selectedProfile?.name;
-      }
-    }
-
+    updateAccount(this, p);
     return p.success;
   }
 

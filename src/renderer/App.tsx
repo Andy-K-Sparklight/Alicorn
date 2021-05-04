@@ -24,6 +24,7 @@ import {
   GetApp,
   Info,
   PowerSettingsNew,
+  WebAsset,
 } from "@material-ui/icons";
 import { LaunchPad } from "./LaunchPad";
 import { tr } from "./Translator";
@@ -35,6 +36,7 @@ import { VersionView } from "./VersionView";
 import { ContainerManager } from "./ContainerManager";
 import { InstallCore } from "./InstallCore";
 import { AccountManager } from "./AccountManager";
+import { Terminal } from "./Terminal";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -100,6 +102,18 @@ export function App(): JSX.Element {
               color={"inherit"}
             >
               <Info />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={tr("MainMenu.QuickTerminal")}>
+            <IconButton
+              className={classes.floatButton}
+              onClick={() => {
+                jumpTo("/Terminal");
+                triggerSetPage(Pages.Terminal);
+              }}
+              color={"inherit"}
+            >
+              <WebAsset />
             </IconButton>
           </Tooltip>
           <Tooltip title={tr("MainMenu.QuickManageAccount")}>
@@ -174,6 +188,7 @@ export function App(): JSX.Element {
         <Route path={"/Version"} component={VersionView} />
         <Route path={"/ContainerManager"} component={ContainerManager} />
         <Route path={"/AccountManager"} component={AccountManager} />
+        <Route path={"/Terminal"} component={Terminal} />
       </Box>
     </Box>
   );

@@ -3,6 +3,7 @@ import {
   authenticate,
   refreshToken,
   RemoteUserProfile,
+  updateAccount,
   validateToken,
 } from "./Account";
 import { Trio } from "../commons/Collections";
@@ -31,16 +32,7 @@ export class MojangAccount extends Account {
       MJ_AUTH_SERVER_ROOT,
       this.selectedProfile
     );
-    if (p.success) {
-      this.lastUsedAccessToken = p.accessToken;
-      this.selectedProfile = p.selectedProfile;
-      this.availableProfiles = p.availableProfiles;
-      if (p.selectedProfile) {
-        this.lastUsedUUID = p.selectedProfile?.id;
-        this.lastUsedUsername = p.selectedProfile?.name;
-      }
-    }
-
+    updateAccount(this, p);
     return p.success;
   }
 
@@ -65,10 +57,6 @@ export class MojangAccount extends Account {
       this.lastUsedUsername = this.selectedProfile.name;
     }
     return true;
-  }
-
-  isAccountReady(): boolean {
-    return !!this.selectedProfile;
   }
 
   serialize(): string {

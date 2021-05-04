@@ -4,6 +4,8 @@ import { isNull, safeGet } from "../commons/Null";
 import { getUniqueID32 } from "../security/Encrypt";
 import objectHash from "object-hash";
 import { AccountType } from "./AccountUtil";
+import { AuthlibAccount } from "./AuthlibAccount";
+import { MojangAccount } from "./MojangAccount";
 
 export abstract class Account {
   type: AccountType;
@@ -178,4 +180,19 @@ function toUserProfile(obj: unknown): RemoteUserProfile {
   const id = String(safeGet(obj, ["id"], ""));
   const name = String(safeGet(obj, ["name"], ""));
   return { id, name };
+}
+
+export function updateAccount(
+  base: AuthlibAccount | MojangAccount,
+  status: AuthenticateDataCallback
+): void {
+  if (status.success) {
+    base.lastUsedAccessToken = status.accessToken;
+    base.selectedProfile = status.selectedProfile;
+    base.availableProfiles = status.availableProfiles;
+    if (status.selectedProfile) {
+      base.lastUsedUUID = status.selectedProfile?.id;
+      base.lastUsedUsername = status.selectedProfile?.name;
+    }
+  }
 }
