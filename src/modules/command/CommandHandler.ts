@@ -1,5 +1,6 @@
 import { echo } from "./BaseCommands";
 import { jconf } from "../java/JConfigure";
+import { update } from "../../main/UpdateConfigure";
 
 const ALL_HANDLERS: Map<
   string,
@@ -40,4 +41,20 @@ export async function handleCommand(
 export function initBuiltInCommands(): void {
   registerCommandHandler("echo", echo);
   registerCommandHandler("jconf", jconf);
+  registerCommandHandler("update", update);
+}
+
+export function generateAction(
+  cmd: string,
+  w: string
+): { valid: boolean; action: string; arg: string } {
+  const regexp = `${cmd}( )*`;
+  const args = w.replace(new RegExp(regexp, "i"), "").split(" ");
+  let action = args.shift();
+  if (action === undefined || action.trim().length === 0) {
+    return { valid: false, action: "", arg: "" };
+  }
+  action = action.trim();
+  const pt = args.join(" ");
+  return { valid: true, action: action, arg: pt };
 }

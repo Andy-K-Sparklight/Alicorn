@@ -26,6 +26,8 @@ const MAIN_BUILD_FILE_RELEASE = RELEASE_FOLDER + "MainBuild.json";
 const RENDERER_BUILD_FILE_RELEASE = RELEASE_FOLDER + "RendererBuild.json";
 const LOCK_FILE = getActualDataPath("install.lock");
 
+let updateBit = false;
+
 interface BuildInfo {
   date: string;
   files: string[];
@@ -35,6 +37,7 @@ interface BuildInfo {
 const AJV = new Ajv();
 
 export async function checkUpdate(): Promise<void> {
+  updateBit = true;
   let HEAD: string;
   let BASE: string;
   if (getBoolean("updator.dev")) {
@@ -53,6 +56,7 @@ export async function checkUpdate(): Promise<void> {
         new Date((await fs.readFile(LOCK_FILE)).toString()) >= new Date(d.date)
       ) {
         console.log("You are running the latest version!");
+        updateBit = false;
         return;
       }
     }
@@ -66,9 +70,11 @@ export async function checkUpdate(): Promise<void> {
         responseType: "json",
       });
       if (!AJV.validate(BuildInfoSchema, res_dll.body)) {
+        updateBit = false;
         return;
       }
       if (!(await doUpdate(BASE, res_dll.body as BuildInfo))) {
+        updateBit = false;
         return;
       }
       const res_rend = await got.get(RENDERER_BUILD_FILE_DEV, {
@@ -76,12 +82,15 @@ export async function checkUpdate(): Promise<void> {
         responseType: "json",
       });
       if (!AJV.validate(BuildInfoSchema, res_rend.body)) {
+        updateBit = false;
         return;
       }
       if (!(await doUpdate(BASE, res_rend.body as BuildInfo))) {
+        updateBit = false;
         return;
       }
       if (!(await doUpdate(BASE, res.body as BuildInfo))) {
+        updateBit = false;
         return;
       }
       await hintUpdate(u);
@@ -91,18 +100,23 @@ export async function checkUpdate(): Promise<void> {
         responseType: "json",
       });
       if (!AJV.validate(BuildInfoSchema, res_rend.body)) {
+        updateBit = false;
         return;
       }
       if (!(await doUpdate(BASE, res_rend.body as BuildInfo))) {
+        updateBit = false;
         return;
       }
       if (!(await doUpdate(BASE, res.body as BuildInfo))) {
+        updateBit = false;
         return;
       }
       await hintUpdate(u);
+      updateBit = false;
     }
   } else {
     console.log("Invalid build info! Skipped updating this time.");
+    updateBit = false;
   }
 }
 
@@ -143,4 +157,8 @@ export async function doUpdate(
   } catch {
     return false;
   }
+}
+
+export function isUpdating(): boolean {
+  return updateBit;
 }

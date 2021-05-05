@@ -18,8 +18,12 @@ const DEFAULT_CONFIG_FILE = path.resolve(
 
 let cachedConfig = {};
 
+export function set(key: string, value: unknown): void {
+  // @ts-ignore
+  cachedConfig[key] = value;
+}
+
 export function get(key: string, def: unknown): unknown {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   return cachedConfig[key] || def;
 }

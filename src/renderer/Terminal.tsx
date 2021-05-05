@@ -33,10 +33,11 @@ export function Terminal(): JSX.Element {
             setLogs([]);
             return;
           }
-          const lx = logs.concat(["AL> " + c]);
+          let lx = logs.concat(["AL> " + c]);
           if (
             !(await handleCommand(c, (m) => {
-              lx.push(m);
+              const a = m.split("\n");
+              lx = lx.concat(a);
               shiftUntil21(lx);
               setLogs(lx);
             }))
