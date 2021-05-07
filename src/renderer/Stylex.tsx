@@ -21,14 +21,6 @@ export const useCardStyles = makeStyles((theme) =>
     },
   })
 );
-makeStyles((theme) =>
-  createStyles({
-    window: {
-      backgroundColor: theme.palette.primary.light,
-      color: theme.palette.secondary.main,
-    },
-  })
-);
 export const usePadStyles = makeStyles((theme) =>
   createStyles({
     para: {
@@ -46,6 +38,38 @@ export const useInputStyles = makeStyles((theme) =>
     },
     border: {
       color: theme.palette.secondary.light,
+    },
+  })
+);
+export const useFormStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      marginLeft: theme.spacing(4),
+    },
+    formControl: {
+      minWidth: 120,
+    },
+    input: {
+      color: theme.palette.secondary.light,
+    },
+    title: {
+      color: theme.palette.primary.main,
+    },
+    text: {
+      fontSize: "medium",
+    },
+    selector: {
+      borderColor: theme.palette.primary.main,
+      color: theme.palette.primary.main,
+      width: theme.spacing(25),
+    },
+    label: {
+      marginLeft: theme.spacing(1),
+      color: theme.palette.primary.main,
+    },
+    btn: {
+      marginLeft: theme.spacing(1),
+      marginTop: theme.spacing(1),
     },
   })
 );

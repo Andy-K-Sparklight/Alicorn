@@ -4,6 +4,7 @@ import { btoa } from "js-base64";
 import { registerBackgroundListeners } from "./Background";
 import { checkUpdate } from "./Updator";
 import { getBoolean, loadConfig } from "../modules/config/ConfigSupport";
+import path from "path";
 
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow | null = null;
@@ -38,7 +39,7 @@ app.on("ready", async () => {
     console.log("All caught up! Alicorn is now initialized.");
   });
   console.log("Preparing window!");
-  await mainWindow.loadFile("Renderer.html");
+  await mainWindow.loadFile(path.resolve(app.getAppPath(), "Renderer.html"));
 });
 
 app.on("window-all-closed", () => {

@@ -36,6 +36,34 @@ export function OperatingHint(props: { open: boolean }): JSX.Element {
   );
 }
 
+export function OperatingHintCustom(props: {
+  open: boolean;
+  msg: string;
+}): JSX.Element {
+  const [saying, setSaying] = useState<string>(
+    randsl("ReadyToLaunch.WaitingText")
+  );
+  useEffect(() => {
+    const t = setInterval(() => {
+      setSaying(randsl("ReadyToLaunch.WaitingText"));
+    }, 5000);
+    return () => {
+      clearInterval(t);
+    };
+  });
+  return (
+    <Dialog open={props.open} disableBackdropClick disableEscapeKeyDown>
+      <DialogTitle>{tr("Operating.PleaseWait")}</DialogTitle>
+      <DialogContent>
+        <DialogContentText>{props.msg}</DialogContentText>
+        <DialogContentText>
+          <i>{saying}</i>
+        </DialogContentText>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export function FailedHint(props: {
   open: boolean;
   closeFunc: () => unknown;

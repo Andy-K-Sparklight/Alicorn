@@ -24,4 +24,5 @@ export enum Pages {
   InstallConfiguration = "InstallConfiguration",
   Version = "Version",
   Terminal = "Terminal",
+  JavaSelector = "JavaSelector",
 }

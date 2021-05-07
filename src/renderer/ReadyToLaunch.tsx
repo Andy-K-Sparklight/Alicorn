@@ -280,7 +280,7 @@ async function startBoot(
   setID: (id: string) => unknown,
   account: Account
 ): Promise<void> {
-  const jRunnable = getJavaRunnable(getLastUsedJavaHome());
+  const jRunnable = await getJavaRunnable(getLastUsedJavaHome());
   setStatus(LaunchingStatus.ACCOUNT_AUTHING);
   if (account.type === AccountType.MICROSOFT) {
     await account.performAuth("");

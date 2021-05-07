@@ -19,6 +19,7 @@ import { saveMirrorSync } from "../modules/download/Mirror";
 import {
   AccountCircle,
   AllInbox,
+  Apps,
   Code,
   FlightTakeoff,
   GetApp,
@@ -37,6 +38,7 @@ import { ContainerManager } from "./ContainerManager";
 import { InstallCore } from "./InstallCore";
 import { AccountManager } from "./AccountManager";
 import { Terminal } from "./Terminal";
+import { JavaSelector } from "./JavaSelector";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -116,6 +118,18 @@ export function App(): JSX.Element {
               <WebAsset />
             </IconButton>
           </Tooltip>
+          <Tooltip title={tr("MainMenu.QuickJavaSelector")}>
+            <IconButton
+              className={classes.floatButton}
+              onClick={() => {
+                jumpTo("/JavaSelector");
+                triggerSetPage(Pages.JavaSelector);
+              }}
+              color={"inherit"}
+            >
+              <Apps />
+            </IconButton>
+          </Tooltip>
           <Tooltip title={tr("MainMenu.QuickManageAccount")}>
             <IconButton
               className={classes.floatButton}
@@ -189,6 +203,7 @@ export function App(): JSX.Element {
         <Route path={"/ContainerManager"} component={ContainerManager} />
         <Route path={"/AccountManager"} component={AccountManager} />
         <Route path={"/Terminal"} component={Terminal} />
+        <Route path={"/JavaSelector"} component={JavaSelector} />
       </Box>
     </Box>
   );

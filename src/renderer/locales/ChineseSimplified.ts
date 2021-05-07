@@ -9,7 +9,9 @@ export default {
   Version: "版本信息",
   AccountManager: "Yggdrasil 帐户管理器",
   Terminal: "终端",
+  JavaSelector: "Java 选择器",
   "MainMenu.QuickManageAccount": "管理帐户",
+  "MainMenu.QuickJavaSelector": "选择 Java",
   "MainMenu.QuickTerminal": "打开终端",
   "MainMenu.Exit": "退出",
   "MainMenu.Version": "版本信息",
@@ -174,4 +176,13 @@ export default {
   "AccountManager.Next": "下一步",
   "AccountManager.Reload": "重新加载",
   "AccountManager.AddYggdrasil": "添加 Yggdrasil 帐户",
+  "JavaSelector.SelectJavaTitle": "Java 运行时",
+  "JavaSelector.SelectJava": "选择 Java 运行时",
+  "JavaSelector.Loading": "请稍等，正在您的设备上查找所有可用的 Java 运行时……",
+  "JavaSelector.Warn32":
+    "性能警示 - Minecraft 在 32 位 Java VM 上可能无法发挥出最好性能",
+  "JavaSelector.WarnClient":
+    "性能警示 - Minecraft 在 Client Java VM 上可能无法发挥出最好性能",
+  "JavaSelector.WarnNonFree":
+    "许可警示 - 这不是自由软件！Alicorn 建议您使用自由的 OpenJDK 运行时代替该非自由的运行时。",
 };

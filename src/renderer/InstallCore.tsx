@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
-  createStyles,
   Dialog,
   DialogActions,
   DialogContent,
@@ -10,7 +9,6 @@ import {
   DialogTitle,
   FormControl,
   InputLabel,
-  makeStyles,
   MenuItem,
   Select,
   Snackbar,
@@ -31,42 +29,10 @@ import {
 } from "../modules/container/ContainerUtil";
 import { FailedHint, OperatingHint } from "./OperatingHint";
 import { installProfile } from "../modules/pff/install/MojangInstall";
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      marginLeft: theme.spacing(4),
-    },
-    formControl: {
-      minWidth: 120,
-    },
-    input: {
-      color: theme.palette.secondary.light,
-    },
-    title: {
-      color: theme.palette.primary.main,
-    },
-    text: {
-      fontSize: "medium",
-    },
-    selector: {
-      borderColor: theme.palette.primary.main,
-      color: theme.palette.primary.main,
-      width: theme.spacing(25),
-    },
-    label: {
-      marginLeft: theme.spacing(1),
-      color: theme.palette.primary.main,
-    },
-    btn: {
-      marginLeft: theme.spacing(1),
-      marginTop: theme.spacing(1),
-    },
-  })
-);
+import { useFormStyles } from "./Stylex";
 
 export function InstallCore(): JSX.Element {
-  const classes = useStyles();
+  const classes = useFormStyles();
   const [foundCores, setCores] = useState<string[]>([]);
   const isLoaded = useRef<boolean>(false);
   const mounted = useRef<boolean>();
