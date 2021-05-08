@@ -1,13 +1,13 @@
 import pkg from "../../../package.json";
 
 export default {
-  LaunchPad: "开始游戏",
-  InstallCore: "安装minecraft",
+  LaunchPad: "启动游戏",
+  InstallCore: "安装 Minecraft 核心",
   ContainerManager: "管理容器",
   CoreDetail: "核心详细信息",
   ReadyToLaunch: "出发吧!",
   Version: "启动器信息",
-  AccountManager: "帐户管理器",
+  AccountManager: "Yggdrasil 帐户管理器",
   Terminal: "终端",
   JavaSelector: "Java 选择器",
   "MainMenu.QuickManageAccount": "管理帐户",
