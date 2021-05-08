@@ -24,11 +24,10 @@ const JAVA_ORACLE = (() => {
 
 export async function getJavaInfoRaw(jHome: string): Promise<string> {
   const jRPath = path.resolve(await getJavaRunnable(jHome));
-  return new Promise<string>((resolve) => {
+  return new Promise<string>((resolve, reject) => {
     childProcess.execFile(jRPath, ["-version"], (e, stdout, stderr) => {
       if (e) {
-        console.log(e);
-        resolve("");
+        reject();
       } else {
         if (stdout.trim().length > 0) {
           resolve(stdout);
@@ -108,7 +107,7 @@ const VERSION_MATCH = /(?<=["'])[0-9._]+?(?=["'])/i;
 const JAVA_9E_MATCH = /(?<=1\.)[0-9](?=.*)/i;
 const JAVA_NEW_MATCH = /^[0-9]{2,}(?=\.?)/i;
 const BITS_32 = /32-bit/i;
-const CLIENT_SIDE = /client/i;
+const CLIENT_SIDE = /client\.*vm/i;
 const OPEN_JDK = /openjdk/i;
 
 export interface JavaInfo {

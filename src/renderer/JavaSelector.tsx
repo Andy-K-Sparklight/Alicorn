@@ -23,6 +23,16 @@ import {
 import { tr } from "./Translator";
 import objectHash from "object-hash";
 
+const CANNOT_LOAD_INFO: JavaInfo = {
+  rootVersion: -1,
+  vm: "",
+  vmSide: "Server",
+  bits: "64",
+  isFree: true,
+  runtime: "",
+  version: "",
+};
+
 export function JavaSelector(): JSX.Element {
   const classes = useFormStyles();
   const [isLoaded, setLoaded] = useState<boolean>(false);
@@ -30,7 +40,9 @@ export function JavaSelector(): JSX.Element {
   const [javaList, setJavaList] = useState<string[]>(getAllJava());
   const [javaInfo, setJavaInfo] = useState<Map<string, JavaInfo>>(new Map());
   const [currentJava, setCurrentJava] = useState<string>(getLastUsedJavaHome());
-  const [currentJavaInfo, setCurrentJavaInfo] = useState<JavaInfo>();
+  const [currentJavaInfo, setCurrentJavaInfo] = useState<JavaInfo>(
+    CANNOT_LOAD_INFO
+  );
   useEffect(() => {
     isMounted.current = true;
     (async () => {
@@ -41,7 +53,11 @@ export function JavaSelector(): JSX.Element {
         if (isMounted.current) {
           setCurrentJavaInfo(t);
         }
-      } catch {}
+      } catch {
+        if (isMounted.current) {
+          setCurrentJavaInfo(CANNOT_LOAD_INFO);
+        }
+      }
     })();
     return () => {
       isMounted.current = false;
@@ -61,7 +77,9 @@ export function JavaSelector(): JSX.Element {
                 j,
                 parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(j)))
               );
-            } catch {}
+            } catch {
+              tMap.set(j, CANNOT_LOAD_INFO);
+            }
           }
           if (isMounted.current) {
             setJavaInfo(tMap);
@@ -125,6 +143,7 @@ export function JavaSelector(): JSX.Element {
           </Typography>
         </Box>
       )}
+
       <JavaInfoDisplay
         jInfo={isLoaded ? javaInfo.get(currentJava) : currentJavaInfo}
       />
@@ -133,17 +152,37 @@ export function JavaSelector(): JSX.Element {
 }
 
 function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
+  console.log(props.jInfo);
+  const corruptBit = props.jInfo?.rootVersion === -1;
   return (
     <Box>
       <Typography variant={"h6"} color={"primary"} gutterBottom>
-        {`Java ${props.jInfo?.rootVersion || 0}`}
+        {corruptBit
+          ? tr("JavaSelector.CannotLoad")
+          : `Java ${props.jInfo?.rootVersion || 0}`}
       </Typography>
-      <Typography color={"secondary"} gutterBottom>
-        {props.jInfo?.runtime || "Unknown"}
-      </Typography>
-      <Typography color={"secondary"} gutterBottom>
-        {props.jInfo?.vm || "Unknown"}
-      </Typography>
+      {corruptBit ? (
+        ""
+      ) : (
+        <Box>
+          <Typography color={"secondary"} gutterBottom>
+            {props.jInfo?.runtime || "Unknown"}
+          </Typography>
+          <Typography color={"secondary"} gutterBottom>
+            {props.jInfo?.vm || "Unknown"}
+          </Typography>
+        </Box>
+      )}
+      {corruptBit ? (
+        <Typography
+          style={{ fontSize: "small", color: "#ff8400" }}
+          gutterBottom
+        >
+          {tr("JavaSelector.CannotLoadDetail")}
+        </Typography>
+      ) : (
+        ""
+      )}
       {props.jInfo?.isFree ? (
         ""
       ) : (
