@@ -15,7 +15,7 @@ import { getActualDataPath } from "../modules/config/DataSupport";
 import fs from "fs-extra";
 import { isFileExist } from "../modules/config/FileUtil";
 
-// UNCHECKED
+// MAINTAINERS ONLY
 
 const BASE_URL = "https://services.al.xuogroup.top/";
 const RELEASE_FOLDER = BASE_URL + "release/";

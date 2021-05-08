@@ -1,6 +1,7 @@
 import os from "os";
 import pkg from "../../../package.json";
 
+// MAINTAINERS ONLY
 // DO NOT EDIT THE FOLLOWING VALUES
 // They are very important for already installed Alicorns!
 

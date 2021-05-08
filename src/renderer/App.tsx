@@ -36,7 +36,7 @@ import { saveVFSync } from "../modules/container/ValidateRecord";
 import { VersionView } from "./VersionView";
 import { ContainerManager } from "./ContainerManager";
 import { InstallCore } from "./InstallCore";
-import { AccountManager } from "./AccountManager";
+import { YggdrasilAccountManager } from "./YggdrasilAccountManager";
 import { Terminal } from "./Terminal";
 import { JavaSelector } from "./JavaSelector";
 
@@ -134,7 +134,7 @@ export function App(): JSX.Element {
             <IconButton
               className={classes.floatButton}
               onClick={() => {
-                jumpTo("/AccountManager");
+                jumpTo("/YggdrasilAccountManager");
                 triggerSetPage(Pages.AccountManager);
               }}
               color={"inherit"}
@@ -201,7 +201,10 @@ export function App(): JSX.Element {
         />
         <Route path={"/Version"} component={VersionView} />
         <Route path={"/ContainerManager"} component={ContainerManager} />
-        <Route path={"/AccountManager"} component={AccountManager} />
+        <Route
+          path={"/YggdrasilAccountManager"}
+          component={YggdrasilAccountManager}
+        />
         <Route path={"/Terminal"} component={Terminal} />
         <Route path={"/JavaSelector"} component={JavaSelector} />
       </Box>

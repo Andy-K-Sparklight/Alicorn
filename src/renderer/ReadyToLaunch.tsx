@@ -61,7 +61,7 @@ import {
 } from "../modules/auth/AccountUtil";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
 import { prefetchData } from "../modules/auth/AJHelper";
-import { toReadableType } from "./AccountManager";
+import { toReadableType } from "./YggdrasilAccountManager";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

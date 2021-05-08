@@ -2,7 +2,7 @@
 
 **Alicorn 在开发中！**
 
-Alicorn 的开发还没有完成，如果你在寻找下载页面，那让你失望了，请等等再来吧。或者，如果你是一位懂得 TypeScript 的开发人员，可以向我们提交 Pull Requests 来加快开发进程！
+Alicorn 的开发还没有完成，您可以到 [这里](https://www.mcbbs.net/thread-1196771-1-1.html) 阅读有关 InDev 的发行信息。
 
 Alicorn Launcher 是 Minecraft（Java 版）第三方启动器，目的在于提供针对国内用户的更好体验。
 

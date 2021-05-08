@@ -1,5 +1,6 @@
 import pkg from "../../../package.json";
 
+// MAINTAINERS ONLY
 export default {
   LaunchPad: "启动游戏",
   InstallCore: "安装 Minecraft 核心",
@@ -184,9 +185,9 @@ export default {
   "JavaSelector.Loading": "请稍等，正在您的设备上查找所有可用的 Java 运行时……",
   "JavaSelector.Reload": "重新查找 Java 运行时",
   "JavaSelector.Warn32":
-    "性能警示 - Minecraft 在 32 位 Java VM 上可能无法发挥出最好性能",
+    "性能警示 - Minecraft 在 32 位 Java VM 上可能无法发挥出最好性能。",
   "JavaSelector.WarnClient":
-    "性能警示 - Minecraft 在 Client Java VM 上可能无法发挥出最好性能",
+    "性能警示 - Minecraft 在 Client Java VM 上可能无法发挥出最好性能。",
   "JavaSelector.WarnNonFree":
     "许可警示 - 这不是自由软件！Alicorn 建议您使用自由的 OpenJDK 运行时代替该非自由的运行时。",
 };

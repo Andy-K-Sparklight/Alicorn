@@ -1,3 +1,4 @@
+// MAINTAINERS ONLY
 class BuildInfoPlugin {
   constructor(output, version) {
     this.output = output;

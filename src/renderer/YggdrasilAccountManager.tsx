@@ -34,7 +34,10 @@ import { YNDialog } from "./OperatingHint";
 import { MojangAccount } from "../modules/auth/MojangAccount";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
 
-export function AccountManager(): JSX.Element {
+// This is only for Yggdrasil accounts
+// MS Account and Local Account should not be saved
+
+export function YggdrasilAccountManager(): JSX.Element {
   const classes = usePadStyles();
   const mountedBit = useRef<boolean>(true);
   const accountsLoaded = useRef<boolean>(false);
