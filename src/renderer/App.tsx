@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) =>
     },
     floatButton: {
       float: "right",
-      marginRight: theme.spacing(2),
+      marginRight: 0,
     },
     title: {
       flexGrow: 1,

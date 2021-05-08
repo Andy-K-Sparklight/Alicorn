@@ -178,9 +178,11 @@ export default {
   "AccountManager.AddYggdrasil": "添加 Yggdrasil 帐户",
   "JavaSelector.SelectJavaTitle": "Java 运行时",
   "JavaSelector.SelectJava": "选择 Java 运行时",
-  "JavaSelector.CannotLoad": "无法读取",
-  "JavaSelector.CannotLoadDetail": "无法读取该 Java 运行时 - 它可能已经损坏",
+  "JavaSelector.CannotLoad": "读取中",
+  "JavaSelector.CannotLoadDetail":
+    "正在读取该 Java 运行时 - 如果这条消息一直没有消失，那么该 Java 运行时可能已经损坏",
   "JavaSelector.Loading": "请稍等，正在您的设备上查找所有可用的 Java 运行时……",
+  "JavaSelector.Reload": "重新查找 Java 运行时",
   "JavaSelector.Warn32":
     "性能警示 - Minecraft 在 32 位 Java VM 上可能无法发挥出最好性能",
   "JavaSelector.WarnClient":

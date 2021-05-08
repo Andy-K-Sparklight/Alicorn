@@ -46,9 +46,7 @@ export const useFormStyles = makeStyles((theme) =>
     root: {
       marginLeft: theme.spacing(4),
     },
-    formControl: {
-      minWidth: 120,
-    },
+    formControl: {},
     input: {
       color: theme.palette.secondary.light,
     },
@@ -64,7 +62,7 @@ export const useFormStyles = makeStyles((theme) =>
       width: theme.spacing(25),
     },
     label: {
-      marginLeft: theme.spacing(1),
+      marginLeft: theme.spacing(0.5),
       color: theme.palette.primary.main,
     },
     btn: {
