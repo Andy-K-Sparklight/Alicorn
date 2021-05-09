@@ -39,6 +39,7 @@ import {
   ensureAssetsIndex,
   ensureClient,
   ensureLibraries,
+  ensureLog4jFile,
   ensureNatives,
 } from "../modules/launch/Ensurance";
 import { launchProfile } from "../modules/launch/LaunchPad";
@@ -298,6 +299,7 @@ async function startBoot(
   setStatus(LaunchingStatus.LIBRARIES_FILLING);
 
   await ensureClient(profile);
+  await ensureLog4jFile(profile, container);
   await ensureLibraries(profile, container);
   await ensureNatives(profile, container);
   setStatus(LaunchingStatus.ASSETS_FILLING);

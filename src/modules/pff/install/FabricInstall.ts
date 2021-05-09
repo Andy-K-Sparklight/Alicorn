@@ -27,7 +27,8 @@ export async function performFabricInstall(
     let failBit = true;
     try {
       await makeTempLP(container);
-      await ensureFabricLibraries(mcv, fbv, container);
+      // Fabric has less libraries, much faster than Forge!
+      await ensureFabricLibrariesOL(mcv, fbv, container);
       await bootFabricInstaller(jExecutable, fbURL, fbv, mcv, container);
     } catch {
       failBit = false;
@@ -71,7 +72,7 @@ async function bootFabricInstaller(
   });
 }
 
-async function ensureFabricLibraries(
+async function ensureFabricLibrariesOL(
   mcv: string,
   fbv: string,
   container: MinecraftContainer

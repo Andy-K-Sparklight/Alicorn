@@ -59,7 +59,8 @@ export function makeInherit(
     retGF.assetIndex = gfHead.assetIndex;
   }
   if (!isNull(gfHead.libraries)) {
-    retGF.libraries = retGF.libraries.concat(gfHead.libraries);
+    // Incoming Changes Must Comes First
+    retGF.libraries = gfHead.libraries.concat(retGF.libraries);
   }
   if (!isNull(gfHead.clientArtifact)) {
     retGF.libraries.push(

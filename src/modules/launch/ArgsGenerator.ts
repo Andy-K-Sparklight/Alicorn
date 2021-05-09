@@ -1,7 +1,6 @@
 import { GameProfile } from "../profile/GameProfile";
 import { Trio } from "../commons/Collections";
 import { MinecraftContainer } from "../container/MinecraftContainer";
-import path from "path";
 import {
   ALICORN_SEPARATOR,
   ALICORN_VERSION_TYPE,
@@ -47,10 +46,16 @@ export function generateVMArgs(
     }
     const tPath = l.artifact.path.trim();
     if (tPath !== "") {
-      usingLibs.push(container.getLibraryPath(tPath));
+      const lb = container.getLibraryPath(tPath);
+      if (!usingLibs.includes(lb)) {
+        usingLibs.push(lb);
+      }
     }
     if (l.isNative) {
-      nativesLibs.push(container.getNativeLibraryExtractedRoot(l));
+      const nlb = container.getNativeLibraryExtractedRoot(l);
+      if (!nativesLibs.includes(nlb)) {
+        nativesLibs.push(nlb);
+      }
     }
   }
   // Specialize for 'client.jar'
@@ -58,12 +63,13 @@ export function generateVMArgs(
     usingLibs.push(profile.clientArtifact.path);
   }
 
+  nativesLibs.push("");
+  usingLibs.push("");
   // All natives directories put together
   vMap.set("natives_directory", nativesLibs.join(FILE_SEPARATOR));
 
   // All class paths put together
   vMap.set("classpath", usingLibs.join(FILE_SEPARATOR));
-
   // Log4j argument
   vMap.set("path", container.getLog4j2FilePath(profile.logFile.path));
 
@@ -74,10 +80,12 @@ export function generateVMArgs(
     }
   }
   const logArgs: string[] = [];
+
   const tArg = profile.logArg.trim();
   if (!isNull(tArg)) {
     logArgs.push(tArg);
   }
+
   staticArgs = staticArgs.concat(logArgs).concat(profile.mainClass);
   return applyVars(vMap, staticArgs);
 }

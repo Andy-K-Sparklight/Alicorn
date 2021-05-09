@@ -16,7 +16,7 @@ import { HashRouter } from "react-router-dom";
 import { App } from "./App";
 import { initVF } from "../modules/container/ValidateRecord";
 import { prepareAJ } from "../modules/auth/AJHelper";
-import { initBuiltInCommands } from "../modules/command/CommandHandler";
+import { initCommands } from "../modules/command/CommandHandler";
 
 const ALICORN_THEME_FILE = "alicorn.theme.json";
 const GLOBAL_STYLES: React.CSSProperties = {
@@ -66,7 +66,7 @@ initTranslator();
 (async () => {
   console.log("Initializing modules...");
   await loadConfig();
-  initBuiltInCommands();
+  initCommands();
   await loadGDT();
   await initEncrypt();
   await loadMirror();

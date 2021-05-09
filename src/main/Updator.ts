@@ -158,7 +158,3 @@ export async function doUpdate(
     return false;
   }
 }
-
-export function isUpdating(): boolean {
-  return updateBit;
-}

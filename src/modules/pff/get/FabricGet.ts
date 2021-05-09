@@ -113,7 +113,7 @@ export async function canSupportGame(
   filter: FabricFilter = FabricFilter.STABLE
 ): Promise<boolean> {
   try {
-    const gJson = await xgot(FABRIC_VERSIONS_GAME);
+    const gJson = await xgot(FABRIC_VERSIONS_GAME, true);
     if (gJson instanceof Array) {
       for (const c of gJson) {
         if (safeGet(c, ["version"]) === version) {

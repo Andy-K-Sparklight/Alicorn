@@ -30,23 +30,41 @@ import {
 import { FailedHint, OperatingHint } from "./OperatingHint";
 import { installProfile } from "../modules/pff/install/MojangInstall";
 import { useFormStyles } from "./Stylex";
+import {
+  generateForgeInstallerName,
+  getForgeInstaller,
+  getForgeVersionByMojang,
+} from "../modules/pff/get/ForgeGet";
+import { performForgeInstall } from "../modules/pff/install/ForgeInstall";
+import { getJavaRunnable, getLastUsedJavaHome } from "../modules/java/JInfo";
 
 export function InstallCore(): JSX.Element {
   const classes = useFormStyles();
   const [foundCores, setCores] = useState<string[]>([]);
   const isLoaded = useRef<boolean>(false);
   const mounted = useRef<boolean>();
-  const [selectedVersion, setSelectedVersion] = useState<string>("");
-  const [filter, setFilter] = useState<ReleaseType>(ReleaseType.RELEASE);
-  const [selectedContainer, setContainer] = useState<string>("");
-  const [mojangOpen, setMojangOpen] = useState<boolean>(false);
+  const [selectedMojangVersion, setSelectedMojangVersion] = useState<string>(
+    ""
+  );
+  const [mojangFilter, setMojangFilter] = useState<ReleaseType>(
+    ReleaseType.RELEASE
+  );
+  const [baseMojangVersionForge, setBaseMojangVersionForge] = useState<string>(
+    ""
+  );
+  const [allMojangRelease, setAllMojangRelease] = useState<string[]>([]);
+  const [detectedForgeVersion, setDetectedForgeVersion] = useState<string>("");
+  const [selectedMojangContainer, setMojangContainer] = useState<string>("");
+  const [selectedForgeContainer, setForgeContainer] = useState<string>("");
+  const [mojangConfirmOpenBit, setMojangConfirmOpen] = useState<boolean>(false);
+  const [forgeConfirmOpenBit, setForgeConfirmOpen] = useState<boolean>(false);
   const [operating, setOperating] = useState<boolean>(false);
   const [failed, setFailed] = useState<boolean>(false);
   const [openNotice, setOpenNotice] = useState<boolean>(false);
   useEffect(() => {
     (async () => {
       if (!isLoaded.current) {
-        const r = await getAllMojangCores(filter);
+        const r = await getAllMojangCores(mojangFilter);
         if (mounted.current) {
           setCores(r);
         }
@@ -59,6 +77,24 @@ export function InstallCore(): JSX.Element {
       mounted.current = false;
     };
   });
+  useEffect(() => {
+    (async () => {
+      console.log("Regenerating Forge Version For " + baseMojangVersionForge);
+      const lForge = await getForgeVersionByMojang(baseMojangVersionForge);
+      console.log(lForge);
+      if (mounted.current) {
+        setDetectedForgeVersion(lForge);
+      }
+    })();
+  }, [baseMojangVersionForge]);
+  useEffect(() => {
+    (async () => {
+      const allMj = await getAllMojangCores(ReleaseType.RELEASE);
+      if (mounted.current) {
+        setAllMojangRelease(allMj);
+      }
+    })();
+  }, []);
   return (
     <Box className={classes.root}>
       <Snackbar
@@ -76,18 +112,63 @@ export function InstallCore(): JSX.Element {
         }}
       />
       <OperatingHint open={operating} />
-      <ConfirmInstallMojang
-        version={selectedVersion}
-        className={classes.input}
-        open={mojangOpen}
+      <ConfirmInstall
+        version={`${baseMojangVersionForge}-forge-${detectedForgeVersion}`}
+        open={forgeConfirmOpenBit}
         closeFunc={() => {
-          setMojangOpen(false);
+          setForgeConfirmOpen(false);
         }}
+        className={classes.input}
         confirmFunc={async () => {
-          setMojangOpen(false);
+          const mcv = baseMojangVersionForge;
+          const fgv = detectedForgeVersion;
+          setForgeConfirmOpen(false);
           setOperating(true);
           setFailed(false);
-          const u = await getProfileURLById(selectedVersion);
+          const ct = getContainer(selectedForgeContainer);
+          console.log(`Using mcv ${mcv} fgv ${fgv}`);
+          const stat = await getForgeInstaller(ct, mcv, fgv);
+          if (!stat) {
+            if (mounted.current) {
+              setOperating(false);
+              setFailed(true);
+            }
+            return;
+          }
+          console.log("Forge Installer Downloaded.");
+          const istat = await performForgeInstall(
+            await getJavaRunnable(getLastUsedJavaHome()),
+            generateForgeInstallerName(mcv, fgv),
+            ct
+          );
+          if (!istat) {
+            console.log("Failed to execute installer!");
+            if (mounted.current) {
+              setOperating(false);
+              setFailed(true);
+            }
+            return;
+          } else {
+            if (mounted.current) {
+              setOperating(false);
+              setFailed(false);
+              setOpenNotice(true);
+            }
+          }
+        }}
+      />
+      <ConfirmInstall
+        version={selectedMojangVersion}
+        className={classes.input}
+        open={mojangConfirmOpenBit}
+        closeFunc={() => {
+          setMojangConfirmOpen(false);
+        }}
+        confirmFunc={async () => {
+          setMojangConfirmOpen(false);
+          setOperating(true);
+          setFailed(false);
+          const u = await getProfileURLById(selectedMojangVersion);
           if (u.length === 0) {
             if (mounted.current) {
               setOperating(false);
@@ -103,9 +184,9 @@ export function InstallCore(): JSX.Element {
           }
           try {
             await installProfile(
-              selectedVersion,
+              selectedMojangVersion,
               d,
-              getContainer(selectedContainer)
+              getContainer(selectedMojangContainer)
             );
             if (mounted.current) {
               setOperating(false);
@@ -120,6 +201,7 @@ export function InstallCore(): JSX.Element {
           }
         }}
       />
+      {/* Mojang */}
       <Box>
         <Typography variant={"h5"} className={classes.title} gutterBottom>
           {tr("InstallCore.InstallMinecraft")}
@@ -137,10 +219,10 @@ export function InstallCore(): JSX.Element {
             className={classes.selector}
             onChange={(e) => {
               isLoaded.current = false;
-              setSelectedVersion("");
-              setFilter(e.target.value as ReleaseType);
+              setSelectedMojangVersion("");
+              setMojangFilter(e.target.value as ReleaseType);
             }}
-            value={filter || ReleaseType.RELEASE}
+            value={mojangFilter || ReleaseType.RELEASE}
           >
             <MenuItem value={ReleaseType.RELEASE}>
               {tr("InstallCore.Release")}
@@ -168,9 +250,9 @@ export function InstallCore(): JSX.Element {
             color={"primary"}
             className={classes.selector}
             onChange={(e) => {
-              setSelectedVersion(String(e.target.value || ""));
+              setSelectedMojangVersion(String(e.target.value || ""));
             }}
-            value={selectedVersion || ""}
+            value={selectedMojangVersion || ""}
           >
             {foundCores.map((c) => {
               return (
@@ -193,9 +275,9 @@ export function InstallCore(): JSX.Element {
             color={"primary"}
             className={classes.selector}
             onChange={(e) => {
-              setContainer(String(e.target.value || ""));
+              setMojangContainer(String(e.target.value || ""));
             }}
-            value={selectedContainer || ""}
+            value={selectedMojangContainer || ""}
           >
             {getAllMounted().map((c) => {
               return (
@@ -210,9 +292,85 @@ export function InstallCore(): JSX.Element {
           className={classes.btn}
           variant={"outlined"}
           color={"primary"}
-          disabled={isNull(selectedVersion) || isNull(selectedContainer)}
+          disabled={
+            isNull(selectedMojangVersion) || isNull(selectedMojangContainer)
+          }
           onClick={() => {
-            setMojangOpen(true);
+            setMojangConfirmOpen(true);
+          }}
+        >
+          {tr("InstallCore.Start")}
+        </Button>
+      </Box>
+      {/* Forge */}
+      <Box>
+        <Typography variant={"h5"} className={classes.title} gutterBottom>
+          {tr("InstallCore.InstallForge")}
+        </Typography>
+        <Typography className={classes.text} color={"secondary"} gutterBottom>
+          {tr("InstallCore.ForgeVersion") +
+            " " +
+            (detectedForgeVersion || "Unknown")}
+        </Typography>
+        <FormControl className={classes.formControl}>
+          <InputLabel
+            id={"CoreInstall-Forge-SelectBase"}
+            className={classes.label}
+          >
+            {tr("InstallCore.ForgeBaseVersion")}
+          </InputLabel>
+          <Select
+            labelId={"CoreInstall-Forge-SelectBase"}
+            color={"primary"}
+            className={classes.selector}
+            onChange={(e) => {
+              setBaseMojangVersionForge(String(e.target.value || ""));
+            }}
+            value={baseMojangVersionForge || ""}
+          >
+            {allMojangRelease.map((r) => {
+              return (
+                <MenuItem key={objectHash(r)} value={r}>
+                  {r}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+        <FormControl className={classes.formControl}>
+          <InputLabel
+            id={"CoreInstall-Forge-TargetContainer"}
+            className={classes.label}
+          >
+            {tr("InstallCore.TargetContainer")}
+          </InputLabel>
+          <Select
+            labelId={"CoreInstall-Forge-TargetContainer"}
+            color={"primary"}
+            className={classes.selector}
+            onChange={(e) => {
+              setForgeContainer(String(e.target.value || ""));
+            }}
+            value={selectedForgeContainer || ""}
+          >
+            {getAllMounted().map((c) => {
+              return (
+                <MenuItem key={objectHash(c)} value={c}>
+                  {c}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+        <Button
+          className={classes.btn}
+          variant={"outlined"}
+          color={"primary"}
+          disabled={
+            isNull(selectedForgeContainer) || isNull(detectedForgeVersion)
+          }
+          onClick={() => {
+            setForgeConfirmOpen(true);
           }}
         >
           {tr("InstallCore.Start")}
@@ -222,7 +380,7 @@ export function InstallCore(): JSX.Element {
   );
 }
 
-function ConfirmInstallMojang(props: {
+function ConfirmInstall(props: {
   version: string;
   open: boolean;
   closeFunc: () => unknown;

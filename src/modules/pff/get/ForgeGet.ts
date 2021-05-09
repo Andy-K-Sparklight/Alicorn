@@ -25,7 +25,7 @@ export async function getForgeVersionByMojang(
   filter = ForgeFilter.RECOMMENDED
 ): Promise<string> {
   try {
-    const tBody = await xgot(FORGE_VERSIONS_MANIFEST);
+    const tBody = await xgot(FORGE_VERSIONS_MANIFEST, true);
     const d = safeGet(tBody, ["promos", `${id}-${filter}`], "");
     if (isNull(d)) {
       if (filter === ForgeFilter.LATEST) {

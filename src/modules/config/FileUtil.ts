@@ -22,6 +22,9 @@ export async function copyFileStream(
   from: string,
   dest: string
 ): Promise<void> {
+  if (!(await isFileExist(from))) {
+    throw new Error("File Not Exist: " + from);
+  }
   const dPath = path.resolve(dest);
   await fs.ensureDir(path.dirname(dPath));
   const stream = fs

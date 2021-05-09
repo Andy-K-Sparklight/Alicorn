@@ -8,27 +8,28 @@ For details, please see https://bitbucket.org/RarityEG/harmonyforgeinstallercli/
 
 A copy of forge.iw.jar will be saved to the root dir of alicorn data.
 */
-import { getActualDataPath, saveDefaultData } from "../../config/DataSupport";
-import { ALICORN_DATA_SUFFIX, FILE_SEPARATOR } from "../../commons/Constants";
-import { copyFileStream, wrappedLoadJSON } from "../../config/FileUtil";
-import { MinecraftContainer } from "../../container/MinecraftContainer";
-import { LibraryMeta } from "../../profile/Meta";
-import { isNull, safeGet } from "../../commons/Null";
-import { makeLibrary } from "../../profile/FabricProfileAdaptor";
-import { GameProfile } from "../../profile/GameProfile";
+import {getActualDataPath, saveDefaultData} from "../../config/DataSupport";
+import {FILE_SEPARATOR} from "../../commons/Constants";
+import {isFileExist, wrappedLoadJSON} from "../../config/FileUtil";
+import {MinecraftContainer} from "../../container/MinecraftContainer";
+import {LibraryMeta} from "../../profile/Meta";
+import {isNull, safeGet} from "../../commons/Null";
+import {makeLibrary} from "../../profile/FabricProfileAdaptor";
+import {GameProfile} from "../../profile/GameProfile";
 import path from "path";
-import { JAR_SUFFIX } from "../../launch/NativesLint";
+import {JAR_SUFFIX} from "../../launch/NativesLint";
 import fs from "fs-extra";
-import { zip } from "compressing";
-import { Pair } from "../../commons/Collections";
-import { noDuplicateConcat } from "../../profile/InheritedProfileAdaptor";
+import {zip} from "compressing";
+import {Pair} from "../../commons/Collections";
+import {noDuplicateConcat} from "../../profile/InheritedProfileAdaptor";
 import childProcess from "child_process";
-import { ensureLibraries } from "../../launch/Ensurance";
+import {ensureLibraries} from "../../launch/Ensurance";
+
+// MAINTAINERS ONLY
 
 const FORGE_INSTALLER_HEADLESS = "forge.iw.jar";
 const CP_ARG = "-cp";
 const LAUNCHER_PROFILES = "launcher_profiles.json";
-const LP_BACKUP = "lp.backup" + ALICORN_DATA_SUFFIX;
 // Figured out! Java problem
 // Okay we shall suggest 8 for 1.12.2 or earlier and 11 for 1.13 or later
 // This runs well!
@@ -42,6 +43,7 @@ export async function initForgeInstallModule(): Promise<void> {
 }
 
 // Run this AFTER downloaded the installer!
+// Argument forgeJar is a relative path generated with generateForgeInstallerName
 export async function performForgeInstall(
   jExecutable: string,
   forgeJar: string,
@@ -51,13 +53,12 @@ export async function performForgeInstall(
   try {
     await makeTempLP(container);
     const ret = await getPolyfillForgeProfile(forgeJar, container);
-
+    // Stupid Forge
+    // We have to fill libraries for the installer, it's slow...
     await ensureLibraries(ret.getFirstValue(), container);
     await bootForgeInstaller(jExecutable, forgeJar, container);
   } catch {
     failBit = false;
-  } finally {
-    await restoreLP(container);
   }
   return failBit;
 }
@@ -91,6 +92,12 @@ export async function bootForgeInstaller(
       rcp.kill("SIGKILL");
       // Forcefully
       reject();
+    });
+    rcp.stdout?.on("data", (d) => {
+      console.log(d.toString());
+    });
+    rcp.stderr?.on("data", (d) => {
+      console.log(d.toString());
     });
   });
 }
@@ -139,27 +146,18 @@ async function rmTempForgeFiles(
 
 // Create a empty 'launcher_profile.json' for the silly installer
 export async function makeTempLP(container: MinecraftContainer): Promise<void> {
-  try {
+  const originLP = container.resolvePath(LAUNCHER_PROFILES);
+  if (!(await isFileExist(originLP))) {
+    await fs.writeFile(originLP, "{}");
+  }
+  /* try {
     await copyFileStream(
       container.resolvePath(LAUNCHER_PROFILES),
       container.resolvePath(LP_BACKUP)
     );
   } catch {
     return;
-  }
-}
-
-// Restore the earlier 'launcher_profiles.json', though Alicorn don't need it
-export async function restoreLP(container: MinecraftContainer): Promise<void> {
-  try {
-    await copyFileStream(
-      container.resolvePath(LP_BACKUP),
-      container.resolvePath(LAUNCHER_PROFILES)
-    );
-    await fs.remove(LP_BACKUP);
-  } catch {
-    return;
-  }
+  } */
 }
 
 // For legacy profiles

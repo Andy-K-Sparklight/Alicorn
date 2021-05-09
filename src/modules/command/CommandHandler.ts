@@ -1,6 +1,7 @@
 import { echo } from "./BaseCommands";
 import { jconf } from "../java/JConfigure";
 import { update } from "../../main/UpdateConfigure";
+import { locale } from "../../renderer/LocaleConfigure";
 
 const ALL_HANDLERS: Map<
   string,
@@ -38,10 +39,11 @@ export async function handleCommand(
   return false;
 }
 
-export function initBuiltInCommands(): void {
+export function initCommands(): void {
   registerCommandHandler("echo", echo);
   registerCommandHandler("jconf", jconf);
   registerCommandHandler("update", update);
+  registerCommandHandler("locale", locale);
 }
 
 export function generateAction(

@@ -2,6 +2,7 @@ import pkg from "../../../package.json";
 
 // MAINTAINERS ONLY
 export default {
+  Lang: "简体中文",
   LaunchPad: "启动游戏",
   InstallCore: "安装 Minecraft 核心",
   ContainerManager: "管理容器",
@@ -145,6 +146,8 @@ export default {
   "ContainerManager.Continue": "继续",
   "ContainerManager.Cancel": "取消",
   "InstallCore.InstallMinecraft": "安装 Minecraft",
+  "InstallCore.InstallForge": "安装 Forge",
+  "InstallCore.InstallFabric": "安装 Fabric",
   "InstallCore.TargetContainer": "目标容器",
   "InstallCore.Release": "Minecraft 稳定版",
   "InstallCore.Snapshot": "Minecraft 快照",
@@ -155,7 +158,11 @@ export default {
   "InstallCore.Confirm.Ready": "准备开始安装",
   "InstallCore.Confirm.Hint": "将安装以下核心到指定的 Minecraft 容器中：",
   "InstallCore.Confirm.OK": "开始操作",
-  "InstallCore.MinecraftVersion": "版本号",
+  "InstallCore.MinecraftVersion": "Minecraft 版本号",
+  "InstallCore.ForgeVersion": "Forge 版本号",
+  "InstallCore.ForgeBaseVersion": "目标 Minecraft 版本号",
+  "InstallCore.FabricVersion": "Fabric 版本号",
+  "InstallCore.FabricBaseVersion": "目标 Minecraft 版本号",
   "AccountManager.Remove": "移除帐户",
   "InstallCore.Success": "成功安装了核心",
   "AccountManager.Refresh": "刷新令牌",

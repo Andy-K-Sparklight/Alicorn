@@ -10,6 +10,10 @@ export function registryLocale(
   localesMap.set(code, data);
 }
 
+export function getLocaleList(): string[] {
+  return Array.from(localesMap.keys());
+}
+
 export function setLocale(code: string): void {
   currentLocale = code;
 }
@@ -32,4 +36,8 @@ export function randsl(key: string): string {
 
 export function initTranslator(): void {
   registryLocale("zh_cn", ChineseSimplified);
+}
+
+export function getCurrentLocale(): string {
+  return currentLocale;
 }
