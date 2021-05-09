@@ -8,22 +8,22 @@ For details, please see https://bitbucket.org/RarityEG/harmonyforgeinstallercli/
 
 A copy of forge.iw.jar will be saved to the root dir of alicorn data.
 */
-import {getActualDataPath, saveDefaultData} from "../../config/DataSupport";
-import {FILE_SEPARATOR} from "../../commons/Constants";
-import {isFileExist, wrappedLoadJSON} from "../../config/FileUtil";
-import {MinecraftContainer} from "../../container/MinecraftContainer";
-import {LibraryMeta} from "../../profile/Meta";
-import {isNull, safeGet} from "../../commons/Null";
-import {makeLibrary} from "../../profile/FabricProfileAdaptor";
-import {GameProfile} from "../../profile/GameProfile";
+import { getActualDataPath, saveDefaultData } from "../../config/DataSupport";
+import { FILE_SEPARATOR } from "../../commons/Constants";
+import { isFileExist, wrappedLoadJSON } from "../../config/FileUtil";
+import { MinecraftContainer } from "../../container/MinecraftContainer";
+import { LibraryMeta } from "../../profile/Meta";
+import { isNull, safeGet } from "../../commons/Null";
+import { makeLibrary } from "../../profile/FabricProfileAdaptor";
+import { GameProfile } from "../../profile/GameProfile";
 import path from "path";
-import {JAR_SUFFIX} from "../../launch/NativesLint";
+import { JAR_SUFFIX } from "../../launch/NativesLint";
 import fs from "fs-extra";
-import {zip} from "compressing";
-import {Pair} from "../../commons/Collections";
-import {noDuplicateConcat} from "../../profile/InheritedProfileAdaptor";
+import { zip } from "compressing";
+import { Pair } from "../../commons/Collections";
+import { noDuplicateConcat } from "../../profile/InheritedProfileAdaptor";
 import childProcess from "child_process";
-import {ensureLibraries} from "../../launch/Ensurance";
+import { ensureLibraries } from "../../launch/Ensurance";
 
 // MAINTAINERS ONLY
 
