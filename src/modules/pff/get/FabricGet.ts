@@ -29,7 +29,7 @@ export async function getLatestFabricInstallerAndLoader(
   let installerURL = "";
   let loaderVersion = "";
   try {
-    const jInstaller = await xgot(FABRIC_VERSIONS_INSTALLER);
+    const jInstaller = await xgot(FABRIC_VERSIONS_INSTALLER, true);
     if (jInstaller instanceof Array) {
       for (const i of jInstaller) {
         const url = safeGet(i, ["url"], "");
@@ -48,7 +48,7 @@ export async function getLatestFabricInstallerAndLoader(
   } catch {}
 
   try {
-    const jLoader = await xgot(FABRIC_VERSIONS_LOADER);
+    const jLoader = await xgot(FABRIC_VERSIONS_LOADER, true);
 
     if (jLoader instanceof Array) {
       for (const l of jLoader) {

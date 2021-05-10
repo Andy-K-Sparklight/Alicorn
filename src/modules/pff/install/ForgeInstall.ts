@@ -148,7 +148,7 @@ async function rmTempForgeFiles(
 export async function makeTempLP(container: MinecraftContainer): Promise<void> {
   const originLP = container.resolvePath(LAUNCHER_PROFILES);
   if (!(await isFileExist(originLP))) {
-    await fs.writeFile(originLP, "{}");
+    await fs.writeJSON(originLP, { profiles: {} });
   }
   /* try {
     await copyFileStream(

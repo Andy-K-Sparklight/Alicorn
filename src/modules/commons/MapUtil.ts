@@ -14,6 +14,9 @@ export function parseMap<T = boolean | string | number>(
       if (e.trim() === "") {
         continue;
       }
+      if (e.startsWith("#")) {
+        continue;
+      }
       const entTuple = e.trim().split(ALICORN_SEPARATOR);
       if (entTuple.length < 2) {
         continue;

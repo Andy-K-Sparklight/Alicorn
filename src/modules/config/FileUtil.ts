@@ -3,8 +3,8 @@ import path from "path";
 
 export async function isFileExist(pt: string): Promise<boolean> {
   try {
-    await fs.access(pt);
-    return true;
+    const s = await fs.stat(pt);
+    return s.isDirectory() || s.size > 0;
   } catch {
     return false;
   }

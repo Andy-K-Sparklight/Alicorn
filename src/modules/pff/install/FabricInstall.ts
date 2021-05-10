@@ -7,7 +7,7 @@ import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { ensureLibraries } from "../../launch/Ensurance";
 import objectHash from "object-hash";
 import childProcess from "child_process";
-import { makeTempLP, restoreLP } from "./ForgeInstall";
+import { makeTempLP } from "./ForgeInstall";
 import { convertFromFabric } from "../../profile/FabricProfileAdaptor";
 import { xgot } from "../../download/GotWrapper";
 
@@ -30,13 +30,13 @@ export async function performFabricInstall(
       // Fabric has less libraries, much faster than Forge!
       await ensureFabricLibrariesOL(mcv, fbv, container);
       await bootFabricInstaller(jExecutable, fbURL, fbv, mcv, container);
-    } catch {
+    } catch (e) {
+      console.log(e);
       failBit = false;
-    } finally {
-      await restoreLP(container);
     }
     return failBit;
-  } catch {
+  } catch (e) {
+    console.log(e);
     return false;
   }
 }
@@ -56,19 +56,34 @@ async function bootFabricInstaller(
     generateFabricJarName(objectHash(fbURL).slice(0, 8))
   );
   return new Promise<void>((resolve, reject) => {
-    const prc = childProcess.spawn(jExecutable, [JAR_ARG, fbJar].concat(fArg), {
-      cwd: container.resolvePath(),
-    });
-    prc.on("close", (code) => {
-      if (code === 0) {
-        resolve();
-      }
-      reject();
-    });
-    prc.on("error", () => {
-      prc.kill("SIGKILL");
-      reject();
-    });
+    try {
+      const prc = childProcess.spawn(
+        jExecutable,
+        [JAR_ARG, fbJar].concat(fArg),
+        {
+          cwd: container.resolvePath(),
+        }
+      );
+      prc.on("close", (code) => {
+        if (code === 0) {
+          resolve();
+        }
+        reject();
+      });
+      prc.on("error", () => {
+        prc.kill("SIGKILL");
+        reject();
+      });
+      prc.stdout?.on("data", (d) => {
+        console.log(d.toString());
+      });
+      prc.stderr?.on("data", (d) => {
+        console.log(d.toString());
+      });
+    } catch (e) {
+      console.log(e);
+      reject(e);
+    }
   });
 }
 

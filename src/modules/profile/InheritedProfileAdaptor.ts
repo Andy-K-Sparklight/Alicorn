@@ -59,9 +59,10 @@ export function makeInherit(
     retGF.assetIndex = gfHead.assetIndex;
   }
   if (!isNull(gfHead.libraries)) {
-    // Incoming Changes Must Comes First
+    // Incoming Changes Must Come First
     retGF.libraries = gfHead.libraries.concat(retGF.libraries);
   }
+  // Which loader use its own client? If it must, it should use library then (
   if (!isNull(gfHead.clientArtifact)) {
     retGF.libraries.push(
       new LibraryMeta(

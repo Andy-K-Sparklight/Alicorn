@@ -34,9 +34,17 @@ import {
   generateForgeInstallerName,
   getForgeInstaller,
   getForgeVersionByMojang,
+  removeForgeInstaller,
 } from "../modules/pff/get/ForgeGet";
 import { performForgeInstall } from "../modules/pff/install/ForgeInstall";
 import { getJavaRunnable, getLastUsedJavaHome } from "../modules/java/JInfo";
+import {
+  canSupportGame,
+  getFabricInstaller,
+  getLatestFabricInstallerAndLoader,
+  removeFabricInstaller,
+} from "../modules/pff/get/FabricGet";
+import { performFabricInstall } from "../modules/pff/install/FabricInstall";
 
 export function InstallCore(): JSX.Element {
   const classes = useFormStyles();
@@ -52,12 +60,21 @@ export function InstallCore(): JSX.Element {
   const [baseMojangVersionForge, setBaseMojangVersionForge] = useState<string>(
     ""
   );
+  const [
+    baseMojangVersionFabric,
+    setBaseMojangVersionFabric,
+  ] = useState<string>("");
   const [allMojangRelease, setAllMojangRelease] = useState<string[]>([]);
   const [detectedForgeVersion, setDetectedForgeVersion] = useState<string>("");
+  const [detectedFabricVersion, setDetectedFabricVersion] = useState<string>(
+    ""
+  );
   const [selectedMojangContainer, setMojangContainer] = useState<string>("");
   const [selectedForgeContainer, setForgeContainer] = useState<string>("");
+  const [selectedFabricContainer, setFabricContainer] = useState<string>("");
   const [mojangConfirmOpenBit, setMojangConfirmOpen] = useState<boolean>(false);
   const [forgeConfirmOpenBit, setForgeConfirmOpen] = useState<boolean>(false);
+  const [fabricConfirmOpenBit, setFabricConfirmOpen] = useState<boolean>(false);
   const [operating, setOperating] = useState<boolean>(false);
   const [failed, setFailed] = useState<boolean>(false);
   const [openNotice, setOpenNotice] = useState<boolean>(false);
@@ -79,14 +96,26 @@ export function InstallCore(): JSX.Element {
   });
   useEffect(() => {
     (async () => {
-      console.log("Regenerating Forge Version For " + baseMojangVersionForge);
       const lForge = await getForgeVersionByMojang(baseMojangVersionForge);
-      console.log(lForge);
       if (mounted.current) {
         setDetectedForgeVersion(lForge);
       }
     })();
   }, [baseMojangVersionForge]);
+  useEffect(() => {
+    (async () => {
+      if (!(await canSupportGame(baseMojangVersionFabric))) {
+        if (mounted.current) {
+          setDetectedFabricVersion("");
+        }
+        return;
+      }
+      const d = (await getLatestFabricInstallerAndLoader()).getSecondValue();
+      if (mounted.current) {
+        setDetectedFabricVersion(d);
+      }
+    })();
+  }, [baseMojangVersionFabric]);
   useEffect(() => {
     (async () => {
       const allMj = await getAllMojangCores(ReleaseType.RELEASE);
@@ -126,7 +155,6 @@ export function InstallCore(): JSX.Element {
           setOperating(true);
           setFailed(false);
           const ct = getContainer(selectedForgeContainer);
-          console.log(`Using mcv ${mcv} fgv ${fgv}`);
           const stat = await getForgeInstaller(ct, mcv, fgv);
           if (!stat) {
             if (mounted.current) {
@@ -135,25 +163,76 @@ export function InstallCore(): JSX.Element {
             }
             return;
           }
-          console.log("Forge Installer Downloaded.");
           const istat = await performForgeInstall(
             await getJavaRunnable(getLastUsedJavaHome()),
             generateForgeInstallerName(mcv, fgv),
             ct
           );
           if (!istat) {
-            console.log("Failed to execute installer!");
             if (mounted.current) {
               setOperating(false);
               setFailed(true);
             }
             return;
           } else {
+            await removeForgeInstaller(ct, mcv, fgv);
             if (mounted.current) {
               setOperating(false);
               setFailed(false);
               setOpenNotice(true);
             }
+          }
+        }}
+      />
+      <ConfirmInstall
+        version={`fabric-loader-${detectedFabricVersion}-${baseMojangVersionFabric}`}
+        open={fabricConfirmOpenBit}
+        closeFunc={() => {
+          setFabricConfirmOpen(false);
+        }}
+        className={classes.input}
+        confirmFunc={async () => {
+          setFabricConfirmOpen(false);
+          setOperating(true);
+          setFailed(false);
+          const u = (await getLatestFabricInstallerAndLoader()).getFirstValue();
+          const fbv = detectedFabricVersion;
+          const mcv = baseMojangVersionFabric;
+          const ct = getContainer(selectedFabricContainer);
+          if (isNull(u)) {
+            if (mounted.current) {
+              setOperating(false);
+              setFailed(true);
+            }
+            return;
+          }
+          const stat = await getFabricInstaller(u, ct);
+          if (!stat) {
+            if (mounted.current) {
+              setOperating(false);
+              setFailed(true);
+            }
+            return;
+          }
+          const stat2 = await performFabricInstall(
+            await getJavaRunnable(getLastUsedJavaHome()),
+            u,
+            fbv,
+            mcv,
+            ct
+          );
+          if (!stat2) {
+            if (mounted.current) {
+              setOperating(false);
+              setFailed(true);
+            }
+            return;
+          }
+          await removeFabricInstaller(u, ct);
+          if (mounted.current) {
+            setOperating(false);
+            setFailed(false);
+            setOpenNotice(true);
           }
         }}
       />
@@ -371,6 +450,81 @@ export function InstallCore(): JSX.Element {
           }
           onClick={() => {
             setForgeConfirmOpen(true);
+          }}
+        >
+          {tr("InstallCore.Start")}
+        </Button>
+      </Box>
+
+      {/* Fabric */}
+      <Box>
+        <Typography variant={"h5"} className={classes.title} gutterBottom>
+          {tr("InstallCore.InstallFabric")}
+        </Typography>
+        <Typography className={classes.text} color={"secondary"} gutterBottom>
+          {tr("InstallCore.FabricVersion") +
+            " " +
+            (detectedFabricVersion || "Unknown")}
+        </Typography>
+        <FormControl className={classes.formControl}>
+          <InputLabel
+            id={"CoreInstall-Fabric-SelectBase"}
+            className={classes.label}
+          >
+            {tr("InstallCore.FabricBaseVersion")}
+          </InputLabel>
+          <Select
+            labelId={"CoreInstall-Fabric-SelectBase"}
+            color={"primary"}
+            className={classes.selector}
+            onChange={(e) => {
+              setBaseMojangVersionFabric(String(e.target.value || ""));
+            }}
+            value={baseMojangVersionFabric || ""}
+          >
+            {allMojangRelease.map((r) => {
+              return (
+                <MenuItem key={objectHash(r)} value={r}>
+                  {r}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+        <FormControl className={classes.formControl}>
+          <InputLabel
+            id={"CoreInstall-Fabric-TargetContainer"}
+            className={classes.label}
+          >
+            {tr("InstallCore.TargetContainer")}
+          </InputLabel>
+          <Select
+            labelId={"CoreInstall-Fabric-TargetContainer"}
+            color={"primary"}
+            className={classes.selector}
+            onChange={(e) => {
+              setFabricContainer(String(e.target.value || ""));
+            }}
+            value={selectedFabricContainer || ""}
+          >
+            {getAllMounted().map((c) => {
+              return (
+                <MenuItem key={objectHash(c)} value={c}>
+                  {c}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+        <Button
+          className={classes.btn}
+          variant={"outlined"}
+          color={"primary"}
+          disabled={
+            isNull(selectedFabricContainer) || isNull(detectedFabricVersion)
+          }
+          onClick={() => {
+            setFabricConfirmOpen(true);
           }}
         >
           {tr("InstallCore.Start")}
