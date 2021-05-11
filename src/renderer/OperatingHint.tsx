@@ -67,12 +67,14 @@ export function OperatingHintCustom(props: {
 export function FailedHint(props: {
   open: boolean;
   closeFunc: () => unknown;
+  reason?: string;
 }): JSX.Element {
+  const reason = props.reason || tr("Operating.FailedInfo");
   return (
     <Dialog open={props.open} onClose={props.closeFunc}>
       <DialogTitle>{tr("Operating.Failed")}</DialogTitle>
       <DialogContent>
-        <DialogContentText>{tr("Operating.FailedInfo")}</DialogContentText>
+        <DialogContentText>{reason}</DialogContentText>
         <DialogContentText>
           <i>{randsl("Operating.FailedSayings")}</i>
         </DialogContentText>

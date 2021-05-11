@@ -87,6 +87,7 @@ const useStyles = makeStyles((theme) =>
     },
   })
 );
+const LAST_USED_USER_NAME_KEY = "ReadyToLaunch.LastUsedUsername";
 
 export function ReadyToLaunch(): JSX.Element {
   const [coreProfile, setProfile] = useState(new GameProfile({}));
@@ -353,7 +354,9 @@ function AccountChoose(props: {
 }): JSX.Element {
   const classes = useInputStyles();
   const [choice, setChoice] = useState<"MZ" | "AL" | "YG">("MZ");
-  const [pName, setName] = useState<string>("Demo");
+  const [pName, setName] = useState<string>(
+    window.localStorage.getItem(LAST_USED_USER_NAME_KEY) || "Demo"
+  );
   const [sAccount, setAccount] = useState<string>("");
   const accountMap: Record<string, Account> = {};
   for (const a of props.allAccounts) {
@@ -458,6 +461,7 @@ function AccountChoose(props: {
                 return;
               case "AL":
               default:
+                window.localStorage.setItem(LAST_USED_USER_NAME_KEY, pName);
                 props.onChose(new LocalAccount(pName));
             }
           }}

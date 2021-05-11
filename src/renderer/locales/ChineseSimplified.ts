@@ -140,7 +140,7 @@ export default {
     "这不会修改磁盘上的文件，您可以稍后重新导入该容器。",
   "ContainerManager.AskClear": "抹掉此 Minecraft 容器？该操作不可撤销！",
   "ContainerManager.AskClearDetail":
-    "抹掉容器将失去其中的全部数据，包括存档、Mod 和其它可能重要的内容！确定要这样做？",
+    "抹掉容器将失去其中的全部数据，包括存档、Mod 和其它可能重要的内容！确定要这样做？Alicorn 同时会解除该容器的链接。",
   "ContainerManager.Yes": "是的，我要这样做",
   "ContainerManager.No": "不，不要这样做",
   "ContainerManager.Continue": "继续",

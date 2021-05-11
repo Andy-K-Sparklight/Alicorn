@@ -60,6 +60,7 @@ export function InstallCore(): JSX.Element {
   const [baseMojangVersionForge, setBaseMojangVersionForge] = useState<string>(
     ""
   );
+  const [failedMsg, setFailedMsg] = useState<string>();
   const [
     baseMojangVersionFabric,
     setBaseMojangVersionFabric,
@@ -139,6 +140,7 @@ export function InstallCore(): JSX.Element {
         closeFunc={() => {
           setFailed(false);
         }}
+        reason={failedMsg}
       />
       <OperatingHint open={operating} />
       <ConfirmInstall
@@ -160,6 +162,9 @@ export function InstallCore(): JSX.Element {
             if (mounted.current) {
               setOperating(false);
               setFailed(true);
+              setFailedMsg(
+                `Could not download the installer for Forge ${fgv} with Minecraft ${mcv}`
+              );
             }
             return;
           }
@@ -172,6 +177,9 @@ export function InstallCore(): JSX.Element {
             if (mounted.current) {
               setOperating(false);
               setFailed(true);
+              setFailedMsg(
+                `Could not execute the installer or the installer reported an error for Forge ${fgv} with Minecraft ${mcv}`
+              );
             }
             return;
           } else {
@@ -211,6 +219,9 @@ export function InstallCore(): JSX.Element {
             if (mounted.current) {
               setOperating(false);
               setFailed(true);
+              setFailedMsg(
+                `Could not download the installer for Fabric ${fbv} with Minecraft ${mcv}`
+              );
             }
             return;
           }
@@ -225,6 +236,9 @@ export function InstallCore(): JSX.Element {
             if (mounted.current) {
               setOperating(false);
               setFailed(true);
+              setFailedMsg(
+                `Could not execute the installer or the installer reported an error for Fabric ${fbv} with Minecraft ${mcv}`
+              );
             }
             return;
           }
@@ -252,6 +266,9 @@ export function InstallCore(): JSX.Element {
             if (mounted.current) {
               setOperating(false);
               setFailed(true);
+              setFailedMsg(
+                `Could not get the profile for Minecraft ${selectedMojangVersion}`
+              );
             }
           }
           const d = await getProfile(u);
@@ -259,6 +276,9 @@ export function InstallCore(): JSX.Element {
             if (mounted.current) {
               setOperating(false);
               setFailed(true);
+              setFailedMsg(
+                "Received invalid profile from Minecraft server or its mirror!"
+              );
             }
           }
           try {
@@ -276,6 +296,7 @@ export function InstallCore(): JSX.Element {
             if (mounted.current) {
               setOperating(false);
               setFailed(true);
+              setFailedMsg("Could not install profile to the container!");
             }
           }
         }}

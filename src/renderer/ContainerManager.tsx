@@ -175,8 +175,6 @@ function SingleContainerDisplay(props: {
                       setOpen(false);
                       unlinkContainer(props.container.id);
                       setContainerListDirty();
-                      console.log("Operated.");
-                      console.log(getAllContainers());
                     }}
                   >
                     {tr("ContainerManager.Yes")}
@@ -208,6 +206,8 @@ function SingleContainerDisplay(props: {
                       setClearOpen(false);
                       setOperating(true);
                       await clearContainer(props.container.id);
+                      unlinkContainer(props.container.id);
+                      setContainerListDirty();
                       setOperating(false);
                     }}
                   >
