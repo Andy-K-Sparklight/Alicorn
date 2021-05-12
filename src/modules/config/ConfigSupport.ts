@@ -43,22 +43,8 @@ export function getString(key: string, def = ""): string {
   return String(val) || def;
 }
 
-export function getNumber(key: string, def: number): number {
-  const val = get(key, def);
-  if (typeof val === "number") {
-    return val;
-  }
-  if (typeof val === "string") {
-    const pInt = parseInt(val);
-    if (!isNaN(pInt)) {
-      return pInt;
-    }
-    const pFloat = parseFloat(val);
-    if (!isNaN(pFloat)) {
-      return pFloat;
-    }
-  }
-  return def;
+export function getNumber(key: string, def = 0): number {
+  return parseNum(get(key, def), def);
 }
 
 export async function loadConfig(): Promise<void> {
@@ -90,4 +76,21 @@ async function saveDefaultConfig() {
       reject(e);
     });
   });
+}
+
+export function parseNum(val: any, def = 0): number {
+  if (typeof val === "number") {
+    return val;
+  }
+  if (typeof val === "string") {
+    const pInt = parseInt(val);
+    if (!isNaN(pInt)) {
+      return pInt;
+    }
+    const pFloat = parseFloat(val);
+    if (!isNaN(pFloat)) {
+      return pFloat;
+    }
+  }
+  return def;
 }

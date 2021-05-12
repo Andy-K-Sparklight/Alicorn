@@ -25,6 +25,7 @@ import {
   GetApp,
   Info,
   PowerSettingsNew,
+  Settings,
   WebAsset,
 } from "@material-ui/icons";
 import { LaunchPad } from "./LaunchPad";
@@ -39,6 +40,7 @@ import { InstallCore } from "./InstallCore";
 import { YggdrasilAccountManager } from "./YggdrasilAccountManager";
 import { Terminal } from "./Terminal";
 import { JavaSelector } from "./JavaSelector";
+import { OptionsPage } from "./Options";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -104,6 +106,18 @@ export function App(): JSX.Element {
               color={"inherit"}
             >
               <Info />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={tr("MainMenu.QuickOptions")}>
+            <IconButton
+              className={classes.floatButton}
+              onClick={() => {
+                jumpTo("/Options");
+                triggerSetPage(Pages.Options);
+              }}
+              color={"inherit"}
+            >
+              <Settings />
             </IconButton>
           </Tooltip>
           <Tooltip title={tr("MainMenu.QuickTerminal")}>
@@ -207,6 +221,7 @@ export function App(): JSX.Element {
         />
         <Route path={"/Terminal"} component={Terminal} />
         <Route path={"/JavaSelector"} component={JavaSelector} />
+        <Route path={"/Options"} component={OptionsPage} />
       </Box>
     </Box>
   );

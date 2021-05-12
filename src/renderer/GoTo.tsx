@@ -12,7 +12,7 @@ export function triggerSetPage(page: string): void {
 }
 
 export enum Pages {
-  Settings = "Settings",
+  Options = "Options",
   ContainerManager = "ContainerManager",
   LaunchPad = "LaunchPad",
   ReadyToLaunch = "ReadyToLaunch",
