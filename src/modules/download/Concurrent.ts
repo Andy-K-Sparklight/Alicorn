@@ -13,14 +13,9 @@ import { Serial } from "./Serial";
 import { validate } from "./Validate";
 import { isFileExist } from "../config/FileUtil";
 
-let TIME_OUT: number;
-let CHUNK_SIZE: number;
-
 const TEMP_SAVE_PATH_ROOT = path.join(os.tmpdir(), "alicorn-download");
 
 export async function initConcurrentDownloader(): Promise<void> {
-  TIME_OUT = getNumber("download.concurrent.timeout", 5000);
-  CHUNK_SIZE = getNumber("download.concurrent.chunk-size", 1024) * 1024;
   await fs.ensureDir(TEMP_SAVE_PATH_ROOT);
 }
 
@@ -40,7 +35,10 @@ export class Concurrent extends AbstractDownloader {
         }
       }
       const fileSize = await getSize(meta.url);
-      if (fileSize <= CHUNK_SIZE) {
+      if (
+        fileSize <=
+        getNumber("download.concurrent.chunk-size", 1024) * 1024
+      ) {
         // Too small or invalid, use serial instead
         return await Serial.getInstance().downloadFile(meta);
       }
@@ -88,7 +86,7 @@ async function sealAndVerify(savePath: string, chunks: Chunk[], hash: string) {
 
 async function getSize(url: string): Promise<number> {
   const response = await got.get(url, {
-    timeout: TIME_OUT,
+    timeout: getNumber("download.concurrent.timeout", 5000),
     cache: false,
     headers: { Range: "bytes=0-1" },
   });
@@ -129,7 +127,7 @@ async function downloadSingleChunk(
 ) {
   const buffer = (
     await got.get(url, {
-      timeout: TIME_OUT,
+      timeout: getNumber("download.concurrent.timeout", 5000),
       cache: false,
       headers: {
         Range: `bytes=${chunk.start}-${chunk.end}`,
@@ -154,12 +152,13 @@ function generateChunks(size: number): Chunk[] {
   const result = [];
   let pointer = 0;
   while (pointer < size) {
-    let end = pointer + CHUNK_SIZE - 1;
+    let end =
+      pointer + getNumber("download.concurrent.chunk-size", 1024) * 1024 - 1;
     if (end > size) {
       end = size;
     }
     result.push(new Chunk(pointer, end));
-    pointer += CHUNK_SIZE;
+    pointer += getNumber("download.concurrent.chunk-size", 1024) * 1024;
   }
   return result;
 }

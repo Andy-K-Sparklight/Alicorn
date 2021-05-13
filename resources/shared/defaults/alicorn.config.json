@@ -3,10 +3,10 @@
   "_comment2": "Invalid config will cause boot failure!",
   "updator.dev": true,
   "updator.use-update": false,
-  "download.concurrent.chunk-size": 1024,
+  "download.concurrent.chunk-size": 1536,
   "download.concurrent.timeout": 5000,
   "download.concurrent.tries-per-chunk": 3,
-  "download.concurrent.max-tasks": 20,
+  "download.concurrent.max-tasks": 30,
   "modx.default-save-path": "${DEFAULT}",
   "modx.ignore-non-standard-mods": true,
   "modx.global-dynamic-load-mods": true

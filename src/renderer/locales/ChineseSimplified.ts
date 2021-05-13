@@ -202,7 +202,21 @@ export default {
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
   "Options.updator.use-update.title": "自动更新",
-  "Options.updator.use-update.desc": "启用来自 Alicorn 的自动更新",
+  "Options.updator.use-update.desc":
+    "启用来自 Alicorn 的自动更新 - 打开打开打开",
   "Options.updator.dev.title": "使用开发频道",
-  "Options.updator.dev.desc": "下载未经压缩的开发版本内核进行更新",
+  "Options.updator.dev.desc":
+    "下载未经压缩的开发版本内核进行更新 - 除了文件多一些以外没什么好处",
+  "Options.download.concurrent.chunk-size.title": "并发下载区块大小",
+  "Options.download.concurrent.chunk-size.desc":
+    "进行并发分段下载时每个文件段的大小，单位 KB - 调太低了对你的处理器是一种折磨",
+  "Options.download.concurrent.timeout.title": "请求等待时间",
+  "Options.download.concurrent.timeout.desc":
+    "在提交错误前最长允许的服务器响应时间，单位毫秒 - 如果调太高了可能会出问题，别说我没告诉过你",
+  "Options.download.concurrent.tries-per-chunk.title": "重试次数",
+  "Options.download.concurrent.tries-per-chunk.desc":
+    "在放弃某个文件的下载前最多的重试次数 - 说真的，调高了真没有什么用，就是多浪费一些时间",
+  "Options.download.concurrent.max-tasks.title": "并发下载任务数",
+  "Options.download.concurrent.max-tasks.desc":
+    "允许下载器同时进行的最多下载任务数，请不要在调高本项的同时调低分段大小 - 如果你不想闻到处理器的香味和经历 GPU 送 CPU 的痛苦",
 };

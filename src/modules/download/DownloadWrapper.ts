@@ -18,15 +18,14 @@ const WAITING_RESOLVES_MAP = new Map<
   DownloadMeta,
   (value: DownloadStatus | PromiseLike<DownloadStatus>) => void
 >();
+const FAILED_COUNT_MAP: Map<DownloadMeta, number> = new Map();
 const END_GATE = "END";
-let MAX_TASKS: number;
 let EMITTER: EventEmitter;
-
 export function initDownloadWrapper(): void {
-  MAX_TASKS = getNumber("download.concurrent.max-tasks", 20);
   EMITTER = new EventEmitter();
   EMITTER.on(END_GATE, (m: DownloadMeta, s: DownloadStatus) => {
     RUNNING_TASKS.delete(m);
+    FAILED_COUNT_MAP.delete(m);
     (
       WAITING_RESOLVES_MAP.get(m) ||
       (() => {
@@ -50,10 +49,22 @@ export async function wrappedDownloadFile(
     meta.savePath,
     meta.sha1
   );
+  FAILED_COUNT_MAP.set(
+    mirroredMeta,
+    getNumber("download.concurrent.tries-per-chunk" || 3)
+  );
   if ((await _wrappedDownloadFile(mirroredMeta)) === DownloadStatus.RESOLVED) {
+    FAILED_COUNT_MAP.delete(mirroredMeta);
     return DownloadStatus.RESOLVED;
   }
-  return await _wrappedDownloadFile(meta);
+  FAILED_COUNT_MAP.delete(mirroredMeta);
+  FAILED_COUNT_MAP.set(
+    meta,
+    getNumber("download.concurrent.tries-per-chunk" || 3)
+  );
+  let s = await _wrappedDownloadFile(meta);
+  FAILED_COUNT_MAP.delete(meta);
+  return s;
 }
 
 function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
@@ -71,7 +82,10 @@ function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
 }
 
 function scheduleNextTask(): void {
-  if (RUNNING_TASKS.size < MAX_TASKS && PENDING_TASKS.length > 0) {
+  if (
+    RUNNING_TASKS.size < getNumber("download.concurrent.max-tasks", 20) &&
+    PENDING_TASKS.length > 0
+  ) {
     const tsk = PENDING_TASKS.pop();
     if (tsk !== undefined) {
       RUNNING_TASKS.add(tsk);
@@ -85,13 +99,23 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
     .downloadFile(meta)
     .then((s) => {
       if (s === DownloadStatus.RESOLVED) {
+        FAILED_COUNT_MAP.delete(meta);
         emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
       } else {
-        Serial.getInstance()
-          .downloadFile(meta)
-          .then((s) => {
-            emitter.emit(END_GATE, meta, s);
-          });
+        const failed = FAILED_COUNT_MAP.get(meta) || 0;
+        if (failed <= 0) {
+          // The last fight!
+          FAILED_COUNT_MAP.delete(meta);
+          Serial.getInstance()
+            .downloadFile(meta)
+            .then((s) => {
+              emitter.emit(END_GATE, meta, s);
+            });
+          return;
+        } else {
+          FAILED_COUNT_MAP.set(meta, failed - 1);
+          downloadSingleFile(meta, emitter);
+        }
       }
     });
 }

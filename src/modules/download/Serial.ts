@@ -10,6 +10,7 @@ import got from "got";
 import { promisify } from "util";
 import stream from "stream";
 import { isFileExist } from "../config/FileUtil";
+import { getNumber } from "../config/ConfigSupport";
 
 const pipeline = promisify(stream.pipeline);
 
@@ -32,7 +33,12 @@ export class Serial extends AbstractDownloader {
       await fs.ensureDir(path.dirname(meta.savePath));
 
       // Pipe data
-      await pipeline(got.stream(meta.url), fs.createWriteStream(meta.savePath));
+      await pipeline(
+        got.stream(meta.url, {
+          timeout: getNumber("download.concurrent.timeout", 5000),
+        }),
+        fs.createWriteStream(meta.savePath)
+      );
 
       if (meta.sha1 === "") {
         return DownloadStatus.RESOLVED;

@@ -22,7 +22,7 @@ const ALICORN_THEME_FILE = "alicorn.theme.json";
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
-const ALICORN_DEFAULT_THEME = createMuiTheme({
+const DEF_THM_OBJ = {
   palette: {
     type: "dark",
     primary: {
@@ -34,7 +34,16 @@ const ALICORN_DEFAULT_THEME = createMuiTheme({
       light: "#ffe0f0",
     },
   },
-});
+};
+
+// @ts-ignore
+const ALICORN_DEFAULT_THEME = createMuiTheme(DEF_THM_OBJ);
+
+let themeG = DEF_THM_OBJ;
+
+export function getThemeG(): Record<string, unknown> {
+  return themeG;
+}
 
 function RendererBootstrap(): JSX.Element {
   const [theme, setTheme] = useState(ALICORN_DEFAULT_THEME);
@@ -46,7 +55,9 @@ function RendererBootstrap(): JSX.Element {
         try {
           await saveDefaultData(ALICORN_THEME_FILE);
           const themeFile = JSON.parse(await loadData(ALICORN_THEME_FILE));
-          setTheme(createMuiTheme(themeFile));
+          const t = createMuiTheme(themeFile);
+          setTheme(t);
+          themeG = themeFile;
         } catch {}
       })();
     }

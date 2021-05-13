@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import {
   Box,
+  createMuiTheme,
   createStyles,
   makeStyles,
+  MuiThemeProvider,
   Switch,
   TextField,
   Typography,
@@ -32,10 +34,35 @@ export function OptionsPage(): JSX.Element {
       },
     })
   )();
+
   return (
     <Box className={classes.root}>
-      <InputItem type={ConfigType.BOOL} bindConfig={"updator.use-update"} />
-      <InputItem type={ConfigType.BOOL} bindConfig={"updator.dev"} />
+      <MuiThemeProvider
+        theme={createMuiTheme({
+          palette: {
+            type: "light",
+          },
+        })}
+      >
+        <InputItem type={ConfigType.BOOL} bindConfig={"updator.use-update"} />
+        <InputItem type={ConfigType.BOOL} bindConfig={"updator.dev"} />
+        <InputItem
+          type={ConfigType.NUM}
+          bindConfig={"download.concurrent.chunk-size"}
+        />
+        <InputItem
+          type={ConfigType.NUM}
+          bindConfig={"download.concurrent.timeout"}
+        />
+        <InputItem
+          type={ConfigType.NUM}
+          bindConfig={"download.concurrent.tries-per-chunk"}
+        />{" "}
+        <InputItem
+          type={ConfigType.NUM}
+          bindConfig={"download.concurrent.max-tasks"}
+        />
+      </MuiThemeProvider>
     </Box>
   );
 }
@@ -45,24 +72,33 @@ function InputItem(props: {
   bindConfig: string;
 }): JSX.Element {
   const [refreshBit, forceRefresh] = useState<boolean>(true);
-  const classes = makeStyles((theme) =>
+
+  const classes = makeStyles(() =>
     createStyles({
       desc: {
         fontSize: "medium",
-        color: theme.palette.secondary.main,
+        color: "#df307f",
       },
       switch: {
-        color: theme.palette.primary.main,
+        color: "#5d2391",
       },
       textField: {
-        borderColor: theme.palette.primary.main,
-        color: theme.palette.primary.main,
+        borderColor: "#5d2391",
+        color: "#5d2391",
+      },
+      text: {
+        color: "#5d2391",
       },
     })
   )();
   return (
     <Box>
-      <Typography color={"primary"} variant={"h6"} gutterBottom>
+      <Typography
+        color={"primary"}
+        variant={"h6"}
+        className={classes.text}
+        gutterBottom
+      >
         {tr(`Options.${props.bindConfig}.title`)}
       </Typography>
       <Typography color={"primary"} className={classes.desc} gutterBottom>
@@ -91,6 +127,7 @@ function InputItem(props: {
               <TextField
                 fullWidth
                 type={"number"}
+                color={"primary"}
                 value={getNumber(props.bindConfig)}
                 onChange={(e) => {
                   set(props.bindConfig, parseNum(e.target.value, 0));
