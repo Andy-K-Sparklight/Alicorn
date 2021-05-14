@@ -219,4 +219,10 @@ export default {
   "Options.download.concurrent.max-tasks.title": "并发下载任务数",
   "Options.download.concurrent.max-tasks.desc":
     "允许下载器同时进行的最多下载任务数，请不要在调高本项的同时调低分段大小 - 如果你不想闻到处理器的香味和经历 GPU 送 CPU 的痛苦",
+  "Options.modx.global-dynamic-load-mods.title": "Mod 动态加载",
+  "Options.modx.global-dynamic-load-mods.desc":
+    "在启动时根据启动的核心自动移动无法加载的 Mod - 如果这项功能导致您的 Mod 出现问题，请关闭它",
+  "Options.modx.ignore-non-standard-mods.title": "忽略无法读取的 Mod",
+  "Options.modx.ignore-non-standard-mods.desc":
+    "动态加载 Mod 时遇到无法读取的 Mod 信息时，是否将其保留在 Mod 文件夹中 - 如果您使用 LiteLoader，请开启它",
 };

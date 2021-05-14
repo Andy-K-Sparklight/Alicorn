@@ -47,6 +47,14 @@ export function OptionsPage(): JSX.Element {
         <InputItem type={ConfigType.BOOL} bindConfig={"updator.use-update"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"updator.dev"} />
         <InputItem
+          type={ConfigType.BOOL}
+          bindConfig={"modx.global-dynamic-load-mods"}
+        />
+        <InputItem
+          type={ConfigType.BOOL}
+          bindConfig={"modx.ignore-non-standard-mods"}
+        />
+        <InputItem
           type={ConfigType.NUM}
           bindConfig={"download.concurrent.chunk-size"}
         />

@@ -26,7 +26,6 @@ import {
   Info,
   PowerSettingsNew,
   Settings,
-  WebAsset,
 } from "@material-ui/icons";
 import { LaunchPad } from "./LaunchPad";
 import { tr } from "./Translator";
@@ -38,9 +37,9 @@ import { VersionView } from "./VersionView";
 import { ContainerManager } from "./ContainerManager";
 import { InstallCore } from "./InstallCore";
 import { YggdrasilAccountManager } from "./YggdrasilAccountManager";
-import { Terminal } from "./Terminal";
 import { JavaSelector } from "./JavaSelector";
 import { OptionsPage } from "./Options";
+import { Terminal } from "./Terminal";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -118,18 +117,6 @@ export function App(): JSX.Element {
               color={"inherit"}
             >
               <Settings />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={tr("MainMenu.QuickTerminal")}>
-            <IconButton
-              className={classes.floatButton}
-              onClick={() => {
-                jumpTo("/Terminal");
-                triggerSetPage(Pages.Terminal);
-              }}
-              color={"inherit"}
-            >
-              <WebAsset />
             </IconButton>
           </Tooltip>
           <Tooltip title={tr("MainMenu.QuickJavaSelector")}>

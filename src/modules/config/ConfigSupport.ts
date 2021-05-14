@@ -60,7 +60,7 @@ export async function loadConfig(): Promise<void> {
 
 export function saveConfigSync(): void {
   fs.ensureDirSync(path.dirname(CONFIG_FILE));
-  fs.writeFileSync(CONFIG_FILE, JSON.stringify(cachedConfig));
+  fs.writeFileSync(CONFIG_FILE, JSON.stringify(cachedConfig, null, 4));
 }
 
 async function saveDefaultConfig() {
