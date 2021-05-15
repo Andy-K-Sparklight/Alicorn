@@ -5,22 +5,21 @@
 // Why not automate? We need it!
 // You builds FREE software rather than SPONSOR ones, thank you very much!
 // Anyway, we'll keep on supporting Forge since there are tremendous requirements.
-
-import { GameProfile } from "./GameProfile";
+import { copyProfile, GameProfile } from "./GameProfile";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { loadProfile } from "./ProfileLoader";
 import { ReleaseType, SPACE } from "../commons/Constants";
 import { isNull } from "../commons/Null";
-import { ClassifiersMeta, LibraryMeta, RuleSet } from "./Meta";
 import objectHash from "object-hash";
 
 // gfBase <- gfHead, just like merge in git
-export function makeInherit(
+export async function makeInherit(
   gfBase: GameProfile,
   gfHead: GameProfile,
   legacyBit = false
-): GameProfile {
-  const retGF = Object.assign({}, gfBase);
+): Promise<GameProfile> {
+  const retGF = await copyProfile(gfBase);
+  gfHead = await copyProfile(gfHead);
   // Though you might call yourself 'release', we suggest that this is a modified one.
   retGF.type = ReleaseType.MODIFIED;
   if (!isNull(gfHead.mainClass)) {
@@ -68,18 +67,12 @@ export function makeInherit(
     retGF.libraries = gfHead.libraries.concat(retGF.libraries);
   }
   // Which loader use its own client? If it must, it should use library then (
-  if (!isNull(gfHead.clientArtifact)) {
-    retGF.libraries.push(
-      new LibraryMeta(
-        gfBase.clientArtifact,
-        ClassifiersMeta.emptyClassifiersMeta(),
-        false,
-        RuleSet.emptyRuleSet(),
-        gfBase.id
-      )
-    );
-    retGF.clientArtifact = gfHead.clientArtifact;
+  for (const ca of gfHead.clientArtifacts) {
+    if (!isNull(ca)) {
+      retGF.clientArtifacts.push(ca);
+    }
   }
+
   return retGF;
 }
 
@@ -101,8 +94,9 @@ export function noDuplicateConcat<T>(a1: T[], a2: T[]): T[] {
 export class InheritedProfile extends GameProfile {
   inheritsFrom = "";
 
-  constructor(obj: Record<string, unknown>) {
-    super(obj);
+  constructor(obj: string) {
+    super((obj = JSON.parse(obj)));
+    // @ts-ignore
     this.inheritsFrom = String(obj["inheritsFrom"] || "");
   }
 
@@ -116,7 +110,7 @@ export class InheritedProfile extends GameProfile {
     if (this.inheritsFrom === this.id) {
       return this;
     }
-    return makeInherit(
+    return await makeInherit(
       await loadProfile(this.inheritsFrom, container),
       this,
       legacyBit

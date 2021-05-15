@@ -1,7 +1,10 @@
-const NULL_OBJECTS = new Set<unknown>();
+import objectHash from "object-hash";
+import { ArtifactMeta, AssetIndexArtifactMeta } from "../profile/Meta";
+
+const NULL_OBJECTS = new Set<string>();
 
 export function registerNullObject(obj: unknown): void {
-  NULL_OBJECTS.add(obj);
+  NULL_OBJECTS.add(objectHash({ o: obj }));
 }
 
 export function isNull(obj: unknown): boolean {
@@ -12,7 +15,9 @@ export function isNull(obj: unknown): boolean {
       obj === "" ||
       obj === "null" ||
       obj === "undefined" ||
-      NULL_OBJECTS.has(obj) ||
+      (obj instanceof AssetIndexArtifactMeta && obj.id === "") ||
+      (obj instanceof ArtifactMeta && obj.path === "") ||
+      NULL_OBJECTS.has(objectHash({ o: obj })) ||
       (typeof obj === "object" &&
         Object.getOwnPropertyNames(obj).length <= 0) ||
       // @ts-ignore

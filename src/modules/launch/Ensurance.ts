@@ -5,9 +5,9 @@ import { checkExtractTrimNativeLocal, getNativeArtifact } from "./NativesLint";
 import { DownloadMeta, DownloadStatus } from "../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../download/DownloadWrapper";
 import fs from "fs-extra";
-import { Progresser } from "../commons/Progresser";
 import { isNull } from "../commons/Null";
-// UNCHECKED
+import { FileOperateReport, LaunchTracker } from "./Tracker";
+
 // This file can not only check resources, but also download packages when installing!
 
 const ASSET_WEB_ROOT = "https://resources.download.minecraft.net/";
@@ -22,10 +22,8 @@ const ASSET_WEB_ROOT = "https://resources.download.minecraft.net/";
 // While there actually has no problem
 export async function ensureNatives(
   profile: GameProfile,
-  container: MinecraftContainer,
-  progresser?: Progresser
+  container: MinecraftContainer
 ): Promise<void> {
-  progresser?.setResolved("Collecting information...");
   const toEnsureLibraries: ArtifactMeta[] = [];
   for (const l of profile.libraries) {
     if (l.isNative && l.canApply()) {
@@ -39,7 +37,6 @@ export async function ensureNatives(
         allPromises.push(
           new Promise<void>((resolve) => {
             checkExtractTrimNativeLocal(container, s).then(() => {
-              progresser?.markUpdate("Resolved native library " + s.path);
               resolve();
             });
           })
@@ -48,25 +45,21 @@ export async function ensureNatives(
       return allPromises;
     })()
   );
-  progresser?.markEnd("All native libraries are resolved.");
 }
 
 // Ensure Client
 // This function will do nothing if there isn't a valid client
 export async function ensureClient(profile: GameProfile): Promise<void> {
-  if (isNull(profile.clientArtifact)) {
-    return;
+  for (const ca of profile.clientArtifacts) {
+    if (isNull(ca)) {
+      return;
+    }
+    if (isNull(ca.url)) {
+      return;
+    }
+    // XXX Not concurrent!
+    await wrappedDownloadFile(new DownloadMeta(ca.url, ca.path, ca.sha1));
   }
-  if (isNull(profile.clientArtifact.url)) {
-    return;
-  }
-  await wrappedDownloadFile(
-    new DownloadMeta(
-      profile.clientArtifact.url,
-      profile.clientArtifact.path,
-      profile.clientArtifact.sha1
-    )
-  );
 }
 
 // Ensure libraries
@@ -74,9 +67,13 @@ export async function ensureClient(profile: GameProfile): Promise<void> {
 export async function ensureLibraries(
   profile: GameProfile,
   container: MinecraftContainer,
-  progresser?: Progresser
+  tracker?: LaunchTracker
 ): Promise<number> {
-  progresser?.setResolved("Collecting information...");
+  const tFiles: FileOperateReport = {
+    total: 0,
+    operateRecord: [],
+    resolved: 0,
+  };
   const allLibrariesToCheck: ArtifactMeta[] = [];
   for (const l of profile.libraries) {
     if (!l.canApply()) {
@@ -87,10 +84,11 @@ export async function ensureLibraries(
       allLibrariesToCheck.push(getNativeArtifact(l));
     }
   }
+  tFiles.total = allLibrariesToCheck.length;
   const values = await Promise.all(
     (() => {
       return allLibrariesToCheck.map((artifact) => {
-        return performSingleCheck(artifact, container, progresser);
+        return performSingleCheck(artifact, container, tFiles);
       });
     })()
   );
@@ -100,7 +98,8 @@ export async function ensureLibraries(
       failedCount++;
     }
   }
-  progresser?.markEnd("All libraries are checked.");
+  tFiles.resolved = tFiles.total - failedCount;
+  tracker?.library(tFiles);
   return failedCount;
 }
 
@@ -110,7 +109,7 @@ export async function ensureLibraries(
 async function performSingleCheck(
   artifact: ArtifactMeta,
   container: MinecraftContainer,
-  progresser?: Progresser
+  operate?: FileOperateReport
 ): Promise<DownloadStatus> {
   const downloadMeta = new DownloadMeta(
     artifact.url,
@@ -118,7 +117,18 @@ async function performSingleCheck(
     artifact.sha1
   );
   const t = await wrappedDownloadFile(downloadMeta);
-  progresser?.markUpdate("Resolved library " + artifact.path);
+  if (t) {
+    operate?.operateRecord.push({
+      file: artifact.path,
+      operation: "OPERATED",
+    });
+  } else {
+    operate?.operateRecord.push({
+      file: artifact.path,
+      operation: "FAILED",
+    });
+  }
+
   return t;
 }
 
@@ -141,20 +151,35 @@ export async function ensureAssetsIndex(
 export async function ensureAllAssets(
   profile: GameProfile,
   container: MinecraftContainer,
-  progresser?: Progresser
+  tracker?: LaunchTracker
 ): Promise<number> {
   try {
-    progresser?.setResolved("Collecting information...");
+    const tFile: FileOperateReport = {
+      total: 0,
+      resolved: 0,
+      operateRecord: [],
+    };
     const obj = await fs.readJSON(
       container.getAssetsIndexPath(profile.assetIndex.id)
     );
     const assetIndexFileMeta = AssetIndexFileMeta.fromObject(obj);
     const allObjects = assetIndexFileMeta.objects.concat();
+    tFile.total = allObjects.length;
     const allStatus = await Promise.all(
       allObjects.map((o) => {
         return new Promise<boolean>((resolve) => {
           ensureAsset(o, container).then((b) => {
-            progresser?.markUpdate("Resolved asset " + o.hash);
+            if (b) {
+              tFile.operateRecord.push({
+                file: o.hash,
+                operation: "OPERATED",
+              });
+            } else {
+              tFile.operateRecord.push({
+                file: o.hash,
+                operation: "FAILED",
+              });
+            }
             resolve(b);
           });
         });
@@ -166,7 +191,8 @@ export async function ensureAllAssets(
         failedCount++;
       }
     }
-    progresser?.markEnd("All assets are checked.");
+    tFile.resolved = tFile.total - failedCount;
+    tracker?.assets(tFile);
     return failedCount;
   } catch {
     return -1; // Which means operation failed

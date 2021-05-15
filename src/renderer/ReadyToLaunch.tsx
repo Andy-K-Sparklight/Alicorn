@@ -32,7 +32,13 @@ import { useParams } from "react-router";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MicrosoftAccount } from "../modules/auth/MicrosoftAccount";
-import { getJavaRunnable, getLastUsedJavaHome } from "../modules/java/JInfo";
+import {
+  getJavaInfoRaw,
+  getJavaRunnable,
+  getLastUsedJavaHome,
+  parseJavaInfo,
+  parseJavaInfoRaw,
+} from "../modules/java/JInfo";
 import { FlightTakeoff } from "@material-ui/icons";
 import objectHash from "object-hash";
 import {
@@ -65,6 +71,8 @@ import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
 import { prefetchData } from "../modules/auth/AJHelper";
 import { toReadableType } from "./YggdrasilAccountManager";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import { LaunchTracker } from "../modules/launch/Tracker";
+import { schedulePromiseTask } from "./Schedule";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -90,6 +98,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 const LAST_USED_USER_NAME_KEY = "ReadyToLaunch.LastUsedUsername";
+export const LAST_LAUNCH_REPORT_KEY = "ReadyToLaunch.LastLaunchReport";
 
 export function ReadyToLaunch(): JSX.Element {
   const [coreProfile, setProfile] = useState(new GameProfile({}));
@@ -99,25 +108,27 @@ export function ReadyToLaunch(): JSX.Element {
 
   useEffect(() => {
     mounted.current = true;
-    if (!profileLoadedBit) {
-      (async () => {
-        try {
-          const d = await loadProfile(id, getContainer(container));
-          if (mounted.current) {
-            setProfile(d);
-            setLoaded(1);
-          }
-        } catch {
-          if (mounted.current) {
-            setLoaded(2);
-          }
+
+    (async () => {
+      try {
+        const d = await schedulePromiseTask(() =>
+          loadProfile(id, getContainer(container))
+        );
+        if (mounted.current) {
+          setProfile(d);
+          setLoaded(1);
         }
-      })();
-    }
+      } catch {
+        if (mounted.current) {
+          setLoaded(2);
+        }
+      }
+    })();
+
     return () => {
       mounted.current = false;
     };
-  });
+  }, []);
 
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
@@ -195,7 +206,7 @@ function Launching(props: {
         onChose={(a) => {
           setSelectedAccount(a);
           (async () => {
-            await startBoot(
+            window.sessionStorage[LAST_LAUNCH_REPORT_KEY] = await startBoot(
               (st) => {
                 setStatus(st);
                 setActiveStep(REV_LAUNCH_STEPS[st]);
@@ -258,7 +269,7 @@ function Launching(props: {
           }
           onClick={async () => {
             if (selectedAccount !== undefined) {
-              await startBoot(
+              window.sessionStorage[LAST_LAUNCH_REPORT_KEY] = await startBoot(
                 (st) => {
                   setStatus(st);
                   setActiveStep(REV_LAUNCH_STEPS[st]);
@@ -286,8 +297,24 @@ async function startBoot(
   container: MinecraftContainer,
   setID: (id: string) => unknown,
   account: Account
-): Promise<void> {
+): Promise<LaunchTracker> {
+  const GLOBAL_LAUNCH_TRACKER = new LaunchTracker();
+  const ALL_PENDING_PROMISE: Promise<void>[] = [];
   const jRunnable = await getJavaRunnable(getLastUsedJavaHome());
+
+  ALL_PENDING_PROMISE.push(
+    new Promise<void>((resolve) => {
+      getJavaInfoRaw(getLastUsedJavaHome()).then((d) => {
+        const jInfo = parseJavaInfo(parseJavaInfoRaw(d));
+        GLOBAL_LAUNCH_TRACKER.java({
+          runtime: jInfo.runtime,
+          version: jInfo.rootVersion,
+        });
+        resolve();
+      });
+    })
+  );
+
   setStatus(LaunchingStatus.ACCOUNT_AUTHING);
   if (account.type === AccountType.MICROSOFT) {
     await account.performAuth("");
@@ -306,18 +333,17 @@ async function startBoot(
 
   await ensureClient(profile);
   await ensureLog4jFile(profile, container);
-  await ensureLibraries(profile, container);
+  await ensureLibraries(profile, container, GLOBAL_LAUNCH_TRACKER);
   await ensureNatives(profile, container);
   setStatus(LaunchingStatus.ASSETS_FILLING);
   await ensureAssetsIndex(profile, container);
-  await ensureAllAssets(profile, container);
+  await ensureAllAssets(profile, container, GLOBAL_LAUNCH_TRACKER);
   setStatus(LaunchingStatus.MODS_PREPARING);
   if (profile.type === ReleaseType.MODIFIED) {
-    await prepareModsCheckFor(profile, container);
+    await prepareModsCheckFor(profile, container, GLOBAL_LAUNCH_TRACKER);
   }
   setStatus(LaunchingStatus.ARGS_GENERATING);
   const em = new EventEmitter();
-
   const runID = launchProfile(profile, container, jRunnable, acData, em, {
     useAj: useAj,
     ajHost: ajHost,
@@ -337,6 +363,8 @@ async function startBoot(
     await restoreMods(container);
     console.log("Done!");
   });
+  console.log(GLOBAL_LAUNCH_TRACKER);
+  return GLOBAL_LAUNCH_TRACKER;
 }
 
 enum LaunchingStatus {
@@ -349,8 +377,6 @@ enum LaunchingStatus {
   FINISHED = "Finished",
 }
 
-// FIXME what's the matter with aj?
-// Just crashed because java cannot load it!
 function AccountChoose(props: {
   open: boolean;
   closeFunc: () => void;

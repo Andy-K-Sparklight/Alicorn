@@ -5,6 +5,10 @@ export class OptionalArgument {
   rules: RuleSet;
   value: string[];
 
+  clone(): OptionalArgument {
+    return new OptionalArgument(this.rules.clone(), this.value.concat());
+  }
+
   constructor(rules: RuleSet, value: string[]) {
     this.rules = rules;
     this.value = value;
@@ -49,6 +53,10 @@ export class ArtifactMeta {
     this.size = size;
   }
 
+  clone(): ArtifactMeta {
+    return new ArtifactMeta(this.url, this.sha1, this.path, this.size);
+  }
+
   static fromObject(obj: Record<string, unknown>): ArtifactMeta {
     if (isNull(obj)) {
       return ArtifactMeta.emptyArtifactMeta();
@@ -86,6 +94,16 @@ export class LibraryMeta {
   isNative: boolean;
   rules: RuleSet;
   name: string;
+
+  clone(): LibraryMeta {
+    return new LibraryMeta(
+      this.artifact.clone(),
+      this.classifiers.clone(),
+      this.isNative,
+      this.rules.clone(),
+      this.name
+    );
+  }
 
   constructor(
     artifact: ArtifactMeta,
@@ -150,6 +168,14 @@ export class LibraryMeta {
 export class RuleSet {
   private readonly rules: Rule[] = [];
 
+  clone(): RuleSet {
+    return new RuleSet(
+      this.rules.map((r) => {
+        return r.clone();
+      })
+    );
+  }
+
   private static readonly EMPTY_RULESET = new RuleSet();
 
   static fromArray(obj: unknown): RuleSet {
@@ -196,6 +222,15 @@ export class Rule {
   requireOSVersion: string;
   requireOSArch: string;
   private static readonly DO_NOTHING_RULE = new Rule(true);
+
+  clone(): Rule {
+    return new Rule(
+      this.isAllow,
+      this.requireOSType,
+      this.requireOSVersion,
+      this.requireOSArch
+    );
+  }
 
   static nothingRule(): Rule {
     return Rule.DO_NOTHING_RULE;
@@ -289,6 +324,16 @@ export class ClassifiersMeta {
     return ept;
   })();
 
+  clone(): ClassifiersMeta {
+    return new ClassifiersMeta(
+      this.javadoc.clone(),
+      this.nativesLinux.clone(),
+      this.nativesMacOS.clone(),
+      this.nativesWindows.clone(),
+      this.sources.clone()
+    );
+  }
+
   static emptyClassifiersMeta(): ClassifiersMeta {
     return ClassifiersMeta.EMPTY_INSTANCE;
   }
@@ -360,6 +405,16 @@ export class AssetIndexArtifactMeta {
     return ept;
   })();
 
+  clone(): AssetIndexArtifactMeta {
+    return new AssetIndexArtifactMeta(
+      this.id,
+      this.sha1,
+      this.size,
+      this.totalSize,
+      this.url
+    );
+  }
+
   static emptyAssetIndexArtifactMeta(): AssetIndexArtifactMeta {
     return AssetIndexArtifactMeta.EMPTY_INSTANCE;
   }
@@ -407,6 +462,14 @@ export class AssetIndexArtifactMeta {
 export class AssetIndexFileMeta {
   objects: AssetMeta[];
 
+  clone(): AssetIndexFileMeta {
+    return new AssetIndexFileMeta(
+      this.objects.map((o) => {
+        return o.clone();
+      })
+    );
+  }
+
   constructor(objects: AssetMeta[]) {
     this.objects = objects;
   }
@@ -425,6 +488,10 @@ export class AssetIndexFileMeta {
 export class AssetMeta {
   hash: string;
   size: number;
+
+  clone(): AssetMeta {
+    return new AssetMeta(this.hash, this.size);
+  }
 
   constructor(hash: string, size: number) {
     this.hash = hash;

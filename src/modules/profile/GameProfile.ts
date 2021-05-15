@@ -6,12 +6,13 @@ import {
 } from "./Meta";
 import { isNull, safeGet } from "../commons/Null";
 import { ReleaseType } from "../commons/Constants";
+import { schedulePromiseTask } from "../../renderer/Schedule";
 
 export class GameProfile {
   gameArgs: string[] = [];
   jvmArgs: OptionalArgument[] = [];
   assetIndex = AssetIndexArtifactMeta.emptyAssetIndexArtifactMeta();
-  clientArtifact = ArtifactMeta.emptyArtifactMeta();
+  clientArtifacts = [ArtifactMeta.emptyArtifactMeta()];
   // The 'path' property in 'client' will be reassigned before downloading
   id = "";
   libraries: LibraryMeta[] = [];
@@ -93,9 +94,9 @@ export class GameProfile {
 
       const tClientObj = safeGet(obj, ["downloads", "client"]);
       if (!isNull(tClientObj)) {
-        this.clientArtifact = ArtifactMeta.fromObject(
-          Object.assign({}, tClientObj)
-        );
+        this.clientArtifacts = [
+          ArtifactMeta.fromObject(Object.assign({}, tClientObj)),
+        ];
       }
 
       const allLibraries = obj["libraries"];
@@ -108,4 +109,30 @@ export class GameProfile {
       throw new Error("Invalid profile! Caused by: " + e);
     }
   }
+}
+
+export async function copyProfile(input: GameProfile): Promise<GameProfile> {
+  return await schedulePromiseTask(async () => {
+    const gp = new GameProfile({});
+    gp.libraries = input.libraries.map((l) => {
+      return l.clone();
+    });
+    gp.jvmArgs = input.jvmArgs.map((a) => {
+      return a.clone();
+    });
+    gp.id = input.id;
+    gp.type = input.type;
+    gp.logArg = input.logArg;
+    gp.releaseTime = new Date(input.releaseTime.toUTCString());
+    gp.baseVersion = input.baseVersion;
+    gp.assetIndex = input.assetIndex.clone();
+    gp.time = new Date(input.time.toUTCString());
+    gp.clientArtifacts = input.clientArtifacts.map((c) => {
+      return c.clone();
+    });
+    gp.gameArgs = input.gameArgs.concat();
+    gp.mainClass = input.mainClass;
+    gp.logFile = input.logFile.clone();
+    return gp;
+  });
 }

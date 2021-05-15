@@ -62,7 +62,7 @@ export async function wrappedDownloadFile(
     meta,
     getNumber("download.concurrent.tries-per-chunk" || 3)
   );
-  let s = await _wrappedDownloadFile(meta);
+  const s = await _wrappedDownloadFile(meta);
   FAILED_COUNT_MAP.delete(meta);
   return s;
 }

@@ -25,6 +25,7 @@ export function generateGameArgs(
   vMap.set("assets_index_name", profile.assetIndex.id);
   vMap.set("auth_uuid", authData.getThirdValue());
   vMap.set("auth_access_token", authData.getSecondValue());
+  vMap.set("auth_session", authData.getSecondValue()); // Pre 1.6
   vMap.set("user_type", MOJANG_USER_TYPE);
   vMap.set("version_type", ALICORN_VERSION_TYPE);
   return applyVars(vMap, profile.gameArgs);
@@ -38,7 +39,7 @@ export function generateVMArgs(
   const vMap = new Map<string, string>();
   vMap.set("launcher_name", LAUNCHER_NAME);
   vMap.set("launcher_version", LAUNCHER_VERSION);
-  const usingLibs: string[] = [];
+  let usingLibs: string[] = [];
   const nativesLibs: string[] = [];
   for (const l of profile.libraries) {
     if (!l.canApply()) {
@@ -59,8 +60,12 @@ export function generateVMArgs(
     }
   }
   // Specialize for 'client.jar'
-  if (!isNull(profile.clientArtifact)) {
-    usingLibs.push(profile.clientArtifact.path);
+  if (!isNull(profile.clientArtifacts)) {
+    usingLibs = usingLibs.concat(
+      profile.clientArtifacts.map((a) => {
+        return a.path;
+      })
+    );
   }
 
   nativesLibs.push("");

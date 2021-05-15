@@ -152,7 +152,6 @@ export function InstallCore(): JSX.Element {
           closeFunc={() => {
             setForgeConfirmOpen(false);
           }}
-          className={classes.input}
           confirmFunc={async () => {
             const mcv = baseMojangVersionForge;
             const fgv = detectedForgeVersion;
@@ -201,7 +200,6 @@ export function InstallCore(): JSX.Element {
           closeFunc={() => {
             setFabricConfirmOpen(false);
           }}
-          className={classes.input}
           confirmFunc={async () => {
             setFabricConfirmOpen(false);
             setOperating(true);
@@ -257,7 +255,6 @@ export function InstallCore(): JSX.Element {
         />
         <ConfirmInstall
           version={selectedMojangVersion}
-          className={classes.input}
           open={mojangConfirmOpenBit}
           closeFunc={() => {
             setMojangConfirmOpen(false);
@@ -565,7 +562,6 @@ function ConfirmInstall(props: {
   version: string;
   open: boolean;
   closeFunc: () => unknown;
-  className: string;
   confirmFunc: () => unknown;
 }): JSX.Element {
   return (
@@ -577,11 +573,7 @@ function ConfirmInstall(props: {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button
-          className={props.className}
-          variant={"outlined"}
-          onClick={props.confirmFunc}
-        >
+        <Button variant={"outlined"} onClick={props.confirmFunc}>
           {tr("InstallCore.Confirm.OK")}
         </Button>
       </DialogActions>

@@ -7,6 +7,7 @@ import { getBoolean } from "../config/ConfigSupport";
 import path from "path";
 import { GameProfile } from "../profile/GameProfile";
 import { JAR_SUFFIX } from "../launch/NativesLint";
+import { FileOperateReport, LaunchTracker } from "../launch/Tracker";
 // How we manage mods:
 // Before launch:
 // 1. Info loading: load all metas in 'mods' folder
@@ -46,10 +47,12 @@ async function moveModsTo(
   mods: ModInfo[],
   container: MinecraftContainer,
   mcVersion: string,
-  type: ProfileType
+  type: ProfileType,
+  tFile: FileOperateReport
 ): Promise<void> {
   const toProcess: ModInfo[] = [];
   try {
+    tFile.total = mods.length;
     for (const mi of mods) {
       if (
         getBoolean("modx.ignore-non-standard-mods") &&
@@ -63,8 +66,14 @@ async function moveModsTo(
         !canModVersionApply(mi.mcversion || "", mcVersion)
       ) {
         toProcess.push(mi);
+      } else {
+        tFile.operateRecord.push({
+          file: mi.fileName || "",
+          operation: "SKIPPED",
+        });
       }
     }
+    tFile.resolved = toProcess.length;
     await fs.emptydir(container.getDynamicModsRoot());
     await Promise.all(
       toProcess.map((m) => {
@@ -74,10 +83,30 @@ async function moveModsTo(
             fs.copyFile(
               pt,
               container.getDynamicModJar(path.basename(m.fileName)),
-              () => {
-                fs.remove(pt, () => {
-                  resolve();
-                });
+              (e) => {
+                if (!e) {
+                  fs.remove(pt, (e) => {
+                    if (e) {
+                      tFile.resolved--;
+                      tFile.operateRecord.push({
+                        file: m.fileName || "",
+                        operation: "FAILED",
+                      });
+                    } else {
+                      tFile.operateRecord.push({
+                        file: m.fileName || "",
+                        operation: "OPERATED",
+                      });
+                    }
+                  });
+                } else {
+                  tFile.operateRecord.push({
+                    file: m.fileName || "",
+                    operation: "FAILED",
+                  });
+                  tFile.resolved--;
+                }
+                resolve();
               }
             );
           } else {
@@ -116,18 +145,22 @@ export async function restoreMods(
 
 export async function prepareModsCheckFor(
   profile: GameProfile,
-  container: MinecraftContainer
+  container: MinecraftContainer,
+  tracker?: LaunchTracker
 ): Promise<void> {
   if (!getBoolean("modx.global-dynamic-load-mods")) {
     return;
   }
+  const tFile: FileOperateReport = { total: 0, resolved: 0, operateRecord: [] };
   try {
     const stat = gatherVersionInfo(profile);
     await moveModsTo(
       await loadMetas(container),
       container,
       stat.version,
-      stat.type
+      stat.type,
+      tFile
     );
+    tracker?.mods(tFile);
   } catch {}
 }
