@@ -5,6 +5,7 @@ import {
   createStyles,
   IconButton,
   makeStyles,
+  Snackbar,
   Toolbar,
   Tooltip,
   Typography,
@@ -63,19 +64,23 @@ const useStyles = makeStyles((theme) =>
     },
   })
 );
-let EVENT_LISTENED_FLAG = false;
 
 export function App(): JSX.Element {
   const classes = useStyles();
   const [page, setPage] = useState(Pages.Version.toString());
+  const [openNotice, setNoticeOpen] = useState(false);
+  const [err, setErr] = useState("");
   useEffect(() => {
-    if (!EVENT_LISTENED_FLAG) {
-      EVENT_LISTENED_FLAG = true;
-      document.addEventListener("setPage", (e) => {
-        setPage(String(safeGet(e, ["detail"], Pages.Version)));
-      });
-    }
-  });
+    document.addEventListener("setPage", (e) => {
+      setPage(String(safeGet(e, ["detail"], Pages.Version)));
+    });
+  }, []);
+  useEffect(() => {
+    window.addEventListener("sysError", (e) => {
+      setErr(String(safeGet(e, ["detail"], "Unknown Error")));
+      setNoticeOpen(true);
+    });
+  }, []);
   return (
     <Box className={classes.root}>
       <AppBar>
@@ -210,6 +215,14 @@ export function App(): JSX.Element {
         <Route path={"/JavaSelector"} component={JavaSelector} />
         <Route path={"/Options"} component={OptionsPage} />
       </Box>
+      <Snackbar
+        open={openNotice}
+        message={tr("System.Error") + err}
+        autoHideDuration={10000}
+        onClose={() => {
+          setNoticeOpen(false);
+        }}
+      />
     </Box>
   );
 }

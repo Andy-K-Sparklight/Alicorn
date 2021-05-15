@@ -13,6 +13,7 @@ export default {
   Terminal: "终端",
   JavaSelector: "Java 选择器",
   Options: "选项",
+  "System.Error": "错误！",
   "MainMenu.QuickManageAccount": "管理帐户",
   "MainMenu.QuickJavaSelector": "选择 Java",
   "MainMenu.QuickTerminal": "打开终端",

@@ -13,6 +13,7 @@ import {
   LinearProgress,
   makeStyles,
   MenuItem,
+  MuiThemeProvider,
   Radio,
   RadioGroup,
   Select,
@@ -63,6 +64,7 @@ import {
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
 import { prefetchData } from "../modules/auth/AJHelper";
 import { toReadableType } from "./YggdrasilAccountManager";
+import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -116,11 +118,15 @@ export function ReadyToLaunch(): JSX.Element {
       mounted.current = false;
     };
   });
-  // TODO add java executable and account choosing
-  return profileLoadedBit === 1 ? (
-    <Launching profile={coreProfile} container={getContainer(container)} />
-  ) : (
-    <LinearProgress color={"secondary"} style={{ width: "80%" }} />
+
+  return (
+    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+      {profileLoadedBit === 1 ? (
+        <Launching profile={coreProfile} container={getContainer(container)} />
+      ) : (
+        <LinearProgress color={"secondary"} style={{ width: "80%" }} />
+      )}
+    </MuiThemeProvider>
   );
 }
 
@@ -274,7 +280,6 @@ function Launching(props: {
   );
 }
 
-// TODO support java select
 async function startBoot(
   setStatus: (status: LaunchingStatus) => void,
   profile: GameProfile,

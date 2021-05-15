@@ -12,6 +12,7 @@ import { loadProfile } from "./ProfileLoader";
 import { ReleaseType, SPACE } from "../commons/Constants";
 import { isNull } from "../commons/Null";
 import { ClassifiersMeta, LibraryMeta, RuleSet } from "./Meta";
+import objectHash from "object-hash";
 
 // gfBase <- gfHead, just like merge in git
 export function makeInherit(
@@ -33,12 +34,16 @@ export function makeInherit(
   }
 
   if (!isNull(gfHead.jvmArgs)) {
-    retGF.jvmArgs = noDuplicateConcat(retGF.jvmArgs, gfHead.jvmArgs);
+    if (!legacyBit) {
+      // For legacy profiles there will be same jvm args, ignore it
+      retGF.jvmArgs = noDuplicateConcat(retGF.jvmArgs, gfHead.jvmArgs);
+    }
   }
   if (!isNull(gfHead.gameArgs)) {
     if (legacyBit) {
       retGF.gameArgs = gfHead.gameArgs;
     } else {
+      // Game arguments are all of string type and can be handled by noDuplicateConcat
       retGF.gameArgs = noDuplicateConcat(retGF.gameArgs, gfHead.gameArgs);
     }
   }
@@ -80,9 +85,14 @@ export function makeInherit(
 
 export function noDuplicateConcat<T>(a1: T[], a2: T[]): T[] {
   const copy = a1.concat();
+  const hashList = copy.map((a) => {
+    return objectHash(a);
+  });
   for (const x of a2) {
-    if (!a1.includes(x)) {
+    const xh = objectHash(x);
+    if (!hashList.includes(xh) && !copy.includes(x)) {
       copy.push(x);
+      hashList.push(xh);
     }
   }
   return copy;

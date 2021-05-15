@@ -9,6 +9,7 @@ import {
   LinearProgress,
   makeStyles,
   MenuItem,
+  MuiThemeProvider,
   Select,
   Tooltip,
   Typography,
@@ -27,6 +28,7 @@ import {
 import { tr } from "./Translator";
 import objectHash from "object-hash";
 import { Refresh } from "@material-ui/icons";
+import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 
 const CANNOT_LOAD_INFO: JavaInfo = {
   rootVersion: -1,
@@ -113,69 +115,71 @@ export function JavaSelector(): JSX.Element {
     })();
   }, [isLoaded]);
   return (
-    <Box className={classes.root}>
-      <Box>
-        <Typography
-          variant={"h5"}
-          color={"primary"}
-          className={classes.title}
-          gutterBottom
-        >
-          {tr("JavaSelector.SelectJavaTitle")}
-        </Typography>
-      </Box>
-      <FormControl>
-        <InputLabel id={"Select-JRE"} className={classes.label}>
-          {tr("JavaSelector.SelectJava")}
-        </InputLabel>
-        <Select
-          disabled={!isLoaded}
-          labelId={"Select-JRE"}
-          color={"primary"}
-          className={classes.selector + " " + fullWidthClasses.form}
-          onChange={(e) => {
-            const sj = String(e.target.value);
-            setCurrentJava(sj);
-            setLastUsedJavaHome(sj);
-          }}
-          value={currentJava}
-        >
-          {javaList.map((j) => {
-            return (
-              <MenuItem key={objectHash(j)} value={j}>
-                {j}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
-      <Tooltip title={tr("JavaSelector.Reload")}>
-        <IconButton
-          color={"primary"}
-          className={fullWidthClasses.right}
-          onClick={() => {
-            setLoaded(false);
-          }}
-        >
-          <Refresh />
-        </IconButton>
-      </Tooltip>
-      {isLoaded ? (
-        ""
-      ) : (
+    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+      <Box className={classes.root}>
         <Box>
-          <LinearProgress color={"secondary"} />
-          <br />
-          <Typography className={classes.text} color={"primary"} gutterBottom>
-            {tr("JavaSelector.Loading")}
+          <Typography
+            variant={"h5"}
+            color={"primary"}
+            className={classes.title}
+            gutterBottom
+          >
+            {tr("JavaSelector.SelectJavaTitle")}
           </Typography>
         </Box>
-      )}
+        <FormControl>
+          <InputLabel id={"Select-JRE"} className={classes.label}>
+            {tr("JavaSelector.SelectJava")}
+          </InputLabel>
+          <Select
+            disabled={!isLoaded}
+            labelId={"Select-JRE"}
+            color={"primary"}
+            className={classes.selector + " " + fullWidthClasses.form}
+            onChange={(e) => {
+              const sj = String(e.target.value);
+              setCurrentJava(sj);
+              setLastUsedJavaHome(sj);
+            }}
+            value={currentJava}
+          >
+            {javaList.map((j) => {
+              return (
+                <MenuItem key={objectHash(j)} value={j}>
+                  {j}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+        <Tooltip title={tr("JavaSelector.Reload")}>
+          <IconButton
+            color={"primary"}
+            className={fullWidthClasses.right}
+            onClick={() => {
+              setLoaded(false);
+            }}
+          >
+            <Refresh />
+          </IconButton>
+        </Tooltip>
+        {isLoaded ? (
+          ""
+        ) : (
+          <Box>
+            <LinearProgress color={"secondary"} />
+            <br />
+            <Typography className={classes.text} color={"primary"} gutterBottom>
+              {tr("JavaSelector.Loading")}
+            </Typography>
+          </Box>
+        )}
 
-      <JavaInfoDisplay
-        jInfo={isLoaded ? javaInfo.get(currentJava) : currentJavaInfo}
-      />
-    </Box>
+        <JavaInfoDisplay
+          jInfo={isLoaded ? javaInfo.get(currentJava) : currentJavaInfo}
+        />
+      </Box>
+    </MuiThemeProvider>
   );
 }
 

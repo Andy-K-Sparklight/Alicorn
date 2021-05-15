@@ -118,18 +118,16 @@ function SingleContainerDisplay(props: {
   const [operating, setOperating] = useState(false);
   const [coreCount, setCount] = useState(-1);
   useEffect(() => {
-    if (coreCount < 0 && props.isMounted) {
-      (async () => {
-        const cores = (await scanCoresIn(props.container)).length;
-        if (mounted.current) {
-          setCount(cores);
-        }
-      })();
-    }
+    (async () => {
+      const cores = (await scanCoresIn(props.container)).length;
+      if (mounted.current) {
+        setCount(cores);
+      }
+    })();
     return () => {
       mounted.current = false;
     };
-  });
+  }, []);
   return (
     <Box>
       <OperatingHint open={operating} />

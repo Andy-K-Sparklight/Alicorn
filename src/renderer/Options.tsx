@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Box,
-  createMuiTheme,
   createStyles,
   makeStyles,
   MuiThemeProvider,
@@ -17,6 +16,7 @@ import {
   set,
 } from "../modules/config/ConfigSupport";
 import { tr } from "./Translator";
+import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 
 // UNCHECKED
 
@@ -37,13 +37,7 @@ export function OptionsPage(): JSX.Element {
 
   return (
     <Box className={classes.root}>
-      <MuiThemeProvider
-        theme={createMuiTheme({
-          palette: {
-            type: "light",
-          },
-        })}
-      >
+      <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
         <InputItem type={ConfigType.BOOL} bindConfig={"updator.use-update"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"updator.dev"} />
         <InputItem
@@ -81,21 +75,21 @@ function InputItem(props: {
 }): JSX.Element {
   const [refreshBit, forceRefresh] = useState<boolean>(true);
 
-  const classes = makeStyles(() =>
+  const classes = makeStyles((theme) =>
     createStyles({
       desc: {
         fontSize: "medium",
-        color: "#df307f",
+        color: theme.palette.secondary.main,
       },
       switch: {
-        color: "#5d2391",
+        color: theme.palette.primary.main,
       },
       textField: {
-        borderColor: "#5d2391",
-        color: "#5d2391",
+        borderColor: theme.palette.primary.main,
+        color: theme.palette.primary.main,
       },
       text: {
-        color: "#5d2391",
+        color: theme.palette.primary.main,
       },
     })
   )();

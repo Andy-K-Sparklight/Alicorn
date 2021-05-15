@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import { initTranslator } from "./Translator";
 import { Box, createMuiTheme, MuiThemeProvider } from "@material-ui/core";
-import { loadData, saveDefaultData } from "../modules/config/DataSupport";
 import { loadConfig } from "../modules/config/ConfigSupport";
 import { loadGDT } from "../modules/container/ContainerUtil";
 import { loadJDT } from "../modules/java/JInfo";
@@ -18,11 +17,10 @@ import { initVF } from "../modules/container/ValidateRecord";
 import { prepareAJ } from "../modules/auth/AJHelper";
 import { initCommands } from "../modules/command/CommandHandler";
 
-const ALICORN_THEME_FILE = "alicorn.theme.json";
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
-const DEF_THM_OBJ = {
+export const ALICORN_DEFAULT_THEME_DARK = createMuiTheme({
   palette: {
     type: "dark",
     primary: {
@@ -34,37 +32,25 @@ const DEF_THM_OBJ = {
       light: "#ffe0f0",
     },
   },
-};
-
-// @ts-ignore
-const ALICORN_DEFAULT_THEME = createMuiTheme(DEF_THM_OBJ);
-
-let themeG = DEF_THM_OBJ;
-
-export function getThemeG(): Record<string, unknown> {
-  return themeG;
-}
+});
+export const ALICORN_DEFAULT_THEME_LIGHT = createMuiTheme({
+  palette: {
+    type: "light",
+    primary: {
+      main: "#5d2391",
+      light: "#d796f0",
+    },
+    secondary: {
+      main: "#df307f",
+      light: "#ffe0f0",
+    },
+  },
+});
 
 function RendererBootstrap(): JSX.Element {
-  const [theme, setTheme] = useState(ALICORN_DEFAULT_THEME);
-  const [themeLoadedBit, setLoaded] = useState(false);
-  useEffect(() => {
-    if (!themeLoadedBit) {
-      setLoaded(true);
-      (async () => {
-        try {
-          await saveDefaultData(ALICORN_THEME_FILE);
-          const themeFile = JSON.parse(await loadData(ALICORN_THEME_FILE));
-          const t = createMuiTheme(themeFile);
-          setTheme(t);
-          themeG = themeFile;
-        } catch {}
-      })();
-    }
-  });
   return (
     <Box style={GLOBAL_STYLES}>
-      <MuiThemeProvider theme={theme}>
+      <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
         <HashRouter>
           <App />
         </HashRouter>
@@ -74,6 +60,14 @@ function RendererBootstrap(): JSX.Element {
 }
 
 initTranslator();
+window.addEventListener("unhandledrejection", (e) => {
+  console.log(e.reason);
+  window.dispatchEvent(new CustomEvent("sysError", { detail: e.reason }));
+});
+window.addEventListener("error", (e) => {
+  console.log(e.message);
+  window.dispatchEvent(new CustomEvent("sysError", { detail: e.message }));
+});
 (async () => {
   console.log("Initializing modules...");
   await loadConfig();
