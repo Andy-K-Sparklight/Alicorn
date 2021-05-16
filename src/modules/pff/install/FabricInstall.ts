@@ -10,6 +10,7 @@ import childProcess from "child_process";
 import { makeTempLP } from "./ForgeInstall";
 import { convertFromFabric } from "../../profile/FabricProfileAdaptor";
 import { xgot } from "../../download/GotWrapper";
+import fs from "fs-extra";
 
 const JAR_ARG = "-jar";
 const INSTALL_ARG =
@@ -30,6 +31,7 @@ export async function performFabricInstall(
       // Fabric has less libraries, much faster than Forge!
       await ensureFabricLibrariesOL(mcv, fbv, container);
       await bootFabricInstaller(jExecutable, fbURL, fbv, mcv, container);
+      await fs.ensureDir(container.getModsRoot());
     } catch (e) {
       console.log(e);
       failBit = false;

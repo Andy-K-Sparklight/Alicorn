@@ -57,6 +57,7 @@ export async function performForgeInstall(
     // We have to fill libraries for the installer, it's slow...
     await ensureLibraries(ret.getFirstValue(), container);
     await bootForgeInstaller(jExecutable, forgeJar, container);
+    await fs.ensureDir(container.getModsRoot());
   } catch {
     failBit = false;
   }
