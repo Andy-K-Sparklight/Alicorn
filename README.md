@@ -1,43 +1,49 @@
 # Alicorn Launcher
 
-**Alicorn 在开发中！**
+## 从源代码构建
 
-Alicorn 的开发还没有完成，您可以到 [这里](https://www.mcbbs.net/thread-1196771-1-1.html) 阅读有关 InDev 的发行信息。
+要构建 Alicorn，请这样做：
 
-Alicorn Launcher 是 Minecraft（Java 版）第三方启动器，目的在于提供针对国内用户的更好体验。
+- 在您的计算机上安装 [Node.js](https://nodejs.org)，我们的 Pull Request Pipeline 使用 `14.16.0`，持续集成使用的是最新的稳定版本，各位开发人员使用的版本则分别是：
 
-## 功能列表（设计）
+  - RarityEG：`15.13.0`
 
-- 【已完成】对具有 Minecraft 标准启动引导 JSON 文件之核心的启动
+- 在您的计算机上安装 [Git](https://git-scm.com)。
 
-- 【已完成】对 Minecraft 下载镜像站点的支持
+- 克隆本仓库：
 
-- 对 OpenJDK 11 的支持（而非默认的 Java Runtime Environment 8）
+  ```
+  git clone https://bitbucket.org/RarityEG/alicorn.git
+  ```
 
-- 【已完成】对海外资源速度受限的*并发 - 分段*下载算法
+  如果您只想进行构建，请指定 `--depth 1` 以去除不必要的历史提交记录。
 
-- 【已完成】基于彼此隔离的“容器”进行文件管理
+- 安装依赖：
 
-- 【已完成】Mod 信息读取与自动加载
+  ```
+  yarn
+  ```
 
-- Minecraft 及其 Mod 化版本的自动化部署
+- 运行构建：
 
-- 常见崩溃错误的智能分析
+  - 发行版：
 
-- 能够解决问题的疑难解答
+    ```
+    yarn release-full
+    ```
 
-- …（未列出）
+  - 开发版：
 
-## 基于 TypeScript
+    ```
+    yarn build-dll
+    yarn build-full
+    ```
 
-Alicorn 是基于 Node.js 与 Electron，使用 TypeScript 进行编写的——听到 Electron，**不要**再想到巨卡巨吃内存的 Atom 啦！经过大量的优化，Alicorn 的**开发**
-环境测试内存占用可以达到 .NET **生产**环境的 60% 甚至更低！（这是我没有想到的）
+  - 测试：
 
-我们决定使用 Web 技术是有原因的。TypeScript 的特性允许我们在具有接近 Java 的严谨代码逻辑时，也能利用它的灵活性来做一些其它语言做不到的事情——这让我们在诸如读取启动引导文件时节省了不少时间。
+    ```
+    yarn quick-test
+    ```
 
-另一个好处就是**更新**。只要你成功安装了 Alicorn（的 Electron 底层）一次，将来 Alicorn 便可进行“无感更新”——简单地下载几 KB 的 JavaScript
-代码即可完成更新。我们认为，与其打断你启动游戏的兴致去进行更新，不如让我们为你完成这项工作。
+  本仓库内没有指定构建二进制文件的工具，因为 Alicorn 的二进制文件是在本地用 Electron 额外构建的，本仓库仅发布 JavaScript 产品更新。
 
-也正是如此，你下载的 Alicorn 二进制文件并不总是内置了最新的 JavaScript 代码——但是你启动的一瞬间，Alicorn 就会知道该更新到哪个版本。下次启动时，Alicorn 就会载入新的代码进行运行。
-
-（未完待续…）
