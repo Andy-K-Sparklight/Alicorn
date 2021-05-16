@@ -117,7 +117,7 @@ async function performSingleCheck(
     artifact.sha1
   );
   const t = await wrappedDownloadFile(downloadMeta);
-  if (t) {
+  if (t === DownloadStatus.RESOLVED) {
     operate?.operateRecord.push({
       file: artifact.path,
       operation: "OPERATED",

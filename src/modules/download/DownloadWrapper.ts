@@ -82,10 +82,9 @@ function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
 }
 
 function scheduleNextTask(): void {
-  if (
-    RUNNING_TASKS.size < getNumber("download.concurrent.max-tasks", 20) &&
-    PENDING_TASKS.length > 0
-  ) {
+  // An aggressive call!
+  const CURRENT_MAX = getNumber("download.concurrent.max-tasks", 20);
+  while (RUNNING_TASKS.size < CURRENT_MAX && PENDING_TASKS.length > 0) {
     const tsk = PENDING_TASKS.pop();
     if (tsk !== undefined) {
       RUNNING_TASKS.add(tsk);

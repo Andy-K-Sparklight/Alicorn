@@ -65,6 +65,7 @@ async function moveModsTo(
         mi.loader?.toString() !== type.toString() ||
         !canModVersionApply(mi.mcversion || "", mcVersion)
       ) {
+        console.log("We need to operate " + mi.fileName);
         toProcess.push(mi);
       } else {
         tFile.operateRecord.push({
@@ -77,36 +78,46 @@ async function moveModsTo(
     await fs.emptydir(container.getDynamicModsRoot());
     await Promise.all(
       toProcess.map((m) => {
+        const mf = m.fileName;
         return new Promise<void>((resolve) => {
-          if (m.fileName !== undefined) {
-            const pt = path.resolve(m.fileName);
+          if (mf !== undefined) {
+            console.log("Processing " + mf);
+            const pt = path.resolve(mf);
             fs.copyFile(
               pt,
-              container.getDynamicModJar(path.basename(m.fileName)),
+              container.getDynamicModJar(path.basename(mf)),
               (e) => {
+                console.log("Copy callback " + pt);
                 if (!e) {
                   fs.remove(pt, (e) => {
+                    console.log("Del callback " + pt);
                     if (e) {
+                      console.log("Error processing " + mf);
+                      console.log(e);
                       tFile.resolved--;
                       tFile.operateRecord.push({
-                        file: m.fileName || "",
+                        file: mf || "",
                         operation: "FAILED",
                       });
                     } else {
+                      console.log("Operated " + mf);
                       tFile.operateRecord.push({
-                        file: m.fileName || "",
+                        file: mf || "",
                         operation: "OPERATED",
                       });
                     }
+                    resolve();
                   });
                 } else {
+                  console.log("Error processing " + mf);
+                  console.log(e);
                   tFile.operateRecord.push({
-                    file: m.fileName || "",
+                    file: mf || "",
                     operation: "FAILED",
                   });
                   tFile.resolved--;
+                  resolve();
                 }
-                resolve();
               }
             );
           } else {
@@ -157,7 +168,7 @@ export async function prepareModsCheckFor(
     await moveModsTo(
       await loadMetas(container),
       container,
-      stat.version,
+      profile.baseVersion,
       stat.type,
       tFile
     );

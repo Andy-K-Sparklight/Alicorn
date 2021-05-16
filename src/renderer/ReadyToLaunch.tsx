@@ -73,6 +73,7 @@ import { toReadableType } from "./YggdrasilAccountManager";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { LaunchTracker } from "../modules/launch/Tracker";
 import { schedulePromiseTask } from "./Schedule";
+import { generateTrackerInfo } from "../modules/crhelper/TrackerGenerator";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -299,21 +300,7 @@ async function startBoot(
   account: Account
 ): Promise<LaunchTracker> {
   const GLOBAL_LAUNCH_TRACKER = new LaunchTracker();
-  const ALL_PENDING_PROMISE: Promise<void>[] = [];
   const jRunnable = await getJavaRunnable(getLastUsedJavaHome());
-
-  ALL_PENDING_PROMISE.push(
-    new Promise<void>((resolve) => {
-      getJavaInfoRaw(getLastUsedJavaHome()).then((d) => {
-        const jInfo = parseJavaInfo(parseJavaInfoRaw(d));
-        GLOBAL_LAUNCH_TRACKER.java({
-          runtime: jInfo.runtime,
-          version: jInfo.rootVersion,
-        });
-        resolve();
-      });
-    })
-  );
 
   setStatus(LaunchingStatus.ACCOUNT_AUTHING);
   if (account.type === AccountType.MICROSOFT) {
@@ -343,6 +330,13 @@ async function startBoot(
     await prepareModsCheckFor(profile, container, GLOBAL_LAUNCH_TRACKER);
   }
   setStatus(LaunchingStatus.ARGS_GENERATING);
+  const jInfo = parseJavaInfo(
+    parseJavaInfoRaw(await getJavaInfoRaw(getLastUsedJavaHome()))
+  );
+  GLOBAL_LAUNCH_TRACKER.java({
+    runtime: jInfo.runtime,
+    version: jInfo.rootVersion,
+  });
   const em = new EventEmitter();
   const runID = launchProfile(profile, container, jRunnable, acData, em, {
     useAj: useAj,
@@ -363,7 +357,8 @@ async function startBoot(
     await restoreMods(container);
     console.log("Done!");
   });
-  console.log(GLOBAL_LAUNCH_TRACKER);
+
+  console.log(generateTrackerInfo(GLOBAL_LAUNCH_TRACKER));
   return GLOBAL_LAUNCH_TRACKER;
 }
 

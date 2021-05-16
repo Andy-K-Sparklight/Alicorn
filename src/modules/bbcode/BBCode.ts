@@ -7,10 +7,11 @@ export class StyleComponent extends BaseComponent {
   underline = false;
   italic = false;
   background = "";
-  foreground = "#5d2391";
+  color = "#5d2391";
   del = false;
   font = "";
   text: string;
+  size = "";
   align: "center" | "left" | "right" | "" = "";
 
   constructor(text: string) {
@@ -18,11 +19,20 @@ export class StyleComponent extends BaseComponent {
     this.text = text;
   }
 
+  make(text: string): StyleComponent {
+    this.text = text;
+    return this;
+  }
+
   toBBCode(): string {
     const tmpArr = [this.text];
     if (this.del) {
       tmpArr.push("[/s]");
       tmpArr.unshift("[s]");
+    }
+    if (this.size) {
+      tmpArr.push("[/size]");
+      tmpArr.unshift(`[size=${this.size}]`);
     }
     if (this.font) {
       tmpArr.push("[/font]");
@@ -40,9 +50,9 @@ export class StyleComponent extends BaseComponent {
       tmpArr.push("[/u]");
       tmpArr.unshift("[u]");
     }
-    if (this.foreground) {
+    if (this.color) {
       tmpArr.push("[/color]");
-      tmpArr.unshift(`[color=${this.foreground}]`);
+      tmpArr.unshift(`[color=${this.color}]`);
     }
     if (this.background) {
       tmpArr.push("[/backcolor]");
@@ -78,5 +88,83 @@ export class CodeComponent extends StyleComponent {
   constructor(code: string) {
     super(code);
     this.font = "Courier New";
+  }
+}
+
+export class Spoiler extends BaseComponent {
+  child = "";
+
+  constructor(content: string) {
+    super();
+    this.child = content;
+  }
+
+  toBBCode(): string {
+    return `[spoiler]${this.child}[/spoiler]`;
+  }
+}
+
+export class Page extends BaseComponent {
+  toBBCode(): string {
+    return "[page]";
+  }
+}
+
+export class Index extends BaseComponent {
+  entries: Map<string | number, string> = new Map();
+
+  constructor() {
+    super();
+  }
+
+  addEntry(id: string | number, name: string): void {
+    this.entries.set(id, name);
+  }
+
+  toBBCode(): string {
+    const a = [];
+    for (const [i, n] of this.entries.entries()) {
+      a.push(`[#${i}]${n}`);
+    }
+    a.unshift("[index]");
+    a.push("[/index]");
+    return a.join("");
+  }
+}
+
+export class Line extends BaseComponent {
+  toBBCode(): string {
+    return "[img]static/image/hrline/3.gif[/img]";
+  }
+}
+
+export class ComponentsGroup {
+  builtStrings: string[] = [];
+
+  db(c: BaseComponent): void {
+    this.builtStrings.push(c.toBBCode());
+  }
+
+  dbRaw(s: string): void {
+    this.builtStrings.push(s);
+  }
+
+  out(conj = ""): string {
+    return this.builtStrings.join(conj);
+  }
+}
+
+export class Box extends BaseComponent {
+  content = "";
+  width = "80%";
+  background = "#ffe0f0";
+
+  constructor(content: string) {
+    super();
+    this.content = content;
+  }
+
+  toBBCode(): string {
+    return `[table=${this.width},${this.background}][tr][td]${this.content}[/td][/tr][/table]`;
   }
 }

@@ -16,6 +16,7 @@ import { App } from "./App";
 import { initVF } from "../modules/container/ValidateRecord";
 import { prepareAJ } from "../modules/auth/AJHelper";
 import { initCommands } from "../modules/command/CommandHandler";
+import { analyzeCrashReport } from "../modules/crhelper/CrashLoader";
 
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
@@ -83,5 +84,13 @@ window.addEventListener("error", (e) => {
   await prepareAJ(); // Authlib Injector
   await loadJDT();
   console.log("Delayed init tasks finished.");
+})();
+
+(async () => {
+  console.log(
+    await analyzeCrashReport(
+      "F:\\.minecraft\\crash-reports\\crash-2021-05-09_12.47.25-client.txt"
+    )
+  );
 })();
 ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
