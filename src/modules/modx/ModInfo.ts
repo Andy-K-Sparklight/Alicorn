@@ -5,7 +5,7 @@ import { getString } from "../config/ConfigSupport";
 import os from "os";
 import path from "path";
 import { JAR_SUFFIX } from "../launch/NativesLint";
-import { copyFileStream, isFileExist } from "../config/FileUtil";
+import { isFileExist } from "../config/FileUtil";
 import fs from "fs-extra";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { zip } from "compressing";
@@ -25,11 +25,11 @@ const META_INF = "META-INF";
 // This might solve most problem
 
 const MOD_META_SUFFIX = ".modx" + ALICORN_DATA_SUFFIX;
-const MOD_CACHE_SUFFIX = ".modx" + JAR_SUFFIX;
+// const MOD_CACHE_SUFFIX = ".modx" + JAR_SUFFIX;
 const MOD_INFO_ROOT_NAME = "modx";
 const DEFAULT_DIR = getActualDataPath(MOD_INFO_ROOT_NAME);
 let MOD_INFO_DIR: string;
-let MOD_CACHE_DIR: string;
+// let MOD_CACHE_DIR: string;
 let MOD_META_DIR: string;
 
 enum ModMetaHeaders {
@@ -63,13 +63,15 @@ export async function initModInfo(): Promise<void> {
   MOD_INFO_DIR = getString("modx.default-save-path", "${DEFAULT}")
     .replace("${DEFAULT}", DEFAULT_DIR)
     .replace("${USER_HOME}", os.homedir());
-  MOD_CACHE_DIR = path.join(MOD_INFO_DIR, "mods");
+  // MOD_CACHE_DIR = path.join(MOD_INFO_DIR, "mods");
   MOD_META_DIR = path.join(MOD_INFO_DIR, "metas");
   await fs.ensureDir(MOD_META_DIR);
-  await fs.ensureDir(MOD_CACHE_DIR);
+  // await fs.ensureDir(MOD_CACHE_DIR);
 }
 
 // Save that mod file
+// Disabled - not necessary
+/*
 async function saveModFileWithHash(
   hash: string,
   origin: string
@@ -80,7 +82,7 @@ async function saveModFileWithHash(
       path.join(MOD_CACHE_DIR, hash + MOD_CACHE_SUFFIX)
     );
   } catch {}
-}
+}*/
 
 // Extract mod files
 async function extractModFiles(
@@ -139,7 +141,7 @@ export async function loadModInfo(
       loadFabricInfo(await fs.readJSON(tFile), ret);
       await cacheMeta(hash, ModMetaHeaders.FABRIC, tFile);
       await deleteModFiles(modJar, container);
-      await saveModFileWithHash(hash, ret.fileName);
+      // await saveModFileWithHash(hash, ret.fileName);
       return ret;
     } else if (await isFileExist(path.join(fBase, META_INF, MODS_TOML))) {
       ret.loader = ModLoader.FORGE;
@@ -147,7 +149,7 @@ export async function loadModInfo(
       loadTomlInfo(toml.parse((await fs.readFile(tFile)).toString()), ret);
       await cacheMeta(hash, ModMetaHeaders.FORGE_MODERN, tFile);
       await deleteModFiles(modJar, container);
-      await saveModFileWithHash(hash, ret.fileName);
+      // await saveModFileWithHash(hash, ret.fileName);
       return ret;
     } else if (await isFileExist(path.join(fBase, MCMOD_INFO))) {
       ret.loader = ModLoader.FORGE;
@@ -155,7 +157,7 @@ export async function loadModInfo(
       loadMCMODInfo(await fs.readJSON(tFile), ret);
       await cacheMeta(hash, ModMetaHeaders.FORGE_LEGACY, tFile);
       await deleteModFiles(modJar, container);
-      await saveModFileWithHash(hash, ret.fileName);
+      // await saveModFileWithHash(hash, ret.fileName);
       return ret;
     } else {
       // Bad loader
