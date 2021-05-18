@@ -30,10 +30,11 @@ export default {
   "Operating.FailedInfo":
     "进行操作时遇到问题，请重试，如果问题依然存在，请向我们反馈。",
   "Operating.FailedSayings": [
-    "毁灭是重生的开始。",
     "为什么会变成这样呢？",
     "我想到了无序可能会背叛我们，但没想到这一天这么快就来了……",
-    "对不起。谢谢你。",
+    "幸亏我们在出现重大事故前阻止了操作。",
+    "就差了那么一点点……",
+    "别慌，只是一点小麻烦。",
   ],
   "Operating.PleaseWaitDetail": "正在进行操作……这可能需要几分钟。",
   "CoreInfo.Introduction.Minecraft": "享受原汁原味的原版 Minecraft",
