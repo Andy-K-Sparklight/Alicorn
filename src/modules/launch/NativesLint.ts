@@ -37,7 +37,6 @@ export async function checkExtractTrimNativeLocal(
     }
     try {
       await zip.uncompress(srcFile, dest);
-      // eslint-disable-next-line no-empty
     } catch {}
     const filesToTrim = await fs.readdir(dest);
     for (const f of filesToTrim) {
