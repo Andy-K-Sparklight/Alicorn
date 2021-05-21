@@ -63,6 +63,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0",
+    "safe-eval": "^0.4.1",
     "semver": "^7.3.5",
     "sha": "^3.0.0",
     "toml": "^3.0.0"

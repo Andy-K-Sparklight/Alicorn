@@ -7,6 +7,7 @@
   "download.concurrent.timeout": 5000,
   "download.concurrent.tries-per-chunk": 3,
   "download.concurrent.max-tasks": 30,
+  "download.no-validate": false,
   "modx.default-save-path": "${DEFAULT}",
   "modx.ignore-non-standard-mods": true,
   "modx.global-dynamic-load-mods": true

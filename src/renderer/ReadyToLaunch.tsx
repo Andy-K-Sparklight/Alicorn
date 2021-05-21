@@ -74,6 +74,11 @@ import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { LaunchTracker } from "../modules/launch/Tracker";
 import { schedulePromiseTask } from "./Schedule";
 import { generateTrackerInfo } from "../modules/crhelper/TrackerGenerator";
+import {
+  getWrapperStatus,
+  WrapperStatus,
+} from "../modules/download/DownloadWrapper";
+import { getNumber } from "../modules/config/ConfigSupport";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -155,6 +160,7 @@ function Launching(props: {
   const [selectedAccount, setSelectedAccount] = useState<Account>();
   const [selecting, setSelecting] = useState<boolean>(false);
   const [allAccounts, setAccounts] = useState<Set<Account>>(new Set<Account>());
+  const [wrapperStatus, setWrapperStatus] = useState<WrapperStatus>();
   useEffect(() => {
     const timer = setInterval(() => {
       setHint(randsl("ReadyToLaunch.WaitingText"));
@@ -179,6 +185,14 @@ function Launching(props: {
       }
     })();
   }, []);
+  useEffect(() => {
+    const tm = setInterval(() => {
+      setWrapperStatus(getWrapperStatus);
+    }, 1000);
+    return () => {
+      clearInterval(tm);
+    };
+  });
   const LAUNCH_STEPS = [
     "Pending",
     "PerformingAuth",
@@ -252,6 +266,17 @@ function Launching(props: {
         <LinearProgress color={"secondary"} />
       )}
       {/* Insert Here */}
+      {status === LaunchingStatus.PENDING ||
+      status === LaunchingStatus.FINISHED ? (
+        ""
+      ) : (
+        <Typography className={classes.text} gutterBottom>
+          {`${tr("ReadyToLaunch.InStack")}${wrapperStatus?.inStack}/${getNumber(
+            "download.concurrent.max-tasks"
+          )} ${tr("ReadyToLaunch.Pending")}${wrapperStatus?.pending}`}
+        </Typography>
+      )}
+
       <Typography className={classes.text} gutterBottom>
         {hint}
       </Typography>

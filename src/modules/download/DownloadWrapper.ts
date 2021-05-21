@@ -2,7 +2,7 @@ import { DownloadMeta, DownloadStatus } from "./AbstractDownloader";
 import { Concurrent } from "./Concurrent";
 import { Serial } from "./Serial";
 import { applyMirror } from "./Mirror";
-import { getNumber } from "../config/ConfigSupport";
+import { getBoolean, getNumber } from "../config/ConfigSupport";
 import EventEmitter from "events";
 import { getModifiedDate, isFileExist } from "../config/FileUtil";
 import { validate } from "./Validate";
@@ -135,10 +135,24 @@ async function existsAndValidate(meta: DownloadMeta): Promise<boolean> {
     return true;
   }
   const res = await validate(meta.savePath, meta.sha1);
-  if (res) {
-    updateRecord(meta.savePath);
-  } else {
-    deleteRecord(meta.savePath);
+  if (!getBoolean("download.no-validate")) {
+    if (res) {
+      updateRecord(meta.savePath);
+    } else {
+      deleteRecord(meta.savePath);
+    }
   }
   return res;
+}
+
+export interface WrapperStatus {
+  inStack: number;
+  pending: number;
+}
+
+export function getWrapperStatus(): WrapperStatus {
+  return {
+    inStack: RUNNING_TASKS.size,
+    pending: PENDING_TASKS.length,
+  };
 }

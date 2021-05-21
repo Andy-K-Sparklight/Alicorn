@@ -1,6 +1,8 @@
 import { getCurrentLocale } from "../../renderer/Translator";
 import { CMC_CRASH_LOADER } from "./CutieMCCrashLoader";
 import fs from "fs-extra";
+import got from "got";
+import { safeEval } from "./SafeEvalNatives";
 
 export interface CrashLoader {
   rules: Record<string, CrashLoaderRule>;
@@ -74,7 +76,7 @@ export class CrashReportCursor {
         continue;
       }
       try {
-        const func = eval(scr) as (
+        const func = safeEval(scr) as (
           cursor: CrashReportCursor,
           locale: string
         ) => CrashLoaderReport;
@@ -113,4 +115,30 @@ export async function analyzeCrashReport(
   } catch {
     return new Map<number, { origin: string; report: CrashLoaderReport[] }>();
   }
+}
+
+async function getOnlineCrashLoader(
+  url: string
+): Promise<CrashLoader | undefined> {
+  try {
+    const r = (await got.get(url, { responseType: "text" })).body;
+    const obj = safeEval(r);
+    if (obj) {
+      return obj as CrashLoader;
+    }
+    return undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export async function onlineAnalyzeCrashReport(
+  fPath: string,
+  url: string
+): Promise<Map<number, { origin: string; report: CrashLoaderReport[] }>> {
+  const d = await getOnlineCrashLoader(url);
+  if (!d) {
+    return new Map<number, { origin: string; report: CrashLoaderReport[] }>();
+  }
+  return analyzeCrashReport(fPath, d);
 }

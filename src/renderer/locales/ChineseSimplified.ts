@@ -55,6 +55,8 @@ export default {
   "CoreDetail.ReleaseType.Modified": "已修改",
   "ReadyToLaunch.Go": "出发吧！",
   "ReadyToLaunch.Hint": "启动该核心：",
+  "ReadyToLaunch.InStack": "缓冲区（正在操作）：",
+  "ReadyToLaunch.Pending": "队列剩余：",
   "ReadyToLaunch.StartAuthTitle": "确保那是你",
   "ReadyToLaunch.StartAuthMsg": "选择一个方式验证您的身份",
   "ReadyToLaunch.UseMZ": "Microsoft 帐户",
@@ -201,6 +203,7 @@ export default {
     "性能警示 - Minecraft 在 Client Java VM 上可能无法发挥出最好性能。",
   "JavaSelector.WarnNonFree":
     "许可警示 - 这不是自由软件！Alicorn 建议您使用自由的 OpenJDK 运行时代替该非自由的运行时。",
+  "Options.AutoSave": "您的修改会自动保存。",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
   "Options.updator.use-update.title": "自动更新",
@@ -219,6 +222,9 @@ export default {
   "Options.download.concurrent.tries-per-chunk.desc":
     "在放弃某个文件的下载前最多的重试次数 - 说真的，调高了真没有什么用，就是多浪费一些时间",
   "Options.download.concurrent.max-tasks.title": "并发下载任务数",
+  "Options.download.no-validate.title": "不进行文件校验",
+  "Options.download.no-validate.desc":
+    "信任下载的文件，不检查其是否完整或有效 - 这可以提升速度，但会降低安全性",
   "Options.download.concurrent.max-tasks.desc":
     "允许下载器同时进行的最多下载任务数，请不要在调高本项的同时调低分段大小 - 如果你不想闻到处理器的香味和经历 GPU 送 CPU 的痛苦",
   "Options.modx.global-dynamic-load-mods.title": "Mod 动态加载",

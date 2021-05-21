@@ -18,8 +18,6 @@ import {
 import { tr } from "./Translator";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 
-// UNCHECKED
-
 enum ConfigType {
   BOOL,
   NUM,
@@ -32,12 +30,19 @@ export function OptionsPage(): JSX.Element {
       root: {
         marginLeft: theme.spacing(4),
       },
+      text: {
+        fontSize: "small",
+        color: theme.palette.secondary.main,
+      },
     })
   )();
 
   return (
     <Box className={classes.root}>
       <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+        <Typography className={classes.text}>
+          {tr("Options.AutoSave")}
+        </Typography>
         <InputItem type={ConfigType.BOOL} bindConfig={"updator.use-update"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"updator.dev"} />
         <InputItem
@@ -56,6 +61,7 @@ export function OptionsPage(): JSX.Element {
           type={ConfigType.NUM}
           bindConfig={"download.concurrent.timeout"}
         />
+        <InputItem type={ConfigType.BOOL} bindConfig={"download.no-validate"} />
         <InputItem
           type={ConfigType.NUM}
           bindConfig={"download.concurrent.tries-per-chunk"}
