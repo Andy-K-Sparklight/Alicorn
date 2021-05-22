@@ -114,12 +114,8 @@ export class GameProfile {
 export async function copyProfile(input: GameProfile): Promise<GameProfile> {
   return await schedulePromiseTask(async () => {
     const gp = new GameProfile({});
-    gp.libraries = input.libraries.map((l) => {
-      return l.clone();
-    });
-    gp.jvmArgs = input.jvmArgs.map((a) => {
-      return a.clone();
-    });
+    gp.libraries = input.libraries.concat();
+    gp.jvmArgs = input.jvmArgs.concat();
     gp.id = input.id;
     gp.type = input.type;
     gp.logArg = input.logArg;

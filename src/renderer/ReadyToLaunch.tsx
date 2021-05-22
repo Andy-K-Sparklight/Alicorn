@@ -73,12 +73,13 @@ import { toReadableType } from "./YggdrasilAccountManager";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { LaunchTracker } from "../modules/launch/Tracker";
 import { schedulePromiseTask } from "./Schedule";
-import { generateTrackerInfo } from "../modules/crhelper/TrackerGenerator";
 import {
   getWrapperStatus,
   WrapperStatus,
 } from "../modules/download/DownloadWrapper";
 import { getNumber } from "../modules/config/ConfigSupport";
+import { scanReports } from "../modules/crhelper/CrashReportFinder";
+import { findNotIn } from "../modules/commons/Collections";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -317,6 +318,16 @@ function Launching(props: {
   );
 }
 
+interface MCFailureInfo {
+  crashReport?: string;
+  tracker: LaunchTracker;
+  profile: GameProfile;
+  container: MinecraftContainer;
+}
+
+// Start to boot a Minecraft instance
+// When Minecraft quit, this function will post an event 'mcFailure'
+// In its detail contains crash report (if found)
 async function startBoot(
   setStatus: (status: LaunchingStatus) => void,
   profile: GameProfile,
@@ -326,7 +337,11 @@ async function startBoot(
 ): Promise<LaunchTracker> {
   const GLOBAL_LAUNCH_TRACKER = new LaunchTracker();
   const jRunnable = await getJavaRunnable(getLastUsedJavaHome());
-
+  const FAILURE_INFO: MCFailureInfo = {
+    container: container,
+    tracker: GLOBAL_LAUNCH_TRACKER,
+    profile: profile,
+  };
   setStatus(LaunchingStatus.ACCOUNT_AUTHING);
   if (account.type === AccountType.MICROSOFT) {
     await account.performAuth("");
@@ -355,6 +370,7 @@ async function startBoot(
     await prepareModsCheckFor(profile, container, GLOBAL_LAUNCH_TRACKER);
   }
   setStatus(LaunchingStatus.ARGS_GENERATING);
+  const originCrashLogs = await scanReports(container);
   const jInfo = parseJavaInfo(
     parseJavaInfoRaw(await getJavaInfoRaw(getLastUsedJavaHome()))
   );
@@ -363,6 +379,34 @@ async function startBoot(
     version: jInfo.rootVersion,
   });
   const em = new EventEmitter();
+  em.on(PROCESS_LOG_GATE, (d) => {
+    console.log(d);
+  });
+  em.on(PROCESS_END_GATE, async (c) => {
+    console.log(`Minecraft(${runID}) exited with exit code ${c}.`);
+    setStatus(LaunchingStatus.PENDING);
+    if (c !== "0" && c !== "SIGINT") {
+      console.log(
+        `Attention! Minecraft(${runID}) might not have run properly!`
+      );
+      console.log("Gathering information...");
+      const finalCrashLogs = await scanReports(container);
+      const logFile = findNotIn(finalCrashLogs, originCrashLogs);
+      logFile.sort();
+      FAILURE_INFO.crashReport = logFile[logFile.length - 1];
+      // Get the last one, undefined if not exists
+      console.log("Reporting...");
+      window.dispatchEvent(
+        new CustomEvent("mcFailure", {
+          detail: FAILURE_INFO,
+        })
+      );
+      console.log("Crash report committed, continue tasks.");
+    }
+    console.log("Restoring mods...");
+    await restoreMods(container);
+    console.log("Done!");
+  });
   const runID = launchProfile(profile, container, jRunnable, acData, em, {
     useAj: useAj,
     ajHost: ajHost,
@@ -372,18 +416,6 @@ async function startBoot(
   setID(runID);
   setStatus(LaunchingStatus.FINISHED);
   console.log(`A new Minecraft instance (${runID}) has been launched.`);
-  em.on(PROCESS_LOG_GATE, (d) => {
-    console.log(d);
-  });
-  em.on(PROCESS_END_GATE, async (c) => {
-    console.log(`Minecraft(${runID}) exited with exit code ${c}.`);
-    setStatus(LaunchingStatus.PENDING);
-    console.log("Restoring mods...");
-    await restoreMods(container);
-    console.log("Done!");
-  });
-
-  console.log(generateTrackerInfo(GLOBAL_LAUNCH_TRACKER));
   return GLOBAL_LAUNCH_TRACKER;
 }
 

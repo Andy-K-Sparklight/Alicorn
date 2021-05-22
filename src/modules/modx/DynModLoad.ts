@@ -65,11 +65,10 @@ async function moveModsTo(
         mi.loader?.toString() !== type.toString() ||
         !canModVersionApply(mi.mcversion || "", mcVersion)
       ) {
-        console.log("We need to operate " + mi.fileName);
         toProcess.push(mi);
       } else {
         tFile.operateRecord.push({
-          file: mi.fileName || "",
+          file: `${mi.displayName}(${mi.fileName})` || "",
           operation: "SKIPPED",
         });
       }
@@ -79,40 +78,33 @@ async function moveModsTo(
     await Promise.all(
       toProcess.map((m) => {
         const mf = m.fileName;
+        const mi = Object.assign({}, m);
         return new Promise<void>((resolve) => {
           if (mf !== undefined) {
-            console.log("Processing " + mf);
             const pt = path.resolve(mf);
             fs.copyFile(
               pt,
               container.getDynamicModJar(path.basename(mf)),
               (e) => {
-                console.log("Copy callback " + pt);
                 if (!e) {
                   fs.remove(pt, (e) => {
-                    console.log("Del callback " + pt);
                     if (e) {
-                      console.log("Error processing " + mf);
-                      console.log(e);
                       tFile.resolved--;
                       tFile.operateRecord.push({
-                        file: mf || "",
+                        file: `${mi.displayName}(${mi.fileName})` || "",
                         operation: "FAILED",
                       });
                     } else {
-                      console.log("Operated " + mf);
                       tFile.operateRecord.push({
-                        file: mf || "",
+                        file: `${mi.displayName}(${mi.fileName})` || "",
                         operation: "OPERATED",
                       });
                     }
                     resolve();
                   });
                 } else {
-                  console.log("Error processing " + mf);
-                  console.log(e);
                   tFile.operateRecord.push({
-                    file: mf || "",
+                    file: `${mi.displayName}(${mi.fileName})` || "",
                     operation: "FAILED",
                   });
                   tFile.resolved--;
@@ -159,7 +151,8 @@ export async function prepareModsCheckFor(
   container: MinecraftContainer,
   tracker?: LaunchTracker
 ): Promise<void> {
-  if (!getBoolean("modx.global-dynamic-load-mods")) {
+  if (!getBoolean("modx.global-dynamic-load-mods") && tracker) {
+    await scanModsList(container, tracker);
     return;
   }
   const tFile: FileOperateReport = { total: 0, resolved: 0, operateRecord: [] };
@@ -174,4 +167,20 @@ export async function prepareModsCheckFor(
     );
     tracker?.mods(tFile);
   } catch {}
+}
+
+export async function scanModsList(
+  container: MinecraftContainer,
+  tracker: LaunchTracker
+): Promise<void> {
+  const tFile: FileOperateReport = { total: 0, resolved: 0, operateRecord: [] };
+  try {
+    const fDir = await fs.readdir(container.getModsRoot());
+    fDir.map((m) => {
+      tFile.operateRecord.push({ operation: "SKIPPED", file: m });
+    });
+  } catch {
+  } finally {
+    tracker.mods(tFile);
+  }
 }

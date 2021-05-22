@@ -12,7 +12,6 @@ import { scanCoresInAllMountedContainers } from "../modules/container/ContainerS
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { whatProfile } from "../modules/profile/WhatProfile";
 import { tr } from "./Translator";
-import objectHash from "object-hash";
 import { FlightTakeoff, Info, Sync } from "@material-ui/icons";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 import { useCardStyles, usePadStyles } from "./Stylex";
@@ -58,6 +57,7 @@ function CoresDisplay(): JSX.Element {
       cachedAllCores = [];
       coresCacheBit = true;
       (async () => {
+        let counter = 0;
         const rMap = await scanCoresInAllMountedContainers(true);
         for (const [c, ids] of rMap.entries()) {
           for (const id of ids) {
@@ -80,6 +80,14 @@ function CoresDisplay(): JSX.Element {
                 baseVersion: "???????",
                 container: c.id,
               });
+            } finally {
+              counter++;
+              if (counter >= 5) {
+                counter = 0;
+                if (mountedBit.current) {
+                  setCores(cachedAllCores);
+                }
+              }
             }
           }
         }
@@ -89,7 +97,7 @@ function CoresDisplay(): JSX.Element {
         }
       })();
     }
-  });
+  }, [coresCacheBit]);
 
   return (
     <Box>
@@ -116,10 +124,9 @@ function CoresDisplay(): JSX.Element {
           isLoading ? {} : { display: "none" }
         )}
       />
-      {}
       <br />
       {cores.map((c) => {
-        return <SingleCoreDisplay key={objectHash(c)} profile={c} />;
+        return <SingleCoreDisplay key={c.location} profile={c} />;
       })}
     </Box>
   );
@@ -189,7 +196,11 @@ function SingleCoreDisplay(props: {
             color={"textSecondary"}
             gutterBottom
           >
-            {props.profile.id}
+            {props.profile.id +
+              " " +
+              tr("CoreInfo.At") +
+              " " +
+              props.profile.container}
           </Typography>
           {props.profile.corrupted ? (
             <CorruptedCoreWarning />

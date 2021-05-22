@@ -37,6 +37,7 @@ export function generateTrackerInfo(tracker: LaunchTracker): string {
   commonText.color = TWILIGHT_COLOR;
   commonText.align = "center";
   commonText.font = TITLE_FONT;
+  commonText.bold = true;
   commonText.size = "14px";
 
   const box = new Box(
@@ -44,6 +45,7 @@ export function generateTrackerInfo(tracker: LaunchTracker): string {
       .make("本部分记录了启动器在启动过程中对游戏文件夹进行的操作。")
       .toBBCode()
   );
+  commonText.bold = false;
   const a = new StyleComponent(box.toBBCode());
   a.align = "center";
   trackerPage.db(a);
@@ -54,6 +56,33 @@ export function generateTrackerInfo(tracker: LaunchTracker): string {
   trackerPage.db(title.make("JRE 运行环境"));
   trackerPage.db(commonText.make("Java " + tracker.java().version));
   trackerPage.db(commonText.make(tracker.java().runtime));
+
+  // Mods
+  if (tracker.mods().total > 0) {
+    trackerPage.dbRaw(BR);
+    trackerPage.db(title.make("Mods 模组动态加载"));
+    const mods = new ComponentsGroup();
+    const CODE_COMPONENT = new StyleComponent("");
+    CODE_COMPONENT.color = TWILIGHT_COLOR;
+    CODE_COMPONENT.size = "2";
+    for (const a of tracker.mods().operateRecord) {
+      CODE_COMPONENT.del = a.operation === "OPERATED";
+      CODE_COMPONENT.color =
+        a.operation !== "OPERATED" ? TWILIGHT_COLOR : "Gray";
+      if (a.file) {
+        mods.dbRaw(
+          CODE_COMPONENT.make(a.file).toBBCode() +
+            " " +
+            (a.operation === "SKIPPED"
+              ? RESERVED
+              : a.operation === "FAILED"
+              ? ERR
+              : MOVED)
+        );
+      }
+    }
+    trackerPage.db(new Spoiler(mods.out("\n")));
+  }
 
   // Libraries
 
@@ -96,33 +125,6 @@ export function generateTrackerInfo(tracker: LaunchTracker): string {
       )
     );
     trackerPage.dbRaw(BR);
-  }
-
-  // Mods
-  if (tracker.mods().total > 0) {
-    trackerPage.dbRaw(BR);
-    trackerPage.db(title.make("Mods 模组动态加载"));
-    const libraries = new ComponentsGroup();
-    const CODE_COMPONENT = new StyleComponent("");
-    CODE_COMPONENT.color = TWILIGHT_COLOR;
-    CODE_COMPONENT.size = "2";
-    for (const a of tracker.mods().operateRecord) {
-      CODE_COMPONENT.del = a.operation === "OPERATED";
-      CODE_COMPONENT.color =
-        a.operation !== "OPERATED" ? TWILIGHT_COLOR : "Gray";
-      if (a.file) {
-        libraries.dbRaw(
-          CODE_COMPONENT.make(a.file).toBBCode() +
-            " " +
-            (a.operation === "SKIPPED"
-              ? RESERVED
-              : a.operation === "FAILED"
-              ? ERR
-              : MOVED)
-        );
-      }
-    }
-    trackerPage.db(new Spoiler(libraries.out("\n")));
   }
   return trackerPage.out();
 }

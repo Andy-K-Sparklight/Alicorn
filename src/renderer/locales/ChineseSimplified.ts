@@ -45,6 +45,7 @@ export default {
   "CoreInfo.Reload": "重新加载",
   "CoreInfo.Detail": "加载详细信息",
   "CoreInfo.Launch": "启动",
+  "CoreInfo.At": "在",
   "CoreDetail.At": "位于",
   "CoreDetail.MainClass": "启动挂载点",
   "CoreDetail.ReleaseTime": "发行于",

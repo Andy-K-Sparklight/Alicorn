@@ -82,3 +82,13 @@ export class Trio<T1, T2, T3> {
     return [this.v1, this.v2, this.v3];
   }
 }
+
+export function findNotIn<T>(target: T[], base: T[]): T[] {
+  const r = [];
+  for (const x of target) {
+    if (!base.includes(x)) {
+      r.unshift(x);
+    }
+  }
+  return r;
+}

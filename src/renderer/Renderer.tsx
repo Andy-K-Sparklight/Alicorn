@@ -16,6 +16,7 @@ import { App } from "./App";
 import { initVF } from "../modules/container/ValidateRecord";
 import { prepareAJ } from "../modules/auth/AJHelper";
 import { initCommands } from "../modules/command/CommandHandler";
+import pkg from "../../package.json";
 
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
@@ -58,6 +59,17 @@ function RendererBootstrap(): JSX.Element {
     </Box>
   );
 }
+
+console.log(`Alicorn ${pkg.version} Renderer Process`);
+console.log("❤ From Andy K Rarity Sparklight");
+console.log("Sparklight is a girl - a filly, to be accurate.");
+console.log("Alicorn Launcher Copyright (C) 2021 Andy K Rarity Sparklight");
+console.log(
+  "This program comes with ABSOLUTELY NO WARRANTY; for details, please see 'resources/app/LICENSE'."
+);
+console.log(
+  "This is free software, and you are welcome to redistribute it under certain conditions; see the license file for details."
+);
 
 initTranslator();
 window.addEventListener("unhandledrejection", (e) => {
