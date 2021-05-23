@@ -241,6 +241,9 @@ export default {
   "Options.modx.ignore-non-standard-mods.title": "忽略无法读取的 Mod",
   "Options.modx.ignore-non-standard-mods.desc":
     "动态加载 Mod 时遇到无法读取的 Mod 信息时，是否将其保留在 Mod 文件夹中 - 如果您使用 LiteLoader，请开启它",
+  "Options.cmc.disable-log4j-config.title": "不使用 Log4j 配置文件",
+  "Options.cmc.disable-log4j-config.desc":
+    "不使用 Mojang 提供的 Log4j 配置文件以在启动疑难解答中获得更清晰的日志 - 副作用是输出到文件的日志会很混乱",
   "CrashReportDisplay.BaseInfo": "基本信息",
   "CrashReportDisplay.BaseInfo.ID": "ID",
   "CrashReportDisplay.BaseInfo.BaseVersion": "Mojang 版本",
@@ -266,4 +269,5 @@ export default {
   "CrashReportDisplay.Analyze.Suggestions": "以下是可用的建议",
   "CrashReportDisplay.Analyze.NoSuggestions": "没有可用的建议",
   "CrashReportDisplay.BBCode": "发布到 MCBBS 求助",
+  "CrashReportDisplay.Logs": "日志",
 };

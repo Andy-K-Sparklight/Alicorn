@@ -68,7 +68,7 @@ async function moveModsTo(
         toProcess.push(mi);
       } else {
         tFile.operateRecord.push({
-          file: `${mi.displayName}(${mi.fileName})` || "",
+          file: `${mi.displayName} (${mi.fileName})` || "",
           operation: "SKIPPED",
         });
       }
@@ -91,12 +91,12 @@ async function moveModsTo(
                     if (e) {
                       tFile.resolved--;
                       tFile.operateRecord.push({
-                        file: `${mi.displayName}(${mi.fileName})` || "",
+                        file: `${mi.displayName} (${mi.fileName})` || "",
                         operation: "FAILED",
                       });
                     } else {
                       tFile.operateRecord.push({
-                        file: `${mi.displayName}(${mi.fileName})` || "",
+                        file: `${mi.displayName} (${mi.fileName})` || "",
                         operation: "OPERATED",
                       });
                     }
@@ -104,7 +104,7 @@ async function moveModsTo(
                   });
                 } else {
                   tFile.operateRecord.push({
-                    file: `${mi.displayName}(${mi.fileName})` || "",
+                    file: `${mi.displayName} (${mi.fileName})` || "",
                     operation: "FAILED",
                   });
                   tFile.resolved--;

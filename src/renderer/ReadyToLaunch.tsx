@@ -109,6 +109,7 @@ const useStyles = makeStyles((theme) =>
 const LAST_USED_USER_NAME_KEY = "ReadyToLaunch.LastUsedUsername";
 export const LAST_LAUNCH_REPORT_KEY = "ReadyToLaunch.LastLaunchReport";
 export const LAST_FAILURE_INFO_KEY = "ReadyToLaunch.LastFailureInfo";
+export const LAST_LOGS_KEY = "ReadyToLaunch.LastLogs";
 export function ReadyToLaunch(): JSX.Element {
   const [coreProfile, setProfile] = useState(new GameProfile({}));
   const [profileLoadedBit, setLoaded] = useState(0);
@@ -371,6 +372,9 @@ async function startBoot(
   window[LAST_FAILURE_INFO_KEY] = undefined;
   // @ts-ignore
   window[LAST_LAUNCH_REPORT_KEY] = undefined;
+  // @ts-ignore
+  window[LAST_LOGS_KEY] = [];
+
   const GLOBAL_LAUNCH_TRACKER = new LaunchTracker();
   const jRunnable = await getJavaRunnable(getLastUsedJavaHome());
   const FAILURE_INFO: MCFailureInfo = {
@@ -416,6 +420,8 @@ async function startBoot(
   });
   const em = new EventEmitter();
   em.on(PROCESS_LOG_GATE, (d) => {
+    // @ts-ignore
+    window[LAST_LOGS_KEY].push(d);
     console.log(d);
   });
   em.on(PROCESS_END_GATE, async (c) => {

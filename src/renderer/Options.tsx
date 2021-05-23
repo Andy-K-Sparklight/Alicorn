@@ -70,6 +70,10 @@ export function OptionsPage(): JSX.Element {
           type={ConfigType.NUM}
           bindConfig={"download.concurrent.max-tasks"}
         />
+        <InputItem
+          type={ConfigType.BOOL}
+          bindConfig={"cmc.disable-log4j-config"}
+        />
       </MuiThemeProvider>
     </Box>
   );

@@ -10,6 +10,7 @@ import {
   MOJANG_USER_TYPE,
 } from "../commons/Constants";
 import { isNull } from "../commons/Null";
+import { getBoolean } from "../config/ConfigSupport";
 
 // Generate game arguments
 export function generateGameArgs(
@@ -87,7 +88,7 @@ export function generateVMArgs(
   const logArgs: string[] = [];
 
   const tArg = profile.logArg.trim();
-  if (!isNull(tArg)) {
+  if (!isNull(tArg) && !getBoolean("cmc.disable-log4j-config")) {
     logArgs.push(tArg);
   }
 

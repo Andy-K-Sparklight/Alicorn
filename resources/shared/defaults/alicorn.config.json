@@ -10,5 +10,6 @@
   "download.no-validate": false,
   "modx.default-save-path": "${DEFAULT}",
   "modx.ignore-non-standard-mods": true,
-  "modx.global-dynamic-load-mods": true
+  "modx.global-dynamic-load-mods": true,
+  "cmc.disable-log4j-config": true
 }

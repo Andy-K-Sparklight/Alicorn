@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   LAST_FAILURE_INFO_KEY,
   LAST_LAUNCH_REPORT_KEY,
+  LAST_LOGS_KEY,
   MCFailureInfo,
 } from "./ReadyToLaunch";
 import { LaunchTracker } from "../modules/launch/Tracker";
@@ -15,11 +16,9 @@ import {
   ListItem,
   ListItemText,
   makeStyles,
-  Paper,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableRow,
   Typography,
 } from "@material-ui/core";
@@ -52,6 +51,8 @@ export function CrashReportDisplay(): JSX.Element {
   const failureInfo = window[LAST_FAILURE_INFO_KEY] as MCFailureInfo;
   // @ts-ignore
   const launchTracker = window[LAST_LAUNCH_REPORT_KEY] as LaunchTracker;
+  // @ts-ignore
+  const logs = window[LAST_LOGS_KEY] as string[];
   const [report, setReport] = useState<CrashReportMap>();
   const mounted = useRef<boolean>(false);
   useEffect(() => {
@@ -75,10 +76,31 @@ export function CrashReportDisplay(): JSX.Element {
   }, []);
   return (
     <Box>
-      <BaseInfoDisplay info={failureInfo} />
-      <ModList tracker={launchTracker} />
-      <LaunchTrackCount tracker={launchTracker} />
+      {
+        // @ts-ignore
+        window[LAST_FAILURE_INFO_KEY] === undefined ? (
+          ""
+        ) : (
+          <BaseInfoDisplay info={failureInfo} />
+        )
+      }
+      {
+        // @ts-ignore
+        window[LAST_LAUNCH_REPORT_KEY] === undefined ? (
+          ""
+        ) : (
+          <Box>
+            <ModList tracker={launchTracker} />
+            <LaunchTrackCount tracker={launchTracker} />
+          </Box>
+        )
+      }
+
       {report === undefined ? "" : <Analyze analyze={report} />}
+      {
+        // @ts-ignore
+        window[LAST_LOGS_KEY]?.length > 0 ? "" : <LogsDisplay logs={logs} />
+      }
     </Box>
   );
 }
@@ -91,51 +113,47 @@ function BaseInfoDisplay(props: { info: MCFailureInfo }): JSX.Element {
         <Typography>{tr("CrashReportDisplay.BaseInfo")}</Typography>
       </AccordionSummary>
       <AccordionDetails className={classes.acc1}>
-        <TableContainer className={classes.table} component={Paper}>
-          <Table>
-            <TableBody>
-              <TableRow>
-                <TableCell>{tr("CrashReportDisplay.BaseInfo.ID")}</TableCell>
-                <TableCell>{props.info.profile.id}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>
-                  {tr("CrashReportDisplay.BaseInfo.BaseVersion")}
-                </TableCell>
-                <TableCell>{props.info.profile.baseVersion}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>
-                  {tr("CrashReportDisplay.BaseInfo.Modded")}
-                </TableCell>
-                <TableCell>
-                  {(() => {
-                    const type = whatProfile(props.info.profile.id);
-                    if (type === ProfileType.MOJANG) {
-                      return tr("CrashReportDisplay.BaseInfo.Modded.No");
-                    }
-                    if (type === ProfileType.UNIVERSAL) {
-                      return tr("CrashReportDisplay.BaseInfo.Modded.Unknown");
-                    }
-                    return tr("CrashReportDisplay.BaseInfo.Modded.Yes");
-                  })()}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>
-                  {tr("CrashReportDisplay.BaseInfo.AssetIndex")}
-                </TableCell>
-                <TableCell>{props.info.profile.assetIndex.id}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>{tr("CrashReportDisplay.BaseInfo.Time")}</TableCell>
-                <TableCell>
-                  {props.info.profile.releaseTime.toLocaleString()}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Table className={classes.table}>
+          <TableBody>
+            <TableRow>
+              <TableCell>{tr("CrashReportDisplay.BaseInfo.ID")}</TableCell>
+              <TableCell>{props.info.profile.id}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                {tr("CrashReportDisplay.BaseInfo.BaseVersion")}
+              </TableCell>
+              <TableCell>{props.info.profile.baseVersion}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>{tr("CrashReportDisplay.BaseInfo.Modded")}</TableCell>
+              <TableCell>
+                {(() => {
+                  const type = whatProfile(props.info.profile.id);
+                  if (type === ProfileType.MOJANG) {
+                    return tr("CrashReportDisplay.BaseInfo.Modded.No");
+                  }
+                  if (type === ProfileType.UNIVERSAL) {
+                    return tr("CrashReportDisplay.BaseInfo.Modded.Unknown");
+                  }
+                  return tr("CrashReportDisplay.BaseInfo.Modded.Yes");
+                })()}
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                {tr("CrashReportDisplay.BaseInfo.AssetIndex")}
+              </TableCell>
+              <TableCell>{props.info.profile.assetIndex.id}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>{tr("CrashReportDisplay.BaseInfo.Time")}</TableCell>
+              <TableCell>
+                {props.info.profile.releaseTime.toLocaleString()}
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
       </AccordionDetails>
     </Accordion>
   );
@@ -149,7 +167,7 @@ function LaunchTrackCount(props: { tracker: LaunchTracker }): JSX.Element {
         <Typography>{tr("CrashReportDisplay.LaunchTrackCount")}</Typography>
       </AccordionSummary>
       <AccordionDetails className={classes.acc1}>
-        <TableContainer className={classes.table} component={Paper}>
+        <Table className={classes.table}>
           <TableBody>
             <TableRow>
               <TableCell>{tr("CrashReportDisplay.Libraries")}</TableCell>
@@ -172,7 +190,7 @@ function LaunchTrackCount(props: { tracker: LaunchTracker }): JSX.Element {
               </TableCell>
             </TableRow>
           </TableBody>
-        </TableContainer>
+        </Table>
       </AccordionDetails>
     </Accordion>
   );
@@ -186,7 +204,7 @@ function ModList(props: { tracker: LaunchTracker }): JSX.Element {
         <Typography>{tr("CrashReportDisplay.Mods")}</Typography>
       </AccordionSummary>
       <AccordionDetails className={classes.acc1}>
-        <TableContainer className={classes.table} component={Paper}>
+        <Table className={classes.table}>
           <TableBody>
             {props.tracker.mods().operateRecord.map((o) => {
               return (
@@ -203,7 +221,7 @@ function ModList(props: { tracker: LaunchTracker }): JSX.Element {
               );
             })}
           </TableBody>
-        </TableContainer>
+        </Table>
       </AccordionDetails>
     </Accordion>
   ) : (
@@ -286,6 +304,24 @@ function Analyze(props: { analyze: CrashReportMap }): JSX.Element {
             );
           });
         })()}
+      </AccordionDetails>
+    </Accordion>
+  );
+}
+
+function LogsDisplay(props: { logs: string[] }): JSX.Element {
+  const classes = useAccStyles();
+  return (
+    <Accordion>
+      <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
+        <Typography>{tr("CrashReportDisplay.Logs")}</Typography>
+      </AccordionSummary>
+      <AccordionDetails className={classes.acc1}>
+        <List>
+          {props.logs.map((l) => {
+            return <ListItemText key={l}>{l}</ListItemText>;
+          })}
+        </List>
       </AccordionDetails>
     </Accordion>
   );
