@@ -3,6 +3,7 @@ import { CMC_CRASH_LOADER } from "./CutieMCCrashLoader";
 import fs from "fs-extra";
 import got from "got";
 import { safeEval } from "./SafeEvalNatives";
+import { schedulePromiseTask } from "../../renderer/Schedule";
 
 export interface CrashLoader {
   rules: Record<string, CrashLoaderRule>;
@@ -27,10 +28,8 @@ export interface CrashLoaderReport {
 export class CrashReportCursor {
   lines: string[] = [];
   currentLine = 0;
-  lineMap: Map<
-    number,
-    { origin: string; report: CrashLoaderReport[] }
-  > = new Map();
+  lineMap: Map<number, { origin: string; report: CrashLoaderReport[] }> =
+    new Map();
 
   constructor(content: string) {
     let all = content.split("\n");
@@ -107,10 +106,14 @@ export async function analyzeCrashReport(
   try {
     const f = (await fs.readFile(fPath)).toString();
     const c = new CrashReportCursor(f);
+
     while (c.getLine() !== undefined) {
-      c.executeLine(loader);
+      await schedulePromiseTask(async () => {
+        c.executeLine(loader);
+      });
       c.next();
     }
+
     return c.build();
   } catch {
     return new Map<number, { origin: string; report: CrashLoaderReport[] }>();

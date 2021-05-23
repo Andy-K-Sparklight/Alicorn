@@ -80,6 +80,8 @@ import {
 import { getNumber } from "../modules/config/ConfigSupport";
 import { scanReports } from "../modules/crhelper/CrashReportFinder";
 import { findNotIn } from "../modules/commons/Collections";
+import { YNDialog } from "./OperatingHint";
+import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -106,7 +108,7 @@ const useStyles = makeStyles((theme) =>
 );
 const LAST_USED_USER_NAME_KEY = "ReadyToLaunch.LastUsedUsername";
 export const LAST_LAUNCH_REPORT_KEY = "ReadyToLaunch.LastLaunchReport";
-
+export const LAST_FAILURE_INFO_KEY = "ReadyToLaunch.LastFailureInfo";
 export function ReadyToLaunch(): JSX.Element {
   const [coreProfile, setProfile] = useState(new GameProfile({}));
   const [profileLoadedBit, setLoaded] = useState(0);
@@ -154,6 +156,7 @@ function Launching(props: {
 }): JSX.Element {
   const classes = useStyles();
   const mountedBit = useRef<boolean>(true);
+  const [warning, setWarning] = useState(false);
   const [runID, setID] = useState("");
   const [status, setStatus] = useState(LaunchingStatus.PENDING);
   const [hint, setHint] = useState(randsl("ReadyToLaunch.WaitingText"));
@@ -169,7 +172,7 @@ function Launching(props: {
     return () => {
       clearInterval(timer);
     };
-  });
+  }, []);
   useEffect(() => {
     mountedBit.current = true;
     (async () => {
@@ -194,6 +197,15 @@ function Launching(props: {
       clearInterval(tm);
     };
   });
+  useEffect(() => {
+    const fun = () => {
+      setWarning(true);
+    };
+    window.addEventListener("mcFailure", fun);
+    return () => {
+      window.removeEventListener("mcFailure", fun);
+    };
+  }, []);
   const LAUNCH_STEPS = [
     "Pending",
     "PerformingAuth",
@@ -222,7 +234,8 @@ function Launching(props: {
         onChose={(a) => {
           setSelectedAccount(a);
           (async () => {
-            window.sessionStorage[LAST_LAUNCH_REPORT_KEY] = await startBoot(
+            // @ts-ignore
+            window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
               (st) => {
                 setStatus(st);
                 setActiveStep(REV_LAUNCH_STEPS[st]);
@@ -236,6 +249,24 @@ function Launching(props: {
         }}
         allAccounts={allAccounts}
       />
+      {warning ? (
+        <YNDialog
+          onClose={() => {
+            setWarning(false);
+          }}
+          onAccept={() => {
+            triggerSetPage(Pages.CrashReportDisplay);
+            jumpTo("/CrashReportDisplay");
+          }}
+          title={tr("ReadyToLaunch.WarnError.Title")}
+          content={tr("ReadyToLaunch.WarnError.Description")}
+          yes={tr("ReadyToLaunch.WarnError.Yes")}
+          no={tr("ReadyToLaunch.WarnError.No")}
+        />
+      ) : (
+        ""
+      )}
+
       <Typography className={classes.text} gutterBottom>
         {tr("ReadyToLaunch.Hint") + " " + props.profile.id}
       </Typography>
@@ -296,7 +327,8 @@ function Launching(props: {
           }
           onClick={async () => {
             if (selectedAccount !== undefined) {
-              window.sessionStorage[LAST_LAUNCH_REPORT_KEY] = await startBoot(
+              // @ts-ignore
+              window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
                 (st) => {
                   setStatus(st);
                   setActiveStep(REV_LAUNCH_STEPS[st]);
@@ -318,7 +350,7 @@ function Launching(props: {
   );
 }
 
-interface MCFailureInfo {
+export interface MCFailureInfo {
   crashReport?: string;
   tracker: LaunchTracker;
   profile: GameProfile;
@@ -335,6 +367,10 @@ async function startBoot(
   setID: (id: string) => unknown,
   account: Account
 ): Promise<LaunchTracker> {
+  // @ts-ignore
+  window[LAST_FAILURE_INFO_KEY] = undefined;
+  // @ts-ignore
+  window[LAST_LAUNCH_REPORT_KEY] = undefined;
   const GLOBAL_LAUNCH_TRACKER = new LaunchTracker();
   const jRunnable = await getJavaRunnable(getLastUsedJavaHome());
   const FAILURE_INFO: MCFailureInfo = {
@@ -396,11 +432,9 @@ async function startBoot(
       FAILURE_INFO.crashReport = logFile[logFile.length - 1];
       // Get the last one, undefined if not exists
       console.log("Reporting...");
-      window.dispatchEvent(
-        new CustomEvent("mcFailure", {
-          detail: FAILURE_INFO,
-        })
-      );
+      // @ts-ignore
+      window[LAST_FAILURE_INFO_KEY] = FAILURE_INFO;
+      window.dispatchEvent(new CustomEvent("mcFailure"));
       console.log("Crash report committed, continue tasks.");
     }
     console.log("Restoring mods...");

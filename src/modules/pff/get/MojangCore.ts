@@ -2,13 +2,11 @@ import { MOJANG_VERSIONS_MANIFEST, ReleaseType } from "../../commons/Constants";
 import { safeGet } from "../../commons/Null";
 import { xgot } from "../../download/GotWrapper";
 
-// UNCHECKED
-
 export async function getAllMojangCores(
   filter = ReleaseType.RELEASE
 ): Promise<string[]> {
   try {
-    const mObj = await xgot(MOJANG_VERSIONS_MANIFEST);
+    const mObj = await xgot(MOJANG_VERSIONS_MANIFEST, true);
     const arr = safeGet(mObj, ["versions"], []);
     const all = new Set<string>();
     if (arr instanceof Array) {
@@ -30,7 +28,7 @@ export async function getLatestMojangCore(
   filter = ReleaseType.RELEASE
 ): Promise<string> {
   try {
-    const mObj = await xgot(MOJANG_VERSIONS_MANIFEST);
+    const mObj = await xgot(MOJANG_VERSIONS_MANIFEST, true);
     return String(safeGet(mObj, ["latest", filter], ""));
   } catch {
     return "";
@@ -39,7 +37,7 @@ export async function getLatestMojangCore(
 
 export async function getProfileURLById(id: string): Promise<string> {
   try {
-    const mObj = await xgot(MOJANG_VERSIONS_MANIFEST);
+    const mObj = await xgot(MOJANG_VERSIONS_MANIFEST, true);
     const arr = safeGet(mObj, ["versions"], []);
     if (arr instanceof Array) {
       for (const v of arr) {

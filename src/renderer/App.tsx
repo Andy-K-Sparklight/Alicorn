@@ -41,6 +41,7 @@ import { YggdrasilAccountManager } from "./YggdrasilAccountManager";
 import { JavaSelector } from "./JavaSelector";
 import { OptionsPage } from "./Options";
 import { Terminal } from "./Terminal";
+import { CrashReportDisplay } from "./CrashReportDisplay";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -214,6 +215,7 @@ export function App(): JSX.Element {
         <Route path={"/Terminal"} component={Terminal} />
         <Route path={"/JavaSelector"} component={JavaSelector} />
         <Route path={"/Options"} component={OptionsPage} />
+        <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
       </Box>
       <Snackbar
         open={openNotice}

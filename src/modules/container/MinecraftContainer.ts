@@ -35,6 +35,13 @@ export class MinecraftContainer {
     return path.resolve(path.join(this.tempFileRoot, relativePath));
   }
 
+  getCrashReport(name: string): string {
+    if (path.isAbsolute(name)) {
+      return name;
+    }
+    return path.resolve(path.join(this.getCrashReportsRoot(), name));
+  }
+
   getNativeLibraryExtractedRoot(library: LibraryMeta): string {
     const nativeLibraryPath = getNativeArtifact(library).path;
     return path.resolve(
