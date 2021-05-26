@@ -19,5 +19,6 @@ jobs:
       with:
         node-version: 15.x
     - run: yarn
+    - run: yarn build-dll
     - run: yarn build-full-ci
     - run: yarn release-full-ci
