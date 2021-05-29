@@ -10,8 +10,6 @@ import {
   ensureNatives,
 } from "../../launch/Ensurance";
 
-// UNCHECKED
-
 export async function installProfile(
   id: string,
   profile: unknown,

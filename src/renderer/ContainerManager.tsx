@@ -112,12 +112,13 @@ function SingleContainerDisplay(props: {
   isMounted: boolean;
 }): JSX.Element {
   const classes = useCardStyles();
-  const mounted = useRef<boolean>(true);
+  const mounted = useRef<boolean>(false);
   const [deleteAskOpen, setOpen] = useState(false);
   const [clearAskOpen, setClearOpen] = useState(false);
   const [operating, setOperating] = useState(false);
   const [coreCount, setCount] = useState(-1);
   useEffect(() => {
+    mounted.current = true;
     (async () => {
       const cores = (await scanCoresIn(props.container)).length;
       if (mounted.current) {
@@ -206,7 +207,9 @@ function SingleContainerDisplay(props: {
                       await clearContainer(props.container.id);
                       unlinkContainer(props.container.id);
                       setContainerListDirty();
-                      setOperating(false);
+                      if (mounted.current) {
+                        setOperating(false);
+                      }
                     }}
                   >
                     {tr("ContainerManager.Yes")}

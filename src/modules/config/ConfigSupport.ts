@@ -59,8 +59,15 @@ export async function loadConfig(): Promise<void> {
 }
 
 export function saveConfigSync(): void {
-  fs.ensureDirSync(path.dirname(CONFIG_FILE));
-  fs.writeFileSync(CONFIG_FILE, JSON.stringify(cachedConfig, null, 4));
+  try {
+    fs.ensureDirSync(path.dirname(CONFIG_FILE));
+    fs.writeFileSync(CONFIG_FILE, JSON.stringify(cachedConfig, null, 4));
+  } catch {}
+}
+
+export async function saveConfig(): Promise<void> {
+  await fs.ensureDirSync(path.dirname(CONFIG_FILE));
+  await fs.writeFile(CONFIG_FILE, JSON.stringify(cachedConfig, null, 4));
 }
 
 async function saveDefaultConfig() {
@@ -78,7 +85,7 @@ async function saveDefaultConfig() {
   });
 }
 
-export function parseNum(val: any, def = 0): number {
+export function parseNum(val: unknown, def = 0): number {
   if (typeof val === "number") {
     return val;
   }

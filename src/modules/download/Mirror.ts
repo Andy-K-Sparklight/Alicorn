@@ -2,7 +2,12 @@
 // A downloader does not include mirror applying
 // Reflecting has to be done manually
 
-import { loadData, saveDataSync, saveDefaultData } from "../config/DataSupport";
+import {
+  loadData,
+  saveData,
+  saveDataSync,
+  saveDefaultData,
+} from "../config/DataSupport";
 import { buildMap, parseMap } from "../commons/MapUtil";
 
 const MIRROR_FILE = "mirrors.ald";
@@ -17,6 +22,10 @@ export function applyMirror(url: string): string {
 
 export function saveMirrorSync(): void {
   saveDataSync(MIRROR_FILE, buildMap(mirrorMap));
+}
+
+export async function saveMirror(): Promise<void> {
+  await saveData(MIRROR_FILE, buildMap(mirrorMap));
 }
 
 export async function loadMirror(): Promise<void> {

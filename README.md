@@ -4,7 +4,8 @@
 
 要构建 Alicorn，请这样做：
 
-- 在您的计算机上安装 [Node.js](https://nodejs.org)，我们的 Pull Request Pipeline 使用 `14.16.0`，持续集成使用的是最新的稳定版本，各位开发人员使用的版本则分别是：
+- 在您的计算机上安装 [Node.js](https://nodejs.org)，我们的 Bitbucket Pull Request Pipeline 使用 `14.16.0`，Travis CI
+  持续集成使用的是最新的稳定版本，GitHub Actions Node.js CI 则使用 `15.x`，各位开发人员使用的版本则分别是：
 
   - RarityEG：`15.13.0`
 
@@ -13,6 +14,9 @@
 - 克隆本仓库：
 
   ```
+  # GitHub（首选）
+  git clone https://github.com/Andy-K-Sparklight/Alicorn.git
+  # BitBucket（仅当 GitHub 不可用时）
   git clone https://bitbucket.org/RarityEG/alicorn.git
   ```
 

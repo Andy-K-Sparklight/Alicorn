@@ -1,4 +1,4 @@
-import { loadData, saveDataSync } from "../config/DataSupport";
+import { loadData, saveData, saveDataSync } from "../config/DataSupport";
 import { buildMap, parseMap } from "../commons/MapUtil";
 import { ALICORN_DATA_SUFFIX } from "../commons/Constants";
 import { MinecraftContainer } from "./MinecraftContainer";
@@ -75,6 +75,12 @@ export function saveGDTSync(): void {
   syncGDTGMT();
   saveDataSync(GMT_NAME, buildMap(GlobalMountDescriptorTable));
   saveDataSync(GDT_NAME, buildMap(GlobalContainerDescriptorTable));
+}
+
+export async function saveGDT(): Promise<void> {
+  syncGDTGMT();
+  await saveData(GMT_NAME, buildMap(GlobalMountDescriptorTable));
+  await saveData(GDT_NAME, buildMap(GlobalContainerDescriptorTable));
 }
 
 function syncGDTGMT(): void {

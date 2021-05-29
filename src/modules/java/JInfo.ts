@@ -1,12 +1,10 @@
 import path from "path";
 import os from "os";
 import { ALICORN_DATA_SUFFIX, PLACE_HOLDER } from "../commons/Constants";
-import { loadData, saveDataSync } from "../config/DataSupport";
+import { loadData, saveData, saveDataSync } from "../config/DataSupport";
 import { buildMap, parseMap } from "../commons/MapUtil";
 import childProcess from "child_process";
 import { isFileExist } from "../config/FileUtil";
-
-// UNCHECKED
 
 const JAVA_RECORD_BASE = "java.record" + ALICORN_DATA_SUFFIX;
 const LATEST_TAG = "?LATEST>>";
@@ -92,9 +90,15 @@ export function saveJDTSync(): void {
   saveDataSync(JAVA_RECORD_BASE, buildMap(JDT));
 }
 
-export function parseJavaInfoRaw(
-  ji: string
-): { spec: string; runtime: string; vm: string } {
+export async function saveJDT(): Promise<void> {
+  await saveData(JAVA_RECORD_BASE, buildMap(JDT));
+}
+
+export function parseJavaInfoRaw(ji: string): {
+  spec: string;
+  runtime: string;
+  vm: string;
+} {
   const a = ji.split(os.EOL);
   return {
     spec: a[0] || "",

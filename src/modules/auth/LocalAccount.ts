@@ -51,5 +51,3 @@ function fakeToken(): string {
 function buildOfflinePlayerUUID(p: string): string {
   return objectHash(OFFLINE_PLAYER_PREFIX + p);
 }
-
-// TODO load account

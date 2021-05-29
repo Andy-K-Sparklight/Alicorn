@@ -46,3 +46,7 @@ export function deleteRecord(file: string): void {
 export function saveVFSync(): void {
   saveDataSync(VALIDATE_FILE, buildMap(VF));
 }
+
+export async function saveVF(): Promise<void> {
+  await saveData(VALIDATE_FILE, buildMap(VF));
+}

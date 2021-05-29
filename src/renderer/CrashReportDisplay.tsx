@@ -11,6 +11,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
+  Button,
   createStyles,
   List,
   ListItem,
@@ -27,8 +28,12 @@ import { tr } from "./Translator";
 import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
 import {
   analyzeCrashReport,
-  CrashLoaderReport,
+  CrashReportMap,
 } from "../modules/crhelper/CrashLoader";
+import fs from "fs-extra";
+import copy from "copy-to-clipboard";
+import { generateCrashAnalytics } from "../modules/crhelper/CrashAnalyticsGenerator";
+import { submitError } from "./Renderer";
 
 const useAccStyles = makeStyles((theme) =>
   createStyles({
@@ -43,6 +48,10 @@ const useAccStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.primary.light,
       color: theme.palette.primary.main,
     },
+    btn: {
+      color: theme.palette.primary.light,
+      borderColor: theme.palette.primary.light,
+    },
   })
 );
 
@@ -54,6 +63,7 @@ export function CrashReportDisplay(): JSX.Element {
   // @ts-ignore
   const logs = window[LAST_LOGS_KEY] as string[];
   const [report, setReport] = useState<CrashReportMap>();
+  const [oc, setOC] = useState<string>("");
   const mounted = useRef<boolean>(false);
   useEffect(() => {
     mounted.current = true;
@@ -65,9 +75,14 @@ export function CrashReportDisplay(): JSX.Element {
     if (failureInfo.crashReport !== undefined) {
       const f = failureInfo.crashReport;
       (async () => {
-        const r = await analyzeCrashReport(
-          failureInfo.container.getCrashReport(f)
-        );
+        const pt = failureInfo.container.getCrashReport(f);
+        const r = await analyzeCrashReport(pt);
+        try {
+          const dt = (await fs.readFile(pt)).toString();
+          if (mounted.current) {
+            setOC(dt);
+          }
+        } catch {}
         if (mounted.current) {
           setReport(r);
         }
@@ -99,7 +114,17 @@ export function CrashReportDisplay(): JSX.Element {
       {report === undefined ? "" : <Analyze analyze={report} />}
       {
         // @ts-ignore
-        window[LAST_LOGS_KEY]?.length > 0 ? "" : <LogsDisplay logs={logs} />
+        window[LAST_LOGS_KEY]?.length === 0 ? "" : <LogsDisplay logs={logs} />
+      }
+
+      {
+        <BBCodeDisplay
+          crashAnalytics={report}
+          originCrashReport={oc}
+          failureInfo={failureInfo}
+          tracker={launchTracker}
+          logs={logs.join("\n")}
+        />
       }
     </Box>
   );
@@ -229,11 +254,6 @@ function ModList(props: { tracker: LaunchTracker }): JSX.Element {
   );
 }
 
-type CrashReportMap = Map<
-  number,
-  { origin: string; report: CrashLoaderReport[] }
->;
-
 function Analyze(props: { analyze: CrashReportMap }): JSX.Element {
   const classes = useAccStyles();
   return (
@@ -311,6 +331,7 @@ function Analyze(props: { analyze: CrashReportMap }): JSX.Element {
 
 function LogsDisplay(props: { logs: string[] }): JSX.Element {
   const classes = useAccStyles();
+  const cLogs = props.logs.join("\n").split("\n");
   return (
     <Accordion>
       <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
@@ -318,10 +339,62 @@ function LogsDisplay(props: { logs: string[] }): JSX.Element {
       </AccordionSummary>
       <AccordionDetails className={classes.acc1}>
         <List>
-          {props.logs.map((l) => {
-            return <ListItemText key={l}>{l}</ListItemText>;
+          {cLogs.map((l) => {
+            if (l.trim().length === 0) {
+              return "";
+            }
+            return (
+              <ListItemText
+                style={{
+                  wordBreak: "break-all",
+                }}
+                key={l}
+              >
+                {l}
+              </ListItemText>
+            );
           })}
         </List>
+      </AccordionDetails>
+    </Accordion>
+  );
+}
+
+function BBCodeDisplay(props: {
+  crashAnalytics?: CrashReportMap;
+  originCrashReport: string;
+  failureInfo: MCFailureInfo;
+  tracker: LaunchTracker;
+  logs: string;
+}): JSX.Element {
+  const classes = useAccStyles();
+  return (
+    <Accordion>
+      <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
+        <Typography>{tr("CrashReportDisplay.BBCode")}</Typography>
+      </AccordionSummary>
+      <AccordionDetails className={classes.acc1}>
+        <Button
+          onClick={() => {
+            if (
+              !copy(
+                generateCrashAnalytics(
+                  props.crashAnalytics,
+                  props.failureInfo,
+                  props.originCrashReport,
+                  props.tracker,
+                  props.logs
+                )
+              )
+            ) {
+              submitError("Failed to copy!");
+            }
+          }}
+          variant={"outlined"}
+          className={classes.btn}
+        >
+          {tr("CrashReportDisplay.Copy")}
+        </Button>
       </AccordionDetails>
     </Accordion>
   );

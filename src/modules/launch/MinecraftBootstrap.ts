@@ -6,8 +6,6 @@ import EventEmitter from "events";
 import { PROCESS_END_GATE, PROCESS_LOG_GATE } from "../commons/Constants";
 import { mount, unmount } from "../container/ContainerUtil";
 
-// UNCHECKED
-
 const POOL = new Map<string, RunningMinecraft>();
 const REV_POOL = new Map<RunningMinecraft, string>();
 

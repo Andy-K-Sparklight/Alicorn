@@ -1,6 +1,7 @@
 import pkg from "../../../package.json";
 
 // MAINTAINERS ONLY
+
 export default {
   Lang: "简体中文",
   LaunchPad: "启动游戏",
@@ -270,4 +271,5 @@ export default {
   "CrashReportDisplay.Analyze.NoSuggestions": "没有可用的建议",
   "CrashReportDisplay.BBCode": "发布到 MCBBS 求助",
   "CrashReportDisplay.Logs": "日志",
+  "CrashReportDisplay.Copy": "复制到剪贴板",
 };

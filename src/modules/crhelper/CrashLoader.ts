@@ -145,3 +145,8 @@ export async function onlineAnalyzeCrashReport(
   }
   return analyzeCrashReport(fPath, d);
 }
+
+export type CrashReportMap = Map<
+  number,
+  { origin: string; report: CrashLoaderReport[] }
+>;

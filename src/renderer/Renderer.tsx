@@ -76,6 +76,7 @@ window.addEventListener("unhandledrejection", (e) => {
   console.log(e.reason);
   window.dispatchEvent(new CustomEvent("sysError", { detail: e.reason }));
 });
+
 window.addEventListener("error", (e) => {
   console.log(e.message);
   window.dispatchEvent(new CustomEvent("sysError", { detail: e.message }));
@@ -96,5 +97,9 @@ window.addEventListener("error", (e) => {
   await loadJDT();
   console.log("Delayed init tasks finished.");
 })();
-
 ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
+
+export function submitError(msg: string): void {
+  console.log(msg);
+  window.dispatchEvent(new CustomEvent("sysError", { detail: msg }));
+}

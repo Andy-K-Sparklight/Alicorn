@@ -13,10 +13,10 @@ import {
 import { ipcRenderer } from "electron";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 import { safeGet } from "../modules/commons/Null";
-import { saveConfigSync } from "../modules/config/ConfigSupport";
-import { saveGDTSync } from "../modules/container/ContainerUtil";
-import { saveJDTSync } from "../modules/java/JInfo";
-import { saveMirrorSync } from "../modules/download/Mirror";
+import { saveConfig, saveConfigSync } from "../modules/config/ConfigSupport";
+import { saveGDT, saveGDTSync } from "../modules/container/ContainerUtil";
+import { saveJDT, saveJDTSync } from "../modules/java/JInfo";
+import { saveMirror, saveMirrorSync } from "../modules/download/Mirror";
 import {
   AccountCircle,
   AllInbox,
@@ -33,7 +33,7 @@ import { tr } from "./Translator";
 import { Route } from "react-router";
 import { CoreDetail } from "./CoreDetailView";
 import { ReadyToLaunch } from "./ReadyToLaunch";
-import { saveVFSync } from "../modules/container/ValidateRecord";
+import { saveVF, saveVFSync } from "../modules/container/ValidateRecord";
 import { VersionView } from "./VersionView";
 import { ContainerManager } from "./ContainerManager";
 import { InstallCore } from "./InstallCore";
@@ -75,6 +75,14 @@ export function App(): JSX.Element {
     document.addEventListener("setPage", (e) => {
       setPage(String(safeGet(e, ["detail"], Pages.Version)));
     });
+  }, []);
+  useEffect(() => {
+    const id = setInterval(async () => {
+      await intervalSaveData();
+    }, 300000);
+    return () => {
+      clearInterval(id);
+    };
   }, []);
   useEffect(() => {
     window.addEventListener("sysError", (e) => {
@@ -246,5 +254,15 @@ function prepareToQuit(): void {
   saveJDTSync();
   saveMirrorSync();
   saveVFSync();
+  console.log("All chunks are saved.");
+}
+
+async function intervalSaveData(): Promise<void> {
+  console.log("Saving data...");
+  await saveConfig();
+  await saveGDT();
+  await saveJDT();
+  await saveMirror();
+  await saveVF();
   console.log("All chunks are saved.");
 }
