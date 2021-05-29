@@ -1,12 +1,12 @@
-import {GameProfile} from "../profile/GameProfile";
-import {MinecraftContainer} from "../container/MinecraftContainer";
-import {ArtifactMeta, AssetIndexFileMeta, AssetMeta} from "../profile/Meta";
-import {checkExtractTrimNativeLocal, getNativeArtifact} from "./NativesLint";
-import {DownloadMeta, DownloadStatus} from "../download/AbstractDownloader";
-import {wrappedDownloadFile} from "../download/DownloadWrapper";
+import { GameProfile } from "../profile/GameProfile";
+import { MinecraftContainer } from "../container/MinecraftContainer";
+import { ArtifactMeta, AssetIndexFileMeta, AssetMeta } from "../profile/Meta";
+import { checkExtractTrimNativeLocal, getNativeArtifact } from "./NativesLint";
+import { DownloadMeta, DownloadStatus } from "../download/AbstractDownloader";
+import { wrappedDownloadFile } from "../download/DownloadWrapper";
 import fs from "fs-extra";
-import {isNull} from "../commons/Null";
-import {FileOperateReport, LaunchTracker} from "./Tracker";
+import { isNull } from "../commons/Null";
+import { FileOperateReport, LaunchTracker } from "./Tracker";
 
 // This file can not only check resources, but also download packages when installing!
 
