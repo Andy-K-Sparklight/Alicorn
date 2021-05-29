@@ -8,8 +8,10 @@ import path from "path";
 import fs from "fs-extra";
 import { zip } from "compressing";
 import { buildMap, parseMap } from "../commons/MapUtil";
-import { getHash, validate } from "../download/Validate";
-import { isFileExist } from "../config/FileUtil";
+import { getHash } from "../download/Validate";
+import { isFileExist } from "../commons/FileUtil";
+import { existsAndValidateRaw } from "../download/DownloadWrapper";
+import { updateRecord } from "../container/ValidateRecord";
 
 export const JAR_SUFFIX = ".jar";
 const META_INF = "META-INF";
@@ -99,14 +101,13 @@ async function checkLockFile(dir: string): Promise<boolean> {
     const cPath = path.resolve(path.join(dir, f));
     pStack.push(
       new Promise<boolean>((resolve) => {
-        isFileExist(cPath).then((b) => {
-          if (!b) {
+        existsAndValidateRaw(cPath, String(s))
+          .then((b) => {
+            resolve(b);
+          })
+          .catch(() => {
             resolve(false);
-          }
-          validate(cPath, String(s)).then((b2) => {
-            resolve(b2);
           });
-        });
       })
     );
   }
@@ -128,7 +129,9 @@ async function saveLockFile(dir: string): Promise<void> {
   await Promise.all(
     dirFiles.map((f) => {
       return new Promise<void>((resolve) => {
-        getHash(path.resolve(path.join(dir, f))).then((s) => {
+        const pt = path.resolve(path.join(dir, f));
+        getHash(pt).then((s) => {
+          updateRecord(pt);
           fMap.set(f, s);
           resolve();
         });

@@ -10,7 +10,7 @@ A copy of forge.iw.jar will be saved to the root dir of alicorn data.
 */
 import { getActualDataPath, saveDefaultData } from "../../config/DataSupport";
 import { FILE_SEPARATOR } from "../../commons/Constants";
-import { isFileExist, wrappedLoadJSON } from "../../config/FileUtil";
+import { isFileExist, wrappedLoadJSON } from "../../commons/FileUtil";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { LibraryMeta } from "../../profile/Meta";
 import { isNull, safeGet } from "../../commons/Null";
@@ -117,9 +117,8 @@ export async function getPolyfillForgeProfile(
   if (Object.getOwnPropertyNames(vf).length <= 0) {
     // Cannot use 'vf === {}'
     modernBit = false;
-    finalProfile = generateForgeDownloadableLibrariesLegacyInProfileAsProfile(
-      ipf
-    );
+    finalProfile =
+      generateForgeDownloadableLibrariesLegacyInProfileAsProfile(ipf);
   } else {
     modernBit = true;
     finalProfile = concatForgeProfiles(

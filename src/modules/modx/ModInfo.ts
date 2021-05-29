@@ -5,7 +5,7 @@ import { getString } from "../config/ConfigSupport";
 import os from "os";
 import path from "path";
 import { JAR_SUFFIX } from "../launch/NativesLint";
-import { isFileExist } from "../config/FileUtil";
+import { isFileExist } from "../commons/FileUtil";
 import fs from "fs-extra";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { zip } from "compressing";

@@ -4,7 +4,7 @@ import { ALICORN_DATA_SUFFIX, PLACE_HOLDER } from "../commons/Constants";
 import { loadData, saveData, saveDataSync } from "../config/DataSupport";
 import { buildMap, parseMap } from "../commons/MapUtil";
 import childProcess from "child_process";
-import { isFileExist } from "../config/FileUtil";
+import { isFileExist } from "../commons/FileUtil";
 
 const JAVA_RECORD_BASE = "java.record" + ALICORN_DATA_SUFFIX;
 const LATEST_TAG = "?LATEST>>";

@@ -9,7 +9,7 @@ import { validate } from "./Validate";
 import got from "got";
 import { promisify } from "util";
 import stream from "stream";
-import { isFileExist } from "../config/FileUtil";
+import { isFileExist } from "../commons/FileUtil";
 import { getNumber } from "../config/ConfigSupport";
 
 const pipeline = promisify(stream.pipeline);

@@ -13,7 +13,7 @@ import { Serial } from "../modules/download/Serial";
 import path from "path";
 import { getActualDataPath } from "../modules/config/DataSupport";
 import fs from "fs-extra";
-import { isFileExist } from "../modules/config/FileUtil";
+import { isFileExist } from "../modules/commons/FileUtil";
 
 // MAINTAINERS ONLY
 

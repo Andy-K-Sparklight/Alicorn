@@ -11,7 +11,7 @@ import os from "os";
 import path from "path";
 import { Serial } from "./Serial";
 import { validate } from "./Validate";
-import { isFileExist } from "../config/FileUtil";
+import { isFileExist } from "../commons/FileUtil";
 
 const TEMP_SAVE_PATH_ROOT = path.join(os.tmpdir(), "alicorn-download");
 

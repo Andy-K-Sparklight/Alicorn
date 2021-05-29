@@ -1,7 +1,7 @@
 import path from "path";
 import os from "os";
 import fs from "fs-extra";
-import { isFileExist } from "./FileUtil";
+import { isFileExist } from "../commons/FileUtil";
 import { getBasePath } from "./PathSolve";
 
 const CONFIG_FILE = path.resolve(

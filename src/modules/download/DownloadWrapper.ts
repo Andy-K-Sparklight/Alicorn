@@ -4,13 +4,13 @@ import { Serial } from "./Serial";
 import { applyMirror } from "./Mirror";
 import { getBoolean, getNumber } from "../config/ConfigSupport";
 import EventEmitter from "events";
-import { getModifiedDate, isFileExist } from "../config/FileUtil";
-import { validate } from "./Validate";
+import { getModifiedDate, isFileExist } from "../commons/FileUtil";
 import {
   deleteRecord,
   getLastValidateModified,
   updateRecord,
 } from "../container/ValidateRecord";
+import { validate } from "./Validate";
 
 const PENDING_TASKS: DownloadMeta[] = [];
 const RUNNING_TASKS = new Set<DownloadMeta>();
@@ -67,6 +67,44 @@ export async function wrappedDownloadFile(
   return s;
 }
 
+export async function existsAndValidate(meta: DownloadMeta): Promise<boolean> {
+  return await _existsAndValidate(meta.savePath, meta.sha1);
+}
+
+export async function existsAndValidateRaw(
+  pt: string,
+  sha1: string
+): Promise<boolean> {
+  return await _existsAndValidate(pt, sha1);
+}
+
+// Cached file validate
+// If no sha provided, we'll ignore it
+async function _existsAndValidate(pt: string, sha1: string): Promise<boolean> {
+  if (!(await isFileExist(pt))) {
+    deleteRecord(pt);
+    return false;
+  }
+  if (sha1.trim() === "") {
+    // This might be a wrong SHA, we should not cache it
+    return true;
+  }
+  const lastValidated = await getLastValidateModified(pt);
+  const actualModifiedDate = await getModifiedDate(pt);
+  if (actualModifiedDate <= lastValidated) {
+    return true;
+  }
+  const res = await validate(pt, sha1);
+  if (!getBoolean("download.no-validate")) {
+    if (res) {
+      updateRecord(pt);
+    } else {
+      deleteRecord(pt);
+    }
+  }
+  return res;
+}
+
 function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
   return new Promise<DownloadStatus>((resolve) => {
     existsAndValidate(meta).then((b) => {
@@ -117,32 +155,6 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
         }
       }
     });
-}
-
-// If no sha provided, we'll ignore it
-async function existsAndValidate(meta: DownloadMeta): Promise<boolean> {
-  if (!(await isFileExist(meta.savePath))) {
-    deleteRecord(meta.savePath);
-    return false;
-  }
-  if (meta.sha1.trim() === "") {
-    // This might be a wrong SHA, we should not cache it
-    return true;
-  }
-  const lastValidated = await getLastValidateModified(meta.savePath);
-  const actualModifiedDate = await getModifiedDate(meta.savePath);
-  if (actualModifiedDate <= lastValidated) {
-    return true;
-  }
-  const res = await validate(meta.savePath, meta.sha1);
-  if (!getBoolean("download.no-validate")) {
-    if (res) {
-      updateRecord(meta.savePath);
-    } else {
-      deleteRecord(meta.savePath);
-    }
-  }
-  return res;
 }
 
 export interface WrapperStatus {

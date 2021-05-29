@@ -82,6 +82,7 @@ import { scanReports } from "../modules/crhelper/CrashReportFinder";
 import { findNotIn } from "../modules/commons/Collections";
 import { YNDialog } from "./OperatingHint";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
+import { ipcRenderer } from "electron";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -476,15 +477,35 @@ function AccountChoose(props: {
   allAccounts: Set<Account>;
 }): JSX.Element {
   const classes = useInputStyles();
+  const btnClasses = makeStyles((theme) =>
+    createStyles({
+      btn: {
+        color: theme.palette.primary.main,
+        borderColor: theme.palette.primary.main,
+      },
+    })
+  )();
   const [choice, setChoice] = useState<"MZ" | "AL" | "YG">("MZ");
   const [pName, setName] = useState<string>(
     window.localStorage.getItem(LAST_USED_USER_NAME_KEY) || "Demo"
   );
+  const mounted = useRef<boolean>(false);
   const [sAccount, setAccount] = useState<string>("");
   const accountMap: Record<string, Account> = {};
+  const [msLogout, setMSLogout] = useState<
+    | "ReadyToLaunch.MSLogout"
+    | "ReadyToLaunch.MSLogoutRunning"
+    | "ReadyToLaunch.MSLogoutDone"
+  >("ReadyToLaunch.MSLogout");
   for (const a of props.allAccounts) {
     accountMap[objectHash(a)] = a;
   }
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   return (
     <Dialog
       open={props.open}
@@ -510,16 +531,19 @@ function AccountChoose(props: {
           <FormControlLabel
             value={"MZ"}
             control={<Radio />}
+            checked={choice === "MZ"}
             label={tr("ReadyToLaunch.UseMZ")}
           />
           <FormControlLabel
             value={"YG"}
             control={<Radio />}
+            checked={choice === "YG"}
             label={tr("ReadyToLaunch.UseYG")}
           />
           <FormControlLabel
             value={"AL"}
             control={<Radio />}
+            checked={choice === "AL"}
             label={tr("ReadyToLaunch.UseAL")}
           />
         </RadioGroup>
@@ -539,6 +563,28 @@ function AccountChoose(props: {
           variant={"outlined"}
           value={pName}
         />
+        {choice === "MZ" ? (
+          <Box>
+            <Button
+              variant={"outlined"}
+              className={btnClasses.btn}
+              disabled={msLogout === "ReadyToLaunch.MSLogoutRunning"}
+              onClick={() => {
+                (async () => {
+                  setMSLogout("ReadyToLaunch.MSLogoutRunning");
+                  await ipcRenderer.invoke("msLogout");
+                  if (mounted.current) {
+                    setMSLogout("ReadyToLaunch.MSLogoutDone");
+                  }
+                })();
+              }}
+            >
+              {tr(msLogout)}
+            </Button>
+          </Box>
+        ) : (
+          ""
+        )}
         {choice === "YG" ? (
           <Box>
             <InputLabel id={"Select-Account"}>

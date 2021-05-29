@@ -5,7 +5,7 @@ import {
   saveData,
   saveDataSync,
 } from "../config/DataSupport";
-import { isFileExist } from "../config/FileUtil";
+import { isFileExist } from "../commons/FileUtil";
 import { buildMap, parseMap } from "../commons/MapUtil";
 import path from "path";
 import { isNull } from "../commons/Null";
@@ -36,10 +36,12 @@ export function getLastValidateModified(file: string): Date {
 }
 
 export function updateRecord(file: string): void {
-  VF.set(path.resolve(file), new Date().toUTCString());
+  file = path.isAbsolute(file) ? file : path.resolve(file);
+  VF.set(file, new Date().toUTCString());
 }
 
 export function deleteRecord(file: string): void {
+  file = path.isAbsolute(file) ? file : path.resolve(file);
   VF.delete(path.resolve(file));
 }
 

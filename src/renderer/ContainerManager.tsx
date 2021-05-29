@@ -33,7 +33,7 @@ import {
   unlinkContainer,
 } from "../modules/container/ContainerWrapper";
 import { OperatingHint } from "./OperatingHint";
-import { isFileExist } from "../modules/config/FileUtil";
+import { isFileExist } from "../modules/commons/FileUtil";
 import fs from "fs-extra";
 import path from "path";
 import { ipcRenderer } from "electron";
