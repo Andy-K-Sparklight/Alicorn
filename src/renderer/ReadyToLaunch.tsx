@@ -530,20 +530,17 @@ function AccountChoose(props: {
         >
           <FormControlLabel
             value={"MZ"}
-            control={<Radio />}
-            checked={choice === "MZ"}
+            control={<Radio checked={choice === "MZ"} />}
             label={tr("ReadyToLaunch.UseMZ")}
           />
           <FormControlLabel
             value={"YG"}
-            control={<Radio />}
-            checked={choice === "YG"}
+            control={<Radio checked={choice === "YG"} />}
             label={tr("ReadyToLaunch.UseYG")}
           />
           <FormControlLabel
             value={"AL"}
-            control={<Radio />}
-            checked={choice === "AL"}
+            control={<Radio checked={choice === "AL"} />}
             label={tr("ReadyToLaunch.UseAL")}
           />
         </RadioGroup>

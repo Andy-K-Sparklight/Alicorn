@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useFormStyles } from "./Stylex";
 import {
   Box,
+  Button,
   createStyles,
   FormControl,
   IconButton,
@@ -28,7 +29,8 @@ import {
 import { tr } from "./Translator";
 import objectHash from "object-hash";
 import { Refresh } from "@material-ui/icons";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import { ALICORN_DEFAULT_THEME_LIGHT, submitError } from "./Renderer";
+import { installJRE } from "../modules/java/GetJDK";
 
 const CANNOT_LOAD_INFO: JavaInfo = {
   rootVersion: -1,
@@ -58,9 +60,8 @@ export function JavaSelector(): JSX.Element {
   const [javaList, setJavaList] = useState<string[]>(getAllJava());
   const [javaInfo, setJavaInfo] = useState<Map<string, JavaInfo>>(new Map());
   const [currentJava, setCurrentJava] = useState<string>(getLastUsedJavaHome());
-  const [currentJavaInfo, setCurrentJavaInfo] = useState<JavaInfo>(
-    CANNOT_LOAD_INFO
-  );
+  const [currentJavaInfo, setCurrentJavaInfo] =
+    useState<JavaInfo>(CANNOT_LOAD_INFO);
   useEffect(() => {
     isMounted.current = true;
 
@@ -178,6 +179,7 @@ export function JavaSelector(): JSX.Element {
         <JavaInfoDisplay
           jInfo={isLoaded ? javaInfo.get(currentJava) : currentJavaInfo}
         />
+        <JavaDownloader />
       </Box>
     </MuiThemeProvider>
   );
@@ -251,6 +253,63 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
           )}
         </Box>
       )}
+    </Box>
+  );
+}
+
+function JavaDownloader(): JSX.Element {
+  const [isRunning, setRunning] = useState<boolean>(false);
+  const mounted = useRef<boolean>(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  return (
+    <Box>
+      <Button
+        variant={"outlined"}
+        color={"primary"}
+        disabled={isRunning}
+        onClick={() => {
+          setRunning(true);
+          (async () => {
+            try {
+              await installJRE(false);
+            } catch (e) {
+              submitError(e);
+            } finally {
+              if (mounted.current) {
+                setRunning(false);
+              }
+            }
+          })();
+        }}
+      >
+        {tr("JavaSelector.GetNew")}
+      </Button>
+      <Button
+        disabled={isRunning}
+        variant={"outlined"}
+        color={"primary"}
+        onClick={() => {
+          setRunning(true);
+          (async () => {
+            try {
+              await installJRE(true);
+            } catch (e) {
+              submitError(e);
+            } finally {
+              if (mounted.current) {
+                setRunning(false);
+              }
+            }
+          })();
+        }}
+      >
+        {tr("JavaSelector.GetOld")}
+      </Button>
     </Box>
   );
 }
