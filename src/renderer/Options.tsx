@@ -45,6 +45,7 @@ export function OptionsPage(): JSX.Element {
         </Typography>
         <InputItem type={ConfigType.BOOL} bindConfig={"updator.use-update"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"updator.dev"} />
+        <InputItem type={ConfigType.BOOL} bindConfig={"web.allow-natives"} />
         <InputItem
           type={ConfigType.BOOL}
           bindConfig={"modx.global-dynamic-load-mods"}

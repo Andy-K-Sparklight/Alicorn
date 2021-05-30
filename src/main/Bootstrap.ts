@@ -9,6 +9,7 @@ import path from "path";
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow | null = null;
 app.on("ready", async () => {
+  const appPath = app.getAppPath();
   console.log("App is ready, preparing window...");
   // Open window as soon as possible
   mainWindow = new BrowserWindow({
@@ -17,6 +18,7 @@ app.on("ready", async () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      sandbox: false,
     },
     frame: false,
     show: false,
@@ -39,7 +41,7 @@ app.on("ready", async () => {
     console.log("All caught up! Alicorn is now initialized.");
   });
   console.log("Preparing window!");
-  await mainWindow.loadFile(path.resolve(app.getAppPath(), "Renderer.html"));
+  await mainWindow.loadFile(path.resolve(appPath, "Renderer.html"));
 });
 
 app.on("window-all-closed", () => {
@@ -55,17 +57,21 @@ app.on("will-quit", () => {
 });
 
 process.on("uncaughtException", async (e) => {
-  console.log(e);
-  await mainWindow?.webContents.loadFile("Error.html", {
-    hash: btoa(escape(String(e.message))),
-  });
+  try {
+    console.log(e);
+    await mainWindow?.webContents.loadFile("Error.html", {
+      hash: btoa(escape(String(e.message))),
+    });
+  } catch {}
 });
 
 process.on("unhandledRejection", async (r) => {
-  console.log(String(r));
-  await mainWindow?.webContents.loadFile("Error.html", {
-    hash: btoa(escape(String(r))),
-  });
+  try {
+    console.log(String(r));
+    await mainWindow?.webContents.loadFile("Error.html", {
+      hash: btoa(escape(String(r))),
+    });
+  } catch {}
 });
 
 export function getMainWindow(): BrowserWindow | null {

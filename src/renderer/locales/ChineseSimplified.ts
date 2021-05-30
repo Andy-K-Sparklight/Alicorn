@@ -20,6 +20,7 @@ export default {
   "MainMenu.QuickJavaSelector": "选择 Java",
   "MainMenu.QuickTerminal": "打开终端",
   "MainMenu.Exit": "退出",
+  "MainMenu.Browser": "探索 MCBBS",
   "MainMenu.Version": "版本信息",
   "MainMenu.QuickOptions": "调整启动器的设置",
   "MainMenu.OpenDevTools": "打开开发者工具",
@@ -222,6 +223,9 @@ export default {
   "Options.AutoSave": "您的修改会自动保存。",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
+  "Options.web.allow-natives.title": "启用 Web 原生支持",
+  "Options.web.allow-natives.desc":
+    "在 Alicorn 附属浏览器中启用本地接口的支持 - Alicorn 与 Web 页面的集成需要此功能，但开启它会降低安全性",
   "Options.updator.use-update.title": "自动更新",
   "Options.updator.use-update.desc":
     "启用来自 Alicorn 的自动更新 - 打开打开打开",

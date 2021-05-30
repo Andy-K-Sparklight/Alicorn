@@ -1,5 +1,6 @@
 import { app, BrowserWindow, dialog, ipcMain } from "electron";
 import { getMainWindow } from "./Bootstrap";
+import { getUserBrowser, openBrowser } from "./Browser";
 
 const LOGIN_START =
   "https://login.live.com/oauth20_authorize.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf";
@@ -15,9 +16,20 @@ const LOGOUT_FINAL = "https://account.microsoft.com/account/Account";
 export function registerBackgroundListeners(): void {
   ipcMain.on("closeWindow", () => {
     console.log("Closing window!");
-    getMainWindow()?.close();
-    loginWindow?.close();
-    logoutWindow?.close();
+    // My poor hooves!!!
+    try {
+      getMainWindow()?.close();
+    } catch {}
+    try {
+      loginWindow?.close();
+    } catch {}
+    try {
+      logoutWindow?.close();
+    } catch {}
+    try {
+      getUserBrowser()?.close();
+    } catch {}
+
     console.log("All windows are closed.");
   });
   ipcMain.on("getAppPath", (e) => {
@@ -126,5 +138,8 @@ export function registerBackgroundListeners(): void {
         }
       });
     });
+  });
+  ipcMain.handle("openBrowser", async (e, node: boolean) => {
+    await openBrowser(node);
   });
 }

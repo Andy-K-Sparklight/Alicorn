@@ -13,7 +13,11 @@ import {
 import { ipcRenderer } from "electron";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 import { safeGet } from "../modules/commons/Null";
-import { saveConfig, saveConfigSync } from "../modules/config/ConfigSupport";
+import {
+  getBoolean,
+  saveConfig,
+  saveConfigSync,
+} from "../modules/config/ConfigSupport";
 import { saveGDT, saveGDTSync } from "../modules/container/ContainerUtil";
 import { saveJDT, saveJDTSync } from "../modules/java/JInfo";
 import { saveMirror, saveMirrorSync } from "../modules/download/Mirror";
@@ -27,6 +31,7 @@ import {
   Info,
   PowerSettingsNew,
   Settings,
+  Web,
 } from "@material-ui/icons";
 import { LaunchPad } from "./LaunchPad";
 import { tr } from "./Translator";
@@ -143,6 +148,22 @@ export function App(): JSX.Element {
               color={"inherit"}
             >
               <Apps />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={tr("MainMenu.Browser")}>
+            <IconButton
+              className={classes.floatButton}
+              onClick={() => {
+                (async () => {
+                  await ipcRenderer.invoke(
+                    "openBrowser",
+                    getBoolean("web.allow-natives")
+                  );
+                })();
+              }}
+              color={"inherit"}
+            >
+              <Web />
             </IconButton>
           </Tooltip>
           <Tooltip title={tr("MainMenu.QuickManageAccount")}>
