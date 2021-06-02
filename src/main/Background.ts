@@ -61,6 +61,9 @@ export function registerBackgroundListeners(): void {
         width: 960,
         height: 540,
         show: false,
+        webPreferences: {
+          enableRemoteModule: false,
+        },
       });
     await loginWindow.loadURL(LOGIN_START);
     return new Promise<string>((resolve) => {
@@ -110,6 +113,9 @@ export function registerBackgroundListeners(): void {
       width: 960,
       height: 540,
       show: false,
+      webPreferences: {
+        enableRemoteModule: false,
+      },
     });
     await logoutWindow.loadURL(BASE_ACCOUNT_URL);
     return new Promise<void>((resolve) => {
@@ -141,5 +147,8 @@ export function registerBackgroundListeners(): void {
   });
   ipcMain.handle("openBrowser", async (e, node: boolean) => {
     await openBrowser(node);
+  });
+  ipcMain.handle("get-main-window-id", () => {
+    return getMainWindow()?.webContents.id || 0;
   });
 }

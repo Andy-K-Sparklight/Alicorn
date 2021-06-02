@@ -24,7 +24,7 @@
     "release-renderer": "npx webpack --config webpack.config.renderer.release.js --progress",
     "release-renderer-ci": "npx webpack --config webpack.config.renderer.release.js",
     "release-star": "npx webpack --config webpack.config.starlight.release.js --progress&&node mix.js",
-    "release-star-ci": "npx webpack --config webpack.config.starlight.release.js.release.js&&node mix.js",
+    "release-star-ci": "npx webpack --config webpack.config.starlight.release.js&&node mix.js",
     "release-full": "yarn release-main&&yarn release-renderer&&yarn release-star",
     "release-full-ci": "yarn release-main-ci&&yarn release-renderer-ci&&yarn release-star-ci"
   },

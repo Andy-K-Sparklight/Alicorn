@@ -13,6 +13,7 @@ export async function openBrowser(nodeIntegration: boolean): Promise<void> {
       contextIsolation: false,
       sandbox: false,
       preload: path.resolve(app.getAppPath(), PRELOAD_FILE),
+      enableRemoteModule: false,
     },
     height: 720,
     width: 1280,
