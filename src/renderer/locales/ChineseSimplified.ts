@@ -223,9 +223,12 @@ export default {
   "Options.AutoSave": "您的修改会自动保存。",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
+  "Options.web.global-proxy.title": "浏览器 HTTP 代理",
+  "Options.web.global-proxy.desc":
+    "设置用于 Alicorn 附属浏览器的代理 - 这对您的浏览体验有很大影响，请在设置前再次仔细考虑您是否真的需要设置它",
   "Options.web.allow-natives.title": "启用 Web 原生支持",
   "Options.web.allow-natives.desc":
-    "在 Alicorn 附属浏览器中启用本地接口的支持 - Alicorn 与 Web 页面的集成需要此功能，但开启它会降低安全性",
+    "在 Alicorn 附属浏览器中启用本地接口的支持 - 部分 Web 页面需要此功能与 Alicorn 进行集成，但开启它会降低安全性",
   "Options.updator.use-update.title": "自动更新",
   "Options.updator.use-update.desc":
     "启用来自 Alicorn 的自动更新 - 打开打开打开",

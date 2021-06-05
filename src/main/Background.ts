@@ -52,7 +52,7 @@ export function registerBackgroundListeners(): void {
     }
     return r.filePaths[0] || "";
   });
-  ipcMain.handle("msBrowserCode", async () => {
+  ipcMain.handle("msBrowserCode", async (e, proxy: string) => {
     let sCode = "";
     loginWindow =
       loginWindow ||
@@ -65,6 +65,11 @@ export function registerBackgroundListeners(): void {
           enableRemoteModule: false,
         },
       });
+    if (proxy.trim().length > 0) {
+      await loginWindow.webContents.session.setProxy({
+        proxyRules: `${proxy},direct://`,
+      });
+    }
     await loginWindow.loadURL(LOGIN_START);
     return new Promise<string>((resolve) => {
       loginWindow?.on("close", () => {
@@ -106,7 +111,7 @@ export function registerBackgroundListeners(): void {
       });
     });
   });
-  ipcMain.handle("msLogout", async () => {
+  ipcMain.handle("msLogout", async (e, proxy: string) => {
     console.log("Creating logout window!");
     logoutWindow = new BrowserWindow({
       frame: false,
@@ -117,6 +122,11 @@ export function registerBackgroundListeners(): void {
         enableRemoteModule: false,
       },
     });
+    if (proxy.trim().length > 0) {
+      await logoutWindow.webContents.session.setProxy({
+        proxyRules: `${proxy},direct://`,
+      });
+    }
     await logoutWindow.loadURL(BASE_ACCOUNT_URL);
     return new Promise<void>((resolve) => {
       logoutWindow?.webContents.on("dom-ready", () => {
@@ -145,8 +155,8 @@ export function registerBackgroundListeners(): void {
       });
     });
   });
-  ipcMain.handle("openBrowser", async (e, node: boolean) => {
-    await openBrowser(node);
+  ipcMain.handle("openBrowser", async (e, node: boolean, proxy: string) => {
+    await openBrowser(node, proxy);
   });
   ipcMain.handle("get-main-window-id", () => {
     return getMainWindow()?.webContents.id || 0;

@@ -77,7 +77,7 @@ import {
   getWrapperStatus,
   WrapperStatus,
 } from "../modules/download/DownloadWrapper";
-import { getNumber } from "../modules/config/ConfigSupport";
+import { getNumber, getString } from "../modules/config/ConfigSupport";
 import { scanReports } from "../modules/crhelper/CrashReportFinder";
 import { findNotIn } from "../modules/commons/Collections";
 import { YNDialog } from "./OperatingHint";
@@ -569,7 +569,10 @@ function AccountChoose(props: {
               onClick={() => {
                 (async () => {
                   setMSLogout("ReadyToLaunch.MSLogoutRunning");
-                  await ipcRenderer.invoke("msLogout");
+                  await ipcRenderer.invoke(
+                    "msLogout",
+                    getString("web.global-proxy")
+                  );
                   if (mounted.current) {
                     setMSLogout("ReadyToLaunch.MSLogoutDone");
                   }

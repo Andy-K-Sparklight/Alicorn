@@ -12,5 +12,6 @@
   "modx.ignore-non-standard-mods": true,
   "modx.global-dynamic-load-mods": true,
   "cmc.disable-log4j-config": true,
-  "web.allow-natives": false
+  "web.allow-natives": false,
+  "web.global-proxy": ""
 }

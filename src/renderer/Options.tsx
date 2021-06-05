@@ -75,6 +75,7 @@ export function OptionsPage(): JSX.Element {
           type={ConfigType.BOOL}
           bindConfig={"cmc.disable-log4j-config"}
         />
+        <InputItem type={ConfigType.STR} bindConfig={"web.global-proxy"} />
       </MuiThemeProvider>
     </Box>
   );

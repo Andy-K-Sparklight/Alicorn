@@ -15,6 +15,7 @@ import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 import { safeGet } from "../modules/commons/Null";
 import {
   getBoolean,
+  getString,
   saveConfig,
   saveConfigSync,
 } from "../modules/config/ConfigSupport";
@@ -157,7 +158,8 @@ export function App(): JSX.Element {
                 (async () => {
                   await ipcRenderer.invoke(
                     "openBrowser",
-                    getBoolean("web.allow-natives")
+                    getBoolean("web.allow-natives"),
+                    getString("web.global-proxy")
                   );
                 })();
               }}

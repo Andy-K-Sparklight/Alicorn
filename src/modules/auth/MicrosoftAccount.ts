@@ -4,6 +4,7 @@ import { ipcRenderer } from "electron";
 import got from "got";
 import { isNull, safeGet } from "../commons/Null";
 import { AccountType } from "./AccountUtil";
+import { getString } from "../config/ConfigSupport";
 
 // The auth progress for MS accounts:
 // User -> Code (Browser)
@@ -118,7 +119,10 @@ export class MicrosoftAccount extends Account {
 // Only in remote!
 export async function browserGetCode(): Promise<string> {
   console.log("Building login window...");
-  return await ipcRenderer.invoke("msBrowserCode");
+  return await ipcRenderer.invoke(
+    "msBrowserCode",
+    getString("web.global-proxy")
+  );
 }
 
 interface AcquireTokenCallback {

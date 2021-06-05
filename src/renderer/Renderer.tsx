@@ -17,6 +17,7 @@ import { initVF } from "../modules/container/ValidateRecord";
 import { prepareAJ } from "../modules/auth/AJHelper";
 import { initCommands } from "../modules/command/CommandHandler";
 import pkg from "../../package.json";
+import { registerHandlers } from "./Handlers";
 
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
@@ -72,6 +73,7 @@ console.log(
 );
 
 initTranslator();
+
 window.addEventListener("unhandledrejection", (e) => {
   console.log(e.reason);
   window.dispatchEvent(new CustomEvent("sysError", { detail: e.reason }));
@@ -81,8 +83,10 @@ window.addEventListener("error", (e) => {
   console.log(e.message);
   window.dispatchEvent(new CustomEvent("sysError", { detail: e.message }));
 });
+
 (async () => {
   console.log("Initializing modules...");
+  registerHandlers();
   await loadConfig();
   initCommands();
   await loadGDT();

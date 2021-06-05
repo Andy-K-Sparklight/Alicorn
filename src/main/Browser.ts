@@ -5,7 +5,10 @@ let USER_BROWSER: BrowserWindow | null;
 export const PRELOAD_FILE = "Starlight.js";
 const BASE_URL = "https://www.mcbbs.net";
 
-export async function openBrowser(nodeIntegration: boolean): Promise<void> {
+export async function openBrowser(
+  nodeIntegration: boolean,
+  proxy: string
+): Promise<void> {
   console.log("Opening browser window!");
   USER_BROWSER = new BrowserWindow({
     webPreferences: {
@@ -18,6 +21,11 @@ export async function openBrowser(nodeIntegration: boolean): Promise<void> {
     height: 720,
     width: 1280,
   });
+  if (proxy.trim().length > 0) {
+    await USER_BROWSER.webContents.session.setProxy({
+      proxyRules: `${proxy},direct://`,
+    });
+  }
   USER_BROWSER.show();
   USER_BROWSER.setMenu(null);
   USER_BROWSER.webContents.openDevTools();
