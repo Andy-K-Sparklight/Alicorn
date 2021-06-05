@@ -17,17 +17,18 @@ export function registerBackgroundListeners(): void {
   ipcMain.on("closeWindow", () => {
     console.log("Closing window!");
     // My poor hooves!!!
+    // Use destroy to make sure they close
     try {
       getMainWindow()?.close();
     } catch {}
     try {
-      loginWindow?.close();
+      loginWindow?.destroy();
     } catch {}
     try {
-      logoutWindow?.close();
+      logoutWindow?.destroy();
     } catch {}
     try {
-      getUserBrowser()?.close();
+      getUserBrowser()?.destroy();
     } catch {}
 
     console.log("All windows are closed.");

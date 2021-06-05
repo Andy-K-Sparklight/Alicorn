@@ -26,8 +26,8 @@ export async function openBrowser(
       proxyRules: `${proxy},direct://`,
     });
   }
-  USER_BROWSER.show();
   USER_BROWSER.setMenu(null);
+  USER_BROWSER.show();
   USER_BROWSER.webContents.openDevTools();
   try {
     await USER_BROWSER.loadURL(BASE_URL);
