@@ -58,7 +58,7 @@ import {
 } from "../modules/commons/Constants";
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { LocalAccount } from "../modules/auth/LocalAccount";
-import { Account } from "../modules/auth/Account";
+import { AbstractGameAccount } from "../modules/auth/Account";
 import { useInputStyles } from "./Stylex";
 import { isNull } from "../modules/commons/Null";
 import {
@@ -114,7 +114,8 @@ export const LAST_LOGS_KEY = "ReadyToLaunch.LastLogs";
 export function ReadyToLaunch(): JSX.Element {
   const [coreProfile, setProfile] = useState(new GameProfile({}));
   const [profileLoadedBit, setLoaded] = useState(0);
-  const { id, container } = useParams<{ id: string; container: string }>();
+  const { id, container, server } =
+    useParams<{ id: string; container: string; server?: string }>();
   const mounted = useRef<boolean>();
 
   useEffect(() => {
@@ -144,7 +145,11 @@ export function ReadyToLaunch(): JSX.Element {
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       {profileLoadedBit === 1 ? (
-        <Launching profile={coreProfile} container={getContainer(container)} />
+        <Launching
+          profile={coreProfile}
+          container={getContainer(container)}
+          server={server}
+        />
       ) : (
         <LinearProgress color={"secondary"} style={{ width: "80%" }} />
       )}
@@ -155,6 +160,7 @@ export function ReadyToLaunch(): JSX.Element {
 function Launching(props: {
   profile: GameProfile;
   container: MinecraftContainer;
+  server?: string;
 }): JSX.Element {
   const classes = useStyles();
   const mountedBit = useRef<boolean>(true);
@@ -163,9 +169,11 @@ function Launching(props: {
   const [status, setStatus] = useState(LaunchingStatus.PENDING);
   const [hint, setHint] = useState(randsl("ReadyToLaunch.WaitingText"));
   const [activeStep, setActiveStep] = useState(0);
-  const [selectedAccount, setSelectedAccount] = useState<Account>();
+  const [selectedAccount, setSelectedAccount] = useState<AbstractGameAccount>();
   const [selecting, setSelecting] = useState<boolean>(false);
-  const [allAccounts, setAccounts] = useState<Set<Account>>(new Set<Account>());
+  const [allAccounts, setAccounts] = useState<Set<AbstractGameAccount>>(
+    new Set<AbstractGameAccount>()
+  );
   const [wrapperStatus, setWrapperStatus] = useState<WrapperStatus>();
   useEffect(() => {
     const timer = setInterval(() => {
@@ -179,7 +187,8 @@ function Launching(props: {
     mountedBit.current = true;
     (async () => {
       const a = await getAllAccounts();
-      const builtAccount: Set<Account> = new Set<Account>();
+      const builtAccount: Set<AbstractGameAccount> =
+        new Set<AbstractGameAccount>();
       for (const accountFile of a) {
         const r = await loadAccount(accountFile);
         if (r) {
@@ -245,7 +254,8 @@ function Launching(props: {
               props.profile,
               props.container,
               setID,
-              a
+              a,
+              props.server
             );
           })();
         }}
@@ -338,7 +348,8 @@ function Launching(props: {
                 props.profile,
                 props.container,
                 setID,
-                selectedAccount
+                selectedAccount,
+                props.server
               );
             } else {
               setSelecting(true);
@@ -367,7 +378,8 @@ async function startBoot(
   profile: GameProfile,
   container: MinecraftContainer,
   setID: (id: string) => unknown,
-  account: Account
+  account: AbstractGameAccount,
+  server?: string
 ): Promise<LaunchTracker> {
   // @ts-ignore
   window[LAST_FAILURE_INFO_KEY] = undefined;
@@ -395,6 +407,12 @@ async function startBoot(
     useAj = true;
     ajHost = (account as AuthlibAccount).authServer;
     prefetch = await prefetchData((account as AuthlibAccount).authServer);
+  }
+  let useServer = false;
+  let serverHost = "";
+  if (typeof server === "string" && server.length > 0) {
+    useServer = true;
+    serverHost = server.trim();
   }
 
   setStatus(LaunchingStatus.LIBRARIES_FILLING);
@@ -452,7 +470,8 @@ async function startBoot(
     useAj: useAj,
     ajHost: ajHost,
     ajPrefetch: prefetch,
-    useServer: false,
+    useServer: useServer,
+    server: serverHost,
   });
   setID(runID);
   setStatus(LaunchingStatus.FINISHED);
@@ -473,8 +492,8 @@ enum LaunchingStatus {
 function AccountChoose(props: {
   open: boolean;
   closeFunc: () => void;
-  onChose: (a: Account) => unknown;
-  allAccounts: Set<Account>;
+  onChose: (a: AbstractGameAccount) => unknown;
+  allAccounts: Set<AbstractGameAccount>;
 }): JSX.Element {
   const classes = useInputStyles();
   const btnClasses = makeStyles((theme) =>
@@ -491,7 +510,7 @@ function AccountChoose(props: {
   );
   const mounted = useRef<boolean>(false);
   const [sAccount, setAccount] = useState<string>("");
-  const accountMap: Record<string, Account> = {};
+  const accountMap: Record<string, AbstractGameAccount> = {};
   const [msLogout, setMSLogout] = useState<
     | "ReadyToLaunch.MSLogout"
     | "ReadyToLaunch.MSLogoutRunning"

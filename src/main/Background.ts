@@ -54,63 +54,65 @@ export function registerBackgroundListeners(): void {
     return r.filePaths[0] || "";
   });
   ipcMain.handle("msBrowserCode", async (e, proxy: string) => {
-    let sCode = "";
-    loginWindow =
-      loginWindow ||
-      new BrowserWindow({
-        frame: false,
-        width: 960,
-        height: 540,
-        show: false,
-        webPreferences: {
-          enableRemoteModule: false,
-        },
-      });
-    if (proxy.trim().length > 0) {
-      await loginWindow.webContents.session.setProxy({
-        proxyRules: `${proxy},direct://`,
-      });
-    }
-    await loginWindow.loadURL(LOGIN_START);
-    return new Promise<string>((resolve) => {
-      loginWindow?.on("close", () => {
-        if (sCode === "") {
-          console.log("Unexpected window closing, what have you done?");
-          resolve("");
-        }
-      });
-      loginWindow?.webContents.on("did-stop-loading", () => {
-        const url = loginWindow?.webContents.getURL();
-        if (url?.startsWith("https://login.live.com/oauth20_desktop.srf")) {
-          if (CODE_REGEX.test(url)) {
-            console.log("Code found. Closing login window.");
-            sCode = unescape((url.match(CODE_REGEX) || [])[0] || "");
+    try {
+      let sCode = "";
+      loginWindow =
+        loginWindow ||
+        new BrowserWindow({
+          frame: false,
+          width: 960,
+          height: 540,
+          show: false,
+          webPreferences: {
+            enableRemoteModule: false,
+          },
+        });
+      if (proxy.trim().length > 0) {
+        await loginWindow.webContents.session.setProxy({
+          proxyRules: `${proxy},direct://`,
+        });
+      }
+      await loginWindow.loadURL(LOGIN_START);
+      return new Promise<string>((resolve) => {
+        loginWindow?.on("close", () => {
+          if (sCode === "") {
+            console.log("Unexpected window closing, what have you done?");
+            resolve("");
+          }
+        });
+        loginWindow?.webContents.on("did-stop-loading", () => {
+          const url = loginWindow?.webContents.getURL();
+          if (url?.startsWith("https://login.live.com/oauth20_desktop.srf")) {
+            if (CODE_REGEX.test(url)) {
+              console.log("Code found. Closing login window.");
+              sCode = unescape((url.match(CODE_REGEX) || [])[0] || "");
+              loginWindow?.close();
+              loginWindow = null;
+              resolve(sCode);
+              return;
+            }
+            if (ERROR_REGEX.test(url)) {
+              sCode = "NOT FOUND";
+              console.log(
+                "Error during login: " +
+                  unescape((url.match(ERROR_REGEX) || [])[0] || "")
+              );
+              console.log(
+                "Caused by: " +
+                  unescape((url.match(ERROR_DESCRIPTION) || [])[0] || "")
+              );
+            }
+            console.log("Error occurred. Closing login window.");
             loginWindow?.close();
             loginWindow = null;
-            resolve(sCode);
-            return;
+            resolve("");
+          } else {
+            console.log("Not a callback URL, showing window...");
+            loginWindow?.show();
           }
-          if (ERROR_REGEX.test(url)) {
-            sCode = "NOT FOUND";
-            console.log(
-              "Error during login: " +
-                unescape((url.match(ERROR_REGEX) || [])[0] || "")
-            );
-            console.log(
-              "Caused by: " +
-                unescape((url.match(ERROR_DESCRIPTION) || [])[0] || "")
-            );
-          }
-          console.log("Error occurred. Closing login window.");
-          loginWindow?.close();
-          loginWindow = null;
-          resolve("");
-        } else {
-          console.log("Not a callback URL, showing window...");
-          loginWindow?.show();
-        }
+        });
       });
-    });
+    } catch {}
   });
   ipcMain.handle("msLogout", async (e, proxy: string) => {
     console.log("Creating logout window!");
