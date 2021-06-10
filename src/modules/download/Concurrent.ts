@@ -10,8 +10,9 @@ import objectHash from "object-hash";
 import os from "os";
 import path from "path";
 import { Serial } from "./Serial";
-import { validate } from "./Validate";
+import { getHash, validate } from "./Validate";
 import { isFileExist } from "../commons/FileUtil";
+import { addRecord } from "./ResolveLock";
 
 const TEMP_SAVE_PATH_ROOT = path.join(os.tmpdir(), "alicorn-download");
 
@@ -44,7 +45,7 @@ export class Concurrent extends AbstractDownloader {
       }
       const allChunks = generateChunks(fileSize);
       await Promise.all(getAllPromises(meta, fileSize, allChunks));
-      await sealAndVerify(meta.savePath, allChunks, meta.sha1);
+      await sealAndVerify(meta.url, meta.savePath, allChunks, meta.sha1);
       return DownloadStatus.RESOLVED;
     } catch {
       return DownloadStatus.FAILED;
@@ -52,7 +53,12 @@ export class Concurrent extends AbstractDownloader {
   }
 }
 
-async function sealAndVerify(savePath: string, chunks: Chunk[], hash: string) {
+async function sealAndVerify(
+  url: string,
+  savePath: string,
+  chunks: Chunk[],
+  hash: string
+) {
   await fs.createFile(savePath);
   const wStream = fs.createWriteStream(savePath);
   for (const c of chunks) {
@@ -77,10 +83,12 @@ async function sealAndVerify(savePath: string, chunks: Chunk[], hash: string) {
   if (hash === "") {
     return;
   }
-  const isMatch = await validate(savePath, hash);
-  if (!isMatch) {
+  const h = await getHash(savePath);
+
+  if (hash !== h) {
     throw new Error("File hash mismatch for " + savePath);
   }
+  addRecord(h, url);
   return;
 }
 

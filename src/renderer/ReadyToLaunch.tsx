@@ -58,7 +58,7 @@ import {
 } from "../modules/commons/Constants";
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { LocalAccount } from "../modules/auth/LocalAccount";
-import { AbstractGameAccount } from "../modules/auth/Account";
+import { Account } from "../modules/auth/Account";
 import { useInputStyles } from "./Stylex";
 import { isNull } from "../modules/commons/Null";
 import {
@@ -169,11 +169,9 @@ function Launching(props: {
   const [status, setStatus] = useState(LaunchingStatus.PENDING);
   const [hint, setHint] = useState(randsl("ReadyToLaunch.WaitingText"));
   const [activeStep, setActiveStep] = useState(0);
-  const [selectedAccount, setSelectedAccount] = useState<AbstractGameAccount>();
+  const [selectedAccount, setSelectedAccount] = useState<Account>();
   const [selecting, setSelecting] = useState<boolean>(false);
-  const [allAccounts, setAccounts] = useState<Set<AbstractGameAccount>>(
-    new Set<AbstractGameAccount>()
-  );
+  const [allAccounts, setAccounts] = useState<Set<Account>>(new Set<Account>());
   const [wrapperStatus, setWrapperStatus] = useState<WrapperStatus>();
   useEffect(() => {
     const timer = setInterval(() => {
@@ -187,8 +185,7 @@ function Launching(props: {
     mountedBit.current = true;
     (async () => {
       const a = await getAllAccounts();
-      const builtAccount: Set<AbstractGameAccount> =
-        new Set<AbstractGameAccount>();
+      const builtAccount: Set<Account> = new Set<Account>();
       for (const accountFile of a) {
         const r = await loadAccount(accountFile);
         if (r) {
@@ -378,7 +375,7 @@ async function startBoot(
   profile: GameProfile,
   container: MinecraftContainer,
   setID: (id: string) => unknown,
-  account: AbstractGameAccount,
+  account: Account,
   server?: string
 ): Promise<LaunchTracker> {
   // @ts-ignore
@@ -492,8 +489,8 @@ enum LaunchingStatus {
 function AccountChoose(props: {
   open: boolean;
   closeFunc: () => void;
-  onChose: (a: AbstractGameAccount) => unknown;
-  allAccounts: Set<AbstractGameAccount>;
+  onChose: (a: Account) => unknown;
+  allAccounts: Set<Account>;
 }): JSX.Element {
   const classes = useInputStyles();
   const btnClasses = makeStyles((theme) =>
@@ -510,7 +507,7 @@ function AccountChoose(props: {
   );
   const mounted = useRef<boolean>(false);
   const [sAccount, setAccount] = useState<string>("");
-  const accountMap: Record<string, AbstractGameAccount> = {};
+  const accountMap: Record<string, Account> = {};
   const [msLogout, setMSLogout] = useState<
     | "ReadyToLaunch.MSLogout"
     | "ReadyToLaunch.MSLogoutRunning"

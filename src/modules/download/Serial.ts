@@ -5,12 +5,13 @@ import {
 } from "./AbstractDownloader";
 import fs from "fs-extra";
 import path from "path";
-import { validate } from "./Validate";
+import { getHash, validate } from "./Validate";
 import got from "got";
 import { promisify } from "util";
 import stream from "stream";
 import { isFileExist } from "../commons/FileUtil";
 import { getNumber } from "../config/ConfigSupport";
+import { addRecord } from "./ResolveLock";
 
 const pipeline = promisify(stream.pipeline);
 
@@ -43,8 +44,10 @@ export class Serial extends AbstractDownloader {
       if (meta.sha1 === "") {
         return DownloadStatus.RESOLVED;
       }
-      if (await validate(meta.savePath, meta.sha1)) {
-        // No error is ok
+      const h = await getHash(meta.savePath);
+      if (meta.sha1 === h) {
+        // No error is ok, add record
+        addRecord(h, meta.url);
         return DownloadStatus.RESOLVED;
       }
 

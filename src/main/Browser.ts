@@ -27,6 +27,10 @@ export async function openBrowser(
     });
   }
   USER_BROWSER.setMenu(null);
+  // XXX This is not recommended
+  USER_BROWSER.on("close", () => {
+    USER_BROWSER?.destroy();
+  });
   USER_BROWSER.show();
   USER_BROWSER.webContents.openDevTools();
   try {

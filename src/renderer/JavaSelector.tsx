@@ -31,6 +31,7 @@ import objectHash from "object-hash";
 import { Refresh } from "@material-ui/icons";
 import { ALICORN_DEFAULT_THEME_LIGHT, submitError } from "./Renderer";
 import { installJRE } from "../modules/java/GetJDK";
+import os from "os";
 
 const CANNOT_LOAD_INFO: JavaInfo = {
   rootVersion: -1,
@@ -62,6 +63,7 @@ export function JavaSelector(): JSX.Element {
   const [currentJava, setCurrentJava] = useState<string>(getLastUsedJavaHome());
   const [currentJavaInfo, setCurrentJavaInfo] =
     useState<JavaInfo>(CANNOT_LOAD_INFO);
+  const display = useRef<boolean>(os.platform() === "win32");
   useEffect(() => {
     isMounted.current = true;
 
@@ -179,7 +181,7 @@ export function JavaSelector(): JSX.Element {
         <JavaInfoDisplay
           jInfo={isLoaded ? javaInfo.get(currentJava) : currentJavaInfo}
         />
-        <JavaDownloader />
+        {display.current ? <JavaDownloader /> : ""}
       </Box>
     </MuiThemeProvider>
   );

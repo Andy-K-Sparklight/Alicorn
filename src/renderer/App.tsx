@@ -48,6 +48,10 @@ import { JavaSelector } from "./JavaSelector";
 import { OptionsPage } from "./Options";
 import { Terminal } from "./Terminal";
 import { CrashReportDisplay } from "./CrashReportDisplay";
+import {
+  saveResolveLock,
+  saveResolveLockSync,
+} from "../modules/download/ResolveLock";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -234,7 +238,7 @@ export function App(): JSX.Element {
         <Route path={"/InstallCore"} component={InstallCore} />
         <Route path={"/CoreDetail/:container/:id"} component={CoreDetail} />
         <Route
-          path={"/ReadyToLaunch/:container/:id"}
+          path={"/ReadyToLaunch/:container/:id/:server?"}
           component={ReadyToLaunch}
         />
         <Route path={"/Version"} component={VersionView} />
@@ -277,6 +281,7 @@ function prepareToQuit(): void {
   saveJDTSync();
   saveMirrorSync();
   saveVFSync();
+  saveResolveLockSync();
   console.log("All chunks are saved.");
 }
 
@@ -287,5 +292,6 @@ async function intervalSaveData(): Promise<void> {
   await saveJDT();
   await saveMirror();
   await saveVF();
+  await saveResolveLock();
   console.log("All chunks are saved.");
 }

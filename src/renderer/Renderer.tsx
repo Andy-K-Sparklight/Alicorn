@@ -18,6 +18,7 @@ import { prepareAJ } from "../modules/auth/AJHelper";
 import { initCommands } from "../modules/command/CommandHandler";
 import pkg from "../../package.json";
 import { registerHandlers } from "./Handlers";
+import { initResolveLock } from "../modules/download/ResolveLock";
 
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
@@ -88,17 +89,18 @@ window.addEventListener("error", (e) => {
   console.log("Initializing modules...");
   registerHandlers();
   await loadConfig();
-  initCommands();
   await loadGDT();
-  await initEncrypt();
+  await initResolveLock();
   await loadMirror();
   await initConcurrentDownloader();
   initDownloadWrapper();
-  await initModInfo();
-  await initForgeInstallModule();
-  await initVF();
-  await prepareAJ(); // Authlib Injector
   await loadJDT();
+  await initForgeInstallModule();
+  initCommands();
+  await initEncrypt();
+  await initModInfo();
+  await prepareAJ(); // Authlib Injector
+  await initVF();
   console.log("Delayed init tasks finished.");
 })();
 ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));

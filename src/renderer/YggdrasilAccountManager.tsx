@@ -26,7 +26,7 @@ import {
   removeAccount,
   saveAccount,
 } from "../modules/auth/AccountUtil";
-import { AbstractGameAccount } from "../modules/auth/Account";
+import { Account } from "../modules/auth/Account";
 import { tr } from "./Translator";
 import { Add, DeleteForever, Refresh } from "@material-ui/icons";
 import { ALICORN_ENCRYPTED_DATA_SUFFIX } from "../modules/commons/Constants";
@@ -41,9 +41,7 @@ export function YggdrasilAccountManager(): JSX.Element {
   const classes = usePadStyles();
   const mountedBit = useRef<boolean>(true);
   const accountsLoaded = useRef<boolean>(false);
-  const [accounts, setAccounts] = useState<Set<AbstractGameAccount>>(
-    new Set<AbstractGameAccount>()
-  );
+  const [accounts, setAccounts] = useState<Set<Account>>(new Set<Account>());
   const [isAdding, isAddingUpdate] = useState<boolean>(false);
   useEffect(() => {
     mountedBit.current = true;
@@ -51,8 +49,7 @@ export function YggdrasilAccountManager(): JSX.Element {
       accountsLoaded.current = true;
       (async () => {
         const a = await getAllAccounts();
-        const builtAccount: Set<AbstractGameAccount> =
-          new Set<AbstractGameAccount>();
+        const builtAccount: Set<Account> = new Set<Account>();
         for (const accountFile of a) {
           const r = await loadAccount(accountFile);
           if (r) {
@@ -78,7 +75,7 @@ export function YggdrasilAccountManager(): JSX.Element {
             color={"inherit"}
             onClick={() => {
               accountsLoaded.current = false;
-              setAccounts(new Set<AbstractGameAccount>());
+              setAccounts(new Set<Account>());
             }}
           >
             <Refresh />
@@ -135,18 +132,15 @@ export function YggdrasilAccountManager(): JSX.Element {
 }
 
 export function SingleAccountDisplay(props: {
-  account: AbstractGameAccount;
-  updateAccount: (
-    origin: AbstractGameAccount,
-    newAccount: AbstractGameAccount
-  ) => unknown;
-  deleteAccount: (origin: AbstractGameAccount) => unknown;
+  account: Account;
+  updateAccount: (origin: Account, newAccount: Account) => unknown;
+  deleteAccount: (origin: Account) => unknown;
 }): JSX.Element {
   const accountCopy = copyAccount(props.account);
   const classes = useCardStyles();
   const [isOperating, setOperating] = useState<boolean>(false);
   const [mjLWOpening, setMjLWOpen] = useState<boolean>(false);
-  const usingAccount = useRef<AbstractGameAccount>(accountCopy);
+  const usingAccount = useRef<Account>(accountCopy);
   const [isAsking, isAskingUpdate] = useState<boolean>(false);
   return (
     <Box>
@@ -273,8 +267,8 @@ export function toReadableType(t: AccountType): string {
 function YggdrasilForm(props: {
   onClose: () => unknown;
   open: boolean;
-  account: AbstractGameAccount | undefined;
-  updateAccount: (a: AbstractGameAccount) => unknown;
+  account: Account | undefined;
+  updateAccount: (a: Account) => unknown;
 }): JSX.Element {
   const classes = useInputStyles();
   const [pwd, setPwd] = useState<string>("");
@@ -341,7 +335,7 @@ function YggdrasilForm(props: {
 function AddAccount(props: {
   open: boolean;
   onClose: () => unknown;
-  handleNewAccount: (a: AbstractGameAccount) => unknown;
+  handleNewAccount: (a: Account) => unknown;
 }): JSX.Element {
   const [email, emailUpdate] = useState<string>("");
   const [authHost, authHostUpdate] = useState<string>("");
@@ -434,11 +428,11 @@ function AddAccount(props: {
 function AddAccountWrapper(props: {
   open: boolean;
   onClose: () => unknown;
-  handleNewAccount: (a: AbstractGameAccount) => unknown;
+  handleNewAccount: (a: Account) => unknown;
 }): JSX.Element {
   const [isPwdOpen, isPwdOpenUpdate] = useState<boolean>(false);
   const [isEmailOpen, isEmailOpenUpdate] = useState<boolean>(true);
-  const [tmpAccount, tmpAccountUpdate] = useState<AbstractGameAccount>();
+  const [tmpAccount, tmpAccountUpdate] = useState<Account>();
   return (
     <Box>
       <YggdrasilForm
