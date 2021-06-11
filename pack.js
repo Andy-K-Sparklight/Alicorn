@@ -13,10 +13,17 @@ Promise.allSettled(
     const s = fs.statSync(c);
     if (s.isDirectory()) {
       if (e.startsWith("Alicorn-win32")) {
-        return compressing.zip.compressDir(c, path.join(tDir, e + ".zip"), {});
+        return compressing.zip.compressDir(
+          c,
+          path.join(tDir, "compressed", e + ".zip"),
+          {}
+        );
       }
       if (e.startsWith("Alicorn-linux")) {
-        return compressing.tgz.compressDir(c, path.join(tDir, e + ".tar.gz"));
+        return compressing.tgz.compressDir(
+          c,
+          path.join(tDir, "compressed", e + ".tar.gz")
+        );
       }
     }
     return Promise.resolve();
