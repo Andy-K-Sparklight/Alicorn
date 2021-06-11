@@ -33,9 +33,20 @@ jobs:
           node-version: 15.x
       - run: yarn
       - run: yarn make-all
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v2
         with:
-          name: Alicorn
-          path: out/compressed/
+          name: Alicorn for Windows x64
+          path: out/compressed/Alicorn-win32-x64.zip
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Alicorn for Windows ia32
+          path: out/compressed/Alicorn-win32-ia32.zip
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Alicorn for GNU/Linux x64
+          path: out/compressed/Alicorn-linux-x64.tar.gz
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Alicorn for GNU/Linux ia32
+          path: out/compressed/Alicorn-linux-ia32.tar.gz
 
