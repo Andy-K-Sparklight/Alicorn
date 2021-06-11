@@ -24,7 +24,7 @@ jobs:
       - run: yarn release-full-ci
 
   make:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 15

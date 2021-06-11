@@ -29,7 +29,7 @@
     "release-full": "yarn release-main&&yarn release-renderer&&yarn release-star",
     "release-full-ci": "yarn release-main-ci&&yarn release-renderer-ci&&yarn release-star-ci",
     "package": "yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=ia32 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=linux --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=linux --arch=ia32 --icon ./resources/build/icon --out out",
-    "compress": "cd out&&mkdir compressed&&zip -r -9 compressed/Alicorn-win32-ia32.zip Alicorn-win32-ia32/*&&zip -r -9 compressed/Alicorn-win32-x64.zip Alicorn-win32-x64/*&&zip -r -9 compressed/Alicorn-linux-ia32.zip Alicorn-linux-ia32/*&&zip -r -9 compressed/Alicorn-linux-x64.zip Alicorn-linux-x64/*",
+    "compress": "node pack.js",
     "make-all": "yarn build-vercel&&yarn package&&yarn compress"
   },
   "devDependencies": {
