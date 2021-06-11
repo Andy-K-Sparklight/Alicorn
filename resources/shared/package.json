@@ -1,5 +1,6 @@
 {
   "name": "Alicorn",
   "author": "RarityEG",
-  "main": "Bootstrap.js"
+  "main": "Bootstrap.js",
+  "version": "1.0.0"
 }

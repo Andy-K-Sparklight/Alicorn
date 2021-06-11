@@ -195,7 +195,7 @@ export function makeFirstPage(): string {
   const box = new Box(
     sc
       .make(
-        `这是由 Alicorn 启动器自动生成的求助信息，Alicorn 版本：${pkg.version}`
+        `这是由 Alicorn 启动器自动生成的求助信息，Alicorn 版本：${pkg.appVersion}`
       )
       .toBBCode()
   );

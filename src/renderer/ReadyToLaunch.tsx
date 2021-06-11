@@ -394,7 +394,14 @@ async function startBoot(
   };
   setStatus(LaunchingStatus.ACCOUNT_AUTHING);
   if (account.type === AccountType.MICROSOFT) {
-    await account.performAuth("");
+    if (!(await account.isAccessTokenValid())) {
+      // Check if the access token is valid
+      await account.performAuth("");
+    }
+  } else if (account.type !== AccountType.ALICORN) {
+    if (!(await account.isAccessTokenValid())) {
+      await account.flushToken(); // Don't know whether this will work or not
+    }
   }
   const acData = await fillAccessData(await account.buildAccessData());
   let useAj = false;
@@ -560,22 +567,25 @@ function AccountChoose(props: {
             label={tr("ReadyToLaunch.UseAL")}
           />
         </RadioGroup>
-        <TextField
-          className={classes.input}
-          autoFocus
-          style={choice === "AL" ? {} : { display: "none" }}
-          margin={"dense"}
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-          label={tr("ReadyToLaunch.UseALName")}
-          type={"text"}
-          spellCheck={false}
-          fullWidth
-          color={"secondary"}
-          variant={"outlined"}
-          value={pName}
-        />
+        {choice === "AL" ? (
+          <TextField
+            className={classes.input}
+            autoFocus
+            margin={"dense"}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+            label={tr("ReadyToLaunch.UseALName")}
+            type={"text"}
+            spellCheck={false}
+            fullWidth
+            color={"secondary"}
+            variant={"outlined"}
+            value={pName}
+          />
+        ) : (
+          ""
+        )}
         {choice === "MZ" ? (
           <Box>
             <Button

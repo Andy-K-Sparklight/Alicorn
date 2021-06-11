@@ -24,7 +24,7 @@ export function VersionView(): JSX.Element {
         {tr("VersionView.Name")}
       </Typography>
       <Typography className={classes.text} gutterBottom>
-        {tr("VersionView.Version") + " " + pkg.version}
+        {tr("VersionView.Version") + " " + pkg.appVersion}
       </Typography>
       <Typography className={classes.text} gutterBottom>
         {tr("VersionView.Description")}

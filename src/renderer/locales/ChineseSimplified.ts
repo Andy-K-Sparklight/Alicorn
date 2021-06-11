@@ -123,7 +123,7 @@ export default {
     "如果您安装了太多的 Mod，Alicorn 可能需要很长的时间来准备它们。",
     "您的每一次文件访问都会被缓存加速！",
     "当然，偶尔缓存也会出问题……",
-    `这是 Alicorn 版本 ${pkg.version}，是一个测试版本。`,
+    `这是 Alicorn 版本 ${pkg.appVersion}，是一个测试版本。`,
     "我们希望您不是为了做一些不好的事情而启动这个核心。",
     "为什么会变成这样呢？真是没想到啊……",
     "您知道吗？英语真的很重要！English is essential!",
@@ -136,7 +136,7 @@ export default {
     "这是 Alicorn 的测试版本，可能存在重大问题，请谨慎使用。",
   "VersionView.Copyright1":
     "Alicorn 启动器是自由软件，复制、修改和重新分发等行为应遵循 GNU GENERAL PUBLIC LICENSE Version 3.0 许可证。",
-  "VersionView.Copyright2": `Copyright (C) 2021 RarityEG from MCBBS
+  "VersionView.Copyright2": `Copyright (C) 2021 Andy K Rarity Sparklight
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3.
     This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.`,
   "ContainerManager.RootDir": "挂载于",

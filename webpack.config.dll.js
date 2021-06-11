@@ -6,7 +6,7 @@ const DllPlugin = require("webpack/lib/DllPlugin");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const BuildInfoPlugin = require("./BuildInfoPlugin");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const Version = require("./package.json").version;
+const Version = require("./package.json").appVersion;
 module.exports = {
   entry: {
     Twilight: ["react", "react-dom", "@material-ui/core", "@material-ui/icons"],

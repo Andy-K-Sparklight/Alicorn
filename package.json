@@ -1,6 +1,7 @@
 {
   "private": true,
-  "version": "InDev",
+  "appVersion": "InDev",
+  "version": "1.0.0",
   "sideEffects": false,
   "scripts": {
     "build-dll": "npx webpack --config webpack.config.dll.js --progress",
@@ -26,7 +27,10 @@
     "release-star": "npx webpack --config webpack.config.starlight.release.js --progress&&node mixin.js",
     "release-star-ci": "npx webpack --config webpack.config.starlight.release.js&&node mixin.js",
     "release-full": "yarn release-main&&yarn release-renderer&&yarn release-star",
-    "release-full-ci": "yarn release-main-ci&&yarn release-renderer-ci&&yarn release-star-ci"
+    "release-full-ci": "yarn release-main-ci&&yarn release-renderer-ci&&yarn release-star-ci",
+    "package": "yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=ia32 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=linux --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=linux --arch=ia32 --icon ./resources/build/icon --out out",
+    "compress": "cd out&&mkdir compressed&&zip -r -9 compressed/Alicorn-win32-ia32.zip Alicorn-win32-ia32/*&&zip -r -9 compressed/Alicorn-win32-x64.zip Alicorn-win32-x64/*&&zip -r -9 compressed/Alicorn-linux-ia32.zip Alicorn-linux-ia32/*&&zip -r -9 compressed/Alicorn-linux-x64.zip Alicorn-linux-x64/*",
+    "make-all": "yarn build-vercel&&yarn package&&yarn compress"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.0.1",
@@ -42,6 +46,7 @@
     "@typescript-eslint/parser": "^4.24.0",
     "copy-webpack-plugin": "^9.0.0",
     "electron": "^12.0.10",
+    "electron-packager": "^15.2.0",
     "eslint": "^7.27.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",

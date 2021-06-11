@@ -24,7 +24,7 @@ class SimpleAlicornAPI implements AlicornAPI {
   }
 
   getVersion(): string {
-    return pkg.version;
+    return pkg.appVersion;
   }
 
   getTarget(): MinecraftContainer {

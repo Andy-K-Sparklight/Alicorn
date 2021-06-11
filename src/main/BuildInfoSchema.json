@@ -4,7 +4,7 @@
     "date": {
       "type": "string"
     },
-    "version": {
+    "appVersion": {
       "type": "string"
     },
     "files": {

@@ -8,7 +8,7 @@ const DllReferencePlugin = require("webpack/lib/DllReferencePlugin");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const BuildInfoPlugin = require("./BuildInfoPlugin");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const Version = require("./package.json").version;
+const Version = require("./package.json").appVersion;
 // noinspection JSValidateTypes
 module.exports = {
   entry: "./src/renderer/Renderer.tsx",
