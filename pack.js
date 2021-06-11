@@ -7,6 +7,9 @@ const path = require("path");
 const tDir = "./out/";
 
 const all = fs.readdirSync(tDir);
+try {
+  fs.mkdirSync(path.join(tDir, "compressed"));
+} catch {}
 Promise.allSettled(
   all.map((e) => {
     const c = path.join(tDir, e);
