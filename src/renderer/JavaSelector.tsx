@@ -33,7 +33,7 @@ import { ALICORN_DEFAULT_THEME_LIGHT, submitError } from "./Renderer";
 import { installJRE } from "../modules/java/GetJDK";
 import os from "os";
 
-const CANNOT_LOAD_INFO: JavaInfo = {
+export const CANNOT_LOAD_INFO: JavaInfo = {
   rootVersion: -1,
   vm: "",
   vmSide: "Server",
@@ -56,8 +56,8 @@ export function JavaSelector(): JSX.Element {
       },
     })
   )();
-  const [isLoaded, setLoaded] = useState<boolean>(true);
-  const isMounted = useRef<boolean>(true);
+  const [isJavaInfoLoaded, setLoaded] = useState<boolean>(true);
+  const mounted = useRef<boolean>(false);
   const [javaList, setJavaList] = useState<string[]>(getAllJava());
   const [javaInfo, setJavaInfo] = useState<Map<string, JavaInfo>>(new Map());
   const [currentJava, setCurrentJava] = useState<string>(getLastUsedJavaHome());
@@ -65,37 +65,37 @@ export function JavaSelector(): JSX.Element {
     useState<JavaInfo>(CANNOT_LOAD_INFO);
   const display = useRef<boolean>(os.platform() === "win32");
   useEffect(() => {
-    isMounted.current = true;
+    mounted.current = true;
 
     (async () => {
       try {
         const t = parseJavaInfo(
           parseJavaInfoRaw(await getJavaInfoRaw(currentJava))
         );
-        if (isMounted.current) {
+        if (mounted.current) {
           setCurrentJavaInfo(t);
         }
       } catch {
-        if (isMounted.current) {
+        if (mounted.current) {
           setCurrentJavaInfo(CANNOT_LOAD_INFO);
         }
       }
     })();
 
     return () => {
-      isMounted.current = false;
+      mounted.current = false;
     };
   }, []);
   useEffect(() => {
     (async () => {
       let javas;
-      if (!isLoaded) {
+      if (!isJavaInfoLoaded) {
         javas = await whereJava();
       } else {
         javas = getAllJava();
       }
-      if (isMounted.current) {
-        if (!isLoaded) {
+      if (mounted.current) {
+        if (!isJavaInfoLoaded) {
           resetJavaList(javas);
         }
         setJavaList(javas);
@@ -110,32 +110,31 @@ export function JavaSelector(): JSX.Element {
             tMap.set(j, CANNOT_LOAD_INFO);
           }
         }
-        if (isMounted.current) {
+        if (mounted.current) {
           setJavaInfo(tMap);
         }
         setLoaded(true);
       }
     })();
-  }, [isLoaded]);
+  }, [isJavaInfoLoaded]);
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box className={classes.root}>
-        <Box>
-          <Typography
-            variant={"h5"}
-            color={"primary"}
-            className={classes.title}
-            gutterBottom
-          >
-            {tr("JavaSelector.SelectJavaTitle")}
-          </Typography>
-        </Box>
+        <Typography
+          variant={"h5"}
+          color={"primary"}
+          className={classes.title}
+          gutterBottom
+        >
+          {tr("JavaSelector.SelectJavaTitle")}
+        </Typography>
+
         <FormControl>
           <InputLabel id={"Select-JRE"} className={classes.label}>
             {tr("JavaSelector.SelectJava")}
           </InputLabel>
           <Select
-            disabled={!isLoaded}
+            disabled={!isJavaInfoLoaded}
             labelId={"Select-JRE"}
             color={"primary"}
             className={classes.selector + " " + fullWidthClasses.form}
@@ -166,7 +165,7 @@ export function JavaSelector(): JSX.Element {
             <Refresh />
           </IconButton>
         </Tooltip>
-        {isLoaded ? (
+        {isJavaInfoLoaded ? (
           ""
         ) : (
           <Box>
@@ -179,7 +178,7 @@ export function JavaSelector(): JSX.Element {
         )}
 
         <JavaInfoDisplay
-          jInfo={isLoaded ? javaInfo.get(currentJava) : currentJavaInfo}
+          jInfo={isJavaInfoLoaded ? javaInfo.get(currentJava) : currentJavaInfo}
         />
         {display.current ? <JavaDownloader /> : ""}
       </Box>
@@ -291,6 +290,7 @@ function JavaDownloader(): JSX.Element {
       >
         {tr("JavaSelector.GetNew")}
       </Button>
+      <br />
       <Button
         disabled={isRunning}
         variant={"outlined"}

@@ -213,7 +213,7 @@ export default {
   "JavaSelector.GetNew":
     "下载 AdoptOpenJDK JRE 16（适用于 Minecraft 17 及更新版本）",
   "JavaSelector.GetOld":
-    "下载 AdoptOpenJDK JRE 8 （适用于 Minecraft 16 及更旧版本）",
+    "下载 AdoptOpenJDK JRE 8  （适用于 Minecraft 16 及更旧版本）",
   "JavaSelector.Warn32":
     "性能警示 - Minecraft 在 32 位 Java VM 上可能无法发挥出最好性能。",
   "JavaSelector.WarnClient":

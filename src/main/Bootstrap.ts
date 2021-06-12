@@ -9,6 +9,9 @@ import path from "path";
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow | null = null;
 app.on("ready", async () => {
+  console.log(
+    `With Electron ${process.versions["electron"]}, Node.js ${process.versions["node"]} and Chrome ${process.versions["chrome"]}`
+  );
   const appPath = app.getAppPath();
   console.log("App is ready, preparing window...");
   // Open window as soon as possible

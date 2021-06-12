@@ -8,6 +8,7 @@ import {
   DialogContentText,
   DialogTitle,
   Fab,
+  FormControl,
   FormControlLabel,
   InputLabel,
   LinearProgress,
@@ -33,6 +34,7 @@ import { loadProfile } from "../modules/profile/ProfileLoader";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MicrosoftAccount } from "../modules/auth/MicrosoftAccount";
 import {
+  getAllJava,
   getJavaInfoRaw,
   getJavaRunnable,
   getLastUsedJavaHome,
@@ -59,7 +61,7 @@ import {
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { LocalAccount } from "../modules/auth/LocalAccount";
 import { Account } from "../modules/auth/Account";
-import { useInputStyles } from "./Stylex";
+import { useFormStyles, useInputStyles } from "./Stylex";
 import { isNull } from "../modules/commons/Null";
 import {
   AccountType,
@@ -173,6 +175,7 @@ function Launching(props: {
   const [selecting, setSelecting] = useState<boolean>(false);
   const [allAccounts, setAccounts] = useState<Set<Account>>(new Set<Account>());
   const [wrapperStatus, setWrapperStatus] = useState<WrapperStatus>();
+  const profileHash = useRef<string>(objectHash(props.profile));
   useEffect(() => {
     const timer = setInterval(() => {
       setHint(randsl("ReadyToLaunch.WaitingText"));
@@ -249,6 +252,7 @@ function Launching(props: {
                 setActiveStep(REV_LAUNCH_STEPS[st]);
               },
               props.profile,
+              profileHash.current,
               props.container,
               setID,
               a,
@@ -318,6 +322,8 @@ function Launching(props: {
         </Typography>
       )}
 
+      <MiniJavaSelector hash={profileHash.current} />
+
       <Typography className={classes.text} gutterBottom>
         {hint}
       </Typography>
@@ -343,6 +349,7 @@ function Launching(props: {
                   setActiveStep(REV_LAUNCH_STEPS[st]);
                 },
                 props.profile,
+                profileHash.current,
                 props.container,
                 setID,
                 selectedAccount,
@@ -373,6 +380,7 @@ export interface MCFailureInfo {
 async function startBoot(
   setStatus: (status: LaunchingStatus) => void,
   profile: GameProfile,
+  profileHash: string,
   container: MinecraftContainer,
   setID: (id: string) => unknown,
   account: Account,
@@ -666,4 +674,75 @@ function AccountChoose(props: {
       </DialogActions>
     </Dialog>
   );
+}
+
+function MiniJavaSelector(props: { hash: string }): JSX.Element {
+  const classes = useFormStyles();
+  const fullWidthClasses = makeStyles((theme) =>
+    createStyles({
+      form: {
+        width: theme.spacing(80),
+      },
+      right: {
+        float: "right",
+        marginRight: theme.spacing(4),
+      },
+    })
+  )();
+  const mounted = useRef<boolean>(false);
+  const [currentJava, setCurrentJava] = useState<string>(
+    getJavaAndCheckAvailable(props.hash)
+  );
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  return (
+    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+      <Box className={classes.root}>
+        <FormControl>
+          <InputLabel id={"Select-JRE"} className={classes.label}>
+            {tr("JavaSelector.SelectJava")}
+          </InputLabel>
+          <Select
+            labelId={"Select-JRE"}
+            color={"primary"}
+            className={classes.selector + " " + fullWidthClasses.form}
+            onChange={(e) => {
+              const sj = String(e.target.value);
+              setCurrentJava(sj);
+              setJavaForProfile(props.hash, sj);
+            }}
+            value={currentJava}
+          >
+            {getAllJava().map((j) => {
+              return (
+                <MenuItem key={objectHash(j)} value={j}>
+                  {j}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+      </Box>
+    </MuiThemeProvider>
+  );
+}
+
+const GKEY = "Profile.PrefJava";
+
+function setJavaForProfile(hash: string, jHome: string): void {
+  window.localStorage[GKEY + hash] = jHome;
+}
+
+function getJavaAndCheckAvailable(hash: string): string {
+  const t = window.localStorage[GKEY + hash];
+  if (typeof t === "string" && t.length > 0) {
+    if (getAllJava().includes(t)) {
+      return t;
+    }
+  }
+  return getLastUsedJavaHome();
 }
