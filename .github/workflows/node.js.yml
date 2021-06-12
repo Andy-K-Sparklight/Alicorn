@@ -43,10 +43,10 @@ jobs:
           path: out/compressed/Alicorn-win32-ia32.zip
       - uses: actions/upload-artifact@v2
         with:
-          name: Alicorn for GNU/Linux x64
+          name: Alicorn for Linux x64
           path: out/compressed/Alicorn-linux-x64.tar.gz
       - uses: actions/upload-artifact@v2
         with:
-          name: Alicorn for GNU/Linux ia32
+          name: Alicorn for Linux ia32
           path: out/compressed/Alicorn-linux-ia32.tar.gz
 
