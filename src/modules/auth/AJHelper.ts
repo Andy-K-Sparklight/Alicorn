@@ -4,7 +4,6 @@ import got from "got";
 
 export const AJ_FILE_BASE = "authlib-injector.jar";
 
-// Download the latest Authlib Injector
 export async function prepareAJ(): Promise<void> {
   await saveDefaultData(AJ_FILE_BASE);
 }

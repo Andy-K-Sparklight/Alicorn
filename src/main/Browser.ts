@@ -20,6 +20,7 @@ export async function openBrowser(
     },
     height: 720,
     width: 1280,
+    title: "Please Wait...",
   });
   if (proxy.trim().length > 0) {
     await USER_BROWSER.webContents.session.setProxy({

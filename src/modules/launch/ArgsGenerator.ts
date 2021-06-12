@@ -146,8 +146,16 @@ export function applyAJ(
     `-javaagent:${tPath}=${vHost}`,
     `-Dauthlibinjector.yggdrasil.prefetched=${prefetch}`,
   ];
-  // To be honest, we want to show 'Alicorn' rather than the name of the auth server
-  // But since some servers auth their players by reading this value('--versionType')
-  // We should let this off
-  // return `-javaagent:${ajPath}=${verifyHost} -Dauthlibinjector.noShowServerName`
+}
+
+// Nide8
+// NEVER EVER APPLY THIS TOGETHER WITH AUTHLIB INJECTOR!!
+export function applyND(ndPath: string, serverId: string): string[] {
+  const tPath = ndPath.trim();
+  const sid = serverId.trim();
+  if (isNull(tPath) || isNull(sid)) {
+    return [];
+  }
+  // Nide8 has not prefetch, that's good!
+  return [`-javaagent:${tPath}=${sid}`, "-Dnide8auth.client=true"];
 }

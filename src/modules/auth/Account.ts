@@ -107,6 +107,10 @@ export async function authenticate(
         }),
       })
     ).body;
+    const accessToken = String(safeGet(res, ["accessToken"], "") || "");
+    if (accessToken === "undefined" || accessToken.length === 0) {
+      return { success: false, accessToken: "", availableProfiles: [] };
+    }
     let selectedProfile: RemoteUserProfile | undefined = undefined;
     const sObj = safeGet(res, ["selectedProfile"], null);
     if (!isNull(sObj)) {
@@ -122,7 +126,7 @@ export async function authenticate(
         }
       }
     }
-    const accessToken = String(safeGet(res, ["accessToken"], "") || "");
+
     return {
       availableProfiles,
       selectedProfile,

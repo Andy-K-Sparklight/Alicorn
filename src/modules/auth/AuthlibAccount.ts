@@ -51,8 +51,10 @@ export class AuthlibAccount extends Account {
       password,
       this.authServer + "/authserver"
     );
-    updateAccount(this, st);
-    return true;
+    if (st.success) {
+      updateAccount(this, st);
+    }
+    return st.success;
   }
 
   serialize(): string {
@@ -69,8 +71,12 @@ export class AuthlibAccount extends Account {
   availableProfiles: RemoteUserProfile[] = [];
   selectedProfile: RemoteUserProfile | undefined;
 
-  constructor(accountName: string, authServer: string) {
-    super(accountName, AccountType.AUTHLIB_INJECTOR);
+  constructor(
+    accountName: string,
+    authServer: string,
+    overrideType = AccountType.AUTHLIB_INJECTOR
+  ) {
+    super(accountName, overrideType);
     this.authServer = authServer;
   }
 }

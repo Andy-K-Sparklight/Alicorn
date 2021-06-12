@@ -15,10 +15,10 @@ import { HashRouter } from "react-router-dom";
 import { App } from "./App";
 import { initVF } from "../modules/container/ValidateRecord";
 import { prepareAJ } from "../modules/auth/AJHelper";
-import { initCommands } from "../modules/command/CommandHandler";
 import pkg from "../../package.json";
 import { registerHandlers } from "./Handlers";
 import { initResolveLock } from "../modules/download/ResolveLock";
+import { prepareND } from "../modules/auth/NDHelper";
 
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
@@ -96,10 +96,10 @@ window.addEventListener("error", (e) => {
   initDownloadWrapper();
   await loadJDT();
   await initForgeInstallModule();
-  initCommands();
   await initEncrypt();
   await initModInfo();
   await prepareAJ(); // Authlib Injector
+  await prepareND(); // Nide8
   await initVF();
   console.log("Delayed init tasks finished.");
 })();

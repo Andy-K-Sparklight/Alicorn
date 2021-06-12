@@ -37,7 +37,6 @@ import {
 import { LaunchPad } from "./LaunchPad";
 import { tr } from "./Translator";
 import { Route } from "react-router";
-import { CoreDetail } from "./CoreDetailView";
 import { ReadyToLaunch } from "./ReadyToLaunch";
 import { saveVF, saveVFSync } from "../modules/container/ValidateRecord";
 import { VersionView } from "./VersionView";
@@ -46,7 +45,6 @@ import { InstallCore } from "./InstallCore";
 import { YggdrasilAccountManager } from "./YggdrasilAccountManager";
 import { JavaSelector } from "./JavaSelector";
 import { OptionsPage } from "./Options";
-import { Terminal } from "./Terminal";
 import { CrashReportDisplay } from "./CrashReportDisplay";
 import {
   saveResolveLock,
@@ -236,7 +234,6 @@ export function App(): JSX.Element {
         <Route path={"/"} component={VersionView} exact />
         <Route path={"/LaunchPad"} component={LaunchPad} />
         <Route path={"/InstallCore"} component={InstallCore} />
-        <Route path={"/CoreDetail/:container/:id"} component={CoreDetail} />
         <Route
           path={"/ReadyToLaunch/:container/:id/:server?"}
           component={ReadyToLaunch}
@@ -247,7 +244,6 @@ export function App(): JSX.Element {
           path={"/YggdrasilAccountManager"}
           component={YggdrasilAccountManager}
         />
-        <Route path={"/Terminal"} component={Terminal} />
         <Route path={"/JavaSelector"} component={JavaSelector} />
         <Route path={"/Options"} component={OptionsPage} />
         <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />

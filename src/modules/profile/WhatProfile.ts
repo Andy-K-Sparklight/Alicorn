@@ -8,6 +8,7 @@ const LEGACY_VERSIONS = /^1\.([0-9]|1[0-2])\.[0-9]+?/i;
 const MOJANG_OLD_AB = /^[ab][0-9]+?\.[0-9]+?.*$/i;
 const MOJANG_OLD_CX = /^c[0-9_.]+?[a-z]*?$/i;
 const MOJANG_OLD_RD = /^rd-[0-9]+?$/i;
+const MOJANG_PRE_RC = /^[0-9]+?\.[0-9]+?(\.)?[0-9]*-(pre|rc)[0-9]*$/i;
 
 export function whatProfile(id: string): ProfileType {
   if (
@@ -15,7 +16,8 @@ export function whatProfile(id: string): ProfileType {
     MOJANG_NAME_SNAPSHOT.test(id) ||
     MOJANG_OLD_AB.test(id) ||
     MOJANG_OLD_CX.test(id) ||
-    MOJANG_OLD_RD.test(id)
+    MOJANG_OLD_RD.test(id) ||
+    MOJANG_PRE_RC.test(id)
   ) {
     return ProfileType.MOJANG;
   }

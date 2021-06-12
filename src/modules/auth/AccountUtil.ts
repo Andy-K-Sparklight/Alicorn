@@ -14,6 +14,7 @@ import { decryptByMachine, encryptByMachine } from "../security/Encrypt";
 import fs from "fs-extra";
 import { MojangAccount } from "./MojangAccount";
 import { MicrosoftAccount } from "./MicrosoftAccount";
+import { Nide8Account } from "./Nide8Account";
 
 // Account Prefix
 // DO NOT EDIT THIS - VALUES ARE VERY ESSENTIAL
@@ -21,11 +22,13 @@ import { MicrosoftAccount } from "./MicrosoftAccount";
 // $MZ! Microsoft Account
 // $BJ! Mojang Account
 // $AJ! Authlib Injector
+// $ND! Nide8
 enum AccountType {
   MICROSOFT = "$MZ!",
   ALICORN = "$AL!",
   AUTHLIB_INJECTOR = "$AJ!",
   MOJANG = "$BJ!",
+  NIDE8 = "$ND!",
 }
 
 const ACCOUNT_ROOT = "accounts";
@@ -72,6 +75,8 @@ export async function loadAccount(fName: string): Promise<Account | null> {
     const deS = decryptByMachine(s);
     const p = decideWhichAccountByHead(deS);
     switch (p.getFirstValue()) {
+      case AccountType.NIDE8:
+        return loadNDAccount(p.getSecondValue());
       case AccountType.AUTHLIB_INJECTOR:
         return loadAJAccount(p.getSecondValue());
       case AccountType.MOJANG:
@@ -89,6 +94,17 @@ export async function loadAccount(fName: string): Promise<Account | null> {
 
 function loadLocalAccount(obj: Record<string, unknown>): LocalAccount {
   const la = new LocalAccount(String(obj["accountName"] || ""));
+  la.lastUsedUsername = String(obj["lastUsedUsername"] || "");
+  la.lastUsedAccessToken = String(obj["lastUsedAccessToken"] || "");
+  la.lastUsedUUID = String(obj["lastUsedUUID"] || "");
+  return la;
+}
+
+function loadNDAccount(obj: Record<string, unknown>): Nide8Account {
+  const la = new Nide8Account(
+    String(obj["accountName"] || ""),
+    String(obj["serverId"] || "")
+  );
   la.lastUsedUsername = String(obj["lastUsedUsername"] || "");
   la.lastUsedAccessToken = String(obj["lastUsedAccessToken"] || "");
   la.lastUsedUUID = String(obj["lastUsedUUID"] || "");
@@ -124,6 +140,9 @@ function loadMSAccount(obj: Record<string, unknown>): MicrosoftAccount {
 }
 
 function decideWhichAccountByCls(a: Account): AccountType {
+  if (a instanceof Nide8Account) {
+    return AccountType.NIDE8;
+  }
   if (a instanceof AuthlibAccount) {
     return AccountType.AUTHLIB_INJECTOR;
   }
@@ -143,6 +162,9 @@ function decideWhichAccountByHead(
     let p1;
     const p2 = JSON.parse(str.slice(4));
     switch (str.slice(0, 4)) {
+      case AccountType.NIDE8:
+        p1 = AccountType.NIDE8;
+        break;
       case AccountType.MICROSOFT:
         p1 = AccountType.MICROSOFT;
         break;
@@ -177,6 +199,17 @@ export function copyAccount(aIn: Account | undefined): Account {
     return new LocalAccount("Demo");
   }
   switch (aIn.type) {
+    case AccountType.NIDE8: {
+      const ai = aIn as Nide8Account;
+      const ac = new Nide8Account(aIn.accountName, ai.serverId);
+      ac.availableProfiles = ai.availableProfiles;
+      ac.accountName = ai.accountName;
+      ac.lastUsedUUID = ai.lastUsedUUID;
+      ac.lastUsedAccessToken = ai.lastUsedAccessToken;
+      ac.lastUsedUsername = ai.lastUsedUsername;
+      ac.selectedProfile = ai.selectedProfile;
+      return ac;
+    }
     case AccountType.MICROSOFT:
       return new MicrosoftAccount(aIn.accountName);
     case AccountType.MOJANG: {

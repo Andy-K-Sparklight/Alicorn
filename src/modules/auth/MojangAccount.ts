@@ -46,8 +46,10 @@ export class MojangAccount extends Account {
       password,
       MJ_AUTH_SERVER_ROOT
     );
-    updateAccount(this, st);
-    return true;
+    if (st.success) {
+      updateAccount(this, st);
+    }
+    return st.success;
   }
 
   serialize(): string {

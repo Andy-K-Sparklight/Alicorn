@@ -12,7 +12,7 @@ import { scanCoresInAllMountedContainers } from "../modules/container/ContainerS
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { whatProfile } from "../modules/profile/WhatProfile";
 import { tr } from "./Translator";
-import { FlightTakeoff, Info, Sync } from "@material-ui/icons";
+import { FlightTakeoff, Sync } from "@material-ui/icons";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 import { useCardStyles, usePadStyles } from "./Stylex";
 
@@ -144,23 +144,6 @@ function SingleCoreDisplay(props: {
             {}
           ) : (
             <Box>
-              <Tooltip title={tr("CoreInfo.Detail")}>
-                <IconButton
-                  color={"inherit"}
-                  className={classes.operateButton}
-                  onClick={() => {
-                    jumpTo(
-                      "/CoreDetail/" +
-                        props.profile.container +
-                        "/" +
-                        props.profile.id
-                    );
-                    triggerSetPage(Pages.CoreDetail);
-                  }}
-                >
-                  <Info />
-                </IconButton>
-              </Tooltip>
               <Tooltip title={tr("CoreInfo.Launch")}>
                 <IconButton
                   color={"inherit"}

@@ -33,6 +33,7 @@ import { ALICORN_ENCRYPTED_DATA_SUFFIX } from "../modules/commons/Constants";
 import { YNDialog } from "./OperatingHint";
 import { MojangAccount } from "../modules/auth/MojangAccount";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
+import { Nide8Account } from "../modules/auth/Nide8Account";
 
 // This is only for Yggdrasil accounts
 // MS Account and Local Account should not be saved
@@ -251,6 +252,8 @@ export function SingleAccountDisplay(props: {
 
 export function toReadableType(t: AccountType): string {
   switch (t) {
+    case AccountType.NIDE8:
+      return "Nide8";
     case AccountType.ALICORN:
       return "Alicorn";
     case AccountType.AUTHLIB_INJECTOR:
@@ -340,6 +343,7 @@ function AddAccount(props: {
   const [email, emailUpdate] = useState<string>("");
   const [authHost, authHostUpdate] = useState<string>("");
   const [isCustom, isCustomUpdate] = useState<boolean>(false);
+  const [isNide, setNide] = useState<boolean>(false);
   const classes = useInputStyles();
   return (
     <Box>
@@ -372,10 +376,25 @@ function AddAccount(props: {
                 checked={isCustom}
                 onChange={(e) => {
                   isCustomUpdate(e.target.checked);
+                  if (!e.target.checked) {
+                    setNide(false);
+                  }
                 }}
               />
             }
             label={tr("AccountManager.UseCustomHost")}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                disabled={!isCustom}
+                checked={isCustom && isNide}
+                onChange={(e) => {
+                  setNide(e.target.checked);
+                }}
+              />
+            }
+            label={tr("AccountManager.UseNide8")}
           />
           <TextField
             disabled={!isCustom}
@@ -406,12 +425,16 @@ function AddAccount(props: {
             }
             onClick={() => {
               if (isCustom) {
-                props.handleNewAccount(
-                  new AuthlibAccount(
-                    email,
-                    authHost.endsWith("/") ? authHost.slice(0, -1) : authHost
-                  )
-                );
+                if (isNide) {
+                  props.handleNewAccount(new Nide8Account(email, authHost));
+                } else {
+                  props.handleNewAccount(
+                    new AuthlibAccount(
+                      email,
+                      authHost.endsWith("/") ? authHost.slice(0, -1) : authHost
+                    )
+                  );
+                }
               } else {
                 props.handleNewAccount(new MojangAccount(email));
               }
@@ -446,7 +469,8 @@ function AddAccountWrapper(props: {
           tmpAccountUpdate(a);
           await saveAccount(a);
           isPwdOpenUpdate(false);
-          isEmailOpenUpdate(false);
+          props.onClose();
+          isEmailOpenUpdate(true);
           props.handleNewAccount(a);
         }}
       />
