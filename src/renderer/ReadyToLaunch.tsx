@@ -110,9 +110,12 @@ const useStyles = makeStyles((theme) =>
   })
 );
 const LAST_USED_USER_NAME_KEY = "ReadyToLaunch.LastUsedUsername";
+const GKEY = "Profile.PrefJava";
+const DEF = "Default";
 export const LAST_LAUNCH_REPORT_KEY = "ReadyToLaunch.LastLaunchReport";
 export const LAST_FAILURE_INFO_KEY = "ReadyToLaunch.LastFailureInfo";
 export const LAST_LOGS_KEY = "ReadyToLaunch.LastLogs";
+
 export function ReadyToLaunch(): JSX.Element {
   const [coreProfile, setProfile] = useState(new GameProfile({}));
   const [profileLoadedBit, setLoaded] = useState(0);
@@ -394,7 +397,9 @@ async function startBoot(
   window[LAST_LOGS_KEY] = [];
 
   const GLOBAL_LAUNCH_TRACKER = new LaunchTracker();
-  const jRunnable = await getJavaRunnable(getLastUsedJavaHome());
+  const jRunnable = await getJavaRunnable(
+    getJavaAndCheckAvailable(profileHash)
+  );
   const FAILURE_INFO: MCFailureInfo = {
     container: container,
     tracker: GLOBAL_LAUNCH_TRACKER,
@@ -691,7 +696,7 @@ function MiniJavaSelector(props: { hash: string }): JSX.Element {
   )();
   const mounted = useRef<boolean>(false);
   const [currentJava, setCurrentJava] = useState<string>(
-    getJavaAndCheckAvailable(props.hash)
+    getJavaAndCheckAvailable(props.hash, true)
   );
   useEffect(() => {
     mounted.current = true;
@@ -717,13 +722,21 @@ function MiniJavaSelector(props: { hash: string }): JSX.Element {
             }}
             value={currentJava}
           >
-            {getAllJava().map((j) => {
-              return (
-                <MenuItem key={objectHash(j)} value={j}>
-                  {j}
+            {(() => {
+              const t = getAllJava().map((j) => {
+                return (
+                  <MenuItem key={objectHash(j)} value={j}>
+                    {j}
+                  </MenuItem>
+                );
+              });
+              t.unshift(
+                <MenuItem key={DEF} value={DEF}>
+                  {tr("ReadyToLaunch.DefaultJava")}
                 </MenuItem>
               );
-            })}
+              return t;
+            })()}
           </Select>
         </FormControl>
       </Box>
@@ -731,18 +744,25 @@ function MiniJavaSelector(props: { hash: string }): JSX.Element {
   );
 }
 
-const GKEY = "Profile.PrefJava";
-
 function setJavaForProfile(hash: string, jHome: string): void {
   window.localStorage[GKEY + hash] = jHome;
 }
 
-function getJavaAndCheckAvailable(hash: string): string {
+function getJavaAndCheckAvailable(hash: string, allowDefault = false): string {
   const t = window.localStorage[GKEY + hash];
   if (typeof t === "string" && t.length > 0) {
+    if (t === DEF) {
+      if (allowDefault) {
+        return DEF;
+      }
+      return getLastUsedJavaHome();
+    }
     if (getAllJava().includes(t)) {
       return t;
     }
+  }
+  if (allowDefault) {
+    return DEF;
   }
   return getLastUsedJavaHome();
 }

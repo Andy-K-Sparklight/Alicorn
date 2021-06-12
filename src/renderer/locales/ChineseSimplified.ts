@@ -70,6 +70,7 @@ export default {
   "ReadyToLaunch.Next": "继续",
   "ReadyToLaunch.UseALName": "玩家名",
   "ReadyToLaunch.UseYGChoose": "使用该帐户",
+  "ReadyToLaunch.DefaultJava": "默认",
   "ReadyToLaunch.Status.Pending": "准备就绪",
   "ReadyToLaunch.Status.CheckingLibs": "正在检查和补充支援库",
   "ReadyToLaunch.Status.CheckingAssets": "正在检查和补充游戏资源",
