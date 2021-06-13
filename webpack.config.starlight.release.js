@@ -13,6 +13,7 @@ module.exports = {
     path: path.resolve(__dirname, "dist", "release"),
   },
   module: {
+    unknownContextCritical: false,
     rules: [
       {
         test: /\.tsx?$/,

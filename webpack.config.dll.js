@@ -24,4 +24,7 @@ module.exports = {
     }),
   ],
   mode: "development",
+  module: {
+    unknownContextCritical: false,
+  },
 };

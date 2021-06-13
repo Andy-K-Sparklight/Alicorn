@@ -5,6 +5,8 @@ import { Pair } from "../commons/Collections";
 import EventEmitter from "events";
 import { PROCESS_END_GATE, PROCESS_LOG_GATE } from "../commons/Constants";
 import { mount, unmount } from "../container/ContainerUtil";
+import { getBoolean } from "../config/ConfigSupport";
+import { runJIM } from "./JIMSupport";
 
 const POOL = new Map<string, RunningMinecraft>();
 const REV_POOL = new Map<RunningMinecraft, string>();
@@ -40,7 +42,7 @@ export class RunningMinecraft {
     try {
       this.process = spawn(this.executable, this.args, {
         cwd: this.container.resolvePath("/"),
-        detached: true,
+        detached: true, // Won't close after launcher closed
       });
     } catch (e) {
       console.log(e);
@@ -60,6 +62,23 @@ export class RunningMinecraft {
       }
       REV_POOL.delete(this);
     });
+    if (getBoolean("launch.jim")) {
+      let c0 = false;
+      this.process?.stderr?.once("data", async () => {
+        if (!c0) {
+          c0 = true;
+          await runJIM();
+          console.log("JIM enabled.");
+        }
+      });
+      this.process?.stdout?.once("data", async () => {
+        if (!c0) {
+          c0 = true;
+          await runJIM();
+          console.log("JIM enabled.");
+        }
+      });
+    }
     this.process?.stdout?.on("data", (d) => {
       const strD = d.toString();
       this.logs.getFirstValue().push(strD);

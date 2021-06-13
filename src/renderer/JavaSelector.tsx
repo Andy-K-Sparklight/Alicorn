@@ -309,6 +309,9 @@ function JavaDownloader(): JSX.Element {
             }
           })();
         }}
+        style={{
+          marginTop: "1%",
+        }}
       >
         {tr("JavaSelector.GetOld")}
       </Button>

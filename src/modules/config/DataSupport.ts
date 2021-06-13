@@ -27,9 +27,11 @@ export async function saveData(
   relativePath: string,
   data: string
 ): Promise<void> {
-  const dest = getActualDataPath(relativePath);
-  await fs.ensureDir(path.dirname(dest));
-  await fs.writeFile(dest, data);
+  try {
+    const dest = getActualDataPath(relativePath);
+    await fs.ensureDir(path.dirname(dest));
+    await fs.writeFile(dest, data);
+  } catch {}
 }
 
 export function saveDataSync(relativePath: string, data: string): void {
@@ -42,9 +44,11 @@ export function saveDataSync(relativePath: string, data: string): void {
 // 'No permission', I don't know why, but we have to do this manually
 
 export async function saveDefaultData(dfPath: string): Promise<void> {
-  const dest = getActualDataPath(dfPath);
-  if (await isFileExist(dest)) {
-    return;
-  }
-  await copyFileStream(path.join(DEFAULTS_ROOT, dfPath), dest);
+  try {
+    const dest = getActualDataPath(dfPath);
+    if (await isFileExist(dest)) {
+      return;
+    }
+    await copyFileStream(path.join(DEFAULTS_ROOT, dfPath), dest);
+  } catch {}
 }

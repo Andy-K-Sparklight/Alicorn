@@ -170,7 +170,7 @@ function Launching(props: {
   const classes = useStyles();
   const mountedBit = useRef<boolean>(true);
   const [warning, setWarning] = useState(false);
-  const [runID, setID] = useState("");
+
   const [status, setStatus] = useState(LaunchingStatus.PENDING);
   const [hint, setHint] = useState(randsl("ReadyToLaunch.WaitingText"));
   const [activeStep, setActiveStep] = useState(0);
@@ -257,7 +257,7 @@ function Launching(props: {
               props.profile,
               profileHash.current,
               props.container,
-              setID,
+
               a,
               props.server
             );
@@ -288,11 +288,6 @@ function Launching(props: {
       </Typography>
       <Typography variant={"h6"} className={classes.primaryText} gutterBottom>
         {tr("ReadyToLaunch.Status." + status)}
-        {status === LaunchingStatus.FINISHED ? " " + runID : ""}
-        {status !== LaunchingStatus.PENDING &&
-        status !== LaunchingStatus.FINISHED
-          ? ""
-          : ""}
       </Typography>
       <Stepper className={classes.stepper} activeStep={activeStep}>
         {LAUNCH_STEPS.map((s) => {
@@ -325,7 +320,7 @@ function Launching(props: {
         </Typography>
       )}
 
-      <MiniJavaSelector hash={profileHash.current} />
+      <MiniJavaSelector hash={profileHash.current} gameId={props.profile.id} />
 
       <Typography className={classes.text} gutterBottom>
         {hint}
@@ -354,7 +349,6 @@ function Launching(props: {
                 props.profile,
                 profileHash.current,
                 props.container,
-                setID,
                 selectedAccount,
                 props.server
               );
@@ -385,7 +379,6 @@ async function startBoot(
   profile: GameProfile,
   profileHash: string,
   container: MinecraftContainer,
-  setID: (id: string) => unknown,
   account: Account,
   server?: string
 ): Promise<LaunchTracker> {
@@ -490,7 +483,7 @@ async function startBoot(
     useServer: useServer,
     server: serverHost,
   });
-  setID(runID);
+
   setStatus(LaunchingStatus.FINISHED);
   console.log(`A new Minecraft instance (${runID}) has been launched.`);
   return GLOBAL_LAUNCH_TRACKER;
@@ -681,7 +674,10 @@ function AccountChoose(props: {
   );
 }
 
-function MiniJavaSelector(props: { hash: string }): JSX.Element {
+function MiniJavaSelector(props: {
+  hash: string;
+  gameId: string;
+}): JSX.Element {
   const classes = useFormStyles();
   const fullWidthClasses = makeStyles((theme) =>
     createStyles({
@@ -698,12 +694,25 @@ function MiniJavaSelector(props: { hash: string }): JSX.Element {
   const [currentJava, setCurrentJava] = useState<string>(
     getJavaAndCheckAvailable(props.hash, true)
   );
+  const [currentJavaVersion, setCurrentJavaVersion] = useState<number>();
+  const loaded = useRef<boolean>(false);
   useEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;
     };
   }, []);
+  useEffect(() => {
+    (async () => {
+      const ji = parseJavaInfo(
+        parseJavaInfoRaw(await getJavaInfoRaw(currentJava))
+      );
+      loaded.current = true;
+      if (mounted.current) {
+        setCurrentJavaVersion(ji.rootVersion);
+      }
+    })();
+  }, [currentJava]);
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box className={classes.root}>
@@ -739,6 +748,23 @@ function MiniJavaSelector(props: { hash: string }): JSX.Element {
             })()}
           </Select>
         </FormControl>
+        {(() => {
+          if (!loaded.current || !currentJavaVersion) {
+            return "";
+          }
+          const c = checkJMCompatibility(props.gameId, currentJavaVersion);
+          if (c === "OK") {
+            return "";
+          }
+          return (
+            <Typography
+              style={{ fontSize: "small", color: "#ff8400" }}
+              gutterBottom
+            >
+              {tr("ReadyToLaunch.JCheck.Too" + c)}
+            </Typography>
+          );
+        })()}
       </Box>
     </MuiThemeProvider>
   );
@@ -765,4 +791,17 @@ function getJavaAndCheckAvailable(hash: string, allowDefault = false): string {
     return DEF;
   }
   return getLastUsedJavaHome();
+}
+
+const LEGACY_VERSIONS = /^1\.([0-9]|1[0-2])(\.)?[0-9]*?/i;
+const MODERN_VERSIONS = /^1\.(1[7-9]|[2-9][0-9])(\.)?[0-9]*?/i;
+
+function checkJMCompatibility(mv: string, jv: number): "OLD" | "NEW" | "OK" {
+  if (LEGACY_VERSIONS.test(mv) && jv > 8) {
+    return "NEW";
+  }
+  if (MODERN_VERSIONS.test(mv) && jv < 16) {
+    return "OLD";
+  }
+  return "OK";
 }

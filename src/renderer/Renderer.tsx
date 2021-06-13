@@ -19,10 +19,14 @@ import pkg from "../../package.json";
 import { registerHandlers } from "./Handlers";
 import { initResolveLock } from "../modules/download/ResolveLock";
 import { prepareND } from "../modules/auth/NDHelper";
+import { saveJIMFile } from "../modules/launch/JIMSupport";
+
+require("v8-compile-cache");
 
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
+
 export const ALICORN_DEFAULT_THEME_DARK = createMuiTheme({
   palette: {
     type: "dark",
@@ -87,21 +91,34 @@ window.addEventListener("error", (e) => {
 
 (async () => {
   console.log("Initializing modules...");
+  const t1 = new Date();
   registerHandlers();
   await loadConfig();
-  await loadGDT();
-  await initResolveLock();
-  await loadMirror();
-  await initConcurrentDownloader();
+  // Essential works and light works
+  await Promise.allSettled([
+    loadGDT(),
+    loadJDT(),
+    initEncrypt(),
+    initModInfo(),
+  ]);
   initDownloadWrapper();
-  await loadJDT();
-  await initForgeInstallModule();
-  await initEncrypt();
-  await initModInfo();
-  await prepareAJ(); // Authlib Injector
-  await prepareND(); // Nide8
-  await initVF();
-  console.log("Delayed init tasks finished.");
+  // Normal works
+  await Promise.allSettled([
+    saveJIMFile(),
+    loadMirror(),
+    initForgeInstallModule(),
+    initConcurrentDownloader(),
+    prepareAJ(),
+    prepareND(),
+  ]);
+  // Heavy works and minor works
+  await Promise.allSettled([initResolveLock(), initVF()]);
+  const t2 = new Date();
+  console.log(
+    "Delayed init tasks finished. Time elapsed: " +
+      (t2.getTime() - t1.getTime()) / 1000 +
+      "s."
+  );
 })();
 ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
 

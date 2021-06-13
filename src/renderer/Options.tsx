@@ -17,6 +17,7 @@ import {
 } from "../modules/config/ConfigSupport";
 import { tr } from "./Translator";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import os from "os";
 
 enum ConfigType {
   BOOL,
@@ -76,6 +77,11 @@ export function OptionsPage(): JSX.Element {
           bindConfig={"cmc.disable-log4j-config"}
         />
         <InputItem type={ConfigType.STR} bindConfig={"web.global-proxy"} />
+        <InputItem
+          type={ConfigType.BOOL}
+          bindConfig={"launch.jim"}
+          onlyOn={"win32"}
+        />
       </MuiThemeProvider>
     </Box>
   );
@@ -84,9 +90,14 @@ export function OptionsPage(): JSX.Element {
 function InputItem(props: {
   type: ConfigType;
   bindConfig: string;
+  onlyOn?: NodeJS.Platform;
 }): JSX.Element {
   const [refreshBit, forceRefresh] = useState<boolean>(true);
-
+  if (props.onlyOn) {
+    if (os.platform() !== props.onlyOn) {
+      return <></>;
+    }
+  }
   const classes = makeStyles((theme) =>
     createStyles({
       desc: {
