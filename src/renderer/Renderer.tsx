@@ -20,6 +20,8 @@ import { registerHandlers } from "./Handlers";
 import { initResolveLock } from "../modules/download/ResolveLock";
 import { prepareND } from "../modules/auth/NDHelper";
 import { saveJIMFile } from "../modules/launch/JIMSupport";
+import { loadAllExtensions } from "../modules/ext/Extension";
+import { markMixin } from "../modules/ext/Mixin";
 
 require("v8-compile-cache");
 
@@ -119,6 +121,16 @@ window.addEventListener("error", (e) => {
       (t2.getTime() - t1.getTime()) / 1000 +
       "s."
   );
+  await markMixin("loadExtensions", "BeforeStart");
+  console.log("Start loading extensions.");
+  await Promise.allSettled([
+    markMixin("loadExtensions", "AfterStart"),
+    loadAllExtensions(),
+  ]);
+  await markMixin("loadExtensions", "BeforeEnd");
+  const t3 = new Date();
+  console.log("Time elapsed: " + (t3.getTime() - t2.getTime()) / 1000 + "s.");
+  await markMixin("loadExtensions", "AfterEnd");
 })();
 ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
 

@@ -11,6 +11,7 @@ import {
 } from "../commons/Constants";
 import { isNull } from "../commons/Null";
 import { getBoolean } from "../config/ConfigSupport";
+import { markMixinSync } from "../ext/Mixin";
 
 // Generate game arguments
 export function generateGameArgs(
@@ -93,7 +94,24 @@ export function generateVMArgs(
   }
 
   staticArgs = staticArgs.concat(logArgs).concat(profile.mainClass);
-  return applyVars(vMap, staticArgs);
+  const eArgs = staticArgs;
+  // Mixin start
+  const oArgs = {
+    args: eArgs,
+    valueMap: vMap,
+    applyVars: applyVars,
+    profile: profile,
+    container: container,
+  };
+  try {
+    markMixinSync("generateVMArgs", "BeforeEnd", oArgs);
+  } catch {}
+  // Mixin end
+  if (oArgs.args.length > 0) {
+    return applyVars(vMap, oArgs.args);
+  } else {
+    return applyVars(vMap, eArgs);
+  }
 }
 
 function applyVars(map: Map<string, string>, str: string[]): string[] {

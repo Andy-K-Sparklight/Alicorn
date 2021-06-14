@@ -30,14 +30,12 @@ export const FABRIC_META_ROOT = "https://meta.fabricmc.net/v2";
 // MD5 of the following text (excluding quotes): "The developer of Alicorn Launcher is really a cute filly!"
 export const CODE_32_SPECIAL = "61096da20861084f1e6a442d939717a8";
 
-enum ReleaseType {
+export enum ReleaseType {
   RELEASE = "release",
   SNAPSHOT = "snapshot",
   OLD_ALPHA = "old_alpha",
   OLD_BETA = "old_beta",
   MODIFIED = "modified", // Nonofficial profiles
 }
-
-export { ReleaseType };
 
 export const PLACE_HOLDER = "#//!?PH>>";

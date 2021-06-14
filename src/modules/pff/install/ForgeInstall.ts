@@ -33,11 +33,11 @@ const LAUNCHER_PROFILES = "launcher_profiles.json";
 // Figured out! Java problem
 // Okay we shall suggest 8 for 1.12.2 or earlier and 11 for 1.13 or later
 // This runs well!
-const PONY_KING_MAIN_CLASS = "rarityeg.alicorn.ForgeInstallerWrapper";
+const PONY_KIND_MAIN_CLASS = "rarityeg.alicorn.ForgeInstallerWrapper";
 const VERSION_PROFILE = "version.json";
 const INSTALL_PROFILE = "install_profile.json";
 
-// Save 'fih.jar'
+// Save 'forge.iw.jar'
 export async function initForgeInstallModule(): Promise<void> {
   await saveDefaultData(FORGE_INSTALLER_HEADLESS);
 }
@@ -77,7 +77,7 @@ export async function bootForgeInstaller(
     [
       CP_ARG,
       fihPt + FILE_SEPARATOR + fgPt,
-      PONY_KING_MAIN_CLASS,
+      PONY_KIND_MAIN_CLASS,
       container.resolvePath(""),
     ],
     { cwd: container.resolvePath() }

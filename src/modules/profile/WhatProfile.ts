@@ -4,7 +4,7 @@ const FABRIC_NAME = /fabric/i;
 const FORGE_NAME = /forge/i;
 const MOJANG_NAME_RELEASE = /^[0-9]+?\.[0-9]+?(\.)?[0-9]*$/i;
 const MOJANG_NAME_SNAPSHOT = /^[0-9]+?w[0-9]+?[a-z]$/i;
-const LEGACY_VERSIONS = /^1\.([0-9]|1[0-2])(\.)?[0-9]*?/i;
+const LEGACY_VERSIONS = /^1\.([0-9]|1[0-2])([-.a-z].*?)?$/i;
 const MOJANG_OLD_AB = /^[ab][0-9]+?\.[0-9]+?.*$/i;
 const MOJANG_OLD_CX = /^c[0-9_.]+?[a-z]*?$/i;
 const MOJANG_OLD_RD = /^rd-[0-9]+?$/i;
@@ -30,14 +30,12 @@ export function whatProfile(id: string): ProfileType {
   return ProfileType.UNIVERSAL;
 }
 
-enum ProfileType {
+export enum ProfileType {
   MOJANG = "Mojang",
   FORGE = "Forge",
   FABRIC = "Fabric",
   UNIVERSAL = "Universal",
 }
-
-export { ProfileType };
 
 export function isLegacy(obj: Record<string, unknown>): boolean {
   if (!isNull(obj["minecraftArguments"])) {

@@ -45,8 +45,4 @@ jobs:
         with:
           name: Alicorn for Linux x64 TGZ
           path: out/compressed/Alicorn-linux-x64.tar.gz
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Alicorn for Linux ia32 TGZ
-          path: out/compressed/Alicorn-linux-ia32.tar.gz
 

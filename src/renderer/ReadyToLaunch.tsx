@@ -793,7 +793,7 @@ function getJavaAndCheckAvailable(hash: string, allowDefault = false): string {
   return getLastUsedJavaHome();
 }
 
-const LEGACY_VERSIONS = /^1\.([0-9]|1[0-2])(\.)?[0-9]*?/i;
+const LEGACY_VERSIONS = /^1\.([0-9]|1[0-2])([-.a-z].*?)?$/i;
 const MODERN_VERSIONS = /^1\.(1[7-9]|[2-9][0-9])(\.)?[0-9]*?/i;
 
 function checkJMCompatibility(mv: string, jv: number): "OLD" | "NEW" | "OK" {
