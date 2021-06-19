@@ -85,6 +85,7 @@ import { findNotIn } from "../modules/commons/Collections";
 import { YNDialog } from "./OperatingHint";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 import { ipcRenderer } from "electron";
+import { Nide8Account } from "../modules/auth/Nide8Account";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -420,10 +421,15 @@ async function startBoot(
   let useAj = false;
   let ajHost = "";
   let prefetch = "";
+  let useNd = false;
+  let ndServerId = "";
   if (account.type === AccountType.AUTHLIB_INJECTOR) {
     useAj = true;
     ajHost = (account as AuthlibAccount).authServer;
     prefetch = await prefetchData((account as AuthlibAccount).authServer);
+  } else if (account.type === AccountType.NIDE8) {
+    useNd = true;
+    ndServerId = (account as Nide8Account).serverId;
   }
   let useServer = false;
   let serverHost = "";
@@ -489,6 +495,8 @@ async function startBoot(
     ajPrefetch: prefetch,
     useServer: useServer,
     server: serverHost,
+    useNd: useNd,
+    ndServerId: ndServerId,
   });
 
   setStatus(LaunchingStatus.FINISHED);
