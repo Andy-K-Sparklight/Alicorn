@@ -33,7 +33,6 @@ export class CrashReportCursor {
 
   constructor(content: string) {
     let all = content.split("\n");
-    console.log(all);
     all = all.map((l) => {
       return l.trimEnd(); // Don't trim head - indent required
     });
@@ -115,7 +114,9 @@ export async function analyzeCrashReport(
     }
 
     return c.build();
-  } catch {
+  } catch (e) {
+    console.log("Error during analyzing!");
+    console.log(e);
     return new Map<number, { origin: string; report: CrashLoaderReport[] }>();
   }
 }

@@ -320,7 +320,14 @@ function Launching(props: {
         </Typography>
       )}
 
-      <MiniJavaSelector hash={profileHash.current} gameId={props.profile.id} />
+      <MiniJavaSelector
+        hash={profileHash.current}
+        gameId={props.profile.id}
+        disabled={
+          status !== LaunchingStatus.PENDING &&
+          status !== LaunchingStatus.FINISHED
+        }
+      />
 
       <Typography className={classes.text} gutterBottom>
         {hint}
@@ -677,6 +684,7 @@ function AccountChoose(props: {
 function MiniJavaSelector(props: {
   hash: string;
   gameId: string;
+  disabled: boolean;
 }): JSX.Element {
   const classes = useFormStyles();
   const fullWidthClasses = makeStyles((theme) =>
