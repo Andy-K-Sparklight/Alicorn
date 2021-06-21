@@ -29,6 +29,7 @@ export function markMixinSync(
   }
   for (const m of allMixins) {
     if (m.type === state) {
+      console.log(`Executing mixin for ${m.target}/${m.type}`);
       m.executor(...args);
     }
   }
@@ -46,6 +47,7 @@ export async function markMixin(
   }
   for (const m of allMixins) {
     if (m.type === state) {
+      console.log(`Executing mixin for ${m.target}/${m.type}`);
       const t = m.executor(...args);
       if (t instanceof Promise) {
         await t;

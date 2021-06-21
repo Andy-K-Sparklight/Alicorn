@@ -26,11 +26,19 @@ export function generateGameArgs(
   vMap.set("assets_root", container.getAssetsRoot());
   vMap.set("assets_index_name", profile.assetIndex.id);
   vMap.set("auth_uuid", authData.getThirdValue());
-  vMap.set("auth_access_token", authData.getSecondValue());
   vMap.set("auth_session", authData.getSecondValue()); // Pre 1.6
   vMap.set("user_type", MOJANG_USER_TYPE);
   vMap.set("version_type", ALICORN_VERSION_TYPE);
-  return applyVars(vMap, profile.gameArgs);
+  const oArgs = {
+    args: profile.gameArgs.concat(),
+    valueMap: vMap,
+    applyVars: applyVars,
+    profile: profile,
+    container: container,
+  };
+  markMixinSync("generateGameArgs", "BeforeEnd", oArgs);
+  oArgs.valueMap.set("auth_access_token", authData.getSecondValue());
+  return applyVars(oArgs.valueMap, oArgs.args);
 }
 
 // Generate vm arguments, not for GCs or anything else
@@ -95,7 +103,6 @@ export function generateVMArgs(
 
   staticArgs = staticArgs.concat(logArgs).concat(profile.mainClass);
   const eArgs = staticArgs;
-  // Mixin start
   const oArgs = {
     args: eArgs,
     valueMap: vMap,
@@ -103,15 +110,8 @@ export function generateVMArgs(
     profile: profile,
     container: container,
   };
-  try {
-    markMixinSync("generateVMArgs", "BeforeEnd", oArgs);
-  } catch {}
-  // Mixin end
-  if (oArgs.args.length > 0) {
-    return applyVars(vMap, oArgs.args);
-  } else {
-    return applyVars(vMap, eArgs);
-  }
+  markMixinSync("generateVMArgs", "BeforeEnd", oArgs);
+  return applyVars(oArgs.valueMap, oArgs.args);
 }
 
 function applyVars(map: Map<string, string>, str: string[]): string[] {

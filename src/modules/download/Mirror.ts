@@ -9,15 +9,29 @@ import {
   saveDefaultData,
 } from "../config/DataSupport";
 import { buildMap, parseMap } from "../commons/MapUtil";
+import { markMixinSync } from "../ext/Mixin";
 
 const MIRROR_FILE = "mirrors.ald";
 let mirrorMap: Map<string, string> = new Map();
 
 export function applyMirror(url: string): string {
-  for (const [k, v] of mirrorMap.entries()) {
-    url = url.replace(k, v);
+  const ogc = { end: false, map: mirrorMap, url: url };
+  markMixinSync("applyMirror", "AfterStart", ogc);
+  if (ogc.end) {
+    return ogc.url;
   }
-  return url;
+  for (const [k, v] of mirrorMap.entries()) {
+    const rx = new RegExp(k);
+    if (rx.test(url)) {
+      const ru = url.replace(rx, v);
+      const ogc = { map: mirrorMap, url: ru };
+      markMixinSync("applyMirror", "BeforeEnd", ogc);
+      return ogc.url; // This is considered faster a bit
+    }
+  }
+  const ogc2 = { map: mirrorMap, url: url };
+  markMixinSync("applyMirror", "BeforeEnd", ogc2);
+  return ogc2.url;
 }
 
 export function saveMirrorSync(): void {
