@@ -96,6 +96,7 @@ export default {
     "您知道吗？Alicorn 的作者是一只小马……好吧，事实上是小马国女孩（小声",
     "您应该多使用 Fabric，毕竟我们花了很大功夫支持它的启动。",
     "您知道 Microsoft 帐户背后的验证过程吗？大致有五步。",
+    "{UserName} 可爱~",
     "Alicorn 是自由软件！",
     "感谢 Node.js，现在验证您的资源文件又快又准确。",
     "请说出新人常用的启动器。不太确定？你确定吗？",
@@ -115,13 +116,13 @@ export default {
     "如果您安装了太多的 Mod，Alicorn 可能需要很长的时间来准备它们。",
     "您的每一次文件访问都会被缓存加速！嗯……只要它不出问题……",
     `这是 Alicorn 版本 ${pkg.appVersion}，是一个测试版本。`,
-    "我们希望您不是为了做一些不好的事情而启动这个核心。",
     "为什么会变成这样呢？真是没想到啊……",
+    "{UserName}，要我说，你有点像个女孩……什么？！你本来就是？！对不起对不起……（脸红",
   ],
   "VersionView.Version": "版本",
   "VersionView.Name": "Alicorn 启动器",
   "VersionView.AuthorName": "作者",
-  "VersionView.Authors": "RarityEG",
+  "VersionView.Authors": "RarityEG / 您 —— {UserName}",
   "VersionView.Description":
     "这是 Alicorn 的测试版本，可能存在重大问题，请谨慎使用。",
   "VersionView.Copyright1":
@@ -149,7 +150,7 @@ export default {
     "这不会修改磁盘上的文件，您可以稍后重新导入该容器。",
   "ContainerManager.AskClear": "抹掉此 Minecraft 容器？该操作不可撤销！",
   "ContainerManager.AskClearDetail":
-    "抹掉容器将失去其中的全部数据，包括存档、Mod 和其它可能重要的内容！确定要这样做？Alicorn 同时会解除该容器的链接。",
+    "抹掉容器将失去其中的全部数据，包括存档、Mod 和其它可能重要的内容！确定要这样做，{UserName}？Alicorn 同时会解除该容器的链接。",
   "ContainerManager.Yes": "是的，我要这样做",
   "ContainerManager.No": "不，不要这样做",
   "ContainerManager.Continue": "继续",
@@ -215,9 +216,14 @@ export default {
   "Options.AutoSave": "您的修改会自动保存。",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
+  "Options.music.enabled.title": "启用音乐音效",
+  "Options.music.enabled.desc":
+    "允许 Alicorn 在合适的时候播放音乐和音效 - 小马们的耳朵是很敏锐的，请注意好好保护它哦！",
+  "Options.user.name.title": "您的昵称",
+  "Options.user.name.desc": "Alicorn 会用这个名字亲切地称呼您 - 嗯……可爱~",
   "Options.launch.jim.title": "适用于 Windows 的 JRE 进程优先级调整",
   "Options.launch.jim.desc":
-    "调整 JRE 进程的优先级以优化游戏运行，但对系统和其它应用有一定影响 - 如果您不知道您在做什么，请不要启用它",
+    "调整 JRE 进程的优先级以优化游戏运行，但对系统和其它应用有较大影响 - 如果您不知道您在做什么，请不要启用它",
   "Options.web.global-proxy.title": "浏览器 HTTP 代理",
   "Options.web.global-proxy.desc":
     "设置用于 Alicorn 附属浏览器的代理 - 这对您的浏览体验有很大影响，请在设置前再次仔细考虑您是否真的需要设置它",
@@ -281,4 +287,10 @@ export default {
   "CrashReportDisplay.BBCode": "发布到 MCBBS 求助",
   "CrashReportDisplay.Logs": "日志",
   "CrashReportDisplay.Copy": "复制到剪贴板",
+  "Welcome.Suggest.Part1": [
+    "今天是 {Date}，欢迎您使用 Alicorn Launcher，{UserName}！",
+  ],
+  "Welcome.Suggest.Part2": [
+    "有什么很想做的事情吗？没有？那么为什么不来试试启动游戏呢？单击右上角的启动台按钮……",
+  ],
 };

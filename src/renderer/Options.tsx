@@ -46,7 +46,7 @@ export function OptionsPage(): JSX.Element {
         </Typography>
         <InputItem type={ConfigType.BOOL} bindConfig={"updator.use-update"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"updator.dev"} />
-        <InputItem type={ConfigType.BOOL} bindConfig={"web.allow-natives"} />
+        <InputItem type={ConfigType.STR} bindConfig={"user.name"} />
         <InputItem
           type={ConfigType.BOOL}
           bindConfig={"modx.global-dynamic-load-mods"}
@@ -57,21 +57,23 @@ export function OptionsPage(): JSX.Element {
         />
         <InputItem
           type={ConfigType.NUM}
-          bindConfig={"download.concurrent.chunk-size"}
-        />
-        <InputItem
-          type={ConfigType.NUM}
           bindConfig={"download.concurrent.timeout"}
         />
+        <InputItem type={ConfigType.BOOL} bindConfig={"web.allow-natives"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"download.no-validate"} />
         <InputItem
           type={ConfigType.NUM}
           bindConfig={"download.concurrent.tries-per-chunk"}
-        />{" "}
+        />
         <InputItem
           type={ConfigType.NUM}
           bindConfig={"download.concurrent.max-tasks"}
         />
+        <InputItem
+          type={ConfigType.NUM}
+          bindConfig={"download.concurrent.chunk-size"}
+        />
+        <InputItem type={ConfigType.BOOL} bindConfig={"music.enabled"} />
         <InputItem
           type={ConfigType.BOOL}
           bindConfig={"cmc.disable-log4j-config"}
@@ -150,6 +152,7 @@ function InputItem(props: {
           case ConfigType.NUM:
             return (
               <TextField
+                spellCheck={false}
                 fullWidth
                 type={"number"}
                 color={"primary"}
@@ -165,6 +168,8 @@ function InputItem(props: {
             return (
               <TextField
                 fullWidth
+                spellCheck={false}
+                color={"primary"}
                 value={getString(props.bindConfig)}
                 onChange={(e) => {
                   set(props.bindConfig, String(e.target.value || ""));

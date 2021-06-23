@@ -1,6 +1,4 @@
 {
-  "_comment1": "Do you pinkie promise that you edit this file properly?",
-  "_comment2": "Invalid config will cause boot failure!",
   "updator.dev": true,
   "updator.use-update": false,
   "download.concurrent.chunk-size": 1536,
@@ -14,5 +12,6 @@
   "cmc.disable-log4j-config": true,
   "web.allow-natives": false,
   "web.global-proxy": "",
-  "launch.jim": false
+  "launch.jim": false,
+  "user.name": ""
 }

@@ -1,6 +1,6 @@
 {
   "private": true,
-  "appVersion": "InDev",
+  "appVersion": "Alpha",
   "version": "1.0.0",
   "sideEffects": false,
   "scripts": {

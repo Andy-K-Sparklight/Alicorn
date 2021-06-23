@@ -1,4 +1,6 @@
 import ChineseSimplified from "./locales/ChineseSimplified";
+import os from "os";
+import { getString } from "../modules/config/ConfigSupport";
 
 let currentLocale = "zh_cn";
 const localesMap = new Map<string, Record<string, string | string[]>>();
@@ -20,7 +22,9 @@ export function setLocale(code: string): void {
 
 // Main translate function
 export function tr(key: string): string {
-  return String((localesMap.get(currentLocale) || {})[key] || key);
+  return applyEnvironmentVars(
+    String((localesMap.get(currentLocale) || {})[key] || key)
+  );
 }
 
 export function randsl(key: string): string {
@@ -31,7 +35,7 @@ export function randsl(key: string): string {
   if (res.length === 0) {
     return key;
   }
-  return res[Math.floor(Math.random() * res.length)];
+  return applyEnvironmentVars(res[Math.floor(Math.random() * res.length)]);
 }
 
 export function initTranslator(): void {
@@ -40,4 +44,10 @@ export function initTranslator(): void {
 
 export function getCurrentLocale(): string {
   return currentLocale;
+}
+
+function applyEnvironmentVars(strIn: string): string {
+  return strIn
+    .replace(/{Date}/g, new Date().toLocaleDateString)
+    .replace(/{UserName}/g, getString("user.name") || os.userInfo().username);
 }

@@ -92,10 +92,11 @@ window.addEventListener("error", (e) => {
 });
 
 (async () => {
+  await loadConfig(); // This comes first
+  ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
   console.log("Initializing modules...");
   const t1 = new Date();
   registerHandlers();
-  await loadConfig();
   // Essential works and light works
   await Promise.allSettled([
     loadGDT(),
@@ -132,7 +133,6 @@ window.addEventListener("error", (e) => {
   console.log("Time elapsed: " + (t3.getTime() - t2.getTime()) / 1000 + "s.");
   await markMixin("loadExtensions", "AfterEnd");
 })();
-ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
 
 export function submitError(msg: string): void {
   console.log(msg);
