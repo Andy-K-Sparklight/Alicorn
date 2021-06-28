@@ -721,7 +721,13 @@ function MiniJavaSelector(props: {
   useEffect(() => {
     (async () => {
       const ji = parseJavaInfo(
-        parseJavaInfoRaw(await getJavaInfoRaw(currentJava))
+        parseJavaInfoRaw(
+          await getJavaInfoRaw(
+            currentJava === DEF
+              ? getJavaAndCheckAvailable(props.hash)
+              : currentJava
+          )
+        )
       );
       loaded.current = true;
       if (mounted.current) {

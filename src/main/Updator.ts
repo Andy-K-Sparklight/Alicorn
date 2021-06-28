@@ -4,7 +4,6 @@ import got from "got";
 import BuildInfoSchema from "./BuildInfoSchema.json";
 import { getMainWindow } from "./Bootstrap";
 import { app, dialog } from "electron";
-import pkg from "../../package.json";
 import {
   DownloadMeta,
   DownloadStatus,
@@ -128,8 +127,8 @@ export async function hintUpdate(d: {
   if (bw) {
     await dialog.showMessageBox(bw, {
       title: "我们已为您更新至最新版本",
-      message: `Alicorn Launcher 已经为您更新：${pkg.appVersion} -> ${d.version}，该版本发布于 ${d.date}。\n更新已经安装，但当您下一次启动 Alicorn 时它们才会生效。\n感谢您使用 Alicorn 启动器！`,
-      buttons: ["好"],
+      message: `这里是 Alicorn Launcher 版本 ${d.version}，创建于 ${d.date}。\n更新已经安装，但当您下一次启动 Alicorn 时它们才会生效。\n感谢您使用 Alicorn 启动器！`,
+      buttons: ["不用谢"],
     });
   }
 }

@@ -2,6 +2,8 @@ import os from "os";
 import childProcess from "child_process";
 import fs from "fs-extra";
 import path from "path";
+import { isFileExist } from "../commons/FileUtil";
+import { getBoolean, getNumber } from "../config/ConfigSupport";
 
 // This function is VERY SLOW!
 // It searches the whole os directory to find 'java.exe'(or 'java' on unix-liked)
@@ -10,18 +12,22 @@ export async function whereJava(): Promise<string[]> {
   let all: string[] = [];
   all = all.concat(await findJavaViaCommand());
   all.push(await findJavaInPATH());
-  if (os.platform() === "win32") {
-    all = all.concat(await findJavaInProgramFilesWin32());
-  } else {
-    all = all.concat(await findJavaUNIX());
+  if (!getBoolean("java.simple-search")) {
+    if (os.platform() === "win32") {
+      all = all.concat(await findJavaInProgramFilesWin32());
+    } else {
+      all = all.concat(await findJavaUNIX());
+    }
   }
   const res: string[] = [];
 
   for (const a of all) {
-    const trimA = path.resolve(path.dirname(path.dirname(a.trim())));
-    if (trimA !== "" && !res.includes(trimA)) {
-      res.push(trimA);
-      // Get Java home
+    if (await isFileExist(a)) {
+      const trimA = path.resolve(path.dirname(path.dirname(a.trim())));
+      if (trimA !== "" && !res.includes(trimA)) {
+        res.push(trimA);
+        // Get Java home
+      }
     }
   }
   return res;
@@ -33,7 +39,7 @@ async function findJavaUNIX(): Promise<string[]> {
   }
   const programBase = "/";
   const all: string[] = [];
-  await diveSearch("java", programBase, all);
+  await diveSearch("java", programBase, all, getNumber("java.search-depth", 8));
   return all;
 }
 
@@ -61,8 +67,18 @@ async function findJavaInProgramFilesWin32(): Promise<string[]> {
   const programBase86 = "C:\\Program Files (x86)";
   const all: string[] = [];
 
-  await diveSearch("java.exe", programBaseMain, all);
-  await diveSearch("java.exe", programBase86, all);
+  await diveSearch(
+    "java.exe",
+    programBaseMain,
+    all,
+    getNumber("java.search-depth", 8)
+  );
+  await diveSearch(
+    "java.exe",
+    programBase86,
+    all,
+    getNumber("java.search-depth", 8)
+  );
   // Find 32 bit, diveSearch can 'afford' error
   return all;
 }
@@ -102,8 +118,13 @@ async function findJavaViaCommand(): Promise<string[]> {
 async function diveSearch(
   fileName: string,
   rootDir: string,
-  concatArray: string[]
+  concatArray: string[],
+  depth = 8,
+  counter = 0
 ): Promise<void> {
+  if (depth !== 0 && counter > depth) {
+    return;
+  }
   try {
     const all = await fs.readdir(rootDir);
     if (all.includes(fileName)) {
@@ -112,7 +133,7 @@ async function diveSearch(
     for (const f of all) {
       const currentBase = path.resolve(rootDir, f);
       if ((await fs.stat(currentBase)).isDirectory()) {
-        await diveSearch(fileName, currentBase, concatArray);
+        await diveSearch(fileName, currentBase, concatArray, depth, ++counter);
       }
     }
   } catch {

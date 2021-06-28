@@ -47,6 +47,7 @@ export function OptionsPage(): JSX.Element {
         <InputItem type={ConfigType.BOOL} bindConfig={"updator.use-update"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"updator.dev"} />
         <InputItem type={ConfigType.STR} bindConfig={"user.name"} />
+        <InputItem type={ConfigType.BOOL} bindConfig={"java.simple-search"} />
         <InputItem
           type={ConfigType.BOOL}
           bindConfig={"modx.global-dynamic-load-mods"}
@@ -73,6 +74,7 @@ export function OptionsPage(): JSX.Element {
           type={ConfigType.NUM}
           bindConfig={"download.concurrent.chunk-size"}
         />
+        <InputItem type={ConfigType.NUM} bindConfig={"java.search-depth"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"music.enabled"} />
         <InputItem
           type={ConfigType.BOOL}

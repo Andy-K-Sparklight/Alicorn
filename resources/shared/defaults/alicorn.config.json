@@ -13,5 +13,7 @@
   "web.allow-natives": false,
   "web.global-proxy": "",
   "launch.jim": false,
-  "user.name": ""
+  "user.name": "",
+  "java.simple-search": false,
+  "java.search-depth": 8
 }
