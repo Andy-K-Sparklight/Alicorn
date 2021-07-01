@@ -91,8 +91,9 @@ export default {
   "ReadyToLaunch.Status.Short.Finished": "完毕",
   "ReadyToLaunch.WaitingText": [
     "暴风雨的来临需要酝酿，新冒险的开始需要准备。",
-    "这可能需要几分钟。",
-    "黛西，慢一点！太快了系统吃不消的！",
+    "这可能需要几分钟，不过只有你第一次玩某个版本时会这样。",
+    "这也许只需要十几秒钟，而且并不是小概率。",
+    "云宝，慢一点！太快了系统吃不消的！",
     "你知道吗？他们依旧在移除HIM。",
     "您知道吗？您很幸运，之前这些工作是由玩家手工完成的。",
     "您知道吗？Alicorn 的作者是一只小马……好吧，事实上是小马国女孩（小声",
@@ -105,19 +106,19 @@ export default {
     "就算您把并发数提升到 1000 个并发，Alicorn 也没有丝毫压力 —— 有压力的是您的电脑",
     "请说出新人常用的启动器。不太确定？你确定吗？",
     "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee —— 这被称作咏 e",
-    "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee —— 这被称作找死",
     "别催了别催了，森林蝙蝠已经准备好加速了。",
     "Minecraft 和我的世界不是一个东西吗？",
     "Minecraft 和我的世界真的不是一个东西！",
     "为了防止世界被破坏，为了守护世界的和平。",
     "即使世界只剩最后一个方块，我们依然为之拼尽全力。",
     "这里的梗很多来自于 MCBBS。",
+    "这里更多的梗不是来自 MCBBS。",
     "这条消息永远不会显示在启动页面上，是不是很神奇呢？",
     "我们的目标是让木板发光。",
     "现在木板发光了，但我们有了新的目标。",
     "就在刚刚过去的几分钟里，我们已经和 Mojang 的服务器进行了许多次对话。",
     "让您在这里等待确实很不礼貌，但是我们更不想让您的游戏崩溃！",
-    "友谊就是魔法！嗯……我是不是太大声了……",
+    "友谊就是魔法！！！（嗯……我是不是太大声了……",
     "如果您安装了太多的 Mod，Alicorn 可能需要很长的时间来准备它们。",
     "您的每一次文件访问都会被缓存加速！嗯……只要它不出问题……",
     `这是 Alicorn 版本 ${pkg.appVersion}，是一个测试版本。`,
@@ -216,10 +217,22 @@ export default {
   "JavaSelector.WarnClient":
     "性能警示 - Minecraft 在 Client Java VM 上可能无法发挥出最好性能。",
   "JavaSelector.WarnNonFree":
-    "许可警示 - 这不是自由软件！Alicorn 建议您使用自由的 OpenJDK 运行时代替该非自由的运行时。",
-  "Options.AutoSave": "您的修改会自动保存。",
+    "许可警示 - 这不是自由软件！Alicorn 建议您使用自由的 OpenJDK 运行时代替该非自由的运行时，这可以避免带来的麻烦。",
+  "Options.AutoSave": "您的修改会自动保存。某些选项只能适用于特定平台。",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
+  "Options.reset.title": "重置为默认值",
+  "Options.reset.desc":
+    "在下次启动时写入当前版本的默认配置 - 在 Alicorn 频繁更新时可能有用，但您的所有改动都将丢失",
+  "Options.pff.cache-root.title": "Pff 文件缓存位置",
+  "Options.pff.cache-root.desc":
+    "设置 Pff 的文件缓存目录 - 这是必须的，有助于加快软件包的安装速度",
+  "Options.pff.page-size.title": "Pff 查询分页大小",
+  "Options.pff.page-size.desc":
+    "进行模糊查询时请求的的分页大小 - 这项设置可能并不很有用",
+  "Options.pff.api-base.title": "Pff API 起始 URL",
+  "Options.pff.api-base.desc":
+    "指定 Pff 在安装软件包时使用的起始 URL，所有的请求都将发往该 URL - 如果你使用自己的软件源，这会很有用",
   "Options.java.search-depth.title": "JRE 搜索深度",
   "Options.java.search-depth.desc":
     "仅从根目录（Program Files 或者 /）搜索一定深度，不要搜索整台计算机 - 设置为 0 以不限制",
@@ -233,10 +246,10 @@ export default {
   "Options.user.name.desc": "Alicorn 会用这个名字亲切地称呼您 - 嗯……可爱~",
   "Options.launch.jim.title": "适用于 Windows 的 JRE 进程优先级调整",
   "Options.launch.jim.desc":
-    "调整 JRE 进程的优先级以优化游戏运行，但对系统和其它应用有较大影响 - 如果您不知道您在做什么，请不要启用它",
+    "调整 JRE 进程的优先级以优化游戏运行，但对系统和其它应用有较大影响 - 该操作有几率导致系统不稳定，如果您不知道您在做什么，请不要启用它",
   "Options.web.global-proxy.title": "浏览器 HTTP 代理",
   "Options.web.global-proxy.desc":
-    "设置用于 Alicorn 附属浏览器的代理 - 这对您的浏览体验有很大影响，请在设置前再次仔细考虑您是否真的需要设置它",
+    "设置用于 Alicorn 附属浏览器的代理 - 所有流量都将通过代理服务器转发，这对您的浏览体验有很大影响，请在设置前再次仔细考虑您是否真的需要它",
   "Options.web.allow-natives.title": "启用 Web 原生支持",
   "Options.web.allow-natives.desc":
     "在 Alicorn 附属浏览器中启用本地接口的支持 - 部分 Web 页面需要此功能与 Alicorn 进行集成，但开启它会使您的计算机直接受到网页中脚本的操控，如果您要开启，请只访问您信任的网页！",
@@ -283,7 +296,7 @@ export default {
   "CrashReportDisplay.Libraries": "支援库",
   "CrashReportDisplay.Assets": "游戏资源",
   "CrashReportDisplay.Total": "总计",
-  "CrashReportDisplay.Resolved": "已准备",
+  "CrashReportDisplay.Resolved": "可用",
   "CrashReportDisplay.Mods": "模组",
   "CrashReportDisplay.Mods.Name": "名称",
   "CrashReportDisplay.Mods.Reserved": "保留",

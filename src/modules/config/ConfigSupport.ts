@@ -70,7 +70,8 @@ export async function saveConfig(): Promise<void> {
   await fs.writeFile(CONFIG_FILE, JSON.stringify(cachedConfig, null, 4));
 }
 
-async function saveDefaultConfig() {
+// DANGEROUS - Will overwrite
+export async function saveDefaultConfig(): Promise<void> {
   await fs.ensureDir(path.dirname(CONFIG_FILE));
   const stream = fs
     .createReadStream(DEFAULT_CONFIG_FILE)

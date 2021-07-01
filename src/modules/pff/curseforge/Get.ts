@@ -2,14 +2,21 @@ import got from "got";
 import { GAME_ID } from "./Values";
 import leven from "js-levenshtein";
 import mdiff from "mdiff";
+import { MinecraftContainer } from "../../container/MinecraftContainer";
+import { findCachedFile, writeCachedFile } from "./Cache";
+import { copyFile } from "fs-extra";
+import { wrappedDownloadFile } from "../../download/DownloadWrapper";
+import {
+  DownloadMeta,
+  DownloadStatus,
+} from "../../download/AbstractDownloader";
 
 export async function getAddonInfoBySlug(
   slug: string,
   apiBase: string,
   extraParams: string,
-  pageSize: string,
+  pageSize: string | number,
   exact: boolean,
-  threshold: number,
   timeout: number
 ): Promise<AddonInfo | undefined> {
   const ACCESS_URL =
@@ -66,7 +73,6 @@ export async function getAddonInfoBySlug(
       if (
         lowestId.length > 0 &&
         lowest !== undefined &&
-        lowest <= threshold &&
         lowestObject !== undefined
       ) {
         return lowestObject;
@@ -94,11 +100,12 @@ export interface AddonInfo {
   defaultFileId: number;
 }
 
+/*
 export interface Dependency {
   id: number;
   addonId: number;
   fileId: number;
-}
+}*/
 
 export interface File {
   id: number;
@@ -106,7 +113,7 @@ export interface File {
   fileName: string;
   fileDate: string;
   fileLength: number;
-  dependencies: Dependency[];
+  // dependencies: Dependency[];
   gameVersion: string[];
   downloadUrl: string;
 }
@@ -133,20 +140,74 @@ export function getLatestFilesByVersion(
   return 0;
 }
 
-export async function getFileInfo(
-  addonInfo: AddonInfo,
-  fileId: number,
+export async function requireFile(
+  file: File,
+  addon: AddonInfo,
+  cacheRoot: string,
+  container: MinecraftContainer
+): Promise<boolean> {
+  const cache = await findCachedFile(file, addon, cacheRoot);
+  const modJar = container.getModJar(file.fileName);
+  if (cache) {
+    try {
+      await copyFile(cache, modJar);
+      return true;
+    } catch {}
+  }
+  const st = await wrappedDownloadFile(
+    new DownloadMeta(file.downloadUrl, modJar)
+  );
+  if (st === DownloadStatus.RESOLVED) {
+    await writeCachedFile(file, addon, cacheRoot, modJar);
+    return true;
+  }
+  return false;
+}
+
+export async function lookupFileInfo(
+  addon: AddonInfo,
+  fileId: number | string,
   apiBase: string,
   timeout: number
 ): Promise<File | undefined> {
+  const ACCESS_URL = apiBase + `/api/v2/addon/${addon.id}/file/${fileId}`;
   try {
-    return (
-      await got.get(apiBase + `/api/v2/addon/${addonInfo.id}/file/${fileId}`, {
-        timeout: timeout,
-        responseType: "json",
-      })
-    ).body as File;
-  } catch (e) {
+    const r = (
+      await got.get(ACCESS_URL, { responseType: "json", timeout: timeout })
+    ).body as Record<string, unknown>;
+    if (
+      r["id"] !== undefined &&
+      r["fileName"] !== undefined &&
+      r["fileDate"] !== undefined &&
+      r["downloadUrl"] !== undefined
+    ) {
+      return r as unknown as File;
+    }
+    return undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export async function lookupAddonInfo(
+  addonId: number | string,
+  apiBase: string,
+  timeout: number
+): Promise<AddonInfo | undefined> {
+  const ACCESS_URL = apiBase + `/api/v2/addon/${addonId}`;
+  try {
+    const r = (
+      await got.get(ACCESS_URL, { responseType: "json", timeout: timeout })
+    ).body as Record<string, unknown>;
+    if (
+      r["id"] !== undefined &&
+      r["name"] !== undefined &&
+      r["slug"] !== undefined
+    ) {
+      return r as unknown as AddonInfo;
+    }
+    return undefined;
+  } catch {
     return undefined;
   }
 }

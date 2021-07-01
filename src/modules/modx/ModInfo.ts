@@ -2,7 +2,6 @@ import { getHash } from "../download/Validate";
 import { getActualDataPath } from "../config/DataSupport";
 import { ALICORN_DATA_SUFFIX } from "../commons/Constants";
 import { getString } from "../config/ConfigSupport";
-import os from "os";
 import path from "path";
 import { JAR_SUFFIX } from "../launch/NativesLint";
 import { isFileExist } from "../commons/FileUtil";
@@ -60,9 +59,7 @@ enum ModLoader {
 export { ModLoader };
 
 export async function initModInfo(): Promise<void> {
-  MOD_INFO_DIR = getString("modx.default-save-path", "${DEFAULT}")
-    .replace("${DEFAULT}", DEFAULT_DIR)
-    .replace("${USER_HOME}", os.homedir());
+  MOD_INFO_DIR = getString("modx.default-save-path", DEFAULT_DIR);
   // MOD_CACHE_DIR = path.join(MOD_INFO_DIR, "mods");
   MOD_META_DIR = path.join(MOD_INFO_DIR, "metas");
   await fs.ensureDir(MOD_META_DIR);

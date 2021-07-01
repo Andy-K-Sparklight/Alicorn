@@ -1,15 +1,9 @@
-import { CrashReportMap } from "./CrashLoader";
-import {
-  Box,
-  CodeComponent,
-  ComponentsGroup,
-  Spoiler,
-  StyleComponent,
-} from "../bbcode/BBCode";
-import { randsl } from "../../renderer/Translator";
+import {CrashReportMap} from "./CrashLoader";
+import {Box, CodeComponent, ComponentsGroup, Spoiler, StyleComponent,} from "../bbcode/BBCode";
+import {randsl} from "../../renderer/Translator";
 import pkg from "../../../package.json";
-import { MCFailureInfo } from "../../renderer/ReadyToLaunch";
-import { LaunchTracker } from "../launch/Tracker";
+import {MCFailureInfo} from "../../renderer/ReadyToLaunch";
+import {LaunchTracker} from "../launch/Tracker";
 
 const TITLE_FONT = "Trebuchet MS";
 const PINKIE_COLOR = "#df307f";
@@ -17,8 +11,8 @@ const TWILIGHT_COLOR = "#5d2391";
 const BR = "\n";
 
 export function generateTrackerInfo(
-  tracker: LaunchTracker,
-  logs: string
+    tracker: LaunchTracker,
+    logs: string
 ): string {
   const br1 = new StyleComponent("[已查验]");
   br1.color = "Green";
@@ -139,7 +133,7 @@ export function generateTrackerInfo(
   trackerPage.dbRaw(BR);
   trackerPage.db(title.make("Logs 日志"));
   trackerPage.db(commonText.make("以下是启动过程中的日志。"));
-  trackerPage.dbRaw(`\n[code]\n${logs}[/code]\n`);
+  trackerPage.dbRaw(`\n[spoiler][code]\n${logs}[/code][/spoiler]\n`);
   return trackerPage.out();
 }
 

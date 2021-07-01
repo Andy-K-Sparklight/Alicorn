@@ -164,7 +164,7 @@ export interface WrapperStatus {
 
 export function getWrapperStatus(): WrapperStatus {
   return {
-    inStack: RUNNING_TASKS.size,
-    pending: PENDING_TASKS.length,
+    inStack: RUNNING_TASKS.size || 0,
+    pending: PENDING_TASKS.length || 0,
   };
 }

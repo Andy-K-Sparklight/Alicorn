@@ -7,7 +7,7 @@ export class DownloadMeta {
   readonly savePath: string;
   readonly sha1: string;
 
-  constructor(url: string, savePath: string, sha1: string) {
+  constructor(url: string, savePath: string, sha1 = "") {
     this.url = url;
     this.savePath = savePath;
     this.sha1 = sha1;

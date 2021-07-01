@@ -75,6 +75,9 @@ export function OptionsPage(): JSX.Element {
           bindConfig={"download.concurrent.chunk-size"}
         />
         <InputItem type={ConfigType.NUM} bindConfig={"java.search-depth"} />
+        <InputItem type={ConfigType.STR} bindConfig={"pff.api-base"} />
+        <InputItem type={ConfigType.NUM} bindConfig={"pff.page-size"} />
+        <InputItem type={ConfigType.STR} bindConfig={"pff.cache-root"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"music.enabled"} />
         <InputItem
           type={ConfigType.BOOL}
@@ -86,6 +89,7 @@ export function OptionsPage(): JSX.Element {
           bindConfig={"launch.jim"}
           onlyOn={"win32"}
         />
+        <InputItem type={ConfigType.BOOL} bindConfig={"reset"} />
       </MuiThemeProvider>
     </Box>
   );

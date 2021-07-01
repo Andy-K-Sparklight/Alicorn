@@ -1,0 +1,51 @@
+import {
+  AddonInfo,
+  getAddonInfoBySlug,
+  getLatestFilesByVersion,
+  lookupAddonInfo,
+  lookupFileInfo,
+  requireFile,
+} from "./Get";
+import { getNumber, getString } from "../../config/ConfigSupport";
+import { CF_API_BASE_URL } from "./Values";
+import os from "os";
+import { MinecraftContainer } from "../../container/MinecraftContainer";
+
+// TODO unchecked
+export async function requireMod(
+  slug: string | number,
+  gameVersion: string,
+  container: MinecraftContainer
+): Promise<boolean> {
+  let apiBase = getString("pff.api-base", CF_API_BASE_URL);
+  apiBase = apiBase.endsWith("/") ? apiBase.slice(0, -1) : apiBase;
+  const pageSize = getNumber("pff.page-size", 10) || 10;
+  const cacheRoot = getString("pff.cache-root", os.homedir());
+  const timeout = getNumber("download.concurrent.timeout");
+  let aInfo: AddonInfo | undefined;
+  if (typeof slug === "string") {
+    aInfo = await getAddonInfoBySlug(
+      slug,
+      apiBase,
+      "",
+      pageSize,
+      false,
+      timeout
+    );
+  } else {
+    aInfo = await lookupAddonInfo(slug, apiBase, timeout);
+  }
+  if (aInfo === undefined) {
+    return false;
+  }
+  const latestFile = await lookupFileInfo(
+    aInfo,
+    getLatestFilesByVersion(aInfo, gameVersion),
+    apiBase,
+    timeout
+  );
+  if (latestFile === undefined) {
+    return false;
+  }
+  return await requireFile(latestFile, aInfo, cacheRoot, container);
+}

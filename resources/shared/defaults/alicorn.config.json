@@ -6,7 +6,7 @@
   "download.concurrent.tries-per-chunk": 3,
   "download.concurrent.max-tasks": 30,
   "download.no-validate": false,
-  "modx.default-save-path": "${DEFAULT}",
+  "modx.default-save-path": "",
   "modx.ignore-non-standard-mods": true,
   "modx.global-dynamic-load-mods": true,
   "cmc.disable-log4j-config": true,
@@ -15,5 +15,9 @@
   "launch.jim": false,
   "user.name": "",
   "java.simple-search": false,
-  "java.search-depth": 8
+  "java.search-depth": 8,
+  "pff.api-base": "https://addons-ecs.forgesvc.net",
+  "pff.page-size": 10,
+  "pff.cache-root": "",
+  "reset": false
 }

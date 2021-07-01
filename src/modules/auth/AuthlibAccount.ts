@@ -23,14 +23,12 @@ export class AuthlibAccount extends Account {
 
   // Get a new token
   async flushToken(): Promise<boolean> {
-    console.log("Flushing token!");
     const p = await refreshToken(
       this.lastUsedAccessToken,
       this.authServer + "/authserver",
       this.selectedProfile
     );
     updateAccount(this, p);
-    console.log(p.success);
     return p.success;
   }
 

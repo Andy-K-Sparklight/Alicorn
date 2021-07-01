@@ -2,7 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { initTranslator } from "./Translator";
 import { Box, createMuiTheme, MuiThemeProvider } from "@material-ui/core";
-import { loadConfig } from "../modules/config/ConfigSupport";
+import {
+  getBoolean,
+  loadConfig,
+  saveDefaultConfig,
+} from "../modules/config/ConfigSupport";
 import { loadGDT } from "../modules/container/ContainerUtil";
 import { loadJDT } from "../modules/java/JInfo";
 import { initEncrypt } from "../modules/security/Encrypt";
@@ -22,6 +26,7 @@ import { prepareND } from "../modules/auth/NDHelper";
 import { saveJIMFile } from "../modules/launch/JIMSupport";
 import { loadAllExtensions } from "../modules/ext/Extension";
 import { markMixin } from "../modules/ext/Mixin";
+import { ipcRenderer } from "electron";
 
 require("v8-compile-cache");
 
@@ -93,6 +98,13 @@ window.addEventListener("error", (e) => {
 
 (async () => {
   await loadConfig(); // This comes first
+  if (getBoolean("reset")) {
+    console.log("Resetting and reloading config...");
+    await saveDefaultConfig();
+    await loadConfig();
+    ipcRenderer.send("reloadConfig");
+    console.log("Reset complete.");
+  }
   ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
   console.log("Initializing modules...");
   const t1 = new Date();
