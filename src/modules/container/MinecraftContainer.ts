@@ -24,22 +24,26 @@ export class MinecraftContainer {
   }
 
   getModJar(modJar: string): string {
-    return path.resolve(path.join(this.getModsRoot(), modJar));
+    return path.resolve(this.getModsRoot(), modJar);
   }
 
   getVersionBase(): string {
     return path.resolve(this.versionsBase);
   }
 
+  getPffLockFile(): string {
+    return path.resolve(this.rootDir, "pff.lock");
+  }
+
   getTempFileStorePath(relativePath: string): string {
-    return path.resolve(path.join(this.tempFileRoot, relativePath));
+    return path.resolve(this.tempFileRoot, relativePath);
   }
 
   getCrashReport(name: string): string {
     if (path.isAbsolute(name)) {
       return name;
     }
-    return path.resolve(path.join(this.getCrashReportsRoot(), name));
+    return path.resolve(this.getCrashReportsRoot(), name);
   }
 
   getNativeLibraryExtractedRoot(library: LibraryMeta): string {
@@ -55,7 +59,7 @@ export class MinecraftContainer {
   }
 
   getLog4j2FilePath(xmlName: string): string {
-    return path.resolve(path.join(this.log4j2Root, xmlName));
+    return path.resolve(this.log4j2Root, xmlName);
   }
 
   getGlobalVersionsRoot(): string {
@@ -63,12 +67,12 @@ export class MinecraftContainer {
   }
 
   getAssetsIndexPath(index: string): string {
-    return path.resolve(path.join(this.assetsRoot, "indexes", index + ".json"));
+    return path.resolve(this.assetsRoot, "indexes", index + ".json");
   }
 
   getAssetPath(hash: string): string {
     const header = hash.slice(0, 2);
-    return path.resolve(path.join(this.assetsRoot, "objects", header, hash));
+    return path.resolve(this.assetsRoot, "objects", header, hash);
   }
 
   getSavesRoot(): string {
@@ -100,19 +104,19 @@ export class MinecraftContainer {
   }
 
   getVersionRoot(id: string): string {
-    return path.resolve(path.join(this.versionsBase, id));
+    return path.resolve(this.versionsBase, id);
   }
 
   getProfilePath(id: string): string {
-    return path.resolve(path.join(this.getVersionRoot(id), id + ".json"));
+    return path.resolve(this.getVersionRoot(id), id + ".json");
   }
 
   getClientJarPath(id: string): string {
-    return path.resolve(path.join(this.getVersionRoot(id), id + ".jar"));
+    return path.resolve(this.getVersionRoot(id), id + ".jar");
   }
 
   getLibraryPath(libPath: string): string {
-    return path.resolve(path.join(this.librariesBase, libPath));
+    return path.resolve(this.librariesBase, libPath);
   }
 
   getLibrariesRoot(): string {
@@ -124,7 +128,7 @@ export class MinecraftContainer {
   }
 
   resolvePath(relativePath?: string): string {
-    return path.resolve(path.join(this.rootDir, relativePath || ""));
+    return path.resolve(this.rootDir, relativePath || "");
   }
 
   getDynamicModsRoot(): string {
@@ -132,7 +136,7 @@ export class MinecraftContainer {
   }
 
   getDynamicModJar(modJar: string): string {
-    return path.resolve(path.join(this.getDynamicModsRoot(), modJar));
+    return path.resolve(this.getDynamicModsRoot(), modJar);
   }
 
   constructor(rootDir: string, id: string) {

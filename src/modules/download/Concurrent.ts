@@ -47,7 +47,8 @@ export class Concurrent extends AbstractDownloader {
       await Promise.all(getAllPromises(meta, fileSize, allChunks));
       await sealAndVerify(meta.url, meta.savePath, allChunks, meta.sha1);
       return DownloadStatus.RESOLVED;
-    } catch {
+    } catch (e) {
+      console.log(e);
       return DownloadStatus.FAILED;
     }
   }
@@ -93,17 +94,20 @@ async function sealAndVerify(
 }
 
 async function getSize(url: string): Promise<number> {
-  const response = await got.get(url, {
-    timeout: getNumber("download.concurrent.timeout", 5000),
-    cache: false,
-    headers: { Range: "bytes=0-1" },
-  });
-  const rangeString = response.headers["content-range"];
-  if (typeof rangeString !== "string") {
+  try {
+    const response = await got.get(url, {
+      timeout: getNumber("download.concurrent.timeout", 5000),
+      headers: { Range: "bytes=0-1" },
+    });
+    const rangeString = response.headers["content-range"];
+    if (typeof rangeString !== "string") {
+      return 0;
+    }
+    // Content-Range format: "bytes=s-e/total"
+    return parseInt(rangeString.split("/").pop() || "0");
+  } catch {
     return 0;
   }
-  // Content-Range format: "bytes=s-e/total"
-  return parseInt(rangeString.split("/").pop() || "0");
 }
 
 function getAllPromises(

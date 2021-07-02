@@ -24,9 +24,9 @@ import { registerHandlers } from "./Handlers";
 import { initResolveLock } from "../modules/download/ResolveLock";
 import { prepareND } from "../modules/auth/NDHelper";
 import { saveJIMFile } from "../modules/launch/JIMSupport";
-import { loadAllExtensions } from "../modules/ext/Extension";
-import { markMixin } from "../modules/ext/Mixin";
 import { ipcRenderer } from "electron";
+import { requireMod } from "../modules/pff/curseforge/Wrapper";
+import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 
 require("v8-compile-cache");
 
@@ -134,16 +134,17 @@ window.addEventListener("error", (e) => {
       (t2.getTime() - t1.getTime()) / 1000 +
       "s."
   );
-  await markMixin("loadExtensions", "BeforeStart");
-  console.log("Start loading extensions.");
-  await Promise.allSettled([
-    markMixin("loadExtensions", "AfterStart"),
-    loadAllExtensions(),
-  ]);
-  await markMixin("loadExtensions", "BeforeEnd");
-  const t3 = new Date();
-  console.log("Time elapsed: " + (t3.getTime() - t2.getTime()) / 1000 + "s.");
-  await markMixin("loadExtensions", "AfterEnd");
+
+  console.log("Testing!");
+  const t = new Date();
+  console.log(
+    await requireMod(
+      "the-twilight-forest",
+      "1.16.5",
+      new MinecraftContainer("/media/rarity/Ponyville/Minecraft", "")
+    )
+  );
+  console.log("Done! Time: " + (new Date().getTime() - t.getTime()) / 1000);
 })();
 
 export function submitError(msg: string): void {

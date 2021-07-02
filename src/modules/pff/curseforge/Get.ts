@@ -153,9 +153,10 @@ export async function requireFile(
     try {
       await ensureDir(path.dirname(modJar));
       await copyFile(cache, modJar);
-      console.log("Cache hit!");
       return true;
-    } catch {}
+    } catch (e) {
+      console.log(e);
+    }
   }
   const st = await wrappedDownloadFile(
     new DownloadMeta(file.downloadUrl, modJar)

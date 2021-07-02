@@ -19,6 +19,7 @@ export async function findCachedFile(
       objectHash(file.fileDate)
     );
     await fs.access(TARGET_FILE);
+    return TARGET_FILE;
   } catch {
     return undefined;
   }

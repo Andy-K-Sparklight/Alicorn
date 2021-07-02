@@ -29,13 +29,11 @@ import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
 import {
   analyzeCrashReport,
   CrashReportMap,
-  onlineAnalyzeCrashReport,
 } from "../modules/crhelper/CrashLoader";
 import fs from "fs-extra";
 import copy from "copy-to-clipboard";
 import { generateCrashAnalytics } from "../modules/crhelper/CrashAnalyticsGenerator";
 import { submitError } from "./Renderer";
-import { markMixin } from "../modules/ext/Mixin";
 
 const useAccStyles = makeStyles((theme) =>
   createStyles({
@@ -78,15 +76,7 @@ export function CrashReportDisplay(): JSX.Element {
       const f = failureInfo.crashReport;
       (async () => {
         const pt = failureInfo.container.getCrashReport(f);
-        let r = await analyzeCrashReport(pt);
-        const oArgs = {
-          report: r,
-          filePath: pt,
-          analyzeCrashReport: analyzeCrashReport,
-          analyzeCrashReportOnline: onlineAnalyzeCrashReport,
-        };
-        await markMixin("generateCrashReport", "BeforeEnd", oArgs);
-        r = oArgs.report;
+        const r = await analyzeCrashReport(pt);
         try {
           const dt = (await fs.readFile(pt)).toString();
           if (mounted.current) {

@@ -10,12 +10,14 @@ import { getNumber, getString } from "../../config/ConfigSupport";
 import { CF_API_BASE_URL } from "./Values";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { DATA_ROOT } from "../../config/DataSupport";
+import { loadLockFile, saveLockFile, writeToLockFile } from "./Lockfile";
 
 export async function requireMod(
   slug: string | number,
   gameVersion: string,
   container: MinecraftContainer
 ): Promise<boolean> {
+  const lockfile = await loadLockFile(container);
   let apiBase = getString("pff.api-base", CF_API_BASE_URL);
   apiBase = apiBase.endsWith("/") ? apiBase.slice(0, -1) : apiBase;
   const pageSize = getNumber("pff.page-size", 10) || 10;
@@ -46,5 +48,12 @@ export async function requireMod(
   if (latestFile === undefined) {
     return false;
   }
-  return await requireFile(latestFile, aInfo, cacheRoot, container);
+  const st = await requireFile(latestFile, aInfo, cacheRoot, container);
+  if (st) {
+    await writeToLockFile(aInfo, latestFile, lockfile);
+    await saveLockFile(lockfile, container);
+    return true;
+  } else {
+    return false;
+  }
 }

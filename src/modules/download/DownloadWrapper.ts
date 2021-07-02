@@ -138,15 +138,33 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
       if (s === DownloadStatus.RESOLVED) {
         FAILED_COUNT_MAP.delete(meta);
         emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
+        return;
       } else {
         const failed = FAILED_COUNT_MAP.get(meta) || 0;
         if (failed <= 0) {
           // The last fight!
-          FAILED_COUNT_MAP.delete(meta);
+          FAILED_COUNT_MAP.set(
+            meta,
+            getNumber("download.concurrent.tries-per-chunk" || 3)
+          );
           Serial.getInstance()
             .downloadFile(meta)
             .then((s) => {
-              emitter.emit(END_GATE, meta, s);
+              if (s === DownloadStatus.RESOLVED) {
+                FAILED_COUNT_MAP.delete(meta);
+                emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
+                return;
+              } else {
+                const failed = FAILED_COUNT_MAP.get(meta) || 0;
+                if (failed <= 0) {
+                  emitter.emit(END_GATE, meta, DownloadStatus.FAILED);
+                  return;
+                } else {
+                  FAILED_COUNT_MAP.set(meta, failed - 1);
+                  downloadSingleFile(meta, emitter);
+                  return;
+                }
+              }
             });
           return;
         } else {

@@ -11,7 +11,6 @@ import {
 } from "../commons/Constants";
 import { isNull } from "../commons/Null";
 import { getBoolean } from "../config/ConfigSupport";
-import { markMixinSync } from "../ext/Mixin";
 
 // Generate game arguments
 export function generateGameArgs(
@@ -29,16 +28,8 @@ export function generateGameArgs(
   vMap.set("auth_session", authData.getSecondValue()); // Pre 1.6
   vMap.set("user_type", MOJANG_USER_TYPE);
   vMap.set("version_type", ALICORN_VERSION_TYPE);
-  const oArgs = {
-    args: profile.gameArgs.concat(),
-    valueMap: vMap,
-    applyVars: applyVars,
-    profile: profile,
-    container: container,
-  };
-  markMixinSync("generateGameArgs", "BeforeEnd", oArgs);
-  oArgs.valueMap.set("auth_access_token", authData.getSecondValue());
-  return applyVars(oArgs.valueMap, oArgs.args);
+  vMap.set("auth_access_token", authData.getSecondValue());
+  return applyVars(vMap, profile.gameArgs.concat());
 }
 
 // Generate vm arguments, not for GCs or anything else
@@ -102,16 +93,7 @@ export function generateVMArgs(
   }
 
   staticArgs = staticArgs.concat(logArgs).concat(profile.mainClass);
-  const eArgs = staticArgs;
-  const oArgs = {
-    args: eArgs,
-    valueMap: vMap,
-    applyVars: applyVars,
-    profile: profile,
-    container: container,
-  };
-  markMixinSync("generateVMArgs", "BeforeEnd", oArgs);
-  return applyVars(oArgs.valueMap, oArgs.args);
+  return applyVars(vMap, staticArgs);
 }
 
 function applyVars(map: Map<string, string>, str: string[]): string[] {
