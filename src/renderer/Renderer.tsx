@@ -25,8 +25,6 @@ import { initResolveLock } from "../modules/download/ResolveLock";
 import { prepareND } from "../modules/auth/NDHelper";
 import { saveJIMFile } from "../modules/launch/JIMSupport";
 import { ipcRenderer } from "electron";
-import { requireMod } from "../modules/pff/curseforge/Wrapper";
-import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 
 require("v8-compile-cache");
 
@@ -134,17 +132,6 @@ window.addEventListener("error", (e) => {
       (t2.getTime() - t1.getTime()) / 1000 +
       "s."
   );
-
-  console.log("Testing!");
-  const t = new Date();
-  console.log(
-    await requireMod(
-      "the-twilight-forest",
-      "1.16.5",
-      new MinecraftContainer("/media/rarity/Ponyville/Minecraft", "")
-    )
-  );
-  console.log("Done! Time: " + (new Date().getTime() - t.getTime()) / 1000);
 })();
 
 export function submitError(msg: string): void {
