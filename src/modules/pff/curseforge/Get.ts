@@ -125,7 +125,7 @@ export interface GameVersionFilesIndex {
   modLoader: number;
 }
 
-export function getLatestFilesByVersion(
+export function getLatestFileByVersion(
   addonInfo: AddonInfo,
   gameVersion: string
 ): number {

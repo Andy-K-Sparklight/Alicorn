@@ -11,6 +11,8 @@ export interface FileMeta {
   fileName: string;
   addonId: number;
   fileId: number;
+  fileDate: string;
+  gameVersion: string;
 }
 
 // This operation modify the lockfile
@@ -30,12 +32,15 @@ export async function fixLockFile(
 export function writeToLockFile(
   addon: AddonInfo,
   file: File,
-  lockfile: Lockfile
+  lockfile: Lockfile,
+  gameVersion: string
 ): void {
   lockfile.files[`${addon.id.toString(16)}/${file.id.toString(16)}`] = {
     addonId: addon.id,
     fileId: file.id,
     fileName: file.fileName,
+    fileDate: file.fileDate,
+    gameVersion: gameVersion,
   };
 }
 

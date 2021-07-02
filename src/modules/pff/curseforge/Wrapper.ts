@@ -1,7 +1,7 @@
 import {
   AddonInfo,
   getAddonInfoBySlug,
-  getLatestFilesByVersion,
+  getLatestFileByVersion,
   lookupAddonInfo,
   lookupFileInfo,
   requireFile,
@@ -11,6 +11,7 @@ import { CF_API_BASE_URL } from "./Values";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { DATA_ROOT } from "../../config/DataSupport";
 import { loadLockFile, saveLockFile, writeToLockFile } from "./Lockfile";
+import { upgradeFile } from "./Upgrade";
 
 export async function requireMod(
   slug: string | number,
@@ -41,7 +42,7 @@ export async function requireMod(
   }
   const latestFile = await lookupFileInfo(
     aInfo,
-    getLatestFilesByVersion(aInfo, gameVersion),
+    getLatestFileByVersion(aInfo, gameVersion),
     apiBase,
     timeout
   );
@@ -50,10 +51,20 @@ export async function requireMod(
   }
   const st = await requireFile(latestFile, aInfo, cacheRoot, container);
   if (st) {
-    await writeToLockFile(aInfo, latestFile, lockfile);
+    await writeToLockFile(aInfo, latestFile, lockfile, gameVersion);
     await saveLockFile(lockfile, container);
     return true;
   } else {
     return false;
   }
+}
+
+export async function upgrade(container: MinecraftContainer): Promise<void> {
+  const lockfile = await loadLockFile(container);
+  let apiBase = getString("pff.api-base", CF_API_BASE_URL);
+  apiBase = apiBase.endsWith("/") ? apiBase.slice(0, -1) : apiBase;
+  const cacheRoot = getString("pff.cache-root", DATA_ROOT);
+  const timeout = getNumber("download.concurrent.timeout");
+  await upgradeFile(lockfile, apiBase, timeout, cacheRoot, container);
+  await saveLockFile(lockfile, container);
 }
