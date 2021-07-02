@@ -39,6 +39,7 @@ export async function writeCachedFile(
       file.id.toString(16),
       objectHash(file.fileDate)
     );
+    await fs.ensureDir(path.dirname(TARGET_FILE));
     await fs.copyFile(origin, TARGET_FILE);
   } catch {}
 }

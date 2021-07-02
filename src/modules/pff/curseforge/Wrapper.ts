@@ -8,10 +8,9 @@ import {
 } from "./Get";
 import { getNumber, getString } from "../../config/ConfigSupport";
 import { CF_API_BASE_URL } from "./Values";
-import os from "os";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
+import { DATA_ROOT } from "../../config/DataSupport";
 
-// TODO unchecked
 export async function requireMod(
   slug: string | number,
   gameVersion: string,
@@ -20,7 +19,7 @@ export async function requireMod(
   let apiBase = getString("pff.api-base", CF_API_BASE_URL);
   apiBase = apiBase.endsWith("/") ? apiBase.slice(0, -1) : apiBase;
   const pageSize = getNumber("pff.page-size", 10) || 10;
-  const cacheRoot = getString("pff.cache-root", os.homedir());
+  const cacheRoot = getString("pff.cache-root", DATA_ROOT);
   const timeout = getNumber("download.concurrent.timeout");
   let aInfo: AddonInfo | undefined;
   if (typeof slug === "string") {

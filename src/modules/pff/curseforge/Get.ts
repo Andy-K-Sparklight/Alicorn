@@ -4,12 +4,13 @@ import leven from "js-levenshtein";
 import mdiff from "mdiff";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { findCachedFile, writeCachedFile } from "./Cache";
-import { copyFile } from "fs-extra";
+import { copyFile, ensureDir } from "fs-extra";
 import { wrappedDownloadFile } from "../../download/DownloadWrapper";
 import {
   DownloadMeta,
   DownloadStatus,
 } from "../../download/AbstractDownloader";
+import path from "path";
 
 export async function getAddonInfoBySlug(
   slug: string,
@@ -150,7 +151,9 @@ export async function requireFile(
   const modJar = container.getModJar(file.fileName);
   if (cache) {
     try {
+      await ensureDir(path.dirname(modJar));
       await copyFile(cache, modJar);
+      console.log("Cache hit!");
       return true;
     } catch {}
   }
