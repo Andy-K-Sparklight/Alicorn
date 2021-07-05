@@ -23,7 +23,7 @@ const JAVA_ORACLE = (() => {
 export async function getJavaInfoRaw(jHome: string): Promise<string> {
   const jRPath = path.resolve(await getJavaRunnable(jHome));
   return new Promise<string>((resolve, reject) => {
-    childProcess.execFile(jRPath, ["--version"], (e, stdout, stderr) => {
+    childProcess.execFile(jRPath, ["-version"], (e, stdout, stderr) => {
       if (e) {
         reject();
       } else {
