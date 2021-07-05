@@ -127,9 +127,13 @@ export interface GameVersionFilesIndex {
 
 export function getLatestFileByVersion(
   addonInfo: AddonInfo,
-  gameVersion: string
+  gameVersion: string,
+  allowDefault = true
 ): number {
   if (gameVersion === "") {
+    if (!allowDefault) {
+      return 0;
+    }
     return addonInfo.defaultFileId;
   }
   const indexes = addonInfo.gameVersionLatestFiles;

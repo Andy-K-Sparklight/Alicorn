@@ -1,6 +1,6 @@
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { isFileExist } from "../../commons/FileUtil";
-import { readJSON, writeJSON } from "fs-extra";
+import { readJSON, writeFile } from "fs-extra";
 import { AddonInfo, File } from "./Get";
 
 export interface Lockfile {
@@ -13,6 +13,7 @@ export interface FileMeta {
   fileId: number;
   fileDate: string;
   gameVersion: string;
+  addonName: string;
 }
 
 // This operation modify the lockfile
@@ -41,6 +42,7 @@ export function writeToLockFile(
     fileName: file.fileName,
     fileDate: file.fileDate,
     gameVersion: gameVersion,
+    addonName: addon.name,
   };
 }
 
@@ -49,7 +51,10 @@ export async function saveLockFile(
   container: MinecraftContainer
 ): Promise<void> {
   try {
-    await writeJSON(container.getPffLockFile(), lockfile);
+    await writeFile(
+      container.getPffLockFile(),
+      JSON.stringify(lockfile, null, 4)
+    );
   } catch {}
 }
 
@@ -57,7 +62,9 @@ export async function loadLockFile(
   container: MinecraftContainer
 ): Promise<Lockfile> {
   try {
-    return (await readJSON(container.getPffLockFile())) as Lockfile;
+    const lock = (await readJSON(container.getPffLockFile())) as Lockfile;
+    await fixLockFile(lock, container);
+    return lock;
   } catch {
     return { files: {} };
   }

@@ -12,7 +12,7 @@ import { scanCoresInAllMountedContainers } from "../modules/container/ContainerS
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { whatProfile } from "../modules/profile/WhatProfile";
 import { tr } from "./Translator";
-import { FlightTakeoff, Sync } from "@material-ui/icons";
+import { Archive, FlightTakeoff, Sync } from "@material-ui/icons";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 import { useCardStyles, usePadStyles } from "./Stylex";
 
@@ -144,6 +144,20 @@ function SingleCoreDisplay(props: {
             {}
           ) : (
             <Box>
+              <Tooltip title={tr("CoreInfo.Pff")}>
+                <IconButton
+                  color={"inherit"}
+                  className={classes.operateButton}
+                  onClick={() => {
+                    jumpTo(
+                      `/PffFront/${props.profile.container}/${props.profile.baseVersion}`
+                    );
+                    triggerSetPage(Pages.PffFront);
+                  }}
+                >
+                  <Archive />
+                </IconButton>
+              </Tooltip>
               <Tooltip title={tr("CoreInfo.Launch")}>
                 <IconButton
                   color={"inherit"}

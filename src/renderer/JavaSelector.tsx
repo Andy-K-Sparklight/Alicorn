@@ -1,14 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useFormStyles } from "./Stylex";
+import { fullWidth, useFormStyles } from "./Stylex";
 import {
   Box,
   Button,
-  createStyles,
   FormControl,
   IconButton,
   InputLabel,
   LinearProgress,
-  makeStyles,
   MenuItem,
   MuiThemeProvider,
   Select,
@@ -45,17 +43,7 @@ export const CANNOT_LOAD_INFO: JavaInfo = {
 
 export function JavaSelector(): JSX.Element {
   const classes = useFormStyles();
-  const fullWidthClasses = makeStyles((theme) =>
-    createStyles({
-      form: {
-        width: theme.spacing(80),
-      },
-      right: {
-        float: "right",
-        marginRight: theme.spacing(4),
-      },
-    })
-  )();
+  const fullWidthClasses = fullWidth();
   const [isJavaInfoLoaded, setLoaded] = useState<boolean>(true);
   const mounted = useRef<boolean>(false);
   const [javaList, setJavaList] = useState<string[]>(getAllJava());

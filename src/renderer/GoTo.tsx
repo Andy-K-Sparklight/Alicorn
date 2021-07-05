@@ -24,6 +24,6 @@ export enum Pages {
   AccountManager = "AccountManager",
   InstallConfiguration = "InstallConfiguration",
   Version = "Version",
-  Terminal = "Terminal",
   JavaSelector = "JavaSelector",
+  PffFront = "PffFront",
 }

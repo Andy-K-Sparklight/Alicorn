@@ -71,3 +71,28 @@ export const useFormStyles = makeStyles((theme) =>
     },
   })
 );
+export const fullWidth = makeStyles((theme) =>
+  createStyles({
+    form: {
+      width: theme.spacing(80),
+    },
+    right: {
+      float: "right",
+      marginRight: theme.spacing(4),
+    },
+    label: {
+      width: theme.spacing(30),
+      paddingLeft: theme.spacing(-10),
+      flexGrow: 1,
+    },
+    progress: {
+      marginLeft: theme.spacing(9.8),
+    },
+    root: {
+      textAlign: "center",
+    },
+    text: {
+      marginLeft: theme.spacing(4),
+    },
+  })
+);

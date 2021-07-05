@@ -61,7 +61,7 @@ import {
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { LocalAccount } from "../modules/auth/LocalAccount";
 import { Account } from "../modules/auth/Account";
-import { useFormStyles, useInputStyles } from "./Stylex";
+import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
 import { isNull } from "../modules/commons/Null";
 import {
   AccountType,
@@ -147,7 +147,7 @@ export function ReadyToLaunch(): JSX.Element {
       mounted.current = false;
     };
   }, []);
-
+  const fullWidthProgress = fullWidth();
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       {profileLoadedBit === 1 ? (
@@ -157,7 +157,11 @@ export function ReadyToLaunch(): JSX.Element {
           server={server}
         />
       ) : (
-        <LinearProgress color={"secondary"} style={{ width: "80%" }} />
+        <LinearProgress
+          color={"secondary"}
+          style={{ width: "80%" }}
+          className={fullWidthProgress.progress}
+        />
       )}
     </MuiThemeProvider>
   );
@@ -695,17 +699,7 @@ function MiniJavaSelector(props: {
   disabled: boolean;
 }): JSX.Element {
   const classes = useFormStyles();
-  const fullWidthClasses = makeStyles((theme) =>
-    createStyles({
-      form: {
-        width: theme.spacing(80),
-      },
-      right: {
-        float: "right",
-        marginRight: theme.spacing(4),
-      },
-    })
-  )();
+  const fullWidthClasses = fullWidth();
   const mounted = useRef<boolean>(false);
   const [currentJava, setCurrentJava] = useState<string>(
     getJavaAndCheckAvailable(props.hash, true)

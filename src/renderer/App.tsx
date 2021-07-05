@@ -50,6 +50,7 @@ import {
   saveResolveLock,
   saveResolveLockSync,
 } from "../modules/download/ResolveLock";
+import { PffFront } from "./PffFront";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -106,7 +107,13 @@ export function App(): JSX.Element {
             {/* Drag our window with title */}
             <Typography variant={"h6"}>{tr(page)}</Typography>
           </Box>
-          <Tooltip title={tr("MainMenu.OpenDevTools")}>
+          <Tooltip
+            title={
+              getBoolean("dev")
+                ? tr("MainMenu.OpenDevToolsFormal")
+                : tr("MainMenu.OpenDevToolsKidding")
+            }
+          >
             <IconButton
               color={"inherit"}
               className={classes.floatButton}
@@ -247,6 +254,7 @@ export function App(): JSX.Element {
         <Route path={"/JavaSelector"} component={JavaSelector} />
         <Route path={"/Options"} component={OptionsPage} />
         <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
+        <Route path={"/PffFront/:container/:version"} component={PffFront} />
       </Box>
       <Snackbar
         open={openNotice}

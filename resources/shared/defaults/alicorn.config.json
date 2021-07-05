@@ -1,4 +1,5 @@
 {
+  "dev": false,
   "updator.dev": true,
   "updator.use-update": false,
   "download.concurrent.chunk-size": 1536,

@@ -61,6 +61,7 @@ export function OptionsPage(): JSX.Element {
           bindConfig={"download.concurrent.timeout"}
         />
         <InputItem type={ConfigType.BOOL} bindConfig={"web.allow-natives"} />
+
         <InputItem type={ConfigType.BOOL} bindConfig={"download.no-validate"} />
         <InputItem
           type={ConfigType.NUM}
@@ -84,6 +85,7 @@ export function OptionsPage(): JSX.Element {
           bindConfig={"cmc.disable-log4j-config"}
         />
         <InputItem type={ConfigType.STR} bindConfig={"web.global-proxy"} />
+        <InputItem type={ConfigType.BOOL} bindConfig={"dev"} />
         <InputItem
           type={ConfigType.BOOL}
           bindConfig={"launch.jim"}
