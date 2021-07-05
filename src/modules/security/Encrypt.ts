@@ -13,10 +13,16 @@ export function getUniqueID32(): string {
 }
 
 export function encryptByMachine(data: string): string {
+  if (data === "") {
+    return ""; // NULL safe
+  }
   return CryptoJS.AES.encrypt(data, MACHINE_ID_32).toString();
 }
 
 export function decryptByMachine(data: string): string {
+  if (data === "") {
+    return "";
+  }
   return CryptoJS.AES.decrypt(data, MACHINE_ID_32).toString(CryptoJS.enc.Utf8);
 }
 

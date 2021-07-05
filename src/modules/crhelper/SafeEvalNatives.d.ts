@@ -1,3 +1,1 @@
-declare function safeEval(exp: string): unknown;
-
-export { safeEval };
+export declare function safeEval(exp: string): unknown;

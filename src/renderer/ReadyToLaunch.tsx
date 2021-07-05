@@ -262,7 +262,6 @@ function Launching(props: {
               props.profile,
               profileHash.current,
               props.container,
-
               a,
               props.server
             );

@@ -5,6 +5,7 @@ import got from "got";
 import { isNull, safeGet } from "../commons/Null";
 import { AccountType } from "./AccountUtil";
 import { getString } from "../config/ConfigSupport";
+import { decryptByMachine, encryptByMachine } from "../security/Encrypt";
 
 // The auth progress for MS accounts:
 // User -> Code (Browser)
@@ -22,6 +23,11 @@ const MJ_LOGIN_XBOX =
   "https://api.minecraftservices.com/authentication/login_with_xbox";
 const MJ_PROFILE_API = "https://api.minecraftservices.com/minecraft/profile";
 
+const MS_LAST_USED_USERNAME_KEY = "MS.LastUsedUserName";
+const MS_LAST_USED_ACTOKEN_KEY = "MS.LastUsedACToken"; // Encrypt
+const MS_LAST_USED_UUID_KEY = "MS.LastUsedUUID";
+const MS_LAST_USED_REFRESH_KEY = "MS.LastUsedRefresh"; // Encrypt
+
 export class MicrosoftAccount extends Account {
   async buildAccessData(): Promise<Trio<string, string, string>> {
     return new Trio<string, string, string>(
@@ -33,6 +39,15 @@ export class MicrosoftAccount extends Account {
 
   constructor(accountName: string) {
     super(accountName, AccountType.MICROSOFT);
+    this.lastUsedUsername =
+      localStorage.getItem(MS_LAST_USED_USERNAME_KEY) || "";
+    this.lastUsedUUID = localStorage.getItem(MS_LAST_USED_UUID_KEY) || "";
+    this.lastUsedAccessToken = decryptByMachine(
+      localStorage.getItem(MS_LAST_USED_ACTOKEN_KEY) || ""
+    );
+    this.refreshToken = decryptByMachine(
+      localStorage.getItem(MS_LAST_USED_REFRESH_KEY) || ""
+    );
   }
 
   async flushToken(): Promise<boolean> {
@@ -65,6 +80,8 @@ export class MicrosoftAccount extends Account {
       }
       this.lastUsedUsername = String(r5.name);
       this.lastUsedUUID = String(r5.uuid);
+      saveRefreshToken(this.refreshToken);
+      saveAccessToken(this.lastUsedAccessToken);
       return true;
     } catch {
       return false;
@@ -96,6 +113,8 @@ export class MicrosoftAccount extends Account {
       if (!(await this.flushToken())) {
         return await this.flushToken();
       }
+      saveRefreshToken(this.refreshToken);
+      saveAccessToken(this.lastUsedAccessToken);
       return true;
     } catch {
       return false;
@@ -113,6 +132,14 @@ export class MicrosoftAccount extends Account {
   }
 
   refreshToken = "";
+}
+
+function saveRefreshToken(v: string): void {
+  localStorage.setItem(MS_LAST_USED_REFRESH_KEY, encryptByMachine(v));
+}
+
+function saveAccessToken(v: string): void {
+  localStorage.setItem(MS_LAST_USED_ACTOKEN_KEY, encryptByMachine(v));
 }
 
 // User -> Code
@@ -133,14 +160,14 @@ interface AcquireTokenCallback {
 
 // Code -> MS Token
 async function getTokenByCode(code: string): Promise<AcquireTokenCallback> {
-  return tokenRequest(code);
+  return await tokenRequest(code);
 }
 
 // Refresh
 async function refreshToken(
   refreshToken: string
 ): Promise<AcquireTokenCallback> {
-  return tokenRequest(refreshToken, true);
+  return await tokenRequest(refreshToken, true);
 }
 
 async function tokenRequest(
@@ -169,7 +196,11 @@ async function tokenRequest(
     if (isNull(accessToken) || isNull(refreshToken)) {
       return { success: false };
     }
-    return { success: true, accessToken, refreshToken };
+    return {
+      success: true,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    };
   } catch {
     return {
       success: false,

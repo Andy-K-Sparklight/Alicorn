@@ -1,5 +1,3 @@
-// Some useful collections
-
 // Pair: 2 values
 export class Pair<T1, T2> {
   private v1: T1;
