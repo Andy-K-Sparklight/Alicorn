@@ -19,8 +19,8 @@ app.on("ready", async () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   // Open window as soon as possible
   mainWindow = new BrowserWindow({
-    width: width * 0.5,
-    height: height * 0.5,
+    width: width * 0.45,
+    height: height * 0.45,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,

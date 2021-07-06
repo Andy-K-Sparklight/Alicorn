@@ -2,15 +2,11 @@
 // A downloader does not include mirror applying
 // Reflecting has to be done manually
 
-import {
-  loadData,
-  saveData,
-  saveDataSync,
-  saveDefaultData,
-} from "../config/DataSupport";
-import { buildMap, parseMap } from "../commons/MapUtil";
+import { loadData, saveDefaultData } from "../config/DataSupport";
+import { parseMap } from "../commons/MapUtil";
+import { getString } from "../config/ConfigSupport";
 
-const MIRROR_FILE = "mirrors.ald";
+const MIRROR_FILES = ["mcbbs.ald", "tss.ald", "bmclapi.ald"];
 let mirrorMap: Map<string, string> = new Map();
 
 export function applyMirror(url: string): string {
@@ -23,25 +19,15 @@ export function applyMirror(url: string): string {
   return url;
 }
 
-export function saveMirrorSync(): void {
-  saveDataSync(MIRROR_FILE, buildMap(mirrorMap));
-}
-
-export async function saveMirror(): Promise<void> {
-  await saveData(MIRROR_FILE, buildMap(mirrorMap));
-}
-
 export async function loadMirror(): Promise<void> {
-  await saveDefaultData(MIRROR_FILE);
-  mirrorMap = parseMap(await loadData(MIRROR_FILE));
-}
-
-export function setMirror(mirror: Map<string, string>): void {
-  mirrorMap = mirror;
-}
-
-export function addMirror(mirror: Map<string, string>): void {
-  for (const [k, v] of mirror.entries()) {
-    mirrorMap.set(k, v);
-  }
+  await Promise.allSettled(
+    MIRROR_FILES.map((f) => {
+      saveDefaultData(f);
+    })
+  );
+  mirrorMap = parseMap(
+    await loadData(
+      getString("download.mirror", "mcbbs") + ".ald" || MIRROR_FILES[0]
+    )
+  );
 }

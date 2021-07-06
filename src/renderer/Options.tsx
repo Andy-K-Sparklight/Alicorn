@@ -56,6 +56,7 @@ export function OptionsPage(): JSX.Element {
           type={ConfigType.BOOL}
           bindConfig={"modx.ignore-non-standard-mods"}
         />
+        <InputItem type={ConfigType.STR} bindConfig={"download.mirror"} />
         <InputItem
           type={ConfigType.NUM}
           bindConfig={"download.concurrent.timeout"}

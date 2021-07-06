@@ -24,5 +24,6 @@
   "pff.api-base": "https://addons-ecs.forgesvc.net",
   "pff.page-size": 10,
   "pff.cache-root": "",
-  "reset": false
+  "reset": false,
+  "download.mirror": "mcbbs"
 }

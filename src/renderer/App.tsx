@@ -21,7 +21,6 @@ import {
 } from "../modules/config/ConfigSupport";
 import { saveGDT, saveGDTSync } from "../modules/container/ContainerUtil";
 import { saveJDT, saveJDTSync } from "../modules/java/JInfo";
-import { saveMirror, saveMirrorSync } from "../modules/download/Mirror";
 import {
   AccountCircle,
   AllInbox,
@@ -287,7 +286,6 @@ function prepareToQuit(): void {
   saveConfigSync();
   saveGDTSync();
   saveJDTSync();
-  saveMirrorSync();
   saveVFSync();
   saveResolveLockSync();
   console.log("All chunks are saved.");
@@ -298,7 +296,6 @@ async function intervalSaveData(): Promise<void> {
   await saveConfig();
   await saveGDT();
   await saveJDT();
-  await saveMirror();
   await saveVF();
   await saveResolveLock();
   console.log("All chunks are saved.");

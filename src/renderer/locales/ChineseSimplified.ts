@@ -224,6 +224,9 @@ export default {
   "Options.AutoSave": "您的修改会自动保存。某些选项只能适用于特定平台。",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
+  "Options.download.mirror.title": "下载源镜像",
+  "Options.download.mirror.desc":
+    "只能选择 ~/alicorn/（或 C:\\Users\\???\\alicorn\\）下的镜像描述文件，不含扩展名 - 如果不想麻烦，从 mcbbs、bmclapi、tss 中选择一个就好。",
   "Options.dev.explicit-error-throw.title": "显式抛出错误",
   "Options.dev.explicit-error-throw.desc":
     "在系统错误发生时额外使用一个对话框告知您错误信息 - 仅在开发时才有使用价值",
