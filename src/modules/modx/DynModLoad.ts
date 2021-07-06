@@ -56,8 +56,12 @@ async function moveModsTo(
     for (const mi of mods) {
       if (
         getBoolean("modx.ignore-non-standard-mods") &&
-        mi.loader === ModLoader.UNKNOWN
+        (mi.loader === ModLoader.UNKNOWN || mi.mcversion === undefined)
       ) {
+        tFile.operateRecord.push({
+          file: `${mi.displayName} (${mi.fileName})` || "",
+          operation: "SKIPPED",
+        });
         continue;
       }
 
@@ -158,6 +162,7 @@ export async function prepareModsCheckFor(
   const tFile: FileOperateReport = { total: 0, resolved: 0, operateRecord: [] };
   try {
     const stat = gatherVersionInfo(profile);
+    console.log(stat);
     await moveModsTo(
       await loadMetas(container),
       container,
