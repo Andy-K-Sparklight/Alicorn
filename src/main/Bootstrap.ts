@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, screen } from "electron";
 import os from "os";
 import { btoa } from "js-base64";
 import { registerBackgroundListeners } from "./Background";
@@ -16,10 +16,11 @@ app.on("ready", async () => {
   );
   const appPath = app.getAppPath();
   console.log("App is ready, preparing window...");
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   // Open window as soon as possible
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 450,
+    width: width * 0.5,
+    height: height * 0.5,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,

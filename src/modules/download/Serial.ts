@@ -10,8 +10,8 @@ import got from "got";
 import { promisify } from "util";
 import stream from "stream";
 import { isFileExist } from "../commons/FileUtil";
-import { getNumber } from "../config/ConfigSupport";
 import { addRecord } from "./ResolveLock";
+import { getConfigOptn } from "./DownloadWrapper";
 
 const pipeline = promisify(stream.pipeline);
 
@@ -36,7 +36,7 @@ export class Serial extends AbstractDownloader {
       // Pipe data
       await pipeline(
         got.stream(meta.url, {
-          timeout: getNumber("download.concurrent.timeout", 5000),
+          timeout: getConfigOptn("timeout", 5000),
         }),
         fs.createWriteStream(meta.savePath)
       );
@@ -52,10 +52,10 @@ export class Serial extends AbstractDownloader {
       }
 
       // Mismatch
-      return DownloadStatus.FAILED;
+      return DownloadStatus.RETRY;
     } catch {
       // Oops
-      return DownloadStatus.FAILED;
+      return DownloadStatus.RETRY;
     }
   }
 }

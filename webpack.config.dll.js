@@ -9,7 +9,16 @@ const BuildInfoPlugin = require("./BuildInfoPlugin");
 const Version = require("./package.json").appVersion;
 module.exports = {
   entry: {
-    Twilight: ["react", "react-dom", "@material-ui/core", "@material-ui/icons"],
+    Twilight: [
+      "react",
+      "react-dom",
+      "@material-ui/core",
+      "@material-ui/icons",
+      "semver",
+      "toml",
+      "js-base64",
+      "js-levenshtein",
+    ],
   },
   output: {
     filename: "[name].dll.js",

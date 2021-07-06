@@ -20,12 +20,54 @@ const FORGE_WEB_ROOT = "/net/minecraftforge/forge";
 
 const SUFFIX = "installer" + JAR_SUFFIX;
 
+const FORGE_MANIFEST_CACHE_KEY = "ForgeManifestCache";
+
 export async function getForgeVersionByMojang(
   id: string,
   filter = ForgeFilter.RECOMMENDED
 ): Promise<string> {
+  return (
+    (await _getForgeVersionByMojang(id, filter, false)) ||
+    (await _getForgeVersionByMojang(id, filter, true))
+  );
+}
+
+export async function prefetchForgeManifest(): Promise<void> {
+  await _getForgeVersionByMojang("", ForgeFilter.RECOMMENDED, true);
+}
+
+async function _getForgeVersionByMojang(
+  id: string,
+  filter = ForgeFilter.RECOMMENDED,
+  noMirror = false
+): Promise<string> {
   try {
-    const tBody = await xgot(FORGE_VERSIONS_MANIFEST, true);
+    let tBody;
+    try {
+      if (
+        // @ts-ignore
+        window[FORGE_MANIFEST_CACHE_KEY] !== undefined &&
+        // @ts-ignore
+        Object.keys(window[FORGE_MANIFEST_CACHE_KEY]).length > 0
+      ) {
+        // @ts-ignore
+        tBody = window[FORGE_MANIFEST_CACHE_KEY];
+      } else {
+        // @ts-ignore
+        tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror);
+        if (noMirror) {
+          // @ts-ignore
+          window[FORGE_MANIFEST_CACHE_KEY] = tBody;
+        }
+      }
+    } catch {
+      // @ts-ignore
+      tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror);
+      if (noMirror) {
+        // @ts-ignore
+        window[FORGE_MANIFEST_CACHE_KEY] = tBody;
+      }
+    }
     const d = safeGet(tBody, ["promos", `${id}-${filter}`], "");
     if (isNull(d)) {
       if (filter === ForgeFilter.LATEST) {
@@ -73,7 +115,10 @@ export async function getForgeInstaller(
     );
     // No validating
     const meta = new DownloadMeta(applyMirror(pt), dest, "");
-    return (await wrappedDownloadFile(meta)) !== DownloadStatus.FAILED;
+    return !(
+      (await wrappedDownloadFile(meta)) in
+      [DownloadStatus.RETRY, DownloadStatus.FATAL]
+    );
   } catch {
     return false;
   }

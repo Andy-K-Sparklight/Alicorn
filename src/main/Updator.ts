@@ -147,7 +147,8 @@ export async function doUpdate(
         ""
       );
       if (
-        (await Serial.getInstance().downloadFile(meta)) == DownloadStatus.FAILED
+        (await Serial.getInstance().downloadFile(meta)) in
+        [DownloadStatus.RETRY, DownloadStatus.FATAL]
       ) {
         return false;
       }

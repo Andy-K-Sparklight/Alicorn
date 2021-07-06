@@ -3,16 +3,16 @@ import {
   DownloadMeta,
   DownloadStatus,
 } from "./AbstractDownloader";
-import { getNumber } from "../config/ConfigSupport";
 import got from "got";
 import fs from "fs-extra";
 import objectHash from "object-hash";
 import os from "os";
 import path from "path";
-import { Serial } from "./Serial";
 import { getHash, validate } from "./Validate";
 import { isFileExist } from "../commons/FileUtil";
 import { addRecord } from "./ResolveLock";
+import { getConfigOptn } from "./DownloadWrapper";
+import { Serial } from "./Serial";
 
 const TEMP_SAVE_PATH_ROOT = path.join(os.tmpdir(), "alicorn-download");
 
@@ -36,11 +36,7 @@ export class Concurrent extends AbstractDownloader {
         }
       }
       const fileSize = await getSize(meta.url);
-      if (
-        fileSize <=
-        getNumber("download.concurrent.chunk-size", 1024) * 1024
-      ) {
-        // Too small or invalid, use serial instead
+      if (fileSize <= getConfigOptn("chunk-size", 1024) * 1024) {
         return await Serial.getInstance().downloadFile(meta);
       }
       const allChunks = generateChunks(fileSize);
@@ -49,7 +45,7 @@ export class Concurrent extends AbstractDownloader {
       return DownloadStatus.RESOLVED;
     } catch (e) {
       console.log(e);
-      return DownloadStatus.FAILED;
+      return DownloadStatus.RETRY;
     }
   }
 }
@@ -96,7 +92,7 @@ async function sealAndVerify(
 async function getSize(url: string): Promise<number> {
   try {
     const response = await got.get(url, {
-      timeout: getNumber("download.concurrent.timeout", 5000),
+      timeout: getConfigOptn("timeout", 5000),
       headers: { Range: "bytes=0-1" },
     });
     const rangeString = response.headers["content-range"];
@@ -139,7 +135,7 @@ async function downloadSingleChunk(
 ) {
   const buffer = (
     await got.get(url, {
-      timeout: getNumber("download.concurrent.timeout", 5000),
+      timeout: getConfigOptn("timeout", 5000),
       cache: false,
       headers: {
         Range: `bytes=${chunk.start}-${chunk.end}`,
@@ -164,13 +160,12 @@ function generateChunks(size: number): Chunk[] {
   const result = [];
   let pointer = 0;
   while (pointer < size) {
-    let end =
-      pointer + getNumber("download.concurrent.chunk-size", 1024) * 1024 - 1;
+    let end = pointer + getConfigOptn("chunk-size", 1024) * 1024 - 1;
     if (end > size) {
       end = size;
     }
     result.push(new Chunk(pointer, end));
-    pointer += getNumber("download.concurrent.chunk-size", 1024) * 1024;
+    pointer += getConfigOptn("chunk-size", 1024) * 1024;
   }
   return result;
 }

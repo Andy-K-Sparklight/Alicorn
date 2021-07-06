@@ -94,3 +94,12 @@ export async function upgrade(container: MinecraftContainer): Promise<void> {
   await upgradeFile(lockfile, apiBase, timeout, cacheRoot, container);
   await saveLockFile(lockfile, container);
 }
+
+const PFF_FLAG = "Downloader.IsPff";
+// Since args pop is very hard for downloaders
+// We will use a flag to do this
+// 1 - Use pff config
+// Any other value - Use common config
+export function setPffFlag(value: string): void {
+  window.sessionStorage.setItem(PFF_FLAG, value);
+}

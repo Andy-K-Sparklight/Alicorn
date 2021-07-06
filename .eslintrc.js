@@ -22,6 +22,7 @@ module.exports = {
   rules: {
     "no-empty-function": "warn",
     "no-empty": "off",
+    "no-debugger":"off",
     "prefer-const": "warn",
     "@typescript-eslint/no-empty-interface": "warn",
     "@typescript-eslint/ban-ts-comment": "off",

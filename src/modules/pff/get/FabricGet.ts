@@ -21,15 +21,48 @@ const FABRIC_VERSIONS_GAME = FABRIC_VERSIONS_ROOT + "/game";
 export const FABRIC_VERSIONS_LOADER = FABRIC_VERSIONS_ROOT + "/loader";
 const FABRIC_VERSIONS_INSTALLER = FABRIC_VERSIONS_ROOT + "/installer";
 
-// Get Fabric installer and loader
-// Please notice that Fabric doesn't care about mojang version!
+const FABRIC_INSTALLER_MANIFEST_CACHE_KEY = "FabricInstallerManifestCache";
+const FABRIC_LOADER_MANIFEST_CACHE_KEY = "FabricLoaderManifestCache";
+
 export async function getLatestFabricInstallerAndLoader(
   filter = FabricFilter.STABLE
+): Promise<Pair<string, string>> {
+  return (
+    (await _getLatestFabricInstallerAndLoader(filter, false)) ||
+    (await _getLatestFabricInstallerAndLoader(filter, true))
+  );
+}
+
+export async function prefetchFabricManifest(): Promise<void> {
+  await _getLatestFabricInstallerAndLoader(FabricFilter.STABLE, true);
+}
+
+// Get Fabric installer and loader
+// Please notice that Fabric doesn't care about mojang version!
+async function _getLatestFabricInstallerAndLoader(
+  filter = FabricFilter.STABLE,
+  noMirror = false
 ): Promise<Pair<string, string>> {
   let installerURL = "";
   let loaderVersion = "";
   try {
-    const jInstaller = await xgot(FABRIC_VERSIONS_INSTALLER, true);
+    let jInstaller;
+
+    if (
+      // @ts-ignore
+      window[FABRIC_INSTALLER_MANIFEST_CACHE_KEY] !== undefined &&
+      // @ts-ignore
+      Object.keys(window[FABRIC_INSTALLER_MANIFEST_CACHE_KEY].length > 0)
+    ) {
+      // @ts-ignore
+      jInstaller = window[FABRIC_INSTALLER_MANIFEST_CACHE_KEY];
+    } else {
+      jInstaller = await xgot(FABRIC_VERSIONS_INSTALLER, noMirror);
+      if (noMirror) {
+        // @ts-ignore
+        window[FABRIC_INSTALLER_MANIFEST_CACHE_KEY] = jInstaller;
+      }
+    }
     if (jInstaller instanceof Array) {
       for (const i of jInstaller) {
         const url = safeGet(i, ["url"], "");
@@ -48,7 +81,23 @@ export async function getLatestFabricInstallerAndLoader(
   } catch {}
 
   try {
-    const jLoader = await xgot(FABRIC_VERSIONS_LOADER, true);
+    let jLoader;
+
+    if (
+      // @ts-ignore
+      window[FABRIC_LOADER_MANIFEST_CACHE_KEY] !== undefined &&
+      // @ts-ignore
+      Object.keys(window[FABRIC_LOADER_MANIFEST_CACHE_KEY].length > 0)
+    ) {
+      // @ts-ignore
+      jLoader = window[FABRIC_LOADER_MANIFEST_CACHE_KEY];
+    } else {
+      jLoader = await xgot(FABRIC_VERSIONS_LOADER, noMirror);
+      if (noMirror) {
+        // @ts-ignore
+        window[FABRIC_LOADER_MANIFEST_CACHE_KEY] = jLoader;
+      }
+    }
 
     if (jLoader instanceof Array) {
       for (const l of jLoader) {

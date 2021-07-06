@@ -1,10 +1,12 @@
 import objectHash from "object-hash";
 import { ArtifactMeta, AssetIndexArtifactMeta } from "../profile/Meta";
 
-const NULL_OBJECTS = new Set<string>();
-
+// Be careful! Don't use any global variable here!
 export function registerNullObject(obj: unknown): void {
-  NULL_OBJECTS.add(objectHash({ o: obj }));
+  // @ts-ignore
+  global["NullObjects"] = global["NullObjects"] || new Set(); // This is the only way to assign a variable
+  // @ts-ignore
+  global["NullObjects"].add(objectHash({ o: obj }));
 }
 
 export function isNull(obj: unknown): boolean {
@@ -17,7 +19,11 @@ export function isNull(obj: unknown): boolean {
       obj === "undefined" ||
       (obj instanceof AssetIndexArtifactMeta && obj.id === "") ||
       (obj instanceof ArtifactMeta && obj.path === "") ||
-      NULL_OBJECTS.has(objectHash({ o: obj })) ||
+      // @ts-ignore
+      (global["NullObjects"] === undefined
+        ? false
+        : // @ts-ignore
+          global["NullObjects"].has(objectHash({ o: obj }))) ||
       (typeof obj === "object" &&
         Object.getOwnPropertyNames(obj).length <= 0) ||
       // @ts-ignore

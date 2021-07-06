@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, screen } from "electron";
 import path from "path";
 
 let USER_BROWSER: BrowserWindow | null;
@@ -10,6 +10,7 @@ export async function openBrowser(
   proxy: string
 ): Promise<void> {
   console.log("Opening browser window!");
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   USER_BROWSER = new BrowserWindow({
     webPreferences: {
       nodeIntegration: nodeIntegration,
@@ -18,8 +19,8 @@ export async function openBrowser(
       preload: path.resolve(app.getAppPath(), PRELOAD_FILE),
       enableRemoteModule: false,
     },
-    height: 720,
-    width: 1280,
+    height: height * 0.7,
+    width: width * 0.7,
     title: "Please Wait...",
   });
   if (proxy.trim().length > 0) {

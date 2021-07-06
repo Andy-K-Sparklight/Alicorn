@@ -93,7 +93,7 @@ export async function ensureLibraries(
   );
   let failedCount = 0;
   for (const x of values) {
-    if (x == DownloadStatus.FAILED) {
+    if (x in [DownloadStatus.RETRY, DownloadStatus.FATAL]) {
       failedCount++;
     }
   }

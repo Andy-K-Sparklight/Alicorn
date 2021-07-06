@@ -1,7 +1,7 @@
-import { app, BrowserWindow, dialog, ipcMain } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, screen } from "electron";
 import { getMainWindow } from "./Bootstrap";
 import { getUserBrowser, openBrowser } from "./Browser";
-import { loadConfig } from "../modules/config/ConfigSupport";
+import { getBoolean, loadConfig } from "../modules/config/ConfigSupport";
 
 const LOGIN_START =
   "https://login.live.com/oauth20_authorize.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf";
@@ -57,12 +57,13 @@ export function registerBackgroundListeners(): void {
   ipcMain.handle("msBrowserCode", async (e, proxy: string) => {
     try {
       let sCode = "";
+      const { width, height } = screen.getPrimaryDisplay().workAreaSize;
       loginWindow =
         loginWindow ||
         new BrowserWindow({
           frame: false,
-          width: 960,
-          height: 540,
+          width: width * 0.5,
+          height: height * 0.5,
           show: false,
           webPreferences: {
             enableRemoteModule: false,
@@ -168,5 +169,11 @@ export function registerBackgroundListeners(): void {
   ipcMain.on("reloadConfig", async () => {
     console.log("Reloading config...");
     await loadConfig();
+    console.log("Config reloaded.");
+  });
+  ipcMain.on("reportError", async (e, msg) => {
+    if (getBoolean("dev.explicit-error-throw")) {
+      dialog.showErrorBox("Oops!", msg);
+    }
   });
 }

@@ -53,25 +53,20 @@ export function InstallCore(): JSX.Element {
   const [foundCores, setCores] = useState<string[]>([]);
   const isLoaded = useRef<boolean>(false);
   const mounted = useRef<boolean>();
-  const [selectedMojangVersion, setSelectedMojangVersion] = useState<string>(
-    ""
-  );
+  const [selectedMojangVersion, setSelectedMojangVersion] =
+    useState<string>("");
   const [mojangFilter, setMojangFilter] = useState<ReleaseType>(
     ReleaseType.RELEASE
   );
-  const [baseMojangVersionForge, setBaseMojangVersionForge] = useState<string>(
-    ""
-  );
+  const [baseMojangVersionForge, setBaseMojangVersionForge] =
+    useState<string>("");
   const [failedMsg, setFailedMsg] = useState<string>();
-  const [
-    baseMojangVersionFabric,
-    setBaseMojangVersionFabric,
-  ] = useState<string>("");
+  const [baseMojangVersionFabric, setBaseMojangVersionFabric] =
+    useState<string>("");
   const [allMojangRelease, setAllMojangRelease] = useState<string[]>([]);
   const [detectedForgeVersion, setDetectedForgeVersion] = useState<string>("");
-  const [detectedFabricVersion, setDetectedFabricVersion] = useState<string>(
-    ""
-  );
+  const [detectedFabricVersion, setDetectedFabricVersion] =
+    useState<string>("");
   const [selectedMojangContainer, setMojangContainer] = useState<string>("");
   const [selectedForgeContainer, setForgeContainer] = useState<string>("");
   const [selectedFabricContainer, setFabricContainer] = useState<string>("");
@@ -159,6 +154,7 @@ export function InstallCore(): JSX.Element {
             setOperating(true);
             setFailed(false);
             const ct = getContainer(selectedForgeContainer);
+            console.log("Fetching forge installer...");
             const stat = await getForgeInstaller(ct, mcv, fgv);
             if (!stat) {
               if (mounted.current) {
@@ -170,6 +166,7 @@ export function InstallCore(): JSX.Element {
               }
               return;
             }
+            console.log("Performing install...");
             const istat = await performForgeInstall(
               await getJavaRunnable(getLastUsedJavaHome()),
               generateForgeInstallerName(mcv, fgv),
@@ -305,7 +302,7 @@ export function InstallCore(): JSX.Element {
         />
         {/* Mojang */}
         <Box>
-          <Typography variant={"h5"} className={classes.title} gutterBottom>
+          <Typography className={classes.title}>
             {tr("InstallCore.InstallMinecraft")}
           </Typography>
           <FormControl className={classes.formControl}>
@@ -406,13 +403,14 @@ export function InstallCore(): JSX.Element {
         </Box>
         {/* Forge */}
         <Box>
-          <Typography variant={"h5"} className={classes.title} gutterBottom>
+          <br />
+          <Typography className={classes.title}>
             {tr("InstallCore.InstallForge")}
           </Typography>
-          <Typography className={classes.text} color={"secondary"} gutterBottom>
+          <Typography className={classes.text} color={"secondary"}>
             {tr("InstallCore.ForgeVersion") +
               " " +
-              (detectedForgeVersion || "Unknown")}
+              (detectedForgeVersion || tr("InstallCore.Unknown"))}
           </Typography>
           <FormControl className={classes.formControl}>
             <InputLabel
@@ -481,13 +479,14 @@ export function InstallCore(): JSX.Element {
 
         {/* Fabric */}
         <Box>
-          <Typography variant={"h5"} className={classes.title} gutterBottom>
+          <br />
+          <Typography className={classes.title}>
             {tr("InstallCore.InstallFabric")}
           </Typography>
-          <Typography className={classes.text} color={"secondary"} gutterBottom>
+          <Typography className={classes.text} color={"secondary"}>
             {tr("InstallCore.FabricVersion") +
               " " +
-              (detectedFabricVersion || "Unknown")}
+              (detectedFabricVersion || tr("InstallCore.Unknown"))}
           </Typography>
           <FormControl className={classes.formControl}>
             <InputLabel

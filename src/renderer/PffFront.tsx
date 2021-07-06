@@ -27,7 +27,7 @@ import { getContainer } from "../modules/container/ContainerUtil";
 import { fullWidth } from "./Stylex";
 import { loadLockFile, Lockfile } from "../modules/pff/curseforge/Lockfile";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
-import { requireMod } from "../modules/pff/curseforge/Wrapper";
+import { requireMod, setPffFlag } from "../modules/pff/curseforge/Wrapper";
 
 export function PffFront(): JSX.Element {
   const emitter = useRef(new EventEmitter());
@@ -38,6 +38,7 @@ export function PffFront(): JSX.Element {
   const [packageName, setPackageName] = useState("");
   const [lockfile, setLockfile] = useState<Lockfile>();
   const mounted = useRef(false);
+  const reloadPff = useRef(false);
   const fullWidthClasses = fullWidth();
   useEffect(() => {
     (async () => {
@@ -46,7 +47,7 @@ export function PffFront(): JSX.Element {
         setLockfile(lock);
       }
     })();
-  }, [isRunning]);
+  }, [isRunning, reloadPff.current]);
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -83,6 +84,7 @@ export function PffFront(): JSX.Element {
                 <InputAdornment position={"end"}>
                   <IconButton
                     disabled={isRunning || packageName.trim().length === 0}
+                    color={"primary"}
                     onClick={() => {
                       setRunning(true);
                       (async () => {
@@ -125,11 +127,7 @@ export function PffFront(): JSX.Element {
         </Typography>
       </Box>
       <Box>
-        <Typography
-          variant={"h6"}
-          className={fullWidthClasses.text}
-          color={"primary"}
-        >
+        <Typography className={fullWidthClasses.text} color={"primary"}>
           {tr("PffFront.QuickWatch")}
         </Typography>
         <List>
@@ -140,7 +138,7 @@ export function PffFront(): JSX.Element {
                   <ListItem key={name}>
                     <ListItemIcon>
                       {version === f.gameVersion ? (
-                        <AssignmentTurnedIn />
+                        <AssignmentTurnedIn color={"primary"} />
                       ) : (
                         <AssignmentLate />
                       )}
@@ -181,5 +179,7 @@ async function pffInstall(
   if (String(p) == name) {
     i = p;
   }
+  setPffFlag("1");
   await requireMod(i, version, container, emitter);
+  setPffFlag("0");
 }

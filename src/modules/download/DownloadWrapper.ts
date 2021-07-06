@@ -21,6 +21,7 @@ const WAITING_RESOLVES_MAP = new Map<
 const FAILED_COUNT_MAP: Map<DownloadMeta, number> = new Map();
 const END_GATE = "END";
 let EMITTER: EventEmitter;
+
 export function initDownloadWrapper(): void {
   EMITTER = new EventEmitter();
   EMITTER.on(END_GATE, (m: DownloadMeta, s: DownloadStatus) => {
@@ -44,24 +45,22 @@ export function initDownloadWrapper(): void {
 export async function wrappedDownloadFile(
   meta: DownloadMeta
 ): Promise<DownloadStatus> {
+  // POST
+  if (meta.url.trim().length === 0 || meta.savePath.trim().length === 0) {
+    return DownloadStatus.RESOLVED;
+  }
   const mirroredMeta = new DownloadMeta(
     applyMirror(meta.url),
     meta.savePath,
     meta.sha1
   );
-  FAILED_COUNT_MAP.set(
-    mirroredMeta,
-    getNumber("download.concurrent.tries-per-chunk" || 3)
-  );
+  FAILED_COUNT_MAP.set(mirroredMeta, getConfigOptn("tries-per-chunk", 3));
   if ((await _wrappedDownloadFile(mirroredMeta)) === DownloadStatus.RESOLVED) {
     FAILED_COUNT_MAP.delete(mirroredMeta);
     return DownloadStatus.RESOLVED;
   }
   FAILED_COUNT_MAP.delete(mirroredMeta);
-  FAILED_COUNT_MAP.set(
-    meta,
-    getNumber("download.concurrent.tries-per-chunk" || 3)
-  );
+  FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
   const s = await _wrappedDownloadFile(meta);
   FAILED_COUNT_MAP.delete(meta);
   return s;
@@ -121,7 +120,7 @@ function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
 
 function scheduleNextTask(): void {
   // An aggressive call!
-  const CURRENT_MAX = getNumber("download.concurrent.max-tasks", 20);
+  const CURRENT_MAX = getConfigOptn("max-tasks", 20);
   while (RUNNING_TASKS.size < CURRENT_MAX && PENDING_TASKS.length > 0) {
     const tsk = PENDING_TASKS.pop();
     if (tsk !== undefined) {
@@ -139,14 +138,11 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
         FAILED_COUNT_MAP.delete(meta);
         emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
         return;
-      } else {
+      } else if (s === DownloadStatus.RETRY) {
         const failed = FAILED_COUNT_MAP.get(meta) || 0;
         if (failed <= 0) {
           // The last fight!
-          FAILED_COUNT_MAP.set(
-            meta,
-            getNumber("download.concurrent.tries-per-chunk" || 3)
-          );
+          FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
           Serial.getInstance()
             .downloadFile(meta)
             .then((s) => {
@@ -155,15 +151,9 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
                 emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
                 return;
               } else {
-                const failed = FAILED_COUNT_MAP.get(meta) || 0;
-                if (failed <= 0) {
-                  emitter.emit(END_GATE, meta, DownloadStatus.FAILED);
-                  return;
-                } else {
-                  FAILED_COUNT_MAP.set(meta, failed - 1);
-                  downloadSingleFile(meta, emitter);
-                  return;
-                }
+                // Simply fatal, retry is meaningless
+                emitter.emit(END_GATE, meta, DownloadStatus.FATAL);
+                return;
               }
             });
           return;
@@ -171,6 +161,23 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
           FAILED_COUNT_MAP.set(meta, failed - 1);
           downloadSingleFile(meta, emitter);
         }
+      } else {
+        // Fatal, simply switch to serial
+        FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
+        Serial.getInstance()
+          .downloadFile(meta)
+          .then((s) => {
+            if (s === DownloadStatus.RESOLVED) {
+              FAILED_COUNT_MAP.delete(meta);
+              emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
+              return;
+            } else {
+              // Fatal
+              emitter.emit(END_GATE, meta, DownloadStatus.FATAL);
+              return;
+            }
+          });
+        return;
       }
     });
 }
@@ -185,4 +192,21 @@ export function getWrapperStatus(): WrapperStatus {
     inStack: RUNNING_TASKS.size || 0,
     pending: PENDING_TASKS.length || 0,
   };
+}
+
+const PFF_FLAG = "Downloader.IsPff";
+
+function getPffFlag(): string {
+  return window.sessionStorage.getItem(PFF_FLAG) || "0";
+}
+
+export function getConfigOptn(name: string, def: number): number {
+  if (getPffFlag() === "1") {
+    return (
+      getNumber("download.pff." + name, 0) ||
+      getNumber("download.concurrent." + name, def)
+    );
+  } else {
+    return getNumber("download.concurrent." + name, def);
+  }
 }

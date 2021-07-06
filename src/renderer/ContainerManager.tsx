@@ -26,7 +26,14 @@ import {
 import objectHash from "object-hash";
 import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
-import { Add, Eject, Input, LayersClear, LinkOff } from "@material-ui/icons";
+import {
+  Add,
+  Eject,
+  FolderOpen,
+  Input,
+  LayersClear,
+  LinkOff,
+} from "@material-ui/icons";
 import {
   clearContainer,
   createNewContainer,
@@ -36,7 +43,7 @@ import { OperatingHint } from "./OperatingHint";
 import { isFileExist } from "../modules/commons/FileUtil";
 import fs from "fs-extra";
 import path from "path";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, shell } from "electron";
 import { scanCoresIn } from "../modules/container/ContainerScanner";
 
 export function setContainerListDirty(): void {
@@ -157,6 +164,7 @@ function SingleContainerDisplay(props: {
                 <LayersClear />
               </IconButton>
             </Tooltip>
+
             <Dialog
               open={deleteAskOpen}
               onClose={() => {
@@ -251,6 +259,19 @@ function SingleContainerDisplay(props: {
                 </IconButton>
               </Tooltip>
             )}
+            <Tooltip title={tr("ContainerManager.OpenInDir")}>
+              <IconButton
+                color={"inherit"}
+                className={classes.operateButton}
+                onClick={() => {
+                  try {
+                    shell.showItemInFolder(props.container.rootDir);
+                  } catch {}
+                }}
+              >
+                <FolderOpen />
+              </IconButton>
+            </Tooltip>
           </Box>
           <Typography variant={"h6"} gutterBottom>
             {props.container.id}

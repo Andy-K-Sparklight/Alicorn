@@ -49,12 +49,14 @@ export async function performForgeInstall(
   forgeJar: string,
   container: MinecraftContainer
 ): Promise<boolean> {
+  console.log("Running Forge installer.");
   let failBit = true;
   try {
     await makeTempLP(container);
     const ret = await getPolyfillForgeProfile(forgeJar, container);
     // Stupid Forge
     // We have to fill libraries for the installer, it's slow...
+    console.log("Ensuring libraries");
     await ensureLibraries(ret.getFirstValue(), container);
     await bootForgeInstaller(jExecutable, forgeJar, container);
     await fs.ensureDir(container.getModsRoot());
@@ -70,6 +72,7 @@ export async function bootForgeInstaller(
   forgeJar: string,
   container: MinecraftContainer
 ): Promise<void> {
+  console.log("Starting Forge installer process");
   const fihPt = getActualDataPath(FORGE_INSTALLER_HEADLESS);
   const fgPt = container.getTempFileStorePath(forgeJar);
   const rcp = childProcess.spawn(

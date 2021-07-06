@@ -25,6 +25,8 @@ import { initResolveLock } from "../modules/download/ResolveLock";
 import { prepareND } from "../modules/auth/NDHelper";
 import { saveJIMFile } from "../modules/launch/JIMSupport";
 import { ipcRenderer } from "electron";
+import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
+import { prefetchFabricManifest } from "../modules/pff/get/FabricGet";
 
 require("v8-compile-cache");
 
@@ -130,6 +132,16 @@ window.addEventListener("error", (e) => {
   console.log(
     "Delayed init tasks finished. Time elapsed: " +
       (t2.getTime() - t1.getTime()) / 1000 +
+      "s."
+  );
+  // Optional services
+  const t3 = new Date();
+  console.log("Running optional services...");
+  await Promise.allSettled([prefetchForgeManifest(), prefetchFabricManifest()]);
+  const t4 = new Date();
+  console.log(
+    "Optional services finished. Time elapsed: " +
+      (t4.getTime() - t3.getTime()) / 1000 +
       "s."
   );
 })();

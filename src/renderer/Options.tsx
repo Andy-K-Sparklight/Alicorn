@@ -31,7 +31,7 @@ export function OptionsPage(): JSX.Element {
       root: {
         marginLeft: theme.spacing(4),
       },
-      text: {
+      head: {
         fontSize: "small",
         color: theme.palette.secondary.main,
       },
@@ -41,7 +41,7 @@ export function OptionsPage(): JSX.Element {
   return (
     <Box className={classes.root}>
       <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-        <Typography className={classes.text}>
+        <Typography className={classes.head}>
           {tr("Options.AutoSave")}
         </Typography>
         <InputItem type={ConfigType.BOOL} bindConfig={"updator.use-update"} />
@@ -60,6 +60,7 @@ export function OptionsPage(): JSX.Element {
           type={ConfigType.NUM}
           bindConfig={"download.concurrent.timeout"}
         />
+        <InputItem type={ConfigType.NUM} bindConfig={"download.pff.timeout"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"web.allow-natives"} />
 
         <InputItem type={ConfigType.BOOL} bindConfig={"download.no-validate"} />
@@ -73,7 +74,15 @@ export function OptionsPage(): JSX.Element {
         />
         <InputItem
           type={ConfigType.NUM}
+          bindConfig={"download.pff.max-tasks"}
+        />
+        <InputItem
+          type={ConfigType.NUM}
           bindConfig={"download.concurrent.chunk-size"}
+        />
+        <InputItem
+          type={ConfigType.NUM}
+          bindConfig={"download.pff.chunk-size"}
         />
         <InputItem type={ConfigType.NUM} bindConfig={"java.search-depth"} />
         <InputItem type={ConfigType.STR} bindConfig={"pff.api-base"} />
@@ -86,6 +95,10 @@ export function OptionsPage(): JSX.Element {
         />
         <InputItem type={ConfigType.STR} bindConfig={"web.global-proxy"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"dev"} />
+        <InputItem
+          type={ConfigType.BOOL}
+          bindConfig={"dev.explicit-error-throw"}
+        />
         <InputItem
           type={ConfigType.BOOL}
           bindConfig={"launch.jim"}
@@ -111,29 +124,27 @@ function InputItem(props: {
   const classes = makeStyles((theme) =>
     createStyles({
       desc: {
-        fontSize: "medium",
+        fontSize: "small",
         color: theme.palette.secondary.main,
       },
       switch: {
         color: theme.palette.primary.main,
+        marginLeft: theme.spacing(-0.5),
       },
       textField: {
         borderColor: theme.palette.primary.main,
         color: theme.palette.primary.main,
       },
-      text: {
+      title: {
+        marginTop: theme.spacing(1),
         color: theme.palette.primary.main,
+        fontSize: "large",
       },
     })
   )();
   return (
     <Box>
-      <Typography
-        color={"primary"}
-        variant={"h6"}
-        className={classes.text}
-        gutterBottom
-      >
+      <Typography color={"primary"} className={classes.title} gutterBottom>
         {tr(`Options.${props.bindConfig}.title`)}
       </Typography>
       <Typography color={"primary"} className={classes.desc} gutterBottom>

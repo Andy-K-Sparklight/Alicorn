@@ -52,8 +52,10 @@ export const useFormStyles = makeStyles((theme) =>
     },
     title: {
       color: theme.palette.primary.main,
+      fontSize: "larger",
     },
     text: {
+      marginLeft: theme.spacing(0.5),
       fontSize: "medium",
     },
     selector: {
@@ -92,7 +94,9 @@ export const fullWidth = makeStyles((theme) =>
       textAlign: "center",
     },
     text: {
-      marginLeft: theme.spacing(4),
+      fontSize: "large",
+      marginTop: theme.spacing(1),
+      marginLeft: theme.spacing(2),
     },
   })
 );

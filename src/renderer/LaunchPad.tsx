@@ -201,10 +201,13 @@ function SingleCoreDisplay(props: {
           </Typography>
           {props.profile.corrupted ? (
             <CorruptedCoreWarning />
-          ) : (
+          ) : props.profile.versionType === "FORGE" ||
+            props.profile.versionType === "FABRIC" ? (
             <Typography className={classes.desc} color={"textSecondary"}>
               {getDescriptionFor(props.profile.versionType)}
             </Typography>
+          ) : (
+            ""
           )}
         </CardContent>
       </Card>
@@ -215,14 +218,11 @@ function SingleCoreDisplay(props: {
 
 function getDescriptionFor(type: string): string {
   switch (type.toUpperCase()) {
-    case "MOJANG":
-      return tr("CoreInfo.Introduction.Minecraft");
-    case "FABRIC":
-      return tr("CoreInfo.Introduction.Fabric");
     case "FORGE":
       return tr("CoreInfo.Introduction.Forge");
+    case "FABRIC":
     default:
-      return tr("CoreInfo.Introduction.Universal");
+      return tr("CoreInfo.Introduction.Fabric");
   }
 }
 

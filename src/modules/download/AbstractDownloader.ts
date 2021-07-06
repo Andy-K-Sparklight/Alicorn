@@ -16,7 +16,8 @@ export class DownloadMeta {
 
 enum DownloadStatus {
   RESOLVED = 1,
-  FAILED = 0,
+  RETRY = 0,
+  FATAL = -1,
 }
 
 export { DownloadStatus };

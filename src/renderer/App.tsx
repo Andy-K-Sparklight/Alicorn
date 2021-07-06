@@ -97,6 +97,10 @@ export function App(): JSX.Element {
     window.addEventListener("sysError", (e) => {
       setErr(String(safeGet(e, ["detail"], "Unknown Error")));
       setNoticeOpen(true);
+      ipcRenderer.send(
+        "reportError",
+        String(safeGet(e, ["detail"], "Unknown Error"))
+      );
     });
   }, []);
   return (

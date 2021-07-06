@@ -22,8 +22,10 @@ export async function fixLockFile(
   container: MinecraftContainer
 ): Promise<void> {
   await Promise.allSettled(
-    Object.keys(lockfile.files).map((name) => {
-      if (!isFileExist(container.getModJar(lockfile.files[name].fileName))) {
+    Object.keys(lockfile.files).map(async (name) => {
+      if (
+        !(await isFileExist(container.getModJar(lockfile.files[name].fileName)))
+      ) {
         delete lockfile.files[name];
       }
     })

@@ -44,10 +44,8 @@ export default {
     "为什么不试试使用 GNU/Linux 呢？那样肯定就不会出问题了……哦，您已经在用了啊……",
   ],
   "Operating.PleaseWaitDetail": "正在进行操作……这可能需要几分钟。",
-  "CoreInfo.Introduction.Minecraft": "原汁原味的原版 Minecraft",
-  "CoreInfo.Introduction.Forge": "古老而不迂腐的传统型 Mod 加载器",
-  "CoreInfo.Introduction.Fabric": "可爱而不妖艳的模块化 Mod 加载器",
-  "CoreInfo.Introduction.Universal": "一次没有地图的旅行……？",
+  "CoreInfo.Introduction.Forge": "此核心可以加载 Forge Mod",
+  "CoreInfo.Introduction.Fabric": "此核心可以加载 Fabric Mod",
   "CoreInfo.CorruptedWarning": "无法读取 - 启动引导文件若非遗失，即为无效",
   "CoreInfo.Reload": "重新加载",
   "CoreInfo.Launch": "启动",
@@ -138,6 +136,7 @@ export default {
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3.
     This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.`,
   "ContainerManager.RootDir": "起始于",
+  "ContainerManager.OpenInDir": "在系统中打开",
   "ContainerManager.Add": "添加 Minecraft 容器",
   "ContainerManager.AddDescription":
     "添加容器很简单：选择一个文件夹并给它起一个名字！",
@@ -166,6 +165,7 @@ export default {
   "InstallCore.InstallForge": "安装 Forge",
   "InstallCore.InstallFabric": "安装 Fabric",
   "InstallCore.TargetContainer": "目标容器",
+  "InstallCore.Unknown": "未能确定",
   "InstallCore.Release": "Minecraft 稳定版",
   "InstallCore.Snapshot": "Minecraft 快照",
   "InstallCore.OldAlpha": "早期 Alpha 版",
@@ -224,6 +224,9 @@ export default {
   "Options.AutoSave": "您的修改会自动保存。某些选项只能适用于特定平台。",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
+  "Options.dev.explicit-error-throw.title": "显式抛出错误",
+  "Options.dev.explicit-error-throw.desc":
+    "在系统错误发生时额外使用一个对话框告知您错误信息 - 仅在开发时才有使用价值",
   "Options.dev.title": "开发人员模式",
   "Options.dev.desc":
     "打开开发人员模式，然后再次看看那些之前让你感到迷惑的标签 - 它们只会对开发人员显示正确的内容",
@@ -258,19 +261,25 @@ export default {
     "设置用于 Alicorn 附属浏览器的代理 - 所有流量都将通过代理服务器转发，这对您的浏览体验有很大影响，请在设置前再次仔细考虑您是否真的需要它",
   "Options.web.allow-natives.title": "启用 Web 原生支持",
   "Options.web.allow-natives.desc":
-    "在 Alicorn 附属浏览器中启用本地接口的支持 - 部分 Web 页面需要此功能与 Alicorn 进行集成，但开启它会使您的计算机直接受到网页中脚本的操控，如果您要开启，请只访问您信任的网页！",
+    "在 Alicorn 附属浏览器中启用本地接口的支持 - 部分 Web 页面需要此功能与 Alicorn 进行集成，但它将您的计算机操作权限直接授予 Web 页面，非常危险！如果您要开启，请只访问您信任的网页！",
   "Options.updator.use-update.title": "自动更新",
   "Options.updator.use-update.desc":
     "启用来自 Alicorn 的自动更新，以及时获取新功能 - 在测试阶段，这尤其重要",
   "Options.updator.dev.title": "使用开发频道",
   "Options.updator.dev.desc":
-    "下载未经压缩的开发版本内核进行更新 - 除了文件多一些以外没什么好处",
+    "下载未经压缩的开发版本内核进行更新 - 以了解开发人员的卡慢感受",
   "Options.download.concurrent.chunk-size.title": "并发下载区块大小",
   "Options.download.concurrent.chunk-size.desc":
     "进行并发分段下载时每个文件段的大小，单位 KB - 调太低了对你的处理器是一种折磨",
+  "Options.download.pff.chunk-size.title": "Pff 并发下载区块大小",
+  "Options.download.pff.chunk-size.desc":
+    "Pff 的并发下载区块大小，由于下载 Mod 和下载游戏资源网络环境不同，需要单独的设置",
   "Options.download.concurrent.timeout.title": "请求等待时间",
   "Options.download.concurrent.timeout.desc":
     "在提交错误前最长允许的服务器响应时间，单位毫秒 - 如果调太高了可能会出问题，别说我没告诉过你",
+  "Options.download.pff.timeout.title": "Pff 请求等待时间",
+  "Options.download.pff.timeout.desc":
+    "Pff 的请求等待时间，由于下载 Mod 和下载游戏资源网络环境不同，需要单独的设置",
   "Options.download.concurrent.tries-per-chunk.title": "重试次数",
   "Options.download.concurrent.tries-per-chunk.desc":
     "在放弃某个文件的下载前最多的重试次数 - 说真的，调高了真没有什么用，就是多浪费一些时间",
@@ -280,6 +289,9 @@ export default {
   "Options.download.concurrent.max-tasks.title": "并发下载任务数",
   "Options.download.concurrent.max-tasks.desc":
     "允许下载器同时进行的最多下载任务数，请不要在调高本项的同时调低分段大小 - 如果你不想闻到处理器的香味和经历 GPU 送 CPU 的痛苦",
+  "Options.download.pff.max-tasks.title": "Pff 并发下载任务数",
+  "Options.download.pff.max-tasks.desc":
+    "Pff 的并发下载任务数，由于下载 Mod 和下载游戏资源网络环境不同，需要单独的设置",
   "Options.modx.global-dynamic-load-mods.title": "Mod 动态加载",
   "Options.modx.global-dynamic-load-mods.desc":
     "在启动时根据启动的核心自动移动无法加载的 Mod - 如果这项功能导致您的 Mod 出现问题，请关闭它",
