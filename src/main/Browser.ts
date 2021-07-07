@@ -19,9 +19,9 @@ export async function openBrowser(
       preload: path.resolve(app.getAppPath(), PRELOAD_FILE),
       enableRemoteModule: false,
     },
-    height: height * 0.7,
-    width: width * 0.7,
-    title: "Please Wait...",
+    height: Math.floor(height * 0.7),
+    width: Math.floor(width * 0.7),
+    title: "Talking to the princess...",
   });
   if (proxy.trim().length > 0) {
     await USER_BROWSER.webContents.session.setProxy({

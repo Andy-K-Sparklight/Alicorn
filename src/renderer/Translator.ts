@@ -1,6 +1,7 @@
 import ChineseSimplified from "./locales/ChineseSimplified";
 import os from "os";
 import { getString } from "../modules/config/ConfigSupport";
+import path from "path";
 
 let currentLocale = "zh_cn";
 const localesMap = new Map<string, Record<string, string | string[]>>();
@@ -49,5 +50,7 @@ export function getCurrentLocale(): string {
 function applyEnvironmentVars(strIn: string): string {
   return strIn
     .replace(/{Date}/g, new Date().toLocaleDateString)
-    .replace(/{UserName}/g, getString("user.name") || os.userInfo().username);
+    .replace(/{UserName}/g, getString("user.name") || os.userInfo().username)
+    .replace(/{Home}/g, os.homedir())
+    .replace(/{AlicornHome}/g, path.join(os.homedir(), "alicorn"));
 }

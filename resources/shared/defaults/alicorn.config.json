@@ -1,15 +1,15 @@
 {
   "dev": false,
   "dev.explicit-error-throw": false,
-  "updator.dev": true,
-  "updator.use-update": false,
-  "download.concurrent.chunk-size": 1536,
+  "updator.dev": false,
+  "updator.use-update": true,
+  "download.concurrent.chunk-size": 2048,
   "download.concurrent.timeout": 5000,
   "download.concurrent.tries-per-chunk": 1,
-  "download.concurrent.max-tasks": 300,
+  "download.concurrent.max-tasks": 500,
   "download.no-validate": false,
   "download.pff.chunk-size": 256,
-  "download.pff.max-tasks": 2000,
+  "download.pff.max-tasks": 1200,
   "download.pff.timeout": 10000,
   "modx.default-save-path": "",
   "modx.ignore-non-standard-mods": true,
@@ -25,5 +25,6 @@
   "pff.page-size": 10,
   "pff.cache-root": "",
   "reset": false,
-  "download.mirror": "mcbbs"
+  "download.mirror": "mcbbs",
+  "pff.proxy": ""
 }

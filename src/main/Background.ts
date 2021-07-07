@@ -62,8 +62,8 @@ export function registerBackgroundListeners(): void {
         loginWindow ||
         new BrowserWindow({
           frame: false,
-          width: width * 0.5,
-          height: height * 0.5,
+          width: Math.floor(width * 0.6),
+          height: Math.floor(height * 0.6),
           show: false,
           webPreferences: {
             enableRemoteModule: false,

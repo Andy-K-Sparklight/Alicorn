@@ -222,11 +222,16 @@ export default {
   "JavaSelector.WarnNonFree":
     "许可警示 - 这不是自由软件！Alicorn 建议您使用自由的 OpenJDK 运行时代替该非自由的运行时，这可以避免带来的麻烦。",
   "Options.AutoSave": "您的修改会自动保存。某些选项只能适用于特定平台。",
+  "Options.Hint":
+    "Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
+  "Options.pff.proxy.title": "Pff 代理服务器",
+  "Options.pff.proxy.desc":
+    "针对 Pff 使用代理服务器，以在使用 Pff 时获得更好的体验 - 只有 Pff 的相关请求才会受影响",
   "Options.download.mirror.title": "下载源镜像",
   "Options.download.mirror.desc":
-    "只能选择 ~/alicorn/（或 C:\\Users\\???\\alicorn\\）下的镜像描述文件，不含扩展名 - 如果不想麻烦，从 mcbbs、bmclapi、tss 中选择一个就好。",
+    "只能选择 {AlicornHome} 下的镜像描述文件，不含扩展名 - 如果不想麻烦，从 mcbbs、bmclapi、tss 中选择一个就好，胡乱输入其它的值将导致无法下载！",
   "Options.dev.explicit-error-throw.title": "显式抛出错误",
   "Options.dev.explicit-error-throw.desc":
     "在系统错误发生时额外使用一个对话框告知您错误信息 - 仅在开发时才有使用价值",
@@ -235,13 +240,13 @@ export default {
     "打开开发人员模式，然后再次看看那些之前让你感到迷惑的标签 - 它们只会对开发人员显示正确的内容",
   "Options.reset.title": "重置为默认值",
   "Options.reset.desc":
-    "在下次启动时写入当前版本的默认配置 - 在 Alicorn 频繁更新时可能有用，但您的所有改动都将丢失",
+    "在下次启动时将设置重置为当前版本的默认内容 - 在 Alicorn 频繁更新时很有用，但您的所有改动都将丢失",
   "Options.pff.cache-root.title": "Pff 文件缓存位置",
   "Options.pff.cache-root.desc":
-    "设置 Pff 的文件缓存目录 - 这是必须的，有助于加快软件包的安装速度",
+    "设置 Pff 的文件缓存目录 - 这是必须的，有助于加快软件包的安装速度，留空以使用默认目录 {AlicornHome}",
   "Options.pff.page-size.title": "Pff 查询分页大小",
   "Options.pff.page-size.desc":
-    "进行模糊查询时请求的的分页大小 - 这项设置可能并不很有用",
+    "进行模糊查询时请求的的分页大小 - 这项设置可能并不很有用，但如果 Pff 不能正确查找您的 Mod，可以扩大该值",
   "Options.pff.api-base.title": "Pff API 起始 URL",
   "Options.pff.api-base.desc":
     "指定 Pff 在安装软件包时使用的起始 URL，所有的请求都将发往该 URL - 如果你使用自己的软件源，这会很有用",
@@ -253,7 +258,7 @@ export default {
     "仅使用命令和环境变量寻找 JRE，不要搜索整台计算机 - 如果您知道如何设置，这可以非常快",
   "Options.music.enabled.title": "启用音乐音效",
   "Options.music.enabled.desc":
-    "允许 Alicorn 在合适的时候播放音乐和音效 - 小马们的耳朵是很敏锐的，请注意好好保护它哦！",
+    "允许 Alicorn 在合适的时候播放音乐和音效 - 作为小马，您的耳朵是很敏锐的，请注意好好保护它哦！",
   "Options.user.name.title": "您的昵称",
   "Options.user.name.desc": "Alicorn 会用这个名字亲切地称呼您 - 嗯……可爱~",
   "Options.launch.jim.title": "适用于 Windows 的 JRE 进程优先级调整",
@@ -261,7 +266,7 @@ export default {
     "调整 JRE 进程的优先级以优化游戏运行，但对系统和其它应用有较大影响 - 该操作有几率导致系统不稳定，如果您不知道您在做什么，请不要启用它",
   "Options.web.global-proxy.title": "浏览器 HTTP 代理",
   "Options.web.global-proxy.desc":
-    "设置用于 Alicorn 附属浏览器的代理 - 所有流量都将通过代理服务器转发，这对您的浏览体验有很大影响，请在设置前再次仔细考虑您是否真的需要它",
+    "设置用于 Alicorn 附属浏览器的代理 - 所有流量都将通过代理服务器转发，这对您的浏览体验有很大影响，请在设置前再次仔细考虑您是否真的需要它，下载器不受此设置影响",
   "Options.web.allow-natives.title": "启用 Web 原生支持",
   "Options.web.allow-natives.desc":
     "在 Alicorn 附属浏览器中启用本地接口的支持 - 部分 Web 页面需要此功能与 Alicorn 进行集成，但它将您的计算机操作权限直接授予 Web 页面，非常危险！如果您要开启，请只访问您信任的网页！",

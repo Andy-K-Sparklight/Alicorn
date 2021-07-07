@@ -28,6 +28,8 @@ import { fullWidth } from "./Stylex";
 import { loadLockFile, Lockfile } from "../modules/pff/curseforge/Lockfile";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { requireMod, setPffFlag } from "../modules/pff/curseforge/Wrapper";
+import { getString } from "../modules/config/ConfigSupport";
+import tunnel from "global-tunnel-ng";
 
 export function PffFront(): JSX.Element {
   const emitter = useRef(new EventEmitter());
@@ -180,6 +182,19 @@ async function pffInstall(
     i = p;
   }
   setPffFlag("1");
+  const url = getString("pff.proxy", "");
+  if (url) {
+    try {
+      const p = new URL(url);
+      tunnel.initialize({
+        host: p.hostname,
+        port: parseInt(p.port),
+      });
+    } catch {}
+  }
   await requireMod(i, version, container, emitter);
+  if (url) {
+    tunnel.end();
+  }
   setPffFlag("0");
 }

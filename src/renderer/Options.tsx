@@ -44,6 +44,7 @@ export function OptionsPage(): JSX.Element {
         <Typography className={classes.head}>
           {tr("Options.AutoSave")}
         </Typography>
+        <Typography className={classes.head}>{tr("Options.Hint")}</Typography>
         <InputItem type={ConfigType.BOOL} bindConfig={"updator.use-update"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"updator.dev"} />
         <InputItem type={ConfigType.STR} bindConfig={"user.name"} />
@@ -95,6 +96,7 @@ export function OptionsPage(): JSX.Element {
           bindConfig={"cmc.disable-log4j-config"}
         />
         <InputItem type={ConfigType.STR} bindConfig={"web.global-proxy"} />
+        <InputItem type={ConfigType.STR} bindConfig={"pff.proxy"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"dev"} />
         <InputItem
           type={ConfigType.BOOL}
