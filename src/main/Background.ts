@@ -1,4 +1,11 @@
-import { app, BrowserWindow, dialog, ipcMain, screen } from "electron";
+import {
+  app,
+  BrowserWindow,
+  dialog,
+  globalShortcut,
+  ipcMain,
+  screen,
+} from "electron";
 import { getMainWindow } from "./Bootstrap";
 import { getUserBrowser, openBrowser } from "./Browser";
 import { getBoolean, loadConfig } from "../modules/config/ConfigSupport";
@@ -175,5 +182,10 @@ export function registerBackgroundListeners(): void {
     if (getBoolean("dev.explicit-error-throw")) {
       dialog.showErrorBox("Oops!", msg);
     }
+  });
+  ipcMain.on("registerHotKey", (e, keyBound: string, signal = keyBound) => {
+    globalShortcut.register(keyBound, () => {
+      getMainWindow()?.webContents.send(signal);
+    });
   });
 }

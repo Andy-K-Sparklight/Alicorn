@@ -87,6 +87,8 @@ import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 import { ipcRenderer } from "electron";
 import { Nide8Account } from "../modules/auth/Nide8Account";
 
+export const LAST_SUCCESSFUL_GAME_KEY = "ReadyToLaunch.LastSuccessfulGame";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     stepper: {
@@ -491,6 +493,7 @@ async function startBoot(
     console.log("Restoring mods...");
     await restoreMods(container);
     console.log("Done!");
+    window.localStorage.setItem(LAST_SUCCESSFUL_GAME_KEY, window.location.hash);
   });
   const runID = launchProfile(profile, container, jRunnable, acData, em, {
     useAj: useAj,

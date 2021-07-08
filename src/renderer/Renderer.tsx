@@ -27,6 +27,7 @@ import { saveJIMFile } from "../modules/launch/JIMSupport";
 import { ipcRenderer } from "electron";
 import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
 import { prefetchFabricManifest } from "../modules/pff/get/FabricGet";
+import { activateHotKeyFeature } from "./HotKeyHandler";
 
 require("v8-compile-cache");
 
@@ -109,6 +110,7 @@ window.addEventListener("error", (e) => {
   console.log("Initializing modules...");
   const t1 = new Date();
   registerHandlers();
+  activateHotKeyFeature();
   // Essential works and light works
   await Promise.allSettled([
     loadGDT(),

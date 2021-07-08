@@ -261,6 +261,9 @@ export function App(): JSX.Element {
       </Box>
       <Snackbar
         open={openNotice}
+        style={{
+          width: "90%",
+        }}
         message={tr("System.Error") + err}
         autoHideDuration={10000}
         onClose={() => {

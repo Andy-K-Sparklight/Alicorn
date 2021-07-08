@@ -226,6 +226,11 @@ export default {
     "Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
+  "Options.hot-key.title": "Alicorn 快捷键",
+  "Options.hot-key.desc": "启用快捷键以进行高效操作 - 查看帮助以了解使用方法",
+  "Options.dev.quick-reload.title": "快速重载",
+  "Options.dev.quick-reload.desc":
+    "按 Ctrl+R 快速重新加载系统 - 这可能导致数据丢失和功能异常，仅应当用于开发",
   "Options.pff.proxy.title": "Pff 代理服务器",
   "Options.pff.proxy.desc":
     "针对 Pff 使用代理服务器，以在使用 Pff 时获得更好的体验 - 只有 Pff 的相关请求才会受影响",
@@ -338,6 +343,8 @@ export default {
   "CrashReportDisplay.Copy": "复制到剪贴板",
   "Welcome.Suggest.Part1": [
     "今天是 {Date}，欢迎您使用 Alicorn Launcher，{UserName}！",
+    "唔……？你为什么会这个时候来找我？",
+    "{UserName}，你来了！正好，我有些东西想给你看……什么？你很着急？啊，那就不妨碍你了……",
   ],
   "Welcome.Suggest.Part2": [
     "有什么很想做的事情吗？没有？那么为什么不来试试启动游戏呢？单击右上角的启动台按钮……",

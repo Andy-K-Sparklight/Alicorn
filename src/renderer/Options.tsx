@@ -97,11 +97,13 @@ export function OptionsPage(): JSX.Element {
         />
         <InputItem type={ConfigType.STR} bindConfig={"web.global-proxy"} />
         <InputItem type={ConfigType.STR} bindConfig={"pff.proxy"} />
+        <InputItem type={ConfigType.BOOL} bindConfig={"hot-key"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"dev"} />
         <InputItem
           type={ConfigType.BOOL}
           bindConfig={"dev.explicit-error-throw"}
         />
+        <InputItem type={ConfigType.BOOL} bindConfig={"dev.quick-reload"} />
         <InputItem
           type={ConfigType.BOOL}
           bindConfig={"launch.jim"}

@@ -1,6 +1,8 @@
 {
   "dev": false,
   "dev.explicit-error-throw": false,
+  "dev.quick-reload": false,
+  "hot-key": true,
   "updator.dev": false,
   "updator.use-update": true,
   "download.concurrent.chunk-size": 2048,
