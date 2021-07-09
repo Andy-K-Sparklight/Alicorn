@@ -1,7 +1,8 @@
 import ChineseSimplified from "./locales/ChineseSimplified";
 import os from "os";
-import { getString } from "../modules/config/ConfigSupport";
+import { getAllConfigKeys, getString } from "../modules/config/ConfigSupport";
 import path from "path";
+import { safeEval } from "../modules/crhelper/SafeEvalNatives";
 
 let currentLocale = "zh_cn";
 const localesMap = new Map<string, Record<string, string | string[]>>();
@@ -39,9 +40,8 @@ export function randsl(key: string, ...values: string[]): string {
   if (res.length === 0) {
     return key;
   }
-  return applyEnvironmentVars(
-    applyCustomVars(res[Math.floor(Math.random() * res.length)], values)
-  );
+  const trimmed = trimControlCode(res, values);
+  return trimmed[Math.floor(Math.random() * trimmed.length)];
 }
 
 export function initTranslator(): void {
@@ -52,12 +52,20 @@ export function getCurrentLocale(): string {
   return currentLocale;
 }
 
+// {Config:key.key} returns the config
 function applyEnvironmentVars(strIn: string): string {
-  return strIn
-    .replace(/{Date}/g, new Date().toLocaleDateString)
+  let primary = strIn
+    .replace(/{Date}/g, new Date().toLocaleDateString())
     .replace(/{UserName}/g, getString("user.name") || os.userInfo().username)
     .replace(/{Home}/g, os.homedir())
     .replace(/{AlicornHome}/g, path.join(os.homedir(), "alicorn"));
+  const allConfig = getAllConfigKeys();
+  allConfig.forEach((cKey) => {
+    const tKey = cKey.replace(/\./g, "\\.");
+    const regex = new RegExp(`\\{Config\\:${tKey}`, "g");
+    primary = primary.replace(regex, getString(cKey));
+  });
+  return primary;
 }
 
 function applyCustomVars(origin: string, rules: string[]): string {
@@ -74,4 +82,32 @@ function applyCustomVars(origin: string, rules: string[]): string {
     }
   }
   return cStr;
+}
+
+// Randsl control
+// Replace first
+// [JavaScript Code] means only add this to choices if JS result is true
+const CONTROL_CODE_REGEX = /(?<=\[).*?(?=].*)/g;
+
+function trimControlCode(origin: string[], rules: string[]): string[] {
+  const output: string[] = [];
+  origin.forEach((v) => {
+    const tr = applyEnvironmentVars(applyCustomVars(v, rules));
+    const controlCode = tr.match(CONTROL_CODE_REGEX);
+    if (controlCode && controlCode[0]) {
+      try {
+        const r = safeEval(controlCode[0]);
+        if (r) {
+          const a = tr.split("]");
+          a.shift();
+          output.push(a.join("]"));
+        }
+      } catch {
+        // If error then we won't add this
+      }
+    } else {
+      output.push(tr);
+    }
+  });
+  return output;
 }

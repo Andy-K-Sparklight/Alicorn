@@ -1,4 +1,3 @@
-import os from "os";
 import { ALICORN_SEPARATOR } from "./Constants";
 
 // Separator '❤❤' is just a choice
@@ -7,7 +6,7 @@ import { ALICORN_SEPARATOR } from "./Constants";
 export function parseMap<T = boolean | string | number>(
   str: string
 ): Map<string, T> {
-  const entries = str.trim().split("\n");
+  const entries = str.trim().split("\n"); // Better compatibility
   const freshMap: Map<string, T> = new Map();
   for (const e of entries) {
     try {
@@ -23,7 +22,7 @@ export function parseMap<T = boolean | string | number>(
       }
       freshMap.set(
         entTuple[0] || "",
-        (manualParse(entTuple[1] || "") as unknown) as T
+        manualParse(entTuple[1] || "") as unknown as T
       );
     } catch {}
   }
@@ -50,5 +49,5 @@ export function buildMap(map: Map<string, unknown>): string {
   for (const [k, v] of map.entries()) {
     stringGroup.push(k + ALICORN_SEPARATOR + String(v));
   }
-  return stringGroup.join(os.EOL);
+  return stringGroup.join("\n");
 }

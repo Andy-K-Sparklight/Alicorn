@@ -30,6 +30,8 @@ import { Refresh } from "@material-ui/icons";
 import { ALICORN_DEFAULT_THEME_LIGHT, submitError } from "./Renderer";
 import { installJRE } from "../modules/java/GetJDK";
 import os from "os";
+import { ipcRenderer } from "electron";
+import path from "path";
 
 export const CANNOT_LOAD_INFO: JavaInfo = {
   rootVersion: -1,
@@ -52,6 +54,7 @@ export function JavaSelector(): JSX.Element {
   const [currentJavaInfo, setCurrentJavaInfo] =
     useState<JavaInfo>(CANNOT_LOAD_INFO);
   const display = useRef<boolean>(os.platform() === "win32");
+  const [refreshBit, setRefreshBit] = useState<boolean>(false);
   useEffect(() => {
     mounted.current = true;
 
@@ -73,7 +76,7 @@ export function JavaSelector(): JSX.Element {
     return () => {
       mounted.current = false;
     };
-  }, []);
+  }, [refreshBit]);
   useEffect(() => {
     (async () => {
       let javas;
@@ -104,7 +107,7 @@ export function JavaSelector(): JSX.Element {
         setLoaded(true);
       }
     })();
-  }, [isJavaInfoLoaded]);
+  }, [isJavaInfoLoaded, refreshBit]);
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box className={classes.root}>
@@ -153,6 +156,34 @@ export function JavaSelector(): JSX.Element {
             <Refresh />
           </IconButton>
         </Tooltip>
+        <br />
+        <br />
+        <Button
+          variant={"outlined"}
+          color={"primary"}
+          onClick={() => {
+            (async () => {
+              const d = path.dirname(path.dirname(await remoteSelectJava()));
+              if (d === "." || d.length === 0) {
+                return;
+              }
+              if (mounted.current) {
+                const jlCopy = javaList.concat();
+                if (!jlCopy.includes(d)) {
+                  jlCopy.push(d);
+                  setJavaList(jlCopy);
+                  resetJavaList(jlCopy);
+                  setRefreshBit(!refreshBit);
+                }
+                setCurrentJava(d);
+              }
+            })();
+          }}
+        >
+          {tr("JavaSelector.CustomAdd")}
+        </Button>
+        <br />
+        <br />
         {isJavaInfoLoaded ? (
           ""
         ) : (
@@ -305,4 +336,8 @@ function JavaDownloader(): JSX.Element {
       </Button>
     </Box>
   );
+}
+
+async function remoteSelectJava(): Promise<string> {
+  return String((await ipcRenderer.invoke("selectJava")) || "");
 }

@@ -9,6 +9,7 @@ import {
 import { getMainWindow } from "./Bootstrap";
 import { getUserBrowser, openBrowser } from "./Browser";
 import { getBoolean, loadConfig } from "../modules/config/ConfigSupport";
+import os from "os";
 
 const LOGIN_START =
   "https://login.live.com/oauth20_authorize.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf";
@@ -55,6 +56,24 @@ export function registerBackgroundListeners(): void {
         "promptToCreate",
         "dontAddToRecent",
       ],
+    });
+    if (r.canceled) {
+      return "";
+    }
+    return r.filePaths[0] || "";
+  });
+  ipcMain.handle("selectJava", async () => {
+    const r = await dialog.showOpenDialog({
+      properties: ["openFile", "dontAddToRecent"],
+      filters:
+        os.platform() === "win32"
+          ? [
+              {
+                name: "Java Executable",
+                extensions: ["exe"],
+              },
+            ]
+          : [],
     });
     if (r.canceled) {
       return "";
@@ -174,7 +193,6 @@ export function registerBackgroundListeners(): void {
     return getMainWindow()?.webContents.id || 0;
   });
   ipcMain.on("reloadConfig", async () => {
-    console.log("Reloading config...");
     await loadConfig();
     console.log("Config reloaded.");
   });

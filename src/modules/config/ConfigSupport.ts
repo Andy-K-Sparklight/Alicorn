@@ -3,6 +3,7 @@ import os from "os";
 import fs from "fs-extra";
 import { isFileExist } from "../commons/FileUtil";
 import { getBasePath } from "./PathSolve";
+import { ipcRenderer } from "electron";
 
 const CONFIG_FILE = path.resolve(
   os.homedir(),
@@ -58,6 +59,10 @@ export async function loadConfig(): Promise<void> {
   }
 }
 
+export function getAllConfigKeys(): string[] {
+  return Object.keys(cachedConfig);
+}
+
 export function saveConfigSync(): void {
   try {
     fs.ensureDirSync(path.dirname(CONFIG_FILE));
@@ -101,4 +106,9 @@ export function parseNum(val: unknown, def = 0): number {
     }
   }
   return def;
+}
+
+export async function saveAndReloadMain(): Promise<void> {
+  await saveConfig();
+  ipcRenderer.send("reloadConfig");
 }

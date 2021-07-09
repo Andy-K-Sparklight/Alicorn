@@ -50,6 +50,7 @@ import {
   saveResolveLockSync,
 } from "../modules/download/ResolveLock";
 import { PffFront } from "./PffFront";
+import { Welcome } from "./Welcome";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -76,12 +77,12 @@ const useStyles = makeStyles((theme) =>
 
 export function App(): JSX.Element {
   const classes = useStyles();
-  const [page, setPage] = useState(Pages.Version.toString());
+  const [page, setPage] = useState(Pages.Welcome.toString());
   const [openNotice, setNoticeOpen] = useState(false);
   const [err, setErr] = useState("");
   useEffect(() => {
     document.addEventListener("setPage", (e) => {
-      setPage(String(safeGet(e, ["detail"], Pages.Version)));
+      setPage(String(safeGet(e, ["detail"], Pages.Welcome)));
     });
   }, []);
   useEffect(() => {
@@ -241,7 +242,7 @@ export function App(): JSX.Element {
         </Toolbar>
       </AppBar>
       <Box className={classes.content}>
-        <Route path={"/"} component={VersionView} exact />
+        <Route path={"/"} component={Welcome} exact />
         <Route path={"/LaunchPad"} component={LaunchPad} />
         <Route path={"/InstallCore"} component={InstallCore} />
         <Route
@@ -258,6 +259,7 @@ export function App(): JSX.Element {
         <Route path={"/Options"} component={OptionsPage} />
         <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
         <Route path={"/PffFront/:container/:version"} component={PffFront} />
+        <Route path={"/Welcome"} component={Welcome} />
       </Box>
       <Snackbar
         open={openNotice}

@@ -27,8 +27,7 @@ export async function loadMirror(): Promise<void> {
   );
   mirrorMap = parseMap(
     await loadData(
-      getString("download.mirror", "mcbbs").toLowerCase().trim() + ".ald" ||
-        MIRROR_FILES[0]
+      getString("download.mirror", "mcbbs").toLowerCase().trim() + ".ald"
     )
   );
 }

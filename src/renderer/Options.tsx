@@ -99,6 +99,7 @@ export function OptionsPage(): JSX.Element {
         <InputItem type={ConfigType.STR} bindConfig={"pff.proxy"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"hot-key"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"dev"} />
+        <InputItem type={ConfigType.BOOL} bindConfig={"dev.f12"} />
         <InputItem
           type={ConfigType.BOOL}
           bindConfig={"dev.explicit-error-throw"}

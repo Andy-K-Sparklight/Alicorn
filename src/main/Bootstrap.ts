@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen } from "electron";
+import { app, BrowserWindow, globalShortcut, screen } from "electron";
 import os from "os";
 import { btoa } from "js-base64";
 import { registerBackgroundListeners } from "./Background";
@@ -47,6 +47,11 @@ app.on("ready", async () => {
     console.log("All caught up! Alicorn is now initialized.");
   });
   console.log("Preparing window!");
+  globalShortcut.register("F12", () => {
+    if (getBoolean("dev.f12")) {
+      mainWindow?.webContents.openDevTools();
+    }
+  });
   await mainWindow.loadFile(path.resolve(appPath, "Renderer.html"));
 });
 

@@ -81,8 +81,7 @@ function CoresDisplay(): JSX.Element {
                 container: c.id,
               });
             } finally {
-              counter++;
-              if (counter >= 5) {
+              if (++counter >= 5) {
                 counter = 0;
                 if (mountedBit.current) {
                   setCores(cachedAllCores);

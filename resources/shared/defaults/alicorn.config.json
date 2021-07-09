@@ -2,6 +2,7 @@
   "dev": false,
   "dev.explicit-error-throw": false,
   "dev.quick-reload": false,
+  "dev.f12": false,
   "hot-key": true,
   "updator.dev": false,
   "updator.use-update": true,

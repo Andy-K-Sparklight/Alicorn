@@ -14,6 +14,7 @@ export default {
   Options: "选项",
   CrashReportDisplay: "启动疑难解答",
   PffFront: "Pff 软件安装器",
+  Welcome: "欢迎回来",
   "System.Error": "Oops！系统错误：",
   "MainMenu.QuickManageAccount": "管理帐户",
   "MainMenu.QuickJavaSelector": "选择 Java",
@@ -204,6 +205,7 @@ export default {
   "AccountManager.Next": "下一步",
   "AccountManager.Reload": "重新加载",
   "AccountManager.AddYggdrasil": "添加 Yggdrasil 帐户",
+  "JavaSelector.CustomAdd": "我想手动定位一个 Java 运行时",
   "JavaSelector.SelectJavaTitle": "Java 运行时",
   "JavaSelector.SelectJava": "选择 Java 运行时",
   "JavaSelector.CannotLoad": "读取中",
@@ -226,11 +228,14 @@ export default {
     "Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
+  "Options.dev.f12.title": "F12 调试",
+  "Options.dev.f12.desc":
+    "按下 F12 以调试 Alicorn 渲染进程 - 请当心，胡乱使用 DevTools 可能导致启动器故障或您的数据丢失！",
   "Options.hot-key.title": "Alicorn 快捷键",
   "Options.hot-key.desc": "启用快捷键以进行高效操作 - 查看帮助以了解使用方法",
   "Options.dev.quick-reload.title": "快速重载",
   "Options.dev.quick-reload.desc":
-    "按 Ctrl+R 快速重新加载系统 - 这可能导致数据丢失和功能异常，仅应当用于开发",
+    "按 Ctrl+R 快速重新加载启动器 - 这可能导致数据丢失和功能异常，仅应当用于开发",
   "Options.pff.proxy.title": "Pff 代理服务器",
   "Options.pff.proxy.desc":
     "针对 Pff 使用代理服务器，以在使用 Pff 时获得更好的体验 - 只有 Pff 的相关请求才会受影响",
@@ -289,7 +294,7 @@ export default {
     "Pff 的并发下载区块大小，由于下载 Mod 和下载游戏资源网络环境不同，需要单独的设置",
   "Options.download.concurrent.timeout.title": "请求等待时间",
   "Options.download.concurrent.timeout.desc":
-    "在提交错误前最长允许的服务器响应时间，单位毫秒 - 如果调太高了可能会出问题，别说我没告诉过你",
+    "在提交错误前最长允许的服务器响应时间，单位毫秒 - 该值过高或过低都可能导致部分文件下载失败",
   "Options.download.pff.timeout.title": "Pff 请求等待时间",
   "Options.download.pff.timeout.desc":
     "Pff 的请求等待时间，由于下载 Mod 和下载游戏资源网络环境不同，需要单独的设置",
@@ -301,7 +306,7 @@ export default {
     "信任下载的文件，直接存储，不检查其是否完整或有效 - 这可以提升速度，但会在出现问题时更难进行排查",
   "Options.download.concurrent.max-tasks.title": "并发下载任务数",
   "Options.download.concurrent.max-tasks.desc":
-    "允许下载器同时进行的最多下载任务数，请不要在调高本项的同时调低分段大小 - 如果你不想闻到处理器的香味和经历 GPU 送 CPU 的痛苦",
+    "允许下载器同时进行的最多下载任务数，一个文件的多个分段视为一个任务 - 如果计算机性能较差，可以将该值调低",
   "Options.download.pff.max-tasks.title": "Pff 并发下载任务数",
   "Options.download.pff.max-tasks.desc":
     "Pff 的并发下载任务数，由于下载 Mod 和下载游戏资源网络环境不同，需要单独的设置",
@@ -344,7 +349,6 @@ export default {
   "Welcome.Suggest.Part1": [
     "今天是 {Date}，欢迎您使用 Alicorn Launcher，{UserName}！",
     "唔……？你为什么会这个时候来找我？",
-    "{UserName}，你来了！正好，我有些东西想给你看……什么？你很着急？啊，那就不妨碍你了……",
   ],
   "Welcome.Suggest.Part2": [
     "有什么很想做的事情吗？没有？那么为什么不来试试启动游戏呢？单击右上角的启动台按钮……",
