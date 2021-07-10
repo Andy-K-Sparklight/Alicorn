@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "sideEffects": false,
   "scripts": {
-    "prepare-win-package": "apt install wine64 -y&&yarn install",
     "build-dll": "npx webpack --config webpack.config.dll.js --progress",
     "build-vercel": "yarn build-dll-ci&&yarn release-full-ci&&yarn build-full-ci",
     "build-dll-ci": "npx webpack --config webpack.config.dll.js",
@@ -33,8 +32,7 @@
     "release-full-ci": "yarn release-main-ci&&yarn release-renderer-ci&&yarn release-star-ci",
     "package": "yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=ia32 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=linux --arch=x64 --icon ./resources/build/icon --out out",
     "compress": "node pack.js",
-    "make-all": "yarn build-vercel&&yarn package&&yarn compress",
-    "push": "git push origin main&&git push github main"
+    "make-all": "yarn build-vercel&&yarn package&&yarn compress"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.0.1",
