@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "sideEffects": false,
   "scripts": {
-    "prepare-win-package": "sudo apt install wine64 -y&&yarn",
+    "prepare-win-package": "sudo apt install wine64 -y&&yarn install",
     "build-dll": "npx webpack --config webpack.config.dll.js --progress",
     "build-vercel": "yarn build-dll-ci&&yarn release-full-ci&&yarn build-full-ci",
     "build-dll-ci": "npx webpack --config webpack.config.dll.js",
