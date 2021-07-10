@@ -95,6 +95,7 @@ export function YNDialog(props: {
   content: string;
   yes: string;
   no: string;
+  open?: boolean;
 }): JSX.Element {
   const [open, setOpen] = useState<boolean>(true);
   return (
@@ -120,6 +121,47 @@ export function YNDialog(props: {
           <Button
             onClick={() => {
               setOpen(false);
+              props.onClose();
+            }}
+          >
+            {props.no}
+          </Button>
+        </DialogActions>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export function YNDialog2(props: {
+  onClose: () => unknown;
+  onAccept: () => unknown;
+  title: string;
+  content: string;
+  yes: string;
+  no: string;
+  open: boolean;
+}): JSX.Element {
+  return (
+    <Dialog
+      open={props.open}
+      onClose={() => {
+        props.onClose();
+      }}
+    >
+      <DialogTitle>{props.title}</DialogTitle>
+      <DialogContent>
+        <DialogContentText>{props.content}</DialogContentText>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              props.onAccept();
+              props.onClose();
+            }}
+          >
+            {props.yes}
+          </Button>
+          <Button
+            onClick={() => {
               props.onClose();
             }}
           >

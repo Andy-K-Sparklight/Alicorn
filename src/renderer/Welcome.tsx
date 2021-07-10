@@ -1,6 +1,17 @@
 import React from "react";
-import { Box, createStyles, makeStyles, Typography } from "@material-ui/core";
-import { randsl } from "./Translator";
+import {
+  Box,
+  createStyles,
+  Link,
+  List,
+  ListItem,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
+import { randsl, tr } from "./Translator";
+import { jumpTo, Pages, triggerSetPage } from "./GoTo";
+import { LAST_SUCCESSFUL_GAME_KEY } from "./ReadyToLaunch";
+import { History } from "@material-ui/icons";
 
 export function Welcome(): JSX.Element {
   const classes = makeStyles((theme) =>
@@ -10,14 +21,27 @@ export function Welcome(): JSX.Element {
       },
       firstText: {
         color: theme.palette.primary.main,
-        fontSize: "medium",
+        fontSize: "large",
       },
       secondText: {
         color: theme.palette.secondary.main,
         fontSize: "small",
       },
+      link: {
+        color: theme.palette.primary.main,
+        fontSize: "small",
+      },
+      thirdText: {
+        color: theme.palette.primary.main,
+        fontSize: "medium",
+      },
+      list: {
+        marginTop: theme.spacing(-2),
+      },
     })
   )();
+  // @ts-ignore
+  console.log(window[LAST_SUCCESSFUL_GAME_KEY]);
   return (
     <Box className={classes.root}>
       <Typography color={"primary"} className={classes.firstText} gutterBottom>
@@ -30,6 +54,39 @@ export function Welcome(): JSX.Element {
       >
         {randsl("Welcome.Suggest.Part2")}
       </Typography>
+      <br />
+      <Typography
+        color={"secondary"}
+        className={classes.thirdText}
+        gutterBottom
+      >
+        {randsl("Welcome.Suggest.Others")}
+      </Typography>
+      <List className={classes.list}>
+        {
+          // @ts-ignore
+          window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ===
+          undefined ? (
+            ""
+          ) : (
+            <ListItem>
+              <History color={"primary"} />
+              <Link
+                className={classes.link}
+                onClick={() => {
+                  jumpTo(
+                    window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ||
+                      "/ReadyToLaunch/undefined/undefined"
+                  );
+                  triggerSetPage(Pages.ReadyToLaunch);
+                }}
+              >
+                {tr("Welcome.Suggest.LastSuccessfulLaunch")}
+              </Link>
+            </ListItem>
+          )
+        }
+      </List>
       {/*TODO*/}
     </Box>
   );

@@ -70,6 +70,9 @@ export function YggdrasilAccountManager(): JSX.Element {
 
   return (
     <Box className={classes.para}>
+      <Typography className={classes.smallText} color={"secondary"}>
+        {tr("AccountManager.Note")}
+      </Typography>
       <Box style={{ textAlign: "right", marginRight: "18%" }}>
         <Tooltip title={tr("AccountManager.Reload")}>
           <IconButton

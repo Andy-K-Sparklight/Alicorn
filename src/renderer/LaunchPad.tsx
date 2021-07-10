@@ -192,11 +192,11 @@ function SingleCoreDisplay(props: {
             color={"textSecondary"}
             gutterBottom
           >
-            {props.profile.id +
-              " " +
-              tr("CoreInfo.At") +
-              " " +
-              props.profile.container}
+            {tr(
+              "CoreInfo.At",
+              `ID=${props.profile.id}`,
+              `Container=${props.profile.container}`
+            )}
           </Typography>
           {props.profile.corrupted ? (
             <CorruptedCoreWarning />

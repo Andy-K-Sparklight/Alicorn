@@ -30,6 +30,7 @@ import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { requireMod, setPffFlag } from "../modules/pff/curseforge/Wrapper";
 import { getString } from "../modules/config/ConfigSupport";
 import tunnel from "global-tunnel-ng";
+import { setChangePageWarn } from "./GoTo";
 
 export function PffFront(): JSX.Element {
   const emitter = useRef(new EventEmitter());
@@ -176,6 +177,7 @@ async function pffInstall(
   version: string,
   emitter: EventEmitter
 ): Promise<void> {
+  setChangePageWarn(true);
   let i: string | number = name;
   const p = parseInt(name);
   if (String(p) == name) {
@@ -197,4 +199,5 @@ async function pffInstall(
     tunnel.end();
   }
   setPffFlag("0");
+  setChangePageWarn(false);
 }

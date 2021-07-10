@@ -32,7 +32,6 @@ import { randsl, tr } from "./Translator";
 import { useParams } from "react-router";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { getContainer } from "../modules/container/ContainerUtil";
-import { MicrosoftAccount } from "../modules/auth/MicrosoftAccount";
 import {
   getAllJava,
   getJavaInfoRaw,
@@ -41,7 +40,6 @@ import {
   parseJavaInfo,
   parseJavaInfoRaw,
 } from "../modules/java/JInfo";
-import { FlightTakeoff } from "@material-ui/icons";
 import objectHash from "object-hash";
 import {
   ensureAllAssets,
@@ -51,7 +49,6 @@ import {
   ensureLog4jFile,
   ensureNatives,
 } from "../modules/launch/Ensurance";
-import { launchProfile } from "../modules/launch/LaunchPad";
 import EventEmitter from "events";
 import {
   PROCESS_END_GATE,
@@ -59,10 +56,8 @@ import {
   ReleaseType,
 } from "../modules/commons/Constants";
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
-import { LocalAccount } from "../modules/auth/LocalAccount";
 import { Account } from "../modules/auth/Account";
 import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
-import { isNull } from "../modules/commons/Null";
 import {
   AccountType,
   fillAccessData,
@@ -71,21 +66,25 @@ import {
 } from "../modules/auth/AccountUtil";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
 import { prefetchData } from "../modules/auth/AJHelper";
-import { toReadableType } from "./YggdrasilAccountManager";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { LaunchTracker } from "../modules/launch/Tracker";
-import { schedulePromiseTask } from "./Schedule";
 import {
   getWrapperStatus,
   WrapperStatus,
 } from "../modules/download/DownloadWrapper";
 import { getNumber, getString } from "../modules/config/ConfigSupport";
 import { scanReports } from "../modules/crhelper/CrashReportFinder";
-import { findNotIn } from "../modules/commons/Collections";
 import { YNDialog } from "./OperatingHint";
-import { jumpTo, Pages, triggerSetPage } from "./GoTo";
-import { ipcRenderer } from "electron";
+import { jumpTo, Pages, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { Nide8Account } from "../modules/auth/Nide8Account";
+import { FlightTakeoff } from "@material-ui/icons";
+import { MicrosoftAccount } from "../modules/auth/MicrosoftAccount";
+import { toReadableType } from "./YggdrasilAccountManager";
+import { launchProfile } from "../modules/launch/LaunchPad";
+import { LocalAccount } from "../modules/auth/LocalAccount";
+import { findNotIn } from "../modules/commons/Collections";
+import { isNull } from "../modules/commons/Null";
+import { ipcRenderer } from "electron";
 
 export const LAST_SUCCESSFUL_GAME_KEY = "ReadyToLaunch.LastSuccessfulGame";
 
@@ -131,9 +130,7 @@ export function ReadyToLaunch(): JSX.Element {
 
     (async () => {
       try {
-        const d = await schedulePromiseTask(() =>
-          loadProfile(id, getContainer(container))
-        );
+        const d = await loadProfile(id, getContainer(container));
         if (mounted.current) {
           setProfile(d);
           setLoaded(1);
@@ -151,21 +148,34 @@ export function ReadyToLaunch(): JSX.Element {
   }, []);
   const fullWidthProgress = fullWidth();
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-      {profileLoadedBit === 1 ? (
-        <Launching
-          profile={coreProfile}
-          container={getContainer(container)}
-          server={server}
-        />
-      ) : (
-        <LinearProgress
-          color={"secondary"}
-          style={{ width: "80%" }}
-          className={fullWidthProgress.progress}
-        />
-      )}
-    </MuiThemeProvider>
+    <Box
+      style={{
+        textAlign: "center",
+      }}
+    >
+      <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+        {profileLoadedBit === 1 ? (
+          <Launching
+            profile={coreProfile}
+            container={getContainer(container)}
+            server={server}
+          />
+        ) : profileLoadedBit === 2 ? (
+          <Typography
+            style={{ fontSize: "medium", color: "#ff8400" }}
+            gutterBottom
+          >
+            {tr("ReadyToLaunch.CouldNotLoad")}
+          </Typography>
+        ) : (
+          <LinearProgress
+            color={"secondary"}
+            style={{ width: "80%" }}
+            className={fullWidthProgress.progress}
+          />
+        )}
+      </MuiThemeProvider>
+    </Box>
   );
 }
 
@@ -212,12 +222,12 @@ function Launching(props: {
   }, []);
   useEffect(() => {
     const tm = setInterval(() => {
-      setWrapperStatus(getWrapperStatus);
+      setWrapperStatus(getWrapperStatus());
     }, 1000);
     return () => {
       clearInterval(tm);
     };
-  });
+  }, []);
   useEffect(() => {
     const fun = () => {
       setWarning(true);
@@ -260,6 +270,7 @@ function Launching(props: {
               (st) => {
                 setStatus(st);
                 setActiveStep(REV_LAUNCH_STEPS[st]);
+                setChangePageWarn(st !== LaunchingStatus.PENDING);
               },
               props.profile,
               profileHash.current,
@@ -290,7 +301,11 @@ function Launching(props: {
       )}
 
       <Typography className={classes.text} gutterBottom>
-        {tr("ReadyToLaunch.Hint") + " " + props.profile.id}
+        {tr(
+          "ReadyToLaunch.Hint",
+          `ID=${props.profile.id}`,
+          `Container=${props.container.id}`
+        )}
       </Typography>
       <Typography variant={"h6"} className={classes.primaryText} gutterBottom>
         {tr("ReadyToLaunch.Status." + status)}
@@ -320,9 +335,12 @@ function Launching(props: {
         ""
       ) : (
         <Typography className={classes.text} gutterBottom>
-          {`${tr("ReadyToLaunch.InStack")}${wrapperStatus?.inStack}/${getNumber(
-            "download.concurrent.max-tasks"
-          )} ${tr("ReadyToLaunch.Pending")}${wrapperStatus?.pending}`}
+          {tr(
+            "ReadyToLaunch.Progress",
+            `Current=${wrapperStatus?.inStack}`,
+            `BufferMax=${getNumber("download.concurrent.max-tasks")}`,
+            `Pending=${wrapperStatus?.pending}`
+          )}
         </Typography>
       )}
 
@@ -358,6 +376,7 @@ function Launching(props: {
                 (st) => {
                   setStatus(st);
                   setActiveStep(REV_LAUNCH_STEPS[st]);
+                  setChangePageWarn(st !== LaunchingStatus.PENDING);
                 },
                 props.profile,
                 profileHash.current,
@@ -489,11 +508,15 @@ async function startBoot(
       window[LAST_FAILURE_INFO_KEY] = FAILURE_INFO;
       window.dispatchEvent(new CustomEvent("mcFailure"));
       console.log("Crash report committed, continue tasks.");
+    } else {
+      window.localStorage.setItem(
+        LAST_SUCCESSFUL_GAME_KEY,
+        window.location.hash
+      );
     }
     console.log("Restoring mods...");
     await restoreMods(container);
     console.log("Done!");
-    window.localStorage.setItem(LAST_SUCCESSFUL_GAME_KEY, window.location.hash);
   });
   const runID = launchProfile(profile, container, jRunnable, acData, em, {
     useAj: useAj,

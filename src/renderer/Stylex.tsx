@@ -29,6 +29,10 @@ export const usePadStyles = makeStyles((theme) =>
       color: theme.palette.primary.main,
       marginLeft: "16%",
     },
+    smallText: {
+      marginLeft: "-16%",
+      fontSize: "small",
+    },
   })
 );
 export const useInputStyles = makeStyles((theme) =>

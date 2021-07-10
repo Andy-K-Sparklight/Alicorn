@@ -107,6 +107,7 @@ window.addEventListener("error", (e) => {
     console.log("Reset complete.");
   }
   ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
+  bindSuperCowPower();
   console.log("Initializing modules...");
   const t1 = new Date();
   registerHandlers();
@@ -151,4 +152,41 @@ window.addEventListener("error", (e) => {
 export function submitError(msg: string): void {
   console.log(msg);
   window.dispatchEvent(new CustomEvent("sysError", { detail: msg }));
+}
+
+function bindSuperCowPower(): void {
+  // @ts-ignore
+  window["moo"] = () => {
+    console.log(
+      "                 (__) \n" +
+        "                 (oo) \n" +
+        "           /------\\/ \n" +
+        "          / |    ||   \n" +
+        "         *  /\\---/\\ \n" +
+        "            ~~   ~~   \n" +
+        '..."Have you mooed today?"...'
+    );
+  };
+  // @ts-ignore
+  window["moomoo"] = () => {
+    console.log(
+      "                 (__)  \n" +
+        "         _______~(..)~ \n" +
+        "           ,----\\(oo) \n" +
+        "          /|____|,'    \n" +
+        '         * /"\\ /\\   \n' +
+        "           ~ ~ ~ ~     \n" +
+        '..."Have you mooed today?"...'
+    );
+  }; // @ts-ignore
+  window["moomoomoo"] = () => {
+    console.log(
+      "                     \\_/ \n" +
+        "   m00h  (__)       -(_)- \n" +
+        "      \\  ~Oo~___     / \\\n" +
+        "         (..)  |\\        \n" +
+        "___________|_|_|_____________\n" +
+        '..."Have you mooed today?"...'
+    );
+  };
 }

@@ -3,6 +3,11 @@ import { setContainerListDirty } from "./ContainerManager";
 import { saveAndReloadMain } from "../modules/config/ConfigSupport";
 
 export function jumpTo(target: string): void {
+  // @ts-ignore
+  if (window[CHANGE_PAGE_WARN]) {
+    window.dispatchEvent(new CustomEvent("changePageWarn", { detail: target }));
+    return;
+  }
   ifLeavingLaunchPadThenSetDirty();
   ifLeavingContainerManagerThenSetContainerListDirty();
   ifLeavingConfigThenReload();
@@ -10,15 +15,11 @@ export function jumpTo(target: string): void {
 }
 
 function ifLeavingLaunchPadThenSetDirty(): void {
-  if (window.location.hash.includes("LaunchPad")) {
-    setDirty();
-  }
+  setDirty();
 }
 
 function ifLeavingContainerManagerThenSetContainerListDirty(): void {
-  if (window.location.hash.includes("ContainerManager")) {
-    setContainerListDirty();
-  }
+  setContainerListDirty();
 }
 
 function ifLeavingConfigThenReload(): void {
@@ -30,6 +31,10 @@ function ifLeavingConfigThenReload(): void {
 }
 
 export function triggerSetPage(page: string): void {
+  // @ts-ignore
+  if (window[CHANGE_PAGE_WARN]) {
+    return;
+  }
   document.dispatchEvent(new CustomEvent("setPage", { detail: page }));
 }
 
@@ -45,4 +50,11 @@ export enum Pages {
   JavaSelector = "JavaSelector",
   PffFront = "PffFront",
   Welcome = "Welcome",
+}
+
+export const CHANGE_PAGE_WARN = "ChangePageWarn";
+
+export function setChangePageWarn(doWarn: boolean): void {
+  // @ts-ignore
+  window[CHANGE_PAGE_WARN] = doWarn;
 }

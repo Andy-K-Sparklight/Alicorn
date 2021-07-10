@@ -8,4 +8,6 @@
 
 html {
     background-color: #ffe0f0;
+    font-family: "Roboto", "Microsoft YaHei UI Light", Tahoma, Verdana, sans-serif;
+    white-space: pre-line;
 }

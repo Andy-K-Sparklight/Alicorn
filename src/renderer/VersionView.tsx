@@ -10,34 +10,44 @@ export function VersionView(): JSX.Element {
         marginLeft: theme.spacing(2),
       },
       title: {
+        fontSize: "larger",
         color: theme.palette.primary.main,
       },
       text: {
-        fontSize: "medium",
-        color: theme.palette.secondary.main,
+        fontSize: "small",
       },
     })
   )();
   return (
     <Box className={classes.root}>
-      <Typography variant={"h5"} className={classes.title} gutterBottom>
+      <Typography className={classes.title} gutterBottom>
         {tr("VersionView.Name")}
       </Typography>
-      <Typography className={classes.text} gutterBottom>
+      <Typography className={classes.text} color={"secondary"} gutterBottom>
         {tr("VersionView.Version") + " " + pkg.appVersion}
       </Typography>
-      <Typography className={classes.text} gutterBottom>
+      <Typography className={classes.text} color={"secondary"} gutterBottom>
         {tr("VersionView.Description")}
       </Typography>
-      <Typography className={classes.text} gutterBottom>
+      <Typography className={classes.text} color={"secondary"} gutterBottom>
         {tr("VersionView.AuthorName") + " " + tr("VersionView.Authors")}
       </Typography>
       <br />
-      <Typography className={classes.text} gutterBottom>
+      <Typography className={classes.text} color={"secondary"} gutterBottom>
         {tr("VersionView.Copyright1")}
       </Typography>
-      <Typography className={classes.text} gutterBottom>
+      <Typography className={classes.text} color={"secondary"} gutterBottom>
         {tr("VersionView.Copyright2")}
+      </Typography>
+      <Typography
+        className={classes.text}
+        color={"primary"}
+        style={{
+          float: "right",
+          marginRight: "2%",
+        }}
+      >
+        {tr("VersionView.SuperCowPower")}
       </Typography>
     </Box>
   );

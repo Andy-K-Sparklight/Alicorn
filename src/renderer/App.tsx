@@ -11,7 +11,13 @@ import {
   Typography,
 } from "@material-ui/core";
 import { ipcRenderer } from "electron";
-import { jumpTo, Pages, triggerSetPage } from "./GoTo";
+import {
+  CHANGE_PAGE_WARN,
+  jumpTo,
+  Pages,
+  setChangePageWarn,
+  triggerSetPage,
+} from "./GoTo";
 import { safeGet } from "../modules/commons/Null";
 import {
   getBoolean,
@@ -51,6 +57,7 @@ import {
 } from "../modules/download/ResolveLock";
 import { PffFront } from "./PffFront";
 import { Welcome } from "./Welcome";
+import { YNDialog2 } from "./OperatingHint";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -60,7 +67,7 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.secondary.light,
     },
     content: {
-      marginTop: theme.spacing(10),
+      marginTop: theme.spacing(4),
     },
     exitButton: {
       marginRight: 0,
@@ -79,9 +86,24 @@ export function App(): JSX.Element {
   const classes = useStyles();
   const [page, setPage] = useState(Pages.Welcome.toString());
   const [openNotice, setNoticeOpen] = useState(false);
+  const [openChangePageWarn, setOpenChangePageWarn] = useState(false);
+  const [pageTarget, setPageTarget] = useState("");
+  const [jumpPageTarget, setJumpPageTarget] = useState("");
   const [err, setErr] = useState("");
   useEffect(() => {
+    window.addEventListener("changePageWarn", (e) => {
+      console.log("Change page warn triggered.");
+      setOpenChangePageWarn(true);
+      setJumpPageTarget(String(safeGet(e, ["detail"], Pages.Welcome)));
+    });
+  }, []);
+  useEffect(() => {
     document.addEventListener("setPage", (e) => {
+      // @ts-ignore
+      if (window[CHANGE_PAGE_WARN]) {
+        setPageTarget(String(safeGet(e, ["detail"], Pages.Welcome)));
+        return;
+      }
       setPage(String(safeGet(e, ["detail"], Pages.Welcome)));
     });
   }, []);
@@ -261,6 +283,23 @@ export function App(): JSX.Element {
         <Route path={"/PffFront/:container/:version"} component={PffFront} />
         <Route path={"/Welcome"} component={Welcome} />
       </Box>
+
+      <YNDialog2
+        onClose={() => {
+          setOpenChangePageWarn(false);
+        }}
+        open={openChangePageWarn}
+        onAccept={() => {
+          setChangePageWarn(false);
+          jumpTo(jumpPageTarget);
+          triggerSetPage(pageTarget);
+        }}
+        title={tr("System.JumpPageWarn.Title")}
+        content={tr("System.JumpPageWarn.Description")}
+        yes={tr("System.JumpPageWarn.Yes")}
+        no={tr("System.JumpPageWarn.No")}
+      />
+
       <Snackbar
         open={openNotice}
         style={{

@@ -32,6 +32,7 @@ import { installJRE } from "../modules/java/GetJDK";
 import os from "os";
 import { ipcRenderer } from "electron";
 import path from "path";
+import { setChangePageWarn } from "./GoTo";
 
 export const CANNOT_LOAD_INFO: JavaInfo = {
   rootVersion: -1,
@@ -79,6 +80,7 @@ export function JavaSelector(): JSX.Element {
   }, [refreshBit]);
   useEffect(() => {
     (async () => {
+      setChangePageWarn(true);
       let javas;
       if (!isJavaInfoLoaded) {
         javas = await whereJava();
@@ -106,17 +108,13 @@ export function JavaSelector(): JSX.Element {
         }
         setLoaded(true);
       }
+      setChangePageWarn(false);
     })();
   }, [isJavaInfoLoaded, refreshBit]);
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box className={classes.root}>
-        <Typography
-          variant={"h5"}
-          color={"primary"}
-          className={classes.title}
-          gutterBottom
-        >
+        <Typography color={"primary"} className={classes.title} gutterBottom>
           {tr("JavaSelector.SelectJavaTitle")}
         </Typography>
 

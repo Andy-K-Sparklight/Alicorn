@@ -16,6 +16,11 @@ export default {
   PffFront: "Pff 软件安装器",
   Welcome: "欢迎回来",
   "System.Error": "Oops！系统错误：",
+  "System.JumpPageWarn.Title": "要离开当前页面吗？",
+  "System.JumpPageWarn.Description":
+    "该页面想要告知您，您不应该在此时离开它，因为您可能有未保存的修改，或者该页面有些操作正在进行。仍要切换页面吗？",
+  "System.JumpPageWarn.Yes": "仍然切换",
+  "System.JumpPageWarn.No": "留在当前页面",
   "MainMenu.QuickManageAccount": "管理帐户",
   "MainMenu.QuickJavaSelector": "选择 Java",
   "MainMenu.Exit": "退出",
@@ -50,12 +55,14 @@ export default {
   "CoreInfo.CorruptedWarning": "无法读取 - 启动引导文件若非遗失，即为无效",
   "CoreInfo.Reload": "重新加载",
   "CoreInfo.Launch": "启动",
-  "CoreInfo.At": "在",
+  "CoreInfo.At": "核心 {ID} 位于容器 {Container} 上",
   "CoreInfo.Pff": "对此核心启动 Pff",
+  "ReadyToLaunch.CouldNotLoad":
+    "无法加载 - 该核心可能已经被移动或损毁\n如果你是通过除启动台之外的地方进入这里，那么原始链接的指向可能已经失效",
   "ReadyToLaunch.Go": "出发吧！",
-  "ReadyToLaunch.Hint": "启动该核心：",
-  "ReadyToLaunch.InStack": "缓冲区（处理中）：",
-  "ReadyToLaunch.Pending": "等候区（排队中）：",
+  "ReadyToLaunch.Hint": "正在启动位于容器 {Container} 上的核心 {ID}",
+  "ReadyToLaunch.Progress":
+    "正在并发处理 {Current} 个下载任务，最大并发允许 {BufferMax}，还有 {Pending} 个任务队列中",
   "ReadyToLaunch.StartAuthTitle": "确保那是你",
   "ReadyToLaunch.StartAuthMsg": "选择一个方式验证您的身份",
   "ReadyToLaunch.UseMZ": "Microsoft 帐户",
@@ -133,9 +140,12 @@ export default {
     "这是 Alicorn 的测试版本，可能存在重大问题，请谨慎使用。",
   "VersionView.Copyright1":
     "Alicorn 启动器是自由软件，复制、修改和重新分发等行为应遵循 GNU GENERAL PUBLIC LICENSE Version 3.0 许可证。",
-  "VersionView.Copyright2": `Copyright (C) 2021 Andy K Rarity Sparklight
-    This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3.
-    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.`,
+  "VersionView.Copyright2":
+    "Copyright (C) 2021 Andy K Rarity Sparklight\n\n" +
+    "以下内容是原始版权声明的中文翻译，不是官方内容，不具有法律效力，只有英文原版的声明具有此等效力。\n\n" +
+    "该程序是免费软件：您可以根据自由软件基金会发布的 GNU 通用公共许可证（第三版）的条款重新分发和/或修改它。\n" +
+    "分发此程序是希望它有用，但不作任何保证；甚至没有对适销性或针对特定目的的适用性的暗示保证。有关更多详细信息，请参阅 GNU 通用公共许可证（第三版）原文。",
+  "VersionView.SuperCowPower": "本启动器具有超级牛力。",
   "ContainerManager.RootDir": "起始于",
   "ContainerManager.OpenInDir": "在系统中打开",
   "ContainerManager.Add": "添加 Minecraft 容器",
@@ -205,6 +215,8 @@ export default {
   "AccountManager.Next": "下一步",
   "AccountManager.Reload": "重新加载",
   "AccountManager.AddYggdrasil": "添加 Yggdrasil 帐户",
+  "AccountManager.Note":
+    "如果您使用 Microsoft 帐户或本地帐户，则无需在此配置，请直接启动游戏，当启动时将（如果必要）询问您相关的信息。",
   "JavaSelector.CustomAdd": "我想手动定位一个 Java 运行时",
   "JavaSelector.SelectJavaTitle": "Java 运行时",
   "JavaSelector.SelectJava": "选择 Java 运行时",
@@ -349,10 +361,19 @@ export default {
   "Welcome.Suggest.Part1": [
     "今天是 {Date}，欢迎您使用 Alicorn Launcher，{UserName}！",
     "唔……？你为什么会这个时候来找我？",
+    "[new Date().getHours()>=18]好上晚！哦，我刚刚在练习古小马语……",
+    "[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]好困……这个时候叫我……？",
+    "[(()=>{const hours=new Date().getHours();return hours>=7&&hours<=11;})()]上午好！今天的天气真不错……什么？我猜错了？这不能怪我，要不你来预测天气试试？",
+    "无论什么时候你需要我，我都在这里的啦……",
+    "什么事？",
   ],
   "Welcome.Suggest.Part2": [
-    "有什么很想做的事情吗？没有？那么为什么不来试试启动游戏呢？单击右上角的启动台按钮……",
+    "有什么很想做的事情吗？没有？那么为什么不来试试启动游戏呢？\n\n" +
+      "单击右上角的「启动台」按钮，选择一个你喜欢的核心，单击它右上角的「启动」按钮就可以进入启动页面，单击页面中央的「确认启动」按钮，并选择一个合适的帐号，游戏就会开始加载进程了……\n\n" +
+      "偶尔你可能会碰到「Minecraft 似乎未正常运行」提示，如果你的游戏确实没有正常运行，不要惊慌，单击「是的，为我分析问题」，进入「启动疑难解答」页面。在那里，你可以查看崩溃报告分析结果、Mod 列表，或者通过最底下的「发布到 MCBBS 求助」按钮生成可用的代码，并前往 MCBBS（我的世界中文论坛）问答板块发帖求助。",
   ],
+  "Welcome.Suggest.Others": "以下内容可能也会有帮助……",
+  "Welcome.Suggest.LastSuccessfulLaunch": "最近一次游戏",
   "PffFront.Slug": "软件名",
   "PffFront.QuickWatch": "软件包速览",
 };
