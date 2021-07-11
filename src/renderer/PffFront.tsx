@@ -31,6 +31,7 @@ import { requireMod, setPffFlag } from "../modules/pff/curseforge/Wrapper";
 import { getString } from "../modules/config/ConfigSupport";
 import tunnel from "global-tunnel-ng";
 import { setChangePageWarn } from "./GoTo";
+import { shell } from "electron";
 
 export function PffFront(): JSX.Element {
   const emitter = useRef(new EventEmitter());
@@ -41,8 +42,23 @@ export function PffFront(): JSX.Element {
   const [packageName, setPackageName] = useState("");
   const [lockfile, setLockfile] = useState<Lockfile>();
   const mounted = useRef(false);
-  const reloadPff = useRef(false);
   const fullWidthClasses = fullWidth();
+  useEffect(() => {
+    const fun = () => {
+      (async () => {
+        const lock = await loadLockFile(getContainer(container));
+        if (mounted.current) {
+          setLockfile(lock);
+        }
+      })();
+    };
+    window.addEventListener("blur", fun);
+    window.addEventListener("focus", fun);
+    return () => {
+      window.removeEventListener("focus", fun);
+      window.removeEventListener("blur", fun);
+    };
+  }, []);
   useEffect(() => {
     (async () => {
       const lock = await loadLockFile(getContainer(container));
@@ -50,7 +66,7 @@ export function PffFront(): JSX.Element {
         setLockfile(lock);
       }
     })();
-  }, [isRunning, reloadPff.current]);
+  }, [isRunning]);
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -133,6 +149,16 @@ export function PffFront(): JSX.Element {
         <Typography className={fullWidthClasses.text} color={"primary"}>
           {tr("PffFront.QuickWatch")}
         </Typography>
+
+        <Typography
+          className={fullWidthClasses.text}
+          color={"secondary"}
+          style={{
+            fontSize: "small",
+          }}
+        >
+          {tr("PffFront.Hint")}
+        </Typography>
         <List>
           {lockfile
             ? Object.keys(lockfile.files).map((name) => {
@@ -146,11 +172,31 @@ export function PffFront(): JSX.Element {
                         <AssignmentLate />
                       )}
                     </ListItemIcon>
-                    <ListItemText>
+                    {lockfile.files[name].thumbNail.length > 0 ? (
+                      <img
+                        style={{
+                          marginLeft: "-2.5%",
+                        }}
+                        src={lockfile.files[name].thumbNail}
+                        alt={"LOGO"}
+                        height={32}
+                        width={32}
+                      />
+                    ) : (
+                      ""
+                    )}
+                    <ListItemText
+                      onClick={() => {
+                        shell.showItemInFolder(
+                          getContainer(container).getModJar(f.fileName)
+                        );
+                      }}
+                    >
                       <Typography
                         style={Object.assign(
                           {
                             fontSize: "small",
+                            marginLeft: "1%",
                           },
                           version === f.gameVersion ? {} : { color: "gray" }
                         )}

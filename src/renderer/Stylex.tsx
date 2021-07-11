@@ -100,7 +100,7 @@ export const fullWidth = makeStyles((theme) =>
     text: {
       fontSize: "large",
       marginTop: theme.spacing(1),
-      marginLeft: theme.spacing(2),
+      marginLeft: theme.spacing(4),
     },
   })
 );

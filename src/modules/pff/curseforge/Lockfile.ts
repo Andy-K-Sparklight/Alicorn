@@ -14,6 +14,7 @@ export interface FileMeta {
   fileDate: string;
   gameVersion: string;
   addonName: string;
+  thumbNail: string;
 }
 
 // This operation modify the lockfile
@@ -45,6 +46,7 @@ export function writeToLockFile(
     fileDate: file.fileDate,
     gameVersion: gameVersion,
     addonName: addon.name,
+    thumbNail: addon.thumbNail,
   };
 }
 

@@ -40,8 +40,6 @@ export function Welcome(): JSX.Element {
       },
     })
   )();
-  // @ts-ignore
-  console.log(window[LAST_SUCCESSFUL_GAME_KEY]);
   return (
     <Box className={classes.root}>
       <Typography color={"primary"} className={classes.firstText} gutterBottom>

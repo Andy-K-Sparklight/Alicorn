@@ -37,6 +37,14 @@ export async function getAddonInfoBySlug(
     for (const i of r) {
       if (i["slug"] === slug.toLowerCase()) {
         if (typeof i["id"] === "string" || typeof i["id"] === "number") {
+          i["thumbNail"] = "";
+          if (i["attachments"] instanceof Array) {
+            if (i["attachments"][0]) {
+              if (i["attachments"][0]["thumbnailUrl"]) {
+                i["thumbNail"] = i["attachments"][0]["thumbnailUrl"];
+              }
+            }
+          }
           return i as AddonInfo;
         }
       }
@@ -48,6 +56,14 @@ export async function getAddonInfoBySlug(
       let lowestSlug = "";
       let lowestObject: AddonInfo | undefined = undefined;
       for (const i of r) {
+        i["thumbNail"] = "";
+        if (i["attachments"] instanceof Array) {
+          if (i["attachments"][0]) {
+            if (i["attachments"][0]["thumbnailUrl"]) {
+              i["thumbNail"] = i["attachments"][0]["thumbnailUrl"];
+            }
+          }
+        }
         const aRank = strDiff(i["slug"], slug.toLowerCase());
         if (lowestId.length === 0) {
           lowestId = String(i["id"]);
@@ -99,6 +115,7 @@ export interface AddonInfo {
   slug: string;
   gameVersionLatestFiles: GameVersionFilesIndex[];
   defaultFileId: number;
+  thumbNail: string;
 }
 
 /*
@@ -212,6 +229,14 @@ export async function lookupAddonInfo(
       r["name"] !== undefined &&
       r["slug"] !== undefined
     ) {
+      r["thumbNail"] = "";
+      if (r["attachments"] instanceof Array) {
+        if (r["attachments"][0]) {
+          if (r["attachments"][0]["thumbnailUrl"]) {
+            r["thumbNail"] = r["attachments"][0]["thumbnailUrl"];
+          }
+        }
+      }
       return r as unknown as AddonInfo;
     }
     return undefined;

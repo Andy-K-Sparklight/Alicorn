@@ -376,4 +376,6 @@ export default {
   "Welcome.Suggest.LastSuccessfulLaunch": "最近一次游戏",
   "PffFront.Slug": "软件名",
   "PffFront.QuickWatch": "软件包速览",
+  "PffFront.Hint":
+    "灰色名称的软件包可能无法适配当前版本。\n单击软件包名称可以在文件资源管理器中查看它。",
 };
