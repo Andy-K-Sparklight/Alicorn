@@ -38,8 +38,8 @@
     "linux": "yarn electron-packager dist/release Alicorn --overwrite --platform=linux --arch=x64 --icon ./resources/build/icon --out out&&node makesh.js",
     "clean": "node clean.js",
     "make": "yarn clean&&yarn prepare-release&&yarn windows&&yarn macos&&yarn linux&&yarn compress",
-    "github-unix": "yarn clean&&yarn prepare-release&&yarn macos&&yarn linux&&yarn compress",
-    "github-windows": "yarn clean&&yarn prepare-release&&yarn windows&&yarn compress"
+    "github-unix": "yarn clean&&yarn release-full-ci&&yarn macos&&yarn linux&&yarn compress",
+    "github-windows": "yarn clean&&yarn release-full-ci&&yarn windows&&yarn compress"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.0.1",
