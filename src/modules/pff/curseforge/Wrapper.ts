@@ -12,7 +12,6 @@ import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { DATA_ROOT } from "../../config/DataSupport";
 import { loadLockFile, saveLockFile, writeToLockFile } from "./Lockfile";
 import { upgradeFile } from "./Upgrade";
-import tunnel from "global-tunnel-ng";
 
 export async function requireMod(
   slug: string | number,
@@ -30,6 +29,7 @@ export async function requireMod(
   let aInfo: AddonInfo | undefined;
   emitter.emit(PFF_MSG_GATE, `Querying info for '${slug}'`);
   if (typeof slug === "string") {
+    slug = encodeURI(slug.toLowerCase());
     aInfo = await getAddonInfoBySlug(
       slug,
       apiBase,
@@ -76,7 +76,6 @@ export async function requireMod(
     await writeToLockFile(aInfo, latestFile, lockfile, gameVersion);
     await saveLockFile(lockfile, container);
     emitter.emit(PFF_MSG_GATE, "All done! Have fun!");
-    tunnel.end();
     return true;
   } else {
     emitter.emit(

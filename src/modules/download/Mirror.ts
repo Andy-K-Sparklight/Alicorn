@@ -6,7 +6,12 @@ import { loadData, saveDefaultData } from "../config/DataSupport";
 import { parseMap } from "../commons/MapUtil";
 import { getString } from "../config/ConfigSupport";
 
-const MIRROR_FILES = ["mcbbs.ald", "tss.ald", "bmclapi.ald"];
+const MIRROR_FILES = [
+  "mcbbs.ald",
+  "tss-mcbbs.ald",
+  "bmclapi.ald",
+  "alicorn-mcbbs.ald",
+];
 let mirrorMap: Map<string, string> = new Map();
 
 export function applyMirror(url: string): string {

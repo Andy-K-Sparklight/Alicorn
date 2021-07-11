@@ -154,7 +154,6 @@ export function InstallCore(): JSX.Element {
             setOperating(true);
             setFailed(false);
             const ct = getContainer(selectedForgeContainer);
-            console.log("Fetching forge installer...");
             const stat = await getForgeInstaller(ct, mcv, fgv);
             if (!stat) {
               if (mounted.current) {

@@ -240,6 +240,9 @@ export default {
     "Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
+  "Options.interactive.i-have-a-crush-on-al.title": "I \u2764 AL",
+  "Options.interactive.i-have-a-crush-on-al.desc":
+    "我喜欢这个启动器……她好可爱～",
   "Options.dev.f12.title": "F12 调试",
   "Options.dev.f12.desc":
     "按下 F12 以调试 Alicorn 渲染进程 - 请当心，胡乱使用 DevTools 可能导致启动器故障或您的数据丢失！",
@@ -248,12 +251,9 @@ export default {
   "Options.dev.quick-reload.title": "快速重载",
   "Options.dev.quick-reload.desc":
     "按 Ctrl+R 快速重新加载启动器 - 这可能导致数据丢失和功能异常，仅应当用于开发",
-  "Options.pff.proxy.title": "Pff 代理服务器",
-  "Options.pff.proxy.desc":
-    "针对 Pff 使用代理服务器，以在使用 Pff 时获得更好的体验 - 只有 Pff 的相关请求才会受影响",
   "Options.download.mirror.title": "下载源镜像",
   "Options.download.mirror.desc":
-    "只能选择 {AlicornHome} 下的镜像描述文件，不含扩展名 - 如果不想麻烦，从 mcbbs、bmclapi、tss 中选择一个就好，胡乱输入其它的值将导致无法下载！",
+    "只能选择 {AlicornHome} 下的镜像描述文件，不含扩展名 - 如果不想麻烦，从 mcbbs、bmclapi、tss-mcbbs 和 alicorn-mcbbs 中选择一个就好，胡乱输入其它的值将导致无法下载！",
   "Options.dev.explicit-error-throw.title": "显式抛出错误",
   "Options.dev.explicit-error-throw.desc":
     "在系统错误发生时额外使用一个对话框告知您错误信息 - 仅在开发时才有使用价值",
@@ -359,18 +359,27 @@ export default {
   "CrashReportDisplay.Logs": "日志",
   "CrashReportDisplay.Copy": "复制到剪贴板",
   "Welcome.Suggest.Part1": [
-    "今天是 {Date}，欢迎您使用 Alicorn Launcher，{UserName}！",
-    "唔……？你为什么会这个时候来找我？",
+    "['{Config:interactive.i-have-a-crush-on-al}'=='false']今天是 {Date}，欢迎您使用 Alicorn Launcher，{UserName}！",
     "[new Date().getHours()>=18]好上晚！哦，我刚刚在练习古小马语……",
     "[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]好困……这个时候叫我……？",
     "[(()=>{const hours=new Date().getHours();return hours>=7&&hours<=11;})()]上午好！今天的天气真不错……什么？我猜错了？这不能怪我，要不你来预测天气试试？",
     "无论什么时候你需要我，我都在这里的啦……",
     "什么事？",
+    "['{Config:interactive.i-have-a-crush-on-al}'=='true']不，可爱的不是我，是 Andy K Rarity Sparklight，这些话都是她写的……",
+    "['{Config:interactive.i-have-a-crush-on-al}'=='true']嗯……不行，不能抱我……",
+    "['{Config:interactive.i-have-a-crush-on-al}'=='true']你这是什么眼神……唔？唔唔唔！放开我！",
+    "['{Config:interactive.i-have-a-crush-on-al}'=='true']这两只小马耳朵？很可爱？想摸摸吗？",
   ],
   "Welcome.Suggest.Part2": [
     "有什么很想做的事情吗？没有？那么为什么不来试试启动游戏呢？\n\n" +
       "单击右上角的「启动台」按钮，选择一个你喜欢的核心，单击它右上角的「启动」按钮就可以进入启动页面，单击页面中央的「确认启动」按钮，并选择一个合适的帐号，游戏就会开始加载进程了……\n\n" +
       "偶尔你可能会碰到「Minecraft 似乎未正常运行」提示，如果你的游戏确实没有正常运行，不要惊慌，单击「是的，为我分析问题」，进入「启动疑难解答」页面。在那里，你可以查看崩溃报告分析结果、Mod 列表，或者通过最底下的「发布到 MCBBS 求助」按钮生成可用的代码，并前往 MCBBS（我的世界中文论坛）问答板块发帖求助。",
+    "在安装 Mod？受够了 CurseForge 的人机验证？那就让 Pff 来吧！\n\n" +
+      "你首先要安装希望玩此 Mod 的核心，可以通过右上角的「安装核心」按钮直达，当你安装时，除了安装 Minecraft 的相应版本（这是必须的），也不要忘了安装对应版本的 Mod 加载器——可能是 Forge 或者 Fabric，安装前请确认 Java 运行时可以正常工作。\n\n" +
+      "一旦你成功安装了核心，在启动台找到它，单击其右上角的「对此核心启动 Pff」，Pff 就会自动适配到该核心的版本。" +
+      "在那里输入你想安装 Mod 的名称，哦对了，是英文名。例如，如果要安装「暮色森林」，最好输入「the-twilight-forest」（不含引号），那是它的 Slug（CurseForge 上的文本 ID）。当然，一些差别也是允许的，例如「twilight-forest」、「twilight frs」都可以指向该 Mod，但是「tforest」则是不行的。" +
+      "一般而言，将 Mod 的名字变成小写（如果你忘了，Pff 也会为你完成这项工作），空格用减号替换，Pff 就可以工作。\n\n" +
+      "按下右侧的箭头即可开始安装，下载 Mod 仍要从 CurseForge CDN 官方下载，取决于你的网络环境，它有时可能无法连接，如果这样，Pff 会等待一段时间后超时。不过只要服务器可以连接，Pff 将使用更小的文件分段和更大的并发数来强行加快下载速度。当然，如果条件允许，设置一个 HTTP 代理并通过 Alicorn 内置浏览器下载是最有效的解决方案。",
   ],
   "Welcome.Suggest.Others": "以下内容可能也会有帮助……",
   "Welcome.Suggest.LastSuccessfulLaunch": "最近一次游戏",

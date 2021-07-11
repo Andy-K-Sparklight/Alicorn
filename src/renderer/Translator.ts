@@ -1,6 +1,6 @@
 import ChineseSimplified from "./locales/ChineseSimplified";
 import os from "os";
-import { getAllConfigKeys, getString } from "../modules/config/ConfigSupport";
+import { getString } from "../modules/config/ConfigSupport";
 import path from "path";
 import { safeEval } from "../modules/crhelper/SafeEvalNatives";
 
@@ -59,12 +59,16 @@ function applyEnvironmentVars(strIn: string): string {
     .replace(/{UserName}/g, getString("user.name") || os.userInfo().username)
     .replace(/{Home}/g, os.homedir())
     .replace(/{AlicornHome}/g, path.join(os.homedir(), "alicorn"));
-  const allConfig = getAllConfigKeys();
-  allConfig.forEach((cKey) => {
-    const tKey = cKey.replace(/\./g, "\\.");
-    const regex = new RegExp(`\\{Config\\:${tKey}\\}`, "g");
-    primary = primary.replace(regex, getString(cKey));
-  });
+
+  const extractRegex = /(?<={Config:).*?(?=})/g;
+  const allConfig = primary.match(extractRegex);
+  if (allConfig) {
+    allConfig.forEach((cKey) => {
+      const tKey = cKey.replace(/\./g, "\\.");
+      const regex = new RegExp(`\\{Config\\:${tKey}\\}`, "g");
+      primary = primary.replace(regex, getString(cKey));
+    });
+  }
   return primary;
 }
 

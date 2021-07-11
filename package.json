@@ -44,7 +44,6 @@
   "devDependencies": {
     "@types/crypto-js": "^4.0.1",
     "@types/fs-extra": "^9.0.11",
-    "@types/global-tunnel-ng": "^2.1.0",
     "@types/js-levenshtein": "^1.1.0",
     "@types/object-hash": "^2.1.0",
     "@types/react": "^17.0.11",
@@ -53,6 +52,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/semver": "^7.3.6",
     "@types/sha": "^3.0.0",
+    "@types/tunnel": "^0.0.3",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
     "copy-webpack-plugin": "^9.0.0",
@@ -79,7 +79,6 @@
     "copy-to-clipboard": "^3.3.1",
     "crypto-js": "^4.0.0",
     "fs-extra": "^10.0.0",
-    "global-tunnel-ng": "^2.7.1",
     "got": "^11.8.2",
     "js-base64": "^3.6.1",
     "js-levenshtein": "^1.1.6",
@@ -93,6 +92,7 @@
     "semver": "^7.3.5",
     "sha": "^3.0.0",
     "toml": "^3.0.0",
+    "tunnel": "^0.0.6",
     "v8-compile-cache": "^2.3.0"
   }
 }

@@ -92,7 +92,6 @@ export function App(): JSX.Element {
   const [err, setErr] = useState("");
   useEffect(() => {
     window.addEventListener("changePageWarn", (e) => {
-      console.log("Change page warn triggered.");
       setOpenChangePageWarn(true);
       setJumpPageTarget(String(safeGet(e, ["detail"], Pages.Welcome)));
     });

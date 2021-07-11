@@ -3,7 +3,7 @@ import got from "got";
 import { load } from "cheerio";
 import { getActualDataPath } from "../config/DataSupport";
 import { wrappedDownloadFile } from "../download/DownloadWrapper";
-import { DownloadMeta, DownloadStatus } from "../download/AbstractDownloader";
+import { DownloadMeta } from "../download/AbstractDownloader";
 import childProcess from "child_process";
 
 const JDK_BASE_URL = "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/";
@@ -25,7 +25,12 @@ export async function getLatestJREURL(old = false): Promise<string> {
     throw new Error("Does not support this arch!");
   }
   const u = `${JDK_BASE_URL}${old ? OLD_JAVA : NEW_JAVA}/jre/${cv}/windows/`;
-  const res = await got.get(u, { responseType: "text" });
+  const res = await got.get(u, {
+    https: {
+      rejectUnauthorized: false,
+    },
+    responseType: "text",
+  });
   const X = load(res.body);
   const ls = X("table#list > tbody > tr");
   if (ls.length === 0) {
@@ -64,7 +69,7 @@ export async function getLatestJREURL(old = false): Promise<string> {
 async function downloadAndStartJREInstaller(u: string): Promise<void> {
   const tD = getActualDataPath("jre_installer_tmp.msi");
   const s = await wrappedDownloadFile(new DownloadMeta(u, tD, ""));
-  if (s === DownloadStatus.RESOLVED) {
+  if (s === 1) {
     childProcess.exec(tD);
   } else {
     throw new Error("Could not download!");

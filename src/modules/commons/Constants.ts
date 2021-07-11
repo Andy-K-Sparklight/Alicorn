@@ -23,7 +23,8 @@ export const MOJANG_VERSIONS_MANIFEST =
   "https://launchermeta.mojang.com/mc/game/version_manifest.json";
 
 export const FORGE_MAVEN_ROOT = "https://files.minecraftforge.net/maven";
-export const FORGE_VERSIONS_MANIFEST = `${FORGE_MAVEN_ROOT}/net/minecraftforge/forge/promotions_slim.json`;
+export const FORGE_VERSIONS_MANIFEST =
+  "https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json";
 
 export const FABRIC_META_ROOT = "https://meta.fabricmc.net/v2";
 

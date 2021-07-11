@@ -3,10 +3,7 @@ import { isNull, safeGet } from "../../commons/Null";
 import { Pair } from "../../commons/Collections";
 import { JAR_SUFFIX } from "../../launch/NativesLint";
 import { wrappedDownloadFile } from "../../download/DownloadWrapper";
-import {
-  DownloadMeta,
-  DownloadStatus,
-} from "../../download/AbstractDownloader";
+import { DownloadMeta } from "../../download/AbstractDownloader";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import objectHash from "object-hash";
 import fs from "fs-extra";
@@ -34,7 +31,7 @@ export async function getLatestFabricInstallerAndLoader(
 }
 
 export async function prefetchFabricManifest(): Promise<void> {
-  await _getLatestFabricInstallerAndLoader(FabricFilter.STABLE, true);
+  await _getLatestFabricInstallerAndLoader(FabricFilter.STABLE, false);
 }
 
 // Get Fabric installer and loader
@@ -58,10 +55,9 @@ async function _getLatestFabricInstallerAndLoader(
       jInstaller = window[FABRIC_INSTALLER_MANIFEST_CACHE_KEY];
     } else {
       jInstaller = await xgot(FABRIC_VERSIONS_INSTALLER, noMirror);
-      if (noMirror) {
-        // @ts-ignore
-        window[FABRIC_INSTALLER_MANIFEST_CACHE_KEY] = jInstaller;
-      }
+
+      // @ts-ignore
+      window[FABRIC_INSTALLER_MANIFEST_CACHE_KEY] = jInstaller;
     }
     if (jInstaller instanceof Array) {
       for (const i of jInstaller) {
@@ -93,10 +89,9 @@ async function _getLatestFabricInstallerAndLoader(
       jLoader = window[FABRIC_LOADER_MANIFEST_CACHE_KEY];
     } else {
       jLoader = await xgot(FABRIC_VERSIONS_LOADER, noMirror);
-      if (noMirror) {
-        // @ts-ignore
-        window[FABRIC_LOADER_MANIFEST_CACHE_KEY] = jLoader;
-      }
+
+      // @ts-ignore
+      window[FABRIC_LOADER_MANIFEST_CACHE_KEY] = jLoader;
     }
 
     if (jLoader instanceof Array) {
@@ -151,7 +146,7 @@ export async function getFabricInstaller(
       ""
     );
 
-    return (await wrappedDownloadFile(meta)) === DownloadStatus.RESOLVED;
+    return (await wrappedDownloadFile(meta)) === 1;
   } catch {
     return false;
   }

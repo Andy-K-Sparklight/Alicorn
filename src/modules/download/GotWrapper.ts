@@ -11,9 +11,11 @@ export async function xgot(
     try {
       return (
         await got.get(url, {
-          cache: noCache ? false : undefined,
           responseType: "json",
           timeout: getNumber("download.concurrent.timeout", 5000),
+          https: {
+            rejectUnauthorized: false,
+          },
         })
       ).body;
     } catch (e) {
@@ -24,9 +26,11 @@ export async function xgot(
   try {
     return (
       await got.get(applyMirror(url), {
-        cache: noCache ? false : undefined,
         responseType: "json",
         timeout: getNumber("download.concurrent.timeout", 5000),
+        https: {
+          rejectUnauthorized: false,
+        },
       })
     ).body;
   } catch (e) {
@@ -37,6 +41,9 @@ export async function xgot(
           cache: noCache ? false : undefined,
           responseType: "json",
           timeout: getNumber("download.concurrent.timeout", 5000),
+          https: {
+            rejectUnauthorized: false,
+          },
         })
       ).body;
     } catch (e) {
@@ -44,4 +51,18 @@ export async function xgot(
       return {};
     }
   }
+}
+
+export async function pgot(url: string, timeout: number): Promise<unknown> {
+  return (
+    await got.get(url, {
+      responseType: "json",
+      timeout: timeout,
+      https: {
+        rejectUnauthorized: false,
+      },
+      // @ts-ignore
+      // agent: getProxy(),
+    })
+  ).body;
 }

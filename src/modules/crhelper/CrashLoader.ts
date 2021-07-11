@@ -125,7 +125,14 @@ async function getOnlineCrashLoader(
   url: string
 ): Promise<CrashLoader | undefined> {
   try {
-    const r = (await got.get(url, { responseType: "text" })).body;
+    const r = (
+      await got.get(url, {
+        https: {
+          rejectUnauthorized: false,
+        },
+        responseType: "text",
+      })
+    ).body;
     const obj = safeEval(r);
     if (obj) {
       return obj as CrashLoader;

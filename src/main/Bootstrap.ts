@@ -80,7 +80,7 @@ process.on("unhandledRejection", async (r) => {
   try {
     console.log(String(r));
     await mainWindow?.webContents.loadFile("Error.html", {
-      hash: btoa(escape(String(r))),
+      hash: btoa(encodeURI(String(r))),
     });
   } catch {}
 });

@@ -1,4 +1,3 @@
-import got from "got";
 import { GAME_ID } from "./Values";
 import leven from "js-levenshtein";
 import mdiff from "mdiff";
@@ -6,11 +5,9 @@ import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { findCachedFile, writeCachedFile } from "./Cache";
 import { copyFile, ensureDir } from "fs-extra";
 import { wrappedDownloadFile } from "../../download/DownloadWrapper";
-import {
-  DownloadMeta,
-  DownloadStatus,
-} from "../../download/AbstractDownloader";
+import { DownloadMeta } from "../../download/AbstractDownloader";
 import path from "path";
+import { pgot } from "../../download/GotWrapper";
 
 export async function getAddonInfoBySlug(
   slug: string,
@@ -23,11 +20,8 @@ export async function getAddonInfoBySlug(
   const ACCESS_URL =
     apiBase +
     `/api/v2/addon/search?gameId=${GAME_ID}&pageSize=${pageSize}&searchFilter=${slug}&sort=1${extraParams}`;
-
   try {
-    const r = (
-      await got.get(ACCESS_URL, { responseType: "json", timeout: timeout })
-    ).body;
+    const r = await pgot(ACCESS_URL, timeout);
     if (!(r instanceof Array)) {
       return undefined;
     }
@@ -98,6 +92,7 @@ export async function getAddonInfoBySlug(
 
     return undefined;
   } catch (e) {
+    console.log(e);
     return undefined;
   }
 }
@@ -182,7 +177,7 @@ export async function requireFile(
   const st = await wrappedDownloadFile(
     new DownloadMeta(file.downloadUrl, modJar)
   );
-  if (st === DownloadStatus.RESOLVED) {
+  if (st === 1) {
     await writeCachedFile(file, addon, cacheRoot, modJar);
     return true;
   }
@@ -197,9 +192,7 @@ export async function lookupFileInfo(
 ): Promise<File | undefined> {
   const ACCESS_URL = apiBase + `/api/v2/addon/${addon.id}/file/${fileId}`;
   try {
-    const r = (
-      await got.get(ACCESS_URL, { responseType: "json", timeout: timeout })
-    ).body as Record<string, unknown>;
+    const r = (await pgot(ACCESS_URL, timeout)) as Record<string, unknown>;
     if (
       r["id"] !== undefined &&
       r["fileName"] !== undefined &&
@@ -221,9 +214,7 @@ export async function lookupAddonInfo(
 ): Promise<AddonInfo | undefined> {
   const ACCESS_URL = apiBase + `/api/v2/addon/${addonId}`;
   try {
-    const r = (
-      await got.get(ACCESS_URL, { responseType: "json", timeout: timeout })
-    ).body as Record<string, unknown>;
+    const r = (await pgot(ACCESS_URL, timeout)) as Record<string, unknown>;
     if (
       r["id"] !== undefined &&
       r["name"] !== undefined &&

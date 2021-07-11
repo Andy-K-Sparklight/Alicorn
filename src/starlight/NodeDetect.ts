@@ -1,6 +1,6 @@
 import { Executor } from "./Component";
 
-export class NodeWarning extends Executor {
+export class NodeDetect extends Executor {
   execute(document: Document, ...args: unknown[]): void {
     document.body.insertAdjacentHTML(
       "afterbegin",

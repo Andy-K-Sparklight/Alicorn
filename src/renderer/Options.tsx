@@ -98,14 +98,16 @@ export function OptionsPage(): JSX.Element {
         <InputItem type={ConfigType.STR} bindConfig={"pff.api-base"} />
         <InputItem type={ConfigType.NUM} bindConfig={"pff.page-size"} />
         <InputItem type={ConfigType.STR} bindConfig={"pff.cache-root"} />
-        <InputItem type={ConfigType.BOOL} bindConfig={"music.enabled"} />
         <InputItem
           type={ConfigType.BOOL}
           bindConfig={"cmc.disable-log4j-config"}
         />
         <InputItem type={ConfigType.STR} bindConfig={"web.global-proxy"} />
-        <InputItem type={ConfigType.STR} bindConfig={"pff.proxy"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"hot-key"} />
+        <InputItem
+          type={ConfigType.BOOL}
+          bindConfig={"interactive.i-have-a-crush-on-al"}
+        />
         <InputItem type={ConfigType.BOOL} bindConfig={"dev"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"dev.f12"} />
         <InputItem

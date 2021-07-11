@@ -26,7 +26,8 @@ export function set(key: string, value: unknown): void {
 
 export function get(key: string, def: unknown): unknown {
   // @ts-ignore
-  return cachedConfig[key] || def;
+  const v = cachedConfig[key];
+  return v === undefined ? def : v;
 }
 
 export function getBoolean(key: string, def = false): boolean {

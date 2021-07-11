@@ -94,6 +94,9 @@ async function getSize(url: string): Promise<number> {
     const response = await got.get(url, {
       timeout: getConfigOptn("timeout", 5000),
       headers: { Range: "bytes=0-1" },
+      https: {
+        rejectUnauthorized: false,
+      },
     });
     const rangeString = response.headers["content-range"];
     if (typeof rangeString !== "string") {
@@ -139,6 +142,9 @@ async function downloadSingleChunk(
       cache: false,
       headers: {
         Range: `bytes=${chunk.start}-${chunk.end}`,
+      },
+      https: {
+        rejectUnauthorized: false,
       },
     })
   ).rawBody;

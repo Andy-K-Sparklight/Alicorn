@@ -2,14 +2,20 @@ import { MOJANG_VERSIONS_MANIFEST, ReleaseType } from "../../commons/Constants";
 import { safeGet } from "../../commons/Null";
 import { xgot } from "../../download/GotWrapper";
 
+export const MOJANG_CORES_KEY = "MojangCores";
+
 export async function getAllMojangCores(
   filter = ReleaseType.RELEASE
 ): Promise<string[]> {
   try {
-    const mObj = await xgot(MOJANG_VERSIONS_MANIFEST, true);
+    const mObj =
+      // @ts-ignore
+      window[MOJANG_CORES_KEY] || (await xgot(MOJANG_VERSIONS_MANIFEST));
     const arr = safeGet(mObj, ["versions"], []);
     const all = new Set<string>();
     if (arr instanceof Array) {
+      // @ts-ignore
+      window[MOJANG_CORES_KEY] = Object.assign({}, mObj);
       for (const v of arr) {
         if (safeGet(v, ["type"]) === filter) {
           all.add(String(safeGet(v, ["id"], "")));
@@ -60,4 +66,8 @@ export async function getProfile(
   } catch {
     return {};
   }
+}
+
+export async function prefetchMojangVersions(): Promise<void> {
+  await getAllMojangCores();
 }

@@ -15,7 +15,14 @@ export function whereAJ(): string {
 export async function prefetchData(authServer: string): Promise<string> {
   try {
     return toBase64(
-      (await got.get(authServer, { cache: false, responseType: "text" })).body
+      (
+        await got.get(authServer, {
+          https: {
+            rejectUnauthorized: false,
+          },
+          responseType: "text",
+        })
+      ).body
     );
   } catch {
     return "";

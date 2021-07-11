@@ -4,10 +4,7 @@ import got from "got";
 import BuildInfoSchema from "./BuildInfoSchema.json";
 import { getMainWindow } from "./Bootstrap";
 import { app, dialog } from "electron";
-import {
-  DownloadMeta,
-  DownloadStatus,
-} from "../modules/download/AbstractDownloader";
+import { DownloadMeta } from "../modules/download/AbstractDownloader";
 import { Serial } from "../modules/download/Serial";
 import path from "path";
 import { getActualDataPath } from "../modules/config/DataSupport";
@@ -52,7 +49,12 @@ export async function checkUpdate(): Promise<void> {
     HEAD = MAIN_BUILD_FILE_RELEASE;
     BASE = RELEASE_FOLDER;
   }
-  const res = await got.get(HEAD, { cache: false, responseType: "json" });
+  const res = await got.get(HEAD, {
+    https: {
+      rejectUnauthorized: false,
+    },
+    responseType: "json",
+  });
   let d: BuildInfo;
   if (AJV.validate(BuildInfoSchema, res.body)) {
     d = res.body as BuildInfo;
@@ -71,7 +73,9 @@ export async function checkUpdate(): Promise<void> {
     };
     if (getBoolean("updator.dev")) {
       const res_dll = await got.get(DLL_BUILD_FILE_DEV, {
-        cache: false,
+        https: {
+          rejectUnauthorized: false,
+        },
         responseType: "json",
       });
       if (!AJV.validate(BuildInfoSchema, res_dll.body)) {
@@ -83,7 +87,9 @@ export async function checkUpdate(): Promise<void> {
         return;
       }
       const res_rend = await got.get(RENDERER_BUILD_FILE_DEV, {
-        cache: false,
+        https: {
+          rejectUnauthorized: false,
+        },
         responseType: "json",
       });
       if (!AJV.validate(BuildInfoSchema, res_rend.body)) {
@@ -101,7 +107,9 @@ export async function checkUpdate(): Promise<void> {
       await hintUpdate(u);
     } else {
       const res_rend = await got.get(RENDERER_BUILD_FILE_RELEASE, {
-        cache: false,
+        https: {
+          rejectUnauthorized: false,
+        },
         responseType: "json",
       });
       if (!AJV.validate(BuildInfoSchema, res_rend.body)) {
@@ -149,10 +157,7 @@ export async function doUpdate(
         path.resolve(app.getAppPath(), v),
         ""
       );
-      if (
-        (await Serial.getInstance().downloadFile(meta)) in
-        [DownloadStatus.RETRY, DownloadStatus.FATAL]
-      ) {
+      if ((await Serial.getInstance().downloadFile(meta)) !== 1) {
         return false;
       }
     }

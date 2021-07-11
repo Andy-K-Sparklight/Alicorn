@@ -11,6 +11,7 @@ import {
   updateRecord,
 } from "../container/ValidateRecord";
 import { validate } from "./Validate";
+import { Agent } from "http";
 
 const PENDING_TASKS: DownloadMeta[] = [];
 const RUNNING_TASKS = new Set<DownloadMeta>();
@@ -55,7 +56,7 @@ export async function wrappedDownloadFile(
     meta.sha1
   );
   FAILED_COUNT_MAP.set(mirroredMeta, getConfigOptn("tries-per-chunk", 3));
-  if ((await _wrappedDownloadFile(mirroredMeta)) === DownloadStatus.RESOLVED) {
+  if ((await _wrappedDownloadFile(mirroredMeta)) === 1) {
     FAILED_COUNT_MAP.delete(mirroredMeta);
     return DownloadStatus.RESOLVED;
   }
@@ -134,11 +135,11 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
   Concurrent.getInstance()
     .downloadFile(meta)
     .then((s) => {
-      if (s === DownloadStatus.RESOLVED) {
+      if (s === 1) {
         FAILED_COUNT_MAP.delete(meta);
         emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
         return;
-      } else if (s === DownloadStatus.RETRY) {
+      } else if (s === 0) {
         const failed = FAILED_COUNT_MAP.get(meta) || 0;
         if (failed <= 0) {
           // The last fight!
@@ -146,7 +147,7 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
           Serial.getInstance()
             .downloadFile(meta)
             .then((s) => {
-              if (s === DownloadStatus.RESOLVED) {
+              if (s === 1) {
                 FAILED_COUNT_MAP.delete(meta);
                 emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
                 return;
@@ -167,7 +168,7 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
         Serial.getInstance()
           .downloadFile(meta)
           .then((s) => {
-            if (s === DownloadStatus.RESOLVED) {
+            if (s === 1) {
               FAILED_COUNT_MAP.delete(meta);
               emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
               return;
@@ -200,6 +201,10 @@ function getPffFlag(): string {
   return window.sessionStorage.getItem(PFF_FLAG) || "0";
 }
 
+export function isPff(): boolean {
+  return getPffFlag() === "1";
+}
+
 export function getConfigOptn(name: string, def: number): number {
   if (getPffFlag() === "1") {
     return (
@@ -209,4 +214,30 @@ export function getConfigOptn(name: string, def: number): number {
   } else {
     return getNumber("download.concurrent." + name, def);
   }
+}
+
+// const PROXY_HOST = "ProxyHost";
+// const PROXY_PORT = "ProxyPort";
+
+// Proxy, still need to "break the ground"
+export function getProxy(): { https: Agent } | undefined {
+  return undefined;
+  /*
+  if (!isPff()) {
+    return undefined;
+  }
+  return {
+    https: tunnel.httpsOverHttp({
+      proxy: {
+        host: window.sessionStorage.getItem(PROXY_HOST) || "",
+        port: parseInt(window.sessionStorage.getItem(PROXY_PORT) || "0"),
+      },
+    }),
+  };
+  */
+}
+
+export function setProxy(_host: string, _port: number): void {
+  // window.sessionStorage.setItem(PROXY_HOST, host);
+  // window.sessionStorage.setItem(PROXY_PORT, port.toString());
 }

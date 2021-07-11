@@ -37,6 +37,9 @@ export class Serial extends AbstractDownloader {
       await pipeline(
         got.stream(meta.url, {
           timeout: getConfigOptn("timeout", 5000),
+          https: {
+            rejectUnauthorized: false,
+          },
         }),
         fs.createWriteStream(meta.savePath)
       );

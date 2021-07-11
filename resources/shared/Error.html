@@ -21,7 +21,7 @@
 <script>
     let data = window.location.hash.slice(1)
 
-    document.getElementById("err_name").innerHTML = unescape(atob(data))
+    document.getElementById("err_name").innerHTML = decodeURI(atob(data))
 </script>
 </body>
 </html>

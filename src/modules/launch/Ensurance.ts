@@ -1,12 +1,12 @@
-import { GameProfile } from "../profile/GameProfile";
-import { MinecraftContainer } from "../container/MinecraftContainer";
-import { ArtifactMeta, AssetIndexFileMeta, AssetMeta } from "../profile/Meta";
-import { checkExtractTrimNativeLocal, getNativeArtifact } from "./NativesLint";
-import { DownloadMeta, DownloadStatus } from "../download/AbstractDownloader";
-import { wrappedDownloadFile } from "../download/DownloadWrapper";
+import {GameProfile} from "../profile/GameProfile";
+import {MinecraftContainer} from "../container/MinecraftContainer";
+import {ArtifactMeta, AssetIndexFileMeta, AssetMeta} from "../profile/Meta";
+import {checkExtractTrimNativeLocal, getNativeArtifact} from "./NativesLint";
+import {DownloadMeta, DownloadStatus} from "../download/AbstractDownloader";
+import {wrappedDownloadFile} from "../download/DownloadWrapper";
 import fs from "fs-extra";
-import { isNull } from "../commons/Null";
-import { FileOperateReport, LaunchTracker } from "./Tracker";
+import {isNull} from "../commons/Null";
+import {FileOperateReport, LaunchTracker} from "./Tracker";
 
 // This file can not only check resources, but also download packages when installing!
 
@@ -93,7 +93,7 @@ export async function ensureLibraries(
   );
   let failedCount = 0;
   for (const x of values) {
-    if (x in [DownloadStatus.RETRY, DownloadStatus.FATAL]) {
+    if (x !== 1) {
       failedCount++;
     }
   }
@@ -116,7 +116,7 @@ async function performSingleCheck(
     artifact.sha1
   );
   const t = await wrappedDownloadFile(downloadMeta);
-  if (t === DownloadStatus.RESOLVED) {
+  if (t === 1) {
     operate?.operateRecord.push({
       file: artifact.path,
       operation: "OPERATED",
@@ -142,7 +142,7 @@ export async function ensureAssetsIndex(
     container.getAssetsIndexPath(profile.assetIndex.id),
     profile.assetIndex.sha1
   );
-  return (await wrappedDownloadFile(meta)) === DownloadStatus.RESOLVED;
+  return (await wrappedDownloadFile(meta)) === 1;
 }
 
 // Ensure all assets of a profile
@@ -209,7 +209,7 @@ export async function ensureAsset(
     container.getAssetPath(assetMeta.hash),
     assetMeta.hash
   );
-  return (await wrappedDownloadFile(meta)) === DownloadStatus.RESOLVED;
+  return (await wrappedDownloadFile(meta)) === 1;
 }
 
 export function generateAssetURL(assetMeta: AssetMeta): string {

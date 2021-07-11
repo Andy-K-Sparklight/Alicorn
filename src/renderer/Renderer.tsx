@@ -28,6 +28,7 @@ import { ipcRenderer } from "electron";
 import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
 import { prefetchFabricManifest } from "../modules/pff/get/FabricGet";
 import { activateHotKeyFeature } from "./HotKeyHandler";
+import { prefetchMojangVersions } from "../modules/pff/get/MojangCore";
 
 require("v8-compile-cache");
 
@@ -140,7 +141,11 @@ window.addEventListener("error", (e) => {
   // Optional services
   const t3 = new Date();
   console.log("Running optional services...");
-  await Promise.allSettled([prefetchForgeManifest(), prefetchFabricManifest()]);
+  await Promise.allSettled([
+    prefetchForgeManifest(),
+    prefetchFabricManifest(),
+    prefetchMojangVersions(),
+  ]);
   const t4 = new Date();
   console.log(
     "Optional services finished. Time elapsed: " +

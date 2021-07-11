@@ -5,10 +5,7 @@ import {
 } from "../../commons/Constants";
 import { isNull, safeGet } from "../../commons/Null";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
-import {
-  DownloadMeta,
-  DownloadStatus,
-} from "../../download/AbstractDownloader";
+import { DownloadMeta } from "../../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../../download/DownloadWrapper";
 import fs from "fs-extra";
 import { JAR_SUFFIX } from "../../launch/NativesLint";
@@ -33,7 +30,7 @@ export async function getForgeVersionByMojang(
 }
 
 export async function prefetchForgeManifest(): Promise<void> {
-  await _getForgeVersionByMojang("", ForgeFilter.RECOMMENDED, true);
+  await _getForgeVersionByMojang("", ForgeFilter.RECOMMENDED, false);
 }
 
 async function _getForgeVersionByMojang(
@@ -55,18 +52,16 @@ async function _getForgeVersionByMojang(
       } else {
         // @ts-ignore
         tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror);
-        if (noMirror) {
-          // @ts-ignore
-          window[FORGE_MANIFEST_CACHE_KEY] = tBody;
-        }
+
+        // @ts-ignore
+        window[FORGE_MANIFEST_CACHE_KEY] = tBody;
       }
     } catch {
       // @ts-ignore
       tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror);
-      if (noMirror) {
-        // @ts-ignore
-        window[FORGE_MANIFEST_CACHE_KEY] = tBody;
-      }
+
+      // @ts-ignore
+      window[FORGE_MANIFEST_CACHE_KEY] = tBody;
     }
     const d = safeGet(tBody, ["promos", `${id}-${filter}`], "");
     if (isNull(d)) {
@@ -115,10 +110,7 @@ export async function getForgeInstaller(
     );
     // No validating
     const meta = new DownloadMeta(applyMirror(pt), dest, "");
-    return !(
-      (await wrappedDownloadFile(meta)) in
-      [DownloadStatus.RETRY, DownloadStatus.FATAL]
-    );
+    return (await wrappedDownloadFile(meta)) === 1;
   } catch {
     return false;
   }
