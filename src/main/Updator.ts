@@ -13,6 +13,7 @@ import path from "path";
 import { getActualDataPath } from "../modules/config/DataSupport";
 import fs from "fs-extra";
 import { isFileExist } from "../modules/commons/FileUtil";
+import os from "os";
 
 // MAINTAINERS ONLY
 
@@ -36,6 +37,11 @@ interface BuildInfo {
 const AJV = new Ajv();
 
 export async function checkUpdate(): Promise<void> {
+  if (os.platform() === "darwin") {
+    // macOS updates isn't supported
+    console.log("Skipped update checking due to unsupported platform.");
+    return;
+  }
   updateBit = true;
   let HEAD: string;
   let BASE: string;
@@ -119,10 +125,7 @@ export async function checkUpdate(): Promise<void> {
   }
 }
 
-export async function hintUpdate(d: {
-  version: string;
-  date: string;
-}): Promise<void> {
+async function hintUpdate(d: { version: string; date: string }): Promise<void> {
   const bw = getMainWindow();
   if (bw) {
     await dialog.showMessageBox(bw, {

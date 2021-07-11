@@ -45,8 +45,16 @@ export function OptionsPage(): JSX.Element {
           {tr("Options.AutoSave")}
         </Typography>
         <Typography className={classes.head}>{tr("Options.Hint")}</Typography>
-        <InputItem type={ConfigType.BOOL} bindConfig={"updator.use-update"} />
-        <InputItem type={ConfigType.BOOL} bindConfig={"updator.dev"} />
+        <InputItem
+          type={ConfigType.BOOL}
+          notOn={"darwin"}
+          bindConfig={"updator.use-update"}
+        />
+        <InputItem
+          type={ConfigType.BOOL}
+          notOn={"darwin"}
+          bindConfig={"updator.dev"}
+        />
         <InputItem type={ConfigType.STR} bindConfig={"user.name"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"java.simple-search"} />
         <InputItem
@@ -120,10 +128,16 @@ function InputItem(props: {
   type: ConfigType;
   bindConfig: string;
   onlyOn?: NodeJS.Platform;
+  notOn?: NodeJS.Platform;
 }): JSX.Element {
   const [refreshBit, forceRefresh] = useState<boolean>(true);
   if (props.onlyOn) {
     if (os.platform() !== props.onlyOn) {
+      return <></>;
+    }
+  }
+  if (props.notOn) {
+    if (os.platform() === props.notOn) {
       return <></>;
     }
   }

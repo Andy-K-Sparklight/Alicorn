@@ -15,7 +15,7 @@ Promise.allSettled(
     const c = path.join(tDir, e);
     const s = fs.statSync(c);
     if (s.isDirectory()) {
-      if (e.startsWith("Alicorn-win32")) {
+      if (e.startsWith("Alicorn-win32") || e.startsWith("Alicorn-darwin")) {
         return compressing.zip.compressDir(
           c,
           path.join(tDir, "compressed", e + ".zip"),

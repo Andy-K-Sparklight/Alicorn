@@ -30,7 +30,7 @@
     "release-star-ci": "npx webpack --config webpack.config.starlight.release.js&&node mixin.js",
     "release-full": "yarn release-main&&yarn release-renderer&&yarn release-star",
     "release-full-ci": "yarn release-main-ci&&yarn release-renderer-ci&&yarn release-star-ci",
-    "package": "yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=ia32 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=linux --arch=x64 --icon ./resources/build/icon --out out",
+    "package": "yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=ia32 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=linux --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=darwin --arch=x64 --icon ./resources/build/icon --out out",
     "compress": "node pack.js",
     "make-all": "yarn build-vercel&&yarn package&&yarn compress"
   },
