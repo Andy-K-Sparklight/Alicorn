@@ -10,7 +10,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  package-unix:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,11 +19,17 @@ jobs:
         with:
           node-version: 15.x
       - run: yarn
-      - run: yarn build-dll
-      - run: yarn build-full-ci
-      - run: yarn release-full-ci
+      - run: yarn github-unix
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Alicorn for macOS x64 ZIP
+          path: out/compressed/Alicorn-darwin-x64.zip
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Alicorn for Linux x64 TGZ
+          path: out/compressed/Alicorn-linux-x64.tar.gz
 
-  make:
+  package-windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -32,7 +38,7 @@ jobs:
         with:
           node-version: 15.x
       - run: yarn
-      - run: yarn make-all
+      - run: yarn github-windows
       - uses: actions/upload-artifact@v2
         with:
           name: Alicorn for Windows x64 ZIP
@@ -41,12 +47,4 @@ jobs:
         with:
           name: Alicorn for Windows ia32 ZIP
           path: out/compressed/Alicorn-win32-ia32.zip
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Alicorn for Linux x64 TGZ
-          path: out/compressed/Alicorn-linux-x64.tar.gz
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Alicorn for macOS x64 ZIP
-          path: out/compressed/Alicorn-darwin-x64.zip
 

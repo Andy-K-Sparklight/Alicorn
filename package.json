@@ -32,11 +32,14 @@
     "release-star-ci": "npx webpack --config webpack.config.starlight.release.js&&node mixin.js",
     "release-full": "yarn release-main&&yarn release-renderer&&yarn release-star",
     "release-full-ci": "yarn release-main-ci&&yarn release-renderer-ci&&yarn release-star-ci",
-    "package": "yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=ia32 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=linux --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=darwin --arch=x64 --icon ./resources/build/icon --out out&&node makesh.js",
     "compress": "node pack.js",
-    "make-all": "yarn clean&&yarn build-vercel&&yarn package&&yarn compress",
-    "make-release": "yarn clean&&yarn prepare-release&&yarn package&&yarn compress",
-    "clean": "node clean.js"
+    "windows": "yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=ia32 --icon ./resources/build/icon --out out",
+    "macos": "yarn electron-packager dist/release Alicorn --overwrite --platform=darwin --arch=x64 --icon ./resources/build/icon --out out",
+    "linux": "yarn electron-packager dist/release Alicorn --overwrite --platform=linux --arch=x64 --icon ./resources/build/icon --out out&&node makesh.js",
+    "clean": "node clean.js",
+    "make": "yarn clean&&yarn prepare-release&&yarn windows&&yarn macos&&yarn linux&&yarn compress",
+    "github-unix": "yarn clean&&yarn prepare-release&&yarn macos&&yarn linux&&yarn compress",
+    "github-windows": "yarn clean&&yarn prepare-release&&yarn windows&&yarn compress"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.0.1",
