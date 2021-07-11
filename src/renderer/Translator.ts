@@ -62,7 +62,7 @@ function applyEnvironmentVars(strIn: string): string {
   const allConfig = getAllConfigKeys();
   allConfig.forEach((cKey) => {
     const tKey = cKey.replace(/\./g, "\\.");
-    const regex = new RegExp(`\\{Config\\:${tKey}`, "g");
+    const regex = new RegExp(`\\{Config\\:${tKey}\\}`, "g");
     primary = primary.replace(regex, getString(cKey));
   });
   return primary;

@@ -6,6 +6,8 @@
   "scripts": {
     "build-dll": "npx webpack --config webpack.config.dll.js --progress",
     "build-vercel": "yarn build-dll-ci&&yarn release-full-ci&&yarn build-full-ci",
+    "prepare-release": "yarn release-full",
+    "prepare-dev": "yarn build-dll&&yarn build-full",
     "build-dll-ci": "npx webpack --config webpack.config.dll.js",
     "build-main": "npx webpack --config webpack.config.main.js --progress",
     "watch-main": "npx webpack --config webpack.config.main.js --progress --watch",
@@ -30,9 +32,11 @@
     "release-star-ci": "npx webpack --config webpack.config.starlight.release.js&&node mixin.js",
     "release-full": "yarn release-main&&yarn release-renderer&&yarn release-star",
     "release-full-ci": "yarn release-main-ci&&yarn release-renderer-ci&&yarn release-star-ci",
-    "package": "yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=ia32 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=linux --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=darwin --arch=x64 --icon ./resources/build/icon --out out",
+    "package": "yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=ia32 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=linux --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=darwin --arch=x64 --icon ./resources/build/icon --out out&&node makesh.js",
     "compress": "node pack.js",
-    "make-all": "yarn build-vercel&&yarn package&&yarn compress"
+    "make-all": "yarn clean&&yarn build-vercel&&yarn package&&yarn compress",
+    "make-release": "yarn clean&&yarn prepare-release&&yarn package&&yarn compress",
+    "clean": "node clean.js"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.0.1",
