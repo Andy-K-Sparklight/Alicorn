@@ -31,14 +31,15 @@ export async function getLatestFabricInstallerAndLoader(
 }
 
 export async function prefetchFabricManifest(): Promise<void> {
-  await _getLatestFabricInstallerAndLoader(FabricFilter.STABLE, false);
+  await _getLatestFabricInstallerAndLoader(FabricFilter.STABLE, false, true);
 }
 
 // Get Fabric installer and loader
 // Please notice that Fabric doesn't care about mojang version!
 async function _getLatestFabricInstallerAndLoader(
   filter = FabricFilter.STABLE,
-  noMirror = false
+  noMirror = false,
+  noTimeout = false
 ): Promise<Pair<string, string>> {
   let installerURL = "";
   let loaderVersion = "";
@@ -54,7 +55,12 @@ async function _getLatestFabricInstallerAndLoader(
       // @ts-ignore
       jInstaller = window[FABRIC_INSTALLER_MANIFEST_CACHE_KEY];
     } else {
-      jInstaller = await xgot(FABRIC_VERSIONS_INSTALLER, noMirror);
+      jInstaller = await xgot(
+        FABRIC_VERSIONS_INSTALLER,
+        noMirror,
+        false,
+        noTimeout
+      );
 
       // @ts-ignore
       window[FABRIC_INSTALLER_MANIFEST_CACHE_KEY] = jInstaller;
@@ -88,7 +94,7 @@ async function _getLatestFabricInstallerAndLoader(
       // @ts-ignore
       jLoader = window[FABRIC_LOADER_MANIFEST_CACHE_KEY];
     } else {
-      jLoader = await xgot(FABRIC_VERSIONS_LOADER, noMirror);
+      jLoader = await xgot(FABRIC_VERSIONS_LOADER, noMirror, false, noTimeout);
 
       // @ts-ignore
       window[FABRIC_LOADER_MANIFEST_CACHE_KEY] = jLoader;

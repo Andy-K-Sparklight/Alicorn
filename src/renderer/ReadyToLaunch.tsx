@@ -78,7 +78,13 @@ import { YNDialog } from "./OperatingHint";
 import { jumpTo, Pages, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { Nide8Account } from "../modules/auth/Nide8Account";
 import { FlightTakeoff } from "@material-ui/icons";
-import { MicrosoftAccount } from "../modules/auth/MicrosoftAccount";
+import {
+  MicrosoftAccount,
+  MS_LAST_USED_ACTOKEN_KEY,
+  MS_LAST_USED_REFRESH_KEY,
+  MS_LAST_USED_USERNAME_KEY,
+  MS_LAST_USED_UUID_KEY,
+} from "../modules/auth/MicrosoftAccount";
 import { toReadableType } from "./YggdrasilAccountManager";
 import { launchProfile } from "../modules/launch/LaunchPad";
 import { LocalAccount } from "../modules/auth/LocalAccount";
@@ -649,6 +655,10 @@ function AccountChoose(props: {
                     "msLogout",
                     getString("web.global-proxy")
                   );
+                  localStorage.setItem(MS_LAST_USED_REFRESH_KEY, "");
+                  localStorage.setItem(MS_LAST_USED_ACTOKEN_KEY, "");
+                  localStorage.setItem(MS_LAST_USED_UUID_KEY, "");
+                  localStorage.setItem(MS_LAST_USED_USERNAME_KEY, "");
                   if (mounted.current) {
                     setMSLogout("ReadyToLaunch.MSLogoutDone");
                   }

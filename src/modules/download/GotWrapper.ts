@@ -5,7 +5,8 @@ import { getNumber } from "../config/ConfigSupport";
 export async function xgot(
   url: string,
   noMirror = false,
-  noCache = false
+  noCache = false,
+  noTimeout = false
 ): Promise<unknown> {
   if (noMirror) {
     try {
@@ -27,7 +28,9 @@ export async function xgot(
     return (
       await got.get(applyMirror(url), {
         responseType: "json",
-        timeout: getNumber("download.concurrent.timeout", 5000),
+        timeout: noTimeout
+          ? undefined
+          : getNumber("download.concurrent.timeout", 5000),
         https: {
           rejectUnauthorized: false,
         },
@@ -40,7 +43,9 @@ export async function xgot(
         await got.get(url, {
           cache: noCache ? false : undefined,
           responseType: "json",
-          timeout: getNumber("download.concurrent.timeout", 5000),
+          timeout: noTimeout
+            ? undefined
+            : getNumber("download.concurrent.timeout", 5000),
           https: {
             rejectUnauthorized: false,
           },

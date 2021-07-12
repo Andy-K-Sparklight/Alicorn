@@ -11,7 +11,6 @@ import {
   updateRecord,
 } from "../container/ValidateRecord";
 import { validate } from "./Validate";
-import { Agent } from "http";
 
 const PENDING_TASKS: DownloadMeta[] = [];
 const RUNNING_TASKS = new Set<DownloadMeta>();
@@ -201,10 +200,6 @@ function getPffFlag(): string {
   return window.sessionStorage.getItem(PFF_FLAG) || "0";
 }
 
-export function isPff(): boolean {
-  return getPffFlag() === "1";
-}
-
 export function getConfigOptn(name: string, def: number): number {
   if (getPffFlag() === "1") {
     return (
@@ -220,9 +215,9 @@ export function getConfigOptn(name: string, def: number): number {
 // const PROXY_PORT = "ProxyPort";
 
 // Proxy, still need to "break the ground"
-export function getProxy(): { https: Agent } | undefined {
+/* export function getProxy(): { https: Agent } | undefined {
   return undefined;
-  /*
+
   if (!isPff()) {
     return undefined;
   }
@@ -234,8 +229,9 @@ export function getProxy(): { https: Agent } | undefined {
       },
     }),
   };
-  */
+
 }
+*/
 
 export function setProxy(_host: string, _port: number): void {
   // window.sessionStorage.setItem(PROXY_HOST, host);

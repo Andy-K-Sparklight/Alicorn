@@ -23,10 +23,10 @@ const MJ_LOGIN_XBOX =
   "https://api.minecraftservices.com/authentication/login_with_xbox";
 const MJ_PROFILE_API = "https://api.minecraftservices.com/minecraft/profile";
 
-const MS_LAST_USED_USERNAME_KEY = "MS.LastUsedUserName";
-const MS_LAST_USED_ACTOKEN_KEY = "MS.LastUsedACToken"; // Encrypt
-const MS_LAST_USED_UUID_KEY = "MS.LastUsedUUID";
-const MS_LAST_USED_REFRESH_KEY = "MS.LastUsedRefresh"; // Encrypt
+export const MS_LAST_USED_USERNAME_KEY = "MS.LastUsedUserName";
+export const MS_LAST_USED_ACTOKEN_KEY = "MS.LastUsedACToken"; // Encrypt
+export const MS_LAST_USED_UUID_KEY = "MS.LastUsedUUID";
+export const MS_LAST_USED_REFRESH_KEY = "MS.LastUsedRefresh"; // Encrypt
 
 export class MicrosoftAccount extends Account {
   async buildAccessData(): Promise<Trio<string, string, string>> {

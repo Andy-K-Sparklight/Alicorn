@@ -25,18 +25,19 @@ export async function getForgeVersionByMojang(
 ): Promise<string> {
   return (
     (await _getForgeVersionByMojang(id, filter, false)) ||
-    (await _getForgeVersionByMojang(id, filter, true))
+    (await _getForgeVersionByMojang(id, filter, true, true))
   );
 }
 
 export async function prefetchForgeManifest(): Promise<void> {
-  await _getForgeVersionByMojang("", ForgeFilter.RECOMMENDED, false);
+  await _getForgeVersionByMojang("", ForgeFilter.RECOMMENDED, false, true);
 }
 
 async function _getForgeVersionByMojang(
   id: string,
   filter = ForgeFilter.RECOMMENDED,
-  noMirror = false
+  noMirror = false,
+  noTimeout = false
 ): Promise<string> {
   try {
     let tBody;
@@ -51,14 +52,14 @@ async function _getForgeVersionByMojang(
         tBody = window[FORGE_MANIFEST_CACHE_KEY];
       } else {
         // @ts-ignore
-        tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror);
+        tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror, false, noTimeout);
 
         // @ts-ignore
         window[FORGE_MANIFEST_CACHE_KEY] = tBody;
       }
     } catch {
       // @ts-ignore
-      tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror);
+      tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror, false, noTimeout);
 
       // @ts-ignore
       window[FORGE_MANIFEST_CACHE_KEY] = tBody;
