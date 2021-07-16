@@ -1,42 +1,75 @@
+import { Box, createMuiTheme, MuiThemeProvider } from "@material-ui/core";
+import { ipcRenderer } from "electron";
 import React from "react";
 import ReactDOM from "react-dom";
-import { initTranslator } from "./Translator";
-import { Box, createMuiTheme, MuiThemeProvider } from "@material-ui/core";
+import { HashRouter } from "react-router-dom";
+import pkg from "../../package.json";
+import { prepareAJ } from "../modules/auth/AJHelper";
+import { prepareND } from "../modules/auth/NDHelper";
 import {
   getBoolean,
+  getString,
   loadConfig,
   saveDefaultConfig,
 } from "../modules/config/ConfigSupport";
 import { loadGDT } from "../modules/container/ContainerUtil";
-import { loadJDT } from "../modules/java/JInfo";
-import { initEncrypt } from "../modules/security/Encrypt";
-import { loadMirror } from "../modules/download/Mirror";
+import { initVF } from "../modules/container/ValidateRecord";
 import { initConcurrentDownloader } from "../modules/download/Concurrent";
 import { initDownloadWrapper } from "../modules/download/DownloadWrapper";
-import { initModInfo } from "../modules/modx/ModInfo";
-import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
-import { HashRouter } from "react-router-dom";
-import { App } from "./App";
-import { initVF } from "../modules/container/ValidateRecord";
-import { prepareAJ } from "../modules/auth/AJHelper";
-import pkg from "../../package.json";
-import { registerHandlers } from "./Handlers";
+import { loadMirror } from "../modules/download/Mirror";
 import { initResolveLock } from "../modules/download/ResolveLock";
-import { prepareND } from "../modules/auth/NDHelper";
+import { loadJDT } from "../modules/java/JInfo";
 import { saveJIMFile } from "../modules/launch/JIMSupport";
-import { ipcRenderer } from "electron";
-import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
+import { initModInfo } from "../modules/modx/ModInfo";
 import { prefetchFabricManifest } from "../modules/pff/get/FabricGet";
-import { activateHotKeyFeature } from "./HotKeyHandler";
+import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
 import { prefetchMojangVersions } from "../modules/pff/get/MojangCore";
-
-require("v8-compile-cache");
+import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
+import { initEncrypt } from "../modules/security/Encrypt";
+import { App } from "./App";
+import { registerHandlers } from "./Handlers";
+import { activateHotKeyFeature } from "./HotKeyHandler";
+import { initTranslator } from "./Translator";
 
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
 
-export const ALICORN_DEFAULT_THEME_DARK = createMuiTheme({
+export function setThemeColor(
+  primaryMain: string,
+  primaryLight: string,
+  secondaryMain: string,
+  secondaryLight: string
+): void {
+  ALICORN_DEFAULT_THEME_DARK = createMuiTheme({
+    palette: {
+      type: "dark",
+      primary: {
+        main: primaryMain,
+        light: primaryLight,
+      },
+      secondary: {
+        main: secondaryMain,
+        light: secondaryLight,
+      },
+    },
+  });
+  ALICORN_DEFAULT_THEME_LIGHT = createMuiTheme({
+    palette: {
+      type: "light",
+      primary: {
+        main: primaryMain,
+        light: primaryLight,
+      },
+      secondary: {
+        main: secondaryMain,
+        light: secondaryLight,
+      },
+    },
+  });
+}
+
+export let ALICORN_DEFAULT_THEME_DARK = createMuiTheme({
   palette: {
     type: "dark",
     primary: {
@@ -49,7 +82,7 @@ export const ALICORN_DEFAULT_THEME_DARK = createMuiTheme({
     },
   },
 });
-export const ALICORN_DEFAULT_THEME_LIGHT = createMuiTheme({
+export let ALICORN_DEFAULT_THEME_LIGHT = createMuiTheme({
   palette: {
     type: "light",
     primary: {
@@ -65,7 +98,11 @@ export const ALICORN_DEFAULT_THEME_LIGHT = createMuiTheme({
 
 function RendererBootstrap(): JSX.Element {
   return (
-    <Box style={GLOBAL_STYLES}>
+    <Box
+      style={Object.assign(GLOBAL_STYLES, {
+        backgroundColor: getString("theme.secondary.light", "#ffe0f0"),
+      })}
+    >
       <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
         <HashRouter>
           <App />
@@ -107,7 +144,20 @@ window.addEventListener("error", (e) => {
     ipcRenderer.send("reloadConfig");
     console.log("Reset complete.");
   }
+  setThemeColor(
+    getString("theme.primary.main", "#5d2391"),
+    getString("theme.primary.light", "#d796f0"),
+    getString("theme.secondary.main", "#df307f"),
+    getString("theme.secondary.light", "#ffe0f0")
+  );
+  const e = document.createElement("style");
+  e.innerText = `html {background-color:${getString(
+    "theme.secondary.light",
+    "#ffe0f0"
+  )};}`;
+  document.head.insertAdjacentElement("beforeend", e);
   ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
+  console.log("This Alicorn has super cow powers.");
   bindSuperCowPower();
   console.log("Initializing modules...");
   const t1 = new Date();

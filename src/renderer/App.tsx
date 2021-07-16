@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Box,
@@ -10,23 +9,6 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import { ipcRenderer } from "electron";
-import {
-  CHANGE_PAGE_WARN,
-  jumpTo,
-  Pages,
-  setChangePageWarn,
-  triggerSetPage,
-} from "./GoTo";
-import { safeGet } from "../modules/commons/Null";
-import {
-  getBoolean,
-  getString,
-  saveConfig,
-  saveConfigSync,
-} from "../modules/config/ConfigSupport";
-import { saveGDT, saveGDTSync } from "../modules/container/ContainerUtil";
-import { saveJDT, saveJDTSync } from "../modules/java/JInfo";
 import {
   AccountCircle,
   AllInbox,
@@ -39,25 +21,43 @@ import {
   Settings,
   Web,
 } from "@material-ui/icons";
-import { LaunchPad } from "./LaunchPad";
-import { tr } from "./Translator";
+import { ipcRenderer } from "electron";
+import React, { useEffect, useState } from "react";
 import { Route } from "react-router";
-import { ReadyToLaunch } from "./ReadyToLaunch";
+import { safeGet } from "../modules/commons/Null";
+import {
+  getBoolean,
+  getString,
+  saveConfig,
+  saveConfigSync,
+} from "../modules/config/ConfigSupport";
+import { saveGDT, saveGDTSync } from "../modules/container/ContainerUtil";
 import { saveVF, saveVFSync } from "../modules/container/ValidateRecord";
-import { VersionView } from "./VersionView";
-import { ContainerManager } from "./ContainerManager";
-import { InstallCore } from "./InstallCore";
-import { YggdrasilAccountManager } from "./YggdrasilAccountManager";
-import { JavaSelector } from "./JavaSelector";
-import { OptionsPage } from "./Options";
-import { CrashReportDisplay } from "./CrashReportDisplay";
 import {
   saveResolveLock,
   saveResolveLockSync,
 } from "../modules/download/ResolveLock";
-import { PffFront } from "./PffFront";
-import { Welcome } from "./Welcome";
+import { saveJDT, saveJDTSync } from "../modules/java/JInfo";
+import { ContainerManager } from "./ContainerManager";
+import { CrashReportDisplay } from "./CrashReportDisplay";
+import {
+  CHANGE_PAGE_WARN,
+  jumpTo,
+  Pages,
+  setChangePageWarn,
+  triggerSetPage,
+} from "./GoTo";
+import { InstallCore } from "./InstallCore";
+import { JavaSelector } from "./JavaSelector";
+import { LaunchPad } from "./LaunchPad";
 import { YNDialog2 } from "./OperatingHint";
+import { OptionsPage } from "./Options";
+import { PffFront } from "./PffFront";
+import { ReadyToLaunch } from "./ReadyToLaunch";
+import { tr } from "./Translator";
+import { VersionView } from "./VersionView";
+import { Welcome } from "./Welcome";
+import { YggdrasilAccountManager } from "./YggdrasilAccountManager";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.secondary.light,
     },
     content: {
-      marginTop: theme.spacing(4),
+      marginTop: theme.spacing(5),
     },
     exitButton: {
       marginRight: 0,

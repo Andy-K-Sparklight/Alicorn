@@ -34,6 +34,7 @@ export function Welcome(): JSX.Element {
       thirdText: {
         color: theme.palette.primary.main,
         fontSize: "medium",
+        marginTop: theme.spacing(-2),
       },
       list: {
         marginTop: theme.spacing(-2),

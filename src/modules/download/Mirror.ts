@@ -2,15 +2,13 @@
 // A downloader does not include mirror applying
 // Reflecting has to be done manually
 
-import { loadData, saveDefaultData } from "../config/DataSupport";
 import { parseMap } from "../commons/MapUtil";
 import { getString } from "../config/ConfigSupport";
+import { loadData, saveDefaultData } from "../config/DataSupport";
 
 const MIRROR_FILES = [
-  "mcbbs.ald",
-  "tss-mcbbs.ald",
-  "bmclapi.ald",
-  "alicorn-mcbbs.ald",
+  "tss.ald",
+  "alicorn.ald",
 ];
 let mirrorMap: Map<string, string> = new Map();
 const METHOD_KEY = "@method";
@@ -48,9 +46,9 @@ export async function loadMirror(): Promise<void> {
       saveDefaultData(f);
     })
   );
-  mirrorMap = parseMap(
-    await loadData(
-      getString("download.mirror", "mcbbs").toLowerCase().trim() + ".ald"
-    )
-  );
+  const mf = getString("download.mirror", "none").toLowerCase().trim();
+  if (mf === "none") {
+    mirrorMap = new Map();
+  }
+  mirrorMap = parseMap(await loadData(mf + ".ald"));
 }

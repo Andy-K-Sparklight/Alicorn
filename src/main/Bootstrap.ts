@@ -6,8 +6,6 @@ import { checkUpdate } from "./Updator";
 import { getBoolean, loadConfig } from "../modules/config/ConfigSupport";
 import path from "path";
 
-require("v8-compile-cache");
-
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow | null = null;
 app.on("ready", async () => {

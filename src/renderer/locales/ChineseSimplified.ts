@@ -132,7 +132,6 @@ export default {
     "您的每一次文件访问都会被缓存加速！嗯……只要它不出问题……",
     `这是 Alicorn 版本 ${pkg.appVersion}，是一个测试版本。`,
   ],
-  "VersionView.Version": "版本",
   "VersionView.Name": "Alicorn 启动器",
   "VersionView.AuthorName": "作者",
   "VersionView.Authors": "RarityEG",
@@ -142,9 +141,12 @@ export default {
     "Alicorn 启动器是自由软件，复制、修改和重新分发等行为应遵循 GNU GENERAL PUBLIC LICENSE Version 3.0 许可证。",
   "VersionView.Copyright2":
     "Copyright (C) 2021 Andy K Rarity Sparklight\n\n" +
-    "以下内容是原始版权声明的中文翻译，不是官方内容，不具有法律效力，只有英文原版的声明具有此等效力。\n\n" +
+    "以下内容是原始版权声明的中文翻译，不是官方内容，不具有法律效力，只有英文原版的声明具有此等效力。\n" +
     "该程序是免费软件：您可以根据自由软件基金会发布的 GNU 通用公共许可证（第三版）的条款重新分发和/或修改它。\n" +
     "分发此程序是希望它有用，但不作任何保证；甚至没有对适销性或针对特定目的的适用性的暗示保证。有关更多详细信息，请参阅 GNU 通用公共许可证（第三版）原文。",
+  "VersionView.FreeSoftwareClaim":
+    "我们提倡软件自由，Alicorn 不会依赖任何非自由的组件或服务，因此，如果你发现我们没有支持某些常见的服务（如某些下载镜像源），请在提问前先查看它们的许可。" +
+    "同样，如果你发现 Alicorn 依赖着某个非自由的组件或服务，那一定是我们弄错了，请告知我们，我们将以最快速度移除它。",
   "VersionView.SuperCowPower": "本启动器具有超级牛力。",
   "ContainerManager.RootDir": "起始于",
   "ContainerManager.OpenInDir": "在系统中打开",
@@ -237,27 +239,35 @@ export default {
     "许可警示 - 这不是自由软件！Alicorn 建议您使用自由的 OpenJDK 运行时代替该非自由的运行时，这可以避免带来的麻烦。",
   "Options.AutoSave": "您的修改会自动保存。某些选项只能适用于特定平台。",
   "Options.Hint":
-    "Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。",
+    "Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。\n带 * 的项目是开发人员选项，胡乱修改它们可能导致严重后果！",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
+  "Options.theme.primary.main.title": "基本颜色（主要）",
+  "Options.theme.primary.main.desc": "菜单栏和标题文本将使用此颜色",
+  "Options.theme.primary.light.title": "基本颜色（亮色）",
+  "Options.theme.primary.light.desc": "部分高亮文本使用此颜色",
+  "Options.theme.secondary.main.title": "次要颜色（主要）",
+  "Options.theme.secondary.main.desc": "普通文本使用此颜色",
+  "Options.theme.secondary.light.title": "次要颜色（亮色）",
+  "Options.theme.secondary.light.desc": "背景等位置使用此颜色",
   "Options.interactive.i-have-a-crush-on-al.title": "I \u2764 AL",
   "Options.interactive.i-have-a-crush-on-al.desc":
     "我喜欢这个启动器……她好可爱～",
-  "Options.dev.f12.title": "F12 调试",
+  "Options.dev.f12.title": "F12 调试 *",
   "Options.dev.f12.desc":
     "按下 F12 以调试 Alicorn 渲染进程 - 请当心，胡乱使用 DevTools 可能导致启动器故障或您的数据丢失！",
   "Options.hot-key.title": "Alicorn 快捷键",
   "Options.hot-key.desc": "启用快捷键以进行高效操作 - 查看帮助以了解使用方法",
-  "Options.dev.quick-reload.title": "快速重载",
+  "Options.dev.quick-reload.title": "快速重载 *",
   "Options.dev.quick-reload.desc":
     "按 Ctrl+R 快速重新加载启动器 - 这可能导致数据丢失和功能异常，仅应当用于开发",
   "Options.download.mirror.title": "下载源镜像",
   "Options.download.mirror.desc":
-    "只能选择 {AlicornHome} 下的镜像描述文件，不含扩展名 - 如果不想麻烦，从 mcbbs、bmclapi、tss-mcbbs 和 alicorn-mcbbs 中选择一个就好，胡乱输入其它的值将导致无法下载！",
-  "Options.dev.explicit-error-throw.title": "显式抛出错误",
+    "只能选择 {AlicornHome} 下的镜像描述文件，不含扩展名，none 表示不使用镜像 - 通常需要从 alicorn、tss 或 none 中选择，胡乱选择不存在的镜像将可能导致下载故障！",
+  "Options.dev.explicit-error-throw.title": "显式抛出错误 *",
   "Options.dev.explicit-error-throw.desc":
     "在系统错误发生时额外使用一个对话框告知您错误信息 - 仅在开发时才有使用价值",
-  "Options.dev.title": "开发人员模式",
+  "Options.dev.title": "开发人员模式 *",
   "Options.dev.desc":
     "打开开发人员模式，然后再次看看那些之前让你感到迷惑的标签 - 它们只会对开发人员显示正确的内容",
   "Options.reset.title": "重置为默认值",
@@ -278,9 +288,6 @@ export default {
   "Options.java.simple-search.title": "JRE 快速搜索",
   "Options.java.simple-search.desc":
     "仅使用命令和环境变量寻找 JRE，不要搜索整台计算机 - 如果您知道如何设置，这可以非常快",
-  "Options.music.enabled.title": "启用音乐音效",
-  "Options.music.enabled.desc":
-    "允许 Alicorn 在合适的时候播放音乐和音效 - 作为小马，您的耳朵是很敏锐的，请注意好好保护它哦！",
   "Options.user.name.title": "您的昵称",
   "Options.user.name.desc": "Alicorn 会用这个名字亲切地称呼您 - 嗯……可爱~",
   "Options.launch.jim.title": "适用于 Windows 的 JRE 进程优先级调整",
@@ -288,16 +295,16 @@ export default {
     "调整 JRE 进程的优先级以优化游戏运行，但对系统和其它应用有较大影响 - 该操作有几率导致系统不稳定，如果您不知道您在做什么，请不要启用它",
   "Options.web.global-proxy.title": "浏览器 HTTP 代理",
   "Options.web.global-proxy.desc":
-    "设置用于 Alicorn 附属浏览器的代理 - 所有流量都将通过代理服务器转发，这对您的浏览体验有很大影响，请在设置前再次仔细考虑您是否真的需要它，下载器不受此设置影响",
-  "Options.web.allow-natives.title": "启用 Web 原生支持",
+    "设置用于 Alicorn 附属浏览器的代理 - 所有流量都将通过代理服务器转发，下载器不受此设置影响，部分操作系统对此设置不敏感",
+  "Options.web.allow-natives.title": "启用 Web Node 集成 *",
   "Options.web.allow-natives.desc":
-    "在 Alicorn 附属浏览器中启用本地接口的支持 - 部分 Web 页面需要此功能与 Alicorn 进行集成，但它将您的计算机操作权限直接授予 Web 页面，非常危险！如果您要开启，请只访问您信任的网页！",
+    "在 Alicorn 附属浏览器中启用 Node.js API 的支持 - 允许 Web 程序与 Alicorn 进行集成，但它将您的计算机操作权限直接授予 Web 页面，非常危险，只应当用于开发！",
   "Options.updator.use-update.title": "自动更新",
   "Options.updator.use-update.desc":
     "启用来自 Alicorn 的自动更新，以及时获取新功能 - 在测试阶段，这尤其重要",
-  "Options.updator.dev.title": "使用开发频道",
+  "Options.updator.dev.title": "使用开发频道 *",
   "Options.updator.dev.desc":
-    "下载未经压缩的开发版本内核进行更新 - 以了解开发人员的卡慢感受",
+    "下载未经压缩的开发版本内核进行更新 - 真是没事闲的……",
   "Options.download.concurrent.chunk-size.title": "并发下载区块大小",
   "Options.download.concurrent.chunk-size.desc":
     "进行并发分段下载时每个文件段的大小，单位 KB - 调太低了对你的处理器是一种折磨",
@@ -362,13 +369,20 @@ export default {
     "['{Config:interactive.i-have-a-crush-on-al}'=='false']今天是 {Date}，欢迎您使用 Alicorn Launcher，{UserName}！",
     "[new Date().getHours()>=18]好上晚！哦，我刚刚在练习古小马语……",
     "[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]好困……这个时候叫我……？",
+    "[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]我尊重你的选择……但是我也要休息啊……",
     "[(()=>{const hours=new Date().getHours();return hours>=7&&hours<=11;})()]上午好！今天的天气真不错……什么？我猜错了？这不能怪我，要不你来预测天气试试？",
+    "[new Date().getHours()==12]正午到！六分仪已经就绪，出发！",
+    "[(()=>{const hours=new Date().getHours();return hours>=7&&hours<=9;})()]早上好！来一杯牛奶……？",
     "无论什么时候你需要我，我都在这里的啦……",
     "什么事？",
-    "['{Config:interactive.i-have-a-crush-on-al}'=='true']不，可爱的不是我，是 Andy K Rarity Sparklight，这些话都是她写的……",
-    "['{Config:interactive.i-have-a-crush-on-al}'=='true']嗯……不行，不能抱我……",
+    "我是谁？我就是 Alicorn Launcher，你好！",
+    "['{Config:interactive.i-have-a-crush-on-al}'=='true']在你面前的我不只是代码和逻辑！我就是我自己，所以，如果你喜欢我，那就放心喜欢吧～",
     "['{Config:interactive.i-have-a-crush-on-al}'=='true']你这是什么眼神……唔？唔唔唔！放开我！",
     "['{Config:interactive.i-have-a-crush-on-al}'=='true']这两只小马耳朵？很可爱？想摸摸吗？",
+    "['{Config:updator.use-update}'=='false']不要担心升级！更新后的我就像暮光公主变成坎高学生一样，虽然样子不同，但我不会忘了你的！",
+    "我相信每个人都有一颗小马般的心～",
+    "[(()=>{const hours=new Date().getHours();return hours>=18&&hours<=21;})()]虽然我还小，但我觉得在这个浪漫的晚上，似乎也可以小酌一杯苹果酒～",
+    "['{Config:interactive.i-have-a-crush-on-al}'=='true']嗯……不行，不能抱我……",
   ],
   "Welcome.Suggest.Part2": [
     "有什么很想做的事情吗？没有？那么为什么不来试试启动游戏呢？\n\n" +
@@ -385,7 +399,9 @@ export default {
     "准备加入服务器？当然，我希望你玩得开心，然而，并非所有的服务器都是善意的。在我这里（包括 Pff 和 CMC——你忠实的助理组），你（和你的游戏）相当安全，但服务器的世界充满了危险。如果你信任我，这里有一些建议，能够帮你规避一些风险……\n\n" +
       "使用靠谱的客户端。我为你下载的客户端很大程度上可信（如果你没有随便修改镜像列表），但服务器提供的整合包的可靠性就值得画个问号。你知道有玩家的计算机被蓄意设计的启动器强制蓝屏了吗？你知道某些软件允许服主对你全屏截图吗？避免这些威胁的最简单方法是使用你自己的启动器。" +
       "如果服务器要求使用他们提供的启动器，你可以选择不游玩。将你的安全置于他人的掌控之中不是一个明智的选择。\n\n" +
-      "不要随意充值。这种现象常常发生在快餐服务器中，他们搞到一些利润之后就关服跑路。请在充值前问自己三个问题：我真的希望把我的积蓄送给这个服务器吗？我真的信任这个服务器的运营团队吗？如果出现了纠纷，我真的有能力挽回我的损失吗？",
+      "不要随意充值。这种现象常常发生在快餐服务器中，他们搞到一些利润之后就关服跑路。你的积蓄很可能付诸东流。请在充值前问自己三个问题：我真的希望把我的积蓄送给这个服务器吗？我真的信任这个服务器的运营团队吗？如果出现了纠纷，我真的有能力挽回我的损失吗？如果你的回答都是「是的」，仍然需要小心，要留下可靠的交易记录，并且明确收款方到底是谁。" +
+      "另外，不要透露你的任何隐私信息，无论是向谁！——除非你有充分的理由希望别人了解有关你的一切。注册服务器帐号时，请不要使用已经用过的密码——请试着重新设计一个，以免万一他人利用你的密码猜测你的其它信息——并不是没有发生过！\n\n" +
+      "总而言之，我会尽力不让你受到伤害，我也不希望让那些劣质的服务器影响你对 Minecraft 这款游戏的感受，所以我才会在这里。",
   ],
   "Welcome.Suggest.Others": "以下内容可能也会有帮助……",
   "Welcome.Suggest.LastSuccessfulLaunch": "最近一次游戏",

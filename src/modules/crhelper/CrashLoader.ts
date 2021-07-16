@@ -1,9 +1,8 @@
-import { getCurrentLocale } from "../../renderer/Translator";
-import { CMC_CRASH_LOADER } from "./CutieMCCrashLoader";
 import fs from "fs-extra";
 import got from "got";
-import { safeEval } from "./SafeEvalNatives";
 import { schedulePromiseTask } from "../../renderer/Schedule";
+import { getCurrentLocale } from "../../renderer/Translator";
+import { CMC_CRASH_LOADER } from "./CutieMCCrashLoader";
 
 export interface CrashLoader {
   rules: Record<string, CrashLoaderRule>;
@@ -74,7 +73,7 @@ export class CrashReportCursor {
         continue;
       }
       try {
-        const func = safeEval(scr) as (
+        const func = eval(scr) as (
           cursor: CrashReportCursor,
           locale: string
         ) => CrashLoaderReport;
@@ -133,7 +132,7 @@ async function getOnlineCrashLoader(
         responseType: "text",
       })
     ).body;
-    const obj = safeEval(r);
+    const obj = eval(r);
     if (obj) {
       return obj as CrashLoader;
     }

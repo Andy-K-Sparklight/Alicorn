@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "sideEffects": false,
   "scripts": {
+    "lc": "yarn quick-test",
+    "wr": "yarn watch-renderer",
+    "wm": "yarn watch-main",
     "build-dll": "npx webpack --config webpack.config.dll.js --progress",
     "build-vercel": "yarn build-dll-ci&&yarn release-full-ci&&yarn build-full-ci",
     "prepare-release": "yarn release-full",
@@ -88,11 +91,9 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0",
-    "safe-eval": "^0.4.1",
     "semver": "^7.3.5",
     "sha": "^3.0.0",
     "toml": "^3.0.0",
-    "tunnel": "^0.0.6",
-    "v8-compile-cache": "^2.3.0"
+    "tunnel": "^0.0.6"
   }
 }

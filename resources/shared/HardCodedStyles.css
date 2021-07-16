@@ -1,13 +1,14 @@
 .window-drag {
-    -webkit-app-region: drag;
+  -webkit-app-region: drag;
 }
 
 ::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 html {
-    background-color: #ffe0f0;
-    font-family: "Roboto", "Microsoft YaHei UI Light", Tahoma, Verdana, sans-serif;
-    white-space: pre-line;
+  background-color: #ffe0f0;
+  font-family: "Roboto", "Microsoft YaHei UI Light", Tahoma, Verdana, sans-serif;
+  white-space: pre-line;
+  line-height: 90%;
 }

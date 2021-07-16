@@ -103,6 +103,10 @@ export function OptionsPage(): JSX.Element {
           bindConfig={"cmc.disable-log4j-config"}
         />
         <InputItem type={ConfigType.STR} bindConfig={"web.global-proxy"} />
+        <InputItem type={ConfigType.STR} bindConfig={"theme.primary.main"} />
+        <InputItem type={ConfigType.STR} bindConfig={"theme.primary.light"} />
+        <InputItem type={ConfigType.STR} bindConfig={"theme.secondary.main"} />
+        <InputItem type={ConfigType.STR} bindConfig={"theme.secondary.light"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"hot-key"} />
         <InputItem
           type={ConfigType.BOOL}

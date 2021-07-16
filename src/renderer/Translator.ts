@@ -1,8 +1,7 @@
-import ChineseSimplified from "./locales/ChineseSimplified";
 import os from "os";
-import { getString } from "../modules/config/ConfigSupport";
 import path from "path";
-import { safeEval } from "../modules/crhelper/SafeEvalNatives";
+import { getString } from "../modules/config/ConfigSupport";
+import ChineseSimplified from "./locales/ChineseSimplified";
 
 let currentLocale = "zh_cn";
 const localesMap = new Map<string, Record<string, string | string[]>>();
@@ -100,7 +99,7 @@ function trimControlCode(origin: string[], rules: string[]): string[] {
     const controlCode = tr.match(CONTROL_CODE_REGEX);
     if (controlCode && controlCode[0]) {
       try {
-        const r = safeEval(controlCode[0]);
+        const r = eval(controlCode[0]);
         if (r) {
           const a = tr.split("]");
           a.shift();

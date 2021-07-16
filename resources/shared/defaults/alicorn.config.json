@@ -29,5 +29,9 @@
   "pff.cache-root": "",
   "reset": false,
   "download.mirror": "mcbbs",
-  "interactive.i-have-a-crush-on-al": false
+  "interactive.i-have-a-crush-on-al": false,
+  "theme.primary.main": "#5d2391",
+  "theme.primary.light": "#d796f0",
+  "theme.secondary.main": "#df307f",
+  "theme.secondary.light": "#ffe0f0"
 }

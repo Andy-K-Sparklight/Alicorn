@@ -21,10 +21,7 @@ export function VersionView(): JSX.Element {
   return (
     <Box className={classes.root}>
       <Typography className={classes.title} gutterBottom>
-        {tr("VersionView.Name")}
-      </Typography>
-      <Typography className={classes.text} color={"secondary"} gutterBottom>
-        {tr("VersionView.Version") + " " + pkg.appVersion}
+        {tr("VersionView.Name") + " " + pkg.appVersion}
       </Typography>
       <Typography className={classes.text} color={"secondary"} gutterBottom>
         {tr("VersionView.Description")}
@@ -34,11 +31,15 @@ export function VersionView(): JSX.Element {
       </Typography>
       <br />
       <Typography className={classes.text} color={"secondary"} gutterBottom>
+        {tr("VersionView.FreeSoftwareClaim")}
+      </Typography>
+      <Typography className={classes.text} color={"secondary"} gutterBottom>
         {tr("VersionView.Copyright1")}
       </Typography>
       <Typography className={classes.text} color={"secondary"} gutterBottom>
         {tr("VersionView.Copyright2")}
       </Typography>
+
       <Typography
         className={classes.text}
         color={"primary"}
