@@ -179,6 +179,7 @@ function InputItem(props: {
           case ConfigType.BOOL:
             return (
               <Switch
+                size={"small"}
                 checked={getBoolean(props.bindConfig)}
                 className={classes.switch}
                 onChange={(e) => {

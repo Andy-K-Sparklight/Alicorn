@@ -1,6 +1,6 @@
-import { setDirty } from "./LaunchPad";
-import { setContainerListDirty } from "./ContainerManager";
 import { saveAndReloadMain } from "../modules/config/ConfigSupport";
+import { setContainerListDirty } from "./ContainerManager";
+import { setDirty } from "./LaunchPad";
 
 export function jumpTo(target: string): void {
   // @ts-ignore
@@ -8,10 +8,18 @@ export function jumpTo(target: string): void {
     window.dispatchEvent(new CustomEvent("changePageWarn", { detail: target }));
     return;
   }
-  ifLeavingLaunchPadThenSetDirty();
-  ifLeavingContainerManagerThenSetContainerListDirty();
-  ifLeavingConfigThenReload();
-  window.location.hash = target;
+  const e = document.getElementById("app_main");
+  const ANIMATION_TIME = 150 + 10;
+  fadeOut(e);
+  setTimeout(() => {
+    ifLeavingLaunchPadThenSetDirty();
+    ifLeavingContainerManagerThenSetContainerListDirty();
+    ifLeavingConfigThenReload();
+    window.location.hash = target;
+    setTimeout(() => {
+      fadeIn(e);
+    }, ANIMATION_TIME);
+  }, ANIMATION_TIME);
 }
 
 function ifLeavingLaunchPadThenSetDirty(): void {
@@ -57,4 +65,17 @@ export const CHANGE_PAGE_WARN = "ChangePageWarn";
 export function setChangePageWarn(doWarn: boolean): void {
   // @ts-ignore
   window[CHANGE_PAGE_WARN] = doWarn;
+}
+
+function fadeOut(ele: HTMLElement | null) {
+  if (ele) {
+    ele.classList.remove("app_fade_in");
+    ele.classList.add("app_fade_out");
+  }
+}
+function fadeIn(ele: HTMLElement | null) {
+  if (ele) {
+    ele.classList.remove("app_fade_out");
+    ele.classList.add("app_fade_in");
+  }
 }

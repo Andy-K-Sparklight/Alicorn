@@ -14,12 +14,8 @@ import {
 } from "../modules/config/ConfigSupport";
 import { loadGDT } from "../modules/container/ContainerUtil";
 import { initVF } from "../modules/container/ValidateRecord";
-import { DownloadMeta } from "../modules/download/AbstractDownloader";
 import { initConcurrentDownloader } from "../modules/download/Concurrent";
-import {
-  initDownloadWrapper,
-  wrappedDownloadFile,
-} from "../modules/download/DownloadWrapper";
+import { initDownloadWrapper } from "../modules/download/DownloadWrapper";
 import { loadMirror } from "../modules/download/Mirror";
 import { initResolveLock } from "../modules/download/ResolveLock";
 import { loadJDT } from "../modules/java/JInfo";

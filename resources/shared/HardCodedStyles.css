@@ -12,3 +12,12 @@ html {
   white-space: pre-line;
   line-height: 90%;
 }
+
+.app_fade_in {
+  transition: opacity 400ms;
+  opacity: 100;
+}
+.app_fade_out {
+  transition: opacity 400ms;
+  opacity: 0;
+}

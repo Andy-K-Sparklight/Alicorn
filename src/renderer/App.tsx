@@ -24,6 +24,7 @@ import {
 import { ipcRenderer } from "electron";
 import React, { useEffect, useState } from "react";
 import { Route } from "react-router";
+import { TransitionGroup } from "react-transition-group";
 import { safeGet } from "../modules/commons/Null";
 import {
   getBoolean,
@@ -268,24 +269,26 @@ export function App(): JSX.Element {
           </Tooltip>
         </Toolbar>
       </AppBar>
-      <Box className={classes.content}>
-        <Route path={"/LaunchPad"} component={LaunchPad} />
-        <Route path={"/InstallCore"} component={InstallCore} />
-        <Route
-          path={"/ReadyToLaunch/:container/:id/:server?"}
-          component={ReadyToLaunch}
-        />
-        <Route path={"/Version"} component={VersionView} />
-        <Route path={"/ContainerManager"} component={ContainerManager} />
-        <Route
-          path={"/YggdrasilAccountManager"}
-          component={YggdrasilAccountManager}
-        />
-        <Route path={"/JavaSelector"} component={JavaSelector} />
-        <Route path={"/Options"} component={OptionsPage} />
-        <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
-        <Route path={"/PffFront/:container/:version"} component={PffFront} />
-        <Route path={"/Welcome"} component={Welcome} />
+      <Box className={classes.content} id={"app_main"}>
+        <TransitionGroup>
+          <Route path={"/LaunchPad"} component={LaunchPad} />
+          <Route path={"/InstallCore"} component={InstallCore} />
+          <Route
+            path={"/ReadyToLaunch/:container/:id/:server?"}
+            component={ReadyToLaunch}
+          />
+          <Route path={"/Version"} component={VersionView} />
+          <Route path={"/ContainerManager"} component={ContainerManager} />
+          <Route
+            path={"/YggdrasilAccountManager"}
+            component={YggdrasilAccountManager}
+          />
+          <Route path={"/JavaSelector"} component={JavaSelector} />
+          <Route path={"/Options"} component={OptionsPage} />
+          <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
+          <Route path={"/PffFront/:container/:version"} component={PffFront} />
+          <Route path={"/Welcome"} component={Welcome} />
+        </TransitionGroup>
       </Box>
 
       <YNDialog2

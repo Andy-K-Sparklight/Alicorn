@@ -1,4 +1,5 @@
 import { ipcRenderer } from "electron";
+import { Executor } from "./Component";
 
 let MAIN_WINDOW: number;
 let cEvent = 0;
@@ -15,4 +16,11 @@ export async function invoke(channel: string, arg?: unknown): Promise<unknown> {
       resolve(result);
     });
   });
+}
+
+export class AlicornCaller extends Executor {
+  execute(_document: Document, ..._args: unknown[]): void {
+    // @ts-ignore
+    window["invokeAlicorn"] = invoke;
+  }
 }
