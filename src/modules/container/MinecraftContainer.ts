@@ -1,6 +1,6 @@
 import path from "path";
-import { LibraryMeta } from "../profile/Meta";
 import { getNativeArtifact, JAR_SUFFIX } from "../launch/NativesLint";
+import { LibraryMeta } from "../profile/Meta";
 
 export class MinecraftContainer {
   id = "";

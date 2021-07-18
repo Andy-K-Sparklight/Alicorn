@@ -158,11 +158,13 @@ export default {
   "ContainerManager.Select": "选择挂载点",
   "ContainerManager.InvalidName": "无效容器名",
   "ContainerManager.InvalidDir": "无效挂载点",
+  "ContainerManager.Type.Physical": "MCX 扩展物理宗卷",
+  "ContainerManager.Type.Shared": "ASC 文件共享宗卷",
   "ContainerManager.Remove": "解除链接",
   "ContainerManager.Mount": "装载该容器",
   "ContainerManager.Unmount": "卸载该容器",
   "ContainerManager.Clear": "抹掉该容器",
-  "ContainerManager.Cores": "个核心",
+  "ContainerManager.Cores": "{Count} 个核心",
   "ContainerManager.CoresLoading": "清点核心中",
   "ContainerManager.AskRemove": "解除链接此容器？",
   "ContainerManager.AskRemoveDetail":
@@ -242,6 +244,9 @@ export default {
     "Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。\n带 * 的项目是开发人员选项，胡乱修改它们可能导致严重后果！",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
+  "Options.cx.shared-root.title": "共享文件存储位置",
+  "Options.cx.shared-root.desc":
+    "使用软连接连接到可复用的文件，那么这些文件应当存储在哪里 - 请留出足够的空间以存储文件",
   "Options.startup-page.url.title": "主页路径",
   "Options.startup-page.url.desc":
     "选择进入启动器时主页的路径 - 用于实际切换页面",
@@ -404,6 +409,11 @@ export default {
       "不要随意充值。这种现象常常发生在快餐服务器中，他们搞到一些利润之后就关服跑路。你的积蓄很可能付诸东流。请在充值前问自己三个问题：我真的希望把我的积蓄送给这个服务器吗？我真的信任这个服务器的运营团队吗？如果出现了纠纷，我真的有能力挽回我的损失吗？如果你的回答都是「是的」，仍然需要小心，要留下可靠的交易记录，并且明确收款方到底是谁。" +
       "另外，不要透露你的任何隐私信息，无论是向谁！——除非你有充分的理由希望别人了解有关你的一切。注册服务器帐号时，请不要使用已经用过的密码——请试着重新设计一个，以免万一他人利用你的密码猜测你的其它信息——并不是没有发生过！\n\n" +
       "总而言之，我会尽力不让你受到伤害，我也不希望让那些劣质的服务器影响你对 Minecraft 这款游戏的感受，所以我才会在这里。",
+    "来自开发人员的信息：试试我们新添加的特色功能「ASC 文件共享宗卷」吧！\n\n" +
+      "以往，你的游戏（包括支援库，游戏资源，启动档案，引导器）被保存在一个容器中，我称它为 MCS 标准物理宗卷。由于我在执行各种功能时会在其中创建不同的文件，因此由我管理的标准宗卷被称为 MCX 扩展物理宗卷。每个 MCX 拥有独有的一份文件，稳定性强，即使一个容器损坏也不会影响其它容器。" +
+      "然而，在整合游戏（使用整合包的游戏）流行的当下，你可能需要为每个包创建单独的容器，这会占用很多空间，而且降低速度，于是我为你准备了一个新的格式：ASC 文件共享宗卷。\n\n" +
+      "ASC 的结构与 MCX 几乎一样，但它有一个特点：大多数文件不是真实的文件，它们是 Symbolic Link，连接到一个特定的位置，你的文件实际上都存储在那里。这允许复用那些在每个容器中经常出现的文件，节省一些空间。要使用这项功能，只需要在创建新容器时选择「ASC 文件共享宗卷」——所有的 ASC 会共享支援库、游戏资源、Mod，但不会共享启动档案、存档或者你自己添加的内容。\n\n" +
+      "当然，ASC 也有一些问题：它不稳定，Symbolic Link 在不同操作系统上的表现不太一样；它不健壮，共享文件的损坏，哪怕是一个，也将导致所有 ASC 出现问题。不过，ASC 在一般游戏方面已经足够了，如果你需要较高的安全性，才需要考虑 MCX。",
   ],
   "Welcome.Suggest.Others": "以下内容可能也会有帮助……",
   "Welcome.Suggest.LastSuccessfulLaunch": "最近一次游戏",

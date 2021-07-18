@@ -1,13 +1,3 @@
-import React, { useEffect, useRef, useState } from "react";
-import { MinecraftContainer } from "../modules/container/MinecraftContainer";
-import {
-  getAllContainerPaths,
-  getAllContainers,
-  getContainer,
-  isMounted,
-  mount,
-  unmount,
-} from "../modules/container/ContainerUtil";
 import {
   Box,
   Button,
@@ -18,14 +8,14 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControlLabel,
   IconButton,
+  Radio,
+  RadioGroup,
   TextField,
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import objectHash from "object-hash";
-import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
-import { tr } from "./Translator";
 import {
   Add,
   Eject,
@@ -34,17 +24,31 @@ import {
   LayersClear,
   LinkOff,
 } from "@material-ui/icons";
+import { ipcRenderer, shell } from "electron";
+import fs from "fs-extra";
+import objectHash from "object-hash";
+import path from "path";
+import React, { useEffect, useRef, useState } from "react";
+import { isFileExist } from "../modules/commons/FileUtil";
+import { scanCoresIn } from "../modules/container/ContainerScanner";
+import {
+  getAllContainerPaths,
+  getAllContainers,
+  getContainer,
+  isMounted,
+  mount,
+  unmount,
+} from "../modules/container/ContainerUtil";
 import {
   clearContainer,
   createNewContainer,
   unlinkContainer,
 } from "../modules/container/ContainerWrapper";
+import { MinecraftContainer } from "../modules/container/MinecraftContainer";
+import { isSharedContainer } from "../modules/container/SharedFiles";
 import { OperatingHint } from "./OperatingHint";
-import { isFileExist } from "../modules/commons/FileUtil";
-import fs from "fs-extra";
-import path from "path";
-import { ipcRenderer, shell } from "electron";
-import { scanCoresIn } from "../modules/container/ContainerScanner";
+import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
+import { tr } from "./Translator";
 
 export function setContainerListDirty(): void {
   window.dispatchEvent(new CustomEvent("setContainerListDirty"));
@@ -124,18 +128,27 @@ function SingleContainerDisplay(props: {
   const [clearAskOpen, setClearOpen] = useState(false);
   const [operating, setOperating] = useState(false);
   const [coreCount, setCount] = useState(-1);
+  const [isASC, setASCBit] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     mounted.current = true;
-    (async () => {
-      const cores = (await scanCoresIn(props.container)).length;
-      if (mounted.current) {
-        setCount(cores);
-      }
-    })();
+    if (props.isMounted) {
+      (async () => {
+        if (await isSharedContainer(props.container)) {
+          if (mounted.current) {
+            setASCBit(true);
+          }
+        }
+        const cores = (await scanCoresIn(props.container)).length;
+        if (mounted.current) {
+          setCount(cores);
+        }
+      })();
+    }
     return () => {
       mounted.current = false;
     };
-  }, []);
+  }, [refresh]);
   return (
     <Box>
       <OperatingHint open={operating} />
@@ -181,6 +194,7 @@ function SingleContainerDisplay(props: {
                     onClick={() => {
                       setOpen(false);
                       unlinkContainer(props.container.id);
+
                       setContainerListDirty();
                     }}
                   >
@@ -253,6 +267,7 @@ function SingleContainerDisplay(props: {
                   onClick={() => {
                     mount(props.container.id);
                     setContainerListDirty();
+                    setRefresh(!refresh);
                   }}
                 >
                   <Input />
@@ -289,9 +304,15 @@ function SingleContainerDisplay(props: {
               className={classes.text}
               gutterBottom
             >
-              {coreCount >= 0
-                ? coreCount + " " + tr("ContainerManager.Cores")
-                : tr("ContainerManager.CoresLoading")}
+              {(coreCount >= 0
+                ? tr("ContainerManager.Cores", `Count=${coreCount}`)
+                : tr("ContainerManager.CoresLoading")) +
+                " - " +
+                tr(
+                  isASC
+                    ? "ContainerManager.Type.Shared"
+                    : "ContainerManager.Type.Physical"
+                )}
             </Typography>
           ) : (
             ""
@@ -335,6 +356,7 @@ function AddNewContainer(props: {
   const [usedName, setName] = useState("");
   const [nameError, setNameError] = useState(false);
   const [dirError, setDirError] = useState(false);
+  const [createASC, setCreateASC] = useState(true);
   const classes = useInputStyles();
   return (
     <Dialog
@@ -393,7 +415,29 @@ function AddNewContainer(props: {
           variant={"outlined"}
           value={selectedDir}
         />
-
+        <RadioGroup
+          row
+          onChange={(e) => {
+            switch (e.target.value) {
+              case "Physical":
+                setCreateASC(false);
+                break;
+              case "Shared":
+                setCreateASC(true);
+            }
+          }}
+        >
+          <FormControlLabel
+            value={"Physical"}
+            control={<Radio checked={!createASC} />}
+            label={tr("ContainerManager.Type.Physical")}
+          />
+          <FormControlLabel
+            value={"Shared"}
+            control={<Radio checked={createASC} />}
+            label={tr("ContainerManager.Type.Shared")}
+          />
+        </RadioGroup>
         <Button
           className={classes.input}
           type={"button"}
@@ -431,7 +475,7 @@ function AddNewContainer(props: {
             setName("");
             setSelected("");
             props.setOperate(true);
-            await createContainer(usedName, selectedDir);
+            await createContainer(usedName, selectedDir, createASC);
             props.setOperate(false);
           }}
         >
@@ -446,6 +490,10 @@ async function remoteSelectDir(): Promise<string> {
   return String((await ipcRenderer.invoke("selectDir")) || "");
 }
 
-async function createContainer(id: string, dir: string): Promise<void> {
-  await createNewContainer(dir, id);
+async function createContainer(
+  id: string,
+  dir: string,
+  asc = false
+): Promise<void> {
+  await createNewContainer(dir, id, asc);
 }

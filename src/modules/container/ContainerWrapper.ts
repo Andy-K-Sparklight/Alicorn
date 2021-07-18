@@ -1,16 +1,18 @@
-import path from "path";
 import fs from "fs-extra";
-import { MinecraftContainer } from "./MinecraftContainer";
+import path from "path";
 import {
   getContainer,
   registerContainer,
   unregisterContainer,
 } from "./ContainerUtil";
+import { MinecraftContainer } from "./MinecraftContainer";
+import { markASC } from "./SharedFiles";
 
 // Create a container at specified dir
 export async function createNewContainer(
   rootDir: string,
-  name: string
+  name: string,
+  isASC = false
 ): Promise<void> {
   if (path.resolve(rootDir) === path.resolve()) {
     throw new Error("Invalid target! Cannot operate cwd.");
@@ -31,6 +33,9 @@ export async function createNewContainer(
   if (!stat?.isDirectory()) {
     throw new Error("Invalid target! Target is not a directory.");
   } else {
+    try {
+      await markASC(d);
+    } catch {}
     registerContainer(new MinecraftContainer(d, name));
   }
 }

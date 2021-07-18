@@ -52,6 +52,7 @@ export function OptionsPage(): JSX.Element {
         />
         <InputItem type={ConfigType.STR} bindConfig={"user.name"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"java.simple-search"} />
+        <InputItem type={ConfigType.STR} bindConfig={"cx.shared-root"} />
         <InputItem
           type={ConfigType.BOOL}
           bindConfig={"modx.global-dynamic-load-mods"}

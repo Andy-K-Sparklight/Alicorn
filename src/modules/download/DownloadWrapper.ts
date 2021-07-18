@@ -1,15 +1,17 @@
-import { DownloadMeta, DownloadStatus } from "./AbstractDownloader";
-import { Concurrent } from "./Concurrent";
-import { Serial } from "./Serial";
-import { applyMirror } from "./Mirror";
-import { getBoolean, getNumber } from "../config/ConfigSupport";
 import EventEmitter from "events";
 import { getModifiedDate, isFileExist } from "../commons/FileUtil";
+import { getBoolean, getNumber } from "../config/ConfigSupport";
+import { getAllContainers, getContainer } from "../container/ContainerUtil";
+import { fetchSharedFile, isSharedContainer } from "../container/SharedFiles";
 import {
   deleteRecord,
   getLastValidateModified,
   updateRecord,
 } from "../container/ValidateRecord";
+import { DownloadMeta, DownloadStatus } from "./AbstractDownloader";
+import { Concurrent } from "./Concurrent";
+import { applyMirror } from "./Mirror";
+import { Serial } from "./Serial";
 import { validate } from "./Validate";
 
 const PENDING_TASKS: DownloadMeta[] = [];
@@ -43,11 +45,31 @@ export function initDownloadWrapper(): void {
 // Concurrent will always be used first
 // If file already exists, downloader will resolve if hash matches
 export async function wrappedDownloadFile(
-  meta: DownloadMeta
+  meta: DownloadMeta,
+  noAutoLn = false
 ): Promise<DownloadStatus> {
   // POST
   if (meta.url.trim().length === 0 || meta.savePath.trim().length === 0) {
     return DownloadStatus.RESOLVED;
+  }
+  if (!noAutoLn) {
+    console.log("Considering possibly ln for " + meta.url);
+    const a = getAllContainers();
+    let targetContainer = "";
+    a.forEach((c) => {
+      if (meta.savePath.includes(getContainer(c).rootDir)) {
+        targetContainer = c;
+      }
+    });
+    console.log(targetContainer);
+    if (
+      targetContainer.length > 0 &&
+      (await isSharedContainer(getContainer(targetContainer)))
+    ) {
+      if (await fetchSharedFile(meta)) {
+        return DownloadStatus.RESOLVED;
+      }
+    }
   }
   const mirroredMeta = new DownloadMeta(
     applyMirror(meta.url),
