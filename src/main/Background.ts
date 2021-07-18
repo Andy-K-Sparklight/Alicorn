@@ -189,7 +189,7 @@ export function registerBackgroundListeners(): void {
   ipcMain.handle("openBrowser", async (e, node: boolean, proxy: string) => {
     await openBrowser(node, proxy);
   });
-  ipcMain.handle("get-main-window-id", () => {
+  ipcMain.handle("getMainWindow", () => {
     return getMainWindow()?.webContents.id || 0;
   });
   ipcMain.on("reloadConfig", async () => {

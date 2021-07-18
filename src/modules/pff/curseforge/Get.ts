@@ -1,13 +1,12 @@
-import { GAME_ID } from "./Values";
-import leven from "js-levenshtein";
-import mdiff from "mdiff";
-import { MinecraftContainer } from "../../container/MinecraftContainer";
-import { findCachedFile, writeCachedFile } from "./Cache";
 import { copyFile, ensureDir } from "fs-extra";
-import { wrappedDownloadFile } from "../../download/DownloadWrapper";
-import { DownloadMeta } from "../../download/AbstractDownloader";
 import path from "path";
+import { invokeWorker } from "../../../renderer/Schedule";
+import { MinecraftContainer } from "../../container/MinecraftContainer";
+import { DownloadMeta } from "../../download/AbstractDownloader";
+import { wrappedDownloadFile } from "../../download/DownloadWrapper";
 import { pgot } from "../../download/GotWrapper";
+import { findCachedFile, writeCachedFile } from "./Cache";
+import { GAME_ID } from "./Values";
 
 export async function getAddonInfoBySlug(
   slug: string,
@@ -58,7 +57,7 @@ export async function getAddonInfoBySlug(
             }
           }
         }
-        const aRank = strDiff(i["slug"], slug.toLowerCase());
+        const aRank = await strDiff(i["slug"], slug.toLowerCase());
         if (lowestId.length === 0) {
           lowestId = String(i["id"]);
         }
@@ -97,10 +96,8 @@ export async function getAddonInfoBySlug(
   }
 }
 
-export function strDiff(str1: string, str2: string): number {
-  const ed = leven(str1, str2);
-  const lcs = mdiff(str1, str2).getLcs()?.length || 0;
-  return ed * 2 - lcs * 8 + 30 + str2.length;
+export async function strDiff(str1: string, str2: string): Promise<number> {
+  return (await invokeWorker("StrDiff", str1, str2)) as number;
 }
 
 export interface AddonInfo {

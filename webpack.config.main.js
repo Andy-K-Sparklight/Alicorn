@@ -9,7 +9,6 @@ const { ContextReplacementPlugin } = require("webpack");
 const BuildInfoPlugin = require("./BuildInfoPlugin");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Version = require("./package.json").appVersion;
-// noinspection JSValidateTypes
 module.exports = {
   entry: "./src/main/Bootstrap.ts",
   output: {

@@ -29,6 +29,7 @@ import { initEncrypt } from "../modules/security/Encrypt";
 import { App } from "./App";
 import { registerHandlers } from "./Handlers";
 import { activateHotKeyFeature } from "./HotKeyHandler";
+import { initWorker } from "./Schedule";
 import { initTranslator } from "./Translator";
 
 const GLOBAL_STYLES: React.CSSProperties = {
@@ -136,7 +137,8 @@ window.addEventListener("error", (e) => {
 });
 
 (async () => {
-  await loadConfig(); // This comes first
+  await Promise.allSettled([loadConfig(), loadGDT(), loadJDT()]);
+  // GDT & JDT is required by LaunchPad & JavaSelector
   if (getBoolean("reset")) {
     console.log("Resetting and reloading config...");
     await saveDefaultConfig();
@@ -155,21 +157,20 @@ window.addEventListener("error", (e) => {
     "theme.secondary.light",
     "#ffe0f0"
   )};}`;
+  // Set background
   document.head.insertAdjacentElement("beforeend", e);
   ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
   console.log("This Alicorn has super cow powers.");
   bindSuperCowPower();
   console.log("Initializing modules...");
   const t1 = new Date();
+  await initWorker();
   registerHandlers();
-  activateHotKeyFeature();
+  if (getBoolean("hot-key")) {
+    activateHotKeyFeature();
+  }
   // Essential works and light works
-  await Promise.allSettled([
-    loadGDT(),
-    loadJDT(),
-    initEncrypt(),
-    initModInfo(),
-  ]);
+  await Promise.allSettled([initEncrypt(), initModInfo()]);
   initDownloadWrapper();
   // Normal works
   await Promise.allSettled([

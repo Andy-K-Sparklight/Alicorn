@@ -1,4 +1,3 @@
-import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Card,
@@ -8,13 +7,14 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
+import { Archive, FlightTakeoff, Sync } from "@material-ui/icons";
+import React, { useEffect, useRef, useState } from "react";
 import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { whatProfile } from "../modules/profile/WhatProfile";
-import { tr } from "./Translator";
-import { Archive, FlightTakeoff, Sync } from "@material-ui/icons";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 import { useCardStyles, usePadStyles } from "./Stylex";
+import { tr } from "./Translator";
 
 let cachedAllCores: SimplifiedCoreInfo[] = [];
 let coresCacheBit = false;
@@ -37,9 +37,9 @@ export function LaunchPad(): JSX.Element {
     </Box>
   );
 }
-
+// FIXME: cores refuse to show
 function CoresDisplay(): JSX.Element {
-  const mountedBit = useRef<boolean>(true);
+  const mountedBit = useRef<boolean>(false);
   const [cores, setCores] = useState<SimplifiedCoreInfo[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [refreshBit, setRefresh] = useState(true);
@@ -55,7 +55,7 @@ function CoresDisplay(): JSX.Element {
         setLoading(true);
       }
       cachedAllCores = [];
-      coresCacheBit = true;
+
       (async () => {
         let counter = 0;
         const rMap = await scanCoresInAllMountedContainers(true);
@@ -94,6 +94,7 @@ function CoresDisplay(): JSX.Element {
           setCores(cachedAllCores);
           setLoading(false);
         }
+        coresCacheBit = true;
       })();
     }
   }, [coresCacheBit]);

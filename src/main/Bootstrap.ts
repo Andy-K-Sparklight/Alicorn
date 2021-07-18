@@ -1,10 +1,10 @@
 import { app, BrowserWindow, globalShortcut, screen } from "electron";
-import os from "os";
 import { btoa } from "js-base64";
+import os from "os";
+import path from "path";
+import { getBoolean, loadConfig } from "../modules/config/ConfigSupport";
 import { registerBackgroundListeners } from "./Background";
 import { checkUpdate } from "./Updator";
-import { getBoolean, loadConfig } from "../modules/config/ConfigSupport";
-import path from "path";
 
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow | null = null;
@@ -20,6 +20,7 @@ app.on("ready", async () => {
     height: Math.floor(height * 0.45),
     webPreferences: {
       nodeIntegration: true,
+      nodeIntegrationInWorker: true,
       contextIsolation: false,
       sandbox: false,
       enableRemoteModule: false,
@@ -45,11 +46,13 @@ app.on("ready", async () => {
     console.log("All caught up! Alicorn is now initialized.");
   });
   console.log("Preparing window!");
-  globalShortcut.register("F12", () => {
-    if (getBoolean("dev.f12")) {
-      mainWindow?.webContents.openDevTools();
-    }
-  });
+  if (getBoolean("hot-key")) {
+    globalShortcut.register("F12", () => {
+      if (getBoolean("dev.f12")) {
+        mainWindow?.webContents.openDevTools();
+      }
+    });
+  }
   await mainWindow.loadFile(path.resolve(appPath, "Renderer.html"));
 });
 

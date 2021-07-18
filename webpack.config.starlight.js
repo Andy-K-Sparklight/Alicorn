@@ -5,7 +5,6 @@ const path = require("path");
 const BuildInfoPlugin = require("./BuildInfoPlugin");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Version = require("./package.json").appVersion;
-// noinspection JSValidateTypes
 module.exports = {
   entry: "./src/starlight/Starlight.ts",
   output: {

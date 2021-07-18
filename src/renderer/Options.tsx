@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   Box,
   createStyles,
@@ -8,6 +7,8 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
+import os from "os";
+import React, { useState } from "react";
 import {
   getBoolean,
   getNumber,
@@ -15,9 +16,8 @@ import {
   parseNum,
   set,
 } from "../modules/config/ConfigSupport";
-import { tr } from "./Translator";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
-import os from "os";
+import { tr } from "./Translator";
 
 enum ConfigType {
   BOOL,
@@ -49,11 +49,6 @@ export function OptionsPage(): JSX.Element {
           type={ConfigType.BOOL}
           notOn={"darwin"}
           bindConfig={"updator.use-update"}
-        />
-        <InputItem
-          type={ConfigType.BOOL}
-          notOn={"darwin"}
-          bindConfig={"updator.dev"}
         />
         <InputItem type={ConfigType.STR} bindConfig={"user.name"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"java.simple-search"} />
@@ -107,6 +102,8 @@ export function OptionsPage(): JSX.Element {
         <InputItem type={ConfigType.STR} bindConfig={"theme.primary.light"} />
         <InputItem type={ConfigType.STR} bindConfig={"theme.secondary.main"} />
         <InputItem type={ConfigType.STR} bindConfig={"theme.secondary.light"} />
+        <InputItem type={ConfigType.STR} bindConfig={"startup-page.name"} />
+        <InputItem type={ConfigType.STR} bindConfig={"startup-page.url"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"hot-key"} />
         <InputItem
           type={ConfigType.BOOL}

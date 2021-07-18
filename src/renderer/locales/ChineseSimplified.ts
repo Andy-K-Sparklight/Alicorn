@@ -242,6 +242,11 @@ export default {
     "Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。\n带 * 的项目是开发人员选项，胡乱修改它们可能导致严重后果！",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
+  "Options.startup-page.url.title": "主页路径",
+  "Options.startup-page.url.desc":
+    "选择进入启动器时主页的路径 - 用于实际切换页面",
+  "Options.startup-page.name.title": "主页名称",
+  "Options.startup-page.name.desc": "选择进入启动器时主页的名称 - 用于显示标题",
   "Options.theme.primary.main.title": "基本颜色（主要）",
   "Options.theme.primary.main.desc": "菜单栏和标题文本将使用此颜色",
   "Options.theme.primary.light.title": "基本颜色（亮色）",
@@ -302,9 +307,6 @@ export default {
   "Options.updator.use-update.title": "自动更新",
   "Options.updator.use-update.desc":
     "启用来自 Alicorn 的自动更新，以及时获取新功能 - 在测试阶段，这尤其重要",
-  "Options.updator.dev.title": "使用开发频道 *",
-  "Options.updator.dev.desc":
-    "下载未经压缩的开发版本内核进行更新 - 真是没事闲的……",
   "Options.download.concurrent.chunk-size.title": "并发下载区块大小",
   "Options.download.concurrent.chunk-size.desc":
     "进行并发分段下载时每个文件段的大小，单位 KB - 调太低了对你的处理器是一种折磨",

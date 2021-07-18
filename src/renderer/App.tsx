@@ -84,12 +84,18 @@ const useStyles = makeStyles((theme) =>
 
 export function App(): JSX.Element {
   const classes = useStyles();
-  const [page, setPage] = useState(Pages.Welcome.toString());
+  const [page, setPage] = useState(getString("startup-page.name", "Welcome"));
   const [openNotice, setNoticeOpen] = useState(false);
   const [openChangePageWarn, setOpenChangePageWarn] = useState(false);
   const [pageTarget, setPageTarget] = useState("");
   const [jumpPageTarget, setJumpPageTarget] = useState("");
   const [err, setErr] = useState("");
+  useEffect(() => {
+    if (window.location.hash === "#/") {
+      jumpTo(getString("startup-page.url", "/Welcome"));
+      triggerSetPage(getString("startup-page.name", "Welcome"));
+    }
+  }, [window.location.hash]);
   useEffect(() => {
     window.addEventListener("changePageWarn", (e) => {
       setOpenChangePageWarn(true);
@@ -263,7 +269,6 @@ export function App(): JSX.Element {
         </Toolbar>
       </AppBar>
       <Box className={classes.content}>
-        <Route path={"/"} component={Welcome} exact />
         <Route path={"/LaunchPad"} component={LaunchPad} />
         <Route path={"/InstallCore"} component={InstallCore} />
         <Route

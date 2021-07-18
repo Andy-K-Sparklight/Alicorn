@@ -1,29 +1,23 @@
 import Ajv from "ajv";
-import { getBoolean } from "../modules/config/ConfigSupport";
-import got from "got";
-import BuildInfoSchema from "./BuildInfoSchema.json";
-import { getMainWindow } from "./Bootstrap";
 import { app, dialog } from "electron";
+import fs from "fs-extra";
+import got from "got";
+import os from "os";
+import path from "path";
+import { isFileExist } from "../modules/commons/FileUtil";
+import { getActualDataPath } from "../modules/config/DataSupport";
 import { DownloadMeta } from "../modules/download/AbstractDownloader";
 import { Serial } from "../modules/download/Serial";
-import path from "path";
-import { getActualDataPath } from "../modules/config/DataSupport";
-import fs from "fs-extra";
-import { isFileExist } from "../modules/commons/FileUtil";
-import os from "os";
+import { getMainWindow } from "./Bootstrap";
+import BuildInfoSchema from "./BuildInfoSchema.json";
 
 // MAINTAINERS ONLY
 
 const BASE_URL = "https://services.al.xuogroup.top/";
 const RELEASE_FOLDER = BASE_URL + "release/";
-const DLL_BUILD_FILE_DEV = BASE_URL + "DllBuild.json";
-const MAIN_BUILD_FILE_DEV = BASE_URL + "MainBuild.json";
-const RENDERER_BUILD_FILE_DEV = BASE_URL + "RendererBuild.json";
 const MAIN_BUILD_FILE_RELEASE = RELEASE_FOLDER + "MainBuild.json";
 const RENDERER_BUILD_FILE_RELEASE = RELEASE_FOLDER + "RendererBuild.json";
 const LOCK_FILE = getActualDataPath("install.lock");
-
-let updateBit = false;
 
 interface BuildInfo {
   date: string;
@@ -35,26 +29,19 @@ const AJV = new Ajv();
 
 export async function checkUpdate(): Promise<void> {
   if (os.platform() === "darwin") {
-    // macOS updates isn't supported
+    // macOS updates isn't supported yet
     console.log("Skipped update checking due to unsupported platform.");
     return;
   }
-  updateBit = true;
-  let HEAD: string;
-  let BASE: string;
-  if (getBoolean("updator.dev")) {
-    HEAD = MAIN_BUILD_FILE_DEV;
-    BASE = BASE_URL;
-  } else {
-    HEAD = MAIN_BUILD_FILE_RELEASE;
-    BASE = RELEASE_FOLDER;
-  }
+  const HEAD = MAIN_BUILD_FILE_RELEASE;
+  const BASE = RELEASE_FOLDER;
   const res = await got.get(HEAD, {
     https: {
       rejectUnauthorized: false,
     },
     responseType: "json",
   });
+  console.log("Validating build info!");
   let d: BuildInfo;
   if (AJV.validate(BuildInfoSchema, res.body)) {
     d = res.body as BuildInfo;
@@ -63,7 +50,6 @@ export async function checkUpdate(): Promise<void> {
         new Date((await fs.readFile(LOCK_FILE)).toString()) >= new Date(d.date)
       ) {
         console.log("You are running the latest version!");
-        updateBit = false;
         return;
       }
     }
@@ -71,65 +57,28 @@ export async function checkUpdate(): Promise<void> {
       version: d.version,
       date: new Date(d.date).toLocaleDateString(),
     };
-    if (getBoolean("updator.dev")) {
-      const res_dll = await got.get(DLL_BUILD_FILE_DEV, {
-        https: {
-          rejectUnauthorized: false,
-        },
-        responseType: "json",
-      });
-      if (!AJV.validate(BuildInfoSchema, res_dll.body)) {
-        updateBit = false;
-        return;
-      }
-      if (!(await doUpdate(BASE, res_dll.body as BuildInfo))) {
-        updateBit = false;
-        return;
-      }
-      const res_rend = await got.get(RENDERER_BUILD_FILE_DEV, {
-        https: {
-          rejectUnauthorized: false,
-        },
-        responseType: "json",
-      });
-      if (!AJV.validate(BuildInfoSchema, res_rend.body)) {
-        updateBit = false;
-        return;
-      }
-      if (!(await doUpdate(BASE, res_rend.body as BuildInfo))) {
-        updateBit = false;
-        return;
-      }
-      if (!(await doUpdate(BASE, res.body as BuildInfo))) {
-        updateBit = false;
-        return;
-      }
-      await hintUpdate(u);
-    } else {
-      const res_rend = await got.get(RENDERER_BUILD_FILE_RELEASE, {
-        https: {
-          rejectUnauthorized: false,
-        },
-        responseType: "json",
-      });
-      if (!AJV.validate(BuildInfoSchema, res_rend.body)) {
-        updateBit = false;
-        return;
-      }
-      if (!(await doUpdate(BASE, res_rend.body as BuildInfo))) {
-        updateBit = false;
-        return;
-      }
-      if (!(await doUpdate(BASE, res.body as BuildInfo))) {
-        updateBit = false;
-        return;
-      }
-      await hintUpdate(u);
-      updateBit = false;
+
+    const res_rend = await got.get(RENDERER_BUILD_FILE_RELEASE, {
+      https: {
+        rejectUnauthorized: false,
+      },
+      responseType: "json",
+    });
+    if (!AJV.validate(BuildInfoSchema, res_rend.body)) {
+      console.log("Invalid build info! Skipped updating this time.");
+      return;
     }
+    if (!(await doUpdate(BASE, res_rend.body as BuildInfo))) {
+      console.log("Update failed, let's try again next time.");
+      return;
+    }
+    if (!(await doUpdate(BASE, res.body as BuildInfo))) {
+      console.log("Update failed, let's try again next time.");
+      return;
+    }
+    await hintUpdate(u);
   } else {
     console.log("Invalid build info! Skipped updating this time.");
-    updateBit = false;
   }
 }
 
