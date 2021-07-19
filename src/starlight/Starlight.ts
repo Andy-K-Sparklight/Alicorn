@@ -1,5 +1,6 @@
 import { AlicornCaller, initAlicornInvoke } from "./CallAlicorn";
 import { ElectronAdaptor } from "./ElectronAdaptor";
+import { JoinServer } from "./JoinServer";
 import { NodeDetect } from "./NodeDetect";
 import { mcbbsDeobf } from "./StarlightDeobf";
 import { StarlightVersion } from "./StarlightVersion";
@@ -21,5 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     mcbbsDeobf();
     console.log("Deobf completed, rendering.");
     new StarlightVersion().render(document);
+    console.log("Loading module JoinServer...");
+    new JoinServer().execute(document);
   }
 });

@@ -27,12 +27,13 @@
   "pff.page-size": 10,
   "pff.cache-root": "",
   "reset": false,
-  "download.mirror": "mcbbs",
+  "download.mirror": "alicorn",
   "interactive.i-have-a-crush-on-al": false,
   "theme.primary.main": "#5d2391",
   "theme.primary.light": "#d796f0",
   "theme.secondary.main": "#df307f",
   "theme.secondary.light": "#ffe0f0",
   "startup-page.name": "Welcome",
-  "startup-page.url": "/Welcome"
+  "startup-page.url": "/Welcome",
+  "starlight.join-server.timeout": 2000
 }

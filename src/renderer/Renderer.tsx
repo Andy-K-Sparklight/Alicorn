@@ -1,5 +1,6 @@
 import { Box, createMuiTheme, MuiThemeProvider } from "@material-ui/core";
 import { ipcRenderer } from "electron";
+import isReachable from "is-reachable";
 import React from "react";
 import ReactDOM from "react-dom";
 import { HashRouter } from "react-router-dom";

@@ -4,6 +4,7 @@ import os from "os";
 import path from "path";
 import { getBoolean, loadConfig } from "../modules/config/ConfigSupport";
 import { registerBackgroundListeners } from "./Background";
+import { getUserBrowser } from "./Browser";
 import { checkUpdate } from "./Updator";
 
 console.log("Starting Alicorn!");
@@ -47,9 +48,14 @@ app.on("ready", async () => {
   });
   console.log("Preparing window!");
   if (getBoolean("hot-key")) {
-    globalShortcut.register("F12", () => {
+    globalShortcut.register("Ctrl+F12", () => {
       if (getBoolean("dev.f12")) {
         mainWindow?.webContents.openDevTools();
+      }
+    });
+    globalShortcut.register("Shift+F12", () => {
+      if (getBoolean("dev.f12")) {
+        getUserBrowser()?.webContents.openDevTools();
       }
     });
   }

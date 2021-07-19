@@ -307,11 +307,18 @@ function Launching(props: {
       )}
 
       <Typography className={classes.text} gutterBottom>
-        {tr(
-          "ReadyToLaunch.Hint",
-          `ID=${props.profile.id}`,
-          `Container=${props.container.id}`
-        )}
+        {props.server
+          ? tr(
+              "ReadyToLaunch.HintServer",
+              `ID=${props.profile.id}`,
+              `Container=${props.container.id}`,
+              `Server=${props.server}`
+            )
+          : tr(
+              "ReadyToLaunch.Hint",
+              `ID=${props.profile.id}`,
+              `Container=${props.container.id}`
+            )}
       </Typography>
       <Typography variant={"h6"} className={classes.primaryText} gutterBottom>
         {tr("ReadyToLaunch.Status." + status)}

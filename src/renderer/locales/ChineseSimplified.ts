@@ -61,6 +61,8 @@ export default {
     "无法加载 - 该核心可能已经被移动或损毁\n如果你是通过除启动台之外的地方进入这里，那么原始链接的指向可能已经失效",
   "ReadyToLaunch.Go": "出发吧！",
   "ReadyToLaunch.Hint": "正在启动位于容器 {Container} 上的核心 {ID}",
+  "ReadyToLaunch.HintServer":
+    "正在启动位于容器 {Container} 上的核心 {ID} 并加入 {Server}",
   "ReadyToLaunch.Progress":
     "正在并发处理 {Current} 个下载任务，最大并发允许 {BufferMax}，还有 {Pending} 个任务队列中",
   "ReadyToLaunch.StartAuthTitle": "确保那是你",
@@ -244,6 +246,10 @@ export default {
     "Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。\n带 * 的项目是开发人员选项，胡乱修改它们可能导致严重后果！",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
+  "Options.starlight.join-server.timeout.title":
+    "Starlight - 服务器 TCP 检查等待时间",
+  "Options.starlight.join-server.timeout.desc":
+    "Starlight 在加入服务器前会检查其连通性，在这一过程中，她最多应该等待多少毫秒？- 设置为 0 以禁用该功能。",
   "Options.cx.shared-root.title": "共享文件存储位置",
   "Options.cx.shared-root.desc":
     "使用软连接连接到可复用的文件，那么这些文件应当存储在哪里 - 请留出足够的空间以存储文件",
@@ -263,9 +269,9 @@ export default {
   "Options.interactive.i-have-a-crush-on-al.title": "I \u2764 AL",
   "Options.interactive.i-have-a-crush-on-al.desc":
     "我喜欢这个启动器……她好可爱～",
-  "Options.dev.f12.title": "F12 调试 *",
+  "Options.dev.f12.title": "快速打开 DevTools *",
   "Options.dev.f12.desc":
-    "按下 F12 以调试 Alicorn 渲染进程 - 请当心，胡乱使用 DevTools 可能导致启动器故障或您的数据丢失！",
+    "按下 Ctrl + F12 以调试 Alicorn 渲染进程，Shift + F12 以调试内置浏览器和 Starlight- 请当心，胡乱使用 DevTools 可能导致启动器故障或您的数据丢失！",
   "Options.hot-key.title": "Alicorn 快捷键",
   "Options.hot-key.desc": "启用快捷键以进行高效操作 - 查看帮助以了解使用方法",
   "Options.dev.quick-reload.title": "快速重载 *",

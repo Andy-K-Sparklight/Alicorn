@@ -95,6 +95,10 @@ export function OptionsPage(): JSX.Element {
         <InputItem type={ConfigType.NUM} bindConfig={"pff.page-size"} />
         <InputItem type={ConfigType.STR} bindConfig={"pff.cache-root"} />
         <InputItem
+          type={ConfigType.NUM}
+          bindConfig={"starlight.join-server.timeout"}
+        />
+        <InputItem
           type={ConfigType.BOOL}
           bindConfig={"cmc.disable-log4j-config"}
         />

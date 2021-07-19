@@ -9,7 +9,7 @@ export function jumpTo(target: string): void {
     return;
   }
   const e = document.getElementById("app_main");
-  const ANIMATION_TIME = 150 + 10;
+  const ANIMATION_TIME = 200;
   fadeOut(e);
   setTimeout(() => {
     ifLeavingLaunchPadThenSetDirty();

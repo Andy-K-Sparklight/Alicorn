@@ -14,10 +14,10 @@ html {
 }
 
 .app_fade_in {
-  transition: opacity 400ms;
+  transition: opacity 200ms;
   opacity: 100;
 }
 .app_fade_out {
-  transition: opacity 400ms;
+  transition: opacity 200ms;
   opacity: 0;
 }
