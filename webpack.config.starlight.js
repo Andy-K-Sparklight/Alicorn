@@ -5,7 +5,9 @@ const path = require("path");
 const BuildInfoPlugin = require("./BuildInfoPlugin");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Version = require("./package.json").appVersion;
-module.exports = {
+
+const BannerPlugin = require("webpack").BannerPlugin;
+const StarlightNode = {
   entry: "./src/starlight/Starlight.ts",
   output: {
     filename: "Starlight.js",
@@ -29,3 +31,37 @@ module.exports = {
   mode: "development",
   target: "electron-preload",
 };
+const StarlightWeb = {
+  entry: "./src/starlight/Starlight.ts",
+  output: {
+    filename: "Starlight.user.js",
+    path: path.resolve(__dirname, "web"),
+  },
+  module: {
+    unknownContextCritical: false,
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
+      },
+    ],
+  },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js"],
+  },
+  plugins: [
+    new BannerPlugin({
+      banner:
+        "// ==UserScript==\n// @name Starlight\n// @namespace https://starlight.xuogroup.top/\n" +
+        "// @version 1.0\n// @run-at document-start\n// @description Extend Alicorn features to web!\n" +
+        "// @author Andy K Rarity Sparklight\n// @match http*://**/*\n// @grant unsafeWindow\n// ==/UserScript==\n",
+      raw: true,
+      entryOnly: true,
+    }),
+  ],
+  mode: "development",
+  target: "web",
+};
+
+module.exports = [StarlightNode, StarlightWeb];

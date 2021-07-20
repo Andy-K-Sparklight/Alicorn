@@ -243,7 +243,7 @@ export default {
     "许可警示 - 这不是自由软件！Alicorn 建议您使用自由的 OpenJDK 运行时代替该非自由的运行时，这可以避免带来的麻烦。",
   "Options.AutoSave": "您的修改会自动保存。某些选项只能适用于特定平台。",
   "Options.Hint":
-    "Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。\n带 * 的项目是开发人员选项，胡乱修改它们可能导致严重后果！",
+    "Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。\n带 * 的项目是开发人员选项，胡乱修改它们可能导致严重后果！\n带 ^ 的项目在重启启动器后才能生效。",
   "Options.Enabled": "已启用",
   "Options.Disabled": "已禁用",
   "Options.starlight.join-server.timeout.title":
@@ -269,10 +269,10 @@ export default {
   "Options.interactive.i-have-a-crush-on-al.title": "I \u2764 AL",
   "Options.interactive.i-have-a-crush-on-al.desc":
     "我喜欢这个启动器……她好可爱～",
-  "Options.dev.f12.title": "快速打开 DevTools *",
+  "Options.dev.f12.title": "快速打开 DevTools * ^",
   "Options.dev.f12.desc":
     "按下 Ctrl + F12 以调试 Alicorn 渲染进程，Shift + F12 以调试内置浏览器和 Starlight- 请当心，胡乱使用 DevTools 可能导致启动器故障或您的数据丢失！",
-  "Options.hot-key.title": "Alicorn 快捷键",
+  "Options.hot-key.title": "Alicorn 快捷键 ^",
   "Options.hot-key.desc": "启用快捷键以进行高效操作 - 查看帮助以了解使用方法",
   "Options.dev.quick-reload.title": "快速重载 *",
   "Options.dev.quick-reload.desc":
@@ -286,7 +286,7 @@ export default {
   "Options.dev.title": "开发人员模式 *",
   "Options.dev.desc":
     "打开开发人员模式，然后再次看看那些之前让你感到迷惑的标签 - 它们只会对开发人员显示正确的内容",
-  "Options.reset.title": "重置为默认值",
+  "Options.reset.title": "重置为默认值 ^",
   "Options.reset.desc":
     "在下次启动时将设置重置为当前版本的默认内容 - 在 Alicorn 频繁更新时很有用，但您的所有改动都将丢失",
   "Options.pff.cache-root.title": "Pff 文件缓存位置",
@@ -315,7 +315,7 @@ export default {
   "Options.web.allow-natives.title": "启用 Web Node 集成 *",
   "Options.web.allow-natives.desc":
     "在 Alicorn 附属浏览器中启用 Node.js API 的支持 - 允许 Web 程序与 Alicorn 进行集成，但它将您的计算机操作权限直接授予 Web 页面，非常危险，只应当用于开发！",
-  "Options.updator.use-update.title": "自动更新",
+  "Options.updator.use-update.title": "自动更新 ^",
   "Options.updator.use-update.desc":
     "启用来自 Alicorn 的自动更新，以及时获取新功能 - 在测试阶段，这尤其重要",
   "Options.download.concurrent.chunk-size.title": "并发下载区块大小",

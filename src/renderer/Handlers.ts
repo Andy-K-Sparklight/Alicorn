@@ -46,4 +46,14 @@ export function addHandler(
       ipcRenderer.sendTo(e.senderId, channel + eid, undefined);
     }
   });
+  ipcRenderer.on(
+    channel + "_A_MAIN",
+    async (_e, eid: number, args: unknown[]) => {
+      try {
+        ipcRenderer.send(channel + "_A_MAIN" + eid, await handler(...args));
+      } catch {
+        ipcRenderer.send(channel + "_A_MAIN" + eid, undefined);
+      }
+    }
+  );
 }

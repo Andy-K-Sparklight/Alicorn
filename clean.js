@@ -10,3 +10,8 @@ fs.remove("./out")
     console.log("Removed out.");
   })
   .catch(() => {});
+fs.remove("./web")
+  .then(() => {
+    console.log("Removed web.");
+  })
+  .catch(() => {});

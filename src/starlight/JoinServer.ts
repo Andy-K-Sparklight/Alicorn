@@ -1,5 +1,6 @@
 import { invokeAlicorn } from "./CallAlicorn";
 import { Executor } from "./Component";
+import { getWindow } from "./GetWindow";
 import { showDialog } from "./MCBBS";
 import { CoreInfo } from "./StarlightFunctions";
 
@@ -111,7 +112,7 @@ function attachJoinButton() {
         await openServer(serverAddress, allCores[0].container, allCores[0].id);
         return;
       }
-      window.addEventListener("selectCore", async (e) => {
+      getWindow().addEventListener("selectCore", async (e) => {
         const s = (e as CustomEvent).detail;
         showDialog(
           '准备就绪，请转到 Alicorn，你的游戏在那里等你。<br/><i style="color:gray">出发！</i>',

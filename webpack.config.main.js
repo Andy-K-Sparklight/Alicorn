@@ -47,4 +47,8 @@ module.exports = {
   devtool: "source-map",
   mode: "development",
   target: "electron-main",
+  externals: {
+    bufferutil: "bufferutil",
+    "utf-8-validate": "utf-8-validate",
+  },
 };

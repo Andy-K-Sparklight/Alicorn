@@ -46,4 +46,8 @@ module.exports = {
   ],
   mode: "production",
   target: "electron-main",
+  externals: {
+    bufferutil: "bufferutil",
+    "utf-8-validate": "utf-8-validate",
+  },
 };
