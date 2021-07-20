@@ -30,7 +30,9 @@ Alicorn 的设计目标非常多，包括大多数启动器现有的功能和一
 - 运行构建：
 
   ```sh
-  yarn make-release
+  yarn make
   ```
 
   该命令构建所有的二进制文件并输出到 `out` 下：Windows x64，Windows ia32，GNU/Linux x64 以及 macOS x64。该命令同时会生成对应的压缩包。
+  
+  请注意非 Windows 操作系统在构建 Windows 应用时需要 wine 的支持，可参考 electron-packager 的输出信息安装。
