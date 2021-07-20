@@ -1,4 +1,8 @@
 export function getWindow(): Window {
-  // @ts-ignore
-  return unsafeWindow || window;
+  try {
+    // @ts-ignore
+    return unsafeWindow;
+  } catch {
+    return window;
+  }
 }

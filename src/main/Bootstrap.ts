@@ -41,7 +41,14 @@ app.on("ready", async () => {
     mainWindow?.show();
     if (getBoolean("updator.use-update")) {
       console.log("Checking updates...");
-      await checkUpdate();
+      try {
+        await checkUpdate();
+      } catch (e) {
+        console.log(e);
+        console.log(
+          "A critical error happened during updating. Try again next time!"
+        );
+      }
     } else {
       console.log("Skipped update checking due to user settings.");
     }

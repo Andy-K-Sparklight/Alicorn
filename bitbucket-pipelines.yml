@@ -2,10 +2,10 @@ image: node:14.16.0
 
 pipelines:
   pull-requests:
-    '**': 
+    "**":
       - step:
           caches:
             - node
           script:
             - yarn
-            - yarn build-full-ci
+            - yarn release-full
