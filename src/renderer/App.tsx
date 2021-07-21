@@ -23,8 +23,7 @@ import {
 } from "@material-ui/icons";
 import { ipcRenderer } from "electron";
 import React, { useEffect, useState } from "react";
-import { Route } from "react-router";
-import { TransitionGroup } from "react-transition-group";
+import { Route } from "react-router-dom";
 import { safeGet } from "../modules/commons/Null";
 import {
   getBoolean,
@@ -87,10 +86,12 @@ export function App(): JSX.Element {
   const classes = useStyles();
   const [page, setPage] = useState(getString("startup-page.name", "Welcome"));
   const [openNotice, setNoticeOpen] = useState(false);
+  const [openWarn, setWarnOpen] = useState(false);
   const [openChangePageWarn, setOpenChangePageWarn] = useState(false);
   const [pageTarget, setPageTarget] = useState("");
   const [jumpPageTarget, setJumpPageTarget] = useState("");
   const [err, setErr] = useState("");
+  const [warn, setWarn] = useState("");
   useEffect(() => {
     if (window.location.hash === "#/") {
       jumpTo(getString("startup-page.url", "/Welcome"));
@@ -130,9 +131,37 @@ export function App(): JSX.Element {
         String(safeGet(e, ["detail"], "Unknown Error"))
       );
     });
+    window.addEventListener("sysWarn", (e) => {
+      setWarn(String(safeGet(e, ["detail"], "Unknown Warning")));
+      setNoticeOpen(true);
+    });
   }, []);
   return (
-    <Box className={classes.root}>
+    <Box
+      className={classes.root}
+      onDrop={(e) => {
+        e.preventDefault();
+        const data = e.dataTransfer.getData("text/plain");
+        if (data.toString().includes("authlib-injector")) {
+          const server = data
+            .toString()
+            .split("authlib-injector:yggdrasil-server:")[1];
+
+          jumpTo("/YggdrasilAccountManager/1/" + server);
+          triggerSetPage(Pages.AccountManager);
+
+          window.dispatchEvent(
+            new CustomEvent("YggdrasilAccountInfoDropped", {
+              detail: decodeURIComponent(server),
+            })
+          );
+        }
+      }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+      }}
+    >
       <AppBar>
         <Toolbar>
           <Box className={"window-drag" + " " + classes.title}>
@@ -270,25 +299,23 @@ export function App(): JSX.Element {
         </Toolbar>
       </AppBar>
       <Box className={classes.content} id={"app_main"}>
-        <TransitionGroup>
-          <Route path={"/LaunchPad"} component={LaunchPad} />
-          <Route path={"/InstallCore"} component={InstallCore} />
-          <Route
-            path={"/ReadyToLaunch/:container/:id/:server?"}
-            component={ReadyToLaunch}
-          />
-          <Route path={"/Version"} component={VersionView} />
-          <Route path={"/ContainerManager"} component={ContainerManager} />
-          <Route
-            path={"/YggdrasilAccountManager"}
-            component={YggdrasilAccountManager}
-          />
-          <Route path={"/JavaSelector"} component={JavaSelector} />
-          <Route path={"/Options"} component={OptionsPage} />
-          <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
-          <Route path={"/PffFront/:container/:version"} component={PffFront} />
-          <Route path={"/Welcome"} component={Welcome} />
-        </TransitionGroup>
+        <Route path={"/LaunchPad"} component={LaunchPad} />
+        <Route path={"/InstallCore"} component={InstallCore} />
+        <Route
+          path={"/ReadyToLaunch/:container/:id/:server?"}
+          component={ReadyToLaunch}
+        />
+        <Route path={"/Version"} component={VersionView} />
+        <Route path={"/ContainerManager"} component={ContainerManager} />
+        <Route
+          path={"/YggdrasilAccountManager/:adding?/:server?"}
+          component={YggdrasilAccountManager}
+        />
+        <Route path={"/JavaSelector"} component={JavaSelector} />
+        <Route path={"/Options"} component={OptionsPage} />
+        <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
+        <Route path={"/PffFront/:container/:version"} component={PffFront} />
+        <Route path={"/Welcome"} component={Welcome} />
       </Box>
 
       <YNDialog2
@@ -316,6 +343,17 @@ export function App(): JSX.Element {
         autoHideDuration={10000}
         onClose={() => {
           setNoticeOpen(false);
+        }}
+      />
+      <Snackbar
+        open={openWarn}
+        style={{
+          width: "90%",
+        }}
+        message={tr("System.Warn") + warn}
+        autoHideDuration={10000}
+        onClose={() => {
+          setWarnOpen(false);
         }}
       />
     </Box>

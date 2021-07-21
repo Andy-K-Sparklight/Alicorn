@@ -1,6 +1,5 @@
-import { Box, createMuiTheme, MuiThemeProvider } from "@material-ui/core";
+import { Box, createTheme, MuiThemeProvider } from "@material-ui/core";
 import { ipcRenderer } from "electron";
-import isReachable from "is-reachable";
 import React from "react";
 import ReactDOM from "react-dom";
 import { HashRouter } from "react-router-dom";
@@ -43,7 +42,7 @@ export function setThemeColor(
   secondaryMain: string,
   secondaryLight: string
 ): void {
-  ALICORN_DEFAULT_THEME_DARK = createMuiTheme({
+  ALICORN_DEFAULT_THEME_DARK = createTheme({
     palette: {
       type: "dark",
       primary: {
@@ -56,7 +55,7 @@ export function setThemeColor(
       },
     },
   });
-  ALICORN_DEFAULT_THEME_LIGHT = createMuiTheme({
+  ALICORN_DEFAULT_THEME_LIGHT = createTheme({
     palette: {
       type: "light",
       primary: {
@@ -71,7 +70,7 @@ export function setThemeColor(
   });
 }
 
-export let ALICORN_DEFAULT_THEME_DARK = createMuiTheme({
+export let ALICORN_DEFAULT_THEME_DARK = createTheme({
   palette: {
     type: "dark",
     primary: {
@@ -84,7 +83,7 @@ export let ALICORN_DEFAULT_THEME_DARK = createMuiTheme({
     },
   },
 });
-export let ALICORN_DEFAULT_THEME_LIGHT = createMuiTheme({
+export let ALICORN_DEFAULT_THEME_LIGHT = createTheme({
   palette: {
     type: "light",
     primary: {
@@ -209,6 +208,10 @@ window.addEventListener("error", (e) => {
 export function submitError(msg: string): void {
   console.log(msg);
   window.dispatchEvent(new CustomEvent("sysError", { detail: msg }));
+}
+export function submiWarn(msg: string): void {
+
+  window.dispatchEvent(new CustomEvent("sysWarn", { detail: msg }));
 }
 
 function bindSuperCowPower(): void {

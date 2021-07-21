@@ -1,4 +1,3 @@
-import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -17,7 +16,10 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
+import { Add, DeleteForever, Refresh } from "@material-ui/icons";
+import React, { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Account } from "../modules/auth/Account";
 import {
   AccountType,
   copyAccount,
@@ -26,24 +28,24 @@ import {
   removeAccount,
   saveAccount,
 } from "../modules/auth/AccountUtil";
-import { Account } from "../modules/auth/Account";
-import { tr } from "./Translator";
-import { Add, DeleteForever, Refresh } from "@material-ui/icons";
+import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
+import { MojangAccount } from "../modules/auth/MojangAccount";
+import { Nide8Account } from "../modules/auth/Nide8Account";
 import { ALICORN_ENCRYPTED_DATA_SUFFIX } from "../modules/commons/Constants";
 import { YNDialog } from "./OperatingHint";
-import { MojangAccount } from "../modules/auth/MojangAccount";
-import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
-import { Nide8Account } from "../modules/auth/Nide8Account";
+import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
+import { tr } from "./Translator";
 
 // This is only for Yggdrasil accounts
 // MS Account and Local Account should not be saved
 
 export function YggdrasilAccountManager(): JSX.Element {
   const classes = usePadStyles();
-  const mountedBit = useRef<boolean>(true);
-  const accountsLoaded = useRef<boolean>(false);
+  const mountedBit = useRef(true);
+  const accountsLoaded = useRef(false);
   const [accounts, setAccounts] = useState<Set<Account>>(new Set<Account>());
-  const [isAdding, isAddingUpdate] = useState<boolean>(false);
+  const { adding, server } = useParams<{ adding: string; server: string }>();
+  const [isAdding, setAdding] = useState(String(adding) === "1");
   useEffect(() => {
     mountedBit.current = true;
     if (!accountsLoaded.current) {
@@ -62,14 +64,30 @@ export function YggdrasilAccountManager(): JSX.Element {
         }
       })();
     }
-
     return () => {
       mountedBit.current = false;
     };
   });
 
   return (
-    <Box className={classes.para}>
+    <Box
+      className={classes.para}
+      id={"yggdrasil_droppable"}
+      onDrop={(e) => {
+        e.preventDefault();
+        const data = e.dataTransfer.getData("text/plain");
+        if (data.toString().includes("authlib-injector")) {
+          const server = data
+            .toString()
+            .split("authlib-injector:yggdrasil-server:")[1];
+          setAdding(true);
+        }
+      }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+      }}
+    >
       <Typography className={classes.smallText} color={"secondary"}>
         {tr("AccountManager.Note")}
       </Typography>
@@ -89,7 +107,7 @@ export function YggdrasilAccountManager(): JSX.Element {
           <IconButton
             color={"inherit"}
             onClick={() => {
-              isAddingUpdate(true);
+              setAdding(true);
             }}
           >
             <Add />
@@ -98,11 +116,12 @@ export function YggdrasilAccountManager(): JSX.Element {
       </Box>
       <AddAccountWrapper
         open={isAdding}
+        server={server}
         onClose={() => {
-          isAddingUpdate(false);
+          setAdding(false);
         }}
         handleNewAccount={(a) => {
-          isAddingUpdate(false);
+          setAdding(false);
           const s1 = new Set(accounts.keys());
           s1.add(a);
           setAccounts(s1);
@@ -142,10 +161,10 @@ export function SingleAccountDisplay(props: {
 }): JSX.Element {
   const accountCopy = copyAccount(props.account);
   const classes = useCardStyles();
-  const [isOperating, setOperating] = useState<boolean>(false);
-  const [mjLWOpening, setMjLWOpen] = useState<boolean>(false);
+  const [isOperating, setOperating] = useState(false);
+  const [mjLWOpening, setMjLWOpen] = useState(false);
   const usingAccount = useRef<Account>(accountCopy);
-  const [isAsking, isAskingUpdate] = useState<boolean>(false);
+  const [isAsking, isAskingUpdate] = useState(false);
   return (
     <Box>
       {/* Confirm delete */}
@@ -277,9 +296,9 @@ function YggdrasilForm(props: {
   updateAccount: (a: Account) => unknown;
 }): JSX.Element {
   const classes = useInputStyles();
-  const [pwd, setPwd] = useState<string>("");
-  const [isRunning, isRunningUpdate] = useState<boolean>(false);
-  const [hasError, setError] = useState<boolean>(false);
+  const [pwd, setPwd] = useState("");
+  const [isRunning, isRunningUpdate] = useState(false);
+  const [hasError, setError] = useState(false);
   return (
     <Dialog open={props.open} onClose={props.onClose}>
       <DialogTitle>{tr("AccountManager.EnterPassword")}</DialogTitle>
@@ -342,19 +361,50 @@ function AddAccount(props: {
   open: boolean;
   onClose: () => unknown;
   handleNewAccount: (a: Account) => unknown;
+  server?: string;
 }): JSX.Element {
-  const [email, emailUpdate] = useState<string>("");
-  const [authHost, authHostUpdate] = useState<string>("");
-  const [isCustom, isCustomUpdate] = useState<boolean>(false);
-  const [isNide, setNide] = useState<boolean>(false);
+  const [email, setEmail] = useState("");
+  const [authHost, setAuthHost] = useState<string>(
+    decodeURIComponent(props.server || "")
+  );
+  const [isCustom, setIsCustom] = useState(
+    props.server !== undefined && props.server.length > 0
+  );
+  const [isNide, setNide] = useState(false);
   const classes = useInputStyles();
+  useEffect(() => {
+    const fun = (e: Event) => {
+      const ev = e as CustomEvent;
+      setIsCustom(true);
+      setAuthHost(ev.detail);
+    };
+    window.addEventListener("YggdrasilAccountInfoDropped", fun);
+    return () => {
+      window.removeEventListener("YggdrasilAccountInfoDropped", fun);
+    };
+  }, []);
   return (
-    <Box>
+    <Box
+      onDrop={(e) => {
+        e.preventDefault();
+        const data = e.dataTransfer.getData("text/plain");
+        setIsCustom(true);
+        setAuthHost(
+          decodeURIComponent(
+            data.toString().split("authlib-injector:yggdrasil-server:")[1]
+          )
+        );
+      }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+      }}
+    >
       <Dialog
         open={props.open}
         onClose={() => {
           props.onClose();
-          emailUpdate("");
+          setEmail("");
         }}
       >
         <DialogContent>
@@ -365,20 +415,21 @@ function AddAccount(props: {
             margin={"dense"}
             color={"secondary"}
             onChange={(e) => {
-              emailUpdate(e.target.value);
+              setEmail(e.target.value);
             }}
             label={tr("AccountManager.Email")}
             type={"email"}
             spellCheck={false}
             fullWidth
             variant={"outlined"}
+            value={email}
           />
           <FormControlLabel
             control={
               <Switch
                 checked={isCustom}
                 onChange={(e) => {
-                  isCustomUpdate(e.target.checked);
+                  setIsCustom(e.target.checked);
                   if (!e.target.checked) {
                     setNide(false);
                   }
@@ -405,11 +456,11 @@ function AddAccount(props: {
             margin={"dense"}
             color={"secondary"}
             onChange={(e) => {
-              authHostUpdate(e.target.value);
+              setAuthHost(e.target.value);
             }}
             label={tr("AccountManager.Host")}
-            type={"url"}
             spellCheck={false}
+            value={authHost}
             fullWidth
             variant={"outlined"}
           />
@@ -455,9 +506,10 @@ function AddAccountWrapper(props: {
   open: boolean;
   onClose: () => unknown;
   handleNewAccount: (a: Account) => unknown;
+  server?: string;
 }): JSX.Element {
-  const [isPwdOpen, isPwdOpenUpdate] = useState<boolean>(false);
-  const [isEmailOpen, isEmailOpenUpdate] = useState<boolean>(true);
+  const [isPwdOpen, isPwdOpenUpdate] = useState(false);
+  const [isEmailOpen, isEmailOpenUpdate] = useState(true);
   const [tmpAccount, tmpAccountUpdate] = useState<Account>();
   return (
     <Box>
@@ -478,6 +530,7 @@ function AddAccountWrapper(props: {
         }}
       />
       <AddAccount
+        server={props.server}
         open={props.open && isEmailOpen}
         onClose={() => {
           isEmailOpenUpdate(true);

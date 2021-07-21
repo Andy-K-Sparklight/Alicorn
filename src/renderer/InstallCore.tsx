@@ -1,4 +1,3 @@
-import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -15,29 +14,14 @@ import {
   Snackbar,
   Typography,
 } from "@material-ui/core";
-import { tr } from "./Translator";
-import { ReleaseType } from "../modules/commons/Constants";
-import {
-  getAllMojangCores,
-  getProfile,
-  getProfileURLById,
-} from "../modules/pff/get/MojangCore";
 import objectHash from "object-hash";
+import React, { useEffect, useRef, useState } from "react";
+import { ReleaseType } from "../modules/commons/Constants";
 import { isNull } from "../modules/commons/Null";
 import {
   getAllMounted,
   getContainer,
 } from "../modules/container/ContainerUtil";
-import { FailedHint, OperatingHint } from "./OperatingHint";
-import { installProfile } from "../modules/pff/install/MojangInstall";
-import { useFormStyles } from "./Stylex";
-import {
-  generateForgeInstallerName,
-  getForgeInstaller,
-  getForgeVersionByMojang,
-  removeForgeInstaller,
-} from "../modules/pff/get/ForgeGet";
-import { performForgeInstall } from "../modules/pff/install/ForgeInstall";
 import { getJavaRunnable, getLastUsedJavaHome } from "../modules/java/JInfo";
 import {
   canSupportGame,
@@ -45,8 +29,24 @@ import {
   getLatestFabricInstallerAndLoader,
   removeFabricInstaller,
 } from "../modules/pff/get/FabricGet";
+import {
+  generateForgeInstallerName,
+  getForgeInstaller,
+  getForgeVersionByMojang,
+  removeForgeInstaller,
+} from "../modules/pff/get/ForgeGet";
+import {
+  getAllMojangCores,
+  getProfile,
+  getProfileURLById,
+} from "../modules/pff/get/MojangCore";
 import { performFabricInstall } from "../modules/pff/install/FabricInstall";
+import { performForgeInstall } from "../modules/pff/install/ForgeInstall";
+import { installProfile } from "../modules/pff/install/MojangInstall";
+import { FailedHint, OperatingHintCustom } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import { useFormStyles } from "./Stylex";
+import { tr } from "./Translator";
 
 export function InstallCore(): JSX.Element {
   const classes = useFormStyles();
@@ -64,18 +64,25 @@ export function InstallCore(): JSX.Element {
   const [baseMojangVersionFabric, setBaseMojangVersionFabric] =
     useState<string>("");
   const [allMojangRelease, setAllMojangRelease] = useState<string[]>([]);
-  const [detectedForgeVersion, setDetectedForgeVersion] = useState<string>("");
+  const [detectedForgeVersion, setDetectedForgeVersion] = useState("");
   const [detectedFabricVersion, setDetectedFabricVersion] =
     useState<string>("");
-  const [selectedMojangContainer, setMojangContainer] = useState<string>("");
-  const [selectedForgeContainer, setForgeContainer] = useState<string>("");
-  const [selectedFabricContainer, setFabricContainer] = useState<string>("");
-  const [mojangConfirmOpenBit, setMojangConfirmOpen] = useState<boolean>(false);
-  const [forgeConfirmOpenBit, setForgeConfirmOpen] = useState<boolean>(false);
-  const [fabricConfirmOpenBit, setFabricConfirmOpen] = useState<boolean>(false);
-  const [operating, setOperating] = useState<boolean>(false);
-  const [failed, setFailed] = useState<boolean>(false);
-  const [openNotice, setOpenNotice] = useState<boolean>(false);
+  const [selectedMojangContainer, setMojangContainer] = useState("");
+  const [selectedForgeContainer, setForgeContainer] = useState("");
+  const [selectedFabricContainer, setFabricContainer] = useState("");
+  const [mojangConfirmOpenBit, setMojangConfirmOpen] = useState(false);
+  const [forgeConfirmOpenBit, setForgeConfirmOpen] = useState(false);
+  const [fabricConfirmOpenBit, setFabricConfirmOpen] = useState(false);
+  const [operating, setOperating] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [openNotice, setOpenNotice] = useState(false);
+  const [progressMsg, _setProgressMsg] = useState("");
+  function setProgressMsg(msg: string): void {
+    // Binding
+    if (mounted.current) {
+      _setProgressMsg(msg);
+    }
+  }
   useEffect(() => {
     (async () => {
       if (!isLoaded.current) {
@@ -140,7 +147,7 @@ export function InstallCore(): JSX.Element {
           }}
           reason={failedMsg}
         />
-        <OperatingHint open={operating} />
+        <OperatingHintCustom open={operating} msg={progressMsg} />
         <ConfirmInstall
           version={`${baseMojangVersionForge}-forge-${detectedForgeVersion}`}
           open={forgeConfirmOpenBit}
@@ -154,6 +161,9 @@ export function InstallCore(): JSX.Element {
             setOperating(true);
             setFailed(false);
             const ct = getContainer(selectedForgeContainer);
+            setProgressMsg(
+              `Fetching Forge installer for Minecraft ${mcv} and Forge ${fgv}...`
+            );
             const stat = await getForgeInstaller(ct, mcv, fgv);
             if (!stat) {
               if (mounted.current) {
@@ -165,7 +175,7 @@ export function InstallCore(): JSX.Element {
               }
               return;
             }
-            console.log("Performing install...");
+            setProgressMsg("Executing Forge installer...");
             const istat = await performForgeInstall(
               await getJavaRunnable(getLastUsedJavaHome()),
               generateForgeInstallerName(mcv, fgv),
@@ -181,6 +191,7 @@ export function InstallCore(): JSX.Element {
               }
               return;
             } else {
+              setProgressMsg("Done! Cleaning up files...");
               await removeForgeInstaller(ct, mcv, fgv);
               if (mounted.current) {
                 setOperating(false);
@@ -200,6 +211,7 @@ export function InstallCore(): JSX.Element {
             setFabricConfirmOpen(false);
             setOperating(true);
             setFailed(false);
+            setProgressMsg("Resloving Fabric installer and loader info...");
             const u = (
               await getLatestFabricInstallerAndLoader()
             ).getFirstValue();
@@ -208,11 +220,15 @@ export function InstallCore(): JSX.Element {
             const ct = getContainer(selectedFabricContainer);
             if (isNull(u)) {
               if (mounted.current) {
+                setFailedMsg("Invalid Fabric info received.");
                 setOperating(false);
                 setFailed(true);
               }
               return;
             }
+            setProgressMsg(
+              `Fetching Fabric installer for Minecraft ${mcv} and Fabric ${fbv}...`
+            );
             const stat = await getFabricInstaller(u, ct);
             if (!stat) {
               if (mounted.current) {
@@ -224,6 +240,8 @@ export function InstallCore(): JSX.Element {
               }
               return;
             }
+            setProgressMsg("Executing Fabric installer...");
+
             const stat2 = await performFabricInstall(
               await getJavaRunnable(getLastUsedJavaHome()),
               u,
@@ -241,6 +259,7 @@ export function InstallCore(): JSX.Element {
               }
               return;
             }
+            setProgressMsg("Done! Cleaning up files...");
             await removeFabricInstaller(u, ct);
             if (mounted.current) {
               setOperating(false);
@@ -259,6 +278,9 @@ export function InstallCore(): JSX.Element {
             setMojangConfirmOpen(false);
             setOperating(true);
             setFailed(false);
+            setProgressMsg(
+              `Fetching profile url for ${selectedMojangVersion}...`
+            );
             const u = await getProfileURLById(selectedMojangVersion);
             if (u.length === 0) {
               if (mounted.current) {
@@ -269,6 +291,7 @@ export function InstallCore(): JSX.Element {
                 );
               }
             }
+            setProgressMsg(`Downloading profile...`);
             const d = await getProfile(u);
             if (isNull(d) || Object.keys(d).length === 0) {
               if (mounted.current) {
@@ -279,6 +302,8 @@ export function InstallCore(): JSX.Element {
                 );
               }
             }
+            setProgressMsg(`Installing profile as ${selectedMojangVersion}...`);
+
             try {
               await installProfile(
                 selectedMojangVersion,

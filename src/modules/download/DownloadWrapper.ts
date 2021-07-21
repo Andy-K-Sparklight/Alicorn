@@ -53,7 +53,6 @@ export async function wrappedDownloadFile(
     return DownloadStatus.RESOLVED;
   }
   if (!noAutoLn) {
-    console.log("Considering possibly ln for " + meta.url);
     const a = getAllContainers();
     let targetContainer = "";
     a.forEach((c) => {
@@ -61,7 +60,6 @@ export async function wrappedDownloadFile(
         targetContainer = c;
       }
     });
-    console.log(targetContainer);
     if (
       targetContainer.length > 0 &&
       (await isSharedContainer(getContainer(targetContainer)))

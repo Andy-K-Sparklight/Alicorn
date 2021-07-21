@@ -22,7 +22,7 @@ export function OperatingHint(props: { open: boolean }): JSX.Element {
     };
   });
   return (
-    <Dialog open={props.open} disableBackdropClick disableEscapeKeyDown>
+    <Dialog open={props.open} disableEscapeKeyDown>
       <DialogTitle>{tr("Operating.PleaseWait")}</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -52,7 +52,7 @@ export function OperatingHintCustom(props: {
     };
   });
   return (
-    <Dialog open={props.open} disableBackdropClick disableEscapeKeyDown>
+    <Dialog open={props.open} disableEscapeKeyDown>
       <DialogTitle>{tr("Operating.PleaseWait")}</DialogTitle>
       <DialogContent>
         <DialogContentText>{props.msg}</DialogContentText>

@@ -7,10 +7,15 @@
 }
 
 html {
+  height: 100%;
   background-color: #ffe0f0;
   font-family: "Roboto", "Microsoft YaHei UI Light", Tahoma, Verdana, sans-serif;
   white-space: pre-line;
   line-height: 90%;
+}
+
+body {
+  height: 100%;
 }
 
 .app_fade_in {
@@ -20,4 +25,7 @@ html {
 .app_fade_out {
   transition: opacity 200ms;
   opacity: 0;
+}
+#yggdrasil_droppable {
+  height: 10000px; /* Easy to drop */
 }

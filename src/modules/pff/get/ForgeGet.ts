@@ -1,4 +1,4 @@
-import { applyMirror } from "../../download/Mirror";
+import fs from "fs-extra";
 import {
   FORGE_MAVEN_ROOT,
   FORGE_VERSIONS_MANIFEST,
@@ -7,9 +7,9 @@ import { isNull, safeGet } from "../../commons/Null";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { DownloadMeta } from "../../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../../download/DownloadWrapper";
-import fs from "fs-extra";
-import { JAR_SUFFIX } from "../../launch/NativesLint";
 import { xgot } from "../../download/GotWrapper";
+import { applyMirror } from "../../download/Mirror";
+import { JAR_SUFFIX } from "../../launch/NativesLint";
 
 // Forge Getter
 
@@ -111,7 +111,8 @@ export async function getForgeInstaller(
     );
     // No validating
     const meta = new DownloadMeta(applyMirror(pt), dest, "");
-    return (await wrappedDownloadFile(meta)) === 1;
+    console.log(meta);
+    return (await wrappedDownloadFile(meta, true)) === 1;
   } catch {
     return false;
   }

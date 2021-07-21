@@ -1,7 +1,5 @@
 import pkg from "../../../package.json";
 
-// MAINTAINERS ONLY
-
 export default {
   Lang: "简体中文",
   LaunchPad: "启动游戏",
@@ -16,6 +14,7 @@ export default {
   PffFront: "Pff 软件安装器",
   Welcome: "欢迎回来",
   "System.Error": "Oops！系统错误：",
+  "System.Warn": "警告！",
   "System.JumpPageWarn.Title": "要离开当前页面吗？",
   "System.JumpPageWarn.Description":
     "该页面想要告知您，您不应该在此时离开它，因为您可能有未保存的修改，或者该页面有些操作正在进行。仍要切换页面吗？",
@@ -222,7 +221,7 @@ export default {
   "AccountManager.Reload": "重新加载",
   "AccountManager.AddYggdrasil": "添加 Yggdrasil 帐户",
   "AccountManager.Note":
-    "如果您使用 Microsoft 帐户或本地帐户，则无需在此配置，请直接启动游戏，当启动时将（如果必要）询问您相关的信息。",
+    "如果您使用 Microsoft 帐户或本地帐户，则无需在此配置，请直接启动游戏，当启动时将（如果必要）询问您相关的信息。\n「将此按钮拖动至启动器」在这里可用，请将按钮拖向这行文字。",
   "JavaSelector.CustomAdd": "我想手动定位一个 Java 运行时",
   "JavaSelector.SelectJavaTitle": "Java 运行时",
   "JavaSelector.SelectJava": "选择 Java 运行时",
@@ -279,7 +278,8 @@ export default {
     "按 Ctrl+R 快速重新加载启动器 - 这可能导致数据丢失和功能异常，仅应当用于开发",
   "Options.download.mirror.title": "下载源镜像",
   "Options.download.mirror.desc":
-    "只能选择 {AlicornHome} 下的镜像描述文件，不含扩展名，none 表示不使用镜像 - 通常需要从 alicorn、tss 或 none 中选择，胡乱选择不存在的镜像将可能导致下载故障！",
+    "只能选择 {AlicornHome} 下的镜像描述文件，不含扩展名，none 表示不使用镜像 - 通常需要从 alicorn、tss 或 none 中选择。\n" +
+    "如果网络环境较差，您还可以选择 alicorn-mcbbs-nonfree 和 tss-mcbbs-nonfree 这两个非自由镜像 - 非自由通常代表着恶意，请只在迫不得已以至于需要放弃安全和稳定性的情况下使用它们！",
   "Options.dev.explicit-error-throw.title": "显式抛出错误 *",
   "Options.dev.explicit-error-throw.desc":
     "在系统错误发生时额外使用一个对话框告知您错误信息 - 仅在开发时才有使用价值",

@@ -8,7 +8,9 @@ import { loadData, saveDefaultData } from "../config/DataSupport";
 
 const MIRROR_FILES = [
   "tss.ald",
+  "tss-mcbbs-nonfree.ald",
   "alicorn.ald",
+  "alicorn-mcbbs-nonfree.ald",
 ];
 let mirrorMap: Map<string, string> = new Map();
 const METHOD_KEY = "@method";

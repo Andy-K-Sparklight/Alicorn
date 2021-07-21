@@ -152,7 +152,7 @@ export async function getFabricInstaller(
       ""
     );
 
-    return (await wrappedDownloadFile(meta)) === 1;
+    return (await wrappedDownloadFile(meta, true)) === 1;
   } catch {
     return false;
   }
