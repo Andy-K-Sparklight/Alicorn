@@ -57,7 +57,8 @@ function applyEnvironmentVars(strIn: string): string {
     .replace(/{Date}/g, new Date().toLocaleDateString())
     .replace(/{UserName}/g, getString("user.name") || os.userInfo().username)
     .replace(/{Home}/g, os.homedir())
-    .replace(/{AlicornHome}/g, path.join(os.homedir(), "alicorn"));
+    .replace(/{AlicornHome}/g, path.join(os.homedir(), "alicorn"))
+    .replace(/{Platform}/g, os.platform());
 
   const extractRegex = /(?<={Config:).*?(?=})/g;
   const allConfig = primary.match(extractRegex);

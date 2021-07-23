@@ -149,6 +149,7 @@ export function InstallCore(): JSX.Element {
         />
         <OperatingHintCustom open={operating} msg={progressMsg} />
         <ConfirmInstall
+          container={selectedForgeContainer}
           version={`${baseMojangVersionForge}-forge-${detectedForgeVersion}`}
           open={forgeConfirmOpenBit}
           closeFunc={() => {
@@ -202,6 +203,7 @@ export function InstallCore(): JSX.Element {
           }}
         />
         <ConfirmInstall
+          container={selectedFabricContainer}
           version={`fabric-loader-${detectedFabricVersion}-${baseMojangVersionFabric}`}
           open={fabricConfirmOpenBit}
           closeFunc={() => {
@@ -269,6 +271,7 @@ export function InstallCore(): JSX.Element {
           }}
         />
         <ConfirmInstall
+          container={selectedMojangContainer}
           version={selectedMojangVersion}
           open={mojangConfirmOpenBit}
           closeFunc={() => {
@@ -584,6 +587,7 @@ export function InstallCore(): JSX.Element {
 function ConfirmInstall(props: {
   version: string;
   open: boolean;
+  container: string;
   closeFunc: () => unknown;
   confirmFunc: () => unknown;
 }): JSX.Element {
@@ -592,7 +596,11 @@ function ConfirmInstall(props: {
       <DialogTitle>{tr("InstallCore.Confirm.Ready")}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          {tr("InstallCore.Confirm.Hint") + " " + props.version}
+          {tr(
+            "InstallCore.Confirm.Hint",
+            `Version=${props.version}`,
+            `Container=${props.container}`
+          )}
         </DialogContentText>
       </DialogContent>
       <DialogActions>

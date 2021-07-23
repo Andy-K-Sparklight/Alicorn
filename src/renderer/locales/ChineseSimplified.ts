@@ -3,7 +3,7 @@ import pkg from "../../../package.json";
 export default {
   Lang: "简体中文",
   LaunchPad: "启动游戏",
-  InstallCore: "安装 Minecraft 核心",
+  InstallCore: "安装核心",
   ContainerManager: "管理容器",
   ReadyToLaunch: "出发吧!",
   Version: "启动器信息",
@@ -21,13 +21,13 @@ export default {
   "System.JumpPageWarn.Yes": "仍然切换",
   "System.JumpPageWarn.No": "留在当前页面",
   "MainMenu.QuickManageAccount": "管理帐户",
-  "MainMenu.QuickJavaSelector": "选择 Java",
+  "MainMenu.QuickJavaSelector": "选择 Java 运行时",
   "MainMenu.Exit": "退出",
-  "MainMenu.Browser": "以全新的方式访问中文论坛",
+  "MainMenu.Browser": "Alicorn 内置浏览器",
   "MainMenu.Version": "版本信息",
   "MainMenu.QuickOptions": "调整启动器的设置",
   "MainMenu.OpenDevToolsFormal": "调试页面",
-  "MainMenu.OpenDevToolsKidding": "不要按下这个键！",
+  "MainMenu.OpenDevToolsKidding": "按下这个键会让你看上去很酷",
   "MainMenu.QuickInstallCore": "安装核心",
   "MainMenu.QuickLaunchPad": "启动游戏",
   "MainMenu.QuickManageContainer": "管理容器",
@@ -46,7 +46,8 @@ export default {
     "对不起对不起！我刚刚睡着了……",
     "没有哪只小马是完美无缺的，您……能理解吗？",
     "再试试？或许这只是一场噩梦而已……",
-    "为什么不试试使用 GNU/Linux 呢？那样肯定就不会出问题了……哦，您已经在用了啊……",
+    "['{Platform}'==='win32'||'{Platform}'==='darwin']（跺蹄蹄）这就是使用专有软件带来的后果！",
+    "['{Platform}'==='win32'||'{Platform}'==='darwin']为什么不试试使用 GNU/Linux 呢？Alicorn 的功能在那里都进行过测试！",
   ],
   "Operating.PleaseWaitDetail": "正在进行操作……这可能需要几分钟。",
   "CoreInfo.Introduction.Forge": "此核心可以加载 Forge Mod",
@@ -55,7 +56,7 @@ export default {
   "CoreInfo.Reload": "重新加载",
   "CoreInfo.Launch": "启动",
   "CoreInfo.At": "核心 {ID} 位于容器 {Container} 上",
-  "CoreInfo.Pff": "对此核心启动 Pff",
+  "CoreInfo.Pff": "在此核心上运行 Pff",
   "ReadyToLaunch.CouldNotLoad":
     "无法加载 - 该核心可能已经被移动或损毁\n如果你是通过除启动台之外的地方进入这里，那么原始链接的指向可能已经失效",
   "ReadyToLaunch.Go": "出发吧！",
@@ -83,16 +84,16 @@ export default {
   "ReadyToLaunch.Status.Short.Pending": "开始",
   "ReadyToLaunch.Start": "启动",
   "ReadyToLaunch.Restart": "重新启动",
-  "ReadyToLaunch.MSLogout": "登出 Microsoft 帐户",
-  "ReadyToLaunch.MSLogoutRunning": "正在登出……",
-  "ReadyToLaunch.MSLogoutDone": "已登出",
-  "ReadyToLaunch.JCheck.TooOLD": "警告 - 该 JRE 太旧啦！启动可能出现问题。",
-  "ReadyToLaunch.JCheck.TooNEW": "警告 - 该 JRE 太新啦！启动可能出现问题。",
+  "ReadyToLaunch.MSLogout": "退出 Microsoft 帐户",
+  "ReadyToLaunch.MSLogoutRunning": "正在退出，请稍等……",
+  "ReadyToLaunch.MSLogoutDone": "已退出",
+  "ReadyToLaunch.JCheck.TooOLD": "警告 - 该 JRE 太旧啦！启动可能出现问题！",
+  "ReadyToLaunch.JCheck.TooNEW": "警告 - 该 JRE 太新啦！启动可能出现问题！",
   "ReadyToLaunch.WarnError.Title": "Minecraft 似乎未正常运行……",
   "ReadyToLaunch.WarnError.Yes": "是的，为我分析问题",
   "ReadyToLaunch.WarnError.No": "不必，游戏已正常运行",
   "ReadyToLaunch.WarnError.Description":
-    "Minecraft 实例没有正常退出，你想要对本次启动进行分析吗？",
+    "Minecraft 实例没有正常退出，你想要对本次启动进行故障排除吗？",
   "ReadyToLaunch.Status.Short.CheckingLibs": "检查支援库",
   "ReadyToLaunch.Status.Short.CheckingAssets": "检查游戏资源",
   "ReadyToLaunch.Status.Short.PerformingAuth": "验证帐户",
@@ -101,8 +102,7 @@ export default {
   "ReadyToLaunch.Status.Short.Finished": "完毕",
   "ReadyToLaunch.WaitingText": [
     "暴风雨的来临需要酝酿，新冒险的开始需要准备。",
-    "这可能需要几分钟，不过只有你第一次玩某个版本时会这样。",
-    "这也许只需要十几秒钟，而且并不是小概率。",
+    "这可能需要一段时间，不过只有你第一次玩某个版本时会这样。",
     "云宝，慢一点！太快了系统吃不消的！",
     "你知道吗？他们依旧在移除HIM。",
     "您知道吗？您很幸运，之前这些工作是由玩家手工完成的。",
@@ -146,11 +146,10 @@ export default {
     "该程序是免费软件：您可以根据自由软件基金会发布的 GNU 通用公共许可证（第三版）的条款重新分发和/或修改它。\n" +
     "分发此程序是希望它有用，但不作任何保证；甚至没有对适销性或针对特定目的的适用性的暗示保证。有关更多详细信息，请参阅 GNU 通用公共许可证（第三版）原文。",
   "VersionView.FreeSoftwareClaim":
-    "我们提倡软件自由，Alicorn 不会依赖任何非自由的组件或服务，因此，如果你发现我们没有支持某些常见的服务（如某些下载镜像源），请在提问前先查看它们的许可。" +
-    "同样，如果你发现 Alicorn 依赖着某个非自由的组件或服务，那一定是我们弄错了，请告知我们，我们将以最快速度移除它。",
+    "我们提倡软件自由，Alicorn 不会依赖任何非自由的组件，因此，如果你发现我们没有支持某些常见的功能，请先查看用于实现它们的相关组件的许可。",
   "VersionView.SuperCowPower": "本启动器具有超级牛力。",
   "ContainerManager.RootDir": "起始于",
-  "ContainerManager.OpenInDir": "在系统中打开",
+  "ContainerManager.OpenInDir": "打开所在文件夹",
   "ContainerManager.Add": "添加 Minecraft 容器",
   "ContainerManager.AddDescription":
     "添加容器很简单：选择一个文件夹并给它起一个名字！",
@@ -169,10 +168,10 @@ export default {
   "ContainerManager.CoresLoading": "清点核心中",
   "ContainerManager.AskRemove": "解除链接此容器？",
   "ContainerManager.AskRemoveDetail":
-    "这不会修改任何游戏文件，您可以稍后重新导入该容器。",
+    "这不会修改容器中的任何文件，您可以稍后重新添加该容器。",
   "ContainerManager.AskClear": "抹掉此 Minecraft 容器？该操作不可撤销！",
   "ContainerManager.AskClearDetail":
-    "抹掉容器将失去其中的全部数据，包括存档、Mod 和其它可能重要的内容！确定要这样做，{UserName}？Alicorn 同时会解除该容器的链接。",
+    "抹掉 {ID} 将失去其中的全部数据，包括存档、Mod 和其它任何内容！确定要这样做，{UserName}？{ID} 将永远失去（真的很久）！",
   "ContainerManager.Yes": "是的，我要这样做",
   "ContainerManager.No": "不，不要这样做",
   "ContainerManager.Continue": "继续",
@@ -189,8 +188,8 @@ export default {
   "InstallCore.MinecraftArch": "Minecraft 类型",
   "InstallCore.Start": "开始安装",
   "InstallCore.Confirm.Ready": "准备开始安装",
-  "InstallCore.Confirm.Hint": "将安装以下核心到指定的 Minecraft 容器中：",
-  "InstallCore.Confirm.OK": "开始操作",
+  "InstallCore.Confirm.Hint": "将安装以下核心到 {Container} 中：{Version}",
+  "InstallCore.Confirm.OK": "继续",
   "InstallCore.MinecraftVersion": "Minecraft 版本号",
   "InstallCore.ForgeVersion": "Forge 版本号",
   "InstallCore.ForgeBaseVersion": "目标 Minecraft 版本号",
@@ -201,7 +200,7 @@ export default {
   "AccountManager.Refresh": "刷新令牌",
   "AccountManager.EnterPassword": "输入密码",
   "AccountManager.Password": "您的密码",
-  "AccountManager.EnterPasswordHint": "为您的帐户输入密码",
+  "AccountManager.EnterPasswordHint": "为您的帐户输入密码（我不会看的！）",
   "AccountManager.Failed":
     "验证失败 - 我们无法验证您的帐户，请检查密码或稍后再试",
   "AccountManager.Validate": "验证",
@@ -221,8 +220,9 @@ export default {
   "AccountManager.Reload": "重新加载",
   "AccountManager.AddYggdrasil": "添加 Yggdrasil 帐户",
   "AccountManager.Note":
-    "如果您使用 Microsoft 帐户或本地帐户，则无需在此配置，请直接启动游戏，当启动时将（如果必要）询问您相关的信息。\n「将此按钮拖动至启动器」在这里可用，请将按钮拖向这行文字。",
-  "JavaSelector.CustomAdd": "我想手动定位一个 Java 运行时",
+    "如果您使用 Microsoft 帐户或本地帐户，则无需在此配置，请直接启动游戏，当启动时将（如果必要）询问您相关的信息。\n" +
+    "「将此按钮拖动至启动器」已受支持，将按钮拖向启动器的任意位置并松蹄就好。",
+  "JavaSelector.CustomAdd": "让我选择一个 Java 运行时",
   "JavaSelector.SelectJavaTitle": "Java 运行时",
   "JavaSelector.SelectJava": "选择 Java 运行时",
   "JavaSelector.CannotLoad": "读取中",
@@ -239,7 +239,7 @@ export default {
   "JavaSelector.WarnClient":
     "性能警示 - Minecraft 在 Client Java VM 上可能无法发挥出最好性能。",
   "JavaSelector.WarnNonFree":
-    "许可警示 - 这不是自由软件！Alicorn 建议您使用自由的 OpenJDK 运行时代替该非自由的运行时，这可以避免带来的麻烦。",
+    "许可警示 - 这不是自由软件！Alicorn 建议您使用自由的 OpenJDK 运行时代替该非自由的运行时，这可以避免潜在的恶意软件。",
   "Options.AutoSave": "您的修改会自动保存。某些选项只能适用于特定平台。",
   "Options.Hint":
     "Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。\n带 * 的项目是开发人员选项，胡乱修改它们可能导致严重后果！\n带 ^ 的项目在重启启动器后才能生效。",
@@ -266,8 +266,7 @@ export default {
   "Options.theme.secondary.light.title": "次要颜色（亮色）",
   "Options.theme.secondary.light.desc": "背景等位置使用此颜色",
   "Options.interactive.i-have-a-crush-on-al.title": "I \u2764 AL",
-  "Options.interactive.i-have-a-crush-on-al.desc":
-    "我喜欢这个启动器……她好可爱～",
+  "Options.interactive.i-have-a-crush-on-al.desc": "我喜欢这只小马……她好可爱～",
   "Options.dev.f12.title": "快速打开 DevTools * ^",
   "Options.dev.f12.desc":
     "按下 Ctrl + F12 以调试 Alicorn 渲染进程，Shift + F12 以调试内置浏览器和 Starlight- 请当心，胡乱使用 DevTools 可能导致启动器故障或您的数据丢失！",
@@ -288,10 +287,10 @@ export default {
     "打开开发人员模式，然后再次看看那些之前让你感到迷惑的标签 - 它们只会对开发人员显示正确的内容",
   "Options.reset.title": "重置为默认值 ^",
   "Options.reset.desc":
-    "在下次启动时将设置重置为当前版本的默认内容 - 在 Alicorn 频繁更新时很有用，但您的所有改动都将丢失",
+    "在下次启动时将设置重置为当前版本的默认内容 - 当你觉得你玩脱了的时候很有用，但您的所有改动都将丢失",
   "Options.pff.cache-root.title": "Pff 文件缓存位置",
   "Options.pff.cache-root.desc":
-    "设置 Pff 的文件缓存目录 - 这是必须的，有助于加快软件包的安装速度，留空以使用默认目录 {AlicornHome}",
+    "设置 Pff 的文件缓存目录 - 这是必须的，有助于加快软件包的二次安装速度，留空以使用默认目录 {AlicornHome}",
   "Options.pff.page-size.title": "Pff 查询分页大小",
   "Options.pff.page-size.desc":
     "进行模糊查询时请求的的分页大小 - 这项设置可能并不很有用，但如果 Pff 不能正确查找您的 Mod，可以扩大该值",

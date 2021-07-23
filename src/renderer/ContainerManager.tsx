@@ -187,7 +187,10 @@ function SingleContainerDisplay(props: {
               <DialogTitle>{tr("ContainerManager.AskRemove")}</DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                  {tr("ContainerManager.AskRemoveDetail")}
+                  {tr(
+                    "ContainerManager.AskRemoveDetail",
+                    `ID=${props.container}`
+                  )}
                 </DialogContentText>
                 <DialogActions>
                   <Button
@@ -219,7 +222,10 @@ function SingleContainerDisplay(props: {
               <DialogTitle>{tr("ContainerManager.AskClear")}</DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                  {tr("ContainerManager.AskClearDetail")}
+                  {tr(
+                    "ContainerManager.AskClearDetail",
+                    `ID=${props.container.id}`
+                  )}
                 </DialogContentText>
                 <DialogActions>
                   <Button

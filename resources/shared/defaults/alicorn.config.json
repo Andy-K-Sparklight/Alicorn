@@ -3,7 +3,7 @@
   "dev.explicit-error-throw": false,
   "dev.quick-reload": false,
   "dev.f12": false,
-  "hot-key": true,
+  "hot-key": false,
   "updator.use-update": true,
   "download.concurrent.chunk-size": 2048,
   "download.concurrent.timeout": 5000,
