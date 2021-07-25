@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "sideEffects": false,
   "scripts": {
+    "lc": "yarn lcd",
+    "df": "yarn dev-full",
+    "wd": "yarn watch-dev",
     "lcd": "yarn launch-dev",
     "lcr": "yarn launch-release",
     "build-vercel": "yarn release-full",

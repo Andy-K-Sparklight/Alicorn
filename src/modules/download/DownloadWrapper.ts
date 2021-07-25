@@ -1,4 +1,5 @@
 import EventEmitter from "events";
+import { tr } from "../../renderer/Translator";
 import { getModifiedDate, isFileExist } from "../commons/FileUtil";
 import { getBoolean, getNumber } from "../config/ConfigSupport";
 import { getAllContainers, getContainer } from "../container/ContainerUtil";
@@ -14,6 +15,24 @@ import { applyMirror } from "./Mirror";
 import { Serial } from "./Serial";
 import { validate } from "./Validate";
 
+const DOINGX: string[] = [];
+export function addDoing(s: string): void {
+  DOINGX.unshift(s);
+  if (DOINGX.length > 3) {
+    DOINGX.pop();
+  }
+}
+
+export function clearDoing(): void {
+  DOINGX.pop();
+  DOINGX.pop();
+  DOINGX.pop();
+}
+
+export function getDoing(): string {
+  return DOINGX[0] || "";
+}
+const DOING: string[] = [];
 const PENDING_TASKS: DownloadMeta[] = [];
 const RUNNING_TASKS = new Set<DownloadMeta>();
 const WAITING_RESOLVES_MAP = new Map<
@@ -50,8 +69,10 @@ export async function wrappedDownloadFile(
 ): Promise<DownloadStatus> {
   // POST
   if (meta.url.trim().length === 0 || meta.savePath.trim().length === 0) {
+    addState(tr("ReadyToLaunch.Got", `Url=${meta.url}`));
     return DownloadStatus.RESOLVED;
   }
+  addState(tr("ReadyToLaunch.Getting", `Url=${meta.url}`));
   if (!noAutoLn) {
     const a = getAllContainers();
     let targetContainer = "";
@@ -65,6 +86,7 @@ export async function wrappedDownloadFile(
       (await isSharedContainer(getContainer(targetContainer)))
     ) {
       if (await fetchSharedFile(meta)) {
+        addState(tr("ReadyToLaunch.Got", `Url=${meta.url}`));
         return DownloadStatus.RESOLVED;
       }
     }
@@ -77,12 +99,18 @@ export async function wrappedDownloadFile(
   FAILED_COUNT_MAP.set(mirroredMeta, getConfigOptn("tries-per-chunk", 3));
   if ((await _wrappedDownloadFile(mirroredMeta)) === 1) {
     FAILED_COUNT_MAP.delete(mirroredMeta);
+    addState(tr("ReadyToLaunch.Got", `Url=${meta.url}`));
     return DownloadStatus.RESOLVED;
   }
   FAILED_COUNT_MAP.delete(mirroredMeta);
   FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
   const s = await _wrappedDownloadFile(meta);
   FAILED_COUNT_MAP.delete(meta);
+  if (s === 1) {
+    addState(tr("ReadyToLaunch.Got", `Url=${meta.url}`));
+  } else {
+    addState(tr("ReadyToLaunch.Failed", `Url=${meta.url}`));
+  }
   return s;
 }
 
@@ -108,7 +136,7 @@ async function _existsAndValidate(pt: string, sha1: string): Promise<boolean> {
     // This might be a wrong SHA, we should not cache it
     return true;
   }
-  const lastValidated = await getLastValidateModified(pt);
+  const lastValidated = getLastValidateModified(pt);
   const actualModifiedDate = await getModifiedDate(pt);
   if (actualModifiedDate <= lastValidated) {
     return true;
@@ -139,7 +167,7 @@ function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
 }
 
 function scheduleNextTask(): void {
-  // An aggressive call!
+  // An aggressive call! Clear the stack.
   const CURRENT_MAX = getConfigOptn("max-tasks", 20);
   while (RUNNING_TASKS.size < CURRENT_MAX && PENDING_TASKS.length > 0) {
     const tsk = PENDING_TASKS.pop();
@@ -205,12 +233,14 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
 export interface WrapperStatus {
   inStack: number;
   pending: number;
+  doing: string;
 }
 
 export function getWrapperStatus(): WrapperStatus {
   return {
     inStack: RUNNING_TASKS.size || 0,
     pending: PENDING_TASKS.length || 0,
+    doing: DOING[0],
   };
 }
 
@@ -256,4 +286,13 @@ export function getConfigOptn(name: string, def: number): number {
 export function setProxy(_host: string, _port: number): void {
   // window.sessionStorage.setItem(PROXY_HOST, host);
   // window.sessionStorage.setItem(PROXY_PORT, port.toString());
+}
+
+export function addState(s: string): void {
+  console.log(s);
+  addDoing(s);
+  DOING.unshift(s);
+  if (DOING.length > 3) {
+    DOING.pop();
+  }
 }

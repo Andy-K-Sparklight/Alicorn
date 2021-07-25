@@ -362,7 +362,7 @@ function AddNewContainer(props: {
   const [usedName, setName] = useState("");
   const [nameError, setNameError] = useState(false);
   const [dirError, setDirError] = useState(false);
-  const [createASC, setCreateASC] = useState(true);
+  const [createASC, setCreateASC] = useState(false);
   const classes = useInputStyles();
   return (
     <Dialog
@@ -492,7 +492,7 @@ function AddNewContainer(props: {
   );
 }
 
-async function remoteSelectDir(): Promise<string> {
+export async function remoteSelectDir(): Promise<string> {
   return String((await ipcRenderer.invoke("selectDir")) || "");
 }
 

@@ -1,4 +1,3 @@
-import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   FormControl,
@@ -13,33 +12,34 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import {
   ArrowForward,
   AssignmentLate,
   AssignmentTurnedIn,
 } from "@material-ui/icons";
-import EventEmitter from "events";
-import { tr } from "./Translator";
-import { useParams } from "react-router";
-import { PFF_MSG_GATE } from "../modules/pff/curseforge/Values";
-import { getContainer } from "../modules/container/ContainerUtil";
-import { fullWidth } from "./Stylex";
-import { loadLockFile, Lockfile } from "../modules/pff/curseforge/Lockfile";
-import { MinecraftContainer } from "../modules/container/MinecraftContainer";
-import { requireMod, setPffFlag } from "../modules/pff/curseforge/Wrapper";
-import { getString } from "../modules/config/ConfigSupport";
-import { setChangePageWarn } from "./GoTo";
 import { shell } from "electron";
+import EventEmitter from "events";
+import React, { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router";
+import { getString } from "../modules/config/ConfigSupport";
+import { getContainer } from "../modules/container/ContainerUtil";
+import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { setProxy } from "../modules/download/DownloadWrapper";
+import { loadLockFile, Lockfile } from "../modules/pff/curseforge/Lockfile";
+import { PFF_MSG_GATE } from "../modules/pff/curseforge/Values";
+import { requireMod, setPffFlag } from "../modules/pff/curseforge/Wrapper";
+import { setChangePageWarn } from "./GoTo";
+import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import { fullWidth } from "./Stylex";
+import { tr } from "./Translator";
 
 export function PffFront(): JSX.Element {
   const emitter = useRef(new EventEmitter());
-  const { container, version } =
-    useParams<{ container: string; version: string }>();
+  const { container, version, name } =
+    useParams<{ container: string; version: string; name?: string }>();
   const [isRunning, setRunning] = useState(false);
   const [info, setInfo] = useState("");
-  const [packageName, setPackageName] = useState("");
+  const [packageName, setPackageName] = useState(name || "");
   const [lockfile, setLockfile] = useState<Lockfile>();
   const mounted = useRef(false);
   const fullWidthClasses = fullWidth();

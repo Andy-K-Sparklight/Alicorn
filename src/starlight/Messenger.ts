@@ -1,11 +1,11 @@
-import { IpcRenderer } from "electron";
 let WEBSOCKET_CLIENT: WebSocket | null = null;
 const TSS: Map<number, (v: unknown) => unknown> = new Map();
 let cEvent = 0;
 
 export async function initMessenger(): Promise<void> {
-  // Detect Electron
-
+  if (WEBSOCKET_CLIENT) {
+    return;
+  }
   return new Promise<void>((resolve, reject) => {
     // Alicorn/Starlight uses port 16814 to exchange data
     WEBSOCKET_CLIENT = new WebSocket("ws://localhost:16814/");

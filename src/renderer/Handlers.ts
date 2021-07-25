@@ -1,7 +1,10 @@
 import { ipcRenderer } from "electron";
 import { getNumber } from "../modules/config/ConfigSupport";
 import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
-import { getContainer } from "../modules/container/ContainerUtil";
+import {
+  getAllContainers,
+  getContainer,
+} from "../modules/container/ContainerUtil";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { CoreInfo } from "../starlight/StarlightFunctions";
 import { jumpTo, triggerSetPage } from "./GoTo";
@@ -32,6 +35,9 @@ export function registerHandlers(): void {
   addHandler("JumpTo", async (target, page) => {
     jumpTo(String(target));
     triggerSetPage(String(page));
+  });
+  addHandler("GetAllContainers", async () => {
+    return getAllContainers();
   });
 }
 

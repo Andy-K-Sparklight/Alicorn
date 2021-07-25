@@ -25,13 +25,45 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import { GameProfile } from "../modules/profile/GameProfile";
-import { MinecraftContainer } from "../modules/container/MinecraftContainer";
+import { FlightTakeoff } from "@material-ui/icons";
+import { ipcRenderer } from "electron";
+import EventEmitter from "events";
+import objectHash from "object-hash";
 import React, { useEffect, useRef, useState } from "react";
-import { randsl, tr } from "./Translator";
 import { useParams } from "react-router";
-import { loadProfile } from "../modules/profile/ProfileLoader";
+import { Account } from "../modules/auth/Account";
+import {
+  AccountType,
+  fillAccessData,
+  getAllAccounts,
+  loadAccount,
+} from "../modules/auth/AccountUtil";
+import { prefetchData } from "../modules/auth/AJHelper";
+import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
+import { LocalAccount } from "../modules/auth/LocalAccount";
+import {
+  MicrosoftAccount,
+  MS_LAST_USED_ACTOKEN_KEY,
+  MS_LAST_USED_REFRESH_KEY,
+  MS_LAST_USED_USERNAME_KEY,
+  MS_LAST_USED_UUID_KEY,
+} from "../modules/auth/MicrosoftAccount";
+import { Nide8Account } from "../modules/auth/Nide8Account";
+import { findNotIn } from "../modules/commons/Collections";
+import {
+  PROCESS_END_GATE,
+  PROCESS_LOG_GATE,
+  ReleaseType,
+} from "../modules/commons/Constants";
+import { isNull } from "../modules/commons/Null";
+import { getNumber, getString } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
+import { MinecraftContainer } from "../modules/container/MinecraftContainer";
+import { scanReports } from "../modules/crhelper/CrashReportFinder";
+import {
+  getWrapperStatus,
+  WrapperStatus,
+} from "../modules/download/DownloadWrapper";
 import {
   getAllJava,
   getJavaInfoRaw,
@@ -40,7 +72,6 @@ import {
   parseJavaInfo,
   parseJavaInfoRaw,
 } from "../modules/java/JInfo";
-import objectHash from "object-hash";
 import {
   ensureAllAssets,
   ensureAssetsIndex,
@@ -49,48 +80,17 @@ import {
   ensureLog4jFile,
   ensureNatives,
 } from "../modules/launch/Ensurance";
-import EventEmitter from "events";
-import {
-  PROCESS_END_GATE,
-  PROCESS_LOG_GATE,
-  ReleaseType,
-} from "../modules/commons/Constants";
-import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
-import { Account } from "../modules/auth/Account";
-import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
-import {
-  AccountType,
-  fillAccessData,
-  getAllAccounts,
-  loadAccount,
-} from "../modules/auth/AccountUtil";
-import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
-import { prefetchData } from "../modules/auth/AJHelper";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
-import { LaunchTracker } from "../modules/launch/Tracker";
-import {
-  getWrapperStatus,
-  WrapperStatus,
-} from "../modules/download/DownloadWrapper";
-import { getNumber, getString } from "../modules/config/ConfigSupport";
-import { scanReports } from "../modules/crhelper/CrashReportFinder";
-import { YNDialog } from "./OperatingHint";
-import { jumpTo, Pages, setChangePageWarn, triggerSetPage } from "./GoTo";
-import { Nide8Account } from "../modules/auth/Nide8Account";
-import { FlightTakeoff } from "@material-ui/icons";
-import {
-  MicrosoftAccount,
-  MS_LAST_USED_ACTOKEN_KEY,
-  MS_LAST_USED_REFRESH_KEY,
-  MS_LAST_USED_USERNAME_KEY,
-  MS_LAST_USED_UUID_KEY,
-} from "../modules/auth/MicrosoftAccount";
-import { toReadableType } from "./YggdrasilAccountManager";
 import { launchProfile } from "../modules/launch/LaunchPad";
-import { LocalAccount } from "../modules/auth/LocalAccount";
-import { findNotIn } from "../modules/commons/Collections";
-import { isNull } from "../modules/commons/Null";
-import { ipcRenderer } from "electron";
+import { LaunchTracker } from "../modules/launch/Tracker";
+import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
+import { GameProfile } from "../modules/profile/GameProfile";
+import { loadProfile } from "../modules/profile/ProfileLoader";
+import { jumpTo, Pages, setChangePageWarn, triggerSetPage } from "./GoTo";
+import { YNDialog } from "./OperatingHint";
+import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
+import { randsl, tr } from "./Translator";
+import { toReadableType } from "./YggdrasilAccountManager";
 
 export const LAST_SUCCESSFUL_GAME_KEY = "ReadyToLaunch.LastSuccessfulGame";
 
@@ -229,7 +229,7 @@ function Launching(props: {
   useEffect(() => {
     const tm = setInterval(() => {
       setWrapperStatus(getWrapperStatus());
-    }, 1000);
+    }, 300);
     return () => {
       clearInterval(tm);
     };
@@ -347,14 +347,19 @@ function Launching(props: {
       status === LaunchingStatus.FINISHED ? (
         ""
       ) : (
-        <Typography className={classes.text} gutterBottom>
-          {tr(
-            "ReadyToLaunch.Progress",
-            `Current=${wrapperStatus?.inStack}`,
-            `BufferMax=${getNumber("download.concurrent.max-tasks")}`,
-            `Pending=${wrapperStatus?.pending}`
-          )}
-        </Typography>
+        <Box>
+          <Typography className={classes.text} gutterBottom>
+            {tr(
+              "ReadyToLaunch.Progress",
+              `Current=${wrapperStatus?.inStack}`,
+              `BufferMax=${getNumber("download.concurrent.max-tasks")}`,
+              `Pending=${wrapperStatus?.pending}`
+            )}
+          </Typography>
+          <Typography className={classes.text} gutterBottom>
+            {wrapperStatus?.doing}
+          </Typography>
+        </Box>
       )}
 
       <MiniJavaSelector

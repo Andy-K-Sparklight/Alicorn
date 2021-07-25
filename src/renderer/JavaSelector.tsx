@@ -1,5 +1,3 @@
-import React, { useEffect, useRef, useState } from "react";
-import { fullWidth, useFormStyles } from "./Stylex";
 import {
   Box,
   Button,
@@ -13,7 +11,13 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import { whereJava } from "../modules/java/WhereJava";
+import { Refresh } from "@material-ui/icons";
+import { ipcRenderer } from "electron";
+import objectHash from "object-hash";
+import os from "os";
+import path from "path";
+import React, { useEffect, useRef, useState } from "react";
+import { installJRE } from "../modules/java/GetJDK";
 import {
   getAllJava,
   getJavaInfoRaw,
@@ -24,15 +28,11 @@ import {
   resetJavaList,
   setLastUsedJavaHome,
 } from "../modules/java/JInfo";
-import { tr } from "./Translator";
-import objectHash from "object-hash";
-import { Refresh } from "@material-ui/icons";
-import { ALICORN_DEFAULT_THEME_LIGHT, submitError } from "./Renderer";
-import { installJRE } from "../modules/java/GetJDK";
-import os from "os";
-import { ipcRenderer } from "electron";
-import path from "path";
+import { whereJava } from "../modules/java/WhereJava";
 import { setChangePageWarn } from "./GoTo";
+import { ALICORN_DEFAULT_THEME_LIGHT, submitError } from "./Renderer";
+import { fullWidth, useFormStyles } from "./Stylex";
+import { tr } from "./Translator";
 
 export const CANNOT_LOAD_INFO: JavaInfo = {
   rootVersion: -1,
@@ -123,7 +123,6 @@ export function JavaSelector(): JSX.Element {
             {tr("JavaSelector.SelectJava")}
           </InputLabel>
           <Select
-            disabled={!isJavaInfoLoaded}
             labelId={"Select-JRE"}
             color={"primary"}
             className={classes.selector + " " + fullWidthClasses.form}

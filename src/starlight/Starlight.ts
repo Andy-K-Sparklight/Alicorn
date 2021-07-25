@@ -1,3 +1,4 @@
+import { AddMod } from "./AddMod";
 import { AlicornCaller } from "./CallAlicorn";
 import { ElectronAdaptor } from "./ElectronAdaptor";
 import { getWindow } from "./GetWindow";
@@ -9,8 +10,12 @@ import { StarlightVersion } from "./StarlightVersion";
 
 console.log("Starlight started.");
 console.log("Starlight by Andy K Rarity Sparklight with ❤~");
-
+let INIT_FLAG = 0;
 document.addEventListener("DOMContentLoaded", async () => {
+  if (INIT_FLAG === 1) {
+    return;
+  }
+  INIT_FLAG = 1;
   console.log("DOM is ready.");
   console.log("Attaching invocation messenger...");
   try {
@@ -34,5 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     new StarlightVersion().render(document);
     console.log("Loading module JoinServer...");
     new JoinServer().execute(document);
+    console.log("Loading module AddMod...");
+    new AddMod().execute(document);
   }
 });

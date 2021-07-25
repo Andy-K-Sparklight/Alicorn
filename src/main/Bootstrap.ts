@@ -21,11 +21,12 @@ app.on("ready", async () => {
     width: Math.floor(width * 0.45),
     height: Math.floor(height * 0.45),
     webPreferences: {
-      nodeIntegration: true,
-      nodeIntegrationInWorker: true,
-      contextIsolation: false,
-      sandbox: false,
-      enableRemoteModule: false,
+      webSecurity: false, // No more CORS!
+      nodeIntegration: true, // Obviously
+      nodeIntegrationInWorker: true, // Worker needs mdiff
+      contextIsolation: false, // Node
+      sandbox: false, // Node
+      enableRemoteModule: false, // No sync
     },
     frame: false,
     show: false,

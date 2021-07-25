@@ -22,6 +22,7 @@ import {
   getAllMounted,
   getContainer,
 } from "../modules/container/ContainerUtil";
+import { clearDoing, getDoing } from "../modules/download/DownloadWrapper";
 import { getJavaRunnable, getLastUsedJavaHome } from "../modules/java/JInfo";
 import {
   canSupportGame,
@@ -53,6 +54,7 @@ export function InstallCore(): JSX.Element {
   const [foundCores, setCores] = useState<string[]>([]);
   const isLoaded = useRef<boolean>(false);
   const mounted = useRef<boolean>();
+  const [doing, setDoing] = useState(getDoing());
   const [selectedMojangVersion, setSelectedMojangVersion] =
     useState<string>("");
   const [mojangFilter, setMojangFilter] = useState<ReleaseType>(
@@ -77,12 +79,23 @@ export function InstallCore(): JSX.Element {
   const [failed, setFailed] = useState(false);
   const [openNotice, setOpenNotice] = useState(false);
   const [progressMsg, _setProgressMsg] = useState("");
+
   function setProgressMsg(msg: string): void {
     // Binding
     if (mounted.current) {
       _setProgressMsg(msg);
     }
   }
+  useEffect(() => {
+    const a = setInterval(() => {
+      if (mounted.current) {
+        setDoing(getDoing());
+      }
+    }, 300);
+    return () => {
+      clearInterval(a);
+    };
+  });
   useEffect(() => {
     (async () => {
       if (!isLoaded.current) {
@@ -147,7 +160,10 @@ export function InstallCore(): JSX.Element {
           }}
           reason={failedMsg}
         />
-        <OperatingHintCustom open={operating} msg={progressMsg} />
+        <OperatingHintCustom
+          open={operating}
+          msg={progressMsg + "\n" + doing}
+        />
         <ConfirmInstall
           container={selectedForgeContainer}
           version={`${baseMojangVersionForge}-forge-${detectedForgeVersion}`}
@@ -156,6 +172,7 @@ export function InstallCore(): JSX.Element {
             setForgeConfirmOpen(false);
           }}
           confirmFunc={async () => {
+            clearDoing();
             const mcv = baseMojangVersionForge;
             const fgv = detectedForgeVersion;
             setForgeConfirmOpen(false);
@@ -210,6 +227,7 @@ export function InstallCore(): JSX.Element {
             setFabricConfirmOpen(false);
           }}
           confirmFunc={async () => {
+            clearDoing();
             setFabricConfirmOpen(false);
             setOperating(true);
             setFailed(false);
@@ -278,6 +296,7 @@ export function InstallCore(): JSX.Element {
             setMojangConfirmOpen(false);
           }}
           confirmFunc={async () => {
+            clearDoing();
             setMojangConfirmOpen(false);
             setOperating(true);
             setFailed(false);

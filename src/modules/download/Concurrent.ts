@@ -1,18 +1,18 @@
+import fs from "fs-extra";
+import got from "got";
+import objectHash from "object-hash";
+import os from "os";
+import path from "path";
+import { isFileExist } from "../commons/FileUtil";
 import {
   AbstractDownloader,
   DownloadMeta,
   DownloadStatus,
 } from "./AbstractDownloader";
-import got from "got";
-import fs from "fs-extra";
-import objectHash from "object-hash";
-import os from "os";
-import path from "path";
-import { getHash, validate } from "./Validate";
-import { isFileExist } from "../commons/FileUtil";
-import { addRecord } from "./ResolveLock";
 import { getConfigOptn } from "./DownloadWrapper";
+import { addRecord } from "./ResolveLock";
 import { Serial } from "./Serial";
+import { getHash, validate } from "./Validate";
 
 const TEMP_SAVE_PATH_ROOT = path.join(os.tmpdir(), "alicorn-download");
 

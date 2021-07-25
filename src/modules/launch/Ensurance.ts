@@ -1,11 +1,12 @@
-import { GameProfile } from "../profile/GameProfile";
-import { MinecraftContainer } from "../container/MinecraftContainer";
-import { ArtifactMeta, AssetIndexFileMeta, AssetMeta } from "../profile/Meta";
-import { checkExtractTrimNativeLocal, getNativeArtifact } from "./NativesLint";
-import { DownloadMeta, DownloadStatus } from "../download/AbstractDownloader";
-import { wrappedDownloadFile } from "../download/DownloadWrapper";
 import fs from "fs-extra";
 import { isNull } from "../commons/Null";
+import { getBoolean } from "../config/ConfigSupport";
+import { MinecraftContainer } from "../container/MinecraftContainer";
+import { DownloadMeta, DownloadStatus } from "../download/AbstractDownloader";
+import { wrappedDownloadFile } from "../download/DownloadWrapper";
+import { GameProfile } from "../profile/GameProfile";
+import { ArtifactMeta, AssetIndexFileMeta, AssetMeta } from "../profile/Meta";
+import { checkExtractTrimNativeLocal, getNativeArtifact } from "./NativesLint";
 import { FileOperateReport, LaunchTracker } from "./Tracker";
 
 // This file can not only check resources, but also download packages when installing!
@@ -220,6 +221,9 @@ export async function ensureLog4jFile(
   profile: GameProfile,
   container: MinecraftContainer
 ): Promise<boolean> {
+  if (getBoolean("cmc.disable-log4j-config")) {
+    return true; // There is no need to download it
+  }
   try {
     if (isNull(profile.logFile)) {
       return true;

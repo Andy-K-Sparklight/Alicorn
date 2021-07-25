@@ -1,7 +1,15 @@
 export function showDialog(...args) {
-  (unsafeWindow || window).showDialog(...args);
+  try {
+    unsafeWindow.showDialog(...args);
+  } catch {
+    window.showDialog(...args);
+  }
 }
 
 export function showError(...args) {
-  (unsafeWindow || window).showError(...args);
+  try {
+    unsafeWindow.showError(...args);
+  } catch {
+    window.showError(...args);
+  }
 }

@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   createStyles,
   makeStyles,
   MuiThemeProvider,
@@ -16,13 +17,16 @@ import {
   parseNum,
   set,
 } from "../modules/config/ConfigSupport";
+import { remoteSelectDir } from "./ContainerManager";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import { useInputStyles } from "./Stylex";
 import { tr } from "./Translator";
 
-enum ConfigType {
+export enum ConfigType {
   BOOL,
   NUM,
   STR,
+  DIR,
 }
 
 export function OptionsPage(): JSX.Element {
@@ -52,7 +56,7 @@ export function OptionsPage(): JSX.Element {
         />
         <InputItem type={ConfigType.STR} bindConfig={"user.name"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"java.simple-search"} />
-        <InputItem type={ConfigType.STR} bindConfig={"cx.shared-root"} />
+        <InputItem type={ConfigType.DIR} bindConfig={"cx.shared-root"} />
         <InputItem
           type={ConfigType.BOOL}
           bindConfig={"modx.global-dynamic-load-mods"}
@@ -93,7 +97,7 @@ export function OptionsPage(): JSX.Element {
         <InputItem type={ConfigType.NUM} bindConfig={"java.search-depth"} />
         <InputItem type={ConfigType.STR} bindConfig={"pff.api-base"} />
         <InputItem type={ConfigType.NUM} bindConfig={"pff.page-size"} />
-        <InputItem type={ConfigType.STR} bindConfig={"pff.cache-root"} />
+        <InputItem type={ConfigType.DIR} bindConfig={"pff.cache-root"} />
         <InputItem
           type={ConfigType.NUM}
           bindConfig={"starlight.join-server.timeout"}
@@ -132,13 +136,14 @@ export function OptionsPage(): JSX.Element {
   );
 }
 
-function InputItem(props: {
+export function InputItem(props: {
   type: ConfigType;
   bindConfig: string;
   onlyOn?: NodeJS.Platform;
   notOn?: NodeJS.Platform;
 }): JSX.Element {
   const [refreshBit, forceRefresh] = useState<boolean>(true);
+  const classex = useInputStyles();
   if (props.onlyOn) {
     if (os.platform() !== props.onlyOn) {
       return <></>;
@@ -210,6 +215,37 @@ function InputItem(props: {
                   forceRefresh(!refreshBit);
                 }}
               />
+            );
+
+          case ConfigType.DIR:
+            return (
+              <Box>
+                <TextField
+                  fullWidth
+                  spellCheck={false}
+                  color={"primary"}
+                  value={getString(props.bindConfig)}
+                  onChange={(e) => {
+                    set(props.bindConfig, String(e.target.value || ""));
+                    forceRefresh(!refreshBit);
+                  }}
+                />
+                <Button
+                  className={classex.inputDark}
+                  type={"button"}
+                  variant={"outlined"}
+                  onClick={async () => {
+                    const d = await remoteSelectDir();
+                    if (d.trim().length === 0) {
+                      return;
+                    }
+                    set(props.bindConfig, d);
+                    forceRefresh(!refreshBit);
+                  }}
+                >
+                  {tr("Options.Select")}
+                </Button>
+              </Box>
             );
           case ConfigType.STR:
           default:

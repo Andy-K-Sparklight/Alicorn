@@ -23,16 +23,15 @@ export function setLocale(code: string): void {
 
 // Main translate function
 export function tr(key: string, ...values: string[]): string {
-  return applyEnvironmentVars(
-    applyCustomVars(
-      String((localesMap.get(currentLocale) || {})[key] || key),
-      values
-    )
-  );
+  let res = (localesMap.get(currentLocale) || {})[key];
+  if (res === undefined) {
+    res = key;
+  }
+  return applyEnvironmentVars(applyCustomVars(String(res), values));
 }
 
 export function randsl(key: string, ...values: string[]): string {
-  const res = (localesMap.get(currentLocale) || {})[key] || key;
+  const res = (localesMap.get(currentLocale) || {})[key];
   if (typeof res === "string") {
     return res;
   }

@@ -1,6 +1,6 @@
-import os from "os";
 import childProcess from "child_process";
 import fs from "fs-extra";
+import os from "os";
 import path from "path";
 import { isFileExist } from "../commons/FileUtil";
 import { getBoolean, getNumber } from "../config/ConfigSupport";
@@ -37,6 +37,7 @@ async function findJavaUNIX(): Promise<string[]> {
   if (os.platform() === "win32") {
     return [];
   }
+  console.log("Searching Java!");
   const programBase = "/";
   const all: string[] = [];
   await diveSearch("java", programBase, all, getNumber("java.search-depth", 8));
@@ -83,6 +84,23 @@ async function findJavaInProgramFilesWin32(): Promise<string[]> {
   return all;
 }
 
+const DIR_BLACKLIST = [
+  "proc",
+  "etc",
+  "node_modules",
+  "tmp",
+  "dev",
+  "sys",
+  "drivers",
+  "var",
+  "src",
+  "config",
+  "lib",
+  "icons",
+  ".npm",
+  "cache",
+];
+
 // Use command to locate
 async function findJavaViaCommand(): Promise<string[]> {
   let command = "which java";
@@ -122,6 +140,7 @@ async function diveSearch(
   depth = 8,
   counter = 0
 ): Promise<void> {
+  console.log("Searching " + rootDir);
   if (depth !== 0 && counter > depth) {
     return;
   }
@@ -131,9 +150,18 @@ async function diveSearch(
       concatArray.push(path.resolve(rootDir, fileName));
     }
     for (const f of all) {
+      if (DIR_BLACKLIST.includes(f.toLowerCase())) {
+        continue;
+      }
       const currentBase = path.resolve(rootDir, f);
       if ((await fs.stat(currentBase)).isDirectory()) {
-        await diveSearch(fileName, currentBase, concatArray, depth, ++counter);
+        await diveSearch(
+          fileName,
+          currentBase,
+          concatArray,
+          depth,
+          counter + 1
+        );
       }
     }
   } catch {

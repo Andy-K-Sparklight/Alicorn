@@ -22,7 +22,11 @@ export async function markASC(dir: string): Promise<void> {
 }
 
 export async function fetchSharedFile(meta: DownloadMeta): Promise<boolean> {
-  const urlSHA = objectHash(meta.url);
+  if (meta.url.trim() === "") {
+    return true; // NULL safe
+  }
+  const u = new URL(meta.url);
+  const urlSHA = objectHash(meta.url) + "-" + objectHash(u.host);
   const root = getString("cx.shared-root");
   let targetFile: string;
   if (root.trim().length > 0) {

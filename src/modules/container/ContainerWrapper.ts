@@ -33,9 +33,11 @@ export async function createNewContainer(
   if (!stat?.isDirectory()) {
     throw new Error("Invalid target! Target is not a directory.");
   } else {
-    try {
-      await markASC(d);
-    } catch {}
+    if (isASC) {
+      try {
+        await markASC(d);
+      } catch {}
+    }
     registerContainer(new MinecraftContainer(d, name));
   }
 }

@@ -8,22 +8,23 @@ For details, please see https://bitbucket.org/RarityEG/harmonyforgeinstallercli/
 
 A copy of forge.iw.jar will be saved to the root dir of alicorn data.
 */
-import { getActualDataPath, saveDefaultData } from "../../config/DataSupport";
+import childProcess from "child_process";
+import { zip } from "compressing";
+import fs from "fs-extra";
+import path from "path";
+import { Pair } from "../../commons/Collections";
 import { FILE_SEPARATOR } from "../../commons/Constants";
 import { isFileExist, wrappedLoadJSON } from "../../commons/FileUtil";
-import { MinecraftContainer } from "../../container/MinecraftContainer";
-import { LibraryMeta } from "../../profile/Meta";
 import { isNull, safeGet } from "../../commons/Null";
+import { getActualDataPath, saveDefaultData } from "../../config/DataSupport";
+import { MinecraftContainer } from "../../container/MinecraftContainer";
+import { addDoing } from "../../download/DownloadWrapper";
+import { ensureLibraries } from "../../launch/Ensurance";
+import { JAR_SUFFIX } from "../../launch/NativesLint";
 import { makeLibrary } from "../../profile/FabricProfileAdaptor";
 import { GameProfile } from "../../profile/GameProfile";
-import path from "path";
-import { JAR_SUFFIX } from "../../launch/NativesLint";
-import fs from "fs-extra";
-import { zip } from "compressing";
-import { Pair } from "../../commons/Collections";
 import { noDuplicateConcat } from "../../profile/InheritedProfileAdaptor";
-import childProcess from "child_process";
-import { ensureLibraries } from "../../launch/Ensurance";
+import { LibraryMeta } from "../../profile/Meta";
 
 // MAINTAINERS ONLY
 
@@ -56,7 +57,7 @@ export async function performForgeInstall(
     const ret = await getPolyfillForgeProfile(forgeJar, container);
     // Stupid Forge
     // We have to fill libraries for the installer, it's slow...
-    console.log("Ensuring libraries");
+    console.log("Ensuring libraries for Forge installer...");
     await ensureLibraries(ret.getFirstValue(), container);
     await bootForgeInstaller(jExecutable, forgeJar, container);
     await fs.ensureDir(container.getModsRoot());
@@ -99,9 +100,11 @@ export async function bootForgeInstaller(
     });
     rcp.stdout?.on("data", (d) => {
       console.log(d.toString());
+      addDoing(d.toString());
     });
     rcp.stderr?.on("data", (d) => {
       console.log(d.toString());
+      addDoing(d.toString());
     });
   });
 }

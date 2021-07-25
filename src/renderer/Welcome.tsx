@@ -12,35 +12,10 @@ import { randsl, tr } from "./Translator";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 import { LAST_SUCCESSFUL_GAME_KEY } from "./ReadyToLaunch";
 import { History } from "@material-ui/icons";
+import { useTextStyles } from "./Stylex";
 
 export function Welcome(): JSX.Element {
-  const classes = makeStyles((theme) =>
-    createStyles({
-      root: {
-        marginLeft: theme.spacing(4),
-      },
-      firstText: {
-        color: theme.palette.primary.main,
-        fontSize: "large",
-      },
-      secondText: {
-        color: theme.palette.secondary.main,
-        fontSize: "small",
-      },
-      link: {
-        color: theme.palette.primary.main,
-        fontSize: "small",
-      },
-      thirdText: {
-        color: theme.palette.primary.main,
-        fontSize: "medium",
-        marginTop: theme.spacing(-2),
-      },
-      list: {
-        marginTop: theme.spacing(-2),
-      },
-    })
-  )();
+  const classes = useTextStyles();
   return (
     <Box className={classes.root}>
       <Typography color={"primary"} className={classes.firstText} gutterBottom>

@@ -33,7 +33,7 @@
   "theme.primary.light": "#d796f0",
   "theme.secondary.main": "#df307f",
   "theme.secondary.light": "#ffe0f0",
-  "startup-page.name": "Welcome",
-  "startup-page.url": "/Welcome",
+  "startup-page.name": "Tutor",
+  "startup-page.url": "/Tutor/1",
   "starlight.join-server.timeout": 2000
 }

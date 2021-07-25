@@ -1,16 +1,17 @@
+import childProcess from "child_process";
+import fs from "fs-extra";
+import objectHash from "object-hash";
+import { MinecraftContainer } from "../../container/MinecraftContainer";
+import { addDoing } from "../../download/DownloadWrapper";
+import { xgot } from "../../download/GotWrapper";
+import { ensureLibraries } from "../../launch/Ensurance";
+import { convertFromFabric } from "../../profile/FabricProfileAdaptor";
+import { GameProfile } from "../../profile/GameProfile";
 import {
   FABRIC_VERSIONS_LOADER,
   generateFabricJarName,
 } from "../get/FabricGet";
-import { GameProfile } from "../../profile/GameProfile";
-import { MinecraftContainer } from "../../container/MinecraftContainer";
-import { ensureLibraries } from "../../launch/Ensurance";
-import objectHash from "object-hash";
-import childProcess from "child_process";
 import { makeTempLP } from "./ForgeInstall";
-import { convertFromFabric } from "../../profile/FabricProfileAdaptor";
-import { xgot } from "../../download/GotWrapper";
-import fs from "fs-extra";
 
 const JAR_ARG = "-jar";
 const INSTALL_ARG =
@@ -78,9 +79,11 @@ async function bootFabricInstaller(
       });
       prc.stdout?.on("data", (d) => {
         console.log(d.toString());
+        addDoing(d.toString());
       });
       prc.stderr?.on("data", (d) => {
         console.log(d.toString());
+        addDoing(d.toString());
       });
     } catch (e) {
       console.log(e);

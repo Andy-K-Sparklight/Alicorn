@@ -13,6 +13,7 @@ import {
   AccountCircle,
   AllInbox,
   Apps,
+  Book,
   Code,
   FlightTakeoff,
   GetApp,
@@ -55,6 +56,7 @@ import { OptionsPage } from "./Options";
 import { PffFront } from "./PffFront";
 import { ReadyToLaunch } from "./ReadyToLaunch";
 import { tr } from "./Translator";
+import { getNextTutorUrl, isShow, isTutor, Tutor } from "./Tutor";
 import { VersionView } from "./VersionView";
 import { Welcome } from "./Welcome";
 import { YggdrasilAccountManager } from "./YggdrasilAccountManager";
@@ -73,7 +75,6 @@ const useStyles = makeStyles((theme) =>
       marginRight: 0,
     },
     floatButton: {
-      float: "right",
       marginRight: 0,
     },
     title: {
@@ -84,7 +85,7 @@ const useStyles = makeStyles((theme) =>
 
 export function App(): JSX.Element {
   const classes = useStyles();
-  const [page, setPage] = useState(getString("startup-page.name", "Welcome"));
+  const [page, setPage] = useState(getString("startup-page.name", "Tutor"));
   const [openNotice, setNoticeOpen] = useState(false);
   const [openWarn, setWarnOpen] = useState(false);
   const [openChangePageWarn, setOpenChangePageWarn] = useState(false);
@@ -92,12 +93,22 @@ export function App(): JSX.Element {
   const [jumpPageTarget, setJumpPageTarget] = useState("");
   const [err, setErr] = useState("");
   const [warn, setWarn] = useState("");
+  const [refreshBit, setRefreshBit] = useState(false);
   useEffect(() => {
     if (window.location.hash === "#/") {
-      jumpTo(getString("startup-page.url", "/Welcome"));
-      triggerSetPage(getString("startup-page.name", "Welcome"));
+      jumpTo(getString("startup-page.url", "/Tutor/1"));
+      triggerSetPage(getString("startup-page.name", "Tutor"));
     }
   }, [window.location.hash]);
+  useEffect(() => {
+    const fun = (_e: Event) => {
+      setRefreshBit(!refreshBit);
+    };
+    window.addEventListener("refreshApp", fun);
+    return () => {
+      window.removeEventListener("refreshApp", fun);
+    };
+  });
   useEffect(() => {
     window.addEventListener("changePageWarn", (e) => {
       setOpenChangePageWarn(true);
@@ -168,134 +179,159 @@ export function App(): JSX.Element {
             {/* Drag our window with title */}
             <Typography variant={"h6"}>{tr(page)}</Typography>
           </Box>
-          <Tooltip
-            title={
-              getBoolean("dev")
-                ? tr("MainMenu.OpenDevToolsFormal")
-                : tr("MainMenu.OpenDevToolsKidding")
-            }
-          >
-            <IconButton
-              color={"inherit"}
-              className={classes.floatButton}
-              onClick={() => {
-                remoteOpenDevTools();
-              }}
+          <Box>
+            <Tooltip title={tr("MainMenu.NextTutorPage")}>
+              <IconButton
+                style={isTutor() ? {} : { display: "none" }}
+                color={"inherit"}
+                className={classes.floatButton}
+                onClick={() => {
+                  jumpTo(getNextTutorUrl());
+                  triggerSetPage(Pages.Tutor);
+                }}
+              >
+                <Book />
+              </IconButton>
+            </Tooltip>
+            <Tooltip
+              title={
+                getBoolean("dev")
+                  ? tr("MainMenu.OpenDevToolsFormal")
+                  : tr("MainMenu.OpenDevToolsKidding")
+              }
             >
-              <Code />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={tr("MainMenu.Version")}>
-            <IconButton
-              className={classes.floatButton}
-              onClick={() => {
-                jumpTo("/Version");
-                triggerSetPage(Pages.Version);
-              }}
-              color={"inherit"}
-            >
-              <Info />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={tr("MainMenu.QuickOptions")}>
-            <IconButton
-              className={classes.floatButton}
-              onClick={() => {
-                jumpTo("/Options");
-                triggerSetPage(Pages.Options);
-              }}
-              color={"inherit"}
-            >
-              <Settings />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={tr("MainMenu.QuickJavaSelector")}>
-            <IconButton
-              className={classes.floatButton}
-              onClick={() => {
-                jumpTo("/JavaSelector");
-                triggerSetPage(Pages.JavaSelector);
-              }}
-              color={"inherit"}
-            >
-              <Apps />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={tr("MainMenu.Browser")}>
-            <IconButton
-              className={classes.floatButton}
-              onClick={() => {
-                (async () => {
-                  await ipcRenderer.invoke(
-                    "openBrowser",
-                    getBoolean("web.allow-natives"),
-                    getString("web.global-proxy")
-                  );
-                })();
-              }}
-              color={"inherit"}
-            >
-              <Web />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={tr("MainMenu.QuickManageAccount")}>
-            <IconButton
-              className={classes.floatButton}
-              onClick={() => {
-                jumpTo("/YggdrasilAccountManager");
-                triggerSetPage(Pages.AccountManager);
-              }}
-              color={"inherit"}
-            >
-              <AccountCircle />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={tr("MainMenu.QuickManageContainer")}>
-            <IconButton
-              className={classes.floatButton}
-              onClick={() => {
-                jumpTo("/ContainerManager");
-                triggerSetPage(Pages.ContainerManager);
-              }}
-              color={"inherit"}
-            >
-              <AllInbox />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={tr("MainMenu.QuickInstallCore")}>
-            <IconButton
-              className={classes.floatButton}
-              onClick={() => {
-                jumpTo("/InstallCore");
-                triggerSetPage(Pages.InstallCore);
-              }}
-              color={"inherit"}
-            >
-              <GetApp />
-            </IconButton>
-          </Tooltip>
+              <IconButton
+                style={genHideStyles("Dev")}
+                color={"inherit"}
+                className={classes.floatButton}
+                onClick={() => {
+                  remoteOpenDevTools();
+                }}
+              >
+                <Code />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={tr("MainMenu.Version")}>
+              <IconButton
+                style={genHideStyles("Version")}
+                className={classes.floatButton}
+                onClick={() => {
+                  jumpTo("/Version");
+                  triggerSetPage(Pages.Version);
+                }}
+                color={"inherit"}
+              >
+                <Info />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={tr("MainMenu.QuickOptions")}>
+              <IconButton
+                style={genHideStyles("Options")}
+                className={classes.floatButton}
+                onClick={() => {
+                  jumpTo("/Options");
+                  triggerSetPage(Pages.Options);
+                }}
+                color={"inherit"}
+              >
+                <Settings />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={tr("MainMenu.QuickJavaSelector")}>
+              <IconButton
+                style={genHideStyles("JavaSelector")}
+                className={classes.floatButton}
+                onClick={() => {
+                  jumpTo("/JavaSelector");
+                  triggerSetPage(Pages.JavaSelector);
+                }}
+                color={"inherit"}
+              >
+                <Apps />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={tr("MainMenu.Browser")}>
+              <IconButton
+                style={genHideStyles("Browser")}
+                className={classes.floatButton}
+                onClick={() => {
+                  (async () => {
+                    await ipcRenderer.invoke(
+                      "openBrowser",
+                      getBoolean("web.allow-natives"),
+                      getString("web.global-proxy")
+                    );
+                  })();
+                }}
+                color={"inherit"}
+              >
+                <Web />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={tr("MainMenu.QuickManageAccount")}>
+              <IconButton
+                style={genHideStyles("AccountManager")}
+                className={classes.floatButton}
+                onClick={() => {
+                  jumpTo("/YggdrasilAccountManager");
+                  triggerSetPage(Pages.AccountManager);
+                }}
+                color={"inherit"}
+              >
+                <AccountCircle />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={tr("MainMenu.QuickManageContainer")}>
+              <IconButton
+                style={genHideStyles("ContainerManager")}
+                className={classes.floatButton}
+                onClick={() => {
+                  jumpTo("/ContainerManager");
+                  triggerSetPage(Pages.ContainerManager);
+                }}
+                color={"inherit"}
+              >
+                <AllInbox />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={tr("MainMenu.QuickInstallCore")}>
+              <IconButton
+                style={genHideStyles("InstallCore")}
+                className={classes.floatButton}
+                onClick={() => {
+                  jumpTo("/InstallCore");
+                  triggerSetPage(Pages.InstallCore);
+                }}
+                color={"inherit"}
+              >
+                <GetApp />
+              </IconButton>
+            </Tooltip>
 
-          <Tooltip title={tr("MainMenu.QuickLaunchPad")}>
-            <IconButton
-              color={"inherit"}
-              className={classes.floatButton}
-              onClick={() => {
-                jumpTo("/LaunchPad");
-                triggerSetPage(Pages.LaunchPad);
-              }}
-            >
-              <FlightTakeoff />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={tr("MainMenu.Exit")}>
-            <IconButton
-              className={classes.exitButton}
-              onClick={remoteCloseWindow}
-              color={"inherit"}
-            >
-              <PowerSettingsNew />
-            </IconButton>
-          </Tooltip>
+            <Tooltip title={tr("MainMenu.QuickLaunchPad")}>
+              <IconButton
+                style={genHideStyles("LaunchPad")}
+                color={"inherit"}
+                className={classes.floatButton}
+                onClick={() => {
+                  jumpTo("/LaunchPad");
+                  triggerSetPage(Pages.LaunchPad);
+                }}
+              >
+                <FlightTakeoff />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={tr("MainMenu.Exit")}>
+              <IconButton
+                style={genHideStyles("Exit")}
+                className={classes.exitButton}
+                onClick={remoteCloseWindow}
+                color={"inherit"}
+              >
+                <PowerSettingsNew />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Toolbar>
       </AppBar>
       <Box className={classes.content} id={"app_main"}>
@@ -314,8 +350,12 @@ export function App(): JSX.Element {
         <Route path={"/JavaSelector"} component={JavaSelector} />
         <Route path={"/Options"} component={OptionsPage} />
         <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
-        <Route path={"/PffFront/:container/:version"} component={PffFront} />
+        <Route
+          path={"/PffFront/:container/:version/:name?"}
+          component={PffFront}
+        />
         <Route path={"/Welcome"} component={Welcome} />
+        <Route path={"/Tutor/:page"} component={Tutor} />
       </Box>
 
       <YNDialog2
@@ -388,4 +428,17 @@ async function intervalSaveData(): Promise<void> {
   await saveVF();
   await saveResolveLock();
   console.log("All chunks are saved.");
+}
+
+function genHideStyles(name: string): React.CSSProperties {
+  if (!isTutor()) {
+    return {};
+  }
+  if (isShow(name)) {
+    console.log("Show " + name);
+    return {};
+  } else {
+    console.log("Hide " + name);
+    return { display: "none" };
+  }
 }

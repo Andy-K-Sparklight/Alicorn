@@ -40,6 +40,9 @@ export const useInputStyles = makeStyles((theme) =>
     input: {
       color: theme.palette.secondary.light,
     },
+    inputDark: {
+      color: theme.palette.primary.main,
+    },
     border: {
       color: theme.palette.secondary.light,
     },
@@ -101,6 +104,38 @@ export const fullWidth = makeStyles((theme) =>
       fontSize: "large",
       marginTop: theme.spacing(1),
       marginLeft: theme.spacing(4),
+    },
+  })
+);
+
+export const useTextStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      marginLeft: theme.spacing(4),
+    },
+    firstText: {
+      color: theme.palette.primary.main,
+      fontSize: "large",
+    },
+    secondText: {
+      color: theme.palette.secondary.main,
+      fontSize: "small",
+    },
+    mediumText: {
+      color: theme.palette.secondary.main,
+      fontSize: "medium",
+    },
+    link: {
+      color: theme.palette.primary.main,
+      fontSize: "small",
+    },
+    thirdText: {
+      color: theme.palette.primary.main,
+      fontSize: "medium",
+      marginTop: theme.spacing(-2),
+    },
+    list: {
+      marginTop: theme.spacing(-2),
     },
   })
 );

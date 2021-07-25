@@ -12,6 +12,7 @@ export function jumpTo(target: string): void {
   const ANIMATION_TIME = 200;
   fadeOut(e);
   setTimeout(() => {
+    window.scrollTo({ top: 0 });
     ifLeavingLaunchPadThenSetDirty();
     ifLeavingContainerManagerThenSetContainerListDirty();
     ifLeavingConfigThenReload();
@@ -58,6 +59,7 @@ export enum Pages {
   JavaSelector = "JavaSelector",
   PffFront = "PffFront",
   Welcome = "Welcome",
+  Tutor = "Tutor",
 }
 
 export const CHANGE_PAGE_WARN = "ChangePageWarn";
