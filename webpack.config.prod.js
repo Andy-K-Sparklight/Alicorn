@@ -79,7 +79,7 @@ const Renderer = {
 const StarlightWeb = {
   entry: "./src/starlight/Starlight.ts",
   output: {
-    filename: "Starlight.user.prod.js",
+    filename: "Starlight.prod.user.js",
     path: path.resolve(__dirname, "dist"), // This is intentional
   },
   module: {

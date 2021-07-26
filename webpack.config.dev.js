@@ -86,7 +86,7 @@ const RendererDev = {
 const StarlightWebDev = {
   entry: "./src/starlight/Starlight.ts",
   output: {
-    filename: "Starlight.user.dev.js",
+    filename: "Starlight.dev.user.js",
     path: path.resolve(__dirname, "dist"),
   },
   module: {
