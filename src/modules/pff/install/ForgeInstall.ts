@@ -26,14 +26,9 @@ import { GameProfile } from "../../profile/GameProfile";
 import { noDuplicateConcat } from "../../profile/InheritedProfileAdaptor";
 import { LibraryMeta } from "../../profile/Meta";
 
-// MAINTAINERS ONLY
-
 const FORGE_INSTALLER_HEADLESS = "forge.iw.jar";
 const CP_ARG = "-cp";
 const LAUNCHER_PROFILES = "launcher_profiles.json";
-// Figured out! Java problem
-// Okay we shall suggest 8 for 1.12.2 or earlier and 11 for 1.13 or later
-// This runs well!
 const PONY_KIND_MAIN_CLASS = "rarityeg.alicorn.ForgeInstallerWrapper";
 const VERSION_PROFILE = "version.json";
 const INSTALL_PROFILE = "install_profile.json";

@@ -1,10 +1,10 @@
-import path from "path";
-import os from "os";
-import { ALICORN_DATA_SUFFIX, PLACE_HOLDER } from "../commons/Constants";
-import { loadData, saveData, saveDataSync } from "../config/DataSupport";
-import { buildMap, parseMap } from "../commons/MapUtil";
 import childProcess from "child_process";
+import os from "os";
+import path from "path";
+import { ALICORN_DATA_SUFFIX, PLACE_HOLDER } from "../commons/Constants";
 import { isFileExist } from "../commons/FileUtil";
+import { buildMap, parseMap } from "../commons/MapUtil";
+import { loadData, saveData, saveDataSync } from "../config/DataSupport";
 
 const JAVA_RECORD_BASE = "java.record" + ALICORN_DATA_SUFFIX;
 const LATEST_TAG = "?LATEST>>";
@@ -75,7 +75,11 @@ export function resetJavaList(list: string[]): void {
   for (const h of list) {
     JDT.set(h, PLACE_HOLDER);
   }
-  JDT.set(LATEST_TAG, lt);
+  if (JDT.has(lt)) {
+    JDT.set(LATEST_TAG, lt);
+  } else {
+    JDT.set(LATEST_TAG, "");
+  }
 }
 
 export function getLastUsedJavaHome(): string {

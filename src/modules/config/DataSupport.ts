@@ -1,6 +1,6 @@
 import fs from "fs-extra";
-import path from "path";
 import os from "os";
+import path from "path";
 import { copyFileStream, isFileExist } from "../commons/FileUtil";
 import { getBasePath } from "./PathSolve";
 
@@ -40,7 +40,7 @@ export function saveDataSync(relativePath: string, data: string): void {
   fs.writeFileSync(dest, data);
 }
 
-// Hint: NEVER use 'fs.copyFile'!
+// Hint: DO NOT use 'fs.copyFile' here!
 // 'No permission', I don't know why, but we have to do this manually
 
 export async function saveDefaultData(dfPath: string): Promise<void> {

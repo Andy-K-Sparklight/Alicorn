@@ -2,6 +2,7 @@ import { Box, MuiThemeProvider, Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getString, set } from "../modules/config/ConfigSupport";
+import { whereJava } from "../modules/java/WhereJava";
 import { jumpTo, triggerSetPage } from "./GoTo";
 import { ConfigType, InputItem } from "./Options";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
@@ -28,6 +29,13 @@ export function Tutor(): JSX.Element {
   const classes = useTextStyles();
   const { page } = useParams<{ page: string }>();
   const control = tr(`Tutor.${page}.Controller`);
+  useEffect(() => {
+    if (page === "1") {
+      whereJava(true)
+        .then(() => {})
+        .catch(() => {}); // Pre init task
+    }
+  }, []);
   useEffect(() => {
     const url = window.location.hash;
     const page = parseInt(url.charAt(url.length - 1));

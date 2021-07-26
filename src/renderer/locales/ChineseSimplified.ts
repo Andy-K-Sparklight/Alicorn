@@ -291,9 +291,9 @@ export default {
   "Options.dev.title": "开发人员模式 *",
   "Options.dev.desc":
     "打开开发人员模式，然后再次看看那些之前让你感到迷惑的标签 - 它们只会对开发人员显示正确的内容",
-  "Options.reset.title": "重置为默认值 ^",
+  "Options.reset.title": "一忘皆空 ^",
   "Options.reset.desc":
-    "在下次启动时将设置重置为当前版本的默认内容 - 当你觉得你玩脱了的时候很有用，但您的所有改动都将丢失",
+    "在下次启动时将设置重置为当前版本的默认内容 - 当你觉得你玩脱了的时候很有用，但所有改动都将丢失",
   "Options.pff.cache-root.title": "Pff 文件缓存位置",
   "Options.pff.cache-root.desc":
     "设置 Pff 的文件缓存目录 - 这是必须的，有助于加快软件包的二次安装速度，留空以使用默认目录 {AlicornHome}",
@@ -431,33 +431,33 @@ export default {
   "Tutor.3.Setting": "updator.use-update;BOOL",
   "Tutor.4.Title": "接下来我们要进行一些重要设置",
   "Tutor.4.Content":
-    "嗯，那么，{UserName}，你好。\n\n接下来我们需要进行一连串的设定，点按右上角的按钮进入下一页。\n\n我们将设置 Java 运行时、下载镜像和 Pff 缓存。",
+    "嗯，那么，{UserName}，你好。\n\n接下来我们需要进行一连串的设定，点按右上角的按钮进入下一页。\n\n我们将设置下载镜像、Pff 缓存和 Java 运行时。",
   "Tutor.4.Controller": "",
   "Tutor.4.Setting": "",
-  "Tutor.5.Title": "Java 平台相关设置",
-  "Tutor.5.Content":
-    "注意：请在阅读完本说明后再操作！\n\nJava 运行时（JRE）是运行 Minecraft 的重要基础，通常配置并不简单，但 Alicorn 让它简单了一些……\n\n现在右上角应该出现了一个新的按钮，在那里你可以选择 JRE 环境（或者安装新的——仅 Windows），单击该按钮，并在那里选择一个 JRE——无论是自动搜索还是手动定位，亦或是干脆安装一个新的。\n\n如果你想玩 Minecraft 17 及以后的版本，需要安装 Java 16，对于 Minecraft 12 及以前的版本，还有 Forge，则需要 Java 8，因此建议将两者都设置好。\n\n在那个页面完成设置后，单击右上角的书进入下一页。",
-  "Tutor.5.Controller": "+JavaSelector",
-  "Tutor.5.Setting": "",
-  "Tutor.6.Title": "下载镜像设置",
-  "Tutor.6.Content":
-    "Minecraft 需要从 Mojang 官网下载，但鉴于网络环境因你所处的位置而异（例如，在坎高下载这些文件就非常快，而在无尽森林可能根本就无法下载），你或许想选择一个镜像。\n\n在下面的设置中你可以键入 alicorn、tss 之一来选择一个完全自由的镜像，也可以选择 alicorn-mcbbs-nonfree 或 tss-mcbbs-nonfree 这两个不完全自由的组合镜像，使用 none 来禁用镜像。\n\nAlicorn 不保证任何镜像的可用性或安全性，如果因下载来自非 Mojang 官方源（即下载镜像不是 none）的文件存在恶意内容导致你的数据丢失或损毁，Mojang（很可能）不将为此负责。",
-  "Tutor.6.Controller": "-JavaSelector",
-  "Tutor.6.Setting": "download.mirror;STR",
-  "Tutor.7.Title": "了解 Pff",
-  "Tutor.7.Content":
-    "（如果你不玩或少玩 Mod，请直接跳过本部分。）\n\nPff 是一个自由的 Alicorn 组件，用于查询符合 CurseForge API 规范的 Mod 分发站点。简单说，就是 Mod 下载器。它能够通过 Mod 英文名（甚至是不完整的）来下载大多数 Mod（如果它们在 CurseForge 或指定的 Mod 分发站点发布了）。\n\nPff 会缓存已经下载过的 Mod，因此，你应该选择一个合适的位置来存放这些缓存文件（不是在 Minecraft 容器中！）。你可以在下面的设置中调整。",
-  "Tutor.7.Controller": "",
-  "Tutor.7.Setting": "pff.cache-root;DIR",
-  "Tutor.8.Title": "设置更多内容",
+  "Tutor.8.Title": "Java 平台相关设置",
   "Tutor.8.Content":
-    "Alicorn 拥有相当数量的设置项，尽管它们大多数的默认值就是建议值，但你可能想定量地修改一些设定值。\n\n现在你可以点击右上角的按钮前往设置页面。跟之前一样，设置完成后点按右上角的书将前往下一页。\n\n如果你不想修改，单击书按钮直接进入下一页。",
+    "注意：请在阅读完本说明后再操作！\n\nJava 运行时（JRE）是运行 Minecraft 的重要基础，通常配置并不简单，但 Alicorn 让它简单了一些……\n\n现在右上角应该出现了一个新的按钮，在那里你可以选择 JRE 环境（或者安装新的——仅 Windows），单击该按钮，并在那里选择一个 JRE——无论是自动搜索还是手动定位，亦或是干脆安装一个新的。\n\n如果你想玩 Minecraft 17 及以后的版本，需要安装 Java 16，对于 Minecraft 12 及以前的版本，还有 Forge，则需要 Java 8，因此建议将两者都设置好。\n\n在那个页面完成设置后，单击右上角的书进入下一页。",
+  "Tutor.8.Controller": "-Options;+JavaSelector",
   "Tutor.8.Setting": "",
-  "Tutor.8.Controller": "+Options",
+  "Tutor.5.Title": "下载镜像设置",
+  "Tutor.5.Content":
+    "Minecraft 需要从 Mojang 官网下载，但鉴于网络环境因你所处的位置而异（例如，在坎高下载这些文件就非常快，而在无尽森林可能根本就无法下载），你或许想选择一个镜像。\n\n在下面的设置中你可以键入 alicorn、tss 之一来选择一个完全自由的镜像，也可以选择 alicorn-mcbbs-nonfree 或 tss-mcbbs-nonfree 这两个不完全自由的组合镜像，使用 none 来禁用镜像。\n\nAlicorn 不保证任何镜像的可用性或安全性，如果因下载来自非 Mojang 官方源（即下载镜像不是 none）的文件存在恶意内容导致你的数据丢失或损毁，Mojang（很可能）不将为此负责。",
+  "Tutor.5.Controller": "",
+  "Tutor.5.Setting": "download.mirror;STR",
+  "Tutor.6.Title": "了解 Pff",
+  "Tutor.6.Content":
+    "（如果你不玩或少玩 Mod，请直接跳过本部分。）\n\nPff 是一个自由的 Alicorn 组件，用于查询符合 CurseForge API 规范的 Mod 分发站点。简单说，就是 Mod 下载器。它能够通过 Mod 英文名（甚至是不完整的）来下载大多数 Mod（如果它们在 CurseForge 或指定的 Mod 分发站点发布了）。\n\nPff 会缓存已经下载过的 Mod，因此，你应该选择一个合适的位置来存放这些缓存文件（不是在 Minecraft 容器中！）。你可以在下面的设置中调整。",
+  "Tutor.6.Controller": "",
+  "Tutor.6.Setting": "pff.cache-root;DIR",
+  "Tutor.7.Title": "设置更多内容",
+  "Tutor.7.Content":
+    "Alicorn 拥有相当数量的设置项，尽管它们大多数的默认值就是建议值，但你可能想定量地修改一些设定值。\n\n现在你可以点击右上角的按钮前往设置页面。跟之前一样，设置完成后点按右上角的书将前往下一页。\n\n如果你不想修改，单击书按钮直接进入下一页。",
+  "Tutor.7.Setting": "",
+  "Tutor.7.Controller": "+Options",
   "Tutor.9.Title": "很快就要完成了",
   "Tutor.9.Content":
     "我迫不及待地想让你开始游戏，现在终于来到了最后几步……赶紧进入下一页吧！\n\n我们将创建容器、安装游戏和启动游戏。",
-  "Tutor.9.Controller": "-Options",
+  "Tutor.9.Controller": "-JavaSelector",
   "Tutor.9.Setting": "",
   "Tutor.10.Title": "创建一个容器",
   "Tutor.10.Content":

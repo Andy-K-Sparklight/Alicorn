@@ -435,10 +435,8 @@ function genHideStyles(name: string): React.CSSProperties {
     return {};
   }
   if (isShow(name)) {
-    console.log("Show " + name);
     return {};
   } else {
-    console.log("Hide " + name);
     return { display: "none" };
   }
 }

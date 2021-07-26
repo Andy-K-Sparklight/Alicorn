@@ -4,11 +4,12 @@ import os from "os";
 import path from "path";
 import { isFileExist } from "../commons/FileUtil";
 import { getBoolean, getNumber } from "../config/ConfigSupport";
+import { resetJavaList } from "./JInfo";
 
 // This function is VERY SLOW!
 // It searches the whole os directory to find 'java.exe'(or 'java' on unix-liked)
 
-export async function whereJava(): Promise<string[]> {
+export async function whereJava(useCache = false): Promise<string[]> {
   let all: string[] = [];
   all = all.concat(await findJavaViaCommand());
   all.push(await findJavaInPATH());
@@ -30,6 +31,9 @@ export async function whereJava(): Promise<string[]> {
       }
     }
   }
+  if (useCache) {
+    resetJavaList(res);
+  }
   return res;
 }
 
@@ -37,7 +41,6 @@ async function findJavaUNIX(): Promise<string[]> {
   if (os.platform() === "win32") {
     return [];
   }
-  console.log("Searching Java!");
   const programBase = "/";
   const all: string[] = [];
   await diveSearch("java", programBase, all, getNumber("java.search-depth", 8));
@@ -140,14 +143,18 @@ async function diveSearch(
   depth = 8,
   counter = 0
 ): Promise<void> {
-  console.log("Searching " + rootDir);
   if (depth !== 0 && counter > depth) {
     return;
   }
   try {
     const all = await fs.readdir(rootDir);
     if (all.includes(fileName)) {
-      concatArray.push(path.resolve(rootDir, fileName));
+      const aPath = path.resolve(rootDir, fileName);
+      if (path.basename(path.dirname(aPath)).toLowerCase() === "bin") {
+        if ((await fs.stat(aPath)).isFile()) {
+          concatArray.push(aPath);
+        }
+      }
     }
     for (const f of all) {
       if (DIR_BLACKLIST.includes(f.toLowerCase())) {
