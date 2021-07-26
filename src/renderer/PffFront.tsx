@@ -230,7 +230,7 @@ async function pffInstall(
     i = p;
   }
   setPffFlag("1");
-  const proxy = getString("pff.proxy", "");
+  const proxy = getString("pff.proxy");
   try {
     const u = new URL(proxy);
     setProxy(u.host, parseInt(u.port));

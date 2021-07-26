@@ -1,5 +1,6 @@
 import { ensureDir, symlink, writeFile } from "fs-extra";
 import objectHash from "object-hash";
+import os from "os";
 import path from "path";
 import { PLACE_HOLDER } from "../commons/Constants";
 import { isFileExist } from "../commons/FileUtil";
@@ -10,7 +11,6 @@ import { wrappedDownloadFile } from "../download/DownloadWrapper";
 import { MinecraftContainer } from "./MinecraftContainer";
 const ASC_NAME = "asc.lock";
 // Use symlink
-
 export async function isSharedContainer(
   container: MinecraftContainer
 ): Promise<boolean> {
@@ -27,7 +27,7 @@ export async function fetchSharedFile(meta: DownloadMeta): Promise<boolean> {
   }
   const u = new URL(meta.url);
   const urlSHA = objectHash(meta.url) + "-" + objectHash(u.host);
-  const root = getString("cx.shared-root");
+  const root = getString("cx.shared-root", os.homedir(), true);
   let targetFile: string;
   if (root.trim().length > 0) {
     targetFile = path.join(root, urlSHA);

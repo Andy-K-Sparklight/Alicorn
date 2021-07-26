@@ -1,9 +1,9 @@
-import path from "path";
-import os from "os";
+import { ipcRenderer } from "electron";
 import fs from "fs-extra";
+import os from "os";
+import path from "path";
 import { isFileExist } from "../commons/FileUtil";
 import { getBasePath } from "./PathSolve";
-import { ipcRenderer } from "electron";
 
 const CONFIG_FILE = path.resolve(
   os.homedir(),
@@ -34,10 +34,12 @@ export function getBoolean(key: string, def = false): boolean {
   return !!get(key, def);
 }
 
-export function getString(key: string, def = ""): string {
+export function getString(key: string, def = "", nonEmpty = false): string {
   const val = get(key, def);
   if (typeof val === "string") {
-    return val;
+    if (!nonEmpty || val.length > 0) {
+      return val;
+    }
   }
   if (typeof val === "object" && val !== undefined && val !== null) {
     return val.toString();

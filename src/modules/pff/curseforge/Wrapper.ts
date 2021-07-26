@@ -1,3 +1,6 @@
+import { getNumber, getString } from "../../config/ConfigSupport";
+import { DATA_ROOT } from "../../config/DataSupport";
+import { MinecraftContainer } from "../../container/MinecraftContainer";
 import {
   AddonInfo,
   getAddonInfoBySlug,
@@ -6,12 +9,9 @@ import {
   lookupFileInfo,
   requireFile,
 } from "./Get";
-import { getNumber, getString } from "../../config/ConfigSupport";
-import { CF_API_BASE_URL, NULL_OUTPUT, PFF_MSG_GATE } from "./Values";
-import { MinecraftContainer } from "../../container/MinecraftContainer";
-import { DATA_ROOT } from "../../config/DataSupport";
 import { loadLockFile, saveLockFile, writeToLockFile } from "./Lockfile";
 import { upgradeFile } from "./Upgrade";
+import { CF_API_BASE_URL, NULL_OUTPUT, PFF_MSG_GATE } from "./Values";
 
 export async function requireMod(
   slug: string | number,
@@ -24,7 +24,7 @@ export async function requireMod(
   let apiBase = getString("pff.api-base", CF_API_BASE_URL);
   apiBase = apiBase.endsWith("/") ? apiBase.slice(0, -1) : apiBase;
   const pageSize = getNumber("pff.page-size", 10) || 10;
-  const cacheRoot = getString("pff.cache-root", DATA_ROOT);
+  const cacheRoot = getString("pff.cache-root", DATA_ROOT, true);
   const timeout = getNumber("download.concurrent.timeout");
   let aInfo: AddonInfo | undefined;
   emitter.emit(PFF_MSG_GATE, `Querying info for '${slug}'`);
@@ -90,7 +90,7 @@ export async function upgrade(container: MinecraftContainer): Promise<void> {
   const lockfile = await loadLockFile(container);
   let apiBase = getString("pff.api-base", CF_API_BASE_URL);
   apiBase = apiBase.endsWith("/") ? apiBase.slice(0, -1) : apiBase;
-  const cacheRoot = getString("pff.cache-root", DATA_ROOT);
+  const cacheRoot = getString("pff.cache-root", DATA_ROOT, true);
   const timeout = getNumber("download.concurrent.timeout");
   await upgradeFile(lockfile, apiBase, timeout, cacheRoot, container);
   await saveLockFile(lockfile, container);

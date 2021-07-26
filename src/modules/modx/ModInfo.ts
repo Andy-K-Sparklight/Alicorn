@@ -1,15 +1,15 @@
-import { getHash } from "../download/Validate";
-import { getActualDataPath } from "../config/DataSupport";
-import { ALICORN_DATA_SUFFIX } from "../commons/Constants";
-import { getString } from "../config/ConfigSupport";
-import path from "path";
-import { JAR_SUFFIX } from "../launch/NativesLint";
-import { isFileExist } from "../commons/FileUtil";
-import fs from "fs-extra";
-import { MinecraftContainer } from "../container/MinecraftContainer";
 import { zip } from "compressing";
-import { isNull, safeGet } from "../commons/Null";
+import fs from "fs-extra";
+import path from "path";
 import toml from "toml";
+import { ALICORN_DATA_SUFFIX } from "../commons/Constants";
+import { isFileExist } from "../commons/FileUtil";
+import { isNull, safeGet } from "../commons/Null";
+import { getString } from "../config/ConfigSupport";
+import { getActualDataPath } from "../config/DataSupport";
+import { MinecraftContainer } from "../container/MinecraftContainer";
+import { getHash } from "../download/Validate";
+import { JAR_SUFFIX } from "../launch/NativesLint";
 
 const MCMOD_INFO = "mcmod.info";
 const FABRIC_MOD_JSON = "fabric.mod.json";
@@ -59,7 +59,7 @@ enum ModLoader {
 export { ModLoader };
 
 export async function initModInfo(): Promise<void> {
-  MOD_INFO_DIR = getString("modx.default-save-path", DEFAULT_DIR);
+  MOD_INFO_DIR = getString("modx.default-save-path", DEFAULT_DIR, true);
   // MOD_CACHE_DIR = path.join(MOD_INFO_DIR, "mods");
   MOD_META_DIR = path.join(MOD_INFO_DIR, "metas");
   await fs.ensureDir(MOD_META_DIR);

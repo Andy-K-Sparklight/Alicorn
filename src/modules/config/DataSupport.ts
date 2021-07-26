@@ -16,11 +16,11 @@ export async function loadData(dataPath: string): Promise<string> {
 }
 
 export function getPathInDefaults(pt: string): string {
-  return path.resolve(path.join(DEFAULTS_ROOT, pt));
+  return path.resolve(DEFAULTS_ROOT, pt);
 }
 
 export function getActualDataPath(pt: string): string {
-  return path.resolve(path.join(DATA_ROOT, pt));
+  return path.resolve(DATA_ROOT, pt);
 }
 
 export async function saveData(
