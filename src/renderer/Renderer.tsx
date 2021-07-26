@@ -35,7 +35,8 @@ import { initTranslator } from "./Translator";
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
-
+const FONT_FAMILY =
+  'UbuntuMono-R, "Open Sans", Roboto, "Microsoft YaHei UI Light", "Fira Code", Consolas, "Courier New", Courier, monospace';
 export function setThemeColor(
   primaryMain: string,
   primaryLight: string,
@@ -54,6 +55,9 @@ export function setThemeColor(
         light: secondaryLight,
       },
     },
+    typography: {
+      fontFamily: FONT_FAMILY,
+    },
   });
   ALICORN_DEFAULT_THEME_LIGHT = createTheme({
     palette: {
@@ -66,6 +70,9 @@ export function setThemeColor(
         main: secondaryMain,
         light: secondaryLight,
       },
+    },
+    typography: {
+      fontFamily: FONT_FAMILY,
     },
   });
 }
@@ -82,6 +89,9 @@ export let ALICORN_DEFAULT_THEME_DARK = createTheme({
       light: "#ffe0f0",
     },
   },
+  typography: {
+    fontFamily: FONT_FAMILY,
+  },
 });
 export let ALICORN_DEFAULT_THEME_LIGHT = createTheme({
   palette: {
@@ -94,6 +104,9 @@ export let ALICORN_DEFAULT_THEME_LIGHT = createTheme({
       main: "#df307f",
       light: "#ffe0f0",
     },
+  },
+  typography: {
+    fontFamily: FONT_FAMILY,
   },
 });
 
@@ -210,7 +223,6 @@ export function submitError(msg: string): void {
   window.dispatchEvent(new CustomEvent("sysError", { detail: msg }));
 }
 export function submiWarn(msg: string): void {
-
   window.dispatchEvent(new CustomEvent("sysWarn", { detail: msg }));
 }
 
