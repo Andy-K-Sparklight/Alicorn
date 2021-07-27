@@ -16,7 +16,7 @@ function getSupportVersions(): string[] {
   const c = document.querySelector(
     "tbody > tr:nth-child(1) > td.plc > div.pct > div > div.typeoption > table > tbody > tr:nth-child(3) > td"
   );
-  return c ? c.innerHTML.split("&nbsp;") : [];
+  return c ? c.innerHTML.split(/&nbsp;|\s/) : [];
 }
 
 function getServerAddress(): string {

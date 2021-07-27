@@ -7,7 +7,6 @@ import { registerBackgroundListeners } from "./Background";
 import { getUserBrowser } from "./Browser";
 import { checkUpdate } from "./Updator";
 import { initWS } from "./WSServer";
-
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow | null = null;
 app.on("ready", async () => {

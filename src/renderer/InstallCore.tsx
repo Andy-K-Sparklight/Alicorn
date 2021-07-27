@@ -22,7 +22,12 @@ import {
   getAllMounted,
   getContainer,
 } from "../modules/container/ContainerUtil";
-import { clearDoing, getDoing } from "../modules/download/DownloadWrapper";
+import {
+  clearDoing,
+  getDoing,
+  subscribeDoing,
+  unsubscribeDoing,
+} from "../modules/download/DownloadWrapper";
 import { getJavaRunnable, getLastUsedJavaHome } from "../modules/java/JInfo";
 import {
   canSupportGame,
@@ -87,13 +92,11 @@ export function InstallCore(): JSX.Element {
     }
   }
   useEffect(() => {
-    const a = setInterval(() => {
-      if (mounted.current) {
-        setDoing(getDoing());
-      }
-    }, 300);
+    subscribeDoing("InstallCore", (d) => {
+      setDoing(d);
+    });
     return () => {
-      clearInterval(a);
+      unsubscribeDoing("InstallCore");
     };
   });
   useEffect(() => {

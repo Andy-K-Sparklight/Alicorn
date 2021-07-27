@@ -62,7 +62,8 @@ import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { scanReports } from "../modules/crhelper/CrashReportFinder";
 import {
   getWrapperStatus,
-  WrapperStatus,
+  subscribeWrapperUpdate,
+  unsubscribeWrapperUpdate,
 } from "../modules/download/DownloadWrapper";
 import {
   getAllJava,
@@ -190,6 +191,7 @@ function Launching(props: {
   container: MinecraftContainer;
   server?: string;
 }): JSX.Element {
+  console.log("Re-renderering launching component!");
   const classes = useStyles();
   const mountedBit = useRef<boolean>(true);
   const [warning, setWarning] = useState(false);
@@ -200,7 +202,7 @@ function Launching(props: {
   const [selectedAccount, setSelectedAccount] = useState<Account>();
   const [selecting, setSelecting] = useState<boolean>(false);
   const [allAccounts, setAccounts] = useState<Set<Account>>(new Set<Account>());
-  const [wrapperStatus, setWrapperStatus] = useState<WrapperStatus>();
+  const [refreshWrapperBit, refreshWrapper] = useState<boolean>(false);
   const profileHash = useRef<string>(objectHash(props.profile));
   useEffect(() => {
     const timer = setInterval(() => {
@@ -227,11 +229,11 @@ function Launching(props: {
     })();
   }, []);
   useEffect(() => {
-    const tm = setInterval(() => {
-      setWrapperStatus(getWrapperStatus());
-    }, 300);
+    subscribeWrapperUpdate("ReadyToLaunch", () => {
+      refreshWrapper(!refreshWrapperBit);
+    });
     return () => {
-      clearInterval(tm);
+      unsubscribeWrapperUpdate("ReadyToLaunch");
     };
   }, []);
   useEffect(() => {
@@ -351,13 +353,13 @@ function Launching(props: {
           <Typography className={classes.text} gutterBottom>
             {tr(
               "ReadyToLaunch.Progress",
-              `Current=${wrapperStatus?.inStack}`,
+              `Current=${getWrapperStatus().inStack}`,
               `BufferMax=${getNumber("download.concurrent.max-tasks")}`,
-              `Pending=${wrapperStatus?.pending}`
+              `Pending=${getWrapperStatus().pending}`
             )}
           </Typography>
           <Typography className={classes.text} gutterBottom>
-            {wrapperStatus?.doing}
+            {getWrapperStatus().doing}
           </Typography>
         </Box>
       )}
@@ -576,6 +578,7 @@ function AccountChoose(props: {
       },
     })
   )();
+  console.log("Re-renderering account choose!");
   const [choice, setChoice] = useState<"MZ" | "AL" | "YG">("MZ");
   const [pName, setName] = useState<string>(
     window.localStorage.getItem(LAST_USED_USER_NAME_KEY) || "Demo"

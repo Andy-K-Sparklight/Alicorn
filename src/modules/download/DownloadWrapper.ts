@@ -16,14 +16,21 @@ import { Serial } from "./Serial";
 import { validate } from "./Validate";
 
 const DOINGX: string[] = [];
+const DOING_X_SUBSCRIBES: Map<string, (d: string) => unknown> = new Map();
 export function addDoing(s: string): void {
   DOINGX.unshift(s);
+  for (const [_n, f] of DOING_X_SUBSCRIBES) {
+    f(s);
+  }
   if (DOINGX.length > 3) {
     DOINGX.pop();
   }
 }
 
 export function clearDoing(): void {
+  for (const [_n, f] of DOING_X_SUBSCRIBES) {
+    f("");
+  }
   DOINGX.pop();
   DOINGX.pop();
   DOINGX.pop();
@@ -32,9 +39,29 @@ export function clearDoing(): void {
 export function getDoing(): string {
   return DOINGX[0] || "";
 }
+
+export function subscribeDoing(
+  name: string,
+  func: (d: string) => unknown
+): void {
+  DOING_X_SUBSCRIBES.set(name, func);
+}
+
+export function unsubscribeDoing(name: string): void {
+  DOING_X_SUBSCRIBES.delete(name);
+}
 const DOING: string[] = [];
+
+const SUBSCRIBE_MAP: Map<string, (w: WrapperStatus) => void> = new Map();
 const PENDING_TASKS: DownloadMeta[] = [];
 const RUNNING_TASKS = new Set<DownloadMeta>();
+
+function markChangeStatus(): void {
+  for (const [_n, f] of SUBSCRIBE_MAP) {
+    f(getWrapperStatus());
+  }
+}
+
 const WAITING_RESOLVES_MAP = new Map<
   DownloadMeta,
   (value: DownloadStatus | PromiseLike<DownloadStatus>) => void
@@ -47,6 +74,7 @@ export function initDownloadWrapper(): void {
   EMITTER = new EventEmitter();
   EMITTER.on(END_GATE, (m: DownloadMeta, s: DownloadStatus) => {
     RUNNING_TASKS.delete(m);
+    markChangeStatus();
     FAILED_COUNT_MAP.delete(m);
     (
       WAITING_RESOLVES_MAP.get(m) ||
@@ -160,6 +188,7 @@ function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
       } else {
         WAITING_RESOLVES_MAP.set(meta, resolve);
         PENDING_TASKS.push(meta);
+        markChangeStatus();
         scheduleNextTask();
       }
     });
@@ -171,7 +200,9 @@ function scheduleNextTask(): void {
   const CURRENT_MAX = getConfigOptn("max-tasks", 20);
   while (RUNNING_TASKS.size < CURRENT_MAX && PENDING_TASKS.length > 0) {
     const tsk = PENDING_TASKS.pop();
+    markChangeStatus();
     if (tsk !== undefined) {
+      markChangeStatus();
       RUNNING_TASKS.add(tsk);
       downloadSingleFile(tsk, EMITTER);
     }
@@ -240,8 +271,18 @@ export function getWrapperStatus(): WrapperStatus {
   return {
     inStack: RUNNING_TASKS.size || 0,
     pending: PENDING_TASKS.length || 0,
-    doing: DOING[0],
+    doing: DOING[0] || "",
   };
+}
+
+export function subscribeWrapperUpdate(
+  name: string,
+  func: (w: WrapperStatus) => unknown
+): void {
+  SUBSCRIBE_MAP.set(name, func);
+}
+export function unsubscribeWrapperUpdate(name: string): void {
+  SUBSCRIBE_MAP.delete(name);
 }
 
 const PFF_FLAG = "Downloader.IsPff";
@@ -292,6 +333,7 @@ export function addState(s: string): void {
   console.log(s);
   addDoing(s);
   DOING.unshift(s);
+  markChangeStatus();
   if (DOING.length > 3) {
     DOING.pop();
   }
