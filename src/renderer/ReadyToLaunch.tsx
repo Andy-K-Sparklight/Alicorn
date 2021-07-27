@@ -424,7 +424,7 @@ export interface MCFailureInfo {
 }
 
 // Start to boot a Minecraft instance
-// When Minecraft quit, this function will post an event 'mcFailure'
+// When Minecraft quit with a non-zero exit code, this function will post an event 'mcFailure'
 // In its detail contains crash report (if found)
 async function startBoot(
   setStatus: (status: LaunchingStatus) => void,
@@ -457,8 +457,9 @@ async function startBoot(
       await account.performAuth("");
     }
   } else if (account.type !== AccountType.ALICORN) {
+    // Alicorn don't need to flush fake token
     if (!(await account.isAccessTokenValid())) {
-      await account.flushToken(); // Don't know whether this will work or not
+      await account.flushToken(); // Don't know whether this will work or not, but we have to give a try
     }
   }
   const acData = await fillAccessData(await account.buildAccessData());
@@ -483,14 +484,15 @@ async function startBoot(
   }
 
   setStatus(LaunchingStatus.LIBRARIES_FILLING);
-
-  await ensureClient(profile);
-  await ensureLog4jFile(profile, container);
-  await ensureLibraries(profile, container, GLOBAL_LAUNCH_TRACKER);
-  await ensureNatives(profile, container);
+  await Promise.all([
+    ensureClient(profile),
+    ensureLog4jFile(profile, container),
+    ensureLibraries(profile, container, GLOBAL_LAUNCH_TRACKER),
+  ]); // Parallel
+  await ensureNatives(profile, container); // Depends on libraries
   setStatus(LaunchingStatus.ASSETS_FILLING);
   await ensureAssetsIndex(profile, container);
-  await ensureAllAssets(profile, container, GLOBAL_LAUNCH_TRACKER);
+  await ensureAllAssets(profile, container, GLOBAL_LAUNCH_TRACKER); // Depends on assets index
   setStatus(LaunchingStatus.MODS_PREPARING);
   if (profile.type === ReleaseType.MODIFIED) {
     await prepareModsCheckFor(profile, container, GLOBAL_LAUNCH_TRACKER);

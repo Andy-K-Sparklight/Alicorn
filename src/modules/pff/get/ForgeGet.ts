@@ -8,7 +8,6 @@ import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { DownloadMeta } from "../../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../../download/DownloadWrapper";
 import { xgot } from "../../download/GotWrapper";
-import { applyMirror } from "../../download/Mirror";
 import { JAR_SUFFIX } from "../../launch/NativesLint";
 
 // Forge Getter
@@ -110,8 +109,7 @@ export async function getForgeInstaller(
       generateForgeInstallerName(mcv, fgv)
     );
     // No validating
-    const meta = new DownloadMeta(applyMirror(pt), dest, "");
-    console.log(meta);
+    const meta = new DownloadMeta(pt, dest, "");
     return (await wrappedDownloadFile(meta, true)) === 1;
   } catch {
     return false;

@@ -95,12 +95,13 @@ export async function wrappedDownloadFile(
   meta: DownloadMeta,
   noAutoLn = false
 ): Promise<DownloadStatus> {
+  const ou = meta.url;
   // POST
   if (meta.url.trim().length === 0 || meta.savePath.trim().length === 0) {
-    addState(tr("ReadyToLaunch.Got", `Url=${meta.url}`));
+    addState(tr("ReadyToLaunch.Got", `Url=${ou}`));
     return DownloadStatus.RESOLVED;
   }
-  addState(tr("ReadyToLaunch.Getting", `Url=${meta.url}`));
+  addState(tr("ReadyToLaunch.Getting", `Url=${ou}`));
   if (!noAutoLn) {
     const a = getAllContainers();
     let targetContainer = "";
@@ -114,7 +115,7 @@ export async function wrappedDownloadFile(
       (await isSharedContainer(getContainer(targetContainer)))
     ) {
       if (await fetchSharedFile(meta)) {
-        addState(tr("ReadyToLaunch.Got", `Url=${meta.url}`));
+        addState(tr("ReadyToLaunch.Got", `Url=${ou}`));
         return DownloadStatus.RESOLVED;
       }
     }
@@ -127,7 +128,7 @@ export async function wrappedDownloadFile(
   FAILED_COUNT_MAP.set(mirroredMeta, getConfigOptn("tries-per-chunk", 3));
   if ((await _wrappedDownloadFile(mirroredMeta)) === 1) {
     FAILED_COUNT_MAP.delete(mirroredMeta);
-    addState(tr("ReadyToLaunch.Got", `Url=${meta.url}`));
+    addState(tr("ReadyToLaunch.Got", `Url=${ou}`));
     return DownloadStatus.RESOLVED;
   }
   FAILED_COUNT_MAP.delete(mirroredMeta);
@@ -135,9 +136,9 @@ export async function wrappedDownloadFile(
   const s = await _wrappedDownloadFile(meta);
   FAILED_COUNT_MAP.delete(meta);
   if (s === 1) {
-    addState(tr("ReadyToLaunch.Got", `Url=${meta.url}`));
+    addState(tr("ReadyToLaunch.Got", `Url=${ou}`));
   } else {
-    addState(tr("ReadyToLaunch.Failed", `Url=${meta.url}`));
+    addState(tr("ReadyToLaunch.Failed", `Url=${ou}`));
   }
   return s;
 }
