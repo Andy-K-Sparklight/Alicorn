@@ -1,7 +1,8 @@
+import { readFile } from "fs-extra";
 import os from "os";
 import path from "path";
 import { getString } from "../modules/config/ConfigSupport";
-import ChineseSimplified from "./locales/ChineseSimplified";
+import { getPathInDefaults } from "../modules/config/DataSupport";
 
 let currentLocale = "zh_cn";
 const localesMap = new Map<string, Record<string, string | string[]>>();
@@ -35,6 +36,9 @@ export function randsl(key: string, ...values: string[]): string {
   if (typeof res === "string") {
     return res;
   }
+  if (typeof res === "undefined") {
+    return key;
+  }
   if (res.length === 0) {
     return key;
   }
@@ -42,10 +46,62 @@ export function randsl(key: string, ...values: string[]): string {
   return trimmed[Math.floor(Math.random() * trimmed.length)];
 }
 
-export function initTranslator(): void {
-  registryLocale("zh_cn", ChineseSimplified);
+export async function initTranslator(): Promise<void> {
+  registryLocale("zh_cn", await buildLocale("zh_cn"));
 }
 
+async function buildLocale(
+  name: string
+): Promise<Record<string, string | string[]>> {
+  try {
+    const f = (await readFile(getPathInDefaults(name + ".md"))).toString();
+    const a = f.split("\n");
+    const b: string[] = [];
+    for (const l1 of a) {
+      const s = l1.trim();
+      if (s.length > 0) {
+        if (s === "@empty") {
+          b.push("");
+        } else {
+          b.push(s);
+        }
+      }
+    }
+    const out: Record<string, string | string[]> = {};
+    const fullLength = b.length;
+    let cursor = 0;
+    let buff: string[] = [];
+    let ctitle = "";
+    while (cursor < fullLength) {
+      const cline = b[cursor];
+      if (cline.startsWith("#")) {
+        // Clean prev buffer
+        if (ctitle.length > 0) {
+          if (buff.length === 1) {
+            out[ctitle] = buff[0];
+          } else if (buff.length >= 2) {
+            out[ctitle] = buff;
+          }
+        }
+        ctitle = cline.slice(1).trim();
+        buff = [];
+      } else {
+        buff.push(eval("`" + cline.trim() + "`"));
+      }
+      cursor++;
+    }
+    if (ctitle.length > 0) {
+      if (buff.length === 1) {
+        out[ctitle] = buff[0];
+      } else if (buff.length >= 2) {
+        out[ctitle] = buff;
+      }
+    }
+    return out;
+  } catch {
+    return {};
+  }
+}
 export function getCurrentLocale(): string {
   return currentLocale;
 }

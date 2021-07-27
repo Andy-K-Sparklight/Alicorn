@@ -137,8 +137,6 @@ console.log(
   "This is free software, and you are welcome to redistribute it under certain conditions; see the license file for details."
 );
 
-initTranslator();
-
 window.addEventListener("unhandledrejection", (e) => {
   console.log(e.reason);
   window.dispatchEvent(new CustomEvent("sysError", { detail: e.reason }));
@@ -150,6 +148,7 @@ window.addEventListener("error", (e) => {
 });
 
 (async () => {
+  await initTranslator();
   await Promise.allSettled([loadConfig(), loadGDT(), loadJDT()]);
   // GDT & JDT is required by LaunchPad & JavaSelector
   if (getBoolean("reset")) {
