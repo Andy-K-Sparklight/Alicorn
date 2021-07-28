@@ -1,11 +1,3 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  LAST_FAILURE_INFO_KEY,
-  LAST_LAUNCH_REPORT_KEY,
-  LAST_LOGS_KEY,
-  MCFailureInfo,
-} from "./ReadyToLaunch";
-import { LaunchTracker } from "../modules/launch/Tracker";
 import {
   Accordion,
   AccordionDetails,
@@ -24,16 +16,25 @@ import {
   Typography,
 } from "@material-ui/core";
 import { ExpandMore } from "@material-ui/icons";
-import { tr } from "./Translator";
-import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
+import copy from "copy-to-clipboard";
+import fs from "fs-extra";
+import React, { useEffect, useRef, useState } from "react";
+import { generateCrashAnalytics } from "../modules/crhelper/CrashAnalyticsGenerator";
 import {
   analyzeCrashReport,
   CrashReportMap,
 } from "../modules/crhelper/CrashLoader";
-import fs from "fs-extra";
-import copy from "copy-to-clipboard";
-import { generateCrashAnalytics } from "../modules/crhelper/CrashAnalyticsGenerator";
+import { CMC_CRASH_LOADER } from "../modules/crhelper/CutieMCCrashLoader";
+import { LaunchTracker } from "../modules/launch/Tracker";
+import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
+import {
+  LAST_FAILURE_INFO_KEY,
+  LAST_LAUNCH_REPORT_KEY,
+  LAST_LOGS_KEY,
+  MCFailureInfo,
+} from "./ReadyToLaunch";
 import { submitError } from "./Renderer";
+import { tr } from "./Translator";
 
 const useAccStyles = makeStyles((theme) =>
   createStyles({
@@ -63,6 +64,7 @@ export function CrashReportDisplay(): JSX.Element {
   // @ts-ignore
   const logs = window[LAST_LOGS_KEY] as string[];
   const [report, setReport] = useState<CrashReportMap>();
+  const [logsReport, setLogsReport] = useState<CrashReportMap>(new Map());
   const [oc, setOC] = useState<string>("");
   const mounted = useRef<boolean>(false);
   useEffect(() => {
@@ -88,6 +90,20 @@ export function CrashReportDisplay(): JSX.Element {
         }
       })();
     }
+    if (logs.length > 0) {
+      (async () => {
+        try {
+          const ac = await analyzeCrashReport(
+            "",
+            CMC_CRASH_LOADER,
+            logs.join("\n")
+          );
+          if (mounted.current) {
+            setLogsReport(ac);
+          }
+        } catch {}
+      })();
+    }
   }, []);
   return (
     <Box>
@@ -111,10 +127,27 @@ export function CrashReportDisplay(): JSX.Element {
         )
       }
 
-      {report === undefined ? "" : <Analyze analyze={report} />}
+      {report === undefined ? (
+        ""
+      ) : (
+        <Box>
+          <Analyze analyze={report} />
+          <LogsDisplay
+            title={tr("CrashReportDisplay.CrashReport")}
+            logs={oc.split("\n")}
+          />
+        </Box>
+      )}
       {
         // @ts-ignore
-        window[LAST_LOGS_KEY]?.length === 0 ? "" : <LogsDisplay logs={logs} />
+        window[LAST_LOGS_KEY]?.length === 0 ? (
+          ""
+        ) : (
+          <Box>
+            <Analyze analyze={logsReport} />
+            <LogsDisplay title={tr("CrashReportDisplay.Logs")} logs={logs} />
+          </Box>
+        )
       }
 
       {
@@ -124,6 +157,7 @@ export function CrashReportDisplay(): JSX.Element {
           failureInfo={failureInfo}
           tracker={launchTracker}
           logs={logs.join("\n")}
+          logsReport={logsReport}
         />
       }
     </Box>
@@ -329,13 +363,13 @@ function Analyze(props: { analyze: CrashReportMap }): JSX.Element {
   );
 }
 
-function LogsDisplay(props: { logs: string[] }): JSX.Element {
+function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
   const classes = useAccStyles();
   const cLogs = props.logs.join("\n").split("\n");
   return (
     <Accordion>
       <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
-        <Typography>{tr("CrashReportDisplay.Logs")}</Typography>
+        <Typography>{props.title}</Typography>
       </AccordionSummary>
       <AccordionDetails className={classes.acc1}>
         <List>
@@ -366,6 +400,7 @@ function BBCodeDisplay(props: {
   failureInfo: MCFailureInfo;
   tracker: LaunchTracker;
   logs: string;
+  logsReport?: CrashReportMap;
 }): JSX.Element {
   const classes = useAccStyles();
   return (
@@ -380,10 +415,10 @@ function BBCodeDisplay(props: {
               !copy(
                 generateCrashAnalytics(
                   props.crashAnalytics,
-                  props.failureInfo,
                   props.originCrashReport,
                   props.tracker,
-                  props.logs
+                  props.logs,
+                  props.logsReport
                 )
               )
             ) {

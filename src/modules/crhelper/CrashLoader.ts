@@ -4,6 +4,7 @@ import { schedulePromiseTask } from "../../renderer/Schedule";
 import { getCurrentLocale } from "../../renderer/Translator";
 import { CMC_CRASH_LOADER } from "./CutieMCCrashLoader";
 
+// Not only for crash reports, but also logs
 export interface CrashLoader {
   rules: Record<string, CrashLoaderRule>;
 }
@@ -99,10 +100,16 @@ export class CrashReportCursor {
 
 export async function analyzeCrashReport(
   fPath: string,
-  loader = CMC_CRASH_LOADER
+  loader = CMC_CRASH_LOADER,
+  directData?: string
 ): Promise<Map<number, { origin: string; report: CrashLoaderReport[] }>> {
   try {
-    const f = (await fs.readFile(fPath)).toString();
+    let f: string;
+    if (directData === undefined) {
+      f = (await fs.readFile(fPath)).toString();
+    } else {
+      f = directData;
+    }
     const c = new CrashReportCursor(f);
 
     while (c.getLine() !== undefined) {

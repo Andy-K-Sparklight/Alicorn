@@ -1,4 +1,5 @@
-import { CrashReportMap } from "./CrashLoader";
+import pkg from "../../../package.json";
+import { randsl } from "../../renderer/Translator";
 import {
   Box,
   CodeComponent,
@@ -6,20 +7,15 @@ import {
   Spoiler,
   StyleComponent,
 } from "../bbcode/BBCode";
-import { randsl } from "../../renderer/Translator";
-import pkg from "../../../package.json";
-import { MCFailureInfo } from "../../renderer/ReadyToLaunch";
 import { LaunchTracker } from "../launch/Tracker";
+import { CrashReportMap } from "./CrashLoader";
 
 const TITLE_FONT = "Trebuchet MS";
 const PINKIE_COLOR = "#df307f";
 const TWILIGHT_COLOR = "#5d2391";
 const BR = "\n";
 
-export function generateTrackerInfo(
-  tracker: LaunchTracker,
-  logs: string
-): string {
+export function generateTrackerInfo(tracker: LaunchTracker): string {
   const br1 = new StyleComponent("[已查验]");
   br1.color = "Green";
   br1.bold = true;
@@ -134,12 +130,6 @@ export function generateTrackerInfo(
     );
     trackerPage.dbRaw(BR);
   }
-
-  // Logs
-  trackerPage.dbRaw(BR);
-  trackerPage.db(title.make("Logs 日志"));
-  trackerPage.db(commonText.make("以下是启动过程中的日志。"));
-  trackerPage.dbRaw(`\n[spoiler][code]\n${logs}[/code][/spoiler]\n`);
   return trackerPage.out();
 }
 
@@ -155,16 +145,22 @@ function generateCount(total: number, done: number): string {
 
 export function generateCrashAnalytics(
   cr: CrashReportMap | undefined,
-  fi: MCFailureInfo,
   originCrashReport: string,
   tracker: LaunchTracker,
-  logs: string
+  logs: string,
+  logsReport: CrashReportMap | undefined
 ): string {
   let c;
   if (cr === undefined) {
     c = "抱歉，但崩溃报告未生成或无法读取。";
   } else {
-    c = makeCrashAnalytics(cr, originCrashReport);
+    c = makeCrashAnalytics(cr, originCrashReport, "崩溃报告");
+  }
+
+  if (logsReport === undefined) {
+    c = "抱歉，但日志未生成或无法读取。";
+  } else {
+    c = makeCrashAnalytics(logsReport, logs, "日志");
   }
   return (
     makeIndex() +
@@ -173,7 +169,7 @@ export function generateCrashAnalytics(
     "\n[page]\n" +
     c +
     "\n[page]\n" +
-    generateTrackerInfo(tracker, logs)
+    generateTrackerInfo(tracker)
   );
 }
 
@@ -187,7 +183,7 @@ export function makeFirstPage(): string {
   group.db(sc);
   sc.color = "#aaaaaa";
   sc.size = "2";
-  group.db(sc.make(randsl("InDev is not stable, told ya!")));
+  group.db(sc.make(randsl("CrashReportDisplay.Complain")));
   group.dbRaw("\n");
   sc.color = "#5d2391";
   sc.size = "2";
@@ -233,10 +229,11 @@ export function makeFirstPage(): string {
 
 export function makeCrashAnalytics(
   crashReport: CrashReportMap,
-  originCrashReport: string
+  originCrashReport: string,
+  type: string
 ): string {
   const group = new ComponentsGroup();
-  const sc = new StyleComponent("崩溃报告原文");
+  const sc = new StyleComponent(type + "原文");
   sc.color = "#5d2391";
   sc.font = "Trebuchet MS";
   sc.align = "center";
@@ -245,7 +242,7 @@ export function makeCrashAnalytics(
   group.dbRaw("\n");
   group.db(new Spoiler(`[code]${originCrashReport}[/code]`));
   group.dbRaw("\n");
-  group.db(sc.make("CMC 机械分析"));
+  group.db(sc.make(type + "分析"));
   group.dbRaw("\n");
   const code = new CodeComponent("");
   code.color = "#5d2391";
