@@ -65,6 +65,5 @@ export function launchProfile(
       .concat(serverArgs)
       .concat(resolutions);
   }
-  console.log(totalArgs);
   return runMinecraft(totalArgs, jExecutable, container, emitter);
 }

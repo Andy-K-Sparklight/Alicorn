@@ -131,7 +131,7 @@ export function CrashReportDisplay(): JSX.Element {
         ""
       ) : (
         <Box>
-          <Analyze analyze={report} />
+          <Analyze analyze={report} title={tr("CrashReportDisplay.Analyze")} />
           <LogsDisplay
             title={tr("CrashReportDisplay.CrashReport")}
             logs={oc.split("\n")}
@@ -144,7 +144,10 @@ export function CrashReportDisplay(): JSX.Element {
           ""
         ) : (
           <Box>
-            <Analyze analyze={logsReport} />
+            <Analyze
+              analyze={logsReport}
+              title={tr("CrashReportDisplay.AnalyzeLogs")}
+            />
             <LogsDisplay title={tr("CrashReportDisplay.Logs")} logs={logs} />
           </Box>
         )
@@ -288,80 +291,93 @@ function ModList(props: { tracker: LaunchTracker }): JSX.Element {
   );
 }
 
-function Analyze(props: { analyze: CrashReportMap }): JSX.Element {
+function Analyze(props: {
+  analyze: CrashReportMap;
+  title: string;
+}): JSX.Element {
   const classes = useAccStyles();
   return (
     <Accordion>
       <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
-        <Typography>{tr("CrashReportDisplay.Analyze")}</Typography>
+        <Typography>{props.title}</Typography>
       </AccordionSummary>
       <AccordionDetails className={classes.acc1}>
-        {(() => {
-          const li = Array.from(props.analyze.keys());
-          return li.map((n) => {
-            const cr = props.analyze.get(n);
-            if (cr?.report.length === 0) {
-              return "";
-            }
-            return (
-              <Box key={n}>
-                <Accordion>
-                  <AccordionSummary
-                    className={classes.acc2}
-                    expandIcon={<ExpandMore />}
-                  >
-                    <Typography>{`${tr(
-                      "CrashReportDisplay.Analyze.Line"
-                    )} ${n} - ${cr?.origin}`}</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails className={classes.acc2}>
-                    {cr?.report.map((r) => {
-                      if (r.by === undefined || r.reason === undefined) {
-                        return <></>;
-                      }
-                      return (
-                        <Accordion key={r.by + r.reason}>
-                          <AccordionSummary
-                            className={classes.acc1}
-                            expandIcon={
-                              r.suggestions !== undefined &&
-                              r.suggestions.length > 0 ? (
-                                <ExpandMore />
-                              ) : undefined
-                            }
-                          >
-                            <Typography>{`${r.by} ${r.reason}`}</Typography>
-                          </AccordionSummary>
-                          <AccordionDetails className={classes.acc1}>
-                            {r.suggestions === undefined ||
-                            r.suggestions.length === 0 ? (
-                              ""
-                            ) : (
-                              <List>
-                                {r.suggestions.map((s) => {
-                                  return (
-                                    <ListItem key={s}>
-                                      <ListItemText>{s}</ListItemText>
-                                    </ListItem>
-                                  );
-                                })}
-                              </List>
-                            )}
-                          </AccordionDetails>
-                        </Accordion>
-                      );
-                    })}
-                  </AccordionDetails>
-                </Accordion>
-                <br />
-              </Box>
-            );
-          });
-        })()}
+        <List>
+          {(() => {
+            const li = Array.from(props.analyze.keys());
+            return li.map((n) => {
+              const cr = props.analyze.get(n);
+              if (cr?.report.length === 0) {
+                return "";
+              }
+              return (
+                <ListItem key={n}>
+                  <Accordion>
+                    <AccordionSummary
+                      className={classes.acc2}
+                      expandIcon={<ExpandMore />}
+                    >
+                      <Typography>
+                        {tr(
+                          "CrashReportDisplay.Analyze.Line",
+                          `Line=${n}`,
+                          `Content=${cr?.origin}`
+                        )}
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails className={classes.acc2}>
+                      <List>
+                        {cr?.report.map((r) => {
+                          if (r.by === undefined || r.reason === undefined) {
+                            return <></>;
+                          }
+                          return (
+                            <ListItem key={r.by + r.reason}>
+                              <Accordion>
+                                <AccordionSummary
+                                  className={classes.acc1}
+                                  expandIcon={
+                                    r.suggestions !== undefined &&
+                                    r.suggestions.length > 0 ? (
+                                      <ExpandMore />
+                                    ) : undefined
+                                  }
+                                >
+                                  <Typography>{`${r.by} ${r.reason}`}</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails className={classes.acc1}>
+                                  {r.suggestions === undefined ||
+                                  r.suggestions.length === 0 ? (
+                                    ""
+                                  ) : (
+                                    <List>
+                                      {r.suggestions.map((s) => {
+                                        return (
+                                          <ListItem key={s}>
+                                            <ListItemText>{s}</ListItemText>
+                                          </ListItem>
+                                        );
+                                      })}
+                                    </List>
+                                  )}
+                                </AccordionDetails>
+                              </Accordion>
+                            </ListItem>
+                          );
+                        })}
+                      </List>
+                    </AccordionDetails>
+                  </Accordion>
+                </ListItem>
+              );
+            });
+          })()}
+        </List>
       </AccordionDetails>
     </Accordion>
   );
 }
+// TODO break line!
 
 function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
   const classes = useAccStyles();

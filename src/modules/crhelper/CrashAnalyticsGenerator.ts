@@ -156,11 +156,11 @@ export function generateCrashAnalytics(
   } else {
     c = makeCrashAnalytics(cr, originCrashReport, "崩溃报告");
   }
-
+  let d;
   if (logsReport === undefined) {
-    c = "抱歉，但日志未生成或无法读取。";
+    d = "抱歉，但日志未生成或无法读取。";
   } else {
-    c = makeCrashAnalytics(logsReport, logs, "日志");
+    d = makeCrashAnalytics(logsReport, logs, "日志");
   }
   return (
     makeIndex() +
@@ -168,6 +168,8 @@ export function generateCrashAnalytics(
     makeFirstPage() +
     "\n[page]\n" +
     c +
+    "\n\n" +
+    d +
     "\n[page]\n" +
     generateTrackerInfo(tracker)
   );

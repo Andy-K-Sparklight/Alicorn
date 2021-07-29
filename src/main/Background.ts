@@ -85,7 +85,7 @@ export function registerBackgroundListeners(): void {
     }
     return r.filePaths[0] || "";
   });
-  ipcMain.handle("msBrowserCode", async (e, proxy: string) => {
+  ipcMain.handle("msBrowserCode", async (_e, proxy: string) => {
     try {
       let sCode = "";
       const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -217,5 +217,11 @@ export function registerBackgroundListeners(): void {
     return await isReachable(address, {
       timeout: getNumber("starlight.join-server.timeout", 2000),
     });
+  });
+  ipcMain.on("hideWindow", async () => {
+    getMainWindow()?.hide();
+  });
+  ipcMain.on("showWindow", async () => {
+    getMainWindow()?.show();
   });
 }

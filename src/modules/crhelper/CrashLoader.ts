@@ -1,7 +1,6 @@
 import fs from "fs-extra";
 import got from "got";
 import { schedulePromiseTask } from "../../renderer/Schedule";
-import { getCurrentLocale } from "../../renderer/Translator";
 import { CMC_CRASH_LOADER } from "./CutieMCCrashLoader";
 
 // Not only for crash reports, but also logs
@@ -10,7 +9,7 @@ export interface CrashLoader {
 }
 
 // Script Specification
-// A function receives arguments 'cursor' 'locale'
+// A function receives arguments 'cursor' 'valueMap'
 // And returns {reason?: string, suggestions?: string[]}
 // If cannot handle it, leave 'reason' to 'undefined' and Alicorn will ignore this line
 
@@ -26,6 +25,7 @@ export interface CrashLoaderReport {
 }
 
 export class CrashReportCursor {
+  private tmpValues: Map<string, string> = new Map();
   lines: string[] = [];
   currentLine = 0;
   lineMap: Map<number, { origin: string; report: CrashLoaderReport[] }> =
@@ -76,9 +76,11 @@ export class CrashReportCursor {
       try {
         const func = eval(scr) as (
           cursor: CrashReportCursor,
-          locale: string
+
+          valueMap: Map<string, string>
         ) => CrashLoaderReport;
-        const report = func(this, getCurrentLocale());
+        const report = func(this, this.tmpValues);
+        // Offer a value registry table to the crash loader
         if (!report.by) {
           report.by = name;
         }

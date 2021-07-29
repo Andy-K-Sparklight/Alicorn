@@ -56,8 +56,12 @@ import {
   ReleaseType,
 } from "../modules/commons/Constants";
 import { isNull } from "../modules/commons/Null";
-import { getNumber, getString } from "../modules/config/ConfigSupport";
-import { getContainer } from "../modules/container/ContainerUtil";
+import {
+  getBoolean,
+  getNumber,
+  getString,
+} from "../modules/config/ConfigSupport";
+import { getContainer, mount } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { scanReports } from "../modules/crhelper/CrashReportFinder";
 import {
@@ -514,6 +518,9 @@ async function startBoot(
   });
   em.on(PROCESS_END_GATE, async (c) => {
     console.log(`Minecraft(${runID}) exited with exit code ${c}.`);
+    if (getBoolean("hide-when-game")) {
+      ipcRenderer.send("showWindow");
+    }
     setStatus(LaunchingStatus.PENDING);
     if (c !== "0" && c !== "SIGINT") {
       console.log(
@@ -552,6 +559,14 @@ async function startBoot(
 
   setStatus(LaunchingStatus.FINISHED);
   console.log(`A new Minecraft instance (${runID}) has been launched.`);
+  if (getBoolean("close-after-launch")) {
+    // Remount
+    mount(container.id);
+    ipcRenderer.send("closeWindow");
+  }
+  if (getBoolean("hide-when-game")) {
+    ipcRenderer.send("hideWindow");
+  }
   return GLOBAL_LAUNCH_TRACKER;
 }
 

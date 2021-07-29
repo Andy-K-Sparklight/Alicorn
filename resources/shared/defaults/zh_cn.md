@@ -792,6 +792,22 @@ Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的
 
 已禁用
 
+# Options.hide-when-game.title
+
+游戏时挂起 Alicorn 窗口
+
+# Options.hide-when-game.desc
+
+在游戏运行时暂停启动器渲染，为 Minecraft 争取约 20 MiB 的 RAM - 有些许的性能提升，同时 Alicorn 能够继续观察游戏状态
+
+# Options.close-after-launch.title
+
+启动后关闭
+
+# Options.close-after-launch.desc
+
+游戏启动后关闭 Alicorn，以节省约 120 MiB 的 RAM 给 Minecraft - 但是当游戏出现问题时 Alicorn 将无法帮助你
+
 # Options.starlight.join-server.timeout.title
 
 Starlight - 服务器 TCP 检查等待时间
@@ -1172,13 +1188,17 @@ Mojang 版本
 
 崩溃报告分析
 
+# CrashReportDisplay.AnalyzeLogs
+
+日志分析
+
 # CrashReportDisplay.LogsAnalyze
 
 日志分析
 
 # CrashReportDisplay.Analyze.Line
 
-行
+第 {Line} 行 - {Content}
 
 # CrashReportDisplay.Complain
 
