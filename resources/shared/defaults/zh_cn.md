@@ -166,6 +166,14 @@ Alicorn 内置浏览器
 
 正在进行操作……这可能需要几分钟。
 
+# CoreInfo.StillLoading
+
+加载尚不完全时结果可能不完整或顺序不正确。
+
+# CoreInfo.Used
+
+该核心被启动过 {Count} 次
+
 # CoreInfo.Introduction.Forge
 
 此核心可以加载 Forge Mod

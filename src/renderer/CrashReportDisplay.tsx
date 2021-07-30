@@ -2,8 +2,10 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Badge,
   Box,
   Button,
+  CircularProgress,
   createStyles,
   List,
   ListItem,
@@ -33,7 +35,7 @@ import {
   LAST_LOGS_KEY,
   MCFailureInfo,
 } from "./ReadyToLaunch";
-import { submitError } from "./Renderer";
+import { ALICORN_DEFAULT_THEME_LIGHT, submitError } from "./Renderer";
 import { tr } from "./Translator";
 
 const useAccStyles = makeStyles((theme) =>
@@ -153,16 +155,14 @@ export function CrashReportDisplay(): JSX.Element {
         )
       }
 
-      {
-        <BBCodeDisplay
-          crashAnalytics={report}
-          originCrashReport={oc}
-          failureInfo={failureInfo}
-          tracker={launchTracker}
-          logs={logs.join("\n")}
-          logsReport={logsReport}
-        />
-      }
+      <BBCodeDisplay
+        crashAnalytics={report}
+        originCrashReport={oc}
+        failureInfo={failureInfo}
+        tracker={launchTracker}
+        logs={logs.join("\n")}
+        logsReport={logsReport}
+      />
     </Box>
   );
 }
@@ -296,15 +296,37 @@ function Analyze(props: {
   title: string;
 }): JSX.Element {
   const classes = useAccStyles();
+  const analyzeList = Array.from(props.analyze.keys());
+  let total = 0;
+  for (const a of analyzeList) {
+    const c = props.analyze.get(a)?.report;
+    if (c && c.length > 0) {
+      total += c.length;
+    }
+  }
   return (
     <Accordion>
       <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
-        <Typography>{props.title}</Typography>
+        {total > 0 ? (
+          <Badge badgeContent={total} color={"secondary"}>
+            <Typography>{props.title}</Typography>
+          </Badge>
+        ) : (
+          <Box flexDirection={"row"}>
+            <Typography>{props.title}</Typography>
+            <CircularProgress
+              style={{
+                color: ALICORN_DEFAULT_THEME_LIGHT.palette.primary.light,
+              }}
+              size={"1rem"}
+            />
+          </Box>
+        )}
       </AccordionSummary>
       <AccordionDetails className={classes.acc1}>
         <List>
           {(() => {
-            const li = Array.from(props.analyze.keys());
+            const li = analyzeList;
             return li.map((n) => {
               const cr = props.analyze.get(n);
               if (cr?.report.length === 0) {
@@ -377,7 +399,6 @@ function Analyze(props: {
     </Accordion>
   );
 }
-// TODO break line!
 
 function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
   const classes = useAccStyles();

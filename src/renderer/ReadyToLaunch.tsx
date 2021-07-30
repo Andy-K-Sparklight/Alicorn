@@ -195,7 +195,6 @@ function Launching(props: {
   container: MinecraftContainer;
   server?: string;
 }): JSX.Element {
-  console.log("Re-renderering launching component!");
   const classes = useStyles();
   const mountedBit = useRef<boolean>(true);
   const [warning, setWarning] = useState(false);
@@ -595,7 +594,6 @@ function AccountChoose(props: {
       },
     })
   )();
-  console.log("Re-renderering account choose!");
   const [choice, setChoice] = useState<"MZ" | "AL" | "YG">("MZ");
   const [pName, setName] = useState<string>(
     window.localStorage.getItem(LAST_USED_USER_NAME_KEY) || "Demo"

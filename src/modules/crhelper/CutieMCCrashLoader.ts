@@ -12,7 +12,7 @@ export const CMC_CRASH_LOADER: CrashLoader = {
       }).toString(),
     },
     CMC002: {
-      match: "Pixel format not accelerated",
+      match: "(Pixel format not accelerated|Couldn't set pixel format)",
       script: ((): CrashLoaderReport => {
         return {
           reason:
@@ -31,15 +31,6 @@ export const CMC_CRASH_LOADER: CrashLoader = {
       }).toString(),
     },
     CMC004: {
-      match: "Could not set pixel format",
-      script: ((): CrashLoaderReport => {
-        return {
-          reason: "显卡驱动未正确安装",
-          suggestions: ["更新或修复显卡驱动"],
-        };
-      }).toString(),
-    },
-    CMC005: {
       match: "OutOfMemoryError",
       script: ((): CrashLoaderReport => {
         return {

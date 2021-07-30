@@ -36,7 +36,8 @@ const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
 const FONT_FAMILY =
-  'UbuntuMono-R, "Open Sans", Roboto, "Microsoft YaHei UI Light", "Fira Code", Consolas, "Courier New", Courier, monospace';
+  '"UbuntuMono", "Open Sans", Roboto, "Fira Code", Monaco,  Consolas, "Courier New", Courier, monospace';
+
 export function setThemeColor(
   primaryMain: string,
   primaryLight: string,

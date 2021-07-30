@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Archive, FlightTakeoff, Sync } from "@material-ui/icons";
+import objectHash from "object-hash";
 import React, { useEffect, useRef, useState } from "react";
 import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
 import { loadProfile } from "../modules/profile/ProfileLoader";
@@ -37,11 +38,11 @@ export function LaunchPad(): JSX.Element {
     </Box>
   );
 }
-// FIXME: cores refuse to show
+
 function CoresDisplay(): JSX.Element {
   const mountedBit = useRef<boolean>(false);
   const [cores, setCores] = useState<SimplifiedCoreInfo[]>([]);
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(false);
   const [refreshBit, setRefresh] = useState(true);
   useEffect(() => {
     mountedBit.current = true;
@@ -50,7 +51,7 @@ function CoresDisplay(): JSX.Element {
     };
   });
   useEffect(() => {
-    if (!coresCacheBit) {
+    if (!coresCacheBit && !isLoading) {
       if (mountedBit.current) {
         setLoading(true);
       }
@@ -91,13 +92,20 @@ function CoresDisplay(): JSX.Element {
           }
         }
         if (mountedBit.current) {
+          cachedAllCores.sort((a, b) => {
+            const hashA = objectHash(a);
+            const hashB = objectHash(b);
+            const pinA = getUsed(hashA);
+            const pinB = getUsed(hashB);
+            return pinB - pinA;
+          });
           setCores(cachedAllCores);
           setLoading(false);
         }
         coresCacheBit = true;
       })();
     }
-  }, [coresCacheBit]);
+  });
 
   return (
     <Box>
@@ -116,14 +124,19 @@ function CoresDisplay(): JSX.Element {
           </IconButton>
         </Tooltip>
       </Box>
-
-      <LinearProgress
-        color={"secondary"}
-        style={Object.assign(
-          { width: "80%" },
-          isLoading ? {} : { display: "none" }
-        )}
-      />
+      {isLoading ? (
+        <Box>
+          <LinearProgress color={"secondary"} style={{ width: "80%" }} />
+          <Typography
+            style={{ fontSize: "medium", color: "#ff8400" }}
+            gutterBottom
+          >
+            {tr("CoreInfo.StillLoading")}
+          </Typography>
+        </Box>
+      ) : (
+        ""
+      )}
       <br />
       {cores.map((c) => {
         return <SingleCoreDisplay key={c.location} profile={c} />;
@@ -136,6 +149,8 @@ function SingleCoreDisplay(props: {
   profile: SimplifiedCoreInfo;
 }): JSX.Element {
   const classes = useCardStyles();
+  const hash = objectHash(props.profile);
+  const used = getUsed(hash);
   return (
     <Box>
       <Card className={classes.card}>
@@ -163,6 +178,7 @@ function SingleCoreDisplay(props: {
                   color={"inherit"}
                   className={classes.operateButton}
                   onClick={() => {
+                    markUsed(hash);
                     jumpTo(
                       "/ReadyToLaunch/" +
                         props.profile.container +
@@ -199,6 +215,17 @@ function SingleCoreDisplay(props: {
               `Container=${props.profile.container}`
             )}
           </Typography>
+          {used > 0 ? (
+            <Typography
+              className={classes.text}
+              color={"textSecondary"}
+              gutterBottom
+            >
+              {tr("CoreInfo.Used", `Count=${used}`)}
+            </Typography>
+          ) : (
+            ""
+          )}
           {props.profile.corrupted ? (
             <CorruptedCoreWarning />
           ) : props.profile.versionType === "FORGE" ||
@@ -214,6 +241,21 @@ function SingleCoreDisplay(props: {
       <br />
     </Box>
   );
+}
+
+const PIN_NUMBER_KEY = "PinIndex.";
+
+function getUsed(hash: string): number {
+  return (
+    parseInt(window.localStorage.getItem(PIN_NUMBER_KEY + hash) || "0") || 0
+  );
+}
+
+function markUsed(hash: string): void {
+  let origin =
+    parseInt(window.localStorage.getItem(PIN_NUMBER_KEY + hash) || "0") || 0;
+  origin++;
+  window.localStorage.setItem(PIN_NUMBER_KEY + hash, origin.toString());
 }
 
 function getDescriptionFor(type: string): string {
