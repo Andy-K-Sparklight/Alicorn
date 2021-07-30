@@ -133,6 +133,7 @@ export function OptionsPage(): JSX.Element {
           onlyOn={"win32"}
         />
         <InputItem type={ConfigType.BOOL} bindConfig={"reset"} />
+        <InputItem type={ConfigType.BOOL} bindConfig={"clean-storage"} />
       </MuiThemeProvider>
     </Box>
   );

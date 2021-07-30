@@ -1,6 +1,4 @@
-import { GameProfile } from "../profile/GameProfile";
 import { Trio } from "../commons/Collections";
-import { MinecraftContainer } from "../container/MinecraftContainer";
 import {
   ALICORN_SEPARATOR,
   ALICORN_VERSION_TYPE,
@@ -11,6 +9,8 @@ import {
 } from "../commons/Constants";
 import { isNull } from "../commons/Null";
 import { getBoolean } from "../config/ConfigSupport";
+import { MinecraftContainer } from "../container/MinecraftContainer";
+import { GameProfile } from "../profile/GameProfile";
 
 // Generate game arguments
 export function generateGameArgs(
@@ -40,6 +40,7 @@ export function generateVMArgs(
   const vMap = new Map<string, string>();
   vMap.set("launcher_name", LAUNCHER_NAME);
   vMap.set("launcher_version", LAUNCHER_VERSION);
+
   let usingLibs: string[] = [];
   const nativesLibs: string[] = [];
   for (const l of profile.libraries) {
@@ -68,12 +69,14 @@ export function generateVMArgs(
       })
     );
   }
-
-  nativesLibs.push("");
-  usingLibs.push("");
   // All natives directories put together
   vMap.set("natives_directory", nativesLibs.join(FILE_SEPARATOR));
-
+  // 1.17
+  vMap.set("library_directory", container.getLibrariesRoot());
+  // Attention! Use base version!
+  // BAD FORGE CAUSED ALL THIS - I WASTED 2 HOURS WHICH COULD HAVE BE SPENT WITH MY PONY FRIENDS
+  vMap.set("version_name", profile.baseVersion);
+  vMap.set("classpath_separator", FILE_SEPARATOR);
   // All class paths put together
   vMap.set("classpath", usingLibs.join(FILE_SEPARATOR));
   // Log4j argument
@@ -100,7 +103,7 @@ function applyVars(map: Map<string, string>, str: string[]): string[] {
   let dt = str.join(ALICORN_SEPARATOR);
 
   for (const [k, v] of map.entries()) {
-    dt = dt.replace("${" + k + "}", v);
+    dt = dt.replaceAll("${" + k + "}", v);
   }
 
   return dt.split(ALICORN_SEPARATOR);

@@ -172,7 +172,7 @@ Alicorn 内置浏览器
 
 # CoreInfo.Used
 
-该核心被启动过 {Count} 次
+此核心被你访问过 {Count} 次
 
 # CoreInfo.Introduction.Forge
 
@@ -268,7 +268,7 @@ Yggdrasil 帐户
 
 # ReadyToLaunch.DefaultJava
 
-默认（全局）
+默认（使用在 Java 选择器中的设置）
 
 # ReadyToLaunch.Status.Pending
 
@@ -344,7 +344,7 @@ Minecraft 似乎未正常运行……
 
 # ReadyToLaunch.WarnError.Description
 
-Minecraft 实例没有正常退出，你想要对本次启动进行故障排除吗？
+Minecraft 实例（看上去）没有正常退出，你想要对本次启动进行故障排除吗？
 
 # ReadyToLaunch.Status.Short.CheckingLibs
 
@@ -446,7 +446,7 @@ RarityEG
 
 # VersionView.Description
 
-这是 Alicorn 的测试版本，可能存在重大问题，请谨慎使用。
+欢迎你测试 Alicorn！希望你使用愉快！
 
 # VersionView.Copyright1
 
@@ -522,7 +522,7 @@ ASC 文件共享宗卷
 
 # ContainerManager.Clear
 
-抹掉该容器
+摧毁该容器
 
 # ContainerManager.Cores
 
@@ -542,11 +542,11 @@ ASC 文件共享宗卷
 
 # ContainerManager.AskClear
 
-抹掉此 Minecraft 容器？该操作不可撤销！
+摧毁此 Minecraft 容器？该操作不可撤销！
 
 # ContainerManager.AskClearDetail
 
-抹掉 {ID} 将失去其中的全部数据，包括存档、Mod 和其它任何内容！确定要这样做，{UserName}？{ID} 将永远失去（真的很久）！
+摧毁 {ID} 将同时摧毁其中的全部数据，包括存档、Mod 和其它任何内容！确定要这样做，{UserName}？\n{ID} 将永远失去（真的很久）！
 
 # ContainerManager.Yes
 
@@ -566,15 +566,15 @@ ASC 文件共享宗卷
 
 # InstallCore.InstallMinecraft
 
-安装 Minecraft
+添加新的核心
 
 # InstallCore.InstallForge
 
-安装 Forge
+改装已有核心（Forge）
 
 # InstallCore.InstallFabric
 
-安装 Fabric
+改装已有核心（Fabric）
 
 # InstallCore.TargetContainer
 
@@ -640,13 +640,13 @@ Fabric 版本号
 
 目标 Minecraft 版本号
 
-# AccountManager.Remove
-
-移除帐户
-
 # InstallCore.Success
 
 成功安装了核心
+
+# AccountManager.Remove
+
+移除帐户
 
 # AccountManager.Refresh
 
@@ -666,7 +666,7 @@ Fabric 版本号
 
 # AccountManager.Failed
 
-验证失败 - 我们无法验证您的帐户，请检查密码或稍后再试
+验证失败 - 我们无法验证您的帐户，请检查密码与网络连接，或稍后再试
 
 # AccountManager.Validate
 
@@ -702,11 +702,11 @@ Fabric 版本号
 
 # AccountManager.Host
 
-服务主机
+验证服务器
 
 # AccountManager.UseCustomHost
 
-使用自定义的服务主机
+使用第三方验证服务器
 
 # AccountManager.UseNide8
 
@@ -714,7 +714,7 @@ Fabric 版本号
 
 # AccountManager.Warn
 
-安全警示 - 请确认这是您信任的服务主机，登录一个随意的服务主机可能会威胁您的数据安全
+安全警示 - 永远不要在第三方验证服务器输入你的 Microsoft 帐户密码！
 
 # AccountManager.Next
 
@@ -778,7 +778,7 @@ Java 运行时
 
 # JavaSelector.WarnNonFree
 
-许可警示 - 这不是自由软件！Alicorn 建议您使用自由的 OpenJDK 运行时代替该非自由的运行时，这可以避免潜在的恶意软件。
+许可警示 - 这不是自由软件！Alicorn 建议您使用自由的 OpenJDK 运行时代替该非自由的运行时，这可以获得更好的性能，同时避免潜在的恶意软件。
 
 # Options.Select
 
@@ -799,6 +799,14 @@ Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的
 # Options.Disabled
 
 已禁用
+
+# Options.clean-storage.title
+
+恢复如初 ^
+
+# Options.clean-storage.desc
+
+摧毁 Alicorn 存储的一切数据，包括设置、效用缓存和使用记录 - 几乎相当于重新安装
 
 # Options.hide-when-game.title
 

@@ -5,12 +5,12 @@
 // Why not automate? We need it!
 // You builds FREE software rather than SPONSOR ones, thank you very much!
 // Anyway, we'll keep on supporting Forge since there are tremendous requirements.
-import { copyProfile, GameProfile } from "./GameProfile";
-import { MinecraftContainer } from "../container/MinecraftContainer";
-import { loadProfile } from "./ProfileLoader";
+import objectHash from "object-hash";
 import { ReleaseType, SPACE } from "../commons/Constants";
 import { isNull } from "../commons/Null";
-import objectHash from "object-hash";
+import { MinecraftContainer } from "../container/MinecraftContainer";
+import { copyProfile, GameProfile } from "./GameProfile";
+import { loadProfile } from "./ProfileLoader";
 
 // gfBase <- gfHead, just like merge in git
 export async function makeInherit(
@@ -83,9 +83,9 @@ export function noDuplicateConcat<T>(a1: T[], a2: T[]): T[] {
   });
   for (const x of a2) {
     const xh = objectHash(x);
-    if (!hashList.includes(xh) && !copy.includes(x)) {
+    if (!hashList.includes(xh) && !a1.includes(x)) {
       copy.push(x);
-      hashList.push(xh);
+      // hashList.push(xh);
     }
   }
   return copy;

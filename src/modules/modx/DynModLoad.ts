@@ -162,7 +162,6 @@ export async function prepareModsCheckFor(
   const tFile: FileOperateReport = { total: 0, resolved: 0, operateRecord: [] };
   try {
     const stat = gatherVersionInfo(profile);
-    console.log(stat);
     await moveModsTo(
       await loadMetas(container),
       container,

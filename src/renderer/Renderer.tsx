@@ -1,5 +1,6 @@
 import { Box, createTheme, MuiThemeProvider } from "@material-ui/core";
 import { ipcRenderer } from "electron";
+import { emptyDir } from "fs-extra";
 import React from "react";
 import ReactDOM from "react-dom";
 import { HashRouter } from "react-router-dom";
@@ -12,6 +13,7 @@ import {
   loadConfig,
   saveDefaultConfig,
 } from "../modules/config/ConfigSupport";
+import { getActualDataPath } from "../modules/config/DataSupport";
 import { loadGDT } from "../modules/container/ContainerUtil";
 import { initVF } from "../modules/container/ValidateRecord";
 import { initConcurrentDownloader } from "../modules/download/Concurrent";
@@ -44,9 +46,9 @@ export function setThemeColor(
   secondaryMain: string,
   secondaryLight: string
 ): void {
-  ALICORN_DEFAULT_THEME_DARK = createTheme({
+  ALICORN_DEFAULT_THEME_LIGHT = createTheme({
     palette: {
-      type: "dark",
+      type: "light",
       primary: {
         main: primaryMain,
         light: primaryLight,
@@ -60,9 +62,9 @@ export function setThemeColor(
       fontFamily: FONT_FAMILY,
     },
   });
-  ALICORN_DEFAULT_THEME_LIGHT = createTheme({
+  ALICORN_DEFAULT_THEME_DARK = createTheme({
     palette: {
-      type: "light",
+      type: "dark",
       primary: {
         main: primaryMain,
         light: primaryLight,
@@ -152,12 +154,27 @@ window.addEventListener("error", (e) => {
   await initTranslator();
   await Promise.allSettled([loadConfig(), loadGDT(), loadJDT()]);
   // GDT & JDT is required by LaunchPad & JavaSelector
+  if (getBoolean("clean-storage")) {
+    console.log("Cleaning storage data!");
+    window.localStorage.clear();
+    await emptyDir(getActualDataPath("."));
+    console.log("Stoarge data cleaned.");
+    console.log("Resetting and reloading config...");
+    await saveDefaultConfig();
+    await loadConfig();
+    ipcRenderer.send("reloadConfig");
+    console.log("Reset complete.");
+    console.log("Reloading window...");
+    window.location.reload();
+  }
   if (getBoolean("reset")) {
     console.log("Resetting and reloading config...");
     await saveDefaultConfig();
     await loadConfig();
     ipcRenderer.send("reloadConfig");
     console.log("Reset complete.");
+    console.log("Reloading window...");
+    window.location.reload();
   }
   setThemeColor(
     getString("theme.primary.main", "#5d2391"),

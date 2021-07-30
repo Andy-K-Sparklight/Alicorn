@@ -1,6 +1,10 @@
-import { MinecraftContainer } from "../container/MinecraftContainer";
 import EventEmitter from "events";
-import { runMinecraft } from "./MinecraftBootstrap";
+import { whereAJ } from "../auth/AJHelper";
+import { whereND } from "../auth/NDHelper";
+import { Pair, Trio } from "../commons/Collections";
+import { isNull } from "../commons/Null";
+import { MinecraftContainer } from "../container/MinecraftContainer";
+import { GameProfile } from "../profile/GameProfile";
 import {
   applyAJ,
   applyND,
@@ -9,11 +13,7 @@ import {
   generateGameArgs,
   generateVMArgs,
 } from "./ArgsGenerator";
-import { Pair, Trio } from "../commons/Collections";
-import { whereAJ } from "../auth/AJHelper";
-import { isNull } from "../commons/Null";
-import { GameProfile } from "../profile/GameProfile";
-import { whereND } from "../auth/NDHelper";
+import { runMinecraft } from "./MinecraftBootstrap";
 
 // Launch and return ID
 export function launchProfile(
@@ -65,5 +65,6 @@ export function launchProfile(
       .concat(serverArgs)
       .concat(resolutions);
   }
+  console.log(totalArgs.join(" "));
   return runMinecraft(totalArgs, jExecutable, container, emitter);
 }
