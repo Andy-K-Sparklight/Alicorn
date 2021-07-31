@@ -75,20 +75,20 @@ export async function makeInherit(
 
   return retGF;
 }
-
+// a1 <- a2, a2 overrides a1 if necessary
 export function noDuplicateConcat<T>(a1: T[], a2: T[]): T[] {
-  const copy = a1.concat();
+  const copy = a2.concat();
   const hashList = copy.map((a) => {
     return objectHash(a);
   });
-  for (const x of a2) {
+  const buff: T[] = [];
+  for (const x of a1) {
     const xh = objectHash(x);
-    if (!hashList.includes(xh) && !a1.includes(x)) {
-      copy.push(x);
-      // hashList.push(xh);
+    if (!hashList.includes(xh) && !a2.includes(x)) {
+      buff.push(x);
     }
   }
-  return copy;
+  return buff.concat(copy);
 }
 
 export class InheritedProfile extends GameProfile {

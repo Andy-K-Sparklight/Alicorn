@@ -31,7 +31,6 @@ export function generateGameArgs(
   vMap.set("auth_access_token", authData.getSecondValue());
   return applyVars(vMap, profile.gameArgs.concat());
 }
-
 // Generate vm arguments, not for GCs or anything else
 export function generateVMArgs(
   profile: GameProfile,

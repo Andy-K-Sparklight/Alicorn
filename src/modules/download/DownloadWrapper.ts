@@ -52,15 +52,8 @@ export function unsubscribeDoing(name: string): void {
 }
 const DOING: string[] = [];
 
-const SUBSCRIBE_MAP: Map<string, (w: WrapperStatus) => void> = new Map();
 const PENDING_TASKS: DownloadMeta[] = [];
 const RUNNING_TASKS = new Set<DownloadMeta>();
-
-function markChangeStatus(): void {
-  for (const [_n, f] of SUBSCRIBE_MAP) {
-    f(getWrapperStatus());
-  }
-}
 
 const WAITING_RESOLVES_MAP = new Map<
   DownloadMeta,
@@ -74,7 +67,6 @@ export function initDownloadWrapper(): void {
   EMITTER = new EventEmitter();
   EMITTER.on(END_GATE, (m: DownloadMeta, s: DownloadStatus) => {
     RUNNING_TASKS.delete(m);
-    markChangeStatus();
     FAILED_COUNT_MAP.delete(m);
     (
       WAITING_RESOLVES_MAP.get(m) ||
@@ -189,7 +181,6 @@ function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
       } else {
         WAITING_RESOLVES_MAP.set(meta, resolve);
         PENDING_TASKS.push(meta);
-        markChangeStatus();
         scheduleNextTask();
       }
     });
@@ -201,9 +192,7 @@ function scheduleNextTask(): void {
   const CURRENT_MAX = getConfigOptn("max-tasks", 20);
   while (RUNNING_TASKS.size < CURRENT_MAX && PENDING_TASKS.length > 0) {
     const tsk = PENDING_TASKS.pop();
-    markChangeStatus();
     if (tsk !== undefined) {
-      markChangeStatus();
       RUNNING_TASKS.add(tsk);
       downloadSingleFile(tsk, EMITTER);
     }
@@ -276,16 +265,6 @@ export function getWrapperStatus(): WrapperStatus {
   };
 }
 
-export function subscribeWrapperUpdate(
-  name: string,
-  func: (w: WrapperStatus) => unknown
-): void {
-  SUBSCRIBE_MAP.set(name, func);
-}
-export function unsubscribeWrapperUpdate(name: string): void {
-  SUBSCRIBE_MAP.delete(name);
-}
-
 const PFF_FLAG = "Downloader.IsPff";
 
 function getPffFlag(): string {
@@ -303,28 +282,6 @@ export function getConfigOptn(name: string, def: number): number {
   }
 }
 
-// const PROXY_HOST = "ProxyHost";
-// const PROXY_PORT = "ProxyPort";
-
-// Proxy, still need to "break the ground"
-/* export function getProxy(): { https: Agent } | undefined {
-  return undefined;
-
-  if (!isPff()) {
-    return undefined;
-  }
-  return {
-    https: tunnel.httpsOverHttp({
-      proxy: {
-        host: window.sessionStorage.getItem(PROXY_HOST) || "",
-        port: parseInt(window.sessionStorage.getItem(PROXY_PORT) || "0"),
-      },
-    }),
-  };
-
-}
-*/
-
 export function setProxy(_host: string, _port: number): void {
   // window.sessionStorage.setItem(PROXY_HOST, host);
   // window.sessionStorage.setItem(PROXY_PORT, port.toString());
@@ -334,7 +291,6 @@ export function addState(s: string): void {
   console.log(s);
   addDoing(s);
   DOING.unshift(s);
-  markChangeStatus();
   if (DOING.length > 3) {
     DOING.pop();
   }

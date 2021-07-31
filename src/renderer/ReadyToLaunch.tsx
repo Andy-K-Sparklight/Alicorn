@@ -66,8 +66,7 @@ import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { scanReports } from "../modules/crhelper/CrashReportFinder";
 import {
   getWrapperStatus,
-  subscribeWrapperUpdate,
-  unsubscribeWrapperUpdate,
+  WrapperStatus,
 } from "../modules/download/DownloadWrapper";
 import {
   getAllJava,
@@ -205,14 +204,18 @@ function Launching(props: {
   const [selectedAccount, setSelectedAccount] = useState<Account>();
   const [selecting, setSelecting] = useState<boolean>(false);
   const [allAccounts, setAccounts] = useState<Set<Account>>(new Set<Account>());
-  const [refreshWrapperBit, refreshWrapper] = useState<boolean>(false);
+  const [ws, setWrapperStatus] = useState<WrapperStatus>(getWrapperStatus());
   const profileHash = useRef<string>(objectHash(props.profile));
   useEffect(() => {
     const timer = setInterval(() => {
       setHint(randsl("ReadyToLaunch.WaitingText"));
     }, 5000);
+    const subscribe = setInterval(() => {
+      setWrapperStatus(getWrapperStatus());
+    }, 100);
     return () => {
       clearInterval(timer);
+      clearInterval(subscribe);
     };
   }, []);
   useEffect(() => {
@@ -230,14 +233,6 @@ function Launching(props: {
         setAccounts(builtAccount);
       }
     })();
-  }, []);
-  useEffect(() => {
-    subscribeWrapperUpdate("ReadyToLaunch", () => {
-      refreshWrapper(!refreshWrapperBit);
-    });
-    return () => {
-      unsubscribeWrapperUpdate("ReadyToLaunch");
-    };
   }, []);
   useEffect(() => {
     const fun = () => {
@@ -356,9 +351,9 @@ function Launching(props: {
           <Typography className={classes.text} gutterBottom>
             {tr(
               "ReadyToLaunch.Progress",
-              `Current=${getWrapperStatus().inStack}`,
+              `Current=${ws.inStack}`,
               `BufferMax=${getNumber("download.concurrent.max-tasks")}`,
-              `Pending=${getWrapperStatus().pending}`
+              `Pending=${ws.pending}`
             )}
           </Typography>
           <Typography className={classes.text} gutterBottom>
