@@ -66,6 +66,7 @@ export function Tutor(): JSX.Element {
   }
   const settingItem = tr(`Tutor.${page}.Setting`);
   const setting = settingItem.split(";");
+  // bind-config;RADIO;key-a/key-b/key-c
   return (
     <Box className={classes.root}>
       <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
@@ -91,6 +92,7 @@ export function Tutor(): JSX.Element {
             <InputItem
               type={getConfigType(setting[1])}
               bindConfig={setting[0]}
+              choices={setting[2] ? setting[2].split("/") : undefined}
             />
           </Box>
         )}
@@ -107,6 +109,8 @@ function getConfigType(s: string): ConfigType {
       return ConfigType.NUM;
     case "DIR":
       return ConfigType.DIR;
+    case "RADIO":
+      return ConfigType.RADIO;
     default:
       return ConfigType.STR;
   }

@@ -2,8 +2,11 @@ import {
   Box,
   Button,
   createStyles,
+  FormControlLabel,
   makeStyles,
   MuiThemeProvider,
+  Radio,
+  RadioGroup,
   Switch,
   TextField,
   Typography,
@@ -27,6 +30,7 @@ export enum ConfigType {
   NUM,
   STR,
   DIR,
+  RADIO,
 }
 
 export function OptionsPage(): JSX.Element {
@@ -58,6 +62,7 @@ export function OptionsPage(): JSX.Element {
         <InputItem type={ConfigType.BOOL} bindConfig={"java.simple-search"} />
         <InputItem type={ConfigType.DIR} bindConfig={"cx.shared-root"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"hide-when-game"} />
+
         <InputItem type={ConfigType.BOOL} bindConfig={"close-after-launch"} />
         <InputItem
           type={ConfigType.BOOL}
@@ -67,7 +72,17 @@ export function OptionsPage(): JSX.Element {
           type={ConfigType.BOOL}
           bindConfig={"modx.ignore-non-standard-mods"}
         />
-        <InputItem type={ConfigType.STR} bindConfig={"download.mirror"} />
+        <InputItem
+          type={ConfigType.RADIO}
+          choices={[
+            "none",
+            "alicorn",
+            "alicorn-mcbbs-nonfree",
+            "tss",
+            "tss-mcbbs-nonfree",
+          ]}
+          bindConfig={"download.mirror"}
+        />
         <InputItem
           type={ConfigType.NUM}
           bindConfig={"download.concurrent.timeout"}
@@ -142,11 +157,15 @@ export function OptionsPage(): JSX.Element {
 export function InputItem(props: {
   type: ConfigType;
   bindConfig: string;
+  choices?: string[];
   onlyOn?: NodeJS.Platform;
   notOn?: NodeJS.Platform;
 }): JSX.Element {
   const [refreshBit, forceRefresh] = useState<boolean>(true);
   const classex = useInputStyles();
+  const [cSelect, setSelect] = useState<string>(
+    getString(props.bindConfig, (props.choices || [""])[0] || "")
+  );
   if (props.onlyOn) {
     if (os.platform() !== props.onlyOn) {
       return <></>;
@@ -249,6 +268,38 @@ export function InputItem(props: {
                   {tr("Options.Select")}
                 </Button>
               </Box>
+            );
+          case ConfigType.RADIO:
+            return (
+              <RadioGroup
+                row
+                onChange={(e) => {
+                  set(props.bindConfig, String(e.target.value));
+                  setSelect(String(e.target.value));
+                }}
+              >
+                {(props.choices || []).map((c) => {
+                  return (
+                    <FormControlLabel
+                      key={c}
+                      value={c}
+                      control={<Radio checked={cSelect === c} />}
+                      label={
+                        <Typography
+                          style={{
+                            fontSize: "small",
+                            color:
+                              ALICORN_DEFAULT_THEME_LIGHT.palette.secondary
+                                .main,
+                          }}
+                        >
+                          {tr(`Options.${props.bindConfig}.${c}`)}
+                        </Typography>
+                      }
+                    />
+                  );
+                })}
+              </RadioGroup>
             );
           case ConfigType.STR:
           default:

@@ -926,7 +926,27 @@ Alicorn 快捷键 ^
 
 # Options.download.mirror.desc
 
-只能选择 {AlicornHome} 下的镜像描述文件，不含扩展名，none 表示不使用镜像 - 通常需要从 alicorn、tss 或 none 中选择。\n 如果网络环境较差，您还可以选择 alicorn-mcbbs-nonfree 和 tss-mcbbs-nonfree 这两个非自由镜像 - Alicorn 并不建议（但也不介意）使用非自由镜像。
+选择一个用于加快下载速度的镜像 - 请注意你的数据安全
+
+# Options.download.mirror.alicorn
+
+Alicorn 轻松访问镜像
+
+# Options.download.mirror.alicorn-mcbbs-nonfree
+
+Alicorn/MCBBS 镜像组（非自由）
+
+# Options.download.mirror.tss
+
+TSS 镜像
+
+# Options.download.mirror.tss-mcbbs-nonfree
+
+TSS/MCBBS 镜像组（非自由）
+
+# Options.download.mirror.none
+
+不使用镜像
 
 # Options.dev.explicit-error-throw.title
 
@@ -1404,7 +1424,7 @@ Minecraft 需要从 Mojang 官网下载，但鉴于网络环境因你所处的�
 
 # Tutor.5.Setting
 
-download.mirror;STR
+download.mirror;RADIO;none/alicorn/alicorn-mcbbs-nonfree/tss/tss-mcbbs-nonfree
 
 # Tutor.6.Title
 
