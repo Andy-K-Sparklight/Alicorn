@@ -224,4 +224,7 @@ export function registerBackgroundListeners(): void {
   ipcMain.on("showWindow", async () => {
     getMainWindow()?.show();
   });
+  ipcMain.on("changeDir", (e, d: string) => {
+    process.chdir(d);
+  });
 }

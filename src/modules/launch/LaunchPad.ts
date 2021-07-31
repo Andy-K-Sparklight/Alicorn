@@ -1,3 +1,4 @@
+import { ipcRenderer } from "electron";
 import EventEmitter from "events";
 import { whereAJ } from "../auth/AJHelper";
 import { whereND } from "../auth/NDHelper";
@@ -65,6 +66,7 @@ export function launchProfile(
       .concat(serverArgs)
       .concat(resolutions);
   }
-  console.log(totalArgs);
+  process.chdir(container.rootDir);
+  ipcRenderer.send("changeDir", container.rootDir);
   return runMinecraft(totalArgs, jExecutable, container, emitter);
 }

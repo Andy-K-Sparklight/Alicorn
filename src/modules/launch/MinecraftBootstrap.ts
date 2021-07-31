@@ -1,11 +1,11 @@
-import { MinecraftContainer } from "../container/MinecraftContainer";
 import { ChildProcess, spawn } from "child_process";
+import EventEmitter from "events";
 import objectHash from "object-hash";
 import { Pair } from "../commons/Collections";
-import EventEmitter from "events";
 import { PROCESS_END_GATE, PROCESS_LOG_GATE } from "../commons/Constants";
-import { mount, unmount } from "../container/ContainerUtil";
 import { getBoolean } from "../config/ConfigSupport";
+import { mount, unmount } from "../container/ContainerUtil";
+import { MinecraftContainer } from "../container/MinecraftContainer";
 import { runJIM } from "./JIMSupport";
 
 const POOL = new Map<string, RunningMinecraft>();
@@ -36,12 +36,11 @@ export class RunningMinecraft {
     this.executable = exec;
     this.emitter = emitter;
   }
-
   run(): string {
     unmount(this.container.id); // Unmount so that user won't operate it
     try {
       this.process = spawn(this.executable, this.args, {
-        cwd: this.container.resolvePath("/"),
+        cwd: this.container.rootDir,
         detached: true, // Won't close after launcher closed
       });
     } catch (e) {
