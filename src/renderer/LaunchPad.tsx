@@ -7,13 +7,22 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import { Archive, FlightTakeoff, Sync } from "@material-ui/icons";
+import {
+  Archive,
+  DeleteForever,
+  EventBusy,
+  FlightTakeoff,
+  Sync,
+} from "@material-ui/icons";
+import { remove } from "fs-extra";
 import objectHash from "object-hash";
 import React, { useEffect, useRef, useState } from "react";
 import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
+import { getContainer } from "../modules/container/ContainerUtil";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { whatProfile } from "../modules/profile/WhatProfile";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
+import { YNDialog2 } from "./OperatingHint";
 import { useCardStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
 
@@ -139,7 +148,16 @@ function CoresDisplay(): JSX.Element {
       )}
       <br />
       {cores.map((c) => {
-        return <SingleCoreDisplay key={c.location} profile={c} />;
+        return (
+          <SingleCoreDisplay
+            key={c.location}
+            refresh={() => {
+              setDirty();
+              setRefresh(!refreshBit);
+            }}
+            profile={c}
+          />
+        );
       })}
     </Box>
   );
@@ -147,16 +165,19 @@ function CoresDisplay(): JSX.Element {
 
 function SingleCoreDisplay(props: {
   profile: SimplifiedCoreInfo;
+  refresh: () => unknown;
 }): JSX.Element {
   const classes = useCardStyles();
   const hash = objectHash(props.profile);
   const used = getUsed(hash);
+  const [warningOpen, setWarningOpen] = useState(false);
+  const [toDestroy, setDestroy] = useState<string>();
   return (
     <Box>
       <Card className={classes.card}>
         <CardContent>
           {props.profile.corrupted ? (
-            {}
+            ""
           ) : (
             <Box>
               <Tooltip title={tr("CoreInfo.Pff")}>
@@ -189,6 +210,30 @@ function SingleCoreDisplay(props: {
                   }}
                 >
                   <FlightTakeoff />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={tr("CoreInfo.Destroy")}>
+                <IconButton
+                  color={"inherit"}
+                  className={classes.operateButton}
+                  onClick={() => {
+                    setDestroy(props.profile.id);
+                    setWarningOpen(true);
+                  }}
+                >
+                  <DeleteForever />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={tr("CoreInfo.ClearUse")}>
+                <IconButton
+                  color={"inherit"}
+                  className={classes.operateButton}
+                  onClick={() => {
+                    markUsed(hash, 0);
+                    props.refresh();
+                  }}
+                >
+                  <EventBusy />
                 </IconButton>
               </Tooltip>
             </Box>
@@ -237,6 +282,24 @@ function SingleCoreDisplay(props: {
             ""
           )}
         </CardContent>
+        <YNDialog2
+          open={warningOpen}
+          onAccept={async () => {
+            if (toDestroy) {
+              await remove(
+                getContainer(props.profile.container).getVersionRoot(toDestroy)
+              );
+            }
+          }}
+          onClose={() => {
+            setWarningOpen(false);
+            props.refresh();
+          }}
+          yes={tr("CoreInfo.Destroy.Yes")}
+          no={tr("CoreInfo.Destroy.No")}
+          title={tr("CoreInfo.Destroy.Title", `Name=${toDestroy}`)}
+          content={tr("CoreInfo.Destroy.Content", `Name=${toDestroy}`)}
+        />
       </Card>
       <br />
     </Box>
@@ -251,7 +314,11 @@ function getUsed(hash: string): number {
   );
 }
 
-function markUsed(hash: string): void {
+function markUsed(hash: string, set?: number): void {
+  if (set !== undefined) {
+    window.localStorage.setItem(PIN_NUMBER_KEY + hash, set.toString());
+    return;
+  }
   let origin =
     parseInt(window.localStorage.getItem(PIN_NUMBER_KEY + hash) || "0") || 0;
   origin++;

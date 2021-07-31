@@ -1,12 +1,12 @@
-import { MinecraftContainer } from "../container/MinecraftContainer";
-import { GameProfile } from "./GameProfile";
 import fs from "fs-extra";
-import { isLegacy, ProfileType, whatProfile } from "./WhatProfile";
-import { convertFromFabric } from "./FabricProfileAdaptor";
-import { convertFromLegacy } from "./LegacyProfileAdaptor";
-import { InheritedProfile } from "./InheritedProfileAdaptor";
 import path from "path";
+import { MinecraftContainer } from "../container/MinecraftContainer";
 import { JAR_SUFFIX } from "../launch/NativesLint";
+import { convertFromFabric } from "./FabricProfileAdaptor";
+import { GameProfile } from "./GameProfile";
+import { InheritedProfile } from "./InheritedProfileAdaptor";
+import { convertFromLegacy } from "./LegacyProfileAdaptor";
+import { isLegacy, ProfileType, whatProfile } from "./WhatProfile";
 
 export async function loadProfileDirectly(
   id: string,
@@ -23,7 +23,12 @@ export async function loadProfile(
   id: string,
   container: MinecraftContainer
 ): Promise<GameProfile> {
-  let jsonObj = await fs.readJSON(container.getProfilePath(id));
+  let jsonObj;
+  try {
+    jsonObj = await fs.readJSON(container.getProfilePath(id));
+  } catch {
+    throw "Profile not exist! Reading: " + id;
+  }
   const vType = whatProfile(String(jsonObj["id"]));
   let legacyBit = false;
   if (isLegacy(jsonObj)) {

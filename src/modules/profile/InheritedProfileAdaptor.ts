@@ -110,10 +110,11 @@ export class InheritedProfile extends GameProfile {
     if (this.inheritsFrom === this.id) {
       return this;
     }
-    return await makeInherit(
-      await loadProfile(this.inheritsFrom, container),
-      this,
-      legacyBit
-    );
+    try {
+      const pf = await loadProfile(this.inheritsFrom, container);
+      return await makeInherit(pf, this, legacyBit);
+    } catch {
+      throw "Failed to load dependency profile! Loading: " + this.inheritsFrom;
+    }
   }
 }
