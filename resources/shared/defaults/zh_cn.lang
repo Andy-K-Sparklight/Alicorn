@@ -662,7 +662,7 @@ Minecraft 版本号
 
 # InstallCore.ForgeVersion
 
-Forge 版本号
+将安装的 Forge 版本：
 
 # InstallCore.ForgeBaseVersion
 
@@ -670,7 +670,7 @@ Forge 版本号
 
 # InstallCore.FabricVersion
 
-Fabric 版本号
+将安装的 Fabric 版本：
 
 # InstallCore.FabricBaseVersion
 
@@ -958,7 +958,7 @@ Alicorn 快捷键 ^
 
 # Options.download.mirror.title
 
-下载源镜像
+下载源镜像 ^
 
 # Options.download.mirror.desc
 
