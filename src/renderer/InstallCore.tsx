@@ -12,6 +12,8 @@ import {
   MuiThemeProvider,
   Select,
   Snackbar,
+  Tab,
+  Tabs,
   Typography,
 } from "@material-ui/core";
 import objectHash from "object-hash";
@@ -84,7 +86,7 @@ export function InstallCore(): JSX.Element {
   const [failed, setFailed] = useState(false);
   const [openNotice, setOpenNotice] = useState(false);
   const [progressMsg, _setProgressMsg] = useState("");
-
+  const [tabValue, setTabValue] = useState(0);
   function setProgressMsg(msg: string): void {
     // Binding
     if (mounted.current) {
@@ -349,10 +351,38 @@ export function InstallCore(): JSX.Element {
             }
           }}
         />
+        <Tabs
+          value={tabValue}
+          onChange={(_e, v) => {
+            setTabValue(v);
+          }}
+        >
+          <Tab
+            label={
+              <Typography color={"primary"}>
+                {tr("InstallCore.InstallMinecraft")}
+              </Typography>
+            }
+          />
+          <Tab
+            label={
+              <Typography color={"primary"}>
+                {tr("InstallCore.InstallForge")}
+              </Typography>
+            }
+          />
+          <Tab
+            label={
+              <Typography color={"primary"}>
+                {tr("InstallCore.InstallFabric")}
+              </Typography>
+            }
+          />
+        </Tabs>
         {/* Mojang */}
-        <Box>
-          <Typography className={classes.title}>
-            {tr("InstallCore.InstallMinecraft")}
+        <TabPanel value={tabValue} index={0}>
+          <Typography className={classes.instr}>
+            {tr("InstallCore.InstallMinecraftInstr")}
           </Typography>
           <FormControl className={classes.formControl}>
             <InputLabel
@@ -449,12 +479,11 @@ export function InstallCore(): JSX.Element {
           >
             {tr("InstallCore.Start")}
           </Button>
-        </Box>
+        </TabPanel>
         {/* Forge */}
-        <Box>
-          <br />
-          <Typography className={classes.title}>
-            {tr("InstallCore.InstallForge")}
+        <TabPanel value={tabValue} index={1}>
+          <Typography className={classes.instr}>
+            {tr("InstallCore.InstallForgeInstr")}
           </Typography>
           <Typography className={classes.text} color={"secondary"}>
             {tr("InstallCore.ForgeVersion") +
@@ -524,13 +553,12 @@ export function InstallCore(): JSX.Element {
           >
             {tr("InstallCore.Start")}
           </Button>
-        </Box>
+        </TabPanel>
 
         {/* Fabric */}
-        <Box>
-          <br />
-          <Typography className={classes.title}>
-            {tr("InstallCore.InstallFabric")}
+        <TabPanel value={tabValue} index={2}>
+          <Typography className={classes.instr}>
+            {tr("InstallCore.InstallFabricInstr")}
           </Typography>
           <Typography className={classes.text} color={"secondary"}>
             {tr("InstallCore.FabricVersion") +
@@ -600,7 +628,7 @@ export function InstallCore(): JSX.Element {
           >
             {tr("InstallCore.Start")}
           </Button>
-        </Box>
+        </TabPanel>
       </Box>
     </MuiThemeProvider>
   );
@@ -631,5 +659,17 @@ function ConfirmInstall(props: {
         </Button>
       </DialogActions>
     </Dialog>
+  );
+}
+function TabPanel(props: {
+  children?: React.ReactNode;
+  index: string | number;
+  value: string | number;
+}): JSX.Element {
+  const { children, value, index } = props;
+  return (
+    <Box hidden={value !== index}>
+      {value === index ? <Box p={3}>{children}</Box> : ""}
+    </Box>
   );
 }

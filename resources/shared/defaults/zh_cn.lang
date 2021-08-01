@@ -592,13 +592,25 @@ ASC 文件共享宗卷
 
 添加新的核心
 
+# InstallCore.InstallMinecraftInstr
+
+使用此选项卡安装新的 Minecraft 原版核心，它是一切改装的基础，同时可以直接游玩。\n原版模组（数据包、资源包、地图等）只需要安装原版核心。
+
 # InstallCore.InstallForge
 
 改装已有核心（Forge）
 
+# InstallCore.InstallForgeInstr
+
+为已有的 Minecraft 核心进行改装并安装 Forge，Forge Mod 需要进行此改装后才可用。\n注意：你必须安装了对应版本的 Minecraft 核心才可以进行改装！
+
 # InstallCore.InstallFabric
 
 改装已有核心（Fabric）
+
+# InstallCore.InstallFabricInstr
+
+为已有的 Minecraft 核心进行改装并安装 Fabric，Fabric Mod 需要进行此改装后才可用。\n注意：你必须安装了对应版本的 Minecraft 核心才可以进行改装！
 
 # InstallCore.TargetContainer
 

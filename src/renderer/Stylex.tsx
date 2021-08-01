@@ -78,6 +78,10 @@ export const useFormStyles = makeStyles((theme) =>
       marginLeft: theme.spacing(1),
       marginTop: theme.spacing(1),
     },
+    instr: {
+      fontSize: "small",
+      color: theme.palette.secondary.main,
+    },
   })
 );
 export const fullWidth = makeStyles((theme) =>

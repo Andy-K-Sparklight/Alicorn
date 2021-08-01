@@ -250,24 +250,29 @@ export function App(): JSX.Element {
                 <Apps />
               </IconButton>
             </Tooltip>
-            <Tooltip title={tr("MainMenu.Browser")}>
-              <IconButton
-                style={genHideStyles("Browser")}
-                className={classes.floatButton}
-                onClick={() => {
-                  (async () => {
-                    await ipcRenderer.invoke(
-                      "openBrowser",
-                      getBoolean("web.allow-natives"),
-                      getString("web.global-proxy")
-                    );
-                  })();
-                }}
-                color={"inherit"}
-              >
-                <Web />
-              </IconButton>
-            </Tooltip>
+            {getBoolean("dev") ? (
+              <Tooltip title={tr("MainMenu.Browser")}>
+                <IconButton
+                  style={genHideStyles("Browser")}
+                  className={classes.floatButton}
+                  onClick={() => {
+                    (async () => {
+                      await ipcRenderer.invoke(
+                        "openBrowser",
+                        getBoolean("web.allow-natives"),
+                        getString("web.global-proxy")
+                      );
+                    })();
+                  }}
+                  color={"inherit"}
+                >
+                  <Web />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              ""
+            )}
+
             <Tooltip title={tr("MainMenu.QuickManageAccount")}>
               <IconButton
                 style={genHideStyles("AccountManager")}
