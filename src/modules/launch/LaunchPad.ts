@@ -67,6 +67,7 @@ export function launchProfile(
       .concat(resolutions);
   }
   process.chdir(container.rootDir);
+  console.log(totalArgs);
   ipcRenderer.send("changeDir", container.rootDir);
   return runMinecraft(totalArgs, jExecutable, container, emitter);
 }

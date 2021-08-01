@@ -18,8 +18,9 @@ import {
 } from "@material-ui/core";
 import objectHash from "object-hash";
 import React, { useEffect, useRef, useState } from "react";
-import { ReleaseType } from "../modules/commons/Constants";
+import { ALICORN_SEPARATOR, ReleaseType } from "../modules/commons/Constants";
 import { isNull } from "../modules/commons/Null";
+import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
 import {
   getAllMounted,
   getContainer,
@@ -51,9 +52,10 @@ import {
 import { performFabricInstall } from "../modules/pff/install/FabricInstall";
 import { performForgeInstall } from "../modules/pff/install/ForgeInstall";
 import { installProfile } from "../modules/pff/install/MojangInstall";
+import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
 import { FailedHint, OperatingHintCustom } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
-import { useFormStyles } from "./Stylex";
+import { fullWidth, useFormStyles } from "./Stylex";
 import { tr } from "./Translator";
 
 export function InstallCore(): JSX.Element {
@@ -67,12 +69,12 @@ export function InstallCore(): JSX.Element {
   const [mojangFilter, setMojangFilter] = useState<ReleaseType>(
     ReleaseType.RELEASE
   );
+  const [patchableCores, setPatchableCores] = useState<PatchableCore[]>([]);
   const [baseMojangVersionForge, setBaseMojangVersionForge] =
     useState<string>("");
   const [failedMsg, setFailedMsg] = useState<string>();
   const [baseMojangVersionFabric, setBaseMojangVersionFabric] =
     useState<string>("");
-  const [allMojangRelease, setAllMojangRelease] = useState<string[]>([]);
   const [detectedForgeVersion, setDetectedForgeVersion] = useState("");
   const [detectedFabricVersion, setDetectedFabricVersion] =
     useState<string>("");
@@ -87,6 +89,7 @@ export function InstallCore(): JSX.Element {
   const [openNotice, setOpenNotice] = useState(false);
   const [progressMsg, _setProgressMsg] = useState("");
   const [tabValue, setTabValue] = useState(0);
+  const fullWidthClasses = fullWidth();
   function setProgressMsg(msg: string): void {
     // Binding
     if (mounted.current) {
@@ -139,11 +142,12 @@ export function InstallCore(): JSX.Element {
       }
     })();
   }, [baseMojangVersionFabric]);
+
   useEffect(() => {
     (async () => {
-      const allMj = await getAllMojangCores(ReleaseType.RELEASE);
+      const aCores = await filterMojangCores();
       if (mounted.current) {
-        setAllMojangRelease(allMj);
+        setPatchableCores(aCores);
       }
     })();
   }, []);
@@ -500,41 +504,29 @@ export function InstallCore(): JSX.Element {
             <Select
               labelId={"CoreInstall-Forge-SelectBase"}
               color={"primary"}
-              className={classes.selector}
+              className={classes.selector + " " + fullWidthClasses.form}
               onChange={(e) => {
-                setBaseMojangVersionForge(String(e.target.value || ""));
+                const s = String(e.target.value).split(ALICORN_SEPARATOR);
+                if (s.length >= 2) {
+                  const c = String(s.shift());
+                  const i = String(s.shift());
+                  setBaseMojangVersionForge(i);
+                  setForgeContainer(c);
+                }
               }}
-              value={baseMojangVersionForge || ""}
+              value={
+                selectedForgeContainer +
+                ALICORN_SEPARATOR +
+                baseMojangVersionForge
+              }
             >
-              {allMojangRelease.map((r) => {
+              {patchableCores.map((r) => {
                 return (
-                  <MenuItem key={objectHash(r)} value={r}>
-                    {r}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-          <FormControl className={classes.formControl}>
-            <InputLabel
-              id={"CoreInstall-Forge-TargetContainer"}
-              className={classes.label}
-            >
-              {tr("InstallCore.TargetContainer")}
-            </InputLabel>
-            <Select
-              labelId={"CoreInstall-Forge-TargetContainer"}
-              color={"primary"}
-              className={classes.selector}
-              onChange={(e) => {
-                setForgeContainer(String(e.target.value || ""));
-              }}
-              value={selectedForgeContainer || ""}
-            >
-              {getAllMounted().map((c) => {
-                return (
-                  <MenuItem key={objectHash(c)} value={c}>
-                    {c}
+                  <MenuItem
+                    key={objectHash(r)}
+                    value={r.container + ALICORN_SEPARATOR + r.id}
+                  >
+                    {`${r.container}/${r.id}`}
                   </MenuItem>
                 );
               })}
@@ -575,41 +567,29 @@ export function InstallCore(): JSX.Element {
             <Select
               labelId={"CoreInstall-Fabric-SelectBase"}
               color={"primary"}
-              className={classes.selector}
+              className={classes.selector + " " + fullWidthClasses.form}
               onChange={(e) => {
-                setBaseMojangVersionFabric(String(e.target.value || ""));
+                const s = String(e.target.value).split(ALICORN_SEPARATOR);
+                if (s.length >= 2) {
+                  const c = String(s.shift());
+                  const i = String(s.shift());
+                  setBaseMojangVersionFabric(i);
+                  setFabricContainer(c);
+                }
               }}
-              value={baseMojangVersionFabric || ""}
+              value={
+                selectedFabricContainer +
+                ALICORN_SEPARATOR +
+                baseMojangVersionFabric
+              }
             >
-              {allMojangRelease.map((r) => {
+              {patchableCores.map((r) => {
                 return (
-                  <MenuItem key={objectHash(r)} value={r}>
-                    {r}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-          <FormControl className={classes.formControl}>
-            <InputLabel
-              id={"CoreInstall-Fabric-TargetContainer"}
-              className={classes.label}
-            >
-              {tr("InstallCore.TargetContainer")}
-            </InputLabel>
-            <Select
-              labelId={"CoreInstall-Fabric-TargetContainer"}
-              color={"primary"}
-              className={classes.selector}
-              onChange={(e) => {
-                setFabricContainer(String(e.target.value || ""));
-              }}
-              value={selectedFabricContainer || ""}
-            >
-              {getAllMounted().map((c) => {
-                return (
-                  <MenuItem key={objectHash(c)} value={c}>
-                    {c}
+                  <MenuItem
+                    key={objectHash(r)}
+                    value={r.container + ALICORN_SEPARATOR + r.id}
+                  >
+                    {`${r.container}/${r.id}`}
                   </MenuItem>
                 );
               })}
@@ -672,4 +652,20 @@ function TabPanel(props: {
       {value === index ? <Box p={3}>{children}</Box> : ""}
     </Box>
   );
+}
+interface PatchableCore {
+  id: string;
+  container: string;
+}
+async function filterMojangCores(): Promise<PatchableCore[]> {
+  const cores = await scanCoresInAllMountedContainers();
+  const b: PatchableCore[] = [];
+  for (const [c, ids] of cores) {
+    for (const i of ids) {
+      if (whatProfile(i) === ProfileType.MOJANG) {
+        b.push({ id: i, container: c.id });
+      }
+    }
+  }
+  return b;
 }

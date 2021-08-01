@@ -98,11 +98,13 @@ const DIR_BLACKLIST = [
   "var",
   "src",
   "config",
-  "lib",
   "icons",
+  "themes",
   ".npm",
   "cache",
 ];
+
+const DIR_BLACKLIST_INCLUDE = /windows|microsoft|common files/i;
 
 // Use command to locate
 async function findJavaViaCommand(): Promise<string[]> {
@@ -157,7 +159,10 @@ async function diveSearch(
       }
     }
     for (const f of all) {
-      if (DIR_BLACKLIST.includes(f.toLowerCase())) {
+      if (
+        DIR_BLACKLIST.includes(f.toLowerCase()) ||
+        DIR_BLACKLIST_INCLUDE.test(f)
+      ) {
         continue;
       }
       const currentBase = path.resolve(rootDir, f);

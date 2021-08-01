@@ -140,12 +140,18 @@ export function YNDialog2(props: {
   yes: string;
   no: string;
   open: boolean;
+  noProp?: boolean;
 }): JSX.Element {
   return (
     <Dialog
       open={props.open}
-      onClose={() => {
+      onClose={(e) => {
         props.onClose();
+      }}
+      onClick={(e) => {
+        if (props.noProp) {
+          e.stopPropagation();
+        }
       }}
     >
       <DialogTitle>{props.title}</DialogTitle>
@@ -153,7 +159,10 @@ export function YNDialog2(props: {
         <DialogContentText>{props.content}</DialogContentText>
         <DialogActions>
           <Button
-            onClick={() => {
+            onClick={(e) => {
+              if (props.noProp) {
+                e.stopPropagation();
+              }
               props.onAccept();
               props.onClose();
             }}
@@ -161,7 +170,10 @@ export function YNDialog2(props: {
             {props.yes}
           </Button>
           <Button
-            onClick={() => {
+            onClick={(e) => {
+              if (props.noProp) {
+                e.stopPropagation();
+              }
               props.onClose();
             }}
           >

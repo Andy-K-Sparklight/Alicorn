@@ -212,7 +212,7 @@ function Launching(props: {
     }, 5000);
     const subscribe = setInterval(() => {
       setWrapperStatus(getWrapperStatus());
-    }, 100);
+    }, 250);
     return () => {
       clearInterval(timer);
       clearInterval(subscribe);

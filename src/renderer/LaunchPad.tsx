@@ -174,7 +174,16 @@ function SingleCoreDisplay(props: {
   const [toDestroy, setDestroy] = useState<string>();
   return (
     <Box>
-      <Card className={classes.card}>
+      <Card
+        className={classes.card}
+        onClick={() => {
+          markUsed(hash);
+          jumpTo(
+            "/ReadyToLaunch/" + props.profile.container + "/" + props.profile.id
+          );
+          triggerSetPage(Pages.ReadyToLaunch);
+        }}
+      >
         <CardContent>
           {props.profile.corrupted ? (
             ""
@@ -184,31 +193,20 @@ function SingleCoreDisplay(props: {
                 <IconButton
                   color={"inherit"}
                   className={classes.operateButton}
-                  onClick={() => {
+                  onClick={(e) => {
                     jumpTo(
                       `/PffFront/${props.profile.container}/${props.profile.baseVersion}`
                     );
                     triggerSetPage(Pages.PffFront);
+                    e.stopPropagation();
                   }}
                 >
                   <Archive />
                 </IconButton>
               </Tooltip>
               <Tooltip title={tr("CoreInfo.Launch")}>
-                <IconButton
-                  color={"inherit"}
-                  className={classes.operateButton}
-                  onClick={() => {
-                    markUsed(hash);
-                    jumpTo(
-                      "/ReadyToLaunch/" +
-                        props.profile.container +
-                        "/" +
-                        props.profile.id
-                    );
-                    triggerSetPage(Pages.ReadyToLaunch);
-                  }}
-                >
+                <IconButton color={"inherit"} className={classes.operateButton}>
+                  {/* We don't need a handler since we can click the card */}
                   <FlightTakeoff />
                 </IconButton>
               </Tooltip>
@@ -216,9 +214,10 @@ function SingleCoreDisplay(props: {
                 <IconButton
                   color={"inherit"}
                   className={classes.operateButton}
-                  onClick={() => {
+                  onClick={(e) => {
                     setDestroy(props.profile.id);
                     setWarningOpen(true);
+                    e.stopPropagation();
                   }}
                 >
                   <DeleteForever />
@@ -228,9 +227,10 @@ function SingleCoreDisplay(props: {
                 <IconButton
                   color={"inherit"}
                   className={classes.operateButton}
-                  onClick={() => {
+                  onClick={(e) => {
                     markUsed(hash, 0);
                     props.refresh();
+                    e.stopPropagation();
                   }}
                 >
                   <EventBusy />
@@ -283,6 +283,7 @@ function SingleCoreDisplay(props: {
           )}
         </CardContent>
         <YNDialog2
+          noProp
           open={warningOpen}
           onAccept={async () => {
             if (toDestroy) {

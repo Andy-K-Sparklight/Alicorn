@@ -74,6 +74,7 @@ export function generateVMArgs(
   vMap.set("library_directory", container.getLibrariesRoot());
   // Attention! Use base version!
   // BAD FORGE CAUSED ALL THIS - I WASTED 2 HOURS WHICH COULD HAVE BE SPENT WITH MY PONY FRIENDS
+  // FIXME: Forge cannot load when mods are present
   vMap.set("version_name", profile.baseVersion);
   vMap.set("classpath_separator", FILE_SEPARATOR);
   // All class paths put together
