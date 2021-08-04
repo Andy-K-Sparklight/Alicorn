@@ -63,7 +63,6 @@ export function OptionsPage(): JSX.Element {
         <InputItem type={ConfigType.DIR} bindConfig={"cx.shared-root"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"hide-when-game"} />
 
-        <InputItem type={ConfigType.BOOL} bindConfig={"close-after-launch"} />
         <InputItem
           type={ConfigType.BOOL}
           bindConfig={"modx.global-dynamic-load-mods"}
@@ -83,6 +82,19 @@ export function OptionsPage(): JSX.Element {
           ]}
           bindConfig={"download.mirror"}
         />
+        <InputItem type={ConfigType.BOOL} bindConfig={"launch.fast-reboot"} />
+        <InputItem type={ConfigType.NUM} bindConfig={"memory"} />
+        <InputItem
+          type={ConfigType.RADIO}
+          bindConfig={"gc1"}
+          choices={["pure", "cms", "g1", "z"]}
+        />
+        <InputItem
+          type={ConfigType.RADIO}
+          bindConfig={"gc2"}
+          choices={["pure", "cms", "g1", "z"]}
+        />
+        <InputItem type={ConfigType.STR} bindConfig={"gw-size"} />
         <InputItem
           type={ConfigType.NUM}
           bindConfig={"download.concurrent.timeout"}
@@ -90,7 +102,6 @@ export function OptionsPage(): JSX.Element {
         <InputItem type={ConfigType.NUM} bindConfig={"download.pff.timeout"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"web.allow-natives"} />
 
-        <InputItem type={ConfigType.BOOL} bindConfig={"download.no-validate"} />
         <InputItem
           type={ConfigType.NUM}
           bindConfig={"download.concurrent.tries-per-chunk"}

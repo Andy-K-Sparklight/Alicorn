@@ -5,13 +5,11 @@
   "dev.f12": false,
   "hot-key": false,
   "hide-when-game": true,
-  "close-after-launch": false,
   "updator.use-update": true,
   "download.concurrent.chunk-size": 4096,
   "download.concurrent.timeout": 5000,
   "download.concurrent.tries-per-chunk": 3,
   "download.concurrent.max-tasks": 200,
-  "download.no-validate": false,
   "download.pff.chunk-size": 256,
   "download.pff.max-tasks": 100,
   "download.pff.timeout": 10000,
@@ -38,5 +36,10 @@
   "theme.secondary.light": "#ffe0f0",
   "startup-page.name": "Tutor",
   "startup-page.url": "/Tutor/1",
-  "starlight.join-server.timeout": 2000
+  "starlight.join-server.timeout": 2000,
+  "gw-size": "960x540",
+  "memory": 0,
+  "gc1": "cms",
+  "gc2": "pure",
+  "launch.fast-reboot": true
 }

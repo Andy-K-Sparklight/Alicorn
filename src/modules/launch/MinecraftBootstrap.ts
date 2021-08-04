@@ -37,7 +37,6 @@ export class RunningMinecraft {
     this.emitter = emitter;
   }
   run(): string {
-    unmount(this.container.id); // Unmount so that user won't operate it
     try {
       this.process = spawn(this.executable, this.args, {
         cwd: this.container.rootDir,
@@ -45,10 +44,8 @@ export class RunningMinecraft {
       });
     } catch (e) {
       console.log(e);
-      mount(this.container.id); // Remount after exit
     }
     this.process?.on("exit", (code, signal) => {
-      mount(this.container.id); // Remount after exit
       this.status = RunningStatus.STOPPING;
       if (code === undefined || code === null) {
         this.exitCode = String(signal);

@@ -1,10 +1,10 @@
-import { Account } from "./Account";
-import { Trio } from "../commons/Collections";
 import objectHash from "object-hash";
+import { v3 } from "uuid";
+import { Trio } from "../commons/Collections";
+import { Account } from "./Account";
 import { AccountType } from "./AccountUtil";
-
 const OFFLINE_PLAYER_PREFIX = "OfflinePlayer:";
-
+const AL_UUID = "60e991ef-5602-479f-85d3-dd72ff93ae68";
 export class LocalAccount extends Account {
   constructor(name: string) {
     super(name, AccountType.ALICORN);
@@ -49,5 +49,5 @@ function fakeToken(): string {
 }
 
 function buildOfflinePlayerUUID(p: string): string {
-  return objectHash(OFFLINE_PLAYER_PREFIX + p);
+  return v3(OFFLINE_PLAYER_PREFIX + p, AL_UUID);
 }

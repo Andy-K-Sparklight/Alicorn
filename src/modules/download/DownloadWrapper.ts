@@ -163,12 +163,10 @@ async function _existsAndValidate(pt: string, sha1: string): Promise<boolean> {
     return true;
   }
   const res = await validate(pt, sha1);
-  if (!getBoolean("download.no-validate")) {
-    if (res) {
-      updateRecord(pt);
-    } else {
-      deleteRecord(pt);
-    }
+  if (res) {
+    updateRecord(pt);
+  } else {
+    deleteRecord(pt);
   }
   return res;
 }

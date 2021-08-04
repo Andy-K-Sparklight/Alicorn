@@ -28,7 +28,7 @@ import { tr } from "./Translator";
 
 let cachedAllCores: SimplifiedCoreInfo[] = [];
 let coresCacheBit = false;
-
+// FIXME: When Fabric error pops the game hasn't ended, if player restart and close the Fabric window, Alicorn will show crash logs instead of launch game properly, this may cause vulnerabilities
 interface SimplifiedCoreInfo {
   location: string;
   container: string;

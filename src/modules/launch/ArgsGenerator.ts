@@ -162,3 +162,42 @@ export function applyND(ndPath: string, serverId: string): string[] {
   // Nide8 has not prefetch, that's good!
   return [`-javaagent:${tPath}=${sid}`, "-Dnide8auth.client=true"];
 }
+
+export function applyMemory(max: number): string[] {
+  if (max > 0) {
+    const min = Math.floor(max * 0.7);
+    return [`-Xmx${max}m`, `-Xms${min}m`];
+  }
+  return [];
+}
+
+export function applyScheme(
+  scheme1: string,
+  scheme2: string,
+  jVersion = 16
+): string[] {
+  if (jVersion >= 16 || scheme1 !== "z") {
+    return RAM_SCHEME[scheme1] || [];
+  }
+  return RAM_SCHEME[scheme2];
+}
+
+const RAM_SCHEME: Record<string, string[]> = {
+  pure: [],
+  cms: [
+    "-XX:+IgnoreUnrecognizedVMOptions",
+    "-XX:+UnlockExperimentalVMOptions",
+    "-XX:+UseConcMarkSweepGC",
+    "-XX:+UseParNewGC",
+    "-XX:+CMSClassUnloadingEnabled",
+    "-XX:+CMSParallelRemarkEnabled",
+    "-XX:SurvivorRatio=2",
+    "-XX:+CMSScavengeBeforeRemark",
+    "-XX:+UseCMSCompactAtFullCollection",
+    "-XX:+CMSParallelRemarkEnabled",
+    "-XX:+ScavengeBeforeFullGC",
+    "-XX:MaxTenuringThreshold=9",
+  ],
+  g1: ["-XX:+UseG1GC"],
+  z: ["-XX:+UseZGC"],
+};

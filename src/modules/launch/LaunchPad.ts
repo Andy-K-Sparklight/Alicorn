@@ -8,8 +8,10 @@ import { MinecraftContainer } from "../container/MinecraftContainer";
 import { GameProfile } from "../profile/GameProfile";
 import {
   applyAJ,
+  applyMemory,
   applyND,
   applyResolution,
+  applyScheme,
   applyServer,
   generateGameArgs,
   generateVMArgs,
@@ -32,6 +34,10 @@ export function launchProfile(
     ajPrefetch?: string;
     useNd?: boolean;
     ndServerId?: string;
+    javaVersion?: number;
+    gc1?: string;
+    gc2?: string;
+    maxMem?: number;
   }
 ): string {
   const vmArgs = generateVMArgs(profile, container);
@@ -51,16 +57,24 @@ export function launchProfile(
   const serverArgs = policies.useServer
     ? applyServer(policies.server || "")
     : [];
+
+  let memArgs: string[] = [];
+  if (policies.javaVersion && policies.gc1 && policies.gc2) {
+    memArgs = applyScheme(policies.gc1, policies.gc2, policies.javaVersion);
+  }
+  memArgs = memArgs.concat(applyMemory(policies.maxMem || 0));
   let totalArgs: string[];
   // I write this judge here in case of you still call ND and AJ both
   if (policies.useNd) {
     totalArgs = ndArgs
+      .concat(memArgs)
       .concat(vmArgs)
       .concat(gameArgs)
       .concat(serverArgs)
       .concat(resolutions);
   } else {
     totalArgs = ajArgs
+      .concat(memArgs)
       .concat(vmArgs)
       .concat(gameArgs)
       .concat(serverArgs)

@@ -49,7 +49,7 @@ import {
   MS_LAST_USED_UUID_KEY,
 } from "../modules/auth/MicrosoftAccount";
 import { Nide8Account } from "../modules/auth/Nide8Account";
-import { findNotIn } from "../modules/commons/Collections";
+import { findNotIn, Pair } from "../modules/commons/Collections";
 import {
   PROCESS_END_GATE,
   PROCESS_LOG_GATE,
@@ -61,7 +61,7 @@ import {
   getNumber,
   getString,
 } from "../modules/config/ConfigSupport";
-import { getContainer, mount } from "../modules/container/ContainerUtil";
+import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { scanReports } from "../modules/crhelper/CrashReportFinder";
 import {
@@ -92,12 +92,13 @@ import { loadProfile } from "../modules/profile/ProfileLoader";
 import { jumpTo, Pages, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { YNDialog } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import { schedulePromiseTask } from "./Schedule";
 import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
 import { toReadableType } from "./YggdrasilAccountManager";
 
 export const LAST_SUCCESSFUL_GAME_KEY = "ReadyToLaunch.LastSuccessfulGame";
-
+export const REBOOT_KEY_BASE = "ReadyToLaunch.Reboot.";
 const useStyles = makeStyles((theme) =>
   createStyles({
     stepper: {
@@ -124,6 +125,7 @@ const useStyles = makeStyles((theme) =>
 const LAST_USED_USER_NAME_KEY = "ReadyToLaunch.LastUsedUsername";
 const GKEY = "Profile.PrefJava";
 const DEF = "Default";
+let NEED_QUERY_STATUS = false;
 export const LAST_LAUNCH_REPORT_KEY = "ReadyToLaunch.LastLaunchReport";
 export const LAST_FAILURE_INFO_KEY = "ReadyToLaunch.LastFailureInfo";
 export const LAST_LOGS_KEY = "ReadyToLaunch.LastLogs";
@@ -211,8 +213,17 @@ function Launching(props: {
       setHint(randsl("ReadyToLaunch.WaitingText"));
     }, 5000);
     const subscribe = setInterval(() => {
-      setWrapperStatus(getWrapperStatus());
-    }, 250);
+      if (NEED_QUERY_STATUS) {
+        let isGettingBit = false;
+        schedulePromiseTask(async () => {
+          if (!isGettingBit) {
+            isGettingBit = true;
+            setWrapperStatus(getWrapperStatus());
+            isGettingBit = false;
+          }
+        });
+      }
+    }, 300);
     return () => {
       clearInterval(timer);
       clearInterval(subscribe);
@@ -420,7 +431,6 @@ export interface MCFailureInfo {
   profile: GameProfile;
   container: MinecraftContainer;
 }
-
 // Start to boot a Minecraft instance
 // When Minecraft quit with a non-zero exit code, this function will post an event 'mcFailure'
 // In its detail contains crash report (if found)
@@ -480,17 +490,35 @@ async function startBoot(
     useServer = true;
     serverHost = server.trim();
   }
-
-  setStatus(LaunchingStatus.LIBRARIES_FILLING);
-  await Promise.all([
-    ensureClient(profile),
-    ensureLog4jFile(profile, container),
-    ensureLibraries(profile, container, GLOBAL_LAUNCH_TRACKER),
-  ]); // Parallel
-  await ensureNatives(profile, container); // Depends on libraries
-  setStatus(LaunchingStatus.ASSETS_FILLING);
-  await ensureAssetsIndex(profile, container);
-  await ensureAllAssets(profile, container, GLOBAL_LAUNCH_TRACKER); // Depends on assets index
+  let resolutionPolicy = false;
+  let w = 0;
+  let h = 0;
+  const resolution = getString("gw-size", "960x540").toLowerCase().split("x");
+  if (resolution.length === 2) {
+    [w, h] = resolution.map((e) => {
+      return parseInt(e);
+    });
+    if (w > 0 && h > 0) {
+      resolutionPolicy = true;
+    }
+  }
+  if (!isReboot(profileHash)) {
+    NEED_QUERY_STATUS = true;
+    setStatus(LaunchingStatus.LIBRARIES_FILLING);
+    await Promise.all([
+      ensureClient(profile),
+      ensureLog4jFile(profile, container),
+      ensureLibraries(profile, container, GLOBAL_LAUNCH_TRACKER),
+    ]); // Parallel
+    await ensureNatives(profile, container); // Depends on libraries
+    setStatus(LaunchingStatus.ASSETS_FILLING);
+    await ensureAssetsIndex(profile, container);
+    await ensureAllAssets(profile, container, GLOBAL_LAUNCH_TRACKER); // Depends on assets index
+    if (getBoolean("launch.fast-reboot")) {
+      markReboot(profileHash);
+    }
+    NEED_QUERY_STATUS = false;
+  }
   setStatus(LaunchingStatus.MODS_PREPARING);
   if (profile.type === ReleaseType.MODIFIED) {
     await prepareModsCheckFor(profile, container, GLOBAL_LAUNCH_TRACKER);
@@ -531,6 +559,8 @@ async function startBoot(
       window[LAST_FAILURE_INFO_KEY] = FAILURE_INFO;
       window.dispatchEvent(new CustomEvent("mcFailure"));
       console.log("Crash report committed, continue tasks.");
+      clearReboot(profileHash);
+      console.log("Cleared reboot flag.");
     } else {
       window.localStorage.setItem(
         LAST_SUCCESSFUL_GAME_KEY,
@@ -549,15 +579,15 @@ async function startBoot(
     server: serverHost,
     useNd: useNd,
     ndServerId: ndServerId,
+    resolution: resolutionPolicy ? new Pair(w, h) : undefined,
+    javaVersion: jInfo.rootVersion,
+    maxMem: getNumber("memory", 0),
+    gc1: getString("gc1", "pure"),
+    gc2: getString("gc2", "pure"),
   });
 
   setStatus(LaunchingStatus.FINISHED);
   console.log(`A new Minecraft instance (${runID}) has been launched.`);
-  if (getBoolean("close-after-launch")) {
-    // Remount
-    mount(container.id);
-    ipcRenderer.send("closeWindow");
-  }
   if (getBoolean("hide-when-game")) {
     ipcRenderer.send("hideWindow");
   }
@@ -880,4 +910,16 @@ function checkJMCompatibility(mv: string, jv: number): "OLD" | "NEW" | "OK" {
     return "OLD";
   }
   return "OK";
+}
+
+function markReboot(hash: string): void {
+  window.sessionStorage.setItem(REBOOT_KEY_BASE + hash, "1");
+}
+
+function clearReboot(hash: string): void {
+  window.sessionStorage.removeItem(REBOOT_KEY_BASE + hash);
+}
+
+function isReboot(hash: string): boolean {
+  return window.sessionStorage.getItem(REBOOT_KEY_BASE + hash) === "1";
 }

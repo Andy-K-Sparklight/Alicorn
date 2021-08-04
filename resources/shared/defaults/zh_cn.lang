@@ -836,6 +836,78 @@ Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的
 
 已禁用
 
+# Options.gc1.title
+
+首选 GC 方案
+
+# Options.gc1.desc
+
+JVM 首选的垃圾回收器方案，Alicorn 将永远优先尝试用它启动 JVM
+
+# Options.gc1.pure
+
+默认（不指定）
+
+# Options.gc1.cms
+
+并发/标记/清除（CMSGC）
+
+# Options.gc1.g1
+
+垃圾优先（G1GC）
+
+# Options.gc1.z
+
+Z（ZGC）
+
+# Options.gc2.title
+
+备选 GC 方案
+
+# Options.gc2.desc
+
+JVM 备选的垃圾回收器方案，当首选方案失败时，Alicorn 将使用此方案
+
+# Options.gc2.pure
+
+默认（不指定）
+
+# Options.gc2.cms
+
+并发/标记/清除（CMSGC）
+
+# Options.gc2.g1
+
+垃圾优先（G1GC）
+
+# Options.gc2.z
+
+Z（ZGC）
+
+# Options.memory.title
+
+最大内存大小
+
+# Options.memory.desc
+
+设置最大内存大小，单位 MB - 设置为 0 以让 JVM 自行选择
+
+# Options.gw-size.title
+
+游戏窗口大小
+
+# Options.gw-size.desc
+
+设置游戏窗口的大小，如 960x540，前宽后高，单位是像素 - 即使不设置，也可以在游戏开始后手动缩放窗口
+
+# Options.launch.fast-reboot.title
+
+快速重启
+
+# Options.launch.fast-reboot.desc
+
+在一次会话中，除第一次成功启动外，启动游戏时将跳过支援库和游戏资源的检查 - 如果你不经常更改文件，建议启用，但如果启动失败，将无法给出支援库和游戏资源的信息
+
 # Options.clean-storage.title
 
 恢复如初 ^
@@ -851,14 +923,6 @@ Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的
 # Options.hide-when-game.desc
 
 在游戏运行时暂停启动器渲染，为 Minecraft 争取约 20 MiB 的 RAM - 有些许的性能提升，同时 Alicorn 能够继续观察游戏状态
-
-# Options.close-after-launch.title
-
-启动后关闭
-
-# Options.close-after-launch.desc
-
-游戏启动后关闭 Alicorn，以节省约 120 MiB 的 RAM 给 Minecraft - 但是当游戏出现问题时 Alicorn 将无法帮助你
 
 # Options.starlight.join-server.timeout.title
 
@@ -1127,14 +1191,6 @@ Pff 的请求等待时间，由于下载 Mod 和下载游戏资源网络环境�
 # Options.download.concurrent.tries-per-chunk.desc
 
 在放弃某个文件的下载前最多的重试次数 - 说真的，调高了真没有什么用，就是多浪费一些时间
-
-# Options.download.no-validate.title
-
-不进行文件校验
-
-# Options.download.no-validate.desc
-
-信任下载的文件，直接存储，不检查其是否完整或有效 - 这可以提升速度，但会在出现问题时更难进行排查
 
 # Options.download.concurrent.max-tasks.title
 
