@@ -355,7 +355,9 @@ function Launching(props: {
       )}
       {/* Insert Here */}
       {status === LaunchingStatus.PENDING ||
-      status === LaunchingStatus.FINISHED ? (
+      status === LaunchingStatus.FINISHED ||
+      status === LaunchingStatus.ACCOUNT_AUTHING ||
+      status === LaunchingStatus.ARGS_GENERATING ? (
         ""
       ) : (
         <Box>
@@ -394,10 +396,7 @@ function Launching(props: {
       >
         <Fab
           color={"primary"}
-          disabled={
-            status !== LaunchingStatus.PENDING &&
-            status !== LaunchingStatus.FINISHED
-          }
+          disabled={status !== LaunchingStatus.PENDING}
           onClick={async () => {
             if (selectedAccount !== undefined) {
               // @ts-ignore

@@ -35,13 +35,12 @@ import { tr } from "./Translator";
 
 export function PffFront(): JSX.Element {
   const emitter = useRef(new EventEmitter());
-  const { container, version, name, loader } =
-    useParams<{
-      container: string;
-      version: string;
-      name?: string;
-      loader: string;
-    }>();
+  const { container, version, name, loader } = useParams<{
+    container: string;
+    version: string;
+    name?: string;
+    loader: string;
+  }>();
   const [isRunning, setRunning] = useState(false);
   const [info, setInfo] = useState("");
   const [packageName, setPackageName] = useState(name || "");
@@ -143,6 +142,7 @@ export function PffFront(): JSX.Element {
         )}
         <Typography
           style={{
+            userSelect: "auto",
             textAlign: "center",
             fontSize: "small",
           }}
@@ -172,7 +172,8 @@ export function PffFront(): JSX.Element {
                 return (
                   <ListItem key={name}>
                     <ListItemIcon>
-                      {version === f.gameVersion ? (
+                      {version === f.gameVersion &&
+                      (loader === "Forge" ? 1 : 4) === f.modLoader ? (
                         <AssignmentTurnedIn color={"primary"} />
                       ) : (
                         <AssignmentLate />
@@ -204,7 +205,10 @@ export function PffFront(): JSX.Element {
                             fontSize: "small",
                             marginLeft: "1%",
                           },
-                          version === f.gameVersion ? {} : { color: "gray" }
+                          version === f.gameVersion &&
+                            (loader === "Forge" ? 1 : 4) === f.modLoader
+                            ? {}
+                            : { color: "gray", textDecoration: "line-through" }
                         )}
                         color={"secondary"}
                       >{`${f.addonName} [${f.addonId}] / ${f.fileName} [${

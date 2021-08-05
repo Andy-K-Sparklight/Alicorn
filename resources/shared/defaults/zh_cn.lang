@@ -1410,6 +1410,38 @@ Mojang 版本
 
 最近一次游戏
 
+# PffFront.NoSuchAddon
+
+获取失败：没有那个 Addon 或者服务暂时不可用
+
+# PffFont.NotCompatible
+
+警告：该 Addon 没有与 {Version} 兼容的版本，无法继续
+
+# PffFont.LookingUpFile
+
+正查找文件 {File}
+
+# PffFront.NoSuchFile
+
+获取失败：没有那个文件或者服务暂时不可用
+
+# PffFront.Downloading
+
+正获取文件 {Url}，取决于网络环境，获取可能失败或消耗很长时间，请耐心等一下……
+
+# PffFront.Locking
+
+正在更新前端锁……
+
+# PffFront.Done
+
+完成
+
+# PffFront.Failed
+
+获取失败：不能获取 {Url}，请再试一次，或者手动下载该文件
+
 # PffFront.Slug
 
 软件名

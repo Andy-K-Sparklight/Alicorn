@@ -1,3 +1,4 @@
+import { tr } from "../../../renderer/Translator";
 import { getNumber, getString } from "../../config/ConfigSupport";
 import { DATA_ROOT } from "../../config/DataSupport";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
@@ -43,7 +44,7 @@ export async function requireMod(
     aInfo = await lookupAddonInfo(slug, apiBase, timeout);
   }
   if (aInfo === undefined) {
-    emitter.emit(PFF_MSG_GATE, "No such addon, stopped.");
+    emitter.emit(PFF_MSG_GATE, tr("PffFront.NoSuchAddon"));
     return false;
   }
   const latestFileId = getLatestFileByVersion(
@@ -55,10 +56,14 @@ export async function requireMod(
   if (latestFileId === 0) {
     emitter.emit(
       PFF_MSG_GATE,
-      `This addon might not be compatible with version ${gameVersion}`
+      tr("PffFront.NotCompatible", `Version=${gameVersion}`)
     );
+    return false;
   }
-  emitter.emit(PFF_MSG_GATE, `Looking up file ${latestFileId}`);
+  emitter.emit(
+    PFF_MSG_GATE,
+    tr("PffFront.LookingUpFile", `File=${latestFileId}`)
+  );
   const latestFile = await lookupFileInfo(
     aInfo,
     latestFileId,
@@ -66,27 +71,24 @@ export async function requireMod(
     timeout
   );
   if (latestFile === undefined) {
-    emitter.emit(
-      PFF_MSG_GATE,
-      `Failed to look up file, this file might not exist.`
-    );
+    emitter.emit(PFF_MSG_GATE, tr("PffFront.NoSuchFile"));
     return false;
   }
   emitter.emit(
     PFF_MSG_GATE,
-    `All is well till now, start downloading from ${latestFile.downloadUrl}, this may take long long long long a time since CurseForge CDN isn't always so fast...`
+    tr("PffFront.Downloading", `Url=${latestFile.downloadUrl}`)
   );
   const st = await requireFile(latestFile, aInfo, cacheRoot, container);
   if (st) {
-    emitter.emit(PFF_MSG_GATE, "A few more things, writing lockfile...");
+    emitter.emit(PFF_MSG_GATE, tr("PffFront.Locking"));
     writeToLockFile(aInfo, latestFile, lockfile, gameVersion, modLoader);
     await saveLockFile(lockfile, container);
-    emitter.emit(PFF_MSG_GATE, "All done! Have fun!");
+    emitter.emit(PFF_MSG_GATE, tr("PffFront.Done"));
     return true;
   } else {
     emitter.emit(
       PFF_MSG_GATE,
-      `Could not download file, try again or download it yourself: ${latestFile.downloadUrl}`
+      tr("PffFront.Failed", `Url=${latestFile.downloadUrl}`)
     );
     return false;
   }
