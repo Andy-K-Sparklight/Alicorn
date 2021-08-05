@@ -35,8 +35,13 @@ import { tr } from "./Translator";
 
 export function PffFront(): JSX.Element {
   const emitter = useRef(new EventEmitter());
-  const { container, version, name } =
-    useParams<{ container: string; version: string; name?: string }>();
+  const { container, version, name, loader } =
+    useParams<{
+      container: string;
+      version: string;
+      name?: string;
+      loader: string;
+    }>();
   const [isRunning, setRunning] = useState(false);
   const [info, setInfo] = useState("");
   const [packageName, setPackageName] = useState(name || "");
@@ -111,7 +116,8 @@ export function PffFront(): JSX.Element {
                           packageName,
                           getContainer(container),
                           version,
-                          emitter.current
+                          emitter.current,
+                          loader === "Forge" ? 1 : 4
                         );
                         if (mounted.current) {
                           setRunning(false);
@@ -221,7 +227,8 @@ async function pffInstall(
   name: string,
   container: MinecraftContainer,
   version: string,
-  emitter: EventEmitter
+  emitter: EventEmitter,
+  modLoader: number
 ): Promise<void> {
   setChangePageWarn(true);
   let i: string | number = name;
@@ -235,7 +242,7 @@ async function pffInstall(
     const u = new URL(proxy);
     setProxy(u.host, parseInt(u.port));
   } catch {}
-  await requireMod(i, version, container, emitter);
+  await requireMod(i, version, container, emitter, modLoader);
   setPffFlag("0");
   setProxy("", 0);
   setChangePageWarn(false);

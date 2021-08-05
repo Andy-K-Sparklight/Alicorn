@@ -195,7 +195,7 @@ function SingleCoreDisplay(props: {
                   className={classes.operateButton}
                   onClick={(e) => {
                     jumpTo(
-                      `/PffFront/${props.profile.container}/${props.profile.baseVersion}`
+                      `/PffFront/${props.profile.container}/${props.profile.baseVersion}/${props.profile.versionType}`
                     );
                     triggerSetPage(Pages.PffFront);
                     e.stopPropagation();

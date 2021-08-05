@@ -89,6 +89,7 @@ export function InstallCore(): JSX.Element {
   const [openNotice, setOpenNotice] = useState(false);
   const [progressMsg, _setProgressMsg] = useState("");
   const [tabValue, setTabValue] = useState(0);
+  const [updatePatchableCoresBit, updatePatchableCores] = useState(false);
   const fullWidthClasses = fullWidth();
   function setProgressMsg(msg: string): void {
     // Binding
@@ -150,7 +151,7 @@ export function InstallCore(): JSX.Element {
         setPatchableCores(aCores);
       }
     })();
-  }, []);
+  }, [updatePatchableCoresBit]);
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box className={classes.root}>
@@ -305,6 +306,7 @@ export function InstallCore(): JSX.Element {
             setMojangConfirmOpen(false);
           }}
           confirmFunc={async () => {
+            updatePatchableCores(!updatePatchableCoresBit);
             clearDoing();
             setMojangConfirmOpen(false);
             setOperating(true);

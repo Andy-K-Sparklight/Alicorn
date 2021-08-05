@@ -19,7 +19,7 @@ function getCompatibleVersions(): string[] {
       .querySelector(
         "tbody > tr:nth-child(1) > td.plc > div.pct > div > div.typeoption > table > tbody > tr:nth-child(6) > td"
       )
-      ?.innerHTML.split("&nbsp;") || []
+      ?.innerHTML.split(/&nbsp;| /i) || []
   );
 }
 
@@ -62,6 +62,32 @@ async function selectContainer(): Promise<string> {
 async function generateClicker(document: Document): Promise<void> {
   const version = getCompatibleVersions();
   const name = getModName();
+  const loaderRaw = document.querySelector(
+    "tbody > tr:nth-child(1) > td.plc > div.pct > div > div.typeoption > table > tbody > tr:nth-child(7) > td"
+  );
+  const loaders = (loaderRaw?.innerHTML || "Fabric").split(/&nbsp;| /i);
+  if (loaderRaw) {
+    loaderRaw.childNodes.forEach((e) => {
+      e.remove();
+    });
+
+    const lks = loaders.map((l) => {
+      if (l.trim().length > 0) {
+        const ele = document.createElement("span");
+        ele.onclick = () => {
+          window.sessionStorage.setItem("selectedLoader", l.trim());
+        };
+        ele.innerHTML = l;
+        return ele;
+      }
+      return undefined;
+    });
+    lks.forEach((l) => {
+      if (l) {
+        loaderRaw.append(l);
+      }
+    });
+  }
 
   if (version.length > 0 && name.length > 0) {
     const links = version.map((v) => {
@@ -71,7 +97,9 @@ async function generateClicker(document: Document): Promise<void> {
         showDialog("准备就绪，转到 Alicorn 按下安装按钮试试吧！", "right");
         await invokeAlicorn(
           "JumpTo",
-          `/PffFront/${ct}/${v}/${name}`,
+          `/PffFront/${ct}/${v}/${
+            window.sessionStorage.getItem("selectedLoader") || "Fabric"
+          }/${name}`,
           "PffFront"
         );
       };

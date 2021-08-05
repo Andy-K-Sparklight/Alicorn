@@ -17,7 +17,8 @@ export async function requireMod(
   slug: string | number,
   gameVersion: string,
   container: MinecraftContainer,
-  emitter = NULL_OUTPUT
+  emitter = NULL_OUTPUT,
+  modLoader: number
 ): Promise<boolean> {
   emitter.emit(PFF_MSG_GATE, `Loading lockfile from ${container.id}`);
   const lockfile = await loadLockFile(container);
@@ -45,7 +46,12 @@ export async function requireMod(
     emitter.emit(PFF_MSG_GATE, "No such addon, stopped.");
     return false;
   }
-  const latestFileId = getLatestFileByVersion(aInfo, gameVersion, false);
+  const latestFileId = getLatestFileByVersion(
+    aInfo,
+    gameVersion,
+    false,
+    modLoader
+  );
   if (latestFileId === 0) {
     emitter.emit(
       PFF_MSG_GATE,
@@ -73,7 +79,7 @@ export async function requireMod(
   const st = await requireFile(latestFile, aInfo, cacheRoot, container);
   if (st) {
     emitter.emit(PFF_MSG_GATE, "A few more things, writing lockfile...");
-    await writeToLockFile(aInfo, latestFile, lockfile, gameVersion);
+    writeToLockFile(aInfo, latestFile, lockfile, gameVersion, modLoader);
     await saveLockFile(lockfile, container);
     emitter.emit(PFF_MSG_GATE, "All done! Have fun!");
     return true;

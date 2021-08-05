@@ -137,7 +137,9 @@ export interface GameVersionFilesIndex {
 export function getLatestFileByVersion(
   addonInfo: AddonInfo,
   gameVersion: string,
-  allowDefault = true
+  allowDefault = true,
+  modLoader = 4, // 4 for Fabric and 1 for Forge, -1 for any
+  allowLoaderDiff = true
 ): number {
   if (gameVersion === "") {
     if (!allowDefault) {
@@ -148,7 +150,16 @@ export function getLatestFileByVersion(
   const indexes = addonInfo.gameVersionLatestFiles;
   for (const i of indexes) {
     if (i.gameVersion === gameVersion) {
-      return i.projectFileId;
+      if (modLoader === 0 || modLoader === i.modLoader) {
+        return i.projectFileId;
+      }
+    }
+  }
+  if (allowLoaderDiff) {
+    for (const i of indexes) {
+      if (i.gameVersion === gameVersion) {
+        return i.projectFileId;
+      }
     }
   }
   return 0;

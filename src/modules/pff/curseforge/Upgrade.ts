@@ -1,4 +1,5 @@
-import { Lockfile, writeToLockFile } from "./Lockfile";
+import { unlink } from "fs-extra";
+import { MinecraftContainer } from "../../container/MinecraftContainer";
 import {
   AddonInfo,
   getLatestFileByVersion,
@@ -6,8 +7,7 @@ import {
   lookupFileInfo,
   requireFile,
 } from "./Get";
-import { MinecraftContainer } from "../../container/MinecraftContainer";
-import { unlink } from "fs-extra";
+import { Lockfile, writeToLockFile } from "./Lockfile";
 
 export async function upgradeFile(
   lockfile: Lockfile,
@@ -32,7 +32,12 @@ export async function upgradeFile(
         }
         const file = await lookupFileInfo(
           addonInfo,
-          getLatestFileByVersion(addonInfo, lockfile.files[f].gameVersion),
+          getLatestFileByVersion(
+            addonInfo,
+            lockfile.files[f].gameVersion,
+            true,
+            lockfile.files[f].modLoader
+          ),
           apiBase,
           timeout
         );
@@ -46,11 +51,12 @@ export async function upgradeFile(
               await unlink(container.getModJar(lockfile.files[f].fileName));
             }
             delete lockfile.files[f];
-            await writeToLockFile(
+            writeToLockFile(
               addonInfo,
               file,
               lockfile,
-              lockfile.files[f].gameVersion
+              lockfile.files[f].gameVersion,
+              lockfile.files[f].modLoader
             );
           }
         }
