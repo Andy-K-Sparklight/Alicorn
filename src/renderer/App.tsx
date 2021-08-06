@@ -158,7 +158,8 @@ export function App(): JSX.Element {
 
   useEffect(() => {
     const fun = (e: KeyboardEvent) => {
-      if (e.key === "/" && enteredCommand === "/") {
+      if (e.key === "/") {
+        setEnteredCommand("/"); // Clear on "/"
         setShowCommand(true);
         window.sessionStorage.setItem("isCommand", "1");
         return;

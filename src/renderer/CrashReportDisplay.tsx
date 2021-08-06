@@ -297,17 +297,20 @@ function Analyze(props: {
 }): JSX.Element {
   const classes = useAccStyles();
   const analyzeList = Array.from(props.analyze.keys());
-  let total = 0;
+  let total = -1;
   for (const a of analyzeList) {
     const c = props.analyze.get(a)?.report;
     if (c && c.length > 0) {
+      if (total === -1) {
+        total = 0;
+      }
       total += c.length;
     }
   }
   return (
     <Accordion>
       <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
-        {total > 0 ? (
+        {total > -1 ? (
           <Badge badgeContent={total} color={"secondary"}>
             <Typography>{props.title}</Typography>
           </Badge>
@@ -440,6 +443,13 @@ function BBCodeDisplay(props: {
   logsReport?: CrashReportMap;
 }): JSX.Element {
   const classes = useAccStyles();
+  const code = generateCrashAnalytics(
+    props.crashAnalytics,
+    props.originCrashReport,
+    props.tracker,
+    props.logs,
+    props.logsReport
+  );
   return (
     <Accordion>
       <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
@@ -448,17 +458,7 @@ function BBCodeDisplay(props: {
       <AccordionDetails className={classes.acc1}>
         <Button
           onClick={() => {
-            if (
-              !copy(
-                generateCrashAnalytics(
-                  props.crashAnalytics,
-                  props.originCrashReport,
-                  props.tracker,
-                  props.logs,
-                  props.logsReport
-                )
-              )
-            ) {
+            if (!copy(code)) {
               submitError("Failed to copy!");
             }
           }}

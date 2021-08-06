@@ -1,4 +1,5 @@
 import { submitWarn } from "../../renderer/Renderer";
+import { registerAlicornFunctions } from "./AlicornFunctions";
 import { initBase } from "./Base";
 
 export function initCommandListener(): void {
@@ -10,12 +11,13 @@ export function initCommandListener(): void {
     );
   });
   initBase();
+  registerAlicornFunctions();
 }
 
-export type CommandHandler = (args: string[]) => unknown;
+export type CommandHandler = (args: string[]) => Promise<unknown | void>;
 const CDT: Map<string, CommandHandler> = new Map();
 
-function dispatchCommand(cmd: string): void {
+export async function dispatchCommand(cmd: string): Promise<unknown> {
   const sa = cmd.trim().split(/\s+/);
   const f = CDT.get(sa.shift()?.toLowerCase() || "");
   const arg: string[] = [];
@@ -39,7 +41,11 @@ function dispatchCommand(cmd: string): void {
   }
 
   if (f) {
-    f(arg);
+    try {
+      return await f(arg);
+    } catch {
+      return undefined;
+    }
   } else {
     submitWarn("Unknown command!");
   }
