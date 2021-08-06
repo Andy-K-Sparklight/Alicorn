@@ -3,7 +3,7 @@ import { isNull } from "../commons/Null";
 const FABRIC_NAME = /fabric/i;
 const FORGE_NAME = /forge/i;
 const MOJANG_NAME_RELEASE = /^[0-9]+?\.[0-9]+?(\.)?[0-9]*$/i;
-const MOJANG_NAME_SNAPSHOT = /^[0-9]+?w[0-9]+?[a-z]$/i;
+const MOJANG_NAME_SNAPSHOT = /^[0-9]+?w[0-9]+?[a-z]+$/i;
 const LEGACY_VERSIONS = /^1\.([0-9]|1[0-2])([-.a-z].*?)?$/i;
 const MOJANG_OLD_AB = /^[ab][0-9]+?\.[0-9]+?.*$/i;
 const MOJANG_OLD_CX = /^c[0-9_.]+?[a-z]*?$/i;

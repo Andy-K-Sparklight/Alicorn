@@ -374,7 +374,6 @@ function Launching(props: {
           </Typography>
         </Box>
       )}
-
       <MiniJavaSelector
         hash={profileHash.current}
         gameId={props.profile.id}
@@ -820,7 +819,12 @@ function MiniJavaSelector(props: {
   }, [currentJava]);
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-      <Box className={classes.root}>
+      <Box
+        className={classes.root}
+        style={{
+          marginTop: "5px",
+        }}
+      >
         <FormControl>
           <InputLabel id={"Select-JRE"} className={classes.label}>
             {tr("JavaSelector.SelectJava")}

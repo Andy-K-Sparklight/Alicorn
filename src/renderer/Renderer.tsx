@@ -7,6 +7,7 @@ import { HashRouter } from "react-router-dom";
 import pkg from "../../package.json";
 import { prepareAJ } from "../modules/auth/AJHelper";
 import { prepareND } from "../modules/auth/NDHelper";
+import { initCommandListener } from "../modules/command/CommandListener";
 import {
   getBoolean,
   getString,
@@ -189,6 +190,7 @@ window.addEventListener("error", (e) => {
   )};}`;
   // Set background
   document.head.insertAdjacentElement("beforeend", e);
+  initCommandListener();
   ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
   console.log("This Alicorn has super cow powers.");
   bindSuperCowPower();
@@ -239,8 +241,11 @@ export function submitError(msg: string): void {
   console.log(msg);
   window.dispatchEvent(new CustomEvent("sysError", { detail: msg }));
 }
-export function submiWarn(msg: string): void {
+export function submitWarn(msg: string): void {
   window.dispatchEvent(new CustomEvent("sysWarn", { detail: msg }));
+}
+export function submitInfo(msg: string): void {
+  window.dispatchEvent(new CustomEvent("sysInfo", { detail: msg }));
 }
 
 function bindSuperCowPower(): void {

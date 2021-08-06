@@ -86,6 +86,8 @@ const useStyles = makeStyles((theme) =>
 export function App(): JSX.Element {
   const classes = useStyles();
   const [page, setPage] = useState(getString("startup-page.name", "Tutor"));
+  const [enteredCommand, setEnteredCommand] = useState("/");
+  const [showCommand, setShowCommand] = useState(false);
   const [openNotice, setNoticeOpen] = useState(false);
   const [openWarn, setWarnOpen] = useState(false);
   const [openChangePageWarn, setOpenChangePageWarn] = useState(false);
@@ -93,6 +95,8 @@ export function App(): JSX.Element {
   const [jumpPageTarget, setJumpPageTarget] = useState("");
   const [err, setErr] = useState("");
   const [warn, setWarn] = useState("");
+  const [info, setInfo] = useState("");
+  const [openInfo, setInfoOpen] = useState(false);
   const [refreshBit, setRefreshBit] = useState(false);
   useEffect(() => {
     if (window.location.hash === "#/") {
@@ -144,9 +148,59 @@ export function App(): JSX.Element {
     });
     window.addEventListener("sysWarn", (e) => {
       setWarn(String(safeGet(e, ["detail"], "Unknown Warning")));
-      setNoticeOpen(true);
+      setWarnOpen(true);
+    });
+    window.addEventListener("sysInfo", (e) => {
+      setInfo(String(safeGet(e, ["detail"], "")));
+      setInfoOpen(true);
     });
   }, []);
+
+  useEffect(() => {
+    const fun = (e: KeyboardEvent) => {
+      if (e.key === "/" && enteredCommand === "/") {
+        setShowCommand(true);
+        window.sessionStorage.setItem("isCommand", "1");
+        return;
+      }
+      if (showCommand) {
+        if (e.key === "Delete") {
+          if (showCommand) {
+            if (enteredCommand === "/") {
+              setShowCommand(false);
+              window.sessionStorage.removeItem("isCommand");
+            } else {
+              setEnteredCommand(enteredCommand.slice(0, -1));
+            }
+          }
+          return;
+        }
+        if (e.key === "Enter") {
+          if (showCommand) {
+            window.dispatchEvent(
+              new CustomEvent("AlicornCommand", { detail: enteredCommand })
+            );
+          }
+          setEnteredCommand("/");
+          setShowCommand(false);
+          window.sessionStorage.removeItem("isCommand");
+          return;
+        }
+        setEnteredCommand(enteredCommand + e.key);
+      }
+    };
+    const f1 = () => {
+      if (showCommand) {
+        setEnteredCommand(enteredCommand + " ");
+      }
+    };
+    window.addEventListener("keypress", fun);
+    window.addEventListener("HelpSpace", f1);
+    return () => {
+      window.removeEventListener("keypress", fun);
+      window.removeEventListener("HelpSpace", f1);
+    };
+  });
   return (
     <Box
       className={classes.root}
@@ -177,9 +231,14 @@ export function App(): JSX.Element {
         <Toolbar>
           <Box className={"window-drag" + " " + classes.title}>
             {/* Drag our window with title */}
-            <Typography variant={"h6"}>{tr(page)}</Typography>
+            <Typography
+              variant={"h6"}
+              style={showCommand ? { fontSize: "small" } : {}}
+            >
+              {showCommand ? enteredCommand : tr(page)}
+            </Typography>
           </Box>
-          <Box>
+          <Box style={showCommand ? { display: "none" } : {}}>
             <Tooltip title={tr("MainMenu.NextTutorPage")}>
               <IconButton
                 style={isTutor() ? {} : { display: "none" }}
@@ -399,6 +458,17 @@ export function App(): JSX.Element {
         autoHideDuration={10000}
         onClose={() => {
           setWarnOpen(false);
+        }}
+      />
+      <Snackbar
+        open={openInfo}
+        style={{
+          width: "90%",
+        }}
+        message={tr("System.Info") + info}
+        autoHideDuration={5000}
+        onClose={() => {
+          setInfoOpen(false);
         }}
       />
     </Box>
