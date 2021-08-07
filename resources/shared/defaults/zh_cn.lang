@@ -1418,11 +1418,19 @@ Mojang 版本
 
 获取失败：没有那个 Addon 或者服务暂时不可用
 
-# PffFont.NotCompatible
+# PffFront.LoadingLock
+
+正在获取前端锁……
+
+# PffFront.Query
+
+正在查询 {Slug}
+
+# PffFront.NotCompatible
 
 警告：该 Addon 没有与 {Version} 兼容的版本，无法继续
 
-# PffFont.LookingUpFile
+# PffFront.LookingUpFile
 
 正查找文件 {File}
 

@@ -21,7 +21,7 @@ export async function requireMod(
   emitter = NULL_OUTPUT,
   modLoader: number
 ): Promise<boolean> {
-  emitter.emit(PFF_MSG_GATE, `Loading lockfile from ${container.id}`);
+  emitter.emit(PFF_MSG_GATE, tr("PffFront.LoadingLock"));
   const lockfile = await loadLockFile(container);
   let apiBase = getString("pff.api-base", CF_API_BASE_URL);
   apiBase = apiBase.endsWith("/") ? apiBase.slice(0, -1) : apiBase;
@@ -29,7 +29,7 @@ export async function requireMod(
   const cacheRoot = getString("pff.cache-root", DATA_ROOT, true);
   const timeout = getNumber("download.concurrent.timeout");
   let aInfo: AddonInfo | undefined;
-  emitter.emit(PFF_MSG_GATE, `Querying info for '${slug}'`);
+  emitter.emit(PFF_MSG_GATE, tr("PffFront.Query", `Slug=${slug}`));
   if (typeof slug === "string") {
     slug = encodeURI(slug.toLowerCase());
     aInfo = await getAddonInfoBySlug(
