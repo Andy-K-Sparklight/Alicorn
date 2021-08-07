@@ -1,4 +1,4 @@
-import { submitWarn } from "../../renderer/Renderer";
+import { submitWarn } from "../../renderer/Message";
 import { registerAlicornFunctions } from "./AlicornFunctions";
 import { initBase } from "./Base";
 

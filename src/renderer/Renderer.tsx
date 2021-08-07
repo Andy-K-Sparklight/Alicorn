@@ -29,6 +29,7 @@ import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
 import { prefetchMojangVersions } from "../modules/pff/get/MojangCore";
 import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
 import { initEncrypt } from "../modules/security/Encrypt";
+import { loadServers } from "../modules/server/ServerFiles";
 import { App } from "./App";
 import { registerHandlers } from "./Handlers";
 import { activateHotKeyFeature } from "./HotKeyHandler";
@@ -212,6 +213,7 @@ window.addEventListener("error", (e) => {
     initConcurrentDownloader(),
     prepareAJ(),
     prepareND(),
+    loadServers(),
   ]);
   // Heavy works and minor works
   await Promise.allSettled([initResolveLock(), initVF()]);
@@ -237,16 +239,7 @@ window.addEventListener("error", (e) => {
   );
 })();
 
-export function submitError(msg: string): void {
-  console.log(msg);
-  window.dispatchEvent(new CustomEvent("sysError", { detail: msg }));
-}
-export function submitWarn(msg: string): void {
-  window.dispatchEvent(new CustomEvent("sysWarn", { detail: msg }));
-}
-export function submitInfo(msg: string): void {
-  window.dispatchEvent(new CustomEvent("sysInfo", { detail: msg }));
-}
+
 
 function bindSuperCowPower(): void {
   // @ts-ignore

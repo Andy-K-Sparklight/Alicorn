@@ -1,7 +1,7 @@
 import { ipcRenderer } from "electron";
-import { jumpTo, Pages, triggerSetPage } from "./GoTo";
-import { submitError } from "./Renderer";
 import { getBoolean } from "../modules/config/ConfigSupport";
+import { jumpTo, Pages, triggerSetPage } from "./GoTo";
+import { submitError } from "./Message";
 
 export function setupHotKey(keyBound: string, callback: () => unknown): void {
   ipcRenderer.send("registerHotKey", keyBound);

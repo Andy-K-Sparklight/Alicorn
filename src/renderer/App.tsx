@@ -39,6 +39,7 @@ import {
   saveResolveLockSync,
 } from "../modules/download/ResolveLock";
 import { saveJDT, saveJDTSync } from "../modules/java/JInfo";
+import { saveServers, saveServersSync } from "../modules/server/ServerFiles";
 import { ContainerManager } from "./ContainerManager";
 import { CrashReportDisplay } from "./CrashReportDisplay";
 import {
@@ -493,6 +494,7 @@ function prepareToQuit(): void {
   saveJDTSync();
   saveVFSync();
   saveResolveLockSync();
+  saveServersSync();
   console.log("All chunks are saved.");
 }
 
@@ -503,6 +505,7 @@ async function intervalSaveData(): Promise<void> {
   await saveJDT();
   await saveVF();
   await saveResolveLock();
+  await saveServers();
   console.log("All chunks are saved.");
 }
 

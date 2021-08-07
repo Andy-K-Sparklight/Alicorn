@@ -306,7 +306,6 @@ export function InstallCore(): JSX.Element {
             setMojangConfirmOpen(false);
           }}
           confirmFunc={async () => {
-            updatePatchableCores(!updatePatchableCoresBit);
             clearDoing();
             setMojangConfirmOpen(false);
             setOperating(true);
@@ -343,6 +342,7 @@ export function InstallCore(): JSX.Element {
                 d,
                 getContainer(selectedMojangContainer)
               );
+              updatePatchableCores(!updatePatchableCoresBit);
               if (mounted.current) {
                 setOperating(false);
                 setFailed(false);

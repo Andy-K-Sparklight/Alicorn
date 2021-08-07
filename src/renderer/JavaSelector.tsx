@@ -30,7 +30,8 @@ import {
 } from "../modules/java/JInfo";
 import { whereJava } from "../modules/java/WhereJava";
 import { setChangePageWarn } from "./GoTo";
-import { ALICORN_DEFAULT_THEME_LIGHT, submitError } from "./Renderer";
+import { submitError } from "./Message";
+import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { fullWidth, useFormStyles } from "./Stylex";
 import { tr } from "./Translator";
 

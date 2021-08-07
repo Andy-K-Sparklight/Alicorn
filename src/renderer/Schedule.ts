@@ -1,4 +1,4 @@
-import { submitError } from "./Renderer";
+import { submitError } from "./Message";
 
 let WORKER: Worker;
 

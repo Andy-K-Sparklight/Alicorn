@@ -1,4 +1,4 @@
-import { submitInfo, submitWarn } from "../../renderer/Renderer";
+import { submitInfo, submitWarn } from "../../renderer/Message";
 import { getString, set } from "../config/ConfigSupport";
 import { registerCommand } from "./CommandListener";
 

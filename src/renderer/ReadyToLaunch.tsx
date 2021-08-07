@@ -393,31 +393,33 @@ function Launching(props: {
             : tr("ReadyToLaunch.Start")
         }
       >
-        <Fab
-          color={"primary"}
-          disabled={status !== LaunchingStatus.PENDING}
-          onClick={async () => {
-            if (selectedAccount !== undefined) {
-              // @ts-ignore
-              window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
-                (st) => {
-                  setStatus(st);
-                  setActiveStep(REV_LAUNCH_STEPS[st]);
-                  setChangePageWarn(st !== LaunchingStatus.PENDING);
-                },
-                props.profile,
-                profileHash.current,
-                props.container,
-                selectedAccount,
-                props.server
-              );
-            } else {
-              setSelecting(true);
-            }
-          }}
-        >
-          <FlightTakeoff />
-        </Fab>
+        <Box>
+          <Fab
+            color={"primary"}
+            disabled={status !== LaunchingStatus.PENDING}
+            onClick={async () => {
+              if (selectedAccount !== undefined) {
+                // @ts-ignore
+                window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
+                  (st) => {
+                    setStatus(st);
+                    setActiveStep(REV_LAUNCH_STEPS[st]);
+                    setChangePageWarn(st !== LaunchingStatus.PENDING);
+                  },
+                  props.profile,
+                  profileHash.current,
+                  props.container,
+                  selectedAccount,
+                  props.server
+                );
+              } else {
+                setSelecting(true);
+              }
+            }}
+          >
+            <FlightTakeoff />
+          </Fab>
+        </Box>
       </Tooltip>
     </Box>
   );

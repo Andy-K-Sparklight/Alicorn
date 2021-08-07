@@ -5,7 +5,6 @@ import {
   Badge,
   Box,
   Button,
-  CircularProgress,
   createStyles,
   List,
   ListItem,
@@ -29,13 +28,13 @@ import {
 import { CMC_CRASH_LOADER } from "../modules/crhelper/CutieMCCrashLoader";
 import { LaunchTracker } from "../modules/launch/Tracker";
 import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
+import { submitError } from "./Message";
 import {
   LAST_FAILURE_INFO_KEY,
   LAST_LAUNCH_REPORT_KEY,
   LAST_LOGS_KEY,
   MCFailureInfo,
 } from "./ReadyToLaunch";
-import { ALICORN_DEFAULT_THEME_LIGHT, submitError } from "./Renderer";
 import { tr } from "./Translator";
 
 const useAccStyles = makeStyles((theme) =>
@@ -297,34 +296,19 @@ function Analyze(props: {
 }): JSX.Element {
   const classes = useAccStyles();
   const analyzeList = Array.from(props.analyze.keys());
-  let total = -1;
+  let total = 0;
   for (const a of analyzeList) {
     const c = props.analyze.get(a)?.report;
     if (c && c.length > 0) {
-      if (total === -1) {
-        total = 0;
-      }
       total += c.length;
     }
   }
   return (
     <Accordion>
       <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
-        {total > -1 ? (
-          <Badge badgeContent={total} color={"secondary"}>
-            <Typography>{props.title}</Typography>
-          </Badge>
-        ) : (
-          <Box flexDirection={"row"}>
-            <Typography>{props.title}</Typography>
-            <CircularProgress
-              style={{
-                color: ALICORN_DEFAULT_THEME_LIGHT.palette.primary.light,
-              }}
-              size={"1rem"}
-            />
-          </Box>
-        )}
+        <Badge badgeContent={total.toString()} color={"secondary"}>
+          <Typography>{props.title}</Typography>
+        </Badge>
       </AccordionSummary>
       <AccordionDetails className={classes.acc1}>
         <List>

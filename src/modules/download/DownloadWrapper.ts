@@ -1,7 +1,8 @@
 import EventEmitter from "events";
+import { submitWarn } from "../../renderer/Message";
 import { tr } from "../../renderer/Translator";
 import { getModifiedDate, isFileExist } from "../commons/FileUtil";
-import { getBoolean, getNumber } from "../config/ConfigSupport";
+import { getNumber } from "../config/ConfigSupport";
 import { getAllContainers, getContainer } from "../container/ContainerUtil";
 import { fetchSharedFile, isSharedContainer } from "../container/SharedFiles";
 import {
@@ -131,6 +132,7 @@ export async function wrappedDownloadFile(
     addState(tr("ReadyToLaunch.Got", `Url=${ou}`));
   } else {
     addState(tr("ReadyToLaunch.Failed", `Url=${ou}`));
+    submitWarn(tr("ReadyToLaunch.Failed", `Url=${ou}`));
   }
   return s;
 }

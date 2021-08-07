@@ -10,7 +10,7 @@ A copy of forge.iw.jar will be saved to the root dir of alicorn data.
 */
 import childProcess from "child_process";
 import { zip } from "compressing";
-import fs from "fs-extra";
+import fs, { readJSON } from "fs-extra";
 import path from "path";
 import { Pair } from "../../commons/Collections";
 import { FILE_SEPARATOR } from "../../commons/Constants";
@@ -18,13 +18,15 @@ import { isFileExist, wrappedLoadJSON } from "../../commons/FileUtil";
 import { isNull, safeGet } from "../../commons/Null";
 import { getActualDataPath, saveDefaultData } from "../../config/DataSupport";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
-import { addDoing } from "../../download/DownloadWrapper";
-import { ensureLibraries } from "../../launch/Ensurance";
+import { DownloadMeta } from "../../download/AbstractDownloader";
+import { addDoing, wrappedDownloadFile } from "../../download/DownloadWrapper";
+import { ensureClient, ensureLibraries } from "../../launch/Ensurance";
 import { JAR_SUFFIX } from "../../launch/NativesLint";
 import { makeLibrary } from "../../profile/FabricProfileAdaptor";
 import { GameProfile } from "../../profile/GameProfile";
 import { noDuplicateConcat } from "../../profile/InheritedProfileAdaptor";
 import { LibraryMeta } from "../../profile/Meta";
+import { loadProfile } from "../../profile/ProfileLoader";
 
 const FORGE_INSTALLER_HEADLESS = "forge.iw.jar";
 const CP_ARG = "-cp";
@@ -113,6 +115,8 @@ export async function getPolyfillForgeProfile(
   const j2 = await getForgeInstallProfileAndVersionProfile(forgeJar, container);
   const ipf = j2.getFirstValue();
   const vf = j2.getSecondValue();
+  await downloadMappingsAndClient(ipf, container);
+
   let finalProfile: GameProfile;
   let modernBit: boolean;
   if (Object.getOwnPropertyNames(vf).length <= 0) {
@@ -129,6 +133,37 @@ export async function getPolyfillForgeProfile(
   }
   await rmTempForgeFiles(forgeJar, container); // Remove after loaded
   return new Pair<GameProfile, boolean>(finalProfile, modernBit);
+}
+
+async function downloadMappingsAndClient(
+  installProfile: Record<string, unknown>,
+  container: MinecraftContainer
+): Promise<void> {
+  try {
+    const mcpVersion = String(
+      safeGet(installProfile, ["data", "MCP_VERSION", "client"], "")
+    )
+      .slice(1)
+      .slice(0, -1);
+    const baseVersion = String(safeGet(installProfile, ["minecraft"], ""));
+    if (mcpVersion.length > 0 && baseVersion.length > 0) {
+      // Mappings isn't in GameProfile, parse manually
+      const f = await readJSON(container.getProfilePath(baseVersion));
+      const p = await loadProfile(baseVersion, container);
+      const mappingsURL = String(
+        safeGet(f, ["downloads", "client_mappings", "url"], "")
+      );
+      const target = container.getLibraryPath(
+        `net/minecraft/client/${baseVersion}-${mcpVersion}/client-${baseVersion}-${mcpVersion}-mappings.txt`
+      );
+      console.log("Downloading mappings!");
+      await Promise.all([
+        wrappedDownloadFile(new DownloadMeta(mappingsURL, target)),
+        ensureClient(p),
+      ]);
+      console.log("Mappings downloaded!");
+    }
+  } catch {}
 }
 
 // Remove the extracted files
