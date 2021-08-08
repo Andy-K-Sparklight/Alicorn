@@ -60,6 +60,7 @@ export enum Pages {
   PffFront = "PffFront",
   Welcome = "Welcome",
   Tutor = "Tutor",
+  ServerList = "ServerList",
 }
 
 export const CHANGE_PAGE_WARN = "ChangePageWarn";

@@ -1,14 +1,17 @@
 import { submitWarn } from "../../renderer/Message";
+import { getBoolean } from "../config/ConfigSupport";
 import { registerAlicornFunctions } from "./AlicornFunctions";
 import { initBase } from "./Base";
 
 export function initCommandListener(): void {
   window.addEventListener("AlicornCommand", (e) => {
-    dispatchCommand(
-      String((e as CustomEvent).detail)
-        .trim()
-        .slice(1)
-    );
+    if (getBoolean("command")) {
+      dispatchCommand(
+        String((e as CustomEvent).detail)
+          .trim()
+          .slice(1)
+      );
+    }
   });
   initBase();
   registerAlicornFunctions();
@@ -43,7 +46,8 @@ export async function dispatchCommand(cmd: string): Promise<unknown> {
   if (f) {
     try {
       return await f(arg);
-    } catch {
+    } catch (e) {
+      submitWarn("Uncaught error happened! " + e);
       return undefined;
     }
   } else {

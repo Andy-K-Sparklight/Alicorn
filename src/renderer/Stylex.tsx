@@ -70,9 +70,17 @@ export const useFormStyles = makeStyles((theme) =>
       color: theme.palette.primary.main,
       width: theme.spacing(25),
     },
+    selectorLight: {
+      borderColor: theme.palette.primary.light,
+      color: theme.palette.primary.light,
+    },
     label: {
       marginLeft: theme.spacing(0.5),
       color: theme.palette.primary.main,
+    },
+    labelLight: {
+      marginLeft: theme.spacing(0.5),
+      color: theme.palette.primary.light,
     },
     btn: {
       marginLeft: theme.spacing(1),
@@ -88,6 +96,9 @@ export const fullWidth = makeStyles((theme) =>
   createStyles({
     form: {
       width: theme.spacing(80),
+    },
+    largerForm: {
+      width: theme.spacing(90),
     },
     right: {
       float: "right",

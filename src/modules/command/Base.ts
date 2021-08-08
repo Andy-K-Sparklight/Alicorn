@@ -2,7 +2,6 @@ import { submitInfo, submitWarn } from "../../renderer/Message";
 import { getString, set } from "../config/ConfigSupport";
 import { registerCommand } from "./CommandListener";
 
-// Alicorn Shell
 export function initBase(): void {
   registerCommand("echo", async (a) => {
     submitInfo(a.join(" "));

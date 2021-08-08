@@ -41,5 +41,7 @@
   "memory": 0,
   "gc1": "cms",
   "gc2": "pure",
-  "launch.fast-reboot": true
+  "launch.fast-reboot": true,
+  "command": false,
+  "assistant": "PonyCN"
 }

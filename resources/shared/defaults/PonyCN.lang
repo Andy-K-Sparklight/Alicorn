@@ -1,7 +1,3 @@
-# Lang
-
-简体中文
-
 # LaunchPad
 
 启动游戏
@@ -50,6 +46,10 @@ Pff 软件安装器
 
 快速上手
 
+# ServerList
+
+服务器列表
+
 # System.Info
 
 信息：
@@ -89,6 +89,10 @@ Oops！系统错误：
 # MainMenu.QuickJavaSelector
 
 选择 Java 运行时
+
+# MainMenu.QuickServerList
+
+显示服务器列表
 
 # MainMenu.Exit
 
@@ -336,7 +340,7 @@ Yggdrasil 帐户
 
 # ReadyToLaunch.Restart
 
-重新启动
+重新启动（当前不可用）
 
 # ReadyToLaunch.MSLogout
 
@@ -458,7 +462,9 @@ Minecraft 和我的世界真的不是一个东西！
 
 如果您安装了太多的 Mod，Alicorn 可能需要很长的时间来准备它们。
 
-您的每一次文件访问都会被缓存加速！嗯……只要它不出问题……
+会飞又会魔法的 Alicorn～
+
+让黛茜飞一会……
 
 # VersionView.Name
 
@@ -840,6 +846,26 @@ Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的
 
 已禁用
 
+# Options.command.title
+
+Alicorn Functions
+
+# Options.command.desc
+
+控制 Alicorn 命令的启用或禁用，它们被 Starlight、Alicorn 脚本或你自己使用
+
+# Options.assistant.title
+
+助理（语言） Assistant (Language)
+
+# Options.assistant.desc
+
+选择你的助理和你喜欢的语言风格\nSelect your assistant and your preferred style
+
+# Options.assistant.PonyCN
+
+小马（小马语/中国）
+
 # Options.gc1.title
 
 首选 GC 方案
@@ -1039,14 +1065,6 @@ Alicorn 轻松访问镜像
 # Options.download.mirror.alicorn-mcbbs-nonfree
 
 Alicorn/MCBBS 镜像组（非自由）
-
-# Options.download.mirror.tss
-
-TSS 镜像
-
-# Options.download.mirror.tss-mcbbs-nonfree
-
-TSS/MCBBS 镜像组（非自由）
 
 # Options.download.mirror.none
 
@@ -1552,7 +1570,7 @@ Java 平台相关设置
 
 # Tutor.5.Content
 
-Minecraft 需要从 Mojang 官网下载，但鉴于网络环境因你所处的位置而异（例如，在坎高下载这些文件就非常快，而在无尽森林可能根本就无法下载），你或许想选择一个镜像。\n\n在下面的设置中你可以键入 alicorn、tss 之一来选择一个完全自由的镜像，也可以选择 alicorn-mcbbs-nonfree 或 tss-mcbbs-nonfree 这两个不完全自由的组合镜像，使用 none 来禁用镜像。\n\nAlicorn 不保证任何镜像的可用性或安全性，如果因下载来自非 Mojang 官方源（即下载镜像不是 none）的文件存在恶意内容导致你的数据丢失或损毁，Mojang（很可能）不将为此负责。
+Minecraft 需要从 Mojang 官网下载，但鉴于网络环境因你所处的位置而异（例如，在坎高下载这些文件就非常快，而在无尽森林可能根本就无法下载），你或许想选择一个镜像。\n\n在下面的设置中你可以键入 alicorn 来选择这个完全自由的镜像，也可以选择 alicorn-mcbbs-nonfree 来使用这个不完全自由的组合镜像，使用 none 来禁用镜像。\n\nAlicorn 不保证任何镜像的可用性或安全性，如果因下载来自非 Mojang 官方源（即下载镜像不是 none）的文件存在恶意内容导致你的数据丢失或损毁，Mojang（很可能）不将为此负责。
 
 # Tutor.5.Controller
 
@@ -1560,7 +1578,7 @@ Minecraft 需要从 Mojang 官网下载，但鉴于网络环境因你所处的�
 
 # Tutor.5.Setting
 
-download.mirror;RADIO;none/alicorn/alicorn-mcbbs-nonfree/tss/tss-mcbbs-nonfree
+download.mirror;RADIO;none/alicorn/alicorn-mcbbs-nonfree
 
 # Tutor.6.Title
 
@@ -1689,3 +1707,63 @@ End
 # Tutor.14.Setting
 
 @empty
+
+# ServerList.Add
+
+添加服务器
+
+# ServerList.AddNewServer.Title
+
+添加服务器
+
+# ServerList.AddNewServer.Description
+
+添加服务器后，你还需要为其配置一个合适的核心用于启动。
+
+# ServerList.AddNewServer.SincereWarn
+
+安全警告：多人游戏是一个非常危险的环境，尽管你觉得你不会遇到，但你确实可能遭到巨大的损失——即使是在一个你极其信任的服务器——确实发生过！\n如果你够勇，你可以添加并继续勇，但如果你将来不勇了，你可以随时删除服务器。如果遭遇意外，请向有关组织或部门求助，并可到 Alicorn 的 Discord 上报告。
+
+# ServerList.AddNewServer.Address
+
+连接地址
+
+# ServerList.AddNewServer.OK
+
+继续，我超勇的！
+
+# ServerList.AddNewServer.Cancel
+
+不，我怂了
+
+# ServerList.Online
+
+在线
+
+# ServerList.Offline
+
+无法连接
+
+# ServerList.UseCore
+
+选择用于游玩的核心
+
+# ServerList.Launch
+
+在启动台中打开
+
+# ServerList.Remove
+
+移除此服务器
+
+# ServerList.Connectable
+
+可以连接
+
+# ServerList.NoConnection
+
+无法连接
+
+# ServerList.Testing
+
+正在测试连接

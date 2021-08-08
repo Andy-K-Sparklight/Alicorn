@@ -1,4 +1,8 @@
-import { CrashLoader, CrashLoaderReport } from "./CrashLoader";
+import {
+  CrashLoader,
+  CrashLoaderReport,
+  CrashReportCursor,
+} from "./CrashLoader";
 
 export const CMC_CRASH_LOADER: CrashLoader = {
   rules: {
@@ -37,6 +41,24 @@ export const CMC_CRASH_LOADER: CrashLoader = {
           reason: "内存不足",
           suggestions: ["安装新的内存", "使用 JRE 调优设置（参见选项页）"],
         };
+      }).toString(),
+    },
+    CMC005: {
+      match: "Could not find required mod",
+      script: ((c: CrashReportCursor): CrashLoaderReport => {
+        const l = c.getLine();
+        const EXTRACT_REGEX = /(?<=\{)[0-9A-Za-z_]+?(?= @ \[)/;
+        const m = l?.match(EXTRACT_REGEX) || "";
+        if (m.length > 0) {
+          return {
+            reason: "缺少依赖 Mod：" + m,
+            suggestions: [
+              "对该核心启动 Pff，在 Pff 中输入 " + m + " 尝试进行安装",
+              "手动补全 " + m,
+            ],
+          };
+        }
+        return {};
       }).toString(),
     },
   },

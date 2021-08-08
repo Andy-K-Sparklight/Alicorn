@@ -15,6 +15,7 @@ import {
   Apps,
   Book,
   Code,
+  Dns,
   FlightTakeoff,
   GetApp,
   Info,
@@ -56,6 +57,7 @@ import { YNDialog2 } from "./OperatingHint";
 import { OptionsPage } from "./Options";
 import { PffFront } from "./PffFront";
 import { ReadyToLaunch } from "./ReadyToLaunch";
+import { ServerList } from "./ServerList";
 import { tr } from "./Translator";
 import { getNextTutorUrl, isShow, isTutor, Tutor } from "./Tutor";
 import { VersionView } from "./VersionView";
@@ -159,36 +161,38 @@ export function App(): JSX.Element {
 
   useEffect(() => {
     const fun = (e: KeyboardEvent) => {
-      if (e.key === "/") {
-        setEnteredCommand("/"); // Clear on "/"
-        setShowCommand(true);
-        window.sessionStorage.setItem("isCommand", "1");
-        return;
-      }
-      if (showCommand) {
-        if (e.key === "Delete") {
-          if (showCommand) {
-            if (enteredCommand === "/") {
-              setShowCommand(false);
-              window.sessionStorage.removeItem("isCommand");
-            } else {
-              setEnteredCommand(enteredCommand.slice(0, -1));
+      if (getBoolean("command")) {
+        if (e.key === "/") {
+          setEnteredCommand("/"); // Clear on "/"
+          setShowCommand(true);
+          window.sessionStorage.setItem("isCommand", "1");
+          return;
+        }
+        if (showCommand) {
+          if (e.key === "Delete") {
+            if (showCommand) {
+              if (enteredCommand === "/") {
+                setShowCommand(false);
+                window.sessionStorage.removeItem("isCommand");
+              } else {
+                setEnteredCommand(enteredCommand.slice(0, -1));
+              }
             }
+            return;
           }
-          return;
-        }
-        if (e.key === "Enter") {
-          if (showCommand) {
-            window.dispatchEvent(
-              new CustomEvent("AlicornCommand", { detail: enteredCommand })
-            );
+          if (e.key === "Enter") {
+            if (showCommand) {
+              window.dispatchEvent(
+                new CustomEvent("AlicornCommand", { detail: enteredCommand })
+              );
+            }
+            setEnteredCommand("/");
+            setShowCommand(false);
+            window.sessionStorage.removeItem("isCommand");
+            return;
           }
-          setEnteredCommand("/");
-          setShowCommand(false);
-          window.sessionStorage.removeItem("isCommand");
-          return;
+          setEnteredCommand(enteredCommand + e.key);
         }
-        setEnteredCommand(enteredCommand + e.key);
       }
     };
     const f1 = () => {
@@ -311,6 +315,19 @@ export function App(): JSX.Element {
                 <Apps />
               </IconButton>
             </Tooltip>
+            <Tooltip title={tr("MainMenu.QuickServerList")}>
+              <IconButton
+                style={genHideStyles("ServerList")}
+                className={classes.floatButton}
+                onClick={() => {
+                  jumpTo("/ServerList");
+                  triggerSetPage(Pages.ServerList);
+                }}
+                color={"inherit"}
+              >
+                <Dns />
+              </IconButton>
+            </Tooltip>
             {getBoolean("dev") ? (
               <Tooltip title={tr("MainMenu.Browser")}>
                 <IconButton
@@ -422,6 +439,7 @@ export function App(): JSX.Element {
         />
         <Route path={"/Welcome"} component={Welcome} />
         <Route path={"/Tutor/:page"} component={Tutor} />
+        <Route path={"/ServerList"} component={ServerList} />
       </Box>
 
       <YNDialog2

@@ -3,8 +3,10 @@ import os from "os";
 import path from "path";
 import { getString } from "../modules/config/ConfigSupport";
 import { getPathInDefaults } from "../modules/config/DataSupport";
+function currentLocale(): string {
+  return getString("assistant", "PonyCN");
+}
 
-let currentLocale = "zh_cn";
 const localesMap = new Map<string, Record<string, string | string[]>>();
 
 export function registryLocale(
@@ -18,13 +20,9 @@ export function getLocaleList(): string[] {
   return Array.from(localesMap.keys());
 }
 
-export function setLocale(code: string): void {
-  currentLocale = code;
-}
-
 // Main translate function
 export function tr(key: string, ...values: string[]): string {
-  let res = (localesMap.get(currentLocale) || {})[key];
+  let res = (localesMap.get(currentLocale()) || {})[key];
   if (res === undefined) {
     res = key;
   }
@@ -32,7 +30,7 @@ export function tr(key: string, ...values: string[]): string {
 }
 
 export function randsl(key: string, ...values: string[]): string {
-  const res = (localesMap.get(currentLocale) || {})[key];
+  const res = (localesMap.get(currentLocale()) || {})[key];
   if (typeof res === "string") {
     return res;
   }
@@ -47,7 +45,7 @@ export function randsl(key: string, ...values: string[]): string {
 }
 
 export async function initTranslator(): Promise<void> {
-  registryLocale("zh_cn", await buildLocale("zh_cn"));
+  registryLocale("PonyCN", await buildLocale("PonyCN"));
 }
 
 async function buildLocale(
@@ -103,7 +101,7 @@ async function buildLocale(
   }
 }
 export function getCurrentLocale(): string {
-  return currentLocale;
+  return currentLocale();
 }
 
 // {Config:key.key} returns the config

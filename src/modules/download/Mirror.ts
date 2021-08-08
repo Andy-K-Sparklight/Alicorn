@@ -6,12 +6,7 @@ import { parseMap } from "../commons/MapUtil";
 import { getString } from "../config/ConfigSupport";
 import { loadData, saveDefaultData } from "../config/DataSupport";
 
-const MIRROR_FILES = [
-  "tss.ald",
-  "tss-mcbbs-nonfree.ald",
-  "alicorn.ald",
-  "alicorn-mcbbs-nonfree.ald",
-];
+const MIRROR_FILES = ["alicorn.ald", "alicorn-mcbbs-nonfree.ald"];
 let mirrorMap: Map<string, string> = new Map();
 const METHOD_KEY = "@method";
 const NO_MIRROR_VAL = "@no-mirror";

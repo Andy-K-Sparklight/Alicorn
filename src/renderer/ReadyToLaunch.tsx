@@ -97,6 +97,7 @@ import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
 import { toReadableType } from "./YggdrasilAccountManager";
 
+const SESSION_ACCESSDATA_CACHED_KEY = "ReadyToLaunch.SessionAccessData"; // Microsoft account only
 export const LAST_SUCCESSFUL_GAME_KEY = "ReadyToLaunch.LastSuccessfulGame";
 export const REBOOT_KEY_BASE = "ReadyToLaunch.Reboot.";
 const useStyles = makeStyles((theme) =>
@@ -460,9 +461,14 @@ async function startBoot(
   };
   setStatus(LaunchingStatus.ACCOUNT_AUTHING);
   if (account.type === AccountType.MICROSOFT) {
-    if (!(await account.isAccessTokenValid())) {
-      // Check if the access token is valid
-      await account.performAuth("");
+    // @ts-ignore
+    if (!window[SESSION_ACCESSDATA_CACHED_KEY]) {
+      if (!(await account.isAccessTokenValid())) {
+        // Check if the access token is valid
+        await account.performAuth("");
+      }
+      // @ts-ignore
+      window[SESSION_ACCESSDATA_CACHED_KEY] = true;
     }
   } else if (account.type !== AccountType.ALICORN) {
     // Alicorn don't need to flush fake token
@@ -705,6 +711,8 @@ function AccountChoose(props: {
               disabled={msLogout === "ReadyToLaunch.MSLogoutRunning"}
               onClick={() => {
                 (async () => {
+                  // @ts-ignore
+                  window[SESSION_ACCESSDATA_CACHED_KEY] = false;
                   setMSLogout("ReadyToLaunch.MSLogoutRunning");
                   await ipcRenderer.invoke(
                     "msLogout",

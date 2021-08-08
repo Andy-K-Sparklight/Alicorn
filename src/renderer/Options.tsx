@@ -62,7 +62,11 @@ export function OptionsPage(): JSX.Element {
         <InputItem type={ConfigType.BOOL} bindConfig={"java.simple-search"} />
         <InputItem type={ConfigType.DIR} bindConfig={"cx.shared-root"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"hide-when-game"} />
-
+        <InputItem
+          type={ConfigType.RADIO}
+          bindConfig={"assistant"}
+          choices={["PonyCN"]}
+        />
         <InputItem
           type={ConfigType.BOOL}
           bindConfig={"modx.global-dynamic-load-mods"}
@@ -73,13 +77,7 @@ export function OptionsPage(): JSX.Element {
         />
         <InputItem
           type={ConfigType.RADIO}
-          choices={[
-            "none",
-            "alicorn",
-            "alicorn-mcbbs-nonfree",
-            "tss",
-            "tss-mcbbs-nonfree",
-          ]}
+          choices={["none", "alicorn", "alicorn-mcbbs-nonfree"]}
           bindConfig={"download.mirror"}
         />
         <InputItem type={ConfigType.BOOL} bindConfig={"launch.fast-reboot"} />
@@ -101,7 +99,7 @@ export function OptionsPage(): JSX.Element {
         />
         <InputItem type={ConfigType.NUM} bindConfig={"download.pff.timeout"} />
         <InputItem type={ConfigType.BOOL} bindConfig={"web.allow-natives"} />
-
+        <InputItem type={ConfigType.BOOL} bindConfig={"command"} />
         <InputItem
           type={ConfigType.NUM}
           bindConfig={"download.concurrent.tries-per-chunk"}
