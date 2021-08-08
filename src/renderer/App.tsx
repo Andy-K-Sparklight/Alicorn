@@ -20,6 +20,7 @@ import {
   GetApp,
   Info,
   PowerSettingsNew,
+  Refresh,
   Settings,
   Web,
 } from "@material-ui/icons";
@@ -256,6 +257,19 @@ export function App(): JSX.Element {
                 }}
               >
                 <Book />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={tr("MainMenu.Reload")}>
+              <IconButton
+                style={genHideStyles("Reload")}
+                color={"inherit"}
+                className={classes.floatButton}
+                onClick={() => {
+                  window.location.hash = "";
+                  window.location.reload();
+                }}
+              >
+                <Refresh />
               </IconButton>
             </Tooltip>
             <Tooltip

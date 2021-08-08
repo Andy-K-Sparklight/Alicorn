@@ -8,16 +8,19 @@ import {
   Radio,
   RadioGroup,
   Switch,
+  Tab,
+  Tabs,
   TextField,
   Typography,
 } from "@material-ui/core";
 import os from "os";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getBoolean,
   getNumber,
   getString,
   parseNum,
+  saveConfig,
   set,
 } from "../modules/config/ConfigSupport";
 import { remoteSelectDir } from "./ContainerManager";
@@ -34,6 +37,7 @@ export enum ConfigType {
 }
 
 export function OptionsPage(): JSX.Element {
+  const [tabValue, setTabValue] = useState(0);
   const classes = makeStyles((theme) =>
     createStyles({
       root: {
@@ -53,111 +57,185 @@ export function OptionsPage(): JSX.Element {
           {tr("Options.AutoSave")}
         </Typography>
         <Typography className={classes.head}>{tr("Options.Hint")}</Typography>
-        <InputItem
-          type={ConfigType.BOOL}
-          notOn={"darwin"}
-          bindConfig={"updator.use-update"}
-        />
-        <InputItem type={ConfigType.STR} bindConfig={"user.name"} />
-        <InputItem type={ConfigType.BOOL} bindConfig={"java.simple-search"} />
-        <InputItem type={ConfigType.DIR} bindConfig={"cx.shared-root"} />
-        <InputItem type={ConfigType.BOOL} bindConfig={"hide-when-game"} />
-        <InputItem
-          type={ConfigType.RADIO}
-          bindConfig={"assistant"}
-          choices={["PonyCN"]}
-        />
-        <InputItem
-          type={ConfigType.BOOL}
-          bindConfig={"modx.global-dynamic-load-mods"}
-        />
-        <InputItem
-          type={ConfigType.BOOL}
-          bindConfig={"modx.ignore-non-standard-mods"}
-        />
-        <InputItem
-          type={ConfigType.RADIO}
-          choices={["none", "alicorn", "alicorn-mcbbs-nonfree"]}
-          bindConfig={"download.mirror"}
-        />
-        <InputItem type={ConfigType.BOOL} bindConfig={"launch.fast-reboot"} />
-        <InputItem type={ConfigType.NUM} bindConfig={"memory"} />
-        <InputItem
-          type={ConfigType.RADIO}
-          bindConfig={"gc1"}
-          choices={["pure", "cms", "g1", "z"]}
-        />
-        <InputItem
-          type={ConfigType.RADIO}
-          bindConfig={"gc2"}
-          choices={["pure", "cms", "g1", "z"]}
-        />
-        <InputItem type={ConfigType.STR} bindConfig={"gw-size"} />
-        <InputItem
-          type={ConfigType.NUM}
-          bindConfig={"download.concurrent.timeout"}
-        />
-        <InputItem type={ConfigType.NUM} bindConfig={"download.pff.timeout"} />
-        <InputItem type={ConfigType.BOOL} bindConfig={"web.allow-natives"} />
-        <InputItem type={ConfigType.BOOL} bindConfig={"command"} />
-        <InputItem
-          type={ConfigType.NUM}
-          bindConfig={"download.concurrent.tries-per-chunk"}
-        />
-        <InputItem
-          type={ConfigType.NUM}
-          bindConfig={"download.concurrent.max-tasks"}
-        />
-        <InputItem
-          type={ConfigType.NUM}
-          bindConfig={"download.pff.max-tasks"}
-        />
-        <InputItem
-          type={ConfigType.NUM}
-          bindConfig={"download.concurrent.chunk-size"}
-        />
-        <InputItem
-          type={ConfigType.NUM}
-          bindConfig={"download.pff.chunk-size"}
-        />
-        <InputItem type={ConfigType.NUM} bindConfig={"java.search-depth"} />
-        <InputItem type={ConfigType.STR} bindConfig={"pff.api-base"} />
-        <InputItem type={ConfigType.NUM} bindConfig={"pff.page-size"} />
-        <InputItem type={ConfigType.DIR} bindConfig={"pff.cache-root"} />
-        <InputItem
-          type={ConfigType.NUM}
-          bindConfig={"starlight.join-server.timeout"}
-        />
-        <InputItem
-          type={ConfigType.BOOL}
-          bindConfig={"cmc.disable-log4j-config"}
-        />
-        <InputItem type={ConfigType.STR} bindConfig={"web.global-proxy"} />
-        <InputItem type={ConfigType.STR} bindConfig={"theme.primary.main"} />
-        <InputItem type={ConfigType.STR} bindConfig={"theme.primary.light"} />
-        <InputItem type={ConfigType.STR} bindConfig={"theme.secondary.main"} />
-        <InputItem type={ConfigType.STR} bindConfig={"theme.secondary.light"} />
-        <InputItem type={ConfigType.STR} bindConfig={"startup-page.name"} />
-        <InputItem type={ConfigType.STR} bindConfig={"startup-page.url"} />
-        <InputItem type={ConfigType.BOOL} bindConfig={"hot-key"} />
-        <InputItem
-          type={ConfigType.BOOL}
-          bindConfig={"interactive.i-have-a-crush-on-al"}
-        />
-        <InputItem type={ConfigType.BOOL} bindConfig={"dev"} />
-        <InputItem type={ConfigType.BOOL} bindConfig={"dev.f12"} />
-        <InputItem
-          type={ConfigType.BOOL}
-          bindConfig={"dev.explicit-error-throw"}
-        />
-        <InputItem type={ConfigType.BOOL} bindConfig={"dev.quick-reload"} />
-        <InputItem
-          type={ConfigType.BOOL}
-          bindConfig={"launch.jim"}
-          onlyOn={"win32"}
-        />
-        <InputItem type={ConfigType.BOOL} bindConfig={"reset"} />
-        <InputItem type={ConfigType.BOOL} bindConfig={"clean-storage"} />
+        {/* Tabs */}
+        <Tabs
+          value={tabValue}
+          onChange={(_e, v) => {
+            setTabValue(v);
+          }}
+        >
+          {" "}
+          <Tab
+            label={
+              <Typography color={"primary"}>
+                {tr("Options.Page.IAndAL")}
+              </Typography>
+            }
+          />
+          <Tab
+            label={
+              <Typography color={"primary"}>
+                {tr("Options.Page.Features")}
+              </Typography>
+            }
+          />
+          <Tab
+            label={
+              <Typography color={"primary"}>
+                {tr("Options.Page.Game")}
+              </Typography>
+            }
+          />
+          <Tab
+            label={
+              <Typography color={"primary"}>
+                {tr("Options.Page.Network")}
+              </Typography>
+            }
+          />
+          <Tab
+            label={
+              <Typography color={"primary"}>
+                {tr("Options.Page.Advanced")}
+              </Typography>
+            }
+          />
+        </Tabs>
+        <TabPanel index={0} value={tabValue}>
+          <InputItem type={ConfigType.STR} bindConfig={"user.name"} />
+          <InputItem
+            type={ConfigType.RADIO}
+            bindConfig={"assistant"}
+            choices={["PonyCN"]}
+          />
+          <InputItem
+            type={ConfigType.RADIO}
+            choices={["Regular", "Cutie", "Decorated"]}
+            bindConfig={"font-style"}
+          />
+          <InputItem type={ConfigType.STR} bindConfig={"theme.primary.main"} />
+          <InputItem type={ConfigType.STR} bindConfig={"theme.primary.light"} />
+          <InputItem
+            type={ConfigType.STR}
+            bindConfig={"theme.secondary.main"}
+          />
+          <InputItem
+            type={ConfigType.STR}
+            bindConfig={"theme.secondary.light"}
+          />
+          <InputItem type={ConfigType.STR} bindConfig={"startup-page.name"} />
+          <InputItem type={ConfigType.STR} bindConfig={"startup-page.url"} />
+          <InputItem
+            type={ConfigType.BOOL}
+            bindConfig={"interactive.i-have-a-crush-on-al"}
+          />
+        </TabPanel>
+        <TabPanel index={1} value={tabValue}>
+          {/* AL Features */}
+
+          <InputItem type={ConfigType.BOOL} bindConfig={"command"} />
+          <InputItem type={ConfigType.DIR} bindConfig={"cx.shared-root"} />
+          <InputItem type={ConfigType.BOOL} bindConfig={"hide-when-game"} />
+          <InputItem
+            type={ConfigType.BOOL}
+            bindConfig={"modx.global-dynamic-load-mods"}
+          />
+          <InputItem
+            type={ConfigType.BOOL}
+            bindConfig={"modx.ignore-non-standard-mods"}
+          />
+          <InputItem type={ConfigType.BOOL} bindConfig={"launch.fast-reboot"} />
+          <InputItem
+            type={ConfigType.BOOL}
+            bindConfig={"cmc.disable-log4j-config"}
+          />
+
+          <InputItem type={ConfigType.BOOL} bindConfig={"hot-key"} />
+          <InputItem type={ConfigType.BOOL} bindConfig={"java.simple-search"} />
+          <InputItem type={ConfigType.NUM} bindConfig={"java.search-depth"} />
+        </TabPanel>
+        <TabPanel index={2} value={tabValue}>
+          <InputItem type={ConfigType.NUM} bindConfig={"memory"} />
+          <InputItem
+            type={ConfigType.RADIO}
+            bindConfig={"gc1"}
+            choices={["pure", "cms", "g1", "z"]}
+          />
+          <InputItem
+            type={ConfigType.RADIO}
+            bindConfig={"gc2"}
+            choices={["pure", "cms", "g1", "z"]}
+          />
+          <InputItem type={ConfigType.STR} bindConfig={"gw-size"} />
+
+          <InputItem
+            type={ConfigType.BOOL}
+            bindConfig={"launch.jim"}
+            onlyOn={"win32"}
+          />
+        </TabPanel>
+        <TabPanel index={3} value={tabValue}>
+          <InputItem
+            type={ConfigType.RADIO}
+            choices={["none", "alicorn", "alicorn-mcbbs-nonfree"]}
+            bindConfig={"download.mirror"}
+          />
+
+          <InputItem
+            type={ConfigType.NUM}
+            bindConfig={"download.concurrent.timeout"}
+          />
+          <InputItem
+            type={ConfigType.NUM}
+            bindConfig={"download.pff.timeout"}
+          />
+
+          <InputItem
+            type={ConfigType.NUM}
+            bindConfig={"download.concurrent.tries-per-chunk"}
+          />
+          <InputItem
+            type={ConfigType.NUM}
+            bindConfig={"download.concurrent.max-tasks"}
+          />
+          <InputItem
+            type={ConfigType.NUM}
+            bindConfig={"download.pff.max-tasks"}
+          />
+          <InputItem
+            type={ConfigType.NUM}
+            bindConfig={"download.concurrent.chunk-size"}
+          />
+          <InputItem
+            type={ConfigType.NUM}
+            bindConfig={"download.pff.chunk-size"}
+          />
+
+          <InputItem type={ConfigType.STR} bindConfig={"pff.api-base"} />
+          <InputItem type={ConfigType.DIR} bindConfig={"pff.cache-root"} />
+          <InputItem type={ConfigType.NUM} bindConfig={"pff.page-size"} />
+          <InputItem
+            type={ConfigType.NUM}
+            bindConfig={"starlight.join-server.timeout"}
+          />
+        </TabPanel>
+        <TabPanel index={4} value={tabValue}>
+          <InputItem
+            type={ConfigType.BOOL}
+            notOn={"darwin"}
+            bindConfig={"updator.use-update"}
+          />
+          <InputItem type={ConfigType.BOOL} bindConfig={"dev"} />
+          <InputItem type={ConfigType.BOOL} bindConfig={"dev.f12"} />
+          <InputItem
+            type={ConfigType.BOOL}
+            bindConfig={"dev.explicit-error-throw"}
+          />
+          <InputItem type={ConfigType.BOOL} bindConfig={"web.allow-natives"} />
+          <InputItem type={ConfigType.BOOL} bindConfig={"dev.quick-reload"} />
+          <InputItem type={ConfigType.BOOL} bindConfig={"reset"} />
+          <InputItem type={ConfigType.BOOL} bindConfig={"clean-storage"} />
+        </TabPanel>
       </MuiThemeProvider>
     </Box>
   );
@@ -175,14 +253,20 @@ export function InputItem(props: {
   const [cSelect, setSelect] = useState<string>(
     getString(props.bindConfig, (props.choices || [""])[0] || "")
   );
+  useEffect(() => {
+    saveConfig()
+      .then(() => {})
+      .catch(() => {});
+  });
+  let disabled = false;
   if (props.onlyOn) {
     if (os.platform() !== props.onlyOn) {
-      return <></>;
+      disabled = true;
     }
   }
   if (props.notOn) {
     if (os.platform() === props.notOn) {
-      return <></>;
+      disabled = true;
     }
   }
   const classes = makeStyles((theme) =>
@@ -193,8 +277,9 @@ export function InputItem(props: {
       },
       switch: {
         color: theme.palette.primary.main,
-        marginLeft: theme.spacing(-0.5),
+        marginLeft: theme.spacing(0.5),
       },
+
       textField: {
         borderColor: theme.palette.primary.main,
         color: theme.palette.primary.main,
@@ -212,30 +297,45 @@ export function InputItem(props: {
         {tr(`Options.${props.bindConfig}.title`)}
       </Typography>
       <Typography color={"primary"} className={classes.desc} gutterBottom>
-        {tr(`Options.${props.bindConfig}.desc`)}
+        {disabled
+          ? tr("Options.NotOn")
+          : tr(`Options.${props.bindConfig}.desc`)}
       </Typography>
       {(() => {
         switch (props.type) {
           case ConfigType.BOOL:
             return (
-              <Switch
-                size={"small"}
-                checked={getBoolean(props.bindConfig)}
-                className={classes.switch}
-                onChange={(e) => {
-                  set(props.bindConfig, e.target.checked);
-                  forceRefresh(!refreshBit);
-                }}
-                name={
-                  getBoolean(props.bindConfig)
-                    ? tr("Options.Enabled")
-                    : tr("Options.Disabled")
+              <FormControlLabel
+                label={
+                  <Typography color={"primary"}>
+                    {getBoolean(props.bindConfig)
+                      ? tr("Options.Enabled")
+                      : tr("Options.Disabled")}
+                  </Typography>
+                }
+                control={
+                  <Switch
+                    size={"small"}
+                    disabled={disabled}
+                    checked={getBoolean(props.bindConfig)}
+                    className={classes.switch}
+                    onChange={(e) => {
+                      set(props.bindConfig, e.target.checked);
+                      forceRefresh(!refreshBit);
+                    }}
+                    name={
+                      getBoolean(props.bindConfig)
+                        ? tr("Options.Enabled")
+                        : tr("Options.Disabled")
+                    }
+                  />
                 }
               />
             );
           case ConfigType.NUM:
             return (
               <TextField
+                disabled={disabled}
                 spellCheck={false}
                 fullWidth
                 type={"number"}
@@ -252,6 +352,7 @@ export function InputItem(props: {
             return (
               <Box>
                 <TextField
+                  disabled={disabled}
                   fullWidth
                   spellCheck={false}
                   color={"primary"}
@@ -292,7 +393,9 @@ export function InputItem(props: {
                     <FormControlLabel
                       key={c}
                       value={c}
-                      control={<Radio checked={cSelect === c} />}
+                      control={
+                        <Radio disabled={disabled} checked={cSelect === c} />
+                      }
                       label={
                         <Typography
                           style={{
@@ -314,6 +417,7 @@ export function InputItem(props: {
           default:
             return (
               <TextField
+                disabled={disabled}
                 fullWidth
                 spellCheck={false}
                 color={"primary"}
@@ -326,6 +430,18 @@ export function InputItem(props: {
             );
         }
       })()}
+    </Box>
+  );
+}
+function TabPanel(props: {
+  children?: React.ReactNode;
+  index: string | number;
+  value: string | number;
+}): JSX.Element {
+  const { children, value, index } = props;
+  return (
+    <Box hidden={value !== index}>
+      {value === index ? <Box p={3}>{children}</Box> : ""}
     </Box>
   );
 }

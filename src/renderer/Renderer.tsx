@@ -41,12 +41,12 @@ const GLOBAL_STYLES: React.CSSProperties = {
 };
 const FONT_FAMILY =
   '"UbuntuMono", "Open Sans", Roboto, "Fira Code", Monaco,  Consolas, "Courier New", Courier, monospace';
-
-export function setThemeColor(
+export function setThemeParams(
   primaryMain: string,
   primaryLight: string,
   secondaryMain: string,
-  secondaryLight: string
+  secondaryLight: string,
+  fontFamily: string
 ): void {
   ALICORN_DEFAULT_THEME_LIGHT = createTheme({
     palette: {
@@ -61,7 +61,7 @@ export function setThemeColor(
       },
     },
     typography: {
-      fontFamily: FONT_FAMILY,
+      fontFamily: fontFamily,
     },
   });
   ALICORN_DEFAULT_THEME_DARK = createTheme({
@@ -77,7 +77,7 @@ export function setThemeColor(
       },
     },
     typography: {
-      fontFamily: FONT_FAMILY,
+      fontFamily: fontFamily,
     },
   });
 }
@@ -178,11 +178,16 @@ window.addEventListener("error", (e) => {
     console.log("Reloading window...");
     window.location.reload();
   }
-  setThemeColor(
+  setThemeParams(
     getString("theme.primary.main", "#5d2391"),
     getString("theme.primary.light", "#d796f0"),
     getString("theme.secondary.main", "#df307f"),
-    getString("theme.secondary.light", "#ffe0f0")
+    getString("theme.secondary.light", "#ffe0f0"),
+    (getString("font-style", "Regular") === "Regular"
+      ? ""
+      : getString("font-style") === "Cutie"
+      ? "CutieX, "
+      : "QTXiaoTu, ") + FONT_FAMILY
   );
   const e = document.createElement("style");
   e.innerText = `html {background-color:${getString(
@@ -238,8 +243,6 @@ window.addEventListener("error", (e) => {
       "s."
   );
 })();
-
-
 
 function bindSuperCowPower(): void {
   // @ts-ignore

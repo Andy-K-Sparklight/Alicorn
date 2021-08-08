@@ -7,3 +7,13 @@
   font-family: "Open Sans";
   src: url("OpenSans-Regular.ttf");
 }
+
+@font-face {
+  font-family: "QTXiaoTu";
+  src: url("QTXiaoTu-Regular.ttf");
+}
+
+@font-face {
+  font-family: "CutieX";
+  src: url("Cutie.ttf");
+}

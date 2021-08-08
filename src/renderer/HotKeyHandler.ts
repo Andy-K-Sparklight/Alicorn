@@ -1,7 +1,6 @@
 import { ipcRenderer } from "electron";
 import { getBoolean } from "../modules/config/ConfigSupport";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
-import { submitError } from "./Message";
 
 export function setupHotKey(keyBound: string, callback: () => unknown): void {
   ipcRenderer.send("registerHotKey", keyBound);
@@ -45,15 +44,10 @@ export function activateHotKeyFeature(): void {
     triggerSetPage(Pages.InstallCore);
   });
 
-  let reloadConfirm = false;
   setupHotKey("Ctrl+r", () => {
     if (getBoolean("dev.quick-reload")) {
-      if (reloadConfirm) {
-        window.location.reload();
-      } else {
-        reloadConfirm = true;
-        submitError("Reload renderer process? THIS IS DANGEROUS!");
-      }
+      window.location.hash = "";
+      window.location.reload();
     }
   });
 }

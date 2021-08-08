@@ -43,5 +43,6 @@
   "gc2": "pure",
   "launch.fast-reboot": true,
   "command": false,
-  "assistant": "PonyCN"
+  "assistant": "PonyCN",
+  "font-style": "Regular"
 }

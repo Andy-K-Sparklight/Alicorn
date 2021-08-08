@@ -78,6 +78,10 @@ Oops！系统错误：
 
 留在当前页面
 
+# MainMenu.Reload
+
+重新加载
+
 # MainMenu.NextTutorPage
 
 前往下一页
@@ -492,7 +496,7 @@ Copyright (C) 2021 Andy K Rarity Sparklight\n\n以下内容是原始版权声明
 
 # VersionView.FreeSoftwareClaim
 
-我们提倡软件自由，Alicorn 不会依赖任何非自由的组件，因此，如果你发现我们没有支持某些常见的功能，请先查看用于实现它们的相关组件的许可。
+我们提倡软件自由，Alicorn 不会依赖任何非自由的软件包，因此，如果你发现我们没有支持某些常见的功能，请先查看用于实现它们的相关组件的许可。\n然而，请注意随附的任何字体均不是 Alicorn 的一部分，它们适用单独的许可条款，修改、使用、分发等受到相关规定的限制。
 
 # VersionView.SuperCowPower
 
@@ -832,11 +836,11 @@ Java 运行时
 
 # Options.AutoSave
 
-您的修改会自动保存。某些选项只能适用于特定平台。
+您的修改会自动保存。
 
 # Options.Hint
 
-Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。\n带 \* 的项目是开发人员选项，胡乱修改它们可能导致严重后果！\n带 ^ 的项目在重启启动器后才能生效。
+不要胡乱设置 - Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。\n带 ^ 的项目在重新加载启动器后才能生效。带 * 的项目是开发人员选项，随意更改可能导致重大问题。
 
 # Options.Enabled
 
@@ -845,6 +849,50 @@ Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的
 # Options.Disabled
 
 已禁用
+
+# Options.NotOn
+
+此选项与当前平台不兼容或者对当前平台无效
+
+# Options.Page.IAndAL
+
+你与 Alicorn
+
+# Options.Page.Features
+
+Alicorn 特色功能
+
+# Options.Page.Game
+
+游戏和性能
+
+# Options.Page.Network
+
+网络和软件包
+
+# Options.Page.Advanced
+
+高级和重置
+
+# Options.font-style.title
+
+字体风格 ^
+
+# Options.font-style.desc
+
+选择 Alicorn 字体风格，「端庄」看上去更清晰，「亲近」看上去更可爱，「萌兔」则看上去有点过分了 - 分别是为技术向和美观向设计的，可不是根据你的性别！\n（在我心中，谁都有一颗善良温柔而可爱的心～）
+
+# Options.font-style.Regular
+
+端庄
+
+# Options.font-style.Cutie
+
+亲近
+
+# Options.font-style.Decorated
+
+萌兔
 
 # Options.command.title
 
@@ -1020,19 +1068,19 @@ Starlight 在加入服务器前会检查其连通性，在这一过程中，她�
 
 # Options.interactive.i-have-a-crush-on-al.title
 
-I \u2764 AL
+Alicorn 的小秘密
 
 # Options.interactive.i-have-a-crush-on-al.desc
 
-我喜欢这只小马……她好可爱～
+如果你真的想要听的话……那好吧，不过先说好，不许告诉别人哦！
 
 # Options.dev.f12.title
 
-快速打开 DevTools \* ^
+快速打开 DevTools * ^
 
 # Options.dev.f12.desc
 
-按下 Ctrl + F12 以调试 Alicorn 渲染进程，Shift + F12 以调试内置浏览器和 Starlight- 请当心，胡乱使用 DevTools 可能导致启动器故障或您的数据丢失！
+按下 Ctrl + F12 以调试 Alicorn 渲染进程，Shift + F12 以调试内置浏览器和 Starlight - 请当心，胡乱使用 DevTools 可能导致启动器故障或您的数据丢失！
 
 # Options.hot-key.title
 
@@ -1044,11 +1092,11 @@ Alicorn 快捷键 ^
 
 # Options.dev.quick-reload.title
 
-快速重载 \*
+快速重载
 
 # Options.dev.quick-reload.desc
 
-按 Ctrl+R 快速重新加载启动器 - 这可能导致数据丢失和功能异常，仅应当用于开发
+按 Ctrl+R 快速重新加载启动器 - 使扩展的变更或者部分设置的修改生效
 
 # Options.download.mirror.title
 
@@ -1072,7 +1120,7 @@ Alicorn/MCBBS 镜像组（非自由）
 
 # Options.dev.explicit-error-throw.title
 
-显式抛出错误 \*
+显式抛出错误 *
 
 # Options.dev.explicit-error-throw.desc
 
@@ -1080,7 +1128,7 @@ Alicorn/MCBBS 镜像组（非自由）
 
 # Options.dev.title
 
-开发人员模式 \*
+开发人员模式 *
 
 # Options.dev.desc
 
@@ -1160,7 +1208,7 @@ Alicorn 会用这个名字亲切地称呼您 - 嗯……可爱~
 
 # Options.web.allow-natives.title
 
-启用 Web Node 集成 \*
+启用 Web Node 集成 *
 
 # Options.web.allow-natives.desc
 
