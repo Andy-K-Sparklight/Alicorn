@@ -272,13 +272,10 @@ function SingleCoreDisplay(props: {
           )}
           {props.profile.corrupted ? (
             <CorruptedCoreWarning />
-          ) : props.profile.versionType === "FORGE" ||
-            props.profile.versionType === "FABRIC" ? (
+          ) : (
             <Typography className={classes.desc} color={"textSecondary"}>
               {getDescriptionFor(props.profile.versionType)}
             </Typography>
-          ) : (
-            ""
           )}
         </CardContent>
         <YNDialog2
@@ -329,9 +326,12 @@ function getDescriptionFor(type: string): string {
   switch (type.toUpperCase()) {
     case "FORGE":
       return tr("CoreInfo.Introduction.Forge");
+    case "INSTALLER":
+      return tr("CoreInfo.Introduction.Installer");
     case "FABRIC":
-    default:
       return tr("CoreInfo.Introduction.Fabric");
+    default:
+      return "";
   }
 }
 

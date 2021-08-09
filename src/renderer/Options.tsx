@@ -180,6 +180,10 @@ export function OptionsPage(): JSX.Element {
             choices={["none", "alicorn", "alicorn-mcbbs-nonfree"]}
             bindConfig={"download.mirror"}
           />
+          <InputItem
+            type={ConfigType.BOOL}
+            bindConfig={"show-downloading-item"}
+          />
 
           <InputItem
             type={ConfigType.NUM}
@@ -225,6 +229,7 @@ export function OptionsPage(): JSX.Element {
             notOn={"darwin"}
             bindConfig={"updator.use-update"}
           />
+          <InputItem type={ConfigType.BOOL} bindConfig={"hardware-acc"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"dev"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"dev.f12"} />
           <InputItem

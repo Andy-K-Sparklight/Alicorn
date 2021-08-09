@@ -194,6 +194,10 @@ Alicorn 内置浏览器
 
 此核心可以加载 Fabric Mod
 
+# CoreInfo.Introduction.Installer
+
+这不是核心，这是一个整合包安装器
+
 # CoreInfo.CorruptedWarning
 
 无法读取 - 启动引导文件若非遗失，即为无效
@@ -873,6 +877,22 @@ Alicorn 特色功能
 # Options.Page.Advanced
 
 高级和重置
+
+# Options.hardware-acc.title
+
+硬件加速 ^
+
+# Options.hardware-acc.desc
+
+使用图形卡进行动画绘制，以节省时间给中央处理器 - 请注意这不同于硬件解码，开启后帧率将大幅降低
+
+# Options.show-downloading-item.title
+
+显示获取进度
+
+# Options.show-downloading-item.desc
+
+在启动监控页面显示正在获取和已经获取的内容 - 对性能有较大影响，请谨慎使用
 
 # Options.font-style.title
 

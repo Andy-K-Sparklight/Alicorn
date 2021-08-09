@@ -213,21 +213,26 @@ function Launching(props: {
     const timer = setInterval(() => {
       setHint(randsl("ReadyToLaunch.WaitingText"));
     }, 5000);
-    const subscribe = setInterval(() => {
-      if (NEED_QUERY_STATUS) {
-        let isGettingBit = false;
-        schedulePromiseTask(async () => {
-          if (!isGettingBit) {
-            isGettingBit = true;
-            setWrapperStatus(getWrapperStatus());
-            isGettingBit = false;
-          }
-        });
-      }
-    }, 300);
+    let subscribe: NodeJS.Timer;
+    if (getBoolean("show-downloading-item")) {
+      subscribe = setInterval(() => {
+        if (NEED_QUERY_STATUS) {
+          let isGettingBit = false;
+          schedulePromiseTask(async () => {
+            if (!isGettingBit) {
+              isGettingBit = true;
+              setWrapperStatus(getWrapperStatus());
+              isGettingBit = false;
+            }
+          });
+        }
+      }, 300);
+    }
     return () => {
       clearInterval(timer);
-      clearInterval(subscribe);
+      if (getBoolean("show-downloading-item")) {
+        clearInterval(subscribe);
+      }
     };
   }, []);
   useEffect(() => {

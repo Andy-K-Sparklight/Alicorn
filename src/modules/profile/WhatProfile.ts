@@ -9,7 +9,7 @@ const MOJANG_OLD_AB = /^[ab][0-9]+?\.[0-9]+?.*$/i;
 const MOJANG_OLD_CX = /^c[0-9_.]+?[a-z]*?$/i;
 const MOJANG_OLD_RD = /^rd-[0-9]+?$/i;
 const MOJANG_PRE_RC = /^[0-9]+?\.[0-9]+?(\.)?[0-9]*-(pre|rc)[0-9]*$/i;
-
+const INSTALLER = /-installer$/i;
 export function whatProfile(id: string): ProfileType {
   if (
     MOJANG_NAME_RELEASE.test(id) ||
@@ -27,6 +27,9 @@ export function whatProfile(id: string): ProfileType {
   if (FORGE_NAME.test(id)) {
     return ProfileType.FORGE;
   }
+  if (INSTALLER.test(id)) {
+    return ProfileType.INSTALLER;
+  }
   return ProfileType.UNIVERSAL;
 }
 
@@ -35,6 +38,7 @@ export enum ProfileType {
   FORGE = "Forge",
   FABRIC = "Fabric",
   UNIVERSAL = "Universal",
+  INSTALLER = "Installer",
 }
 
 export function isLegacy(obj: Record<string, unknown>): boolean {

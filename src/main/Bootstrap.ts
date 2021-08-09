@@ -2,13 +2,18 @@ import { app, BrowserWindow, globalShortcut, screen } from "electron";
 import { btoa } from "js-base64";
 import os from "os";
 import path from "path";
-import { getBoolean, loadConfig } from "../modules/config/ConfigSupport";
+import { getBoolean, loadConfigSync } from "../modules/config/ConfigSupport";
 import { registerBackgroundListeners } from "./Background";
 import { getUserBrowser } from "./Browser";
 import { checkUpdate } from "./Updator";
 import { initWS } from "./WSServer";
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow | null = null;
+console.log("Loading config...");
+loadConfigSync();
+if (!getBoolean("hardware-acc")) {
+  app.disableHardwareAcceleration();
+}
 app.on("ready", async () => {
   console.log(
     `With Electron ${process.versions["electron"]}, Node.js ${process.versions["node"]} and Chrome ${process.versions["chrome"]}`
@@ -34,8 +39,7 @@ app.on("ready", async () => {
   console.log("Loading resources...");
   console.log("Registering event listeners...");
   registerBackgroundListeners();
-  console.log("Loading config...");
-  await loadConfig();
+
   mainWindow.once("ready-to-show", async () => {
     console.log("Creating window!");
     mainWindow?.show();

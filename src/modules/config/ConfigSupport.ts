@@ -61,6 +61,13 @@ export async function loadConfig(): Promise<void> {
     await saveDefaultConfig();
   }
 }
+export function loadConfigSync(): void {
+  try {
+    cachedConfig = JSON.parse(fs.readFileSync(CONFIG_FILE).toString());
+  } catch {
+    cachedConfig = JSON.parse(fs.readFileSync(DEFAULT_CONFIG_FILE).toString());
+  }
+}
 
 export function getAllConfigKeys(): string[] {
   return Object.keys(cachedConfig);

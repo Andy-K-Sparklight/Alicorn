@@ -13,6 +13,7 @@
   "download.pff.chunk-size": 256,
   "download.pff.max-tasks": 100,
   "download.pff.timeout": 10000,
+  "show-downloading-item": false,
   "modx.default-save-path": "",
   "modx.ignore-non-standard-mods": true,
   "modx.global-dynamic-load-mods": true,
@@ -44,5 +45,6 @@
   "launch.fast-reboot": true,
   "command": false,
   "assistant": "PonyCN",
-  "font-style": "Regular"
+  "font-style": "Regular",
+  "hardware-acc": false
 }
