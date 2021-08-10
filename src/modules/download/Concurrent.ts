@@ -1,8 +1,8 @@
 import fs from "fs-extra";
 import got from "got";
-import objectHash from "object-hash";
 import os from "os";
 import path from "path";
+import { basicHash } from "../commons/BasicHash";
 import { isFileExist } from "../commons/FileUtil";
 import {
   AbstractDownloader,
@@ -61,7 +61,7 @@ async function sealAndVerify(
   for (const c of chunks) {
     const pt = path.join(
       TEMP_SAVE_PATH_ROOT,
-      generatePath(objectHash(savePath), c.start, c.end)
+      generatePath(basicHash(savePath), c.start, c.end)
     );
     await new Promise<void>((resolve, reject) => {
       const rStream = fs.createReadStream(pt);
@@ -115,7 +115,7 @@ function getAllPromises(
   chunks: Chunk[]
 ): Promise<void>[] {
   const allPromises = [];
-  const savePathHash = objectHash(meta.savePath);
+  const savePathHash = basicHash(meta.savePath);
   for (const c of chunks) {
     const tmpFileSavePath = path.join(
       TEMP_SAVE_PATH_ROOT,

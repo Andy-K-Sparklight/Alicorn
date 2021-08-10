@@ -228,7 +228,7 @@ Alicorn 内置浏览器
 
 # CoreInfo.Destroy.Content
 
-摧毁 {Name} 会删除对应的档案，该操作不可撤销，但你可以稍后重新安装它。\n要摧毁该核心档案吗？
+摧毁 {Name} 会删除对应的档案，统计信息也会一并移除，该操作不可撤销！\n要摧毁该核心档案吗？
 
 # CoreInfo.ClearUse
 

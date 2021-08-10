@@ -21,6 +21,7 @@ import { initConcurrentDownloader } from "../modules/download/Concurrent";
 import { initDownloadWrapper } from "../modules/download/DownloadWrapper";
 import { loadMirror } from "../modules/download/Mirror";
 import { initResolveLock } from "../modules/download/ResolveLock";
+import { getIdentifier } from "../modules/download/Validate";
 import { loadJDT } from "../modules/java/JInfo";
 import { saveJIMFile } from "../modules/launch/JIMSupport";
 import { initModInfo } from "../modules/modx/ModInfo";
@@ -241,6 +242,11 @@ window.addEventListener("error", (e) => {
     "Optional services finished. Time elapsed: " +
       (t4.getTime() - t3.getTime()) / 1000 +
       "s."
+  );
+  console.log(
+    await getIdentifier(
+      "/home/rarity/Minecraft/mods/preview_OptiFine_1.17.1_HD_U_G9_pre32.jar"
+    )
   );
 })();
 

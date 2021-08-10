@@ -16,7 +16,6 @@ import {
   Tabs,
   Typography,
 } from "@material-ui/core";
-import objectHash from "object-hash";
 import React, { useEffect, useRef, useState } from "react";
 import { ALICORN_SEPARATOR, ReleaseType } from "../modules/commons/Constants";
 import { isNull } from "../modules/commons/Null";
@@ -440,7 +439,7 @@ export function InstallCore(): JSX.Element {
             >
               {foundCores.map((c) => {
                 return (
-                  <MenuItem key={objectHash(c)} value={c}>
+                  <MenuItem key={c} value={c}>
                     {c}
                   </MenuItem>
                 );
@@ -465,7 +464,7 @@ export function InstallCore(): JSX.Element {
             >
               {getAllMounted().map((c) => {
                 return (
-                  <MenuItem key={objectHash(c)} value={c}>
+                  <MenuItem key={c} value={c}>
                     {c}
                   </MenuItem>
                 );
@@ -525,7 +524,7 @@ export function InstallCore(): JSX.Element {
               {patchableCores.map((r) => {
                 return (
                   <MenuItem
-                    key={objectHash(r)}
+                    key={r.container + "/" + r.id}
                     value={r.container + ALICORN_SEPARATOR + r.id}
                   >
                     {`${r.container}/${r.id}`}
@@ -588,7 +587,7 @@ export function InstallCore(): JSX.Element {
               {patchableCores.map((r) => {
                 return (
                   <MenuItem
-                    key={objectHash(r)}
+                    key={r.container + "/" + r.id}
                     value={r.container + ALICORN_SEPARATOR + r.id}
                   >
                     {`${r.container}/${r.id}`}

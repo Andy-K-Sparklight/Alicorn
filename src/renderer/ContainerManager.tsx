@@ -26,7 +26,6 @@ import {
 } from "@material-ui/icons";
 import { ipcRenderer, shell } from "electron";
 import fs from "fs-extra";
-import objectHash from "object-hash";
 import path from "path";
 import React, { useEffect, useRef, useState } from "react";
 import { isFileExist } from "../modules/commons/FileUtil";
@@ -108,7 +107,7 @@ export function ContainerManager(): JSX.Element {
         const im = isMounted(c);
         return (
           <SingleContainerDisplay
-            key={objectHash(c)}
+            key={c}
             container={getContainer(c)}
             isMounted={im}
           />

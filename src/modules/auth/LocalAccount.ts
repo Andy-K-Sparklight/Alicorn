@@ -1,5 +1,5 @@
-import objectHash from "object-hash";
 import { v3 } from "uuid";
+import { basicHash } from "../commons/BasicHash";
 import { Trio } from "../commons/Collections";
 import { Account } from "./Account";
 import { AccountType } from "./AccountUtil";
@@ -45,7 +45,7 @@ export class LocalAccount extends Account {
 }
 
 function fakeToken(): string {
-  return objectHash(Math.random()).slice(0, 32);
+  return basicHash(Math.random()).slice(0, 32);
 }
 
 function buildOfflinePlayerUUID(p: string): string {

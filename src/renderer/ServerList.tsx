@@ -31,7 +31,6 @@ import {
   SignalCellularConnectedNoInternet0Bar,
 } from "@material-ui/icons";
 import { ipcRenderer } from "electron";
-import objectHash from "object-hash";
 import React, { useEffect, useRef, useState } from "react";
 import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
 import {
@@ -329,7 +328,7 @@ function GameCoreSelector(props: {
         >
           {props.cores.map((j) => {
             return (
-              <MenuItem key={objectHash(j)} value={j}>
+              <MenuItem key={j} value={j}>
                 {j}
               </MenuItem>
             );

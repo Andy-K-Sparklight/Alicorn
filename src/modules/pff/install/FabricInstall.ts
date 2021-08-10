@@ -1,6 +1,6 @@
 import childProcess from "child_process";
 import fs from "fs-extra";
-import objectHash from "object-hash";
+import { basicHash } from "../../commons/BasicHash";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { addDoing } from "../../download/DownloadWrapper";
 import { xgot } from "../../download/GotWrapper";
@@ -56,7 +56,7 @@ async function bootFabricInstaller(
     .replace("${loader_version}", fbv)
     .split(" ");
   const fbJar = container.getTempFileStorePath(
-    generateFabricJarName(objectHash(fbURL).slice(0, 8))
+    generateFabricJarName(basicHash(fbURL).slice(0, 8))
   );
   return new Promise<void>((resolve, reject) => {
     try {

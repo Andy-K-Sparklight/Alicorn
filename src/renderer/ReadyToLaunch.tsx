@@ -343,7 +343,7 @@ function Launching(props: {
       <Stepper className={classes.stepper} activeStep={activeStep}>
         {LAUNCH_STEPS.map((s) => {
           return (
-            <Step key={objectHash(s)}>
+            <Step key={s}>
               <StepLabel>
                 <Typography className={classes.textSP}>
                   {tr("ReadyToLaunch.Status.Short." + s)}

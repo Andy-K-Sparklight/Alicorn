@@ -1,13 +1,13 @@
+import fs from "fs-extra";
+import { basicHash } from "../../commons/BasicHash";
+import { Pair } from "../../commons/Collections";
 import { FABRIC_META_ROOT } from "../../commons/Constants";
 import { isNull, safeGet } from "../../commons/Null";
-import { Pair } from "../../commons/Collections";
-import { JAR_SUFFIX } from "../../launch/NativesLint";
-import { wrappedDownloadFile } from "../../download/DownloadWrapper";
-import { DownloadMeta } from "../../download/AbstractDownloader";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
-import objectHash from "object-hash";
-import fs from "fs-extra";
+import { DownloadMeta } from "../../download/AbstractDownloader";
+import { wrappedDownloadFile } from "../../download/DownloadWrapper";
 import { xgot } from "../../download/GotWrapper";
+import { JAR_SUFFIX } from "../../launch/NativesLint";
 
 // Alicorn LIKE Fabric!
 // Good Fabric! Noble Fabric! Excellent Fabric!
@@ -131,7 +131,7 @@ export async function removeFabricInstaller(
   try {
     await fs.remove(
       container.getTempFileStorePath(
-        generateFabricJarName(objectHash(url).slice(0, 8))
+        generateFabricJarName(basicHash(url).slice(0, 8))
       )
     );
   } catch {
@@ -147,7 +147,7 @@ export async function getFabricInstaller(
     const meta = new DownloadMeta(
       url,
       container.getTempFileStorePath(
-        generateFabricJarName(objectHash(url).slice(0, 8))
+        generateFabricJarName(basicHash(url).slice(0, 8))
       ),
       ""
     );

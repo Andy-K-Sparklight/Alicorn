@@ -1,8 +1,8 @@
-import { Trio } from "../commons/Collections";
 import got from "got";
+import { uniqueHash } from "../commons/BasicHash";
+import { Trio } from "../commons/Collections";
 import { isNull, safeGet } from "../commons/Null";
 import { getUniqueID32 } from "../security/Encrypt";
-import objectHash from "object-hash";
 import { AccountType } from "./AccountUtil";
 import { AuthlibAccount } from "./AuthlibAccount";
 import { MojangAccount } from "./MojangAccount";
@@ -30,7 +30,7 @@ export abstract class Account {
   // Username, AccessToken, UUID
 
   getAccountIdentifier(): string {
-    return objectHash(this.accountName);
+    return uniqueHash(this.accountName);
   }
 
   abstract serialize(): string;

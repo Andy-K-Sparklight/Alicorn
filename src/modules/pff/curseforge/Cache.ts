@@ -1,8 +1,8 @@
-import { AddonInfo, File } from "./Get";
-import path from "path";
-import { GLOBAL_CACHE_NAME, GLOBAL_FILE_NAME } from "./Values";
-import objectHash from "object-hash";
 import fs from "fs-extra";
+import path from "path";
+import { uniqueHash } from "../../commons/BasicHash";
+import { AddonInfo, File } from "./Get";
+import { GLOBAL_CACHE_NAME, GLOBAL_FILE_NAME } from "./Values";
 
 export async function findCachedFile(
   file: File,
@@ -16,7 +16,7 @@ export async function findCachedFile(
       GLOBAL_FILE_NAME,
       addon.id.toString(16),
       file.id.toString(16),
-      objectHash(file.fileDate)
+      uniqueHash(file.fileDate)
     );
     await fs.access(TARGET_FILE);
     return TARGET_FILE;
@@ -38,7 +38,7 @@ export async function writeCachedFile(
       GLOBAL_FILE_NAME,
       addon.id.toString(16),
       file.id.toString(16),
-      objectHash(file.fileDate)
+      uniqueHash(file.fileDate)
     );
     await fs.ensureDir(path.dirname(TARGET_FILE));
     await fs.copyFile(origin, TARGET_FILE);

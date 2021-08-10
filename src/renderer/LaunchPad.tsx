@@ -216,6 +216,8 @@ function SingleCoreDisplay(props: {
                   onClick={(e) => {
                     setDestroy(props.profile.id);
                     setWarningOpen(true);
+                    markUsed(hash, 0);
+                    props.refresh();
                     e.stopPropagation();
                   }}
                 >

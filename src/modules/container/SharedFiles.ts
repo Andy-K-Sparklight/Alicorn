@@ -1,7 +1,7 @@
 import { ensureDir, symlink, writeFile } from "fs-extra";
-import objectHash from "object-hash";
 import os from "os";
 import path from "path";
+import { basicHash, uniqueHash } from "../commons/BasicHash";
 import { PLACE_HOLDER } from "../commons/Constants";
 import { isFileExist } from "../commons/FileUtil";
 import { getString } from "../config/ConfigSupport";
@@ -26,7 +26,7 @@ export async function fetchSharedFile(meta: DownloadMeta): Promise<boolean> {
     return true; // NULL safe
   }
   const u = new URL(meta.url);
-  const urlSHA = objectHash(meta.url) + "-" + objectHash(u.host);
+  const urlSHA = uniqueHash(meta.url) + "-" + basicHash(u.host);
   const root = getString("cx.shared-root", os.homedir(), true);
   let targetFile: string;
   if (root.trim().length > 0) {

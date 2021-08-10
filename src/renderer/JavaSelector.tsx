@@ -13,7 +13,6 @@ import {
 } from "@material-ui/core";
 import { Refresh } from "@material-ui/icons";
 import { ipcRenderer } from "electron";
-import objectHash from "object-hash";
 import os from "os";
 import path from "path";
 import React, { useEffect, useRef, useState } from "react";
@@ -136,7 +135,7 @@ export function JavaSelector(): JSX.Element {
           >
             {javaList.map((j) => {
               return (
-                <MenuItem key={objectHash(j)} value={j}>
+                <MenuItem key={j} value={j}>
                   {j}
                 </MenuItem>
               );

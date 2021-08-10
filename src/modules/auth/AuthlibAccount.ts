@@ -1,3 +1,5 @@
+import { uniqueHash } from "../commons/BasicHash";
+import { Trio } from "../commons/Collections";
 import {
   Account,
   authenticate,
@@ -6,8 +8,6 @@ import {
   updateAccount,
   validateToken,
 } from "./Account";
-import { Trio } from "../commons/Collections";
-import objectHash from "object-hash";
 import { AccountType } from "./AccountUtil";
 
 // Account using Authlib Injector
@@ -33,7 +33,7 @@ export class AuthlibAccount extends Account {
   }
 
   getAccountIdentifier(): string {
-    return objectHash(this.accountName);
+    return uniqueHash(this.accountName);
   }
 
   async isAccessTokenValid(): Promise<boolean> {
