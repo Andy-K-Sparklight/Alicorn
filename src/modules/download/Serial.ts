@@ -1,17 +1,17 @@
+import fs from "fs-extra";
+import got from "got";
+import path from "path";
+import stream from "stream";
+import { promisify } from "util";
+import { isFileExist } from "../commons/FileUtil";
 import {
   AbstractDownloader,
   DownloadMeta,
   DownloadStatus,
 } from "./AbstractDownloader";
-import fs from "fs-extra";
-import path from "path";
-import { getHash, validate } from "./Validate";
-import got from "got";
-import { promisify } from "util";
-import stream from "stream";
-import { isFileExist } from "../commons/FileUtil";
-import { addRecord } from "./ResolveLock";
 import { getConfigOptn } from "./DownloadWrapper";
+import { addRecord } from "./ResolveLock";
+import { getHash, getIdentifier, validate } from "./Validate";
 
 const pipeline = promisify(stream.pipeline);
 
@@ -50,7 +50,10 @@ export class Serial extends AbstractDownloader {
       const h = await getHash(meta.savePath);
       if (meta.sha1 === h) {
         // No error is ok, add record
-        addRecord(h, meta.url);
+        const id = await getIdentifier(meta.savePath);
+        if (id.length > 0) {
+          addRecord(id, meta.url);
+        }
         return DownloadStatus.RESOLVED;
       }
 

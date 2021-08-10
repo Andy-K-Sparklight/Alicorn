@@ -1,9 +1,17 @@
 import { Box, createStyles, makeStyles, Typography } from "@material-ui/core";
-import React from "react";
+import { ipcRenderer } from "electron";
+import React, { useEffect, useState } from "react";
 import pkg from "../../package.json";
 import { tr } from "./Translator";
-
 export function VersionView(): JSX.Element {
+  const [ecVersion, setEcVersion] = useState(
+    tr("VersionView.Electron.Fetching")
+  );
+  useEffect(() => {
+    (async () => {
+      setEcVersion(await ipcRenderer.invoke("getElectronVersion"));
+    })();
+  }, []);
   const classes = makeStyles((theme) =>
     createStyles({
       root: {
@@ -22,6 +30,19 @@ export function VersionView(): JSX.Element {
     <Box className={classes.root}>
       <Typography className={classes.title} gutterBottom>
         {tr("VersionView.Name") + " " + pkg.appVersion}
+      </Typography>
+      <Typography className={classes.text} color={"secondary"}>
+        {tr(
+          "VersionView.EcVersion",
+          `Build=${pkg.devDependencies.electron.slice(1)}`,
+          `Current=${ecVersion}`
+        )}
+      </Typography>
+      <Typography className={classes.text} color={"secondary"} gutterBottom>
+        {tr(
+          "VersionView.Electron." +
+            cmpVersion(ecVersion, pkg.devDependencies.electron.slice(1))
+        )}
       </Typography>
       <Typography className={classes.text} color={"secondary"} gutterBottom>
         {tr("VersionView.Description")}
@@ -52,4 +73,16 @@ export function VersionView(): JSX.Element {
       </Typography>
     </Box>
   );
+}
+function cmpVersion(
+  current: string,
+  build: string
+): "Perfect" | "OK" | "Attention" {
+  if (current === build) {
+    return "Perfect";
+  }
+  if (current.split(".")[0] === build.split(".")[0]) {
+    return "OK";
+  }
+  return "Attention";
 }

@@ -12,7 +12,7 @@ import {
 import { getConfigOptn } from "./DownloadWrapper";
 import { addRecord } from "./ResolveLock";
 import { Serial } from "./Serial";
-import { getHash, validate } from "./Validate";
+import { getHash, getIdentifier, validate } from "./Validate";
 
 const TEMP_SAVE_PATH_ROOT = path.join(os.tmpdir(), "alicorn-download");
 
@@ -85,7 +85,10 @@ async function sealAndVerify(
   if (hash !== h) {
     throw new Error("File hash mismatch for " + savePath);
   }
-  addRecord(h, url);
+  const id = await getIdentifier(savePath);
+  if (id.length > 0) {
+    addRecord(id, url);
+  }
   return;
 }
 

@@ -122,7 +122,7 @@ export async function loadModInfo(
       const mt = await fs.readFile(
         path.join(MOD_META_DIR, hash + MOD_META_SUFFIX)
       );
-      return await loadCachedMeta(mt.toString());
+      return loadCachedMeta(mt.toString());
     }
     await extractModFiles(modJar, container);
 

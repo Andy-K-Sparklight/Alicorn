@@ -478,13 +478,33 @@ Minecraft 和我的世界真的不是一个东西！
 
 Alicorn 启动器
 
+# VersionView.Electron.Fetching
+
+正在获取……
+
+# VersionView.EcVersion
+
+此版本是针对 Electron {Build} 构建的，您当前正在使用 Electron {Current}
+
+# VersionView.Electron.Perfect
+
+这个 Electron 经过蹄工测试，可以与当前版本的 Alicorn 完全兼容，现在就开始畅玩吧！
+
+# VersionView.Electron.OK
+
+这个 Electron 和编译版本很接近，应当与当前版本的 Alicorn 兼容，通常不会有影响运行的问题。
+
+# VersionView.Electron.Attention
+
+这个 Electron 太旧啦！Alicorn 可能无法正常运行，非常建议重新下载 Alicorn，你的设置和数据会保留。
+
 # VersionView.AuthorName
 
-作者
+开发人员：
 
 # VersionView.Authors
 
-RarityEG
+Andy K Rarity Sparklight
 
 # VersionView.Description
 
@@ -496,7 +516,7 @@ Alicorn 启动器是自由软件，复制、修改和重新分发等行为应遵
 
 # VersionView.Copyright2
 
-Copyright (C) 2021 Andy K Rarity Sparklight\n\n以下内容是原始版权声明的中文翻译，不是官方内容，不具有法律效力，只有英文原版的声明具有此等效力。\n该程序是免费软件：您可以根据自由软件基金会发布的 GNU 通用公共许可证（第三版）的条款重新分发和/或修改它。\n分发此程序是希望它有用，但不作任何保证；甚至没有对适销性或针对特定目的的适用性的暗示保证。有关更多详细信息，请参阅 GNU 通用公共许可证（第三版）原文。
+Copyright (C) 2021 Andy K Rarity Sparklight\n\n以下内容是原始版权声明的中文翻译，不是官方内容，不具有法律效力，只有英文原版的声明具有此等效力。\n该程序是自由软件：您可以根据自由软件基金会发布的 GNU 通用公共许可证（第三版）的条款重新分发和/或修改它。\n分发此程序是希望它有用，但不作任何保证；甚至没有对适销性或针对特定目的的适用性的暗示保证。有关更多详细信息，请参阅 GNU 通用公共许可证（第三版）原文。
 
 # VersionView.FreeSoftwareClaim
 

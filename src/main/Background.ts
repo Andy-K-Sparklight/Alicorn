@@ -227,4 +227,7 @@ export function registerBackgroundListeners(): void {
   ipcMain.on("changeDir", (e, d: string) => {
     process.chdir(d);
   });
+  ipcMain.handle("getElectronVersion", async () => {
+    return process.versions["electron"];
+  });
 }
