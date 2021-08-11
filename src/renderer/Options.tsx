@@ -236,7 +236,6 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.BOOL}
             bindConfig={"dev.explicit-error-throw"}
           />
-          <InputItem type={ConfigType.BOOL} bindConfig={"web.allow-natives"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"dev.quick-reload"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"reset"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"clean-storage"} />
