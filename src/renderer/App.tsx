@@ -13,7 +13,7 @@ import {
   AccountCircle,
   AllInbox,
   Apps,
-  Book,
+  ArrowForward,
   Code,
   Dns,
   FlightTakeoff,
@@ -256,7 +256,7 @@ export function App(): JSX.Element {
                   triggerSetPage(Pages.Tutor);
                 }}
               >
-                <Book />
+                <ArrowForward />
               </IconButton>
             </Tooltip>
             <Tooltip title={tr("MainMenu.Reload")}>
@@ -351,7 +351,7 @@ export function App(): JSX.Element {
                     (async () => {
                       await ipcRenderer.invoke(
                         "openBrowser",
-                        getBoolean("web.allow-natives"),
+                        false,
                         getString("web.global-proxy")
                       );
                     })();
