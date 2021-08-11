@@ -189,7 +189,7 @@ export function InstallCore(): JSX.Element {
             setFailed(false);
             const ct = getContainer(selectedForgeContainer);
             setProgressMsg(
-              `Fetching Forge installer for Minecraft ${mcv} and Forge ${fgv}...`
+              tr("InstallCore.Progress.Fetching", `Loader=Forge`, `MCV=${mcv}`)
             );
             const stat = await getForgeInstaller(ct, mcv, fgv);
             if (!stat) {
@@ -197,12 +197,12 @@ export function InstallCore(): JSX.Element {
                 setOperating(false);
                 setFailed(true);
                 setFailedMsg(
-                  `Could not download the installer for Forge ${fgv} with Minecraft ${mcv}`
+                  tr("InstallCore.Progress.FailedToDownload", `Loader=Forge`)
                 );
               }
               return;
             }
-            setProgressMsg("Executing Forge installer...");
+            setProgressMsg(tr("InstallCore.Progress.ExecutingForge"));
             const istat = await performForgeInstall(
               await getJavaRunnable(getLastUsedJavaHome()),
               generateForgeInstallerName(mcv, fgv),
@@ -212,9 +212,7 @@ export function InstallCore(): JSX.Element {
               if (mounted.current) {
                 setOperating(false);
                 setFailed(true);
-                setFailedMsg(
-                  `Could not execute the installer or the installer reported an error for Forge ${fgv} with Minecraft ${mcv}`
-                );
+                setFailedMsg(tr("InstallCore.Progress.CouldNotExecute"));
               }
               return;
             } else {
@@ -256,7 +254,7 @@ export function InstallCore(): JSX.Element {
               return;
             }
             setProgressMsg(
-              `Fetching Fabric installer for Minecraft ${mcv} and Fabric ${fbv}...`
+              tr("InstallCore.Progress.Fetching", `Loader=Fabric`, `MCV=${mcv}`)
             );
             const stat = await getFabricInstaller(u, ct);
             if (!stat) {
@@ -264,12 +262,12 @@ export function InstallCore(): JSX.Element {
                 setOperating(false);
                 setFailed(true);
                 setFailedMsg(
-                  `Could not download the installer for Fabric ${fbv} with Minecraft ${mcv}`
+                  tr("InstallCore.Progress.FailedToDownload", `Loader=Fabric`)
                 );
               }
               return;
             }
-            setProgressMsg("Executing Fabric installer...");
+            setProgressMsg(tr("InstallCore.Progress.ExecutingFabric"));
 
             const stat2 = await performFabricInstall(
               await getJavaRunnable(getLastUsedJavaHome()),
@@ -282,9 +280,7 @@ export function InstallCore(): JSX.Element {
               if (mounted.current) {
                 setOperating(false);
                 setFailed(true);
-                setFailedMsg(
-                  `Could not execute the installer or the installer reported an error for Fabric ${fbv} with Minecraft ${mcv}`
-                );
+                setFailedMsg(tr("InstallCore.Progress.CouldNotExecute"));
               }
               return;
             }
@@ -309,32 +305,24 @@ export function InstallCore(): JSX.Element {
             setMojangConfirmOpen(false);
             setOperating(true);
             setFailed(false);
-            setProgressMsg(
-              `Fetching profile url for ${selectedMojangVersion}...`
-            );
+            setProgressMsg(tr("InstallCore.Progress.FetchingProfile"));
             const u = await getProfileURLById(selectedMojangVersion);
             if (u.length === 0) {
               if (mounted.current) {
                 setOperating(false);
                 setFailed(true);
-                setFailedMsg(
-                  `Could not get the profile for Minecraft ${selectedMojangVersion}`
-                );
+                setFailedMsg(tr("InstallCore.Progress.FailedToFetchProfile"));
               }
             }
-            setProgressMsg(`Downloading profile...`);
+            setProgressMsg(tr("InstallCore.Progress.DownloadingProfile"));
             const d = await getProfile(u);
             if (isNull(d) || Object.keys(d).length === 0) {
               if (mounted.current) {
                 setOperating(false);
                 setFailed(true);
-                setFailedMsg(
-                  "Received invalid profile from Minecraft server or its mirror!"
-                );
+                setFailedMsg(tr("InstallCore.Progress.InvalidProfile"));
               }
             }
-            setProgressMsg(`Installing profile as ${selectedMojangVersion}...`);
-
             try {
               await installProfile(
                 selectedMojangVersion,
@@ -351,7 +339,7 @@ export function InstallCore(): JSX.Element {
               if (mounted.current) {
                 setOperating(false);
                 setFailed(true);
-                setFailedMsg("Could not install profile to the container!");
+                setFailedMsg(tr("InstallCore.Progress.FailedToInstallProfile"));
               }
             }
           }}

@@ -134,6 +134,10 @@ Alicorn 内置浏览器
 
 管理容器
 
+# Operating.ClickToDebug
+
+如果希望向他人寻求帮助，单击本窗口的任何位置可打开日志。
+
 # Operating.PleaseWait
 
 请稍等
@@ -625,6 +629,46 @@ ASC 文件共享宗卷
 # ContainerManager.Cancel
 
 取消
+
+# InstallCore.Progress.CouldNotExecuteInstallCore.Progress.CouldNotExecute
+
+没能启动安装程序，或安装程序没能正确完成任务，请检查 Java 运行时设置、目的目录权限和网络连接，然后再试一次
+
+# InstallCore.Progress.FailedToInstallProfile
+
+安装失败，目的目录是否存在？你是否有权限写入它？
+
+# InstallCore.Progress.InvalidProfile
+
+无效的启动档案，下载源是否出现故障？
+
+# InstallCore.Progress.DownloadingProfile
+
+正下载启动档案……
+
+# InstallCore.Progress.FailedToFetchProfile
+
+获取启动档案失败
+
+# InstallCore.Progress.FetchingProfile
+
+正获取启动档案……
+
+# InstallCore.Progress.Fetching
+
+正获取 {Loader} 的安装程序，适用于 Minecraft {MCV}……
+
+# InstallCore.Progress.FailedToDownload
+
+没有能够下载 {Loader} 的安装程序
+
+# InstallCore.Progress.ExecutingForge
+
+正运行 Forge 安装程序……
+
+# InstallCore.Progress.ExecutingFabric
+
+正运行 Fabric 安装程序……
 
 # InstallCore.InstallMinecraft
 
@@ -1246,14 +1290,6 @@ Alicorn 会用这个名字亲切地称呼您 - 嗯……可爱~
 
 设置用于 Alicorn 附属浏览器的代理 - 所有流量都将通过代理服务器转发，下载器不受此设置影响，部分操作系统对此设置不敏感
 
-# Options.web.allow-natives.title
-
-启用 Web Node 集成 *
-
-# Options.web.allow-natives.desc
-
-在 Alicorn 附属浏览器中启用 Node.js API 的支持 - 允许 Web 程序与 Alicorn 进行集成，但它将您的计算机操作权限直接授予 Web 页面，非常危险，只应当用于开发！
-
 # Options.updator.use-update.title
 
 自动更新 ^
@@ -1572,13 +1608,29 @@ Mojang 版本
 
 灰色名称的软件包可能无法适配当前版本。\n单击软件包名称可以在文件资源管理器中查看它。
 
+# Tutor.0.Title
+
+你好！Hello!
+
+# Tutor.0.Content
+
+欢迎使用 Alicorn Launcher！\nWelcome to Alicorn Launcher!\n\nAlicorn Launcher（就是我）是一个 Minecraft 启动器，使用超酷的前端技术构建！\nAlicorn Launcher (me) is a Minecraft game launcher, built with some awesome front-end technologies!\n\n在我开始为您工作之前，我想向您进行一个简短的自我介绍，以帮助您完成配置。\nBefore we started, I'd like to give a brief introduction of myself which may help you to configure.\n\n现在菜单的右端应该只有一个图标，点按它来前往教程的下一页。\nThere is only one button in the menu bar, click it and you'll be redirected to the next page.\n\n记住，在教程期间，右上角的「下一步」按钮（就像一个箭头）将带你进入教程的下一页，而其它按钮则有对应的功能，请仔细阅读说明！\nPlease bear in mind that this button will always bring you to the next page, while other buttons can have their functionalities.
+
+# Tutor.0.Controller
+
+@empty
+
+# Tutor.0.Setting
+
+@empty
+
 # Tutor.1.Title
 
-你好！
+本地化 Localization
 
 # Tutor.1.Content
 
-欢迎使用 Alicorn Launcher！\n\nAlicorn Launcher（就是我）是一个 Minecraft 启动器，使用超酷的前端技术构建！\n\n在我开始为您工作之前，我想向您进行一个简短的自我介绍，以帮助您完成配置。\n\n现在菜单的右端应该只有一个图标，点按它来前往教程的下一页。\n\n记住，在教程期间，右上角的书本按钮将带你进入教程的下一页，而其它按钮则有对应的功能，请仔细阅读说明！
+您喜欢什么样的我？（或者说，您说什么语言？）\nWhich kind of me do you like? (Or, which language do you speak?)
 
 # Tutor.1.Controller
 
@@ -1586,7 +1638,7 @@ Mojang 版本
 
 # Tutor.1.Setting
 
-@empty
+assistant;RADIO;PonyCN
 
 # Tutor.2.Title
 
@@ -1636,19 +1688,19 @@ updator.use-update;BOOL
 
 @empty
 
-# Tutor.8.Title
+# Tutor.7.Title
 
 Java 平台相关设置
 
-# Tutor.8.Content
+# Tutor.7.Content
 
-注意：请在阅读完本说明后再操作！\n\nJava 运行时（JRE）是运行 Minecraft 的重要基础，通常配置并不简单，但 Alicorn 让它简单了一些……\n\n现在右上角应该出现了一个新的按钮，在那里你可以选择 JRE 环境（或者安装新的——仅 Windows），单击该按钮，并在那里选择一个 JRE——无论是自动搜索还是手动定位，亦或是干脆安装一个新的。\n\n如果你想玩 Minecraft 17 及以后的版本，需要安装 Java 16，对于 Minecraft 12 及以前的版本，还有 Forge，则需要 Java 8，因此建议将两者都设置好。\n\n在那个页面完成设置后，单击右上角的书进入下一页。
+注意：请在阅读完本说明后再操作！\n\nJava 运行时（JRE）是运行 Minecraft 的重要基础，通常配置并不简单，但 Alicorn 让它简单了一些……\n\n现在右上角应该出现了一个新的按钮，在那里你可以配置 JRE 环境。单击该按钮，并在那里选择一个 JRE——无论是自动搜索还是手动定位，亦或是干脆安装一个新的。\n\n如果你想玩 Minecraft 17 及以后的版本，需要安装 Java 16，对于 Minecraft 12 及以前的版本，还有 Forge，则需要 Java 8，因此建议将两者都设置好。\n\n在那个页面完成设置后，单击右上角的按钮进入下一页。
 
-# Tutor.8.Controller
+# Tutor.7.Controller
 
--Options;+JavaSelector
++JavaSelector
 
-# Tutor.8.Setting
+# Tutor.7.Setting
 
 @empty
 
@@ -1658,7 +1710,7 @@ Java 平台相关设置
 
 # Tutor.5.Content
 
-Minecraft 需要从 Mojang 官网下载，但鉴于网络环境因你所处的位置而异（例如，在坎高下载这些文件就非常快，而在无尽森林可能根本就无法下载），你或许想选择一个镜像。\n\n在下面的设置中你可以键入 alicorn 来选择这个完全自由的镜像，也可以选择 alicorn-mcbbs-nonfree 来使用这个不完全自由的组合镜像，使用 none 来禁用镜像。\n\nAlicorn 不保证任何镜像的可用性或安全性，如果因下载来自非 Mojang 官方源（即下载镜像不是 none）的文件存在恶意内容导致你的数据丢失或损毁，Mojang（很可能）不将为此负责。
+Minecraft 需要从 Mojang 官网下载，但鉴于网络环境因你所处的位置而异（例如，在坎高下载这些文件就非常快，而在无尽森林可能根本就无法下载），你或许想选择一个镜像。\n\nAlicorn 不保证任何镜像的可用性或安全性，如果因下载来自非 Mojang 官方源（即下载镜像不是 none）的文件存在恶意内容导致你的数据丢失或损毁，Mojang、Microsoft 和我们（Alicorn 开发人员）都不会承担任何责任，镜像提供方也同样如此。
 
 # Tutor.5.Controller
 
@@ -1684,33 +1736,33 @@ download.mirror;RADIO;none/alicorn/alicorn-mcbbs-nonfree
 
 pff.cache-root;DIR
 
-# Tutor.7.Title
-
-设置更多内容
-
-# Tutor.7.Content
-
-Alicorn 拥有相当数量的设置项，尽管它们大多数的默认值就是建议值，但你可能想定量地修改一些设定值。\n\n现在你可以点击右上角的按钮前往设置页面。跟之前一样，设置完成后点按右上角的书将前往下一页。\n\n如果你不想修改，单击书按钮直接进入下一页。
-
-# Tutor.7.Setting
-
-@empty
-
-# Tutor.7.Controller
-
-+Options
-
-# Tutor.9.Title
+# Tutor.8.Title
 
 很快就要完成了
 
-# Tutor.9.Content
+# Tutor.8.Content
 
 我迫不及待地想让你开始游戏，现在终于来到了最后几步……赶紧进入下一页吧！\n\n我们将创建容器、安装游戏和启动游戏。
 
-# Tutor.9.Controller
+# Tutor.8.Controller
 
 -JavaSelector
+
+# Tutor.8.Setting
+
+@empty
+
+# Tutor.9.Title
+
+创建一个容器
+
+# Tutor.9.Content
+
+注意：请在阅读完本说明后再操作！\n\n「容器」是我管理游戏的基本单位，也是你的游戏存放的位置。\n\n单击右上角的按钮前往容器管理页面，你可以创建成百上千个容器，但这次让我们先只创建一个。\n\n在那里，单击「+」来添加一个容器，给它命名（随意就好），并且单击「选择挂载点」按钮选择一个挂载点（文件夹，最好是空的），这个文件夹将存放你的游戏文件。如果你之前使用过其它启动器，可以选择 .minecraft 文件夹，Alicorn 就会导入它。\n\n哦，对啦，你还没有设置 ASC 缓存目录，因此就创建 MCX 容器吧～\n\n创建好容器后，单击右上角的按钮即可进入最后两步。
+
+# Tutor.9.Controller
+
++ContainerManager
 
 # Tutor.9.Setting
 
@@ -1718,15 +1770,15 @@ Alicorn 拥有相当数量的设置项，尽管它们大多数的默认值就是
 
 # Tutor.10.Title
 
-创建一个容器
+安装游戏
 
 # Tutor.10.Content
 
-注意：请在阅读完本说明后再操作！\n\n「容器」是我管理游戏的基本单位，也是你的游戏存放的位置。\n\n单击右上角的按钮前往容器管理页面，你可以创建成百上千个容器，但这次让我们先只创建一个。\n\n在那里，单击「+」来添加一个容器，给它命名（随意就好），并且单击「选择挂载点」按钮选择一个挂载点（文件夹，最好是空的），这个文件夹将存放你的游戏文件。如果你之前使用过其它启动器，可以选择 .minecraft 文件夹，Alicorn 就会导入它。\n\n哦，对啦，你还没有设置 ASC 缓存目录，因此就创建 MCX 容器吧～\n\n创建好容器后，单击右上角的书即可进入最后两步。
+注意：请在阅读完本说明后再操作！\n\nAlicorn 内置的游戏下载器可以为你完成这项烦人的工作，单击右上角的按钮转到那里。\n\n你需要至少安装一个 Minecraft 版本（第一行），如果你想使用 Forge 或 Fabric，还可以选择第二行和第三行的安装程序（同时也必须安装对应的 Minecraft 版本）。记住：所有选项选齐后才可以开始安装！\n\n同样，安装好游戏后，点按右上角的按钮以进入最后一步。
 
 # Tutor.10.Controller
 
-+ContainerManager
+-ContainerManager;+InstallCore
 
 # Tutor.10.Setting
 
@@ -1734,15 +1786,15 @@ Alicorn 拥有相当数量的设置项，尽管它们大多数的默认值就是
 
 # Tutor.11.Title
 
-安装游戏
+准备出发！
 
 # Tutor.11.Content
 
-注意：请在阅读完本说明后再操作！\n\nAlicorn 内置的游戏下载器可以为你完成这项烦人的工作，单击右上角的按钮转到那里。\n\n你需要至少安装一个 Minecraft 版本（第一行），如果你想使用 Forge 或 Fabric，还可以选择第二行和第三行的安装程序（同时也必须安装对应的 Minecraft 版本）。记住：所有选项选齐后才可以开始安装！\n\n同样，安装好游戏后，点按右上角的书以进入最后一步。
+注意：请在阅读完本说明后再操作！\n\n现在是最后一步了，启动你的游戏吧！\n\n单击右上角的按钮来进入启动台，你能看到你刚刚安装的核心，单击它右上角的按钮转到启动预备页面，在那里，你可以使用 Microsoft 帐户或本地帐户启动游戏——如果你还在使用旧版 Mojang 帐户（未迁移），这次请先用本地帐户启动一下。\n\n等你的游戏启动了，再单击右上角的按钮回到教程。如果启动出问题了，你会得到进一步提示。\n\n（首次启动可能需要等一小会，我们要补全游戏资源。）
 
 # Tutor.11.Controller
 
--ContainerManager;+InstallCore
+-InstallCore;+LaunchPad
 
 # Tutor.11.Setting
 
@@ -1750,49 +1802,33 @@ Alicorn 拥有相当数量的设置项，尽管它们大多数的默认值就是
 
 # Tutor.12.Title
 
-准备出发！
+恭喜！
 
 # Tutor.12.Content
 
-注意：请在阅读完本说明后再操作！\n\n现在是最后一步了，启动你的游戏吧！\n\n单击右上角的按钮来进入启动台，你能看到你刚刚安装的核心，单击它右上角的按钮转到启动预备页面，在那里，你可以使用 Microsoft 帐户或本地帐户启动游戏——如果你还在使用旧版 Mojang 帐户（未迁移），这次请先用本地帐户启动一下。\n\n等你的游戏启动了，再单击右上角的书回到教程。如果启动出问题了，你会得到进一步提示。\n\n（首次启动可能需要等一小会，我们要补全游戏资源。）
-
-# Tutor.12.Controller
-
--InstallCore;+LaunchPad
+本教程的内容到此就结束了，这当然不是 Alicorn 功能的全部，甚至不是一小部分。你可以在使用过程中逐渐了解 Alicorn 和她的相关功能。\n\n接下来你可以选择设置一个帐户来进行第三方验证，或者设置 ASC 缓存位置来启用 ASC 容器这一超酷的功能～\n\n要了解有关 Alicorn 的更多信息（包括帮助），可以访问 https://al.xuogroup.top（我们的网站）\n\n（题外话：Alicorn 的作者——Sparklight 是个 Equestria Girl 哦～）\n\nAlicorn 的菜单按钮将在你单击右上角的按钮后全部解锁。
 
 # Tutor.12.Setting
 
 @empty
 
-# Tutor.13.Title
-
-恭喜！
-
-# Tutor.13.Content
-
-本教程的内容到此就结束了，这当然不是 Alicorn 功能的全部，甚至不是一小部分。你可以在使用过程中逐渐了解 Alicorn 和她的相关功能。\n\n接下来你可以选择设置一个帐户来进行第三方验证，或者设置 ASC 缓存位置来启用 ASC 容器这一超酷的功能～\n\n要了解有关 Alicorn 的更多信息（包括帮助），可以访问 https://al.xuogroup.top（我们的网站）\n\n（题外话：Alicorn 的作者——Sparklight 是个 Equestria Girl 哦～）\n\n右上角的菜单将在你单击书本按钮后全部解锁。
-
-# Tutor.13.Setting
-
-@empty
-
-# Tutor.13.Controller
+# Tutor.12.Controller
 
 -LaunchPad
 
-# Tutor.14.Controller
+# Tutor.13.Controller
 
 End
 
-# Tutor.14.Title
+# Tutor.13.Title
 
 @empty
 
-# Tutor.14.Content
+# Tutor.13.Content
 
 @empty
 
-# Tutor.14.Setting
+# Tutor.13.Setting
 
 @empty
 

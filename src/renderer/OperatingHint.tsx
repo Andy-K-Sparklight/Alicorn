@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -72,13 +73,17 @@ export function FailedHint(props: {
   const reason = props.reason || tr("Operating.FailedInfo");
   return (
     <Dialog open={props.open} onClose={props.closeFunc}>
-      <DialogTitle>{tr("Operating.Failed")}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>{reason}</DialogContentText>
-        <DialogContentText>
-          <i>{randsl("Operating.FailedSayings")}</i>
-        </DialogContentText>
-      </DialogContent>
+      <Box>
+        <DialogTitle>{tr("Operating.Failed")}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{reason}</DialogContentText>
+          <DialogContentText>
+            <b>{tr("Operating.ClickToDebug")}</b>
+            <i>{randsl("Operating.FailedSayings")}</i>
+          </DialogContentText>
+        </DialogContent>
+      </Box>
+
       <DialogActions>
         <Button onClick={props.closeFunc}>
           {tr("Operating.FailedConfirm")}
