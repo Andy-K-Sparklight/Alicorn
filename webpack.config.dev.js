@@ -24,6 +24,9 @@ const MainDev = {
   },
   resolve: {
     extensions: [".ts", ".js"],
+    alias: {
+      ws: path.resolve("./node_modules/ws/index.js"),
+    },
   },
   plugins: [
     new BuildInfoPlugin("MainBuild.json", Version),
