@@ -964,7 +964,7 @@ Alicorn 特色功能
 
 # Options.font-style.desc
 
-选择 Alicorn 字体风格，「端庄」看上去更清晰，「亲近」看上去更可爱，「萌兔」则看上去有点过分了 - 分别是为技术向和美观向设计的，可不是根据你的性别！\n（在我心中，谁都有一颗善良温柔而可爱的心～）
+选择 Alicorn 字体风格，「端庄」看上去更清晰，「亲近」看上去更可爱 - 分别是为技术向和美观向设计的，可不是根据你的性别！\n（在我心中，谁都有一颗善良温柔而可爱的心～）
 
 # Options.font-style.Regular
 
@@ -973,10 +973,6 @@ Alicorn 特色功能
 # Options.font-style.Cutie
 
 亲近
-
-# Options.font-style.Decorated
-
-萌兔
 
 # Options.command.title
 

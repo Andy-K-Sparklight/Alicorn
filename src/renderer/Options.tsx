@@ -110,7 +110,7 @@ export function OptionsPage(): JSX.Element {
           />
           <InputItem
             type={ConfigType.RADIO}
-            choices={["Regular", "Cutie", "Decorated"]}
+            choices={["Regular", "Cutie"]}
             bindConfig={"font-style"}
           />
           <InputItem type={ConfigType.STR} bindConfig={"theme.primary.main"} />
