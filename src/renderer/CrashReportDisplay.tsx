@@ -10,6 +10,7 @@ import {
   ListItem,
   ListItemText,
   makeStyles,
+  MuiThemeProvider,
   Table,
   TableBody,
   TableCell,
@@ -35,6 +36,7 @@ import {
   LAST_LOGS_KEY,
   MCFailureInfo,
 } from "./ReadyToLaunch";
+import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { tr } from "./Translator";
 
 const useAccStyles = makeStyles((theme) =>
@@ -108,6 +110,15 @@ export function CrashReportDisplay(): JSX.Element {
   }, []);
   return (
     <Box>
+      <BBCodeDisplay
+        crashAnalytics={report}
+        originCrashReport={oc}
+        failureInfo={failureInfo}
+        tracker={launchTracker}
+        logs={logs.join("\n")}
+        logsReport={logsReport}
+      />
+      <br />
       {
         // @ts-ignore
         window[LAST_FAILURE_INFO_KEY] === undefined ? (
@@ -153,15 +164,6 @@ export function CrashReportDisplay(): JSX.Element {
           </Box>
         )
       }
-
-      <BBCodeDisplay
-        crashAnalytics={report}
-        originCrashReport={oc}
-        failureInfo={failureInfo}
-        tracker={launchTracker}
-        logs={logs.join("\n")}
-        logsReport={logsReport}
-      />
     </Box>
   );
 }
@@ -435,23 +437,42 @@ function BBCodeDisplay(props: {
     props.logsReport
   );
   return (
-    <Accordion>
-      <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
-        <Typography>{tr("CrashReportDisplay.BBCode")}</Typography>
-      </AccordionSummary>
-      <AccordionDetails className={classes.acc1}>
+    <Box
+      style={{
+        display: "flex",
+        marginLeft: "2%",
+      }}
+    >
+      <Typography
+        style={{
+          display: "inline",
+          fontSize: "small",
+          overflow: "auto",
+          lineBreak: "auto",
+        }}
+        color={"secondary"}
+      >
+        {tr("CrashReportDisplay.Instruction")}
+      </Typography>
+      <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
         <Button
           onClick={() => {
             if (!copy(code)) {
               submitError("Failed to copy!");
             }
           }}
+          style={{
+            display: "inline",
+            float: "right",
+            marginLeft: "auto",
+            width: "15%",
+          }}
           variant={"outlined"}
           className={classes.btn}
         >
           {tr("CrashReportDisplay.Copy")}
         </Button>
-      </AccordionDetails>
-    </Accordion>
+      </MuiThemeProvider>
+    </Box>
   );
 }
