@@ -1,4 +1,4 @@
-import { submitWarn } from "../../renderer/Message";
+import { submitInfo, submitWarn } from "../../renderer/Message";
 import { dispatchCommand, registerCommand } from "./CommandListener";
 
 const FUNCTIONS: Map<string, string> = new Map();
@@ -47,5 +47,8 @@ export function registerAlicornFunctions(): void {
         return dispatchCommand(x);
       })
     );
+  });
+  registerCommand("moo", async () => {
+    submitInfo("...Have you mooed today?");
   });
 }
