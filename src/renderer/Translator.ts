@@ -1,6 +1,7 @@
 import { readFile } from "fs-extra";
 import os from "os";
 import path from "path";
+import React from "react";
 import { getString } from "../modules/config/ConfigSupport";
 import { getPathInDefaults } from "../modules/config/DataSupport";
 function currentLocale(): string {
@@ -21,12 +22,24 @@ export function getLocaleList(): string[] {
 }
 
 // Main translate function
+// ATTENETION! This function actually CAN return a JSX Element
+// We use string here to 'cheat' TSC
 export function tr(key: string, ...values: string[]): string {
   let res = (localesMap.get(currentLocale()) || {})[key];
   if (res === undefined) {
     res = key;
   }
-  return applyEnvironmentVars(applyCustomVars(String(res), values));
+  let p = String(res);
+  if (p.startsWith("@HTML")) {
+    p = p.slice(5);
+    // Cheat TSC
+    return React.createElement("span", {
+      dangerouslySetInnerHTML: {
+        __html: applyEnvironmentVars(applyCustomVars(p, values)),
+      },
+    }) as unknown as string;
+  }
+  return applyEnvironmentVars(applyCustomVars(p, values));
 }
 
 export function randsl(key: string, ...values: string[]): string {
