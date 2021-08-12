@@ -41,7 +41,7 @@ async function findJavaUNIX(): Promise<string[]> {
   if (os.platform() === "win32") {
     return [];
   }
-  const programBase = "/";
+  const programBase = "/usr/";
   const all: string[] = [];
   await diveSearch("java", programBase, all, getNumber("java.search-depth", 8));
   return all;
