@@ -232,7 +232,7 @@ Alicorn 内置浏览器
 
 # CoreInfo.Destroy.Content
 
-摧毁 {Name} 会删除对应的档案，统计信息也会一并移除，该操作不可撤销！\n要摧毁该核心档案吗？
+@HTML摧毁 {Name} 会删除对应的档案，统计信息也会一并移除，<b>该操作不可撤销</b>！\n要摧毁该核心档案吗？
 
 # CoreInfo.ClearUse
 
@@ -420,19 +420,19 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 这可能需要一段时间，不过只有你第一次玩某个版本时会这样。
 
-云宝，慢一点！太快了系统吃不消的！
+星璇正在赶来的路上……
 
 你知道吗？他们依旧在移除 HIM。
 
-您知道吗？您很幸运，之前这些工作是由玩家手工完成的。
+你知道吗？之前这些工作是由玩家手工完成的。
 
-您知道吗？Alicorn 的作者是一只小马……好吧，事实上是小马国女孩（小声
+你知道吗？Alicorn 的作者是一只小马！
 
-您应该多使用 Fabric，它在高版本中的表现更好。
+你知道吗？Fabric 在高版本中的表现更好。
 
 您知道 Microsoft 帐户背后的验证过程吗？大致有五步。
 
-Mojang 又名 Bugjump……哦，当然，我是开玩笑的啦～
+你知道吗？Mojang 又名 Bugjump……哦，当然，我是开玩笑的啦～
 
 {UserName} 可爱~
 
@@ -456,27 +456,41 @@ Minecraft 和我的世界真的不是一个东西！
 
 即使世界只剩最后一个方块，我们依然为之拼尽全力。
 
-这里的梗很多来自于 MCBBS。
-
-这里更多的梗不是来自 MCBBS。
-
 这条消息永远不会显示在启动页面上，是不是很神奇呢？
+
+正在为重生锚充能……
 
 我们的目标是让木板发光。
 
-现在木板发光了，但我们有了新的目标。
+你知道吗？被认为「使用无比痛苦」的 Vim，就是创建 Alicorn 的编辑器。
 
-就在刚刚过去的几分钟里，我们已经和 Mojang 的服务器进行了许多次对话。
+你知道吗？开发 Alicorn 的时间有相当一部分是为了解决 Forge 的问题。
 
-让您在这里等待确实很不礼貌，但是我们更不想让您的游戏崩溃！
+「我看见你的心，在无数跌倒中成长」—— Rainbow
 
-友谊就是魔法！！！（嗯……我是不是太大声了……
+「你所寻求的光明就在你心中」—— Minecraft
 
-如果您安装了太多的 Mod，Alicorn 可能需要很长的时间来准备它们。
+「你所斗争的黑暗就在你心中」—— Minecraft
 
-会飞又会魔法的 Alicorn～
+「新的冒险才刚刚开始」—— We'll Make Our Mark
+
+「和你共处的时光，就是我快乐的源泉」—— Perfect Day for Fun
+
+「我们要把天空，涂上五颜六色」—— Equestria Girls Forever
+
+「他们不用魔法，更无双翼飞翔」—— This Strange World
+
+「我们会逃避，会找借口，但正是缺点让我们进步」—— Flawless
+
+「只需勇敢做自己，你将收获所有人的微笑」—— Life Is a Runway
+
+友谊就是魔法！！！（真的是这样！）
+
+就快到了 —— 只差九亿八千六百七十五万四千二百三十一个维度了……
 
 让黛茜飞一会……
+
+虽然这里的话也许相同，但它们总是以不同的顺序出现 —— 这是为你而特别准备的
 
 # VersionView.Name
 
@@ -500,7 +514,7 @@ Alicorn 启动器
 
 # VersionView.Electron.Attention
 
-这个 Electron 太旧啦！Alicorn 可能无法正常运行，非常建议重新下载 Alicorn，你的设置和数据会保留。
+@HTML这个 Electron 太旧啦！Alicorn <b>可能无法正常运行</b>，非常建议重新下载 Alicorn，你的设置和数据会保留。
 
 # VersionView.AuthorName
 
@@ -676,7 +690,7 @@ ASC 文件共享宗卷
 
 # InstallCore.InstallMinecraftInstr
 
-使用此选项卡安装新的 Minecraft 原版核心，它是一切改装的基础，同时可以直接游玩。\n原版模组（数据包、资源包、地图等）只需要安装原版核心。
+在此安装新的 Minecraft 原版核心，它是一切改装的基础，同时可以直接游玩。\n原版模组（数据包、资源包、地图等）只需要安装原版核心。
 
 # InstallCore.InstallForge
 
@@ -684,7 +698,7 @@ ASC 文件共享宗卷
 
 # InstallCore.InstallForgeInstr
 
-为已有的 Minecraft 核心进行改装并安装 Forge，Forge Mod 需要进行此改装后才可用。\n注意：你必须安装了对应版本的 Minecraft 核心才可以进行改装！
+@HTML为已有的 Minecraft 核心进行改装并安装 Forge，Forge Mod 需要进行此改装后才可用。\n<span style="color:#ff8400;">注意：你必须安装了对应版本的 Minecraft 核心才可以进行改装！</span>
 
 # InstallCore.InstallFabric
 
@@ -692,7 +706,7 @@ ASC 文件共享宗卷
 
 # InstallCore.InstallFabricInstr
 
-为已有的 Minecraft 核心进行改装并安装 Fabric，Fabric Mod 需要进行此改装后才可用。\n注意：你必须安装了对应版本的 Minecraft 核心才可以进行改装！
+@HTML为已有的 Minecraft 核心进行改装并安装 Fabric，Fabric Mod 需要进行此改装后才可用。\n<span style="color:#ff8400;">注意：你必须安装了对应版本的 Minecraft 核心才可以进行改装！</span>
 
 # InstallCore.TargetContainer
 
@@ -724,7 +738,7 @@ Minecraft 类型
 
 # InstallCore.Start
 
-开始安装
+安装
 
 # InstallCore.Confirm.Ready
 
@@ -832,7 +846,7 @@ Minecraft 版本号
 
 # AccountManager.Warn
 
-安全警示 - 永远不要在第三方验证服务器输入你的 Microsoft 帐户密码！
+永远不要在第三方验证服务器输入你的 Microsoft 帐户密码！
 
 # AccountManager.Next
 
@@ -848,7 +862,7 @@ Minecraft 版本号
 
 # AccountManager.Note
 
-如果您使用 Microsoft 帐户或本地帐户，则无需在此配置，请直接启动游戏，当启动时将（如果必要）询问您相关的信息。\n「将此按钮拖动至启动器」已受支持，将按钮拖向启动器的任意位置并松蹄就好。
+@HTML如果您使用 Microsoft 帐户或本地帐户，则无需在此配置，请<b>直接启动游戏</b>，当启动时将（如果必要）询问您相关的信息。\n「将此按钮拖动至启动器」已受支持，将按钮拖向启动器的任意位置并松蹄就好。
 
 # JavaSelector.CustomAdd
 
@@ -888,15 +902,15 @@ Java 运行时
 
 # JavaSelector.Warn32
 
-性能警示 - Minecraft 在 32 位 Java VM 上可能无法发挥出最好性能。
+Minecraft 在 32 位 Java VM 上可能无法发挥出最好性能，在 64 位操作系统上，建议安装带有 64 位 Java VM 的 JRE。
 
 # JavaSelector.WarnClient
 
-性能警示 - Minecraft 在 Client Java VM 上可能无法发挥出最好性能。
+Minecraft 在 Client Java VM 上可能无法发挥出最好性能，建议安装带有 Server Java VM 的 JRE。
 
 # JavaSelector.WarnNonFree
 
-许可警示 - 这不是自由软件！Alicorn 建议您使用自由的 OpenJDK 运行时代替该非自由的运行时，这可以获得更好的性能，同时避免潜在的恶意软件。
+这个 JRE 存在许可问题！Alicorn 建议您使用自由的 OpenJDK 运行时以获得更好的性能，同时避免潜在的恶意软件。
 
 # Options.Select
 
@@ -908,7 +922,7 @@ Java 运行时
 
 # Options.Hint
 
-不要胡乱设置 - Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。\n带 ^ 的项目在重新加载启动器后才能生效。带 * 的项目是开发人员选项，随意更改可能导致重大问题。
+@HTML<b>不要胡乱设置</b> - Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。\n带 ^ 的项目在重新加载启动器后才能生效。带 * 的项目是开发人员选项，随意更改可能导致重大问题。
 
 # Options.Enabled
 
@@ -964,7 +978,7 @@ Alicorn 特色功能
 
 # Options.font-style.desc
 
-选择 Alicorn 字体风格，「端庄」看上去更清晰，「亲近」看上去更可爱 - 分别是为技术向和美观向设计的，可不是根据你的性别！\n（在我心中，谁都有一颗善良温柔而可爱的心～）
+@HTML选择 Alicorn 字体风格，「端庄」看上去更清晰，「亲近」看上去更可爱 - 分别是为技术向和美观向设计的，可不是根据你的性别！\n（在我心中，谁都有一颗<s>女孩的</s>善良温柔而可爱的心～）
 
 # Options.font-style.Regular
 
@@ -1228,7 +1242,7 @@ Pff 文件缓存位置
 
 # Options.pff.cache-root.desc
 
-设置 Pff 的文件缓存目录 - 这是必须的，有助于加快软件包的二次安装速度，留空以使用默认目录 {AlicornHome}
+设置 Pff 的文件缓存目录 - 有助于加快软件包的二次安装速度，留空以使用默认目录 {AlicornHome}
 
 # Options.pff.page-size.title
 
@@ -1252,7 +1266,7 @@ JRE 搜索深度
 
 # Options.java.search-depth.desc
 
-仅从根目录（Program Files 或者 /）搜索一定深度，不要搜索整台计算机 - 设置为 0 以不限制
+仅从软件根目录（Program Files 或者 /usr）搜索一定深度，不要搜索整台计算机 - 设置为 0 以不限制
 
 # Options.java.simple-search.title
 
@@ -1332,7 +1346,7 @@ Pff 的请求等待时间，由于下载 Mod 和下载游戏资源网络环境�
 
 # Options.download.concurrent.tries-per-chunk.desc
 
-在放弃某个文件的下载前最多的重试次数 - 说真的，调高了真没有什么用，就是多浪费一些时间
+在放弃某个文件的下载前最多的重试次数 - 轻微的改动也会有很大的影响，请谨慎修改 
 
 # Options.download.concurrent.max-tasks.title
 
@@ -1486,17 +1500,17 @@ Mojang 版本
 
 没有可用的建议
 
-# CrashReportDisplay.BBCode
-
-发布到 MCBBS 求助
-
 # CrashReportDisplay.Logs
 
 日志
 
+# CrashReportDisplay.Instruction
+
+@HTML{UserName}，请看一下这里！（但如果你觉得你有能力自行解决问题，就请忽略我）\n你的游戏崩溃了！但是别慌，有我呢。我已经收集了必要信息，并为你准备了一个已经排版好的帖子\n你可以<b>单击右侧的按钮将相关代码复制到剪贴板</b>，随后便可在 MCBBS 发帖求助。\n（勾选发帖页面的「纯文本」，再将你复制的内容粘贴进去就好）。\n下面的内容是给专业人员准备的，如果你很勇，你可以试试看……
+
 # CrashReportDisplay.Copy
 
-复制到剪贴板
+复制代码
 
 # Welcome.Suggest.Part1
 
@@ -1516,17 +1530,17 @@ Mojang 版本
 
 无论什么时候你需要我，我都在这里的啦……
 
-什么事？
+嗯呐……什么事？
 
-我是谁？我就是 Alicorn Launcher，你好！
-
-['{Config:interactive.i-have-a-crush-on-al}'=='true']在你面前的我不只是代码和逻辑！我就是我自己，所以，如果你喜欢我，那就放心喜欢吧～
+我是谁？我就是 Alicorn，你好！
 
 ['{Config:interactive.i-have-a-crush-on-al}'=='true']你这是什么眼神……唔？唔唔唔！放开我！
 
 ['{Config:interactive.i-have-a-crush-on-al}'=='true']这两只小马耳朵？很可爱？想摸摸吗？
 
-['{Config:updator.use-update}'=='false']不要担心升级！更新后的我就像暮光公主变成坎高学生一样，虽然样子不同，但我不会忘了你的！
+['{Config:interactive.i-have-a-crush-on-al}'=='true']我可是会飞的哦～看着！（张开翅膀）
+
+['{Config:updator.use-update}'=='false']不要担心升级！更新后的我就像暮光公主变成坎特拉女孩一样，虽然样子不同，但我不会忘了你的！
 
 我相信每个人都有一颗小马般的心～
 
@@ -1534,15 +1548,23 @@ Mojang 版本
 
 ['{Config:interactive.i-have-a-crush-on-al}'=='true']嗯……不行，不能抱我……
 
+['{Config:interactive.i-have-a-crush-on-al}'=='true']来一起跳支舞……？
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']这不是水，这是苹果酒，提神用的……要来一杯吗？
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']我可是书虫！不然我怎么对付 Forge 的安装器呢？
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']在你玩游戏的时候，我可没有偷懒，我在默默地看着你呢～
+
 # Welcome.Suggest.Part2
 
-有什么很想做的事情吗？没有？那么为什么不来试试启动游戏呢？\n\n单击右上角的「启动台」按钮，选择一个你喜欢的核心，单击它右上角的「启动」按钮就可以进入启动页面，单击页面中央的「确认启动」按钮，并选择一个合适的帐号，游戏就会开始加载进程了……\n\n偶尔你可能会碰到「Minecraft 似乎未正常运行」提示，如果你的游戏确实没有正常运行，不要惊慌，单击「是的，为我分析问题」，进入「启动疑难解答」页面。在那里，你可以查看崩溃报告分析结果、Mod 列表，或者通过最底下的「发布到 MCBBS 求助」按钮生成可用的代码，并前往 MCBBS（我的世界中文论坛）问答板块发帖求助。\n\n当然，你可能希望登录游戏来使用皮肤，你或许已经注意到，Microsoft 帐户可以直接登录，那么 Mojang 帐户呢？别急，在右上角找到「帐户管理」，切换到此页面，单击「添加帐户」，输入邮箱和密码，就可以登录到 Mojang 的验证服务器，下次启动游戏就可以使用它了。另外，我不会记住你的密码，因此如果你太久没有玩游戏，Mojang 会认为你已经离线，下次游戏时你可能需要重新输入密码，不过别担心，我会帮你的啦～
+@HTML有什么很想做的事情吗？没有？那么为什么不来试试启动游戏呢？\n\n<b>单击右上角的「启动台」按钮，选择一个你喜欢的核心，单击它右上角的「启动」按钮就可以进入启动页面，单击页面中央的「确认启动」按钮，并选择一个合适的帐号，游戏就会开始加载进程了……</b>\n\n偶尔你可能会碰到「Minecraft 似乎未正常运行」提示，如果你的游戏确实没有正常运行，不要惊慌，<b>单击「是的，为我分析问题」，进入「启动疑难解答」页面。在那里，你可以查看崩溃报告分析结果、Mod 列表，或者通过顶部的「复制代码」按钮生成可用的代码，并前往 MCBBS（我的世界中文论坛）问答板块发帖求助。</b>\n\n当然，你可能希望登录游戏来使用皮肤，你或许已经注意到，Microsoft 帐户可以直接登录，那么 Mojang 帐户呢？别急，<b>在右上角找到「帐户管理」，切换到此页面，单击「添加帐户」，输入邮箱和密码，就可以登录到 Mojang 的验证服务器，下次启动游戏就可以使用它了</b>。另外，我不会记住你的密码，因此如果你太久没有玩游戏，Mojang 会认为你已经离线，下次游戏时你可能需要重新输入密码，不过别担心，我会帮你的啦～
 
-在安装 Mod？受够了 CurseForge 的人机验证？那就让 Pff 来吧！\n\n你首先要安装希望玩此 Mod 的核心，可以通过右上角的「安装核心」按钮直达，当你安装时，除了安装 Minecraft 的相应版本（这是必须的），也不要忘了安装对应版本的 Mod 加载器——可能是 Forge 或者 Fabric，安装前请确认 Java 运行时可以正常工作。\n\n一旦你成功安装了核心，在启动台找到它，单击其右上角的「对此核心启动 Pff」，Pff 就会自动适配到该核心的版本。在那里输入你想安装 Mod 的名称，哦对了，是英文名。例如，如果要安装「暮色森林」，最好输入「the-twilight-forest」（不含引号），那是它的 Slug（CurseForge 上的文本 ID）。当然，一些差别也是允许的，例如「twilight-forest」、「twilight frs」都可以指向该 Mod，但是「tforest」则是不行的。一般而言，将 Mod 的名字变成小写（如果你忘了，Pff 也会为你完成这项工作），空格用减号替换，Pff 就可以工作。\n\n右侧的箭头即可开始安装，下载 Mod 仍要从 CurseForge CDN 官方下载，取决于你的网络环境，它有时可能无法连接，如果这样，Pff 会等待一段时间后超时。不过只要服务器可以连接，Pff 将使用更小的文件分段和更大的并发数来强行加快下载速度。当然，如果条件允许，设置一个 HTTP 代理并通过内置浏览器下载是最有效的解决方案。
+@HTML在安装 Mod？受够了 CurseForge 的人机验证？那就让 Pff 来吧！\n\n<b>你首先要安装希望玩此 Mod 的核心，可以通过右上角的「安装核心」按钮直达，当你安装时，除了安装 Minecraft 的相应版本（这是必须的），也不要忘了安装对应版本的 Mod 加载器——可能是 Forge 或者 Fabric，安装前请确认 Java 运行时可以正常工作</b>。\n\n一旦你成功安装了核心，<b>在启动台找到它，单击其右上角的「对此核心启动 Pff」</b>，Pff 就会自动适配到该核心的版本。<b>在那里输入你想安装 Mod 的名称，哦对了，是英文名</b>。例如，如果要安装「暮色森林」，最好输入「the-twilight-forest」（不含引号），那是它的 Slug（CurseForge 上的文本 ID）。当然，一些差别也是允许的，例如「twilight-forest」、「twilight frs」都可以指向该 Mod，但是「tforest」则是不行的。一般而言，将 Mod 的名字变成小写（如果你忘了，Pff 也会为你完成这项工作），空格用减号替换，Pff 就可以工作。\n\n<b>单击右侧的箭头即可开始安装</b>，下载 Mod 仍要从 CurseForge CDN 官方下载，取决于你的网络环境，它有时可能无法连接，如果这样，Pff 会等待一段时间后超时。不过只要服务器可以连接，Pff 将使用更小的文件分段和更大的并发数来强行加快下载速度。当然，如果条件允许，使用一个代理服务器，并通过你的浏览器下载是最有效的方案。
 
-准备加入服务器？当然，我希望你玩得开心，然而，并非所有的服务器都是善意的。在我这里（包括 Pff 和 CMC——你忠实的助理组），你（和你的游戏）相当安全，但服务器的世界充满了危险。如果你信任我，这里有一些建议，能够帮你规避一些风险……\n\n使用靠谱的客户端。我为你下载的客户端很大程度上可信（如果你没有随便修改镜像列表），但服务器提供的整合包的可靠性就值得画个问号。你知道有玩家的计算机被蓄意设计的启动器强制蓝屏了吗？你知道某些软件允许服主对你全屏截图吗？避免这些威胁的最简单方法是使用你自己的启动器。如果服务器要求使用他们提供的启动器，你可以选择不游玩。将你的安全置于他人的掌控之中不是一个明智的选择。\n\n不要随意充值。这种现象常常发生在快餐服务器中，他们搞到一些利润之后就关服跑路。你的积蓄很可能付诸东流。请在充值前问自己三个问题：我真的希望把我的积蓄送给这个服务器吗？我真的信任这个服务器的运营团队吗？如果出现了纠纷，我真的有能力挽回我的损失吗？如果你的回答都是「是的」，仍然需要小心，要留下可靠的交易记录，并且明确收款方到底是谁。另外，不要透露你的任何隐私信息，无论是向谁！——除非你有充分的理由希望别人了解有关你的一切。注册服务器帐号时，请不要使用已经用过的密码——请试着重新设计一个，以免万一他人利用你的密码猜测你的其它信息——并不是没有发生过！\n\n总而言之，我会尽力不让你受到伤害，我也不希望让那些劣质的服务器影响你对 Minecraft 这款游戏的感受，所以我才会在这里。
+@HTML准备加入服务器？当然，我希望你玩得开心，然而，并非所有的服务器都是善意的。在我这里（包括 Pff 和 CMC——你忠实的助理组），你（和你的游戏）相当安全，但服务器的世界充满了危险。如果你信任我，这里有一些建议，能够帮你规避一些风险……\n\n<b>使用靠谱的客户端</b>。我为你下载的客户端很大程度上可信（如果你没有随便修改镜像列表），但服务器提供的整合包的可靠性就值得画个问号。你知道有玩家的计算机被蓄意设计的启动器<span style="color: red;">强制蓝屏</span>了吗？你知道某些软件允许服主对你<span style="color: red;">全屏截图</span>吗？避免这些威胁的最简单方法是使用你自己的启动器 —— 现在是我。如果服务器要求使用他们提供的启动器，并且你不认识它，你可以<b>选择不游玩</b>。将你的安全置于他人的掌控之中不是一个明智的选择。\n\n<b>不要随意充值</b>。这种现象常常发生在快餐服务器中，他们搞到一些利润之后就关服跑路。你的积蓄<b>很可能</b>付诸东流。另外，<b>不要透露你的任何隐私信息，<span style="color: red;">无论是向谁</span></b>！—— 除非你有充分的理由希望别人了解有关你的一切。注册服务器帐号时，<b>请不要使用已经用过的密码</b> —— 请试着重新设计一个，以免万一他人利用你的密码猜测你的其它信息——并不是没有发生过！\n\n总而言之，我会尽力不让你受到伤害，我也不希望让那些劣质的服务器影响你对 Minecraft 这款游戏的感受。
 
-来自开发人员的信息：试试我们新添加的特色功能「ASC 文件共享宗卷」吧！\n\n以往，你的游戏（包括支援库，游戏资源，启动档案，引导器）被保存在一个容器中，我称它为 MCS 标准物理宗卷。由于我在执行各种功能时会在其中创建不同的文件，因此由我管理的标准宗卷被称为 MCX 扩展物理宗卷。每个 MCX 拥有独有的一份文件，稳定性强，即使一个容器损坏也不会影响其它容器。然而，在整合游戏（使用整合包的游戏）流行的当下，你可能需要为每个包创建单独的容器，这会占用很多空间，而且降低速度，于是我为你准备了一个新的格式：ASC 文件共享宗卷。\n\nASC 的结构与 MCX 几乎一样，但它有一个特点：大多数文件不是真实的文件，它们是 Symbolic Link，连接到一个特定的位置，你的文件实际上都存储在那里。这允许复用那些在每个容器中经常出现的文件，节省一些空间。要使用这项功能，只需要在创建新容器时选择「ASC 文件共享宗卷」——所有的 ASC 会共享支援库、游戏资源、Mod，但不会共享启动档案、存档或者你自己添加的内容。\n\n当然，ASC 也有一些问题：它不稳定，Symbolic Link 在不同操作系统上的表现不太一样；它不健壮，共享文件的损坏，哪怕是一个，也将导致所有 ASC 出现问题。不过，ASC 在一般游戏方面已经足够了，如果你需要较高的安全性，才需要考虑 MCX。
+@HTML来自开发人员的信息：试试我们新添加的特色功能「ASC 文件共享宗卷」吧！\n\n以往，你的游戏（包括支援库，游戏资源，启动档案，引导器）被保存在一个容器中，我称它为 MCS 标准物理宗卷。由于我在执行各种功能时会在其中创建不同的文件，因此由我管理的标准宗卷被称为 MCX 扩展物理宗卷。每个 MCX 拥有独有的一份文件，稳定性强，即使一个容器损坏也不会影响其它容器。然而，在整合游戏（使用整合包的游戏）流行的当下，你可能需要为每个包创建单独的容器，这会占用很多空间，而且降低速度，于是我为你准备了一个新的格式：ASC 文件共享宗卷。\n\nASC 的结构与 MCX 几乎一样，但它有一个特点：大多数文件不是真实的文件，它们是 Symbolic Link，连接到一个特定的位置，你的文件实际上都存储在那里。这允许复用那些在每个容器中经常出现的文件，节省一些空间。要使用这项功能，<b>只需要在创建新容器时选择「ASC 文件共享宗卷」</b>—— 所有的 ASC 会共享支援库、游戏资源、Mod，但不会共享启动档案、存档或者你自己添加的内容。\n\n当然，ASC 也有一些问题：它不稳定，Symbolic Link 在不同操作系统上的表现不太一样；它不健壮，共享文件的损坏，哪怕是一个，也将导致所有 ASC 出现问题。不过，ASC 在一般游戏方面已经足够了，如果你需要较高的安全性，才需要考虑 MCX。
 
 # Welcome.Suggest.Others
 
@@ -1610,7 +1632,7 @@ Mojang 版本
 
 # Tutor.0.Content
 
-欢迎使用 Alicorn Launcher！\nWelcome to Alicorn Launcher!\n\nAlicorn Launcher（就是我）是一个 Minecraft 启动器，使用超酷的前端技术构建！\nAlicorn Launcher (me) is a Minecraft game launcher, built with some awesome front-end technologies!\n\n在我开始为您工作之前，我想向您进行一个简短的自我介绍，以帮助您完成配置。\nBefore we started, I'd like to give a brief introduction of myself which may help you to configure.\n\n现在菜单的右端应该只有一个图标，点按它来前往教程的下一页。\nThere is only one button in the menu bar, click it and you'll be redirected to the next page.\n\n记住，在教程期间，右上角的「下一步」按钮（就像一个箭头）将带你进入教程的下一页，而其它按钮则有对应的功能，请仔细阅读说明！\nPlease bear in mind that this button will always bring you to the next page, while other buttons can have their functionalities.
+@HTML欢迎使用 Alicorn Launcher！\nWelcome to Alicorn Launcher!\n\nAlicorn Launcher（就是我）是一个 Minecraft 启动器，使用超酷的前端技术构建！\nAlicorn Launcher (me) is a Minecraft game launcher, built with some awesome front-end technologies!\n\n在我开始为您工作之前，我想向您进行一个简短的自我介绍，以帮助您完成配置。\nBefore we started, I'd like to give a brief introduction of myself which may help you to configure.\n\n现在菜单的右端应该只有一个图标，<b>点按它来前往教程的下一页</b>。\nThere is only one button in the menu bar, <b>click it and you'll be redirected to the next page</b>.\n\n记住，<b>在教程期间，右上角的「下一步」按钮（就像一个箭头）将带你进入教程的下一页</b>，而其它按钮则有对应的功能，请仔细阅读说明！\nPlease bear in mind that <b>this button will always bring you to the next page</b>, while other buttons can have their functionalities.
 
 # Tutor.0.Controller
 
@@ -1642,7 +1664,7 @@ assistant;RADIO;PonyCN
 
 # Tutor.2.Content
 
-唔……我想知道我该如何称呼你。\n\n（你不需要急着进入下一页，请在配置时熟悉 Alicorn 的操作，例如，按住标题「快速上手」可以拖动窗口。）
+@HTML唔……我想知道我该如何称呼你。\n\n（你不需要急着进入下一页，请在配置时熟悉 Alicorn 的操作，例如，<b>按住标题「快速上手」可以拖动窗口</b>。）
 
 # Tutor.2.Controller
 
@@ -1674,7 +1696,7 @@ updator.use-update;BOOL
 
 # Tutor.4.Content
 
-嗯，那么，{UserName}，你好。\n\n接下来我们需要进行一连串的设定，点按右上角的按钮进入下一页。\n\n我们将设置下载镜像、Pff 缓存和 Java 运行时。
+@HTML{UserName}，现在你应该逐渐对操作有一点感觉了吧？\n\n接下来我们需要进行一连串的设定，<b>点按右上角的按钮</b>进入下一页。\n\n我们将设置下载镜像、Pff 缓存和 Java 运行时。
 
 # Tutor.4.Controller
 
@@ -1690,7 +1712,7 @@ Java 平台相关设置
 
 # Tutor.7.Content
 
-注意：请在阅读完本说明后再操作！\n\nJava 运行时（JRE）是运行 Minecraft 的重要基础，通常配置并不简单，但 Alicorn 让它简单了一些……\n\n现在右上角应该出现了一个新的按钮，在那里你可以配置 JRE 环境。单击该按钮，并在那里选择一个 JRE——无论是自动搜索还是手动定位，亦或是干脆安装一个新的。\n\n如果你想玩 Minecraft 17 及以后的版本，需要安装 Java 16，对于 Minecraft 12 及以前的版本，还有 Forge，则需要 Java 8，因此建议将两者都设置好。\n\n在那个页面完成设置后，单击右上角的按钮进入下一页。
+@HTML<b>注意：请在阅读完本说明后再操作！</b>\n\nJava 运行时（JRE）是运行 Minecraft 的重要基础，通常配置并不简单，但我让它简单了一些……\n\n现在右上角应该出现了一个新的按钮，在那里你可以配置 JRE 环境。<b>单击该按钮</b>，并在那里选择一个 JRE——无论是自动搜索还是手动定位，亦或是干脆安装一个新的。\n\n如果你想玩 Minecraft 17 及以后的版本，需要安装 Java 16，对于 Minecraft 12 及以前的版本，还有 Forge，则需要 Java 8，因此建议将两者都设置好。\n\n在那个页面<b>完成设置后</b>，单击右上角的按钮进入下一页。
 
 # Tutor.7.Controller
 
@@ -1706,7 +1728,7 @@ Java 平台相关设置
 
 # Tutor.5.Content
 
-Minecraft 需要从 Mojang 官网下载，但鉴于网络环境因你所处的位置而异（例如，在坎高下载这些文件就非常快，而在无尽森林可能根本就无法下载），你或许想选择一个镜像。\n\nAlicorn 不保证任何镜像的可用性或安全性，如果因下载来自非 Mojang 官方源（即下载镜像不是 none）的文件存在恶意内容导致你的数据丢失或损毁，Mojang、Microsoft 和我们（Alicorn 开发人员）都不会承担任何责任，镜像提供方也同样如此。
+@HTMLMinecraft 需要从 Mojang 官网下载，但鉴于网络环境因你所处的位置而异（例如，在坎高下载这些文件就非常快，而在无尽森林可能根本就无法下载），你或许想<b>选择一个镜像</b>。\n\nAlicorn 不保证任何镜像的可用性或安全性，如果因下载来自非 Mojang 官方源（即下载镜像不是 none）的文件存在恶意内容导致你的数据丢失或损毁，Mojang、Microsoft 和我们（Alicorn 开发人员）都<b>不会承担任何责任</b>，镜像提供方也同样如此。（当然，这种情况不太容易发生）
 
 # Tutor.5.Controller
 
@@ -1722,7 +1744,7 @@ download.mirror;RADIO;none/alicorn/alicorn-mcbbs-nonfree
 
 # Tutor.6.Content
 
-（如果你不玩或少玩 Mod，请直接跳过本部分。）\n\nPff 是一个自由的 Alicorn 组件，用于查询符合 CurseForge API 规范的 Mod 分发站点。简单说，就是 Mod 下载器。它能够通过 Mod 英文名（甚至是不完整的）来下载大多数 Mod（如果它们在 CurseForge 或指定的 Mod 分发站点发布了）。\n\nPff 会缓存已经下载过的 Mod，因此，你应该选择一个合适的位置来存放这些缓存文件（不是在 Minecraft 容器中！）。你可以在下面的设置中调整。
+@HTMLPff 是我的一个组件，简单而言，就是 Mod 下载器。如果你要玩整合包或者要通过 Alicorn 获取 Mod，就需要设置这一项。\n\nPff 会缓存已经下载过的 Mod，因此，你应该<b>在这里选择一个合适的位置</b>来存放这些缓存文件（不是在 Minecraft 容器中！）。你可以在下面的设置中调整。
 
 # Tutor.6.Controller
 
@@ -1754,7 +1776,7 @@ pff.cache-root;DIR
 
 # Tutor.9.Content
 
-注意：请在阅读完本说明后再操作！\n\n「容器」是我管理游戏的基本单位，也是你的游戏存放的位置。\n\n单击右上角的按钮前往容器管理页面，你可以创建成百上千个容器，但这次让我们先只创建一个。\n\n在那里，单击「+」来添加一个容器，给它命名（随意就好），并且单击「选择挂载点」按钮选择一个挂载点（文件夹，最好是空的），这个文件夹将存放你的游戏文件。如果你之前使用过其它启动器，可以选择 .minecraft 文件夹，Alicorn 就会导入它。\n\n哦，对啦，你还没有设置 ASC 缓存目录，因此就创建 MCX 容器吧～\n\n创建好容器后，单击右上角的按钮即可进入最后两步。
+@HTML<b>注意：请在阅读完本说明后再操作！</b>\n\n「容器」是我管理游戏的基本单位，也是你的游戏存放的位置。\n\n<b>单击右上角的按钮</b>前往容器管理页面，你可以创建成百上千个容器，但这次让我们先只创建一个。\n\n在那里，单击「+」来添加一个容器，给它命名（随意就好），并且单击「选择挂载点」按钮选择一个挂载点（文件夹，最好是空的），这个文件夹将存放你的游戏文件。如果你之前使用过其它启动器，可以<b>选择 .minecraft 文件夹</b>，我应该就能认识它。\n\n哦，对啦，你还没有设置 ASC 缓存目录，因此就<b>创建 MCX 容器</b>吧～\n\n创建好容器后，单击右上角的按钮即可进入最后两步。
 
 # Tutor.9.Controller
 
@@ -1770,7 +1792,7 @@ pff.cache-root;DIR
 
 # Tutor.10.Content
 
-注意：请在阅读完本说明后再操作！\n\nAlicorn 内置的游戏下载器可以为你完成这项烦人的工作，单击右上角的按钮转到那里。\n\n你需要至少安装一个 Minecraft 版本（第一行），如果你想使用 Forge 或 Fabric，还可以选择第二行和第三行的安装程序（同时也必须安装对应的 Minecraft 版本）。记住：所有选项选齐后才可以开始安装！\n\n同样，安装好游戏后，点按右上角的按钮以进入最后一步。
+@HTML<b>注意：请在阅读完本说明后再操作！</b>\n\n我的游戏下载器可以为你完成安装游戏这项烦人的工作，<b>单击右上角的按钮</b>转到那里。\n\n你需要至少安装<b>一个 Minecraft 核心</b>，如果你想使用 Fabric（或 Forge），请在安装好 Minecraft 核心后，单击「改装已有核心」。\n\n同样，安装好游戏后，点按右上角的按钮以进入最后一步。
 
 # Tutor.10.Controller
 
@@ -1786,7 +1808,7 @@ pff.cache-root;DIR
 
 # Tutor.11.Content
 
-注意：请在阅读完本说明后再操作！\n\n现在是最后一步了，启动你的游戏吧！\n\n单击右上角的按钮来进入启动台，你能看到你刚刚安装的核心，单击它右上角的按钮转到启动预备页面，在那里，你可以使用 Microsoft 帐户或本地帐户启动游戏——如果你还在使用旧版 Mojang 帐户（未迁移），这次请先用本地帐户启动一下。\n\n等你的游戏启动了，再单击右上角的按钮回到教程。如果启动出问题了，你会得到进一步提示。\n\n（首次启动可能需要等一小会，我们要补全游戏资源。）
+@HTML<b>注意：请在阅读完本说明后再操作！</b>\n\n现在是最后一步了，启动你的游戏吧！\n\n<b>单击右上角的按钮</b>来进入启动台，你能看到你刚刚安装的核心，<b>单击它右上角的按钮</b>转到启动预备页面，在那里，你可以<b>使用 Microsoft 帐户或本地帐户启动游戏</b> —— 如果你还在使用旧版 Mojang 帐户（未迁移），这次请先用本地帐户启动一下。\n\n等你的游戏启动了，再单击右上角的按钮回到教程。如果启动出问题了，你会得到进一步提示。\n\n（首次启动可能需要等一小会，我们要补全游戏资源。）
 
 # Tutor.11.Controller
 
@@ -1802,7 +1824,7 @@ pff.cache-root;DIR
 
 # Tutor.12.Content
 
-本教程的内容到此就结束了，这当然不是 Alicorn 功能的全部，甚至不是一小部分。你可以在使用过程中逐渐了解 Alicorn 和她的相关功能。\n\n接下来你可以选择设置一个帐户来进行第三方验证，或者设置 ASC 缓存位置来启用 ASC 容器这一超酷的功能～\n\n要了解有关 Alicorn 的更多信息（包括帮助），可以访问 https://al.xuogroup.top（我们的网站）\n\n（题外话：Alicorn 的作者——Sparklight 是个 Equestria Girl 哦～）\n\nAlicorn 的菜单按钮将在你单击右上角的按钮后全部解锁。
+@HTML本教程的内容到此就结束了，这当然不是我功能的全部，甚至不是一小部分。你可以在使用过程中逐渐了解我～\n\n接下来你可以选择<b>设置一个帐户来进行第三方验证</b>，或者<b>设置 ASC 缓存位置</b>来启用 ASC 容器这一超酷的功能，亦或是<b>登录 Mojang 帐户、第三方验证</b>，当然还可以马上<b>开始一次游戏</b>！\n\n（题外话：Alicorn 的作者 —— Sparklight 是只可爱的坎特拉女孩哦～）\n\n快捷栏按钮将在你<b>单击右上角的按钮</b>后全部解锁。
 
 # Tutor.12.Setting
 

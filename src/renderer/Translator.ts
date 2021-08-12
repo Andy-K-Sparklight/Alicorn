@@ -162,7 +162,7 @@ const CONTROL_CODE_REGEX = /(?<=\[).*?(?=].*)/g;
 function trimControlCode(origin: string[], rules: string[]): string[] {
   const output: string[] = [];
   origin.forEach((v) => {
-    const tr = applyEnvironmentVars(applyCustomVars(v, rules));
+    let tr = applyEnvironmentVars(applyCustomVars(v, rules));
     const controlCode = tr.match(CONTROL_CODE_REGEX);
     if (controlCode && controlCode[0]) {
       try {
@@ -170,12 +170,31 @@ function trimControlCode(origin: string[], rules: string[]): string[] {
         if (r) {
           const a = tr.split("]");
           a.shift();
-          output.push(a.join("]"));
+          let s = a.join("]");
+          if (s.startsWith("@HTML")) {
+            s = s.slice(5);
+            output.push(
+              React.createElement("span", {
+                dangerouslySetInnerHTML: { __html: s },
+              }) as unknown as string
+            );
+            return;
+          }
+          output.push(s);
         }
       } catch {
         // If error then we won't add this
       }
     } else {
+      if (tr.startsWith("@HTML")) {
+        tr = tr.slice(5);
+        output.push(
+          React.createElement("span", {
+            dangerouslySetInnerHTML: { __html: tr },
+          }) as unknown as string
+        );
+        return;
+      }
       output.push(tr);
     }
   });
