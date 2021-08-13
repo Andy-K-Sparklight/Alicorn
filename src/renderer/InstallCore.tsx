@@ -216,7 +216,6 @@ export function InstallCore(): JSX.Element {
               }
               return;
             } else {
-              setProgressMsg("Done! Cleaning up files...");
               await removeForgeInstaller(ct, mcv, fgv);
               if (mounted.current) {
                 setOperating(false);
