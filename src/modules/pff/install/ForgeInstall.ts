@@ -146,10 +146,10 @@ async function downloadMappingsAndClient(
       .slice(1)
       .slice(0, -1);
     const baseVersion = String(safeGet(installProfile, ["minecraft"], ""));
+    const p = await loadProfile(baseVersion, container);
     if (mcpVersion.length > 0 && baseVersion.length > 0) {
       // Mappings isn't in GameProfile, parse manually
       const f = await readJSON(container.getProfilePath(baseVersion));
-      const p = await loadProfile(baseVersion, container);
       const mappingsURL = String(
         safeGet(f, ["downloads", "client_mappings", "url"], "")
       );
@@ -157,12 +157,10 @@ async function downloadMappingsAndClient(
         `net/minecraft/client/${baseVersion}-${mcpVersion}/client-${baseVersion}-${mcpVersion}-mappings.txt`
       );
       console.log("Downloading mappings!");
-      await Promise.all([
-        wrappedDownloadFile(new DownloadMeta(mappingsURL, target)),
-        ensureClient(p),
-      ]);
+      wrappedDownloadFile(new DownloadMeta(mappingsURL, target));
       console.log("Mappings downloaded!");
     }
+    ensureClient(p);
   } catch {}
 }
 
