@@ -5,6 +5,7 @@ import { getActualDataPath } from "../config/DataSupport";
 import { wrappedDownloadFile } from "../download/DownloadWrapper";
 import { DownloadMeta } from "../download/AbstractDownloader";
 import childProcess from "child_process";
+import { getProxyAgent } from "../download/ProxyConfigure";
 
 const JDK_BASE_URL = "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/";
 const OLD_JAVA = "8";
@@ -29,6 +30,7 @@ export async function getLatestJREURL(old = false): Promise<string> {
     https: {
       rejectUnauthorized: false,
     },
+    agent: getProxyAgent(),
     responseType: "text",
   });
   const X = load(res.body);

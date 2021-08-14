@@ -75,10 +75,11 @@ export function FailedHint(props: {
     <Dialog open={props.open} onClose={props.closeFunc}>
       <Box>
         <DialogTitle>{tr("Operating.Failed")}</DialogTitle>
-        <DialogContent>
+        <DialogContent onClick={() => {}}>
           <DialogContentText>{reason}</DialogContentText>
           <DialogContentText>
             <b>{tr("Operating.ClickToDebug")}</b>
+            <br />
             <i>{randsl("Operating.FailedSayings")}</i>
           </DialogContentText>
         </DialogContent>

@@ -7,6 +7,7 @@ import { registerBackgroundListeners } from "./Background";
 import { getUserBrowser } from "./Browser";
 import { checkUpdate } from "./Updator";
 import { initWS } from "./WSServer";
+
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow | null = null;
 console.log("Loading config...");
@@ -74,6 +75,7 @@ app.on("ready", async () => {
   await mainWindow.loadFile(path.resolve(appPath, "Renderer.html"));
   console.log("Preparing WS!");
   initWS();
+  console.log("Setting up proxy!");
 });
 
 app.on("window-all-closed", () => {

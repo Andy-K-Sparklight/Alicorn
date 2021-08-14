@@ -1,6 +1,7 @@
 import got from "got";
-import { applyMirror } from "./Mirror";
 import { getNumber } from "../config/ConfigSupport";
+import { applyMirror } from "./Mirror";
+import { getProxyAgent } from "./ProxyConfigure";
 
 export async function xgot(
   url: string,
@@ -10,6 +11,7 @@ export async function xgot(
 ): Promise<unknown> {
   if (noMirror) {
     try {
+      console.log("Without mirror GET " + url);
       return (
         await got.get(url, {
           responseType: "json",
@@ -17,6 +19,7 @@ export async function xgot(
           https: {
             rejectUnauthorized: false,
           },
+          agent: getProxyAgent(),
         })
       ).body;
     } catch (e) {
@@ -25,6 +28,7 @@ export async function xgot(
     }
   }
   try {
+    console.log("With mirror get " + applyMirror(url));
     return (
       await got.get(applyMirror(url), {
         responseType: "json",
@@ -34,27 +38,12 @@ export async function xgot(
         https: {
           rejectUnauthorized: false,
         },
+        agent: getProxyAgent(),
       })
     ).body;
   } catch (e) {
     console.log(e);
-    try {
-      return (
-        await got.get(url, {
-          cache: noCache ? false : undefined,
-          responseType: "json",
-          timeout: noTimeout
-            ? undefined
-            : getNumber("download.concurrent.timeout", 5000),
-          https: {
-            rejectUnauthorized: false,
-          },
-        })
-      ).body;
-    } catch (e) {
-      console.log(e);
-      return {};
-    }
+    return await xgot(url, true);
   }
 }
 
@@ -66,6 +55,7 @@ export async function pgot(url: string, timeout: number): Promise<unknown> {
       https: {
         rejectUnauthorized: false,
       },
+      agent: getProxyAgent(),
       // @ts-ignore
       // agent: getProxy(),
     })

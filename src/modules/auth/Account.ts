@@ -2,6 +2,7 @@ import got from "got";
 import { uniqueHash } from "../commons/BasicHash";
 import { Trio } from "../commons/Collections";
 import { isNull, safeGet } from "../commons/Null";
+import { getProxyAgent } from "../download/ProxyConfigure";
 import { getUniqueID32 } from "../security/Encrypt";
 import { AccountType } from "./AccountUtil";
 import { AuthlibAccount } from "./AuthlibAccount";

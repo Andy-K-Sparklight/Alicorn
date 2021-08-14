@@ -12,6 +12,7 @@ import {
   IconButton,
   Radio,
   RadioGroup,
+  Switch,
   TextField,
   Tooltip,
   Typography,
@@ -45,7 +46,18 @@ import {
 } from "../modules/container/ContainerWrapper";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { isSharedContainer } from "../modules/container/SharedFiles";
-import { OperatingHint } from "./OperatingHint";
+import {
+  getDoing,
+  subscribeDoing,
+  unsubscribeDoing,
+} from "../modules/download/DownloadWrapper";
+import { wrappedInstallModpack } from "../modules/pff/modpack/InstallCFModpack";
+import { deployIJPack } from "../modules/pff/modpack/InstallIJModpack";
+import {
+  FailedHint,
+  OperatingHint,
+  OperatingHintCustom,
+} from "./OperatingHint";
 import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
 
@@ -59,6 +71,9 @@ export function ContainerManager(): JSX.Element {
   const [operating, setOpen] = useState(false);
   const [opening, setCreating] = useState(false);
   const classes2 = usePadStyles();
+  const [doing, setDoing] = useState(getDoing());
+  const [failedOpen, setFailedOpen] = useState(false);
+  const [reason, setReason] = useState("");
   useEffect(() => {
     isEleMounted.current = true;
     const fun = () => {
@@ -72,10 +87,25 @@ export function ContainerManager(): JSX.Element {
       isEleMounted.current = false;
     };
   });
+  useEffect(() => {
+    subscribeDoing("ContainerManager", (d) => {
+      setDoing(d);
+    });
+    return () => {
+      unsubscribeDoing("ContainerManager");
+    };
+  }, []);
   const allContainers = getAllContainers();
   return (
     <Box className={classes2.para}>
-      <OperatingHint open={operating} />
+      <OperatingHintCustom open={operating} msg={doing} />
+      <FailedHint
+        closeFunc={() => {
+          setFailedOpen(false);
+        }}
+        open={failedOpen}
+        reason={reason}
+      />
       <AddNewContainer
         setOperate={(s) => {
           if (isEleMounted.current) {
@@ -83,6 +113,10 @@ export function ContainerManager(): JSX.Element {
           }
         }}
         open={opening}
+        setFailed={(e) => {
+          setFailedOpen(true);
+          setReason(e);
+        }}
         closeFunc={() => {
           if (isEleMounted.current) {
             setCreating(false);
@@ -129,6 +163,7 @@ function SingleContainerDisplay(props: {
   const [coreCount, setCount] = useState(-1);
   const [isASC, setASCBit] = useState(false);
   const [refresh, setRefresh] = useState(false);
+
   useEffect(() => {
     mounted.current = true;
     if (props.isMounted) {
@@ -151,6 +186,7 @@ function SingleContainerDisplay(props: {
   return (
     <Box>
       <OperatingHint open={operating} />
+
       <Card className={props.isMounted ? classes.card : classes.uCard}>
         <CardContent>
           <Box>
@@ -356,12 +392,16 @@ function AddNewContainer(props: {
   open: boolean;
   closeFunc: () => unknown;
   setOperate: (s: boolean) => unknown;
+  setFailed: (s: string) => unknown;
 }): JSX.Element {
   const [selectedDir, setSelected] = useState("");
   const [usedName, setName] = useState("");
   const [nameError, setNameError] = useState(false);
   const [dirError, setDirError] = useState(false);
+  const [modpackError, setModpackError] = useState(false);
   const [createASC, setCreateASC] = useState(false);
+  const [allowModpack, setAllowModpack] = useState(false);
+  const [modpackPath, setModpackPath] = useState("");
   const classes = useInputStyles();
   return (
     <Dialog
@@ -397,29 +437,50 @@ function AddNewContainer(props: {
           fullWidth
           variant={"outlined"}
         />
-        <TextField
-          error={dirError}
-          className={classes.input}
-          autoFocus
-          margin={"dense"}
-          onChange={(e) => {
-            setSelected(e.target.value);
-            validateDir(e.target.value).then((b) => {
-              setDirError(!b);
-            });
-          }}
-          label={
-            dirError
-              ? tr("ContainerManager.InvalidDir")
-              : tr("ContainerManager.Dir")
-          }
-          type={"text"}
-          spellCheck={false}
-          fullWidth
-          disabled
-          variant={"outlined"}
-          value={selectedDir}
-        />
+        {/* Choose Dir */}
+        <Box>
+          <TextField
+            error={dirError}
+            className={classes.input}
+            autoFocus
+            margin={"dense"}
+            onChange={(e) => {
+              setSelected(e.target.value);
+              validateDir(e.target.value).then((b) => {
+                setDirError(!b);
+              });
+            }}
+            label={
+              dirError
+                ? tr("ContainerManager.InvalidDir")
+                : tr("ContainerManager.Dir")
+            }
+            type={"text"}
+            spellCheck={false}
+            fullWidth
+            disabled
+            variant={"outlined"}
+            value={selectedDir}
+          />
+
+          <Button
+            className={classes.input}
+            type={"button"}
+            style={{
+              display: "inline",
+            }}
+            variant={"outlined"}
+            onClick={async () => {
+              const d = await remoteSelectDir();
+              setSelected(d);
+              validateDir(d).then((b) => {
+                setDirError(!b);
+              });
+            }}
+          >
+            {tr("ContainerManager.Select")}
+          </Button>
+        </Box>
         <RadioGroup
           row
           onChange={(e) => {
@@ -443,20 +504,64 @@ function AddNewContainer(props: {
             label={tr("ContainerManager.Type.Shared")}
           />
         </RadioGroup>
-        <Button
-          className={classes.input}
-          type={"button"}
-          variant={"outlined"}
-          onClick={async () => {
-            const d = await remoteSelectDir();
-            setSelected(d);
-            validateDir(d).then((b) => {
-              setDirError(!b);
-            });
-          }}
-        >
-          {tr("ContainerManager.Select")}
-        </Button>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={allowModpack}
+              onChange={(e) => {
+                setAllowModpack(e.target.checked);
+              }}
+            />
+          }
+          label={tr("ContainerManager.CreateModpack")}
+        />
+        {/* Choose Modpack */}
+        <Box>
+          <TextField
+            error={modpackError}
+            className={classes.input}
+            autoFocus
+            style={{
+              display: allowModpack ? "inherit" : "none",
+            }}
+            margin={"dense"}
+            onChange={(e) => {
+              setModpackPath(e.target.value);
+              isFileExist(e.target.value).then((b) => {
+                setModpackError(!b);
+              });
+            }}
+            label={
+              modpackError
+                ? tr("ContainerManager.InvalidModpackPath")
+                : tr("ContainerManager.ModpackPath")
+            }
+            type={"text"}
+            spellCheck={false}
+            fullWidth
+            disabled
+            variant={"outlined"}
+            value={modpackPath}
+          />
+
+          <Button
+            className={classes.input}
+            type={"button"}
+            style={{
+              display: allowModpack ? "inherit" : "none",
+            }}
+            variant={"outlined"}
+            onClick={async () => {
+              const d = await remoteSelectModpack();
+              setModpackPath(d);
+              isFileExist(d).then((b) => {
+                setModpackError(!b);
+              });
+            }}
+          >
+            {tr("ContainerManager.ChooseModpack")}
+          </Button>
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button
@@ -464,6 +569,9 @@ function AddNewContainer(props: {
             props.closeFunc();
             setName("");
             setSelected("");
+            setAllowModpack(false);
+            setCreateASC(false);
+            setModpackPath("");
           }}
         >
           {tr("ContainerManager.Cancel")}
@@ -472,15 +580,36 @@ function AddNewContainer(props: {
           disabled={
             nameError ||
             dirError ||
+            modpackError ||
             usedName.trim().length <= 0 ||
-            selectedDir.trim().length <= 0
+            selectedDir.trim().length <= 0 ||
+            modpackPath.trim().length <= 0
           }
           onClick={async () => {
             props.closeFunc();
+            props.setOperate(true);
+
+            try {
+              await createContainer(usedName, selectedDir, createASC);
+              if (modpackPath.endsWith(".zip")) {
+                await wrappedInstallModpack(
+                  getContainer(usedName),
+                  modpackPath
+                );
+              }
+              if (modpackPath.endsWith(".json")) {
+                await deployIJPack(getContainer(usedName), modpackPath);
+              }
+            } catch (e) {
+              props.setFailed(e);
+            }
+
             setName("");
             setSelected("");
-            props.setOperate(true);
-            await createContainer(usedName, selectedDir, createASC);
+            setAllowModpack(false);
+            setCreateASC(false);
+            setModpackPath("");
+
             props.setOperate(false);
           }}
         >
@@ -493,6 +622,10 @@ function AddNewContainer(props: {
 
 export async function remoteSelectDir(): Promise<string> {
   return String((await ipcRenderer.invoke("selectDir")) || "");
+}
+
+export async function remoteSelectModpack(): Promise<string> {
+  return String((await ipcRenderer.invoke("selectModpack")) || "");
 }
 
 async function createContainer(

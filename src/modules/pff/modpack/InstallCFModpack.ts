@@ -22,6 +22,7 @@ import {
   writeToLockFile,
 } from "../curseforge/Lockfile";
 import { CF_API_BASE_URL } from "../curseforge/Values";
+import { setPffFlag } from "../curseforge/Wrapper";
 import {
   getFabricInstaller,
   getLatestFabricInstallerAndLoader,
@@ -32,11 +33,10 @@ import {
   getForgeInstaller,
   removeForgeInstaller,
 } from "../get/ForgeGet";
-import { getProfile, getProfileURLById } from "../get/MojangCore";
+import { downloadProfile, getProfileURLById } from "../get/MojangCore";
 import { performFabricInstall } from "../install/FabricInstall";
 import { performForgeInstall } from "../install/ForgeInstall";
-import { installProfile } from "../install/MojangInstall";
-import { ModpackModel, transformManifest5 } from "./ModpackModel";
+import { ModpackModel, transformManifest5 } from "./CFModpackModel";
 const MANIFEST_FILE = "manifest.json";
 
 async function parseModpack(
@@ -87,8 +87,7 @@ async function deployProfile(
 ): Promise<void> {
   const u = await getProfileURLById(bv);
   if (u.length > 0) {
-    const p = await getProfile(u);
-    installProfile(bv, p, container);
+    await downloadProfile(u, container, bv);
   }
 }
 
@@ -143,6 +142,7 @@ async function installMods(
   container: MinecraftContainer,
   model: ModpackModel
 ): Promise<void> {
+  setPffFlag("1");
   const lockfile = await loadLockFile(container);
   let apiBase = getString("pff.api-base", CF_API_BASE_URL);
   apiBase = apiBase.endsWith("/") ? apiBase.slice(0, -1) : apiBase;
@@ -164,6 +164,7 @@ async function installMods(
     })
   );
   await saveLockFile(lockfile, container);
+  setPffFlag("0");
 }
 
 async function installSingleMod(
@@ -209,12 +210,15 @@ export async function wrappedInstallModpack(
   container: MinecraftContainer,
   source: string
 ): Promise<void> {
+  addDoing(tr("ContainerManager.ParsingModpack"));
   const model = await parseModpack(container, source);
   if (!model) {
     throw "Could not parse this modpack!";
   }
+  addDoing(tr("ContainerManager.DeployingProfile"));
   await deployProfile(model.baseVersion, container);
   if (model.modLoaders.length > 0) {
+    addDoing(tr("ContainerManager.DeployingModLoader"));
     await deployModLoader(
       model.modLoaders[0].type || ProfileType.FORGE,
       model.modLoaders[0].version || "",
@@ -222,7 +226,10 @@ export async function wrappedInstallModpack(
       container
     );
   }
+  addDoing(tr("ContainerManager.DeployingMods"));
   await installMods(container, model);
+  addDoing(tr("ContainerManager.DeployingDeltas"));
   await deployOverrides(model.overrideSourceDir, container.rootDir);
+  addDoing(tr("ContainerManager.CleaningUp"));
   await removeTempFiles(container, source);
 }

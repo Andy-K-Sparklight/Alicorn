@@ -64,7 +64,6 @@ export function OptionsPage(): JSX.Element {
             setTabValue(v);
           }}
         >
-          {" "}
           <Tab
             label={
               <Typography color={"primary"}>
@@ -184,7 +183,11 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.BOOL}
             bindConfig={"show-downloading-item"}
           />
-
+          <InputItem
+            type={ConfigType.RADIO}
+            bindConfig={"download.primary-downloader"}
+            choices={["Concurrent", "Serial"]}
+          />
           <InputItem
             type={ConfigType.NUM}
             bindConfig={"download.concurrent.timeout"}
@@ -218,6 +221,10 @@ export function OptionsPage(): JSX.Element {
           <InputItem type={ConfigType.STR} bindConfig={"pff.api-base"} />
           <InputItem type={ConfigType.DIR} bindConfig={"pff.cache-root"} />
           <InputItem type={ConfigType.NUM} bindConfig={"pff.page-size"} />
+          <InputItem
+            type={ConfigType.STR}
+            bindConfig={"download.global-proxy"}
+          />
           <InputItem
             type={ConfigType.NUM}
             bindConfig={"starlight.join-server.timeout"}

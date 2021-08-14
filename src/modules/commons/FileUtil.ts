@@ -2,6 +2,9 @@ import fs from "fs-extra";
 import path from "path";
 
 export async function isFileExist(pt: string): Promise<boolean> {
+  if (pt.length === 0) {
+    return false; // Null safe
+  }
   try {
     const s = await fs.stat(pt);
     return s.isDirectory() || s.size > 0;

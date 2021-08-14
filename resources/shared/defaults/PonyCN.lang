@@ -464,7 +464,9 @@ Minecraft 和我的世界真的不是一个东西！
 
 你知道吗？被认为「使用无比痛苦」的 Vim，就是创建 Alicorn 的编辑器。
 
-你知道吗？开发 Alicorn 的时间有相当一部分是为了解决 Forge 的问题。
+你知道吗？开发 Alicorn 主要是为了解决 Forge 的问题：一部分是 Minecraft Forge 的安装问题，一部分是 CurseForge 的下载问题，还有一部分是 Electron Forge 的打包问题。
+
+「」
 
 「我看见你的心，在无数跌倒中成长」—— Rainbow
 
@@ -482,7 +484,13 @@ Minecraft 和我的世界真的不是一个东西！
 
 「我们会逃避，会找借口，但正是缺点让我们进步」—— Flawless
 
+「我知道这不对，可那又如何」—— I'll Fly
+
+「你终将成为不朽的传奇」—— Legend You Are Meant To Be
+
 「只需勇敢做自己，你将收获所有人的微笑」—— Life Is a Runway
+
+「生活少不了冲突和麻烦，但歌声和欢笑将与我们作伴」—— The Heart Carol
 
 友谊就是魔法！！！（真的是这样！）
 
@@ -491,6 +499,10 @@ Minecraft 和我的世界真的不是一个东西！
 让黛茜飞一会……
 
 虽然这里的话也许相同，但它们总是以不同的顺序出现 —— 这是为你而特别准备的
+
+正在回收三叉戟……
+
+正在酿造迅捷药水……
 
 # VersionView.Name
 
@@ -530,11 +542,11 @@ Andy K Rarity Sparklight
 
 # VersionView.Copyright1
 
-Alicorn 启动器是自由软件，复制、修改和重新分发等行为应遵循 GNU GENERAL PUBLIC LICENSE Version 3.0 许可证。
+Alicorn 启动器是自由软件，复制、修改和重新分发等行为应遵循 GNU GENERAL PUBLIC LICENSE Version 3.0 许可证（或以后的版本）。
 
 # VersionView.Copyright2
 
-Copyright (C) 2021 Andy K Rarity Sparklight\n\n以下内容是原始版权声明的中文翻译，不是官方内容，不具有法律效力，只有英文原版的声明具有此等效力。\n该程序是自由软件：您可以根据自由软件基金会发布的 GNU 通用公共许可证（第三版）的条款重新分发和/或修改它。\n分发此程序是希望它有用，但不作任何保证；甚至没有对适销性或针对特定目的的适用性的暗示保证。有关更多详细信息，请参阅 GNU 通用公共许可证（第三版）原文。
+Copyright (C) 2021 Andy K Rarity Sparklight\n\n以下内容是原始版权声明的中文翻译，不是官方内容，不具有法律效力，只有英文原版的声明具有此等效力。\n该程序是自由软件：您可以根据自由软件基金会发布的 GNU 通用公共许可证（第三版或以后）的条款重新分发和/或修改它。\n分发此程序是希望它有用，但不作任何保证；甚至没有对适销性或针对特定目的的适用性的暗示保证。有关更多详细信息，请参阅 GNU 通用公共许可证（第三版或以后）原文。
 
 # VersionView.FreeSoftwareClaim
 
@@ -587,6 +599,50 @@ MCX 扩展物理宗卷
 # ContainerManager.Type.Shared
 
 ASC 文件共享宗卷
+
+# ContainerManager.CreateModpack
+
+使用安装包创建这个容器
+
+# ContainerManager.ModpackWarn
+
+安装包（亦即整合包）可以提供超酷的游戏体验，但有的安装包中包含潜在的病毒或恶意软件！这些风险我没有办法为你发现，如果你是从一个不可信的来源（如服务器）获得该安装包的，那么请务必小心！\n如果你继续，我会在创建容器后为你自动安装它。
+
+# ContainerManager.ModpackPath
+
+安装包路径
+
+# ContainerManager.InvalidModpackPath
+
+无效的安装包路径
+
+# ContainerManager.ParsingModpack
+
+正解析安装包……
+
+# ContainerManager.DeployingProfile
+
+正部署启动档案……
+
+# ContainerManager.DeployingMods
+
+Pff 正安装 Mod……
+
+# ContainerManager.DeployingModLoader
+
+正部署 Mod 加载器……
+
+# ContainerManager.DeployingDeltas
+
+正计算和部署差异……
+
+# ContainerManager.CleaningUp
+
+正在清理……
+
+# ContainerManager.ChooseModpack
+
+选择安装包
 
 # ContainerManager.Remove
 
@@ -1192,6 +1248,14 @@ Alicorn 快捷键 ^
 
 按 Ctrl+R 快速重新加载启动器 - 使扩展的变更或者部分设置的修改生效
 
+# Options.download.global-proxy.title
+
+下载代理 ^
+
+# Options.download.global-proxy.desc
+
+访问网络时所使用的代理服务器，应当以 <主机名>:<端口> 的格式设置，如 localhost:1080，除帐户验证外的所有网络请求都将从此服务器转发 - 如果你不知道你在做什么，请留空，不要胡乱设置！
+
 # Options.download.mirror.title
 
 下载源镜像 ^
@@ -1307,6 +1371,22 @@ Alicorn 会用这个名字亲切地称呼您 - 嗯……可爱~
 # Options.updator.use-update.desc
 
 启用来自 Alicorn 的自动更新，以及时获取新功能 - 在测试阶段，这尤其重要
+
+# Options.download.primary-downloader.title
+
+下载方案
+
+# Options.download.primary-downloader.desc
+
+优先使用何种方案进行下载：「分段」有助于提高较大文件的下载速度，但不稳定，会加大 CPU 负载，且其效果很大程度上依赖于相关参数的设置；「线性」使用常规的下载方案 - 无论选择哪个，「线性」总会作为后备方案
+
+# Options.download.primary-downloader.Concurrent
+
+分段
+
+# Options.download.primary-downloader.Serial
+
+线性
 
 # Options.download.concurrent.chunk-size.title
 

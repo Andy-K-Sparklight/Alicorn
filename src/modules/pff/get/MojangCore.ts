@@ -1,5 +1,8 @@
 import { MOJANG_VERSIONS_MANIFEST, ReleaseType } from "../../commons/Constants";
 import { safeGet } from "../../commons/Null";
+import { MinecraftContainer } from "../../container/MinecraftContainer";
+import { DownloadMeta } from "../../download/AbstractDownloader";
+import { wrappedDownloadFile } from "../../download/DownloadWrapper";
 import { xgot } from "../../download/GotWrapper";
 
 export const MOJANG_CORES_KEY = "MojangCores";
@@ -60,14 +63,21 @@ export async function getProfileURLById(id: string): Promise<string> {
   }
 }
 
+export async function downloadProfile(
+  url: string,
+  container: MinecraftContainer,
+  version: string
+): Promise<void> {
+  const m = new DownloadMeta(url, container.getVersionRoot(version));
+  await wrappedDownloadFile(m);
+}
+/**
+ * @deprecated
+ */
 export async function getProfile(
   url: string
 ): Promise<Record<string, unknown>> {
-  try {
-    return Object.assign({}, await xgot(url));
-  } catch {
-    return {};
-  }
+  return (await xgot(url)) as Record<string, unknown>;
 }
 
 export async function prefetchMojangVersions(): Promise<void> {

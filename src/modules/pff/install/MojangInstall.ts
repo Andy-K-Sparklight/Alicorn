@@ -1,7 +1,6 @@
-import { MinecraftContainer } from "../../container/MinecraftContainer";
 import fs from "fs-extra";
 import path from "path";
-import { GameProfile } from "../../profile/GameProfile";
+import { MinecraftContainer } from "../../container/MinecraftContainer";
 import {
   ensureAllAssets,
   ensureAssetsIndex,
@@ -9,7 +8,10 @@ import {
   ensureLog4jFile,
   ensureNatives,
 } from "../../launch/Ensurance";
-
+import { GameProfile } from "../../profile/GameProfile";
+/**
+ * @deprecated
+ */
 export async function installProfile(
   id: string,
   profile: unknown,

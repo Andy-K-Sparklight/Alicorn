@@ -10,6 +10,7 @@ import {
   DownloadStatus,
 } from "./AbstractDownloader";
 import { getConfigOptn } from "./DownloadWrapper";
+import { getProxyAgent } from "./ProxyConfigure";
 import { addRecord } from "./ResolveLock";
 import { getHash, getIdentifier, validate } from "./Validate";
 
@@ -40,6 +41,7 @@ export class Serial extends AbstractDownloader {
           https: {
             rejectUnauthorized: false,
           },
+          agent: getProxyAgent(),
         }),
         fs.createWriteStream(meta.savePath)
       );

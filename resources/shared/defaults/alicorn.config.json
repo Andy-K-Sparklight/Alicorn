@@ -6,13 +6,14 @@
   "hot-key": false,
   "hide-when-game": true,
   "updator.use-update": true,
-  "download.concurrent.chunk-size": 4096,
-  "download.concurrent.timeout": 5000,
-  "download.concurrent.tries-per-chunk": 3,
+  "download.concurrent.chunk-size": 8192,
+  "download.concurrent.timeout": 10000,
+  "download.concurrent.tries-per-chunk": 2,
   "download.concurrent.max-tasks": 200,
-  "download.pff.chunk-size": 256,
-  "download.pff.max-tasks": 100,
-  "download.pff.timeout": 10000,
+  "download.global-proxy": "",
+  "download.pff.chunk-size": 1024,
+  "download.pff.max-tasks": 1200,
+  "download.pff.timeout": 300000,
   "show-downloading-item": false,
   "modx.default-save-path": "",
   "modx.ignore-non-standard-mods": true,
@@ -45,5 +46,6 @@
   "command": false,
   "assistant": "PonyCN",
   "font-style": "Regular",
-  "hardware-acc": false
+  "hardware-acc": false,
+  "download.primary-downloader": "Concurrent"
 }

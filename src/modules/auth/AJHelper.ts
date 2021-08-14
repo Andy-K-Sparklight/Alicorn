@@ -1,6 +1,7 @@
 import { getActualDataPath, saveDefaultData } from "../config/DataSupport";
 import { toBase64 } from "js-base64";
 import got from "got";
+import { getProxyAgent } from "../download/ProxyConfigure";
 
 export const AJ_FILE_BASE = "authlib-injector.jar";
 
@@ -20,6 +21,7 @@ export async function prefetchData(authServer: string): Promise<string> {
           https: {
             rejectUnauthorized: false,
           },
+          agent: getProxyAgent(),
           responseType: "text",
         })
       ).body

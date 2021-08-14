@@ -67,6 +67,25 @@ export function registerBackgroundListeners(): void {
     }
     return r.filePaths[0] || "";
   });
+  ipcMain.handle("selectModpack", async () => {
+    const r = await dialog.showOpenDialog({
+      properties: ["openFile", "dontAddToRecent"],
+      filters: [
+        {
+          name: "CurseForge Modpack",
+          extensions: ["zip"],
+        },
+        {
+          name: "Install.json Generic Profile",
+          extensions: ["json"],
+        },
+      ],
+    });
+    if (r.canceled) {
+      return "";
+    }
+    return r.filePaths[0] || "";
+  });
   ipcMain.handle("selectJava", async () => {
     const r = await dialog.showOpenDialog({
       properties: ["openFile", "dontAddToRecent"],
@@ -147,7 +166,7 @@ export function registerBackgroundListeners(): void {
       });
     } catch {}
   });
-  ipcMain.handle("msLogout", async (e, proxy: string) => {
+  ipcMain.handle("msLogout", async (_e, proxy: string) => {
     console.log("Creating logout window!");
     logoutWindow = new BrowserWindow({
       frame: false,
@@ -191,7 +210,7 @@ export function registerBackgroundListeners(): void {
       });
     });
   });
-  ipcMain.handle("openBrowser", async (e, node: boolean, proxy: string) => {
+  ipcMain.handle("openBrowser", async (_e, node: boolean, proxy: string) => {
     await openBrowser(node, proxy);
   });
   ipcMain.handle("getMainWindow", () => {
@@ -201,7 +220,7 @@ export function registerBackgroundListeners(): void {
     await loadConfig();
     console.log("Config reloaded.");
   });
-  ipcMain.on("reportError", async (e, msg) => {
+  ipcMain.on("reportError", async (_e, msg) => {
     if (getBoolean("dev.explicit-error-throw")) {
       dialog.showErrorBox("Oops!", msg);
     }
@@ -224,7 +243,7 @@ export function registerBackgroundListeners(): void {
   ipcMain.on("showWindow", async () => {
     getMainWindow()?.show();
   });
-  ipcMain.on("changeDir", (e, d: string) => {
+  ipcMain.on("changeDir", (_e, d: string) => {
     process.chdir(d);
   });
   ipcMain.handle("getElectronVersion", async () => {

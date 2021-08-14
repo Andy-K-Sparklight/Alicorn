@@ -4,12 +4,14 @@ import os from "os";
 import path from "path";
 import { basicHash } from "../commons/BasicHash";
 import { isFileExist } from "../commons/FileUtil";
+import { getString } from "../config/ConfigSupport";
 import {
   AbstractDownloader,
   DownloadMeta,
   DownloadStatus,
 } from "./AbstractDownloader";
 import { getConfigOptn } from "./DownloadWrapper";
+import { getProxyAgent } from "./ProxyConfigure";
 import { addRecord } from "./ResolveLock";
 import { Serial } from "./Serial";
 import { getHash, getIdentifier, validate } from "./Validate";
@@ -28,6 +30,9 @@ export class Concurrent extends AbstractDownloader {
   }
 
   async downloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
+    if (getString("download.primary-downloader") !== "Concurrent") {
+      return await Serial.getInstance().downloadFile(meta);
+    }
     try {
       // If file already exists then check if HASH matches
       if (meta.sha1 !== "" && (await isFileExist(meta.savePath))) {
@@ -36,16 +41,23 @@ export class Concurrent extends AbstractDownloader {
         }
       }
       const fileSize = await getSize(meta.url);
+      console.log(fileSize);
       if (fileSize <= getConfigOptn("chunk-size", 1024) * 1024) {
         return await Serial.getInstance().downloadFile(meta);
       }
       const allChunks = generateChunks(fileSize);
-      await Promise.all(getAllPromises(meta, fileSize, allChunks));
-      await sealAndVerify(meta.url, meta.savePath, allChunks, meta.sha1);
+      await Promise.all(getAllPromises(meta, allChunks));
+      await sealAndVerify(
+        meta.url,
+        meta.savePath,
+        allChunks,
+        meta.sha1,
+        fileSize
+      );
       return DownloadStatus.RESOLVED;
     } catch (e) {
       console.log(e);
-      return DownloadStatus.RETRY;
+      return await Serial.getInstance().downloadFile(meta);
     }
   }
 }
@@ -54,7 +66,8 @@ async function sealAndVerify(
   url: string,
   savePath: string,
   chunks: Chunk[],
-  hash: string
+  hash: string,
+  size: number
 ) {
   await fs.createFile(savePath);
   const wStream = fs.createWriteStream(savePath);
@@ -82,6 +95,11 @@ async function sealAndVerify(
   }
   const h = await getHash(savePath);
 
+  const s = await fs.stat(savePath);
+  if (s.size !== size) {
+    throw new Error("File size mismatch for " + savePath);
+  }
+
   if (hash !== h) {
     throw new Error("File hash mismatch for " + savePath);
   }
@@ -100,6 +118,7 @@ async function getSize(url: string): Promise<number> {
       https: {
         rejectUnauthorized: false,
       },
+      agent: getProxyAgent(),
     });
     const rangeString = response.headers["content-range"];
     if (typeof rangeString !== "string") {
@@ -112,11 +131,7 @@ async function getSize(url: string): Promise<number> {
   }
 }
 
-function getAllPromises(
-  meta: DownloadMeta,
-  size: number,
-  chunks: Chunk[]
-): Promise<void>[] {
+function getAllPromises(meta: DownloadMeta, chunks: Chunk[]): Promise<void>[] {
   const allPromises = [];
   const savePathHash = basicHash(meta.savePath);
   for (const c of chunks) {
@@ -149,6 +164,7 @@ async function downloadSingleChunk(
       https: {
         rejectUnauthorized: false,
       },
+      agent: getProxyAgent(),
     })
   ).rawBody;
   await fs.writeFile(tmpSavePath, buffer);

@@ -7,6 +7,7 @@ import path from "path";
 import { isFileExist } from "../modules/commons/FileUtil";
 import { getActualDataPath } from "../modules/config/DataSupport";
 import { DownloadMeta } from "../modules/download/AbstractDownloader";
+import { getProxyAgent } from "../modules/download/ProxyConfigure";
 import { Serial } from "../modules/download/Serial";
 import { getMainWindow } from "./Bootstrap";
 import BuildInfoSchema from "./BuildInfoSchema.json";
@@ -40,6 +41,7 @@ export async function checkUpdate(): Promise<void> {
       rejectUnauthorized: false,
     },
     responseType: "json",
+    agent: getProxyAgent(),
   });
   console.log("Validating build info!");
   let d: BuildInfo;
@@ -62,6 +64,7 @@ export async function checkUpdate(): Promise<void> {
       https: {
         rejectUnauthorized: false,
       },
+      agent: getProxyAgent(),
       responseType: "json",
     });
     if (!AJV.validate(BuildInfoSchema, res_rend.body)) {
