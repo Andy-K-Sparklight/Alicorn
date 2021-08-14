@@ -1,6 +1,6 @@
 {
   "private": true,
-  "appVersion": "Beta",
+  "appVersion": "RC",
   "version": "1.0.0",
   "sideEffects": false,
   "scripts": {
