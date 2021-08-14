@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   package-unix:
@@ -20,6 +20,10 @@ jobs:
           node-version: 15.x
       - run: yarn
       - run: yarn github-unix
+      - run: sha1sum out/compressed/Alicorn-darwin-x64.zip
+      - run: md5sum out/compressed/Alicorn-darwin-x64.zip
+      - run: sha1sum out/compressed/Alicorn-linux-x64.zip
+      - run: md5sum out/compressed/Alicorn-linux-x64.zip
       - uses: actions/upload-artifact@v2
         with:
           name: Alicorn for macOS x64 ZIP
@@ -39,6 +43,10 @@ jobs:
           node-version: 15.x
       - run: yarn
       - run: yarn github-windows
+      - run: sha1sum out/compressed/Alicorn-win32-x64.zip
+      - run: md5sum out/compressed/Alicorn-win32-x64.zip
+      - run: sha1sum out/compressed/Alicorn-win32-ia32.zip
+      - run: md5sum out/compressed/Alicorn-win32-ia32.zip
       - uses: actions/upload-artifact@v2
         with:
           name: Alicorn for Windows x64 ZIP
@@ -47,4 +55,3 @@ jobs:
         with:
           name: Alicorn for Windows ia32 ZIP
           path: out/compressed/Alicorn-win32-ia32.zip
-
