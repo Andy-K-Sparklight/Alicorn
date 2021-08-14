@@ -112,6 +112,9 @@ export function ContainerManager(): JSX.Element {
             setOpen(s);
           }
         }}
+        refresh={() => {
+          triggerRefresh(!refreshTrigger);
+        }}
         open={opening}
         setFailed={(e) => {
           setFailedOpen(true);
@@ -232,7 +235,6 @@ function SingleContainerDisplay(props: {
                     onClick={() => {
                       setOpen(false);
                       unlinkContainer(props.container.id);
-
                       setContainerListDirty();
                     }}
                   >
@@ -393,6 +395,7 @@ function AddNewContainer(props: {
   closeFunc: () => unknown;
   setOperate: (s: boolean) => unknown;
   setFailed: (s: string) => unknown;
+  refresh: () => unknown;
 }): JSX.Element {
   const [selectedDir, setSelected] = useState("");
   const [usedName, setName] = useState("");
@@ -600,6 +603,7 @@ function AddNewContainer(props: {
               if (modpackPath.endsWith(".json")) {
                 await deployIJPack(getContainer(usedName), modpackPath);
               }
+              props.refresh();
             } catch (e) {
               props.setFailed(e);
             }
