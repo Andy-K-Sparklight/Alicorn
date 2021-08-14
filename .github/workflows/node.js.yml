@@ -22,8 +22,8 @@ jobs:
       - run: yarn github-unix
       - run: sha1sum out/compressed/Alicorn-darwin-x64.zip
       - run: md5sum out/compressed/Alicorn-darwin-x64.zip
-      - run: sha1sum out/compressed/Alicorn-linux-x64.zip
-      - run: md5sum out/compressed/Alicorn-linux-x64.zip
+      - run: sha1sum out/compressed/Alicorn-linux-x64.tar.gz
+      - run: md5sum out/compressed/Alicorn-linux-x64.tar.gz
       - uses: actions/upload-artifact@v2
         with:
           name: Alicorn for macOS x64 ZIP
