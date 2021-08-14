@@ -375,7 +375,13 @@ function Launching(props: {
               `Pending=${ws.pending}`
             )}
           </Typography>
-          <Typography className={classes.text} gutterBottom>
+          <Typography
+            style={{
+              display: getBoolean("show-downloading-item") ? undefined : "none",
+            }}
+            className={classes.text}
+            gutterBottom
+          >
             {getWrapperStatus().doing}
           </Typography>
         </Box>
