@@ -11,7 +11,6 @@ export async function xgot(
 ): Promise<unknown> {
   if (noMirror) {
     try {
-      console.log("Without mirror GET " + url);
       return (
         await got.get(url, {
           responseType: "json",
@@ -28,7 +27,6 @@ export async function xgot(
     }
   }
   try {
-    console.log("With mirror get " + applyMirror(url));
     return (
       await got.get(applyMirror(url), {
         responseType: "json",
@@ -56,8 +54,6 @@ export async function pgot(url: string, timeout: number): Promise<unknown> {
         rejectUnauthorized: false,
       },
       agent: getProxyAgent(),
-      // @ts-ignore
-      // agent: getProxy(),
     })
   ).body;
 }
