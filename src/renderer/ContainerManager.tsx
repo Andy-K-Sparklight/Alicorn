@@ -586,7 +586,7 @@ function AddNewContainer(props: {
             modpackError ||
             usedName.trim().length <= 0 ||
             selectedDir.trim().length <= 0 ||
-            modpackPath.trim().length <= 0
+            (allowModpack && modpackPath.trim().length <= 0)
           }
           onClick={async () => {
             props.closeFunc();
