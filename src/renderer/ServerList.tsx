@@ -37,6 +37,7 @@ import {
   addServer,
   getServerList,
   removeServer,
+  trimServerAddress,
 } from "../modules/server/ServerFiles";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
@@ -170,7 +171,7 @@ function AddNewServer(props: {
             }
             onClick={() => {
               props.onClose();
-              props.onNewServer(enteredServer);
+              props.onNewServer(trimServerAddress(enteredServer));
               setEnteredServer("");
             }}
           >

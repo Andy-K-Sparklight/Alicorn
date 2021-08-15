@@ -33,7 +33,7 @@ export function addServer(s: string): void {
 export function removeServer(s: string): void {
   SERVERS.delete(trimServerAddress(s));
 }
-function trimServerAddress(origin: string): string {
+export function trimServerAddress(origin: string): string {
   origin = origin.trim();
   if (!origin.includes(":")) {
     return origin + ":25565";
