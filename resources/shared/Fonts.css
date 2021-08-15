@@ -1,14 +1,19 @@
 @font-face {
   font-family: "UbuntuMono";
-  src: url("UbuntuMono-R.woff");
+  src: url(UbuntuMono-R.woff) format("woff");
 }
 
 @font-face {
   font-family: "Open Sans";
-  src: url("OpenSans-Regular.ttf");
+  src: url(OpenSans-Regular.woff) format("woff");
 }
 
 @font-face {
   font-family: "CutieX";
-  src: url("Cutie.ttf");
+  src: url(Cutie.woff) format("woff");
+}
+
+@font-face {
+  font-family: "Roboto Medium";
+  src: url(Roboto-Medium.woff) format("woff");
 }

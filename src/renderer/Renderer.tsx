@@ -1,6 +1,7 @@
 import { Box, createTheme, MuiThemeProvider } from "@material-ui/core";
 import { ipcRenderer } from "electron";
 import { emptyDir } from "fs-extra";
+import os from "os";
 import React from "react";
 import ReactDOM from "react-dom";
 import { HashRouter } from "react-router-dom";
@@ -35,12 +36,15 @@ import { registerHandlers } from "./Handlers";
 import { activateHotKeyFeature } from "./HotKeyHandler";
 import { initWorker } from "./Schedule";
 import { initTranslator } from "./Translator";
-
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
+const WIN_FONT_FAMILY =
+  '"Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
+const GNU_FONT_FAMILY =
+  '"UbuntuMono", "Open Sans", "Roboto Medium", "Fira Code", Monaco,  Consolas, "Courier New", Courier, monospace';
 const FONT_FAMILY =
-  '"UbuntuMono", "Open Sans", Roboto, "Fira Code", Monaco,  Consolas, "Courier New", Courier, monospace';
+  os.platform() === "win32" ? WIN_FONT_FAMILY : GNU_FONT_FAMILY;
 export function setThemeParams(
   primaryMain: string,
   primaryLight: string,
@@ -183,11 +187,8 @@ window.addEventListener("error", (e) => {
     getString("theme.primary.light", "#d796f0"),
     getString("theme.secondary.main", "#df307f"),
     getString("theme.secondary.light", "#ffe0f0"),
-    (getString("font-style", "Regular") === "Regular"
-      ? ""
-      : getString("font-style") === "Cutie"
-      ? "CutieX, "
-      : "QTXiaoTu, ") + FONT_FAMILY
+    (getString("font-style", "Regular") === "Regular" ? "" : "CutieX, ") +
+      FONT_FAMILY
   );
   const e = document.createElement("style");
   e.innerText = `html {background-color:${getString(

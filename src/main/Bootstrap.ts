@@ -6,7 +6,7 @@ import { getBoolean, loadConfigSync } from "../modules/config/ConfigSupport";
 import { registerBackgroundListeners } from "./Background";
 import { getUserBrowser } from "./Browser";
 import { checkUpdate } from "./Updator";
-import { initWS } from "./WSServer";
+import { closeWS, initWS } from "./WSServer";
 
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow | null = null;
@@ -81,6 +81,8 @@ app.on("ready", async () => {
 app.on("window-all-closed", () => {
   if (os.platform() !== "darwin") {
     console.log("Stopping!");
+    console.log("Stopping WS!");
+    closeWS();
     app.quit();
   }
 });

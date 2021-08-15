@@ -29,3 +29,6 @@ export function initWS(): void {
     });
   });
 }
+export function closeWS(): void {
+  WS_SERVER.close();
+}
