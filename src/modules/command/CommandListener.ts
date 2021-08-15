@@ -2,7 +2,8 @@ import { submitWarn } from "../../renderer/Message";
 import { getBoolean } from "../config/ConfigSupport";
 import { registerAlicornFunctions } from "./AlicornFunctions";
 import { initBase } from "./Base";
-
+import { initExtraTools } from "./ExtraTools";
+const HISTORY: string[] = [];
 export function initCommandListener(): void {
   window.addEventListener("AlicornCommand", (e) => {
     if (getBoolean("command")) {
@@ -15,6 +16,7 @@ export function initCommandListener(): void {
   });
   initBase();
   registerAlicornFunctions();
+  initExtraTools();
 }
 
 export type CommandHandler = (args: string[]) => Promise<unknown | void>;
@@ -22,6 +24,14 @@ const CDT: Map<string, CommandHandler> = new Map();
 
 export async function dispatchCommand(cmd: string): Promise<unknown> {
   const sa = cmd.trim().split(/\s+/);
+  if (sa[0] === "!!") {
+    const c = HISTORY[0];
+    if (c) {
+      return await dispatchCommand(c);
+    }
+  } else {
+    HISTORY.unshift(cmd);
+  }
   const f = CDT.get(sa.shift()?.toLowerCase() || "");
   const arg: string[] = [];
   while (sa.length > 0) {
