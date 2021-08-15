@@ -44,13 +44,12 @@ import {
   removeForgeInstaller,
 } from "../modules/pff/get/ForgeGet";
 import {
+  downloadProfile,
   getAllMojangCores,
-  getProfile,
   getProfileURLById,
 } from "../modules/pff/get/MojangCore";
 import { performFabricInstall } from "../modules/pff/install/FabricInstall";
 import { performForgeInstall } from "../modules/pff/install/ForgeInstall";
-import { installProfile } from "../modules/pff/install/MojangInstall";
 import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
 import { FailedHint, OperatingHintCustom } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
@@ -314,19 +313,12 @@ export function InstallCore(): JSX.Element {
               }
             }
             setProgressMsg(tr("InstallCore.Progress.DownloadingProfile"));
-            const d = await getProfile(u);
-            if (isNull(d) || Object.keys(d).length === 0) {
-              if (mounted.current) {
-                setOperating(false);
-                setFailed(true);
-                setFailedMsg(tr("InstallCore.Progress.InvalidProfile"));
-              }
-            }
+
             try {
-              await installProfile(
-                selectedMojangVersion,
-                d,
-                getContainer(selectedMojangContainer)
+              await downloadProfile(
+                u,
+                getContainer(selectedMojangContainer),
+                selectedMojangVersion
               );
               updatePatchableCores(!updatePatchableCoresBit);
               if (mounted.current) {

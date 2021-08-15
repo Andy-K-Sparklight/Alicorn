@@ -1,10 +1,10 @@
+import path from "path";
 import { MOJANG_VERSIONS_MANIFEST, ReleaseType } from "../../commons/Constants";
 import { safeGet } from "../../commons/Null";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { DownloadMeta } from "../../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../../download/DownloadWrapper";
 import { xgot } from "../../download/GotWrapper";
-
 export const MOJANG_CORES_KEY = "MojangCores";
 
 export async function getAllMojangCores(
@@ -68,7 +68,10 @@ export async function downloadProfile(
   container: MinecraftContainer,
   version: string
 ): Promise<void> {
-  const m = new DownloadMeta(url, container.getVersionRoot(version));
+  const m = new DownloadMeta(
+    url,
+    path.join(container.getVersionRoot(version), version + ".json")
+  );
   await wrappedDownloadFile(m);
 }
 /**
