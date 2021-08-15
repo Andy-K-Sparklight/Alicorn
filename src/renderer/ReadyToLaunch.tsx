@@ -389,6 +389,7 @@ function Launching(props: {
       <MiniJavaSelector
         hash={profileHash.current}
         gameId={props.profile.id}
+        gameVersion={props.profile.baseVersion.toString()}
         disabled={
           status !== LaunchingStatus.PENDING &&
           status !== LaunchingStatus.FINISHED
@@ -806,6 +807,7 @@ function MiniJavaSelector(props: {
   hash: string;
   gameId: string;
   disabled: boolean;
+  gameVersion: string;
 }): JSX.Element {
   const classes = useFormStyles();
   const fullWidthClasses = fullWidth();
@@ -882,7 +884,7 @@ function MiniJavaSelector(props: {
           if (!loaded.current || !currentJavaVersion) {
             return "";
           }
-          const c = checkJMCompatibility(props.gameId, currentJavaVersion);
+          const c = checkJMCompatibility(props.gameVersion, currentJavaVersion);
           if (c === "OK") {
             return "";
           }
