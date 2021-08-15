@@ -6,7 +6,7 @@ export const useCardStyles = makeStyles((theme) =>
       fontSize: "medium",
     },
     desc: {
-      fontSize: "small",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
     },
     card: {
       backgroundColor: theme.palette.primary.main,
@@ -31,7 +31,7 @@ export const usePadStyles = makeStyles((theme) =>
     },
     smallText: {
       marginLeft: "-16%",
-      fontSize: "small",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
     },
   })
 );
@@ -87,7 +87,7 @@ export const useFormStyles = makeStyles((theme) =>
       marginTop: theme.spacing(1),
     },
     instr: {
-      fontSize: "small",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
       color: theme.palette.secondary.main,
     },
   })
@@ -134,7 +134,7 @@ export const useTextStyles = makeStyles((theme) =>
     },
     secondText: {
       color: theme.palette.secondary.main,
-      fontSize: "small",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
     },
     mediumText: {
       color: theme.palette.secondary.main,
@@ -142,7 +142,7 @@ export const useTextStyles = makeStyles((theme) =>
     },
     link: {
       color: theme.palette.primary.main,
-      fontSize: "small",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
     },
     thirdText: {
       color: theme.palette.primary.main,

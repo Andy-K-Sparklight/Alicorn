@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.secondary.light,
     },
     textSP: {
-      fontSize: "small",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
       color: theme.palette.secondary.main,
     },
     text: {
@@ -890,7 +890,11 @@ function MiniJavaSelector(props: {
           }
           return (
             <Typography
-              style={{ fontSize: "small", color: "#ff8400" }}
+              style={{
+                fontSize:
+                  window.sessionStorage.getItem("smallFontSize") || "16px",
+                color: "#ff8400",
+              }}
               gutterBottom
             >
               {tr("ReadyToLaunch.JCheck.Too" + c)}

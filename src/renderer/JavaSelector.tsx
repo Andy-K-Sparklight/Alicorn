@@ -226,7 +226,10 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
       )}
       {corruptBit ? (
         <Typography
-          style={{ fontSize: "small", color: "#ff8400" }}
+          style={{
+            fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+            color: "#ff8400",
+          }}
           gutterBottom
         >
           {tr("JavaSelector.CannotLoadDetail")}
@@ -242,7 +245,11 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
             ""
           ) : (
             <Typography
-              style={{ fontSize: "small", color: "#ff8400" }}
+              style={{
+                fontSize:
+                  window.sessionStorage.getItem("smallFontSize") || "16px",
+                color: "#ff8400",
+              }}
               gutterBottom
             >
               {tr("JavaSelector.WarnNonFree")}
@@ -252,7 +259,11 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
             ""
           ) : (
             <Typography
-              style={{ fontSize: "small", color: "#ff8400" }}
+              style={{
+                fontSize:
+                  window.sessionStorage.getItem("smallFontSize") || "16px",
+                color: "#ff8400",
+              }}
               gutterBottom
             >
               {tr("JavaSelector.WarnClient")}
@@ -262,7 +273,11 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
             ""
           ) : (
             <Typography
-              style={{ fontSize: "small", color: "#ff8400" }}
+              style={{
+                fontSize:
+                  window.sessionStorage.getItem("smallFontSize") || "16px",
+                color: "#ff8400",
+              }}
               gutterBottom
             >
               {tr("JavaSelector.Warn32")}

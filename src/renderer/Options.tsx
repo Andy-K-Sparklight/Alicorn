@@ -44,7 +44,7 @@ export function OptionsPage(): JSX.Element {
         marginLeft: theme.spacing(4),
       },
       head: {
-        fontSize: "small",
+        fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
         color: theme.palette.secondary.main,
       },
     })
@@ -283,7 +283,7 @@ export function InputItem(props: {
   const classes = makeStyles((theme) =>
     createStyles({
       desc: {
-        fontSize: "small",
+        fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
         color: theme.palette.secondary.main,
       },
       switch: {
@@ -410,7 +410,9 @@ export function InputItem(props: {
                       label={
                         <Typography
                           style={{
-                            fontSize: "small",
+                            fontSize:
+                              window.sessionStorage.getItem("smallFontSize") ||
+                              "16px",
                             color:
                               ALICORN_DEFAULT_THEME_LIGHT.palette.secondary
                                 .main,

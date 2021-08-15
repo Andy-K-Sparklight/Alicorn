@@ -40,7 +40,7 @@ const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
 const WIN_FONT_FAMILY =
-  '"Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
+  '"UbuntuMono", "Open Sans", "Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
 const GNU_FONT_FAMILY =
   '"UbuntuMono", "Open Sans", "Roboto Medium", "Fira Code", Monaco,  Consolas, "Courier New", Courier, monospace';
 const FONT_FAMILY =
@@ -145,7 +145,7 @@ console.log(
 console.log(
   "This is free software, and you are welcome to redistribute it under certain conditions; see the license file for details."
 );
-
+configureFontSize();
 window.addEventListener("unhandledrejection", (e) => {
   console.log(e.reason);
   window.dispatchEvent(new CustomEvent("sysError", { detail: e.reason }));
@@ -280,4 +280,10 @@ function bindSuperCowPower(): void {
         '..."Have you mooed today?"...'
     );
   };
+}
+
+function configureFontSize(): void {
+  const f = (document.body.clientWidth / 70).toString() + "px";
+  console.log("Set small font size as " + f);
+  window.sessionStorage.setItem("smallFontSize", f);
 }

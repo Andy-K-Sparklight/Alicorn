@@ -135,7 +135,13 @@ function AddNewServer(props: {
             {tr("ServerList.AddNewServer.Description")}
           </DialogContentText>
           <DialogContentText>
-            <span style={{ fontSize: "small", color: "red" }}>
+            <span
+              style={{
+                fontSize:
+                  window.sessionStorage.getItem("smallFontSize") || "16px",
+                color: "red",
+              }}
+            >
               {tr("ServerList.AddNewServer.SincereWarn")}
             </span>
           </DialogContentText>

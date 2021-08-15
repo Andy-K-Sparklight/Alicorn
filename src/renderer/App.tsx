@@ -240,7 +240,15 @@ export function App(): JSX.Element {
             {/* Drag our window with title */}
             <Typography
               variant={"h6"}
-              style={showCommand ? { fontSize: "small" } : {}}
+              style={
+                showCommand
+                  ? {
+                      fontSize:
+                        window.sessionStorage.getItem("smallFontSize") ||
+                        "16px",
+                    }
+                  : {}
+              }
             >
               {showCommand ? enteredCommand : tr(page)}
             </Typography>

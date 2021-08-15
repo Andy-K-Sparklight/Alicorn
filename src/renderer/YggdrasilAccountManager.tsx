@@ -323,7 +323,13 @@ function YggdrasilForm(props: {
           value={pwd}
         />
         {hasError ? (
-          <DialogContentText style={{ fontSize: "small", color: "#ff8400" }}>
+          <DialogContentText
+            style={{
+              fontSize:
+                window.sessionStorage.getItem("smallFontSize") || "16px",
+              color: "#ff8400",
+            }}
+          >
             {tr("AccountManager.Failed")}
           </DialogContentText>
         ) : (
@@ -465,7 +471,13 @@ function AddAccount(props: {
             variant={"outlined"}
           />
           {isCustom ? (
-            <DialogContentText style={{ fontSize: "small", color: "#ff8400" }}>
+            <DialogContentText
+              style={{
+                fontSize:
+                  window.sessionStorage.getItem("smallFontSize") || "16px",
+                color: "#ff8400",
+              }}
+            >
               {tr("AccountManager.Warn")}
             </DialogContentText>
           ) : (

@@ -144,7 +144,7 @@ export function PffFront(): JSX.Element {
           style={{
             userSelect: "auto",
             textAlign: "center",
-            fontSize: "small",
+            fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
           }}
           color={"primary"}
         >
@@ -160,7 +160,7 @@ export function PffFront(): JSX.Element {
           className={fullWidthClasses.text}
           color={"secondary"}
           style={{
-            fontSize: "small",
+            fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
           }}
         >
           {tr("PffFront.Hint")}
@@ -202,7 +202,9 @@ export function PffFront(): JSX.Element {
                       <Typography
                         style={Object.assign(
                           {
-                            fontSize: "small",
+                            fontSize:
+                              window.sessionStorage.getItem("smallFontSize") ||
+                              "16px",
                             marginLeft: "1%",
                           },
                           version === f.gameVersion &&

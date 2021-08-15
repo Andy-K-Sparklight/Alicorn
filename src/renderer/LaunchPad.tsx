@@ -340,7 +340,13 @@ function getDescriptionFor(type: string): string {
 function CorruptedCoreWarning(): JSX.Element {
   return (
     <Box>
-      <Typography style={{ fontSize: "small", color: "#ff8400" }} gutterBottom>
+      <Typography
+        style={{
+          fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+          color: "#ff8400",
+        }}
+        gutterBottom
+      >
         {tr("CoreInfo.CorruptedWarning")}
       </Typography>
     </Box>

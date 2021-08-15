@@ -12,6 +12,7 @@ html {
   white-space: pre-line;
   line-height: 90%;
   user-select: none;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
