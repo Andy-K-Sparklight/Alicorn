@@ -40,9 +40,9 @@ const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
 const WIN_FONT_FAMILY =
-  '"UbuntuMono", "Open Sans", "Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
+  '"UbuntuMono", "Microsoft YaHei UI", "Open Sans", "Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
 const GNU_FONT_FAMILY =
-  '"UbuntuMono", "Open Sans", "Roboto Medium", "Fira Code", Monaco,  Consolas, "Courier New", Courier, monospace';
+  '"UbuntuMono", "Open Sans", "Roboto Medium", "Fira Code", Monaco, Consolas, "Courier New", Courier, monospace';
 const FONT_FAMILY =
   os.platform() === "win32" ? WIN_FONT_FAMILY : GNU_FONT_FAMILY;
 export function setThemeParams(

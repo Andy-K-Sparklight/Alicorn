@@ -21,13 +21,13 @@ export function Welcome(): JSX.Element {
         {randsl("Welcome.Suggest.Part2")}
       </Typography>
       <br />
-      <Typography
+      {/*<Typography
         color={"secondary"}
         className={classes.thirdText}
         gutterBottom
       >
         {randsl("Welcome.Suggest.Others")}
-      </Typography>
+      </Typography>*/}
       <Tooltip title={tr("Welcome.Suggest.LastSuccessfulLaunch")}>
         <Fab
           disabled={!window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY)}
