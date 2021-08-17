@@ -1052,6 +1052,14 @@ Alicorn Functions
 
 控制 Alicorn 命令的启用或禁用，它们被 Starlight、Alicorn 脚本或你自己使用
 
+# Options.goto.animate.title
+
+平滑页面切换
+
+# Options.goto.animate.desc
+
+切换页面时使用淡入淡出动画，而不是简单地导航
+
 # Options.assistant.title
 
 助理（语言） Assistant (Language)

@@ -122,6 +122,7 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.STR}
             bindConfig={"theme.secondary.light"}
           />
+          <InputItem type={ConfigType.BOOL} bindConfig={"goto.animate"} />
           <InputItem type={ConfigType.STR} bindConfig={"startup-page.name"} />
           <InputItem type={ConfigType.STR} bindConfig={"startup-page.url"} />
           <InputItem

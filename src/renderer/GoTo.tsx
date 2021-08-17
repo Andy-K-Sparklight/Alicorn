@@ -1,4 +1,4 @@
-import { saveAndReloadMain } from "../modules/config/ConfigSupport";
+import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
 import { setContainerListDirty } from "./ContainerManager";
 import { setDirty } from "./LaunchPad";
 
@@ -8,19 +8,27 @@ export function jumpTo(target: string): void {
     window.dispatchEvent(new CustomEvent("changePageWarn", { detail: target }));
     return;
   }
-  const e = document.getElementById("app_main");
-  const ANIMATION_TIME = 200;
-  fadeOut(e);
-  setTimeout(() => {
+  if (getBoolean("goto.animate")) {
+    const e = document.getElementById("app_main");
+    const ANIMATION_TIME = 250;
+    fadeOut(e);
+    setTimeout(() => {
+      window.scrollTo({ top: 0 });
+      ifLeavingLaunchPadThenSetDirty();
+      ifLeavingContainerManagerThenSetContainerListDirty();
+      ifLeavingConfigThenReload();
+      window.location.hash = target;
+      setTimeout(() => {
+        fadeIn(e);
+      }, ANIMATION_TIME);
+    }, ANIMATION_TIME);
+  } else {
     window.scrollTo({ top: 0 });
     ifLeavingLaunchPadThenSetDirty();
     ifLeavingContainerManagerThenSetContainerListDirty();
     ifLeavingConfigThenReload();
     window.location.hash = target;
-    setTimeout(() => {
-      fadeIn(e);
-    }, ANIMATION_TIME);
-  }, ANIMATION_TIME);
+  }
 }
 
 function ifLeavingLaunchPadThenSetDirty(): void {
