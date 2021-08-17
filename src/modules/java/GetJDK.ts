@@ -1,10 +1,11 @@
-import os from "os";
-import got from "got";
 import { load } from "cheerio";
-import { getActualDataPath } from "../config/DataSupport";
-import { wrappedDownloadFile } from "../download/DownloadWrapper";
-import { DownloadMeta } from "../download/AbstractDownloader";
 import childProcess from "child_process";
+import got from "got";
+import os from "os";
+import { basicHash } from "../commons/BasicHash";
+import { getActualDataPath } from "../config/DataSupport";
+import { DownloadMeta } from "../download/AbstractDownloader";
+import { wrappedDownloadFile } from "../download/DownloadWrapper";
 import { getProxyAgent } from "../download/ProxyConfigure";
 
 const JDK_BASE_URL = "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/";
@@ -69,7 +70,8 @@ export async function getLatestJREURL(old = false): Promise<string> {
 }
 
 async function downloadAndStartJREInstaller(u: string): Promise<void> {
-  const tD = getActualDataPath("jre_installer_tmp.msi");
+  const tD = getActualDataPath(`jre_installer_tmp_${basicHash(u)}.msi`);
+
   const s = await wrappedDownloadFile(new DownloadMeta(u, tD, ""));
   if (s === 1) {
     childProcess.exec(tD);
