@@ -1,18 +1,10 @@
+import { Box, Fab, Tooltip, Typography } from "@material-ui/core";
+import { History } from "@material-ui/icons";
 import React from "react";
-import {
-  Box,
-  createStyles,
-  Link,
-  List,
-  ListItem,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
-import { randsl, tr } from "./Translator";
 import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 import { LAST_SUCCESSFUL_GAME_KEY } from "./ReadyToLaunch";
-import { History } from "@material-ui/icons";
 import { useTextStyles } from "./Stylex";
+import { randsl, tr } from "./Translator";
 
 export function Welcome(): JSX.Element {
   const classes = useTextStyles();
@@ -36,7 +28,27 @@ export function Welcome(): JSX.Element {
       >
         {randsl("Welcome.Suggest.Others")}
       </Typography>
-      <List className={classes.list}>
+      <Tooltip title={tr("Welcome.Suggest.LastSuccessfulLaunch")}>
+        <Fab
+          disabled={!window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY)}
+          color={"primary"}
+          style={{
+            position: "fixed",
+            right: "16px",
+            bottom: "16px",
+          }}
+          onClick={() => {
+            jumpTo(
+              window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ||
+                "/ReadyToLaunch/undefined/undefined"
+            );
+            triggerSetPage(Pages.ReadyToLaunch);
+          }}
+        >
+          <History />
+        </Fab>
+      </Tooltip>
+      {/*<List className={classes.list}>
         {
           // @ts-ignore
           window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ===
@@ -60,7 +72,7 @@ export function Welcome(): JSX.Element {
             </ListItem>
           )
         }
-      </List>
+      </List>*/}
       {/*TODO*/}
     </Box>
   );

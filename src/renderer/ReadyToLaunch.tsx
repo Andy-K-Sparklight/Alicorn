@@ -579,12 +579,9 @@ async function startBoot(
       console.log("Crash report committed, continue tasks.");
       clearReboot(profileHash);
       console.log("Cleared reboot flag.");
-    } else {
-      window.localStorage.setItem(
-        LAST_SUCCESSFUL_GAME_KEY,
-        window.location.hash
-      );
     }
+    window.localStorage.setItem(LAST_SUCCESSFUL_GAME_KEY, window.location.hash);
+
     console.log("Restoring mods...");
     await restoreMods(container);
     console.log("Done!");
