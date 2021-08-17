@@ -1,3 +1,4 @@
+import { LAUNCHER_VERSION } from "../modules/commons/Constants";
 import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
 import { setContainerListDirty } from "./ContainerManager";
 import { setDirty } from "./LaunchPad";
@@ -7,6 +8,11 @@ export function jumpTo(target: string): void {
   if (window[CHANGE_PAGE_WARN]) {
     window.dispatchEvent(new CustomEvent("changePageWarn", { detail: target }));
     return;
+  }
+  if (window.location.hash.includes("Welcome")) {
+    if (window.localStorage.getItem("CurrentVersion") !== LAUNCHER_VERSION) {
+      window.localStorage.setItem("CurrentVersion", LAUNCHER_VERSION);
+    }
   }
   if (getBoolean("goto.animate")) {
     const e = document.getElementById("app_main");

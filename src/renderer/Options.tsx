@@ -237,6 +237,7 @@ export function OptionsPage(): JSX.Element {
             notOn={"darwin"}
             bindConfig={"updator.use-update"}
           />
+          <InputItem type={ConfigType.STR} bindConfig={"updator.url"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"hardware-acc"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"dev"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"dev.f12"} />

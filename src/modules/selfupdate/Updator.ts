@@ -1,24 +1,34 @@
 import Ajv from "ajv";
-import { app } from "electron";
 import fs from "fs-extra";
 import got from "got";
 import os from "os";
 import path from "path";
-import { isFileExist } from "../modules/commons/FileUtil";
-import { getActualDataPath } from "../modules/config/DataSupport";
-import { DownloadMeta } from "../modules/download/AbstractDownloader";
-import { getProxyAgent } from "../modules/download/ProxyConfigure";
-import { Serial } from "../modules/download/Serial";
+import { isFileExist } from "../commons/FileUtil";
+import { getString } from "../config/ConfigSupport";
+import { getActualDataPath } from "../config/DataSupport";
+import { getBasePath } from "../config/PathSolve";
+import { DownloadMeta } from "../download/AbstractDownloader";
+import { getProxyAgent } from "../download/ProxyConfigure";
+import { Serial } from "../download/Serial";
 import BuildInfoSchema from "./BuildInfoSchema.json";
 
 // MAINTAINERS ONLY
 
-const BASE_URL = "https://services.al.xuogroup.top/";
-const RELEASE_FOLDER = BASE_URL + "release/";
-const MAIN_BUILD_FILE_RELEASE = RELEASE_FOLDER + "MainBuild.json";
-const RENDERER_BUILD_FILE_RELEASE = RELEASE_FOLDER + "RendererBuild.json";
-const LOCK_FILE = getActualDataPath("install.lock");
-
+let BASE_URL: string;
+let RELEASE_FOLDER: string;
+let MAIN_BUILD_FILE_RELEASE: string;
+let RENDERER_BUILD_FILE_RELEASE: string;
+let LOCK_FILE: string;
+export function initUpdator(): void {
+  BASE_URL = getString(
+    "updator.url",
+    "https://cdn.jsdelive.net/gh/Andy-K-Sparklight/Alicorn@production/"
+  );
+  RELEASE_FOLDER = BASE_URL + "release/";
+  MAIN_BUILD_FILE_RELEASE = RELEASE_FOLDER + "MainBuild.json";
+  RENDERER_BUILD_FILE_RELEASE = RELEASE_FOLDER + "RendererBuild.json";
+  LOCK_FILE = getActualDataPath("install.lock");
+}
 interface BuildInfo {
   date: string;
   files: string[];
@@ -54,10 +64,6 @@ export async function checkUpdate(): Promise<void> {
         return;
       }
     }
-    const u = {
-      version: d.version,
-      date: new Date(d.date).toLocaleDateString(),
-    };
 
     const res_rend = await got.get(RENDERER_BUILD_FILE_RELEASE, {
       https: {
@@ -78,6 +84,9 @@ export async function checkUpdate(): Promise<void> {
       console.log("Update failed, let's try again next time.");
       return;
     }
+
+    await fs.ensureDir(path.dirname(LOCK_FILE));
+    await fs.writeFile(LOCK_FILE, (res.body as BuildInfo).date);
     // await hintUpdate(u); We have a page to show update
   } else {
     console.log("Invalid build info! Skipped updating this time.");
@@ -99,26 +108,25 @@ export async function doUpdate(
   baseUrl: string,
   info: BuildInfo
 ): Promise<boolean> {
-  await fs.ensureDir(path.dirname(LOCK_FILE));
-  await fs.writeFile(LOCK_FILE, info.date);
   try {
     for (const v of info.files) {
-      const target = path.resolve(app.getAppPath(), v);
+      const target = path.resolve(getBasePath(), v);
       await backupFile(target);
     }
     for (const v of info.files) {
-      const target = path.resolve(app.getAppPath(), v);
+      const target = path.resolve(getBasePath(), v);
       const meta = new DownloadMeta(baseUrl + v, target, "");
 
-      if ((await Serial.getInstance().downloadFile(meta)) !== 1) {
-        throw "Failed to download!";
+      if ((await Serial.getInstance().downloadFile(meta, true)) !== 1) {
+        throw "Failed to download: " + meta.url;
       }
     }
     return true;
-  } catch {
+  } catch (e) {
+    console.log(e);
     for (const v of info.files) {
       try {
-        const target = path.resolve(app.getAppPath(), v);
+        const target = path.resolve(getBasePath(), v);
         await restoreFile(target);
       } catch {}
     }

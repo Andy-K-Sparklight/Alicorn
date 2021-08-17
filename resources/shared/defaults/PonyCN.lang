@@ -1,3 +1,11 @@
+# Changelog.title
+
+这是一个崭新的我！
+
+# Changelog.content
+
+@HTMLAlicorn Pre2 是一个质量更新，包含一些值得注意的新玩意……
+
 # LaunchPad
 
 启动游戏
@@ -1011,6 +1019,14 @@ Alicorn 特色功能
 # Options.Page.Advanced
 
 高级和重置
+
+# Options.updator.url.title
+
+更新来源
+
+# Options.updator.url.desc
+
+下一次 Alicorn 会从这里开始下载更新 - 这适合用于在不同的 Alicorn 发行版之间切换
 
 # Options.hardware-acc.title
 

@@ -23,7 +23,10 @@ export class Serial extends AbstractDownloader {
     return Serial.instance;
   }
 
-  async downloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
+  async downloadFile(
+    meta: DownloadMeta,
+    noTimeout?: boolean
+  ): Promise<DownloadStatus> {
     try {
       // If file already exists then check if HASH matches
       if (meta.sha1 !== "" && (await isFileExist(meta.savePath))) {
@@ -37,7 +40,7 @@ export class Serial extends AbstractDownloader {
       // Pipe data
       await pipeline(
         got.stream(meta.url, {
-          timeout: getConfigOptn("timeout", 5000),
+          timeout: noTimeout ? undefined : getConfigOptn("timeout", 5000),
           https: {
             rejectUnauthorized: false,
           },

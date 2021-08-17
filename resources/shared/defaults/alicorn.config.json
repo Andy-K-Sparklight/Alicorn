@@ -6,6 +6,7 @@
   "hot-key": false,
   "hide-when-game": true,
   "updator.use-update": true,
+  "updator.url": "https://alicorn-updates.netlify.app/",
   "download.concurrent.chunk-size": 8192,
   "download.concurrent.timeout": 10000,
   "download.concurrent.tries-per-chunk": 2,

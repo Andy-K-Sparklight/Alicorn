@@ -30,6 +30,7 @@ import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
 import { prefetchMojangVersions } from "../modules/pff/get/MojangCore";
 import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
 import { initEncrypt } from "../modules/security/Encrypt";
+import { checkUpdate, initUpdator } from "../modules/selfupdate/Updator";
 import { loadServers } from "../modules/server/ServerFiles";
 import { App } from "./App";
 import { registerHandlers } from "./Handlers";
@@ -243,6 +244,20 @@ window.addEventListener("error", (e) => {
       (t4.getTime() - t3.getTime()) / 1000 +
       "s."
   );
+  if (getBoolean("updator.use-update")) {
+    console.log("Checking updates...");
+    try {
+      initUpdator();
+      await checkUpdate();
+    } catch (e) {
+      console.log(e);
+      console.log(
+        "A critical error happened during updating. Try again next time!"
+      );
+    }
+  } else {
+    console.log("Skipped update checking due to user settings.");
+  }
 })();
 
 function bindSuperCowPower(): void {

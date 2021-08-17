@@ -5,7 +5,6 @@ import path from "path";
 import { getBoolean, loadConfigSync } from "../modules/config/ConfigSupport";
 import { registerBackgroundListeners } from "./Background";
 import { getUserBrowser } from "./Browser";
-import { checkUpdate } from "./Updator";
 import { closeWS, initWS } from "./WSServer";
 
 console.log("Starting Alicorn!");
@@ -44,19 +43,7 @@ app.on("ready", async () => {
   mainWindow.once("ready-to-show", async () => {
     console.log("Creating window!");
     mainWindow?.show();
-    if (getBoolean("updator.use-update")) {
-      console.log("Checking updates...");
-      try {
-        await checkUpdate();
-      } catch (e) {
-        console.log(e);
-        console.log(
-          "A critical error happened during updating. Try again next time!"
-        );
-      }
-    } else {
-      console.log("Skipped update checking due to user settings.");
-    }
+
     console.log("All caught up! Alicorn is now initialized.");
   });
   console.log("Preparing window!");

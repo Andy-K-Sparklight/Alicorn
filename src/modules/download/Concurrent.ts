@@ -29,7 +29,10 @@ export class Concurrent extends AbstractDownloader {
     return Concurrent.instance;
   }
 
-  async downloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
+  async downloadFile(
+    meta: DownloadMeta,
+    overrideTimeout?: boolean
+  ): Promise<DownloadStatus> {
     if (getString("download.primary-downloader") !== "Concurrent") {
       return await Serial.getInstance().downloadFile(meta);
     }
@@ -41,12 +44,11 @@ export class Concurrent extends AbstractDownloader {
         }
       }
       const fileSize = await getSize(meta.url);
-      console.log(fileSize);
       if (fileSize <= getConfigOptn("chunk-size", 1024) * 1024) {
         return await Serial.getInstance().downloadFile(meta);
       }
       const allChunks = generateChunks(fileSize);
-      await Promise.all(getAllPromises(meta, allChunks));
+      await Promise.all(getAllPromises(meta, allChunks, overrideTimeout));
       await sealAndVerify(
         meta.url,
         meta.savePath,
@@ -131,7 +133,11 @@ async function getSize(url: string): Promise<number> {
   }
 }
 
-function getAllPromises(meta: DownloadMeta, chunks: Chunk[]): Promise<void>[] {
+function getAllPromises(
+  meta: DownloadMeta,
+  chunks: Chunk[],
+  overrideTimeout?: boolean
+): Promise<void>[] {
   const allPromises = [];
   const savePathHash = basicHash(meta.savePath);
   for (const c of chunks) {
@@ -140,7 +146,9 @@ function getAllPromises(meta: DownloadMeta, chunks: Chunk[]): Promise<void>[] {
       generatePath(savePathHash, c.start, c.end)
     );
 
-    allPromises.push(downloadSingleChunk(meta.url, tmpFileSavePath, c));
+    allPromises.push(
+      downloadSingleChunk(meta.url, tmpFileSavePath, c, overrideTimeout)
+    );
   }
   return allPromises;
 }
@@ -152,11 +160,12 @@ function generatePath(hash: string, start: number, end: number) {
 async function downloadSingleChunk(
   url: string,
   tmpSavePath: string,
-  chunk: Chunk
+  chunk: Chunk,
+  overrideTimeout?: boolean
 ) {
   const buffer = (
     await got.get(url, {
-      timeout: getConfigOptn("timeout", 5000),
+      timeout: overrideTimeout ? undefined : getConfigOptn("timeout", 5000),
       cache: false,
       headers: {
         Range: `bytes=${chunk.start}-${chunk.end}`,
