@@ -3,10 +3,12 @@ import { ipcRenderer } from "electron";
 import React, { useEffect, useState } from "react";
 import pkg from "../../package.json";
 import { tr } from "./Translator";
+const modeList = ["Copyright", "Privacy", "Credit"];
 export function VersionView(): JSX.Element {
   const [ecVersion, setEcVersion] = useState(
     tr("VersionView.Electron.Fetching")
   );
+  const [displayMode, setDisplayMode] = useState(0);
   useEffect(() => {
     (async () => {
       setEcVersion(await ipcRenderer.invoke("getElectronVersion"));
@@ -54,13 +56,24 @@ export function VersionView(): JSX.Element {
       <Typography className={classes.text} color={"secondary"} gutterBottom>
         {tr("VersionView.FreeSoftwareClaim")}
       </Typography>
-      <Typography className={classes.text} color={"secondary"} gutterBottom>
-        {tr("VersionView.Copyright1")}
-      </Typography>
-      <Typography className={classes.text} color={"secondary"} gutterBottom>
-        {tr("VersionView.Copyright2")}
-      </Typography>
-
+      <Box
+        onClick={() => {
+          setDisplayMode((v) => {
+            let r = v + 1;
+            if (r >= modeList.length) {
+              r = 0;
+            }
+            return r;
+          });
+        }}
+      >
+        <Typography className={classes.text} color={"secondary"} gutterBottom>
+          {tr("VersionView." + modeList[displayMode])}
+        </Typography>
+        <Typography className={classes.text} color={"secondary"} gutterBottom>
+          {tr("VersionView.ClickToSeeNext")}
+        </Typography>
+      </Box>
       <Typography
         className={classes.text}
         color={"primary"}

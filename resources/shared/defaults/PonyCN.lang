@@ -1,10 +1,10 @@
 # Changelog.title
 
-这是一个崭新的我！
+这里是 Alicorn Final
 
 # Changelog.content
 
-@HTMLAlicorn Pre2 是一个质量更新，包含一些值得注意的新玩意……
+@HTMLAlicorn Final 是 Alicorn 正式版发布前的最后一个预览版本。<br/>此更新修复了一直存在的升级方法漏洞，提升了 Alicorn 更新体验，建议所有用户安装。<br/><br/>此版本还对资源文件做了重大修改，主要是将 Jar 包改用 ALD 类型以便于文件统一管理，功能上不会受到影响。<br/><br/>Java 进程优先级调整从此版本移除。
 
 # LaunchPad
 
@@ -548,17 +548,25 @@ Andy K Rarity Sparklight
 
 欢迎你测试 Alicorn！希望你使用愉快！
 
-# VersionView.Copyright1
+# VersionView.ClickToSeeNext
 
-Alicorn 启动器是自由软件，复制、修改和重新分发等行为应遵循 GNU GENERAL PUBLIC LICENSE Version 3.0 许可证（或以后的版本）。
+单击来查看更多……
 
-# VersionView.Copyright2
+# VersionView.Copyright
 
-Copyright (C) 2021 Andy K Rarity Sparklight\n\n以下内容是原始版权声明的中文翻译，不是官方内容，不具有法律效力，只有英文原版的声明具有此等效力。\n该程序是自由软件：您可以根据自由软件基金会发布的 GNU 通用公共许可证（第三版或以后）的条款重新分发和/或修改它。\n分发此程序是希望它有用，但不作任何保证；甚至没有对适销性或针对特定目的的适用性的暗示保证。有关更多详细信息，请参阅 GNU 通用公共许可证（第三版或以后）原文。
+Alicorn 启动器是自由软件，复制、修改和重新分发等行为应遵循 GNU GENERAL PUBLIC LICENSE Version 3.0 许可证（或以后的版本）。\n\nCopyright (C) 2021 Andy K Rarity Sparklight\n\n该程序是自由软件：您可以根据自由软件基金会发布的 GNU 通用公共许可证（第三版或以后）的条款重新分发和/或修改它。\n分发此程序是希望它有用，但不作任何保证；甚至没有对适销性或针对特定目的的适用性的暗示保证。有关更多详细信息，请参阅 GNU 通用公共许可证（第三版或以后）原文。
+
+# VersionView.Privacy
+
+@HTML有关隐私，Alicorn 的处理方法满足：<b><ul><li>我们始终会询问你的意见，除非我们认为这是在干扰你的使用</li><li>数据只保存在本地，除身份验证等必需的信息外均不上传</li><li>可以随时通过重置 Alicorn 来清除已保存的数据</li><li>不保存你的密码，也不向你询问有关你个人的真实信息</li></ul></b>
+
+# VersionView.Credit
+
+Alicorn 的创建离不开超过 505 个 NPM 可重用软件包，其中包括 Material UI、React、Electron 这些框架软件包，got、crypto-js、ajv 这些效用软件包，Webpack、TypeScript 这些构建软件包，以及许多许多被大量依赖的基础软件包。\nAlicorn 还要感谢包括 VSCodium 和 Vim 在内的开发工具，因为有它们，Alicorn 的开发效率成倍地提升。\n\n您是否想支持 Alicorn？或者只是想了解更多内容？欢迎访问 <a href="https://al.xuogroup.top">Alicorn Launcher 官方网站</a>
 
 # VersionView.FreeSoftwareClaim
 
-我们提倡软件自由，Alicorn 不会依赖任何非自由的软件包，因此，如果你发现我们没有支持某些常见的功能，请先查看用于实现它们的相关组件的许可。\n然而，请注意随附的任何字体均不是 Alicorn 的一部分，它们适用单独的许可条款，修改、使用、分发等受到相关规定的限制。
+我们提倡软件自由，Alicorn 不会依赖非自由的软件包，因此，如果你发现我们没有支持某些常见的功能，请先查看用于实现它们的相关组件的许可。
 
 # VersionView.SuperCowPower
 
