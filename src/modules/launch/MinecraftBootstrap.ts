@@ -57,23 +57,7 @@ export class RunningMinecraft {
       }
       REV_POOL.delete(this);
     });
-    if (getBoolean("launch.jim")) {
-      let c0 = false;
-      this.process?.stderr?.once("data", async () => {
-        if (!c0) {
-          c0 = true;
-          await runJIM();
-          console.log("JIM enabled.");
-        }
-      });
-      this.process?.stdout?.once("data", async () => {
-        if (!c0) {
-          c0 = true;
-          await runJIM();
-          console.log("JIM enabled.");
-        }
-      });
-    }
+   
     this.process?.stdout?.on("data", (d) => {
       const strD = d.toString();
       this.logs.getFirstValue().push(strD);

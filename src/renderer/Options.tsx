@@ -167,12 +167,6 @@ export function OptionsPage(): JSX.Element {
             choices={["pure", "cms", "g1", "z"]}
           />
           <InputItem type={ConfigType.STR} bindConfig={"gw-size"} />
-
-          <InputItem
-            type={ConfigType.BOOL}
-            bindConfig={"launch.jim"}
-            onlyOn={"win32"}
-          />
         </TabPanel>
         <TabPanel index={3} value={tabValue}>
           <InputItem

@@ -21,7 +21,6 @@
   "modx.global-dynamic-load-mods": true,
   "cmc.disable-log4j-config": true,
   "web.global-proxy": "",
-  "launch.jim": false,
   "user.name": "",
   "java.simple-search": false,
   "java.search-depth": 8,

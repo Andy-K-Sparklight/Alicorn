@@ -1372,14 +1372,6 @@ JRE 快速搜索
 
 Alicorn 会用这个名字亲切地称呼您 - 嗯……可爱~
 
-# Options.launch.jim.title
-
-适用于 Windows 的 JRE 进程优先级调整
-
-# Options.launch.jim.desc
-
-调整 JRE 进程的优先级以优化游戏运行，但对系统和其它应用有较大影响 - 该操作有几率导致系统不稳定，如果您不知道您在做什么，请不要启用它
-
 # Options.web.global-proxy.title
 
 浏览器 HTTP 代理
