@@ -22,7 +22,7 @@ let LOCK_FILE: string;
 export function initUpdator(): void {
   BASE_URL = getString(
     "updator.url",
-    "https://cdn.jsdelive.net/gh/Andy-K-Sparklight/Alicorn@production/"
+    "https://cdn.jsdelivr.net/gh/Andy-K-Sparklight/Alicorn@production/"
   );
   RELEASE_FOLDER = BASE_URL + "release/";
   MAIN_BUILD_FILE_RELEASE = RELEASE_FOLDER + "MainBuild.json";
