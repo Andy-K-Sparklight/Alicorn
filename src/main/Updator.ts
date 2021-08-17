@@ -1,5 +1,5 @@
 import Ajv from "ajv";
-import { app, dialog } from "electron";
+import { app } from "electron";
 import fs from "fs-extra";
 import got from "got";
 import os from "os";
@@ -9,7 +9,6 @@ import { getActualDataPath } from "../modules/config/DataSupport";
 import { DownloadMeta } from "../modules/download/AbstractDownloader";
 import { getProxyAgent } from "../modules/download/ProxyConfigure";
 import { Serial } from "../modules/download/Serial";
-import { getMainWindow } from "./Bootstrap";
 import BuildInfoSchema from "./BuildInfoSchema.json";
 
 // MAINTAINERS ONLY
@@ -79,12 +78,12 @@ export async function checkUpdate(): Promise<void> {
       console.log("Update failed, let's try again next time.");
       return;
     }
-    await hintUpdate(u);
+    // await hintUpdate(u); We have a page to show update
   } else {
     console.log("Invalid build info! Skipped updating this time.");
   }
 }
-
+/*
 async function hintUpdate(d: { version: string; date: string }): Promise<void> {
   const bw = getMainWindow();
   if (bw) {
@@ -95,7 +94,7 @@ async function hintUpdate(d: { version: string; date: string }): Promise<void> {
     });
   }
 }
-
+*/
 export async function doUpdate(
   baseUrl: string,
   info: BuildInfo
@@ -104,17 +103,33 @@ export async function doUpdate(
   await fs.writeFile(LOCK_FILE, info.date);
   try {
     for (const v of info.files) {
-      const meta = new DownloadMeta(
-        baseUrl + v,
-        path.resolve(app.getAppPath(), v),
-        ""
-      );
+      const target = path.resolve(app.getAppPath(), v);
+      await backupFile(target);
+    }
+    for (const v of info.files) {
+      const target = path.resolve(app.getAppPath(), v);
+      const meta = new DownloadMeta(baseUrl + v, target, "");
+
       if ((await Serial.getInstance().downloadFile(meta)) !== 1) {
-        return false;
+        throw "Failed to download!";
       }
     }
     return true;
   } catch {
+    for (const v of info.files) {
+      try {
+        const target = path.resolve(app.getAppPath(), v);
+        await restoreFile(target);
+      } catch {}
+    }
     return false;
   }
+}
+
+async function backupFile(src: string): Promise<void> {
+  await fs.copyFile(src, src + ".backup");
+}
+
+async function restoreFile(src: string): Promise<void> {
+  await fs.copyFile(src + ".backup", src);
 }
