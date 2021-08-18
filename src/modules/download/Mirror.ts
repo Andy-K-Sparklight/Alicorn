@@ -11,7 +11,7 @@ let mirrorMap: Map<string, string> = new Map();
 const METHOD_KEY = "@method";
 const NO_MIRROR_VAL = "@no-mirror";
 const CURRENT_LINX_REGEX = "[REGEX]";
-
+const CURRENT_LINX_EXACT = "[EXACT]";
 export function applyMirror(url: string): string {
   const useRegex = mirrorMap.get(METHOD_KEY) === "regex";
   for (const [k, v] of mirrorMap.entries()) {
@@ -33,6 +33,14 @@ export function applyMirror(url: string): string {
           return url;
         }
         return url.replace(rx, v);
+      }
+    } else if (k.startsWith(CURRENT_LINX_EXACT)) {
+      const rx = k.slice(CURRENT_LINX_EXACT.length);
+      if (url === rx) {
+        if (v === NO_MIRROR_VAL) {
+          return url;
+        }
+        return v;
       }
     } else {
       if (url.includes(k)) {
