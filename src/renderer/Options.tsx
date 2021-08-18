@@ -179,6 +179,10 @@ export function OptionsPage(): JSX.Element {
             bindConfig={"show-downloading-item"}
           />
           <InputItem
+            type={ConfigType.BOOL}
+            bindConfig={"download.skip-validate"}
+          />
+          <InputItem
             type={ConfigType.RADIO}
             bindConfig={"download.primary-downloader"}
             choices={["Concurrent", "Serial"]}
