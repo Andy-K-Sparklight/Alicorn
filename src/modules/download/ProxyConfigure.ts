@@ -3,8 +3,7 @@ import { Pair } from "../commons/Collections";
 import { getString } from "../config/ConfigSupport";
 
 const PROXY_REGEX = /^[0-9A-Za-z\-.]+?:[0-9]+$/i;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let GLOBAL_HOH: any = null;
+
 export function getProxy(): Pair<string, number> {
   const gp = getString("download.global-proxy");
   if (PROXY_REGEX.test(gp)) {
@@ -16,12 +15,9 @@ export function getProxy(): Pair<string, number> {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getProxyAgent(): any {
-  if (GLOBAL_HOH) {
-    return GLOBAL_HOH;
-  }
   const p = getProxy();
   if (p.getFirstValue().length > 0 && p.getSecondValue() > -1) {
-    GLOBAL_HOH = {
+    return {
       https: httpsOverHttp({
         proxy: {
           host: p.getFirstValue(),
@@ -29,7 +25,6 @@ export function getProxyAgent(): any {
         },
       }),
     };
-    return GLOBAL_HOH;
   }
   return undefined;
 }
