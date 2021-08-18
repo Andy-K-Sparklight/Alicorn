@@ -92,7 +92,6 @@ import { loadProfile } from "../modules/profile/ProfileLoader";
 import { jumpTo, Pages, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { YNDialog } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
-import { schedulePromiseTask } from "./Schedule";
 import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
 import { toReadableType } from "./YggdrasilAccountManager";
@@ -136,6 +135,7 @@ export function ReadyToLaunch(): JSX.Element {
   const [profileLoadedBit, setLoaded] = useState(0);
   const { id, container, server } =
     useParams<{ id: string; container: string; server?: string }>();
+
   const mounted = useRef<boolean>();
 
   useEffect(() => {
@@ -213,26 +213,14 @@ function Launching(props: {
     const timer = setInterval(() => {
       setHint(randsl("ReadyToLaunch.WaitingText"));
     }, 5000);
-    let subscribe: NodeJS.Timer;
-    if (getBoolean("show-downloading-item")) {
-      subscribe = setInterval(() => {
-        if (NEED_QUERY_STATUS) {
-          let isGettingBit = false;
-          schedulePromiseTask(async () => {
-            if (!isGettingBit) {
-              isGettingBit = true;
-              setWrapperStatus(getWrapperStatus());
-              isGettingBit = false;
-            }
-          });
-        }
-      }, 300);
-    }
+    const subscribe = setInterval(() => {
+      if (NEED_QUERY_STATUS) {
+        setWrapperStatus(getWrapperStatus());
+      }
+    }, 1000);
     return () => {
       clearInterval(timer);
-      if (getBoolean("show-downloading-item")) {
-        clearInterval(subscribe);
-      }
+      clearInterval(subscribe);
     };
   }, []);
   useEffect(() => {
@@ -353,11 +341,12 @@ function Launching(props: {
           );
         })}
       </Stepper>
-      {status === LaunchingStatus.PENDING ||
-      status === LaunchingStatus.FINISHED ? (
-        ""
-      ) : (
+      {status === LaunchingStatus.ACCOUNT_AUTHING ||
+      status === LaunchingStatus.ARGS_GENERATING ||
+      status === LaunchingStatus.MODS_PREPARING ? (
         <LinearProgress color={"secondary"} />
+      ) : (
+        ""
       )}
       {/* Insert Here */}
       {status === LaunchingStatus.PENDING ||
@@ -382,7 +371,7 @@ function Launching(props: {
             className={classes.text}
             gutterBottom
           >
-            {getWrapperStatus().doing}
+            {ws.doing}
           </Typography>
         </Box>
       )}
