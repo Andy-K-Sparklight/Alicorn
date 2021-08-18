@@ -72,6 +72,7 @@ export async function checkUpdate(): Promise<void> {
       agent: getProxyAgent(),
       responseType: "json",
     });
+    console.log("Downloading files...");
     if (!AJV.validate(BuildInfoSchema, res_rend.body)) {
       console.log("Invalid build info! Skipped updating this time.");
       return;
@@ -87,6 +88,7 @@ export async function checkUpdate(): Promise<void> {
 
     await fs.ensureDir(path.dirname(LOCK_FILE));
     await fs.writeFile(LOCK_FILE, (res.body as BuildInfo).date);
+    console.log("Update completed.");
     // await hintUpdate(u); We have a page to show update
   } else {
     console.log("Invalid build info! Skipped updating this time.");
