@@ -51,8 +51,8 @@ import {
   subscribeDoing,
   unsubscribeDoing,
 } from "../modules/download/DownloadWrapper";
-import { wrappedInstallModpack } from "../modules/pff/modpack/InstallCFModpack";
 import { deployIJPack } from "../modules/pff/modpack/InstallIJModpack";
+import { wrappedInstallModpack } from "../modules/pff/modpack/InstallModpack";
 import {
   FailedHint,
   OperatingHint,
@@ -575,6 +575,8 @@ function AddNewContainer(props: {
             setAllowModpack(false);
             setCreateASC(false);
             setModpackPath("");
+            setDirError(false);
+            setModpackError(false);
           }}
         >
           {tr("ContainerManager.Cancel")}

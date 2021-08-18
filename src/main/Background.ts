@@ -55,12 +55,7 @@ export function registerBackgroundListeners(): void {
   });
   ipcMain.handle("selectDir", async () => {
     const r = await dialog.showOpenDialog({
-      properties: [
-        "openDirectory",
-        "createDirectory",
-        "promptToCreate",
-        "dontAddToRecent",
-      ],
+      properties: ["openDirectory", "createDirectory", "promptToCreate"],
     });
     if (r.canceled) {
       return "";
@@ -69,10 +64,10 @@ export function registerBackgroundListeners(): void {
   });
   ipcMain.handle("selectModpack", async () => {
     const r = await dialog.showOpenDialog({
-      properties: ["openFile", "dontAddToRecent"],
+      properties: ["openFile"],
       filters: [
         {
-          name: "CurseForge Modpack",
+          name: "Modpack Archive",
           extensions: ["zip"],
         },
         {
