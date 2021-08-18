@@ -70,7 +70,6 @@ export async function bootForgeInstaller(
   forgeJar: string,
   container: MinecraftContainer
 ): Promise<void> {
-  console.log("Starting Forge installer process");
   const fihPt = getActualDataPath(FORGE_INSTALLER_HEADLESS);
   const fgPt = container.getTempFileStorePath(forgeJar);
   const rcp = childProcess.spawn(
@@ -96,11 +95,9 @@ export async function bootForgeInstaller(
       reject();
     });
     rcp.stdout?.on("data", (d) => {
-      console.log(d.toString());
       addDoing(d.toString());
     });
     rcp.stderr?.on("data", (d) => {
-      console.log(d.toString());
       addDoing(d.toString());
     });
   });

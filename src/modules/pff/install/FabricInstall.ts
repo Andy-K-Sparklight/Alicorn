@@ -78,11 +78,9 @@ async function bootFabricInstaller(
         reject();
       });
       prc.stdout?.on("data", (d) => {
-        console.log(d.toString());
         addDoing(d.toString());
       });
       prc.stderr?.on("data", (d) => {
-        console.log(d.toString());
         addDoing(d.toString());
       });
     } catch (e) {
