@@ -542,7 +542,7 @@ Andy K Rarity Sparklight
 
 # VersionView.Description
 
-欢迎你测试 Alicorn！希望你使用愉快！
+@HTML欢迎使用 Alicorn！如果遇到什么问题，可到 <a href="javascript:ashow('https://al.xuogroup.top')">我们的网站</a> 上寻求帮助。
 
 # VersionView.ClickToSeeNext
 
@@ -558,7 +558,7 @@ Alicorn 启动器是自由软件，复制、修改和重新分发等行为应遵
 
 # VersionView.Credit
 
-@HTMLAlicorn 的创建离不开超过 505 个 NPM 可重用软件包，其中包括 Material UI、React、Electron 这些框架软件包，got、crypto-js、ajv 这些效用软件包，Webpack、TypeScript 这些构建软件包，以及许多许多被大量依赖的基础软件包。\nAlicorn 还要感谢包括 VSCodium 和 Vim 在内的开发工具，因为有它们，Alicorn 的开发效率成倍地提升。\n\n您是否想支持 Alicorn？或者只是想了解更多内容？欢迎访问 <a href="https://al.xuogroup.top">Alicorn Launcher 官方网站</a>
+@HTMLAlicorn 的创建离不开超过 505 个 NPM 可重用软件包，其中包括 Material UI、React、Electron 这些框架软件包，got、crypto-js、ajv 这些效用软件包，Webpack、TypeScript 这些构建软件包，以及许多许多被大量依赖的基础软件包。\nAlicorn 还要感谢包括 VSCodium 和 Vim 在内的开发工具，因为有它们，Alicorn 的开发效率成倍地提升。\n\n您是否想支持 Alicorn？或者只是想了解更多内容？欢迎访问 <a href="javascript:ashow('https://al.xuogroup.top')">Alicorn Launcher 官方网站</a>
 
 # VersionView.FreeSoftwareClaim
 
@@ -1848,7 +1848,7 @@ download.mirror;RADIO;none/alicorn/alicorn-mcbbs-nonfree
 
 # Tutor.6.Content
 
-@HTMLPff 是我的一个组件，简单而言，就是 Mod 下载器。如果你要玩整合包或者要通过 Alicorn 获取 Mod，就需要设置这一项。\n\nPff 会缓存已经下载过的 Mod，因此，你应该<b>在这里选择一个合适的位置</b>来存放这些缓存文件（不是在 Minecraft 容器中！）。你可以在下面的设置中调整。
+@HTMLPff 是我的一个组件，简单而言，就是 Mod 下载器。如果你要玩整合包或者要通过 Alicorn 获取 Mod，<b>就需要设置这一项</b>。\n\nPff 会缓存已经下载过的 Mod，因此，你应该<b>在这里选择一个合适的位置</b>来存放这些缓存文件（不是在 Minecraft 容器中！）。你可以在下面的设置中调整。随着时间的推移，这里会放置许许多多的 Mod，请确保留出足够多的空间！
 
 # Tutor.6.Controller
 
@@ -1928,7 +1928,7 @@ pff.cache-root;DIR
 
 # Tutor.12.Content
 
-@HTML本教程的内容到此就结束了，这当然不是我功能的全部，甚至不是一小部分。你可以在使用过程中逐渐了解我～\n\n接下来你可以选择<b>设置一个帐户来进行第三方验证</b>，或者<b>设置 ASC 缓存位置</b>来启用 ASC 容器这一超酷的功能，亦或是<b>登录 Mojang 帐户、第三方验证</b>，当然还可以马上<b>开始一次游戏</b>！\n\n（题外话：Alicorn 的作者 —— Sparklight 是只可爱的坎特拉女孩哦～）\n\n快捷栏按钮将在你<b>单击右上角的按钮</b>后全部解锁。
+@HTML本教程的内容到此就结束了，这当然不是我功能的全部，甚至不是一小部分。你可以在使用过程中逐渐了解我～\n\n接下来你可以选择<b>设置一个帐户来进行第三方验证</b>，或者<b>设置 ASC 缓存位置</b>来启用 ASC 容器这一超酷的功能，亦或是<b>登录 Mojang 帐户、第三方验证</b>，当然还可以马上<b>开始一次游戏</b>！\n\n（题外话：Alicorn 的作者 —— Sparklight 是只可爱的坎特拉女孩哦～）\n\n快捷栏按钮将在你<b>单击右上角的按钮</b>后全部解锁。\n\n欢迎访问 <a href="javascript:ashow('https://al.xuogroup.top')">Alicorn Launcher 官方网站</a>～
 
 # Tutor.12.Setting
 

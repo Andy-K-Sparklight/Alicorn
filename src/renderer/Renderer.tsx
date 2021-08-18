@@ -1,5 +1,5 @@
 import { Box, createTheme, MuiThemeProvider } from "@material-ui/core";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, shell } from "electron";
 import { emptyDir } from "fs-extra";
 import os from "os";
 import React from "react";
@@ -159,6 +159,10 @@ window.addEventListener("error", (e) => {
 
 (async () => {
   await initTranslator();
+  // @ts-ignore
+  window["ashow"] = (a: string) => {
+    shell.openExternal(a);
+  }; // Binding
   await Promise.allSettled([loadConfig(), loadGDT(), loadJDT()]);
   // GDT & JDT is required by LaunchPad & JavaSelector
   if (getBoolean("clean-storage")) {
@@ -195,7 +199,7 @@ window.addEventListener("error", (e) => {
   e.innerText = `html {background-color:${getString(
     "theme.secondary.light",
     "#ffe0f0"
-  )};}`;
+  )};} a {color:${getString("theme.primary.main", "#5d2391")};}`;
   // Set background
   document.head.insertAdjacentElement("beforeend", e);
   initCommandListener();
