@@ -41,6 +41,8 @@ export async function xgot(
     ).body;
   } catch (e) {
     console.log(e);
+    console.log("Relative url(origin): " + url);
+    console.log("Relative url(mirror): " + applyMirror(url));
     return await xgot(url, true);
   }
 }
