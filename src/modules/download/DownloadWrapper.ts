@@ -2,7 +2,7 @@ import EventEmitter from "events";
 import { submitWarn } from "../../renderer/Message";
 import { tr } from "../../renderer/Translator";
 import { getModifiedDate, isFileExist } from "../commons/FileUtil";
-import { getNumber } from "../config/ConfigSupport";
+import { getBoolean, getNumber } from "../config/ConfigSupport";
 import { getAllContainers, getContainer } from "../container/ContainerUtil";
 import { fetchSharedFile, isSharedContainer } from "../container/SharedFiles";
 import {
@@ -163,6 +163,9 @@ async function _existsAndValidate(pt: string, sha1: string): Promise<boolean> {
   const lastValidated = getLastValidateModified(pt);
   const actualModifiedDate = await getModifiedDate(pt);
   if (actualModifiedDate <= lastValidated) {
+    return true;
+  }
+  if (getBoolean("download.skip-validate")) {
     return true;
   }
   const res = await validate(pt, sha1);

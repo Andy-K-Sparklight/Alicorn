@@ -1,7 +1,11 @@
 import CryptoJS from "crypto-js";
 import { readFile } from "fs-extra";
 import sha from "sha";
+import { getBoolean } from "../config/ConfigSupport";
 export function validate(file: string, expected: string): Promise<boolean> {
+  if (getBoolean("download.skip-validate")) {
+    return Promise.resolve(true);
+  }
   return new Promise<boolean>((resolve) => {
     sha.check(file, expected, (e) => {
       if (e) {
