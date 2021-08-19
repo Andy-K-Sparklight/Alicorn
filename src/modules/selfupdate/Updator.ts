@@ -4,6 +4,7 @@ import got from "got";
 import os from "os";
 import path from "path";
 import pkg from "../../../package.json";
+import { isFileExist } from "../commons/FileUtil";
 import { getString } from "../config/ConfigSupport";
 import { getActualDataPath } from "../config/DataSupport";
 import { getBasePath } from "../config/PathSolve";
@@ -76,7 +77,7 @@ export async function checkUpdate(): Promise<void> {
       });
     } catch (e) {
       if (String(e).includes("404")) {
-        console.log("You are running the latest version!");
+        console.log("You are running the latest version! (No Later File)");
         IS_UPDATING = false;
         notifyAll();
         return;
@@ -86,21 +87,21 @@ export async function checkUpdate(): Promise<void> {
       throw e;
     }
     console.log("Validating build info!");
-    // let d: BuildInfo;
+    let d: BuildInfo;
     if (AJV.validate(BuildInfoSchema, res.body)) {
-      res.body as BuildInfo;
-      /*
+      d = res.body as BuildInfo;
+
       if (await isFileExist(LOCK_FILE)) {
         if (
           new Date((await fs.readFile(LOCK_FILE)).toString()) >=
           new Date(d.date)
         ) {
-          console.log("You are running the latest version!");
+          console.log("You are running the latest version! (Date)");
           IS_UPDATING = false;
           notifyAll();
           return;
         }
-      }*/
+      }
 
       const res_rend = await got.get(RENDERER_BUILD_FILE_RELEASE, {
         https: {
