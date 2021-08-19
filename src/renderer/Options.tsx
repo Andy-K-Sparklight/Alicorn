@@ -206,10 +206,6 @@ export function OptionsPage(): JSX.Element {
           />
           <InputItem
             type={ConfigType.NUM}
-            bindConfig={"download.pff.max-tasks"}
-          />
-          <InputItem
-            type={ConfigType.NUM}
             bindConfig={"download.concurrent.chunk-size"}
           />
           <InputItem

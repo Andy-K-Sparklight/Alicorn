@@ -13,7 +13,6 @@
   "download.concurrent.max-tasks": 200,
   "download.global-proxy": "",
   "download.pff.chunk-size": 1024,
-  "download.pff.max-tasks": 1200,
   "download.pff.timeout": 300000,
   "download.skip-validate": false,
   "show-downloading-item": false,
