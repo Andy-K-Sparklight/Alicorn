@@ -149,9 +149,19 @@ export async function doUpdate(
 }
 
 async function backupFile(src: string): Promise<void> {
+  try {
+    await fs.access(src);
+  } catch {
+    return;
+  }
   await fs.copyFile(src, src + ".backup");
 }
 
 async function restoreFile(src: string): Promise<void> {
+  try {
+    await fs.access(src + ".backup");
+  } catch {
+    return;
+  }
   await fs.copyFile(src + ".backup", src);
 }

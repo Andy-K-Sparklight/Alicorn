@@ -1,10 +1,10 @@
 # Changelog.title
 
-这里是 Alicorn Final
+这里是 Alicorn Crystal
 
 # Changelog.content
 
-@HTMLAlicorn Final 是 Alicorn 正式版发布前的最后一个预览版本。<br/>此更新修复了一直存在的升级方法漏洞，提升了 Alicorn 更新体验，建议所有用户安装。<br/><br/>此版本还对资源文件做了重大修改，主要是将 Jar 包改用 ALD 类型以便于文件统一管理，功能上不会受到影响。<br/><br/>Java 进程优先级调整从此版本移除。
+@HTML欢迎使用 Crystal！此版本修复了更新系统的 Bug，作为过渡版本而发布。
 
 # LaunchPad
 
