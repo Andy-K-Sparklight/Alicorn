@@ -268,19 +268,21 @@ export function App(): JSX.Element {
                 <ArrowForward />
               </IconButton>
             </Tooltip>
-            <Tooltip title={tr("MainMenu.Reload")}>
-              <IconButton
-                style={genHideStyles("Reload")}
-                color={"inherit"}
-                className={classes.floatButton}
-                onClick={() => {
-                  window.location.hash = "";
-                  window.location.reload();
-                }}
-              >
-                <Refresh />
-              </IconButton>
-            </Tooltip>
+            <Box style={getBoolean("dev") ? {} : { display: "none" }}>
+              <Tooltip title={tr("MainMenu.Reload")}>
+                <IconButton
+                  style={genHideStyles("Reload")}
+                  color={"inherit"}
+                  className={classes.floatButton}
+                  onClick={() => {
+                    window.location.hash = "";
+                    window.location.reload();
+                  }}
+                >
+                  <Refresh />
+                </IconButton>
+              </Tooltip>
+            </Box>
             <Tooltip
               title={
                 getBoolean("dev")

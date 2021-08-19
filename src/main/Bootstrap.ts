@@ -43,8 +43,11 @@ app.on("ready", async () => {
   mainWindow.once("ready-to-show", async () => {
     console.log("Creating window!");
     mainWindow?.show();
-
     console.log("All caught up! Alicorn is now initialized.");
+    if (getBoolean("dev")) {
+      console.log("Development mode detected, opening devtools...");
+      mainWindow?.webContents.openDevTools();
+    }
   });
   console.log("Preparing window!");
   if (getBoolean("hot-key")) {
