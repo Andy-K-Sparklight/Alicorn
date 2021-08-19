@@ -72,7 +72,7 @@ export async function downloadProfile(
     url,
     path.join(container.getVersionRoot(version), version + ".json")
   );
-  await wrappedDownloadFile(m);
+  await wrappedDownloadFile(m, true);
 }
 /**
  * @deprecated

@@ -160,12 +160,12 @@ async function _existsAndValidate(pt: string, sha1: string): Promise<boolean> {
     // This might be a wrong SHA, we should not cache it
     return true;
   }
+  if (getBoolean("download.skip-validate")) {
+    return true;
+  }
   const lastValidated = getLastValidateModified(pt);
   const actualModifiedDate = await getModifiedDate(pt);
   if (actualModifiedDate <= lastValidated) {
-    return true;
-  }
-  if (getBoolean("download.skip-validate")) {
     return true;
   }
   const res = await validate(pt, sha1);

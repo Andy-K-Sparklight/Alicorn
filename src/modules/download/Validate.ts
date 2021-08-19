@@ -8,8 +8,6 @@ export async function validate(
     return Promise.resolve(true);
   }
   const actual = await getHash(file);
-  console.log(actual);
-  console.log(expected);
   if (actual.trim().toLowerCase() === expected.trim().toLowerCase()) {
     return true;
   }
