@@ -214,7 +214,11 @@ function Launching(props: {
       setHint(randsl("ReadyToLaunch.WaitingText"));
     }, 5000);
     const subscribe = setInterval(() => {
-      if (NEED_QUERY_STATUS) {
+      if (
+        NEED_QUERY_STATUS &&
+        (status === LaunchingStatus.LIBRARIES_FILLING ||
+          status === LaunchingStatus.ASSETS_FILLING)
+      ) {
         setWrapperStatus(getWrapperStatus());
       }
     }, 1000);
