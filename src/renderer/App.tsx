@@ -13,6 +13,7 @@ import {
   AccountCircle,
   AllInbox,
   Apps,
+  ArrowBack,
   ArrowForward,
   Code,
   Dns,
@@ -46,7 +47,9 @@ import { saveServers, saveServersSync } from "../modules/server/ServerFiles";
 import { ContainerManager } from "./ContainerManager";
 import { CrashReportDisplay } from "./CrashReportDisplay";
 import {
+  canGoBack,
   CHANGE_PAGE_WARN,
+  goBack,
   jumpTo,
   Pages,
   setChangePageWarn,
@@ -98,6 +101,7 @@ export function App(): JSX.Element {
   const [openChangePageWarn, setOpenChangePageWarn] = useState(false);
   const [pageTarget, setPageTarget] = useState("");
   const [jumpPageTarget, setJumpPageTarget] = useState("");
+  const [haveHistory, setHaveHistory] = useState(false);
   const [err, setErr] = useState("");
   const [warn, setWarn] = useState("");
   const [info, setInfo] = useState("");
@@ -121,7 +125,13 @@ export function App(): JSX.Element {
   useEffect(() => {
     window.addEventListener("changePageWarn", (e) => {
       setOpenChangePageWarn(true);
-      setJumpPageTarget(String(safeGet(e, ["detail"], Pages.Welcome)));
+      const s = safeGet(e, ["detail"], {});
+      // @ts-ignore
+      const target = String(s.target || "");
+      // @ts-ignore
+      const history = !!s.history;
+      setHaveHistory(history);
+      setJumpPageTarget(target);
     });
   }, []);
   useEffect(() => {
@@ -268,10 +278,24 @@ export function App(): JSX.Element {
                 <ArrowForward />
               </IconButton>
             </Tooltip>
-            <Box style={getBoolean("dev") ? {} : { display: "none" }}>
+            {canGoBack() ? (
+              <Tooltip title={tr("MainMenu.GoBack")}>
+                <IconButton
+                  color={"inherit"}
+                  className={classes.floatButton}
+                  onClick={() => {
+                    goBack();
+                  }}
+                >
+                  <ArrowBack />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              ""
+            )}
+            {getBoolean("dev") ? (
               <Tooltip title={tr("MainMenu.Reload")}>
                 <IconButton
-                  style={genHideStyles("Reload")}
                   color={"inherit"}
                   className={classes.floatButton}
                   onClick={() => {
@@ -282,7 +306,9 @@ export function App(): JSX.Element {
                   <Refresh />
                 </IconButton>
               </Tooltip>
-            </Box>
+            ) : (
+              ""
+            )}
             <Tooltip
               title={
                 getBoolean("dev")
@@ -479,8 +505,8 @@ export function App(): JSX.Element {
         open={openChangePageWarn}
         onAccept={() => {
           setChangePageWarn(false);
-          jumpTo(jumpPageTarget);
-          triggerSetPage(pageTarget);
+          jumpTo(jumpPageTarget, haveHistory);
+          triggerSetPage(pageTarget, haveHistory);
         }}
         title={tr("System.JumpPageWarn.Title")}
         content={tr("System.JumpPageWarn.Description")}

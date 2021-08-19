@@ -299,8 +299,8 @@ function Launching(props: {
             setWarning(false);
           }}
           onAccept={() => {
-            triggerSetPage(Pages.CrashReportDisplay);
             jumpTo("/CrashReportDisplay");
+            triggerSetPage(Pages.CrashReportDisplay);
           }}
           title={tr("ReadyToLaunch.WarnError.Title")}
           content={tr("ReadyToLaunch.WarnError.Description")}

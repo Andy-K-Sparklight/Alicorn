@@ -3,12 +3,22 @@ import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
 import { setContainerListDirty } from "./ContainerManager";
 import { setDirty } from "./LaunchPad";
 
-export function jumpTo(target: string): void {
+const PAGES_HISTORY: string[] = [];
+const TITLE_HISTORY: string[] = [];
+
+export function jumpTo(target: string, keepHistory = true): void {
   // @ts-ignore
   if (window[CHANGE_PAGE_WARN]) {
-    window.dispatchEvent(new CustomEvent("changePageWarn", { detail: target }));
+    window.dispatchEvent(
+      new CustomEvent("changePageWarn", {
+        detail: { target: target, history: keepHistory },
+      })
+    );
     return;
   }
+  // if (keepHistory) {
+  PAGES_HISTORY.push(target);
+  // }
   if (window.location.hash.includes("Welcome")) {
     if (window.localStorage.getItem("CurrentVersion") !== LAUNCHER_VERSION) {
       window.localStorage.setItem("CurrentVersion", LAUNCHER_VERSION);
@@ -53,12 +63,26 @@ function ifLeavingConfigThenReload(): void {
   }
 }
 
-export function triggerSetPage(page: string): void {
+export function triggerSetPage(page: string, _keepHistory = true): void {
   // @ts-ignore
   if (window[CHANGE_PAGE_WARN]) {
     return;
   }
+  //if (keepHistory) {
+  TITLE_HISTORY.push(page);
+  //}
   document.dispatchEvent(new CustomEvent("setPage", { detail: page }));
+}
+
+export function canGoBack(): boolean {
+  return PAGES_HISTORY.length > 1 && TITLE_HISTORY.length > 1;
+}
+
+export function goBack(): void {
+  PAGES_HISTORY.pop();
+  TITLE_HISTORY.pop();
+  jumpTo(PAGES_HISTORY.pop() || "/", false);
+  triggerSetPage(TITLE_HISTORY.pop() || "", false);
 }
 
 export enum Pages {
