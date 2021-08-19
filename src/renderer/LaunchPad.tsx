@@ -188,21 +188,26 @@ function SingleCoreDisplay(props: {
             ""
           ) : (
             <Box>
-              <Tooltip title={tr("CoreInfo.Pff")}>
-                <IconButton
-                  color={"inherit"}
-                  className={classes.operateButton}
-                  onClick={(e) => {
-                    jumpTo(
-                      `/PffFront/${props.profile.container}/${props.profile.baseVersion}/${props.profile.versionType}`
-                    );
-                    triggerSetPage(Pages.PffFront);
-                    e.stopPropagation();
-                  }}
-                >
-                  <Archive />
-                </IconButton>
-              </Tooltip>
+              {props.profile.versionType !== "Mojang" &&
+              props.profile.versionType !== "Installer" ? (
+                <Tooltip title={tr("CoreInfo.Pff")}>
+                  <IconButton
+                    color={"inherit"}
+                    className={classes.operateButton}
+                    onClick={(e) => {
+                      jumpTo(
+                        `/PffFront/${props.profile.container}/${props.profile.baseVersion}/${props.profile.versionType}`
+                      );
+                      triggerSetPage(Pages.PffFront);
+                      e.stopPropagation();
+                    }}
+                  >
+                    <Archive />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                ""
+              )}
               <Tooltip title={tr("CoreInfo.Launch")}>
                 <IconButton color={"inherit"} className={classes.operateButton}>
                   {/* We don't need a handler since we can click the card */}
