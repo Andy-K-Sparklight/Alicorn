@@ -234,20 +234,7 @@ window.addEventListener("error", (e) => {
       (t2.getTime() - t1.getTime()) / 1000 +
       "s."
   );
-  // Optional services
-  const t3 = new Date();
-  console.log("Running optional services...");
-  await Promise.allSettled([
-    prefetchForgeManifest(),
-    prefetchFabricManifest(),
-    prefetchMojangVersions(),
-  ]);
-  const t4 = new Date();
-  console.log(
-    "Optional services finished. Time elapsed: " +
-      (t4.getTime() - t3.getTime()) / 1000 +
-      "s."
-  );
+  // Update
   if (getBoolean("updator.use-update")) {
     console.log("Checking updates...");
     try {
@@ -262,6 +249,20 @@ window.addEventListener("error", (e) => {
   } else {
     console.log("Skipped update checking due to user settings.");
   }
+  // Optional services
+  const t3 = new Date();
+  console.log("Running optional services...");
+  await Promise.allSettled([
+    prefetchForgeManifest(),
+    prefetchFabricManifest(),
+    prefetchMojangVersions(),
+  ]);
+  const t4 = new Date();
+  console.log(
+    "Optional services finished. Time elapsed: " +
+      (t4.getTime() - t3.getTime()) / 1000 +
+      "s."
+  );
 })();
 
 function bindSuperCowPower(): void {

@@ -6,7 +6,7 @@ HarmonyForgeInstallerCLI is licensed under the GNU GENERAL PUBLIC LICENSE 3.0 (a
 It's license is compatible with ours, since we use GPL-3.0 too.
 For details, please see https://bitbucket.org/RarityEG/harmonyforgeinstallercli/src/main/LICENSE
 
-A copy of forge.iw.jar.ald will be saved to the root dir of alicorn data.
+A copy of forge.iw.ald will be saved to the root dir of alicorn data.
 */
 import childProcess from "child_process";
 import { zip } from "compressing";
@@ -28,7 +28,7 @@ import { noDuplicateConcat } from "../../profile/InheritedProfileAdaptor";
 import { LibraryMeta } from "../../profile/Meta";
 import { loadProfile } from "../../profile/ProfileLoader";
 
-const FORGE_INSTALLER_HEADLESS = "forge.iw.jar.ald";
+const FORGE_INSTALLER_HEADLESS = "forge.iw.ald";
 const CP_ARG = "-cp";
 const LAUNCHER_PROFILES = "launcher_profiles.json";
 const PONY_KIND_MAIN_CLASS = "rarityeg.alicorn.ForgeInstallerWrapper";

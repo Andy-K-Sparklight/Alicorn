@@ -3,7 +3,7 @@ import { toBase64 } from "js-base64";
 import { getActualDataPath, saveDefaultData } from "../config/DataSupport";
 import { getProxyAgent } from "../download/ProxyConfigure";
 
-export const AJ_FILE_BASE = "authlib-injector.jar.ald";
+export const AJ_FILE_BASE = "authlib-injector.ald";
 
 export async function prepareAJ(): Promise<void> {
   await saveDefaultData(AJ_FILE_BASE);

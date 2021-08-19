@@ -6,7 +6,7 @@
   "hot-key": false,
   "hide-when-game": true,
   "updator.use-update": true,
-  "updator.url": "https://cdn.jsdelivr.net/gh/Andy-K-Sparklight/Alicorn@production/",
+  "updator.url": "",
   "download.concurrent.chunk-size": 8192,
   "download.concurrent.timeout": 10000,
   "download.concurrent.tries-per-chunk": 2,

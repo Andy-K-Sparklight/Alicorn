@@ -1,8 +1,9 @@
 import Ajv from "ajv";
 import fs from "fs-extra";
-import got from "got";
+import got, { HTTPError } from "got";
 import os from "os";
 import path from "path";
+import pkg from "../../../package.json";
 import { isFileExist } from "../commons/FileUtil";
 import { getString } from "../config/ConfigSupport";
 import { getActualDataPath } from "../config/DataSupport";
@@ -11,7 +12,6 @@ import { DownloadMeta } from "../download/AbstractDownloader";
 import { getProxyAgent } from "../download/ProxyConfigure";
 import { Serial } from "../download/Serial";
 import BuildInfoSchema from "./BuildInfoSchema.json";
-
 // MAINTAINERS ONLY
 
 let BASE_URL: string;
@@ -22,8 +22,10 @@ let LOCK_FILE: string;
 export function initUpdator(): void {
   BASE_URL = getString(
     "updator.url",
-    "https://cdn.jsdelivr.net/gh/Andy-K-Sparklight/Alicorn@production/"
-  );
+    `https://cdn.jsdelivr.net/gh/Andy-K-Sparklight/Alicorn@${
+      pkg.updatorVersion + 1
+    }`
+  ).replace("${version}", (pkg.updatorVersion + 1).toString());
   RELEASE_FOLDER = BASE_URL + "release/";
   MAIN_BUILD_FILE_RELEASE = RELEASE_FOLDER + "MainBuild.json";
   RENDERER_BUILD_FILE_RELEASE = RELEASE_FOLDER + "RendererBuild.json";
@@ -45,13 +47,24 @@ export async function checkUpdate(): Promise<void> {
   }
   const HEAD = MAIN_BUILD_FILE_RELEASE;
   const BASE = RELEASE_FOLDER;
-  const res = await got.get(HEAD, {
-    https: {
-      rejectUnauthorized: false,
-    },
-    responseType: "json",
-    agent: getProxyAgent(),
-  });
+  let res;
+  try {
+    res = await got.get(HEAD, {
+      https: {
+        rejectUnauthorized: false,
+      },
+      responseType: "json",
+      agent: getProxyAgent(),
+    });
+  } catch (e) {
+    if (e instanceof HTTPError) {
+      if (e.code === "404") {
+        console.log("You are running the latest version!");
+        return;
+      }
+    }
+    throw e;
+  }
   console.log("Validating build info!");
   let d: BuildInfo;
   if (AJV.validate(BuildInfoSchema, res.body)) {
@@ -118,7 +131,6 @@ export async function doUpdate(
     for (const v of info.files) {
       const target = path.resolve(getBasePath(), v);
       const meta = new DownloadMeta(baseUrl + v, target, "");
-
       if ((await Serial.getInstance().downloadFile(meta, true)) !== 1) {
         throw "Failed to download: " + meta.url;
       }

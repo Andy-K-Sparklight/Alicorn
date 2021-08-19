@@ -2,6 +2,7 @@
   "private": true,
   "appVersion": "Final",
   "version": "1.0.0",
+  "updatorVersion": 2,
   "sideEffects": false,
   "scripts": {
     "lc": "yarn lcd",
