@@ -27,7 +27,7 @@ export async function fetchSharedFile(meta: DownloadMeta): Promise<boolean> {
   }
   const u = new URL(meta.url);
   const urlSHA = uniqueHash(meta.url) + "-" + basicHash(u.host);
-  const root = getString("cx.shared-root", os.homedir(), true);
+  const root = getString("cx.shared-root");
   let targetFile: string;
   if (root.trim().length > 0) {
     targetFile = path.join(root, urlSHA);
