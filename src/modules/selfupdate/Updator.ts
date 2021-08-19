@@ -19,6 +19,8 @@ let RELEASE_FOLDER: string;
 let MAIN_BUILD_FILE_RELEASE: string;
 let RENDERER_BUILD_FILE_RELEASE: string;
 let LOCK_FILE: string;
+let IS_UPDATING = false;
+let func: (() => unknown) | null = null;
 export function initUpdator(): void {
   BASE_URL = getString(
     "updator.url",
@@ -36,75 +38,115 @@ interface BuildInfo {
   files: string[];
   version: string;
 }
+export function waitUpdateFinished(f: () => unknown): void {
+  if (!IS_UPDATING) {
+    f();
+  } else {
+    func = f;
+  }
+}
+
+function notifyAll(): void {
+  if (func) {
+    func();
+  }
+}
 
 const AJV = new Ajv();
 
 export async function checkUpdate(): Promise<void> {
-  if (os.platform() === "darwin") {
-    // macOS updates isn't supported yet
-    console.log("Skipped update checking due to unsupported platform.");
-    return;
-  }
-  const HEAD = MAIN_BUILD_FILE_RELEASE;
-  const BASE = RELEASE_FOLDER;
-  let res;
   try {
-    res = await got.get(HEAD, {
-      https: {
-        rejectUnauthorized: false,
-      },
-      responseType: "json",
-      agent: getProxyAgent(),
-    });
-  } catch (e) {
-    if (e instanceof HTTPError) {
-      if (e.code === "404") {
-        console.log("You are running the latest version!");
-        return;
-      }
+    if (os.platform() === "darwin") {
+      // macOS updates isn't supported yet
+      console.log("Skipped update checking due to unsupported platform.");
+      return;
     }
-    throw e;
-  }
-  console.log("Validating build info!");
-  let d: BuildInfo;
-  if (AJV.validate(BuildInfoSchema, res.body)) {
-    d = res.body as BuildInfo;
-    if (await isFileExist(LOCK_FILE)) {
-      if (
-        new Date((await fs.readFile(LOCK_FILE)).toString()) >= new Date(d.date)
-      ) {
-        console.log("You are running the latest version!");
-        return;
+    IS_UPDATING = true;
+    const HEAD = MAIN_BUILD_FILE_RELEASE;
+    const BASE = RELEASE_FOLDER;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let res: any;
+    try {
+      res = await got.get(HEAD, {
+        https: {
+          rejectUnauthorized: false,
+        },
+        responseType: "json",
+        agent: getProxyAgent(),
+      });
+    } catch (e) {
+      if (e instanceof HTTPError) {
+        if (e.code === "404") {
+          console.log("You are running the latest version!");
+          IS_UPDATING = false;
+          notifyAll();
+          return;
+        }
       }
+      IS_UPDATING = false;
+      notifyAll();
+      throw e;
     }
+    console.log("Validating build info!");
+    let d: BuildInfo;
+    if (AJV.validate(BuildInfoSchema, res.body)) {
+      d = res.body as BuildInfo;
+      if (await isFileExist(LOCK_FILE)) {
+        if (
+          new Date((await fs.readFile(LOCK_FILE)).toString()) >=
+          new Date(d.date)
+        ) {
+          console.log("You are running the latest version!");
+          IS_UPDATING = false;
+          notifyAll();
+          return;
+        }
+      }
 
-    const res_rend = await got.get(RENDERER_BUILD_FILE_RELEASE, {
-      https: {
-        rejectUnauthorized: false,
-      },
-      agent: getProxyAgent(),
-      responseType: "json",
-    });
-    console.log("Downloading files...");
-    if (!AJV.validate(BuildInfoSchema, res_rend.body)) {
+      const res_rend = await got.get(RENDERER_BUILD_FILE_RELEASE, {
+        https: {
+          rejectUnauthorized: false,
+        },
+        agent: getProxyAgent(),
+        responseType: "json",
+      });
+      console.log("Downloading files...");
+      if (!AJV.validate(BuildInfoSchema, res_rend.body)) {
+        console.log("Invalid build info! Skipped updating this time.");
+        IS_UPDATING = false;
+        notifyAll();
+        return;
+      }
+      if (!(await doUpdate(BASE, res_rend.body as BuildInfo))) {
+        console.log("Update failed, let's try again next time.");
+        IS_UPDATING = false;
+        notifyAll();
+        return;
+      }
+      if (!(await doUpdate(BASE, res.body as BuildInfo))) {
+        console.log("Update failed, let's try again next time.");
+        IS_UPDATING = false;
+        notifyAll();
+        return;
+      }
+
+      await fs.ensureDir(path.dirname(LOCK_FILE));
+      await fs.writeFile(LOCK_FILE, (res.body as BuildInfo).date);
+      console.log("Update completed.");
+      IS_UPDATING = false;
+      notifyAll();
+      // await hintUpdate(u); We have a page to show update
+    } else {
       console.log("Invalid build info! Skipped updating this time.");
-      return;
+      IS_UPDATING = false;
+      notifyAll();
     }
-    if (!(await doUpdate(BASE, res_rend.body as BuildInfo))) {
-      console.log("Update failed, let's try again next time.");
-      return;
-    }
-    if (!(await doUpdate(BASE, res.body as BuildInfo))) {
-      console.log("Update failed, let's try again next time.");
-      return;
-    }
-
-    await fs.ensureDir(path.dirname(LOCK_FILE));
-    await fs.writeFile(LOCK_FILE, (res.body as BuildInfo).date);
-    console.log("Update completed.");
-    // await hintUpdate(u); We have a page to show update
-  } else {
-    console.log("Invalid build info! Skipped updating this time.");
+  } catch (e) {
+    console.log("Precaught error during updating!");
+    console.log(e);
+    IS_UPDATING = false;
+    notifyAll();
+    throw e;
   }
 }
 /*

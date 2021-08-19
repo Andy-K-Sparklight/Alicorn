@@ -41,6 +41,7 @@ import {
   saveResolveLockSync,
 } from "../modules/download/ResolveLock";
 import { saveJDT, saveJDTSync } from "../modules/java/JInfo";
+import { waitUpdateFinished } from "../modules/selfupdate/Updator";
 import { saveServers, saveServersSync } from "../modules/server/ServerFiles";
 import { ContainerManager } from "./ContainerManager";
 import { CrashReportDisplay } from "./CrashReportDisplay";
@@ -430,7 +431,12 @@ export function App(): JSX.Element {
               <IconButton
                 style={genHideStyles("Exit")}
                 className={classes.exitButton}
-                onClick={remoteCloseWindow}
+                onClick={() => {
+                  remoteHideWindow();
+                  waitUpdateFinished(() => {
+                    remoteCloseWindow();
+                  });
+                }}
                 color={"inherit"}
               >
                 <PowerSettingsNew />
@@ -515,6 +521,10 @@ export function App(): JSX.Element {
       />
     </Box>
   );
+}
+function remoteHideWindow(): void {
+  console.log("Preparing to exit!");
+  ipcRenderer.send("hideWindow");
 }
 
 function remoteCloseWindow(): void {
