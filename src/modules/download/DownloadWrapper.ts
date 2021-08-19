@@ -292,7 +292,6 @@ export function setProxy(_host: string, _port: number): void {
 }
 
 export function addState(s: string): void {
-  console.log(s);
   addDoing(s);
   DOING.unshift(s);
   if (DOING.length > 3) {
