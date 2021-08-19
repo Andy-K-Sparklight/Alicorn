@@ -1,10 +1,9 @@
 import Ajv from "ajv";
 import fs from "fs-extra";
-import got, { HTTPError } from "got";
+import got from "got";
 import os from "os";
 import path from "path";
 import pkg from "../../../package.json";
-import { isFileExist } from "../commons/FileUtil";
 import { getString } from "../config/ConfigSupport";
 import { getActualDataPath } from "../config/DataSupport";
 import { getBasePath } from "../config/PathSolve";
@@ -29,7 +28,6 @@ export function initUpdator(): void {
     }/`,
     true
   ).replace("${version}", (pkg.updatorVersion + 1).toString());
-  console.log(BASE_URL);
   RELEASE_FOLDER = BASE_URL + "release/";
   MAIN_BUILD_FILE_RELEASE = RELEASE_FOLDER + "MainBuild.json";
   RENDERER_BUILD_FILE_RELEASE = RELEASE_FOLDER + "RendererBuild.json";
@@ -77,22 +75,21 @@ export async function checkUpdate(): Promise<void> {
         agent: getProxyAgent(),
       });
     } catch (e) {
-      if (e instanceof HTTPError) {
-        if (e.code === "404") {
-          console.log("You are running the latest version!");
-          IS_UPDATING = false;
-          notifyAll();
-          return;
-        }
+      if (String(e).includes("404")) {
+        console.log("You are running the latest version!");
+        IS_UPDATING = false;
+        notifyAll();
+        return;
       }
       IS_UPDATING = false;
       notifyAll();
       throw e;
     }
     console.log("Validating build info!");
-    let d: BuildInfo;
+    // let d: BuildInfo;
     if (AJV.validate(BuildInfoSchema, res.body)) {
-      d = res.body as BuildInfo;
+      res.body as BuildInfo;
+      /*
       if (await isFileExist(LOCK_FILE)) {
         if (
           new Date((await fs.readFile(LOCK_FILE)).toString()) >=
@@ -103,7 +100,7 @@ export async function checkUpdate(): Promise<void> {
           notifyAll();
           return;
         }
-      }
+      }*/
 
       const res_rend = await got.get(RENDERER_BUILD_FILE_RELEASE, {
         https: {
