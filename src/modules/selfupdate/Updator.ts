@@ -24,7 +24,7 @@ export function initUpdator(): void {
     "updator.url",
     `https://cdn.jsdelivr.net/gh/Andy-K-Sparklight/Alicorn@${
       pkg.updatorVersion + 1
-    }`
+    }/`
   ).replace("${version}", (pkg.updatorVersion + 1).toString());
   RELEASE_FOLDER = BASE_URL + "release/";
   MAIN_BUILD_FILE_RELEASE = RELEASE_FOLDER + "MainBuild.json";
