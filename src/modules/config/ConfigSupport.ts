@@ -18,7 +18,7 @@ const DEFAULT_CONFIG_FILE = path.resolve(
 );
 
 let cachedConfig = {};
-
+let defaultConfig = {};
 export function set(key: string, value: unknown): void {
   // @ts-ignore
   cachedConfig[key] = value;
@@ -26,7 +26,10 @@ export function set(key: string, value: unknown): void {
 
 export function get(key: string, def: unknown): unknown {
   // @ts-ignore
-  const v = cachedConfig[key];
+  let v = cachedConfig[key];
+  if (v === undefined) {
+    v = cachedConfig[key] = defaultConfig[key]; // Repair
+  }
   return v === undefined ? def : v;
 }
 
@@ -60,6 +63,11 @@ export async function loadConfig(): Promise<void> {
   } catch {
     await saveDefaultConfig();
   }
+  try {
+    defaultConfig = Object.freeze(
+      JSON.parse((await fs.readFile(CONFIG_FILE)).toString())
+    );
+  } catch {}
 }
 export function loadConfigSync(): void {
   try {
