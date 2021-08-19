@@ -1,6 +1,8 @@
+import { readFile } from "fs-extra";
 import leven from "js-levenshtein";
 import mdiff from "mdiff";
-
+import sha from "sha";
+import CryptoJS from "crypto-js";
 const HANDLERS = new Map();
 
 onmessage = (e) => {
@@ -25,6 +27,23 @@ addHandler("POST", () => {
 
 addHandler("Close", () => {
   close();
+});
+
+addHandler("Sha256File", async (target) => {
+  let s = await readFile(target);
+  return CryptoJS.SHA256(s.toString());
+});
+
+addHandler("Sha1File", (target) => {
+  return new Promise((resolve) => {
+    sha.get(target, (e, s) => {
+      if (e) {
+        resolve("");
+      } else {
+        resolve(s);
+      }
+    });
+  });
 });
 
 addHandler("StrDiff", (str1, str2) => {

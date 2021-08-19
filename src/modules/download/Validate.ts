@@ -1,39 +1,29 @@
-import CryptoJS from "crypto-js";
-import { readFile } from "fs-extra";
-import sha from "sha";
+import { invokeWorker } from "../../renderer/Schedule";
 import { getBoolean } from "../config/ConfigSupport";
-export function validate(file: string, expected: string): Promise<boolean> {
+export async function validate(
+  file: string,
+  expected: string
+): Promise<boolean> {
   if (getBoolean("download.skip-validate")) {
     return Promise.resolve(true);
   }
-  return new Promise<boolean>((resolve) => {
-    sha.check(file, expected, (e) => {
-      if (e) {
-        resolve(false);
-      } else {
-        resolve(true);
-      }
-    });
-  });
+  const actual = await getHash(file);
+  console.log(actual);
+  console.log(expected);
+  if (actual.trim().toLowerCase() === expected.trim().toLowerCase()) {
+    return true;
+  }
+  return false;
 }
 
-export function getHash(f: string): Promise<string> {
-  return new Promise<string>((resolve) => {
-    sha.get(f, (e, d) => {
-      if (e) {
-        resolve("");
-      } else {
-        resolve(d);
-      }
-    });
-  });
+export async function getHash(f: string): Promise<string> {
+  return String(await invokeWorker("Sha1File", f));
 }
 
 export async function getIdentifier(f: string): Promise<string> {
   try {
-    const bf = (await readFile(f)).toString();
-    const r1 = CryptoJS.SHA512(bf.toString()).toString();
-    const r2 = CryptoJS.SHA256(bf.toString()).toString();
+    const r1 = await getHash(f);
+    const r2 = String(await invokeWorker("Sha256File", f));
     return r1 + "-" + r2;
   } catch (e) {
     console.log(e);
