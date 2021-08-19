@@ -28,6 +28,7 @@ export function get(key: string, def: unknown): unknown {
   // @ts-ignore
   let v = cachedConfig[key];
   if (v === undefined) {
+    // @ts-ignore
     v = cachedConfig[key] = defaultConfig[key]; // Repair
   }
   return v === undefined ? def : v;
