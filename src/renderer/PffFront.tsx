@@ -29,6 +29,7 @@ import { loadLockFile, Lockfile } from "../modules/pff/curseforge/Lockfile";
 import { PFF_MSG_GATE } from "../modules/pff/curseforge/Values";
 import { requireMod, setPffFlag } from "../modules/pff/curseforge/Wrapper";
 import { setChangePageWarn } from "./GoTo";
+import { hasEdited } from "./Options";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { fullWidth } from "./Stylex";
 import { tr } from "./Translator";
@@ -142,7 +143,7 @@ export function PffFront(): JSX.Element {
         )}
         <Typography
           style={{
-            userSelect: "auto",
+            userSelect: "all",
             textAlign: "center",
             fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
           }}
@@ -150,6 +151,20 @@ export function PffFront(): JSX.Element {
         >
           {info}
         </Typography>
+        {hasEdited("pff.cache-root") ? (
+          ""
+        ) : (
+          <Typography
+            style={{
+              textAlign: "center",
+              fontSize:
+                window.sessionStorage.getItem("smallFontSize") || "16px",
+              color: "#ff8400",
+            }}
+          >
+            {tr("PffFront.WarnNoCache")}
+          </Typography>
+        )}
       </Box>
       <Box>
         <Typography className={fullWidthClasses.text} color={"primary"}>

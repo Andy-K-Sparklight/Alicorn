@@ -86,6 +86,10 @@ Oops！系统错误：
 
 留在当前页面
 
+# MainMenu.Help
+
+常见问题
+
 # MainMenu.GoBack
 
 上一页
@@ -550,7 +554,7 @@ Andy K Rarity Sparklight
 
 # VersionView.Description
 
-@HTML欢迎使用 Alicorn！如果遇到什么问题，可到 <a href="javascript:ashow('https://al.xuogroup.top')">我们的网站</a> 上寻求帮助。
+@HTML欢迎使用 Alicorn！
 
 # VersionView.ClickToSeeNext
 
@@ -1210,7 +1214,7 @@ Starlight 在加入服务器前会检查其连通性，在这一过程中，她�
 
 # Options.cx.shared-root.title
 
-ASC 共享文件存储位置
+ASC 共享文件存储路径
 
 # Options.cx.shared-root.desc
 
@@ -1588,10 +1592,6 @@ Mojang 版本
 
 日志分析
 
-# CrashReportDisplay.LogsAnalyze
-
-日志分析
-
 # CrashReportDisplay.Analyze.Line
 
 第 {Line} 行 - {Content}
@@ -1685,6 +1685,10 @@ Mojang 版本
 # Welcome.Suggest.LastSuccessfulLaunch
 
 最近一次游戏
+
+# PffFront.WarnNoCache
+
+警告 - 你没有为 Pff 设置下载缓存，二次安装 Mod 时将无法得到加速！
 
 # PffFront.NoSuchAddon
 

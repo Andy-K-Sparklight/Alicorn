@@ -185,9 +185,13 @@ export async function requireFile(
   const st = await wrappedDownloadFile(
     new DownloadMeta(file.downloadUrl, modJar)
   );
-  if (st === 1) {
-    await writeCachedFile(file, addon, cacheRoot, modJar);
-    return true;
+  if (st === 1 && cacheRoot.trim().length > 0) {
+    try {
+      await writeCachedFile(file, addon, cacheRoot, modJar);
+      return true;
+    } catch {
+      return false;
+    }
   }
   return false;
 }

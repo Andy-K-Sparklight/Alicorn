@@ -26,7 +26,7 @@ export async function requireMod(
   let apiBase = getString("pff.api-base", CF_API_BASE_URL);
   apiBase = apiBase.endsWith("/") ? apiBase.slice(0, -1) : apiBase;
   const pageSize = getNumber("pff.page-size", 10) || 10;
-  const cacheRoot = getString("pff.cache-root", DATA_ROOT, true);
+  const cacheRoot = getString("pff.cache-root", "", true);
   const timeout = getNumber("download.concurrent.timeout");
   let aInfo: AddonInfo | undefined;
   emitter.emit(PFF_MSG_GATE, tr("PffFront.Query", `Slug=${slug}`));
@@ -98,7 +98,7 @@ export async function upgrade(container: MinecraftContainer): Promise<void> {
   const lockfile = await loadLockFile(container);
   let apiBase = getString("pff.api-base", CF_API_BASE_URL);
   apiBase = apiBase.endsWith("/") ? apiBase.slice(0, -1) : apiBase;
-  const cacheRoot = getString("pff.cache-root", DATA_ROOT, true);
+  const cacheRoot = getString("pff.cache-root", "", true);
   const timeout = getNumber("download.concurrent.timeout");
   await upgradeFile(lockfile, apiBase, timeout, cacheRoot, container);
   await saveLockFile(lockfile, container);
