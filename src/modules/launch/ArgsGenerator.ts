@@ -31,6 +31,7 @@ export function generateGameArgs(
   vMap.set("user_type", MOJANG_USER_TYPE);
   vMap.set("version_type", ALICORN_VERSION_TYPE);
   vMap.set("auth_access_token", authData.getSecondValue());
+  vMap.set("user_properties", "[]"); // Currently we don't support twitch
   return applyVars(vMap, profile.gameArgs.concat());
 }
 // Generate vm arguments, not for GCs or anything else
@@ -196,7 +197,6 @@ const RAM_SCHEME: Record<string, string[]> = {
     "-XX:+CMSParallelRemarkEnabled",
     "-XX:SurvivorRatio=2",
     "-XX:+CMSScavengeBeforeRemark",
-    "-XX:+UseCMSCompactAtFullCollection",
     "-XX:+CMSParallelRemarkEnabled",
     "-XX:+ScavengeBeforeFullGC",
     "-XX:MaxTenuringThreshold=9",
