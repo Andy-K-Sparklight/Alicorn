@@ -41,7 +41,6 @@ export function OptionsPage(): JSX.Element {
   const classes = makeStyles((theme) =>
     createStyles({
       root: {
-        marginLeft: theme.spacing(3.5),
       },
       head: {
         fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",

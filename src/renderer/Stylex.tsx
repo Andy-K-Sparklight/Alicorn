@@ -27,10 +27,10 @@ export const usePadStyles = makeStyles((theme) =>
       flexGrow: 1,
       marginTop: theme.spacing(4),
       color: theme.palette.primary.main,
-      marginLeft: "16%",
+      marginLeft: "10%",
     },
     smallText: {
-      marginLeft: "-16%",
+      marginLeft: "-10%",
       fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
     },
   })
@@ -50,9 +50,7 @@ export const useInputStyles = makeStyles((theme) =>
 );
 export const useFormStyles = makeStyles((theme) =>
   createStyles({
-    root: {
-      marginLeft: theme.spacing(4),
-    },
+    root: {},
     formControl: {},
     input: {
       color: theme.palette.secondary.light,
@@ -125,9 +123,7 @@ export const fullWidth = makeStyles((theme) =>
 
 export const useTextStyles = makeStyles((theme) =>
   createStyles({
-    root: {
-      marginLeft: theme.spacing(4),
-    },
+    root: {},
     firstText: {
       color: theme.palette.primary.main,
       fontSize: "large",

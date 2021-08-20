@@ -16,9 +16,7 @@ export function VersionView(): JSX.Element {
   }, []);
   const classes = makeStyles((theme) =>
     createStyles({
-      root: {
-        marginLeft: theme.spacing(2),
-      },
+      root: {},
       title: {
         fontSize: "larger",
         color: theme.palette.primary.main,

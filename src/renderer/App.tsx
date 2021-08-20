@@ -78,6 +78,8 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.secondary.light,
     },
     content: {
+      marginLeft: theme.spacing(3.5),
+      marginRight: theme.spacing(3.5),
       marginTop: theme.spacing(5),
     },
     exitButton: {
@@ -279,21 +281,11 @@ export function App(): JSX.Element {
                 <ArrowForward />
               </IconButton>
             </Tooltip>
-            <Tooltip title={tr("MainMenu.Help")}>
-              <IconButton
-                color={"inherit"}
-                className={classes.floatButton}
-                onClick={() => {
-                  shell.openExternal("https://al.xuogroup.top/faq/");
-                }}
-              >
-                <LiveHelp />
-              </IconButton>
-            </Tooltip>
             {canGoBack() ? (
               <Tooltip title={tr("MainMenu.GoBack")}>
                 <IconButton
                   color={"inherit"}
+                  style={genHideStyles("GoBack")}
                   className={classes.floatButton}
                   onClick={() => {
                     goBack();
@@ -305,6 +297,18 @@ export function App(): JSX.Element {
             ) : (
               ""
             )}
+            <Tooltip title={tr("MainMenu.Help")}>
+              <IconButton
+                style={genHideStyles("Help")}
+                color={"inherit"}
+                className={classes.floatButton}
+                onClick={() => {
+                  shell.openExternal("https://al.xuogroup.top/faq/");
+                }}
+              >
+                <LiveHelp />
+              </IconButton>
+            </Tooltip>
             {getBoolean("dev") ? (
               <Tooltip title={tr("MainMenu.Reload")}>
                 <IconButton

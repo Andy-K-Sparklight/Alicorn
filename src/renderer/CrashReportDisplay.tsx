@@ -440,7 +440,6 @@ function BBCodeDisplay(props: {
     <Box
       style={{
         display: "flex",
-        marginLeft: "2%",
       }}
     >
       <Typography

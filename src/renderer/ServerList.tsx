@@ -62,7 +62,7 @@ export function ServerList(): JSX.Element {
   }, []);
   return (
     <Box>
-      <Box style={{ textAlign: "right", marginRight: "18%" }}>
+      <Box style={{ textAlign: "right", marginRight: "5%" }}>
         <Tooltip title={tr("ServerList.Add")}>
           <IconButton
             color={"primary"}
