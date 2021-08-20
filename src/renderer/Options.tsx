@@ -355,6 +355,7 @@ export function InputItem(props: {
                 disabled={disabled}
                 spellCheck={false}
                 fullWidth
+                variant={"outlined"}
                 type={"number"}
                 color={"primary"}
                 value={getNumber(props.bindConfig)}
@@ -372,6 +373,7 @@ export function InputItem(props: {
                 <TextField
                   disabled={disabled}
                   fullWidth
+                  variant={"outlined"}
                   spellCheck={false}
                   color={"primary"}
                   value={getString(props.bindConfig)}
@@ -385,6 +387,9 @@ export function InputItem(props: {
                   className={classex.inputDark}
                   type={"button"}
                   variant={"outlined"}
+                  style={{
+                    marginTop: "4px",
+                  }}
                   onClick={async () => {
                     const d = await remoteSelectDir();
                     if (d.trim().length === 0) {
@@ -441,6 +446,7 @@ export function InputItem(props: {
               <TextField
                 disabled={disabled}
                 fullWidth
+                variant={"outlined"}
                 spellCheck={false}
                 color={"primary"}
                 value={getString(props.bindConfig)}
