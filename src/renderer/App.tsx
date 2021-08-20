@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) =>
     content: {
       marginLeft: theme.spacing(3.5),
       marginRight: theme.spacing(3.5),
-      marginTop: theme.spacing(5),
+      marginTop: theme.spacing(4),
     },
     exitButton: {
       marginRight: 0,
