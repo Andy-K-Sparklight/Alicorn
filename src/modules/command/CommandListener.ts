@@ -23,6 +23,9 @@ export type CommandHandler = (args: string[]) => Promise<unknown | void>;
 const CDT: Map<string, CommandHandler> = new Map();
 
 export async function dispatchCommand(cmd: string): Promise<unknown> {
+  if (cmd.trim().length === 0) {
+    return; // NULL safe
+  }
   const sa = cmd.trim().split(/\s+/);
   if (sa[0] === "!!") {
     const c = HISTORY[0];

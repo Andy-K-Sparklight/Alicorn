@@ -5,7 +5,19 @@ import { applyMirror } from "../download/Mirror";
 import { Serial } from "../download/Serial";
 import { registerCommand } from "./CommandListener";
 
+let time: Date | undefined;
+
 export function initExtraTools(): void {
+  registerCommand("timer", async () => {
+    if (time === undefined) {
+      time = new Date();
+      submitInfo("Started timing.");
+    } else {
+      const s = (new Date().getTime() - time.getTime()) / 1000;
+      time = undefined;
+      submitInfo("Time elapsed: " + s + "s");
+    }
+  });
   registerCommand("download", async (a) => {
     let u = a.shift();
     const t = a.shift();
