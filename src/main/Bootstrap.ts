@@ -22,8 +22,8 @@ app.on("ready", async () => {
   console.log("App is ready, preparing window...");
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   mainWindow = new BrowserWindow({
-    width: Math.floor(width * 0.45),
-    height: Math.floor(height * 0.45),
+    width: Math.floor(width * 0.5),
+    height: Math.floor(height * 0.5),
     webPreferences: {
       webSecurity: false, // No more CORS!
       nodeIntegration: true, // Obviously
