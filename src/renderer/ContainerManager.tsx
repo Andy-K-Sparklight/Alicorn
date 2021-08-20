@@ -58,6 +58,7 @@ import {
   OperatingHint,
   OperatingHintCustom,
 } from "./OperatingHint";
+import { hasEdited } from "./Options";
 import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
 
@@ -402,7 +403,7 @@ function AddNewContainer(props: {
   const [nameError, setNameError] = useState(false);
   const [dirError, setDirError] = useState(false);
   const [modpackError, setModpackError] = useState(false);
-  const [createASC, setCreateASC] = useState(false);
+  const [createASC, setCreateASC] = useState(hasEdited("cx.shared-root"));
   const [allowModpack, setAllowModpack] = useState(false);
   const [modpackPath, setModpackPath] = useState("");
   const classes = useInputStyles();
@@ -501,11 +502,24 @@ function AddNewContainer(props: {
             control={<Radio checked={!createASC} />}
             label={tr("ContainerManager.Type.Physical")}
           />
-          <FormControlLabel
-            value={"Shared"}
-            control={<Radio checked={createASC} />}
-            label={tr("ContainerManager.Type.Shared")}
-          />
+          <Tooltip
+            title={tr("ContainerManager.ASCCacheNotSet")}
+            disableHoverListener={hasEdited("cx.shared-root")}
+            disableFocusListener={hasEdited("cx.shared-root")}
+            disableTouchListener={hasEdited("cx.shared-root")}
+          >
+            <FormControlLabel
+              value={"Shared"}
+              control={
+                hasEdited("cx.shared-root") ? (
+                  <Radio checked={createASC} />
+                ) : (
+                  <Radio disabled checked={false} />
+                )
+              }
+              label={tr("ContainerManager.Type.Shared")}
+            />
+          </Tooltip>
         </RadioGroup>
         <FormControlLabel
           control={
@@ -573,7 +587,7 @@ function AddNewContainer(props: {
             setName("");
             setSelected("");
             setAllowModpack(false);
-            setCreateASC(false);
+            setCreateASC(hasEdited("cx.shared-root"));
             setModpackPath("");
             setDirError(false);
             setModpackError(false);
@@ -613,9 +627,8 @@ function AddNewContainer(props: {
             setName("");
             setSelected("");
             setAllowModpack(false);
-            setCreateASC(false);
+            setCreateASC(hasEdited("cx.shared-root"));
             setModpackPath("");
-
             props.setOperate(false);
           }}
         >

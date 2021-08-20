@@ -248,6 +248,14 @@ export function OptionsPage(): JSX.Element {
   );
 }
 
+export function hasEdited(conf: string): boolean {
+  return window.localStorage.getItem("Edited." + conf) === "1";
+}
+
+export function markEdited(conf: string): void {
+  window.localStorage.setItem("Edited." + conf, "1");
+}
+
 export function InputItem(props: {
   type: ConfigType;
   bindConfig: string;
@@ -327,7 +335,9 @@ export function InputItem(props: {
                     checked={getBoolean(props.bindConfig)}
                     className={classes.switch}
                     onChange={(e) => {
+                      markEdited(props.bindConfig);
                       set(props.bindConfig, e.target.checked);
+
                       forceRefresh(!refreshBit);
                     }}
                     name={
@@ -349,6 +359,7 @@ export function InputItem(props: {
                 color={"primary"}
                 value={getNumber(props.bindConfig)}
                 onChange={(e) => {
+                  markEdited(props.bindConfig);
                   set(props.bindConfig, parseNum(e.target.value, 0));
                   forceRefresh(!refreshBit);
                 }}
@@ -365,6 +376,7 @@ export function InputItem(props: {
                   color={"primary"}
                   value={getString(props.bindConfig)}
                   onChange={(e) => {
+                    markEdited(props.bindConfig);
                     set(props.bindConfig, String(e.target.value || ""));
                     forceRefresh(!refreshBit);
                   }}
@@ -391,6 +403,7 @@ export function InputItem(props: {
               <RadioGroup
                 row
                 onChange={(e) => {
+                  markEdited(props.bindConfig);
                   set(props.bindConfig, String(e.target.value));
                   setSelect(String(e.target.value));
                 }}
@@ -432,6 +445,7 @@ export function InputItem(props: {
                 color={"primary"}
                 value={getString(props.bindConfig)}
                 onChange={(e) => {
+                  markEdited(props.bindConfig);
                   set(props.bindConfig, String(e.target.value || ""));
                   forceRefresh(!refreshBit);
                 }}

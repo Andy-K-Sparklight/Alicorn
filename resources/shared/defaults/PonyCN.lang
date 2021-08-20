@@ -620,6 +620,10 @@ MCX 扩展物理宗卷
 
 ASC 文件共享宗卷
 
+# ContainerManager.ASCCacheNotSet
+
+不能创建 - 你需要在选项中设置「ASC 共享文件存储路径」
+
 # ContainerManager.CreateModpack
 
 使用安装包创建这个容器
