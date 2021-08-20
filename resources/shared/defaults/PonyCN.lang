@@ -1358,7 +1358,7 @@ Pff 文件缓存位置
 
 # Options.pff.cache-root.desc
 
-设置 Pff 的文件缓存目录 - 有助于加快软件包的二次安装速度，留空以使用默认目录 {AlicornHome}
+设置 Pff 的文件缓存目录 - 有助于加快软件包的二次安装速度，若留空，你会失去 Mod 安装加速的机会
 
 # Options.pff.page-size.title
 
