@@ -20,12 +20,13 @@ import {
   FlightTakeoff,
   GetApp,
   Info,
+  LiveHelp,
   PowerSettingsNew,
   Refresh,
   Settings,
   Web,
 } from "@material-ui/icons";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, shell } from "electron";
 import React, { useEffect, useState } from "react";
 import { Route } from "react-router-dom";
 import { safeGet } from "../modules/commons/Null";
@@ -276,6 +277,17 @@ export function App(): JSX.Element {
                 }}
               >
                 <ArrowForward />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={tr("MainMenu.Help")}>
+              <IconButton
+                color={"inherit"}
+                className={classes.floatButton}
+                onClick={() => {
+                  shell.openExternal("https://al.xuogroup.top/faq/");
+                }}
+              >
+                <LiveHelp />
               </IconButton>
             </Tooltip>
             {canGoBack() ? (
