@@ -41,7 +41,7 @@ const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
 const WIN_FONT_FAMILY =
-  '"UbuntuMono", "Microsoft YaHei UI", "Open Sans", "Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
+  '"UbuntuMono", "Open Sans", "Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
 const GNU_FONT_FAMILY =
   '"UbuntuMono", "Open Sans", "Roboto Medium", "Fira Code", Monaco, Consolas, "Courier New", Courier, monospace';
 const FONT_FAMILY =
@@ -303,7 +303,7 @@ function bindSuperCowPower(): void {
 }
 
 function configureFontSize(): void {
-  const f = (document.body.clientWidth / 70).toString() + "px";
+  const f = (document.body.clientWidth / 60).toString() + "px";
   console.log("Set small font size as " + f);
   window.sessionStorage.setItem("smallFontSize", f);
 }
