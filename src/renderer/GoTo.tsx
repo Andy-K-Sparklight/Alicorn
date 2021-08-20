@@ -24,6 +24,7 @@ export function jumpTo(target: string, keepHistory = true): void {
       window.localStorage.setItem("CurrentVersion", LAUNCHER_VERSION);
     }
   }
+  console.log("JMP " + target);
   if (getBoolean("goto.animate")) {
     const e = document.getElementById("app_main");
     const ANIMATION_TIME = 250;
@@ -66,11 +67,15 @@ function ifLeavingConfigThenReload(): void {
 export function triggerSetPage(page: string, _keepHistory = true): void {
   // @ts-ignore
   if (window[CHANGE_PAGE_WARN]) {
+    window.dispatchEvent(
+      new CustomEvent("changePageWarnTitle", { detail: page })
+    );
     return;
   }
   //if (keepHistory) {
   TITLE_HISTORY.push(page);
   //}
+  console.log("CTT " + page);
   document.dispatchEvent(new CustomEvent("setPage", { detail: page }));
 }
 
@@ -79,6 +84,10 @@ export function canGoBack(): boolean {
 }
 
 export function goBack(): void {
+  // @ts-ignore
+  if (window[CHANGE_PAGE_WARN]) {
+    return; // Simply ignore
+  }
   PAGES_HISTORY.pop();
   TITLE_HISTORY.pop();
   jumpTo(PAGES_HISTORY.pop() || "/", false);

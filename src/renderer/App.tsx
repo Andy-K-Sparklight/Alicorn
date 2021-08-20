@@ -136,6 +136,9 @@ export function App(): JSX.Element {
       setHaveHistory(history);
       setJumpPageTarget(target);
     });
+    window.addEventListener("changePageWarnTitle", (e) => {
+      setPageTarget(String(safeGet(e, ["detail"], Pages.Welcome)));
+    });
   }, []);
   useEffect(() => {
     document.addEventListener("setPage", (e) => {
