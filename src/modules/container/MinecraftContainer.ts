@@ -31,6 +31,10 @@ export class MinecraftContainer {
     return path.resolve(this.versionsBase);
   }
 
+  getAssetsRootLegacy(): string {
+    return path.resolve(this.assetsRoot, "legacy");
+  }
+
   getPffLockFile(): string {
     return path.resolve(this.rootDir, "pff.lock");
   }

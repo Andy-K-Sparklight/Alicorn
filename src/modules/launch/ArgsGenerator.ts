@@ -32,6 +32,7 @@ export function generateGameArgs(
   vMap.set("version_type", ALICORN_VERSION_TYPE);
   vMap.set("auth_access_token", authData.getSecondValue());
   vMap.set("user_properties", "[]"); // Currently we don't support twitch
+  vMap.set("game_assets", container.getAssetsRootLegacy()); // Pre 1.6
   return applyVars(vMap, profile.gameArgs.concat());
 }
 // Generate vm arguments, not for GCs or anything else
