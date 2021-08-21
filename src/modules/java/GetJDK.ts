@@ -54,14 +54,14 @@ export async function getLatestJREURL(old = false): Promise<string> {
     }
     // First OpenJ9
     for (const a of all) {
-      if (a.includes("openj9")) {
+      if (a.includes("openj9") && a.toLowerCase().includes("openjdk")) {
         resolve(u + a);
         return;
       }
     }
     // Then Hotspot
     for (const a of all) {
-      if (a.includes("hotspot")) {
+      if (a.includes("hotspot") && a.toLowerCase().includes("openjdk")) {
         resolve(u + a);
         return;
       }
