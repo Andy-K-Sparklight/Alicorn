@@ -24,7 +24,6 @@ export function jumpTo(target: string, keepHistory = true): void {
       window.localStorage.setItem("CurrentVersion", LAUNCHER_VERSION);
     }
   }
-  console.log("JMP " + target);
   if (getBoolean("goto.animate")) {
     const e = document.getElementById("app_main");
     const ANIMATION_TIME = 250;
@@ -75,7 +74,6 @@ export function triggerSetPage(page: string, _keepHistory = true): void {
   //if (keepHistory) {
   TITLE_HISTORY.push(page);
   //}
-  console.log("CTT " + page);
   document.dispatchEvent(new CustomEvent("setPage", { detail: page }));
 }
 
@@ -92,22 +90,6 @@ export function goBack(): void {
   TITLE_HISTORY.pop();
   jumpTo(PAGES_HISTORY.pop() || "/", false);
   triggerSetPage(TITLE_HISTORY.pop() || "", false);
-}
-
-export enum Pages {
-  CrashReportDisplay = "CrashReportDisplay",
-  Options = "Options",
-  ContainerManager = "ContainerManager",
-  LaunchPad = "LaunchPad",
-  ReadyToLaunch = "ReadyToLaunch",
-  InstallCore = "InstallCore",
-  AccountManager = "AccountManager",
-  Version = "Version",
-  JavaSelector = "JavaSelector",
-  PffFront = "PffFront",
-  Welcome = "Welcome",
-  Tutor = "Tutor",
-  ServerList = "ServerList",
 }
 
 export const CHANGE_PAGE_WARN = "ChangePageWarn";

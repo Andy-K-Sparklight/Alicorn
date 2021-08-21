@@ -21,7 +21,7 @@ import { scanCoresInAllMountedContainers } from "../modules/container/ContainerS
 import { getContainer } from "../modules/container/ContainerUtil";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { whatProfile } from "../modules/profile/WhatProfile";
-import { jumpTo, Pages, triggerSetPage } from "./GoTo";
+import { jumpTo, triggerSetPage } from "./GoTo";
 import { YNDialog2 } from "./OperatingHint";
 import { useCardStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
@@ -180,7 +180,7 @@ function SingleCoreDisplay(props: {
           jumpTo(
             "/ReadyToLaunch/" + props.profile.container + "/" + props.profile.id
           );
-          triggerSetPage(Pages.ReadyToLaunch);
+          triggerSetPage("ReadyToLaunch");
         }}
       >
         <CardContent>
@@ -198,7 +198,7 @@ function SingleCoreDisplay(props: {
                       jumpTo(
                         `/PffFront/${props.profile.container}/${props.profile.baseVersion}/${props.profile.versionType}`
                       );
-                      triggerSetPage(Pages.PffFront);
+                      triggerSetPage("PffFront");
                       e.stopPropagation();
                     }}
                   >

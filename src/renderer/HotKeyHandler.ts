@@ -1,6 +1,5 @@
 import { ipcRenderer } from "electron";
 import { getBoolean } from "../modules/config/ConfigSupport";
-import { jumpTo, Pages, triggerSetPage } from "./GoTo";
 
 export function setupHotKey(keyBound: string, callback: () => unknown): void {
   ipcRenderer.send("registerHotKey", keyBound);
@@ -23,25 +22,26 @@ Use Ctrl to control Alicorn with development options.
 - r: Reload
  */
 export function activateHotKeyFeature(): void {
+  /*
   setupHotKey("Alt+l", () => {
     jumpTo("/LaunchPad");
-    triggerSetPage(Pages.LaunchPad);
+    triggerSetPage("LaunchPad");
   });
   setupHotKey("Alt+a", () => {
     jumpTo("/YggdrasilAccountManager");
-    triggerSetPage(Pages.AccountManager);
+    triggerSetPage("AccountManager");
   });
   setupHotKey("Alt+c", () => {
     jumpTo("/ContainerManager");
-    triggerSetPage(Pages.ContainerManager);
+    triggerSetPage("ContainerManager");
   });
   setupHotKey("Alt+p", () => {
     jumpTo("/PffFront");
-    triggerSetPage(Pages.PffFront);
+    triggerSetPage("PffFront");
   });
   setupHotKey("Alt+i", () => {
     jumpTo("/InstallCore");
-    triggerSetPage(Pages.InstallCore);
+    triggerSetPage("InstallCore");
   });
 
   setupHotKey("Ctrl+r", () => {
@@ -49,5 +49,5 @@ export function activateHotKeyFeature(): void {
       window.location.hash = "";
       window.location.reload();
     }
-  });
+  });*/
 }

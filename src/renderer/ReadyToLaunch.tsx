@@ -23,7 +23,7 @@ import {
   Stepper,
   TextField,
   Tooltip,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import { FlightTakeoff } from "@material-ui/icons";
 import { ipcRenderer } from "electron";
@@ -36,7 +36,7 @@ import {
   AccountType,
   fillAccessData,
   getAllAccounts,
-  loadAccount,
+  loadAccount
 } from "../modules/auth/AccountUtil";
 import { prefetchData } from "../modules/auth/AJHelper";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
@@ -46,27 +46,27 @@ import {
   MS_LAST_USED_ACTOKEN_KEY,
   MS_LAST_USED_REFRESH_KEY,
   MS_LAST_USED_USERNAME_KEY,
-  MS_LAST_USED_UUID_KEY,
+  MS_LAST_USED_UUID_KEY
 } from "../modules/auth/MicrosoftAccount";
 import { Nide8Account } from "../modules/auth/Nide8Account";
 import { findNotIn, Pair } from "../modules/commons/Collections";
 import {
   PROCESS_END_GATE,
   PROCESS_LOG_GATE,
-  ReleaseType,
+  ReleaseType
 } from "../modules/commons/Constants";
 import { isNull } from "../modules/commons/Null";
 import {
   getBoolean,
   getNumber,
-  getString,
+  getString
 } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { scanReports } from "../modules/crhelper/CrashReportFinder";
 import {
   getWrapperStatus,
-  WrapperStatus,
+  WrapperStatus
 } from "../modules/download/DownloadWrapper";
 import {
   getAllJava,
@@ -74,7 +74,7 @@ import {
   getJavaRunnable,
   getLastUsedJavaHome,
   parseJavaInfo,
-  parseJavaInfoRaw,
+  parseJavaInfoRaw
 } from "../modules/java/JInfo";
 import {
   ensureAllAssets,
@@ -82,14 +82,14 @@ import {
   ensureClient,
   ensureLibraries,
   ensureLog4jFile,
-  ensureNatives,
+  ensureNatives
 } from "../modules/launch/Ensurance";
 import { launchProfile } from "../modules/launch/LaunchPad";
 import { LaunchTracker } from "../modules/launch/Tracker";
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
 import { loadProfile } from "../modules/profile/ProfileLoader";
-import { jumpTo, Pages, setChangePageWarn, triggerSetPage } from "./GoTo";
+import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { YNDialog } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
@@ -300,7 +300,7 @@ function Launching(props: {
           }}
           onAccept={() => {
             jumpTo("/CrashReportDisplay");
-            triggerSetPage(Pages.CrashReportDisplay);
+            triggerSetPage("CrashReportDisplay");
           }}
           title={tr("ReadyToLaunch.WarnError.Title")}
           content={tr("ReadyToLaunch.WarnError.Description")}

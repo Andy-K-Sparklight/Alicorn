@@ -52,7 +52,6 @@ import {
   CHANGE_PAGE_WARN,
   goBack,
   jumpTo,
-  Pages,
   setChangePageWarn,
   triggerSetPage,
 } from "./GoTo";
@@ -137,17 +136,17 @@ export function App(): JSX.Element {
       setJumpPageTarget(target);
     });
     window.addEventListener("changePageWarnTitle", (e) => {
-      setPageTarget(String(safeGet(e, ["detail"], Pages.Welcome)));
+      setPageTarget(String(safeGet(e, ["detail"], "Welcome")));
     });
   }, []);
   useEffect(() => {
     document.addEventListener("setPage", (e) => {
       // @ts-ignore
       if (window[CHANGE_PAGE_WARN]) {
-        setPageTarget(String(safeGet(e, ["detail"], Pages.Welcome)));
+        setPageTarget(String(safeGet(e, ["detail"], "Welcome")));
         return;
       }
-      setPage(String(safeGet(e, ["detail"], Pages.Welcome)));
+      setPage(String(safeGet(e, ["detail"], "Welcome")));
     });
   }, []);
   useEffect(() => {
@@ -237,7 +236,7 @@ export function App(): JSX.Element {
             .split("authlib-injector:yggdrasil-server:")[1];
 
           jumpTo("/YggdrasilAccountManager/1/" + server);
-          triggerSetPage(Pages.AccountManager);
+          triggerSetPage("AccountManager");
 
           window.dispatchEvent(
             new CustomEvent("YggdrasilAccountInfoDropped", {
@@ -278,7 +277,7 @@ export function App(): JSX.Element {
                 className={classes.floatButton}
                 onClick={() => {
                   jumpTo(getNextTutorUrl());
-                  triggerSetPage(Pages.Tutor);
+                  triggerSetPage("Tutor");
                 }}
               >
                 <ArrowForward />
@@ -352,7 +351,7 @@ export function App(): JSX.Element {
                 className={classes.floatButton}
                 onClick={() => {
                   jumpTo("/Version");
-                  triggerSetPage(Pages.Version);
+                  triggerSetPage("Version");
                 }}
                 color={"inherit"}
               >
@@ -365,7 +364,7 @@ export function App(): JSX.Element {
                 className={classes.floatButton}
                 onClick={() => {
                   jumpTo("/Options");
-                  triggerSetPage(Pages.Options);
+                  triggerSetPage("Options");
                 }}
                 color={"inherit"}
               >
@@ -378,7 +377,7 @@ export function App(): JSX.Element {
                 className={classes.floatButton}
                 onClick={() => {
                   jumpTo("/JavaSelector");
-                  triggerSetPage(Pages.JavaSelector);
+                  triggerSetPage("JavaSelector");
                 }}
                 color={"inherit"}
               >
@@ -391,7 +390,7 @@ export function App(): JSX.Element {
                 className={classes.floatButton}
                 onClick={() => {
                   jumpTo("/ServerList");
-                  triggerSetPage(Pages.ServerList);
+                  triggerSetPage("ServerList");
                 }}
                 color={"inherit"}
               >
@@ -427,7 +426,7 @@ export function App(): JSX.Element {
                 className={classes.floatButton}
                 onClick={() => {
                   jumpTo("/YggdrasilAccountManager");
-                  triggerSetPage(Pages.AccountManager);
+                  triggerSetPage("AccountManager");
                 }}
                 color={"inherit"}
               >
@@ -440,7 +439,7 @@ export function App(): JSX.Element {
                 className={classes.floatButton}
                 onClick={() => {
                   jumpTo("/ContainerManager");
-                  triggerSetPage(Pages.ContainerManager);
+                  triggerSetPage("ContainerManager");
                 }}
                 color={"inherit"}
               >
@@ -453,7 +452,7 @@ export function App(): JSX.Element {
                 className={classes.floatButton}
                 onClick={() => {
                   jumpTo("/InstallCore");
-                  triggerSetPage(Pages.InstallCore);
+                  triggerSetPage("InstallCore");
                 }}
                 color={"inherit"}
               >
@@ -468,7 +467,7 @@ export function App(): JSX.Element {
                 className={classes.floatButton}
                 onClick={() => {
                   jumpTo("/LaunchPad");
-                  triggerSetPage(Pages.LaunchPad);
+                  triggerSetPage("LaunchPad");
                 }}
               >
                 <FlightTakeoff />

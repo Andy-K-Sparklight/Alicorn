@@ -39,7 +39,7 @@ import {
   removeServer,
   trimServerAddress,
 } from "../modules/server/ServerFiles";
-import { jumpTo, Pages, triggerSetPage } from "./GoTo";
+import { jumpTo, triggerSetPage } from "./GoTo";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
 import { tr } from "./Translator";
@@ -257,7 +257,7 @@ export function SingleServerDisplay(props: {
                     props.address
                   }`
                 );
-                triggerSetPage(Pages.ReadyToLaunch);
+                triggerSetPage("ReadyToLaunch");
               }}
             >
               <FlightTakeoff />
