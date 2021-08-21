@@ -40,8 +40,7 @@ export function OptionsPage(): JSX.Element {
   const [tabValue, setTabValue] = useState(0);
   const classes = makeStyles((theme) =>
     createStyles({
-      root: {
-      },
+      root: {},
       head: {
         fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
         color: theme.palette.secondary.main,
@@ -170,7 +169,12 @@ export function OptionsPage(): JSX.Element {
         <TabPanel index={3} value={tabValue}>
           <InputItem
             type={ConfigType.RADIO}
-            choices={["none", "alicorn", "alicorn-mcbbs-nonfree"]}
+            choices={[
+              "none",
+              "alicorn",
+              "alicorn-mcbbs-nonfree",
+              "alicorn-bmclapi-nonfree",
+            ]}
             bindConfig={"download.mirror"}
           />
           <InputItem

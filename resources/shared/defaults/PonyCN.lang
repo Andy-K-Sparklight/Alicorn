@@ -728,6 +728,10 @@ Pff 正安装 Mod……
 
 取消
 
+# InstallCore.Progress.CouldNotExecute
+
+没能执行安装程序……
+
 # InstallCore.Progress.CouldNotExecuteInstallCore.Progress.CouldNotExecute
 
 没能启动安装程序，或安装程序没能正确完成任务，请检查 Java 运行时设置、目的目录权限和网络连接，然后再试一次
@@ -1314,7 +1318,11 @@ Alicorn 快捷键 ^
 
 # Options.download.mirror.desc
 
-@HTML选择一个用于加快下载速度的镜像 - 请注意你的数据安全\nAlicorn 轻松访问镜像<b>不包含库文件与资源文件</b>！\nAlicorn/MCBBS 镜像组的 MCBBS 镜像部分是由 BMCLAPI 和 MCBBS 共同为你提供的，用于加快某些访问源站较慢区域的下载速度。
+@HTML选择一个用于加快下载速度的镜像 - 请注意你的数据安全\nAlicorn 轻松访问镜像<b>不包含库文件与资源文件</b>！\nMCBBS 镜像与 BMCLAPI 镜像是由 BMCLAPI 和 MCBBS 共同为你提供的，用于加快某些访问源站较慢区域的下载速度。
+
+# Options.download.mirror.alicorn-bmclapi-nonfree
+
+Alicorn/BMCLAPI 镜像组（合并的记录，非自由）
 
 # Options.download.mirror.alicorn
 
@@ -1852,7 +1860,7 @@ Java 平台相关设置
 
 # Tutor.5.Setting
 
-download.mirror;RADIO;none/alicorn/alicorn-mcbbs-nonfree
+download.mirror;RADIO;none/alicorn/alicorn-mcbbs-nonfree/alicorn-bmclapi-nonfree
 
 # Tutor.6.Title
 
@@ -2025,3 +2033,15 @@ End
 # ServerList.Testing
 
 正在测试连接
+
+# UtilitiesIndex.Description
+
+@HTML欢迎来到 Alicorn 工具库！这里有你想要的工具吗？\nAlicorn 可以很方便地与很多工具集成，如果你有自己的小工具并且想要接入 Alicorn，欢迎<a href="javascript:ashow('https://al.xuogroup.top/contact/')">联系我们</a>！\n单击来进入一个或多个小工具。
+
+# UtilitiesIndex.Item
+
+@HTML<b>{Name}</b>，版本 {Version}（{Author} 作品）
+
+# UtilitiesIndex.Open
+
+启动
