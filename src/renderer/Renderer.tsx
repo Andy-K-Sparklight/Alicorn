@@ -13,7 +13,7 @@ import {
   getBoolean,
   getString,
   loadConfig,
-  saveDefaultConfig,
+  saveDefaultConfig
 } from "../modules/config/ConfigSupport";
 import { getActualDataPath } from "../modules/config/DataSupport";
 import { loadGDT } from "../modules/container/ContainerUtil";
@@ -41,7 +41,7 @@ const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
 const WIN_FONT_FAMILY =
-  '"UbuntuMono", "Open Sans", "Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
+  'Consolas, "Microsoft YaHei UI", "Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
 const GNU_FONT_FAMILY =
   '"UbuntuMono", "Open Sans", "Roboto Medium", "Fira Code", Monaco, Consolas, "Courier New", Courier, monospace';
 const FONT_FAMILY =
