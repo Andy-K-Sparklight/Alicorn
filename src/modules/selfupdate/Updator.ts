@@ -62,11 +62,14 @@ export async function checkUpdate(): Promise<void> {
       console.log("Skipped update checking due to unsupported platform.");
       return;
     }
+    console.log("Start checking updates!");
     IS_UPDATING = true;
     const HEAD = MAIN_BUILD_FILE_RELEASE;
+    console.log("HEAD is " + MAIN_BUILD_FILE_RELEASE);
     const BASE = RELEASE_FOLDER;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let res: any;
+    console.log("Fetching version info...");
     try {
       res = await got.get(HEAD, {
         https: {
@@ -75,9 +78,12 @@ export async function checkUpdate(): Promise<void> {
         responseType: "json",
         agent: getProxyAgent(),
       });
+      console.log("Fetched a manifest.");
     } catch (e) {
       if (String(e).includes("404")) {
-        console.log("You are running the latest version! (No Later File)");
+        console.log(
+          "You are running the latest version! (404 / No Later File)"
+        );
         IS_UPDATING = false;
         notifyAll();
         return;
@@ -90,7 +96,7 @@ export async function checkUpdate(): Promise<void> {
     let d: BuildInfo;
     if (AJV.validate(BuildInfoSchema, res.body)) {
       d = res.body as BuildInfo;
-
+      console.log("Validate passed.");
       if (await isFileExist(LOCK_FILE)) {
         if (
           new Date((await fs.readFile(LOCK_FILE)).toString()) >=
@@ -102,7 +108,10 @@ export async function checkUpdate(): Promise<void> {
           return;
         }
       }
-
+      console.log(
+        "This update is released at " + new Date(d.date).toLocaleString()
+      );
+      console.log("Fetching extra manifest...");
       const res_rend = await got.get(RENDERER_BUILD_FILE_RELEASE, {
         https: {
           rejectUnauthorized: false,
@@ -168,9 +177,11 @@ export async function doUpdate(
   try {
     for (const v of info.files) {
       const target = path.resolve(getBasePath(), v);
+      console.log("Backing up " + target);
       await backupFile(target);
     }
     for (const v of info.files) {
+      console.log("Downloading " + v);
       const target = path.resolve(getBasePath(), v);
       const meta = new DownloadMeta(baseUrl + v, target, "");
       if ((await Serial.getInstance().downloadFile(meta, true)) !== 1) {
@@ -183,6 +194,7 @@ export async function doUpdate(
     for (const v of info.files) {
       try {
         const target = path.resolve(getBasePath(), v);
+        console.log("Restoring " + target);
         await restoreFile(target);
       } catch {}
     }

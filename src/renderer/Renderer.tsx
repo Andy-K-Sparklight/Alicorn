@@ -13,7 +13,7 @@ import {
   getBoolean,
   getString,
   loadConfig,
-  saveDefaultConfig
+  saveDefaultConfig,
 } from "../modules/config/ConfigSupport";
 import { getActualDataPath } from "../modules/config/DataSupport";
 import { loadGDT } from "../modules/container/ContainerUtil";
@@ -240,6 +240,7 @@ window.addEventListener("error", (e) => {
     try {
       initUpdator();
       await checkUpdate();
+      console.log("Update completed!");
     } catch (e) {
       console.log(e);
       console.log(
