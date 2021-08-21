@@ -190,7 +190,7 @@ async function installMods(
   const lockfile = await loadLockFile(container);
   let apiBase = getString("pff.api-base", CF_API_BASE_URL);
   apiBase = apiBase.endsWith("/") ? apiBase.slice(0, -1) : apiBase;
-  const cacheRoot = getString("pff.cache-root", "", true);
+  const cacheRoot = getString("pff.cache-root", "");
   const timeout = getNumber("download.concurrent.timeout");
   await Promise.all(
     model.files.map((m) => {
