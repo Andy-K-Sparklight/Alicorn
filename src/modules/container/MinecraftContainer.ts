@@ -70,6 +70,10 @@ export class MinecraftContainer {
     return path.resolve(this.assetsRoot, "indexes", index + ".json");
   }
 
+  getAssetPathLegacy(name: string): string {
+    return path.resolve(this.assetsRoot, "legacy", name);
+  }
+
   getAssetPath(hash: string): string {
     const header = hash.slice(0, 2);
     return path.resolve(this.assetsRoot, "objects", header, hash);

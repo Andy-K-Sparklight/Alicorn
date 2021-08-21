@@ -162,13 +162,14 @@ export async function ensureAllAssets(
     const obj = await fs.readJSON(
       container.getAssetsIndexPath(profile.assetIndex.id)
     );
-    const assetIndexFileMeta = AssetIndexFileMeta.fromObject(obj);
+    const il = profile.assetIndex.id.toLowerCase() === "legacy";
+    const assetIndexFileMeta = AssetIndexFileMeta.fromObject(obj, il);
     const allObjects = assetIndexFileMeta.objects.concat();
     tFile.total = allObjects.length;
     const allStatus = await Promise.all(
       allObjects.map((o) => {
         return new Promise<boolean>((resolve) => {
-          ensureAsset(o, container).then((b) => {
+          ensureAsset(o, container, il).then((b) => {
             if (b) {
               tFile.operateRecord.push({
                 file: o.hash,
@@ -203,11 +204,14 @@ export async function ensureAllAssets(
 // Since there are loads of objects, always call this function concurrently!
 export async function ensureAsset(
   assetMeta: AssetMeta,
-  container: MinecraftContainer
+  container: MinecraftContainer,
+  isLegacy: boolean
 ): Promise<boolean> {
   const meta = new DownloadMeta(
     generateAssetURL(assetMeta),
-    container.getAssetPath(assetMeta.hash),
+    isLegacy
+      ? container.getAssetPathLegacy(assetMeta.path)
+      : container.getAssetPath(assetMeta.hash),
     assetMeta.hash
   );
   return (await wrappedDownloadFile(meta)) === 1;

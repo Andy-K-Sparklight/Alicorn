@@ -461,44 +461,51 @@ export class AssetIndexArtifactMeta {
 
 export class AssetIndexFileMeta {
   objects: AssetMeta[];
-
+  isLegacy: boolean;
   clone(): AssetIndexFileMeta {
     return new AssetIndexFileMeta(
       this.objects.map((o) => {
         return o.clone();
-      })
+      }),
+      this.isLegacy
     );
   }
 
-  constructor(objects: AssetMeta[]) {
+  constructor(objects: AssetMeta[], isLegacy: boolean) {
     this.objects = objects;
+    this.isLegacy = isLegacy;
   }
 
-  static fromObject(obj: Record<string, unknown>): AssetIndexFileMeta {
+  static fromObject(
+    obj: Record<string, unknown>,
+    isLegacy: boolean
+  ): AssetIndexFileMeta {
     const objs: AssetMeta[] = [];
     if (typeof obj["objects"] === "object") {
       for (const x of Object.getOwnPropertyNames(obj["objects"])) {
-        objs.push(AssetMeta.fromObject(safeGet(obj, ["objects", x])));
+        objs.push(AssetMeta.fromObject(safeGet(obj, ["objects", x]), x));
       }
     }
-    return new AssetIndexFileMeta(objs);
+    return new AssetIndexFileMeta(objs, isLegacy);
   }
 }
 
 export class AssetMeta {
   hash: string;
   size: number;
+  path: string;
 
   clone(): AssetMeta {
-    return new AssetMeta(this.hash, this.size);
+    return new AssetMeta(this.hash, this.size, this.path);
   }
 
-  constructor(hash: string, size: number) {
+  constructor(hash: string, size: number, path: string) {
     this.hash = hash;
     this.size = size;
+    this.path = path;
   }
 
-  static fromObject(obj: unknown): AssetMeta {
+  static fromObject(obj: unknown, path: string): AssetMeta {
     let hash = "";
     let size = 0;
     // @ts-ignore
@@ -521,6 +528,6 @@ export class AssetMeta {
       // @ts-ignore
       size = obj["size"];
     }
-    return new AssetMeta(hash, size);
+    return new AssetMeta(hash, size, path);
   }
 }
