@@ -456,7 +456,7 @@ function BBCodeDisplay(props: {
       <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
         <Button
           onClick={() => {
-            if (!copy(code)) {
+            if (!copy(code, { format: "text/plain" })) {
               submitError("Failed to copy!");
             }
           }}
