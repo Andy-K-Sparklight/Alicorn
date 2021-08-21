@@ -5,6 +5,8 @@ import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { DownloadMeta } from "../../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../../download/DownloadWrapper";
 import { xgot } from "../../download/GotWrapper";
+import { ensureClient } from "../../launch/Ensurance";
+import { loadProfile } from "../../profile/ProfileLoader";
 export const MOJANG_CORES_KEY = "MojangCores";
 
 export async function getAllMojangCores(
@@ -68,11 +70,15 @@ export async function downloadProfile(
   container: MinecraftContainer,
   version: string
 ): Promise<void> {
-  const m = new DownloadMeta(
-    url,
-    path.join(container.getVersionRoot(version), version + ".json")
+  const profilePath = path.join(
+    container.getVersionRoot(version),
+    version + ".json"
   );
+  const m = new DownloadMeta(url, profilePath);
   await wrappedDownloadFile(m, true);
+  // Ensure client
+  const p = await loadProfile(version, container);
+  await ensureClient(p);
 }
 /**
  * @deprecated

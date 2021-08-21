@@ -1,3 +1,4 @@
+import path from "path";
 import { Trio } from "../commons/Collections";
 import {
   ALICORN_SEPARATOR,
@@ -11,7 +12,7 @@ import { isNull } from "../commons/Null";
 import { getBoolean } from "../config/ConfigSupport";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { GameProfile } from "../profile/GameProfile";
-
+import { JAR_SUFFIX } from "./NativesLint";
 const COMMON_VM_ARGS = ["-Dfile.encoding=UTF-8", "-showversion"];
 
 // Generate game arguments
@@ -44,7 +45,7 @@ export function generateVMArgs(
   vMap.set("launcher_name", LAUNCHER_NAME);
   vMap.set("launcher_version", LAUNCHER_VERSION);
 
-  let usingLibs: string[] = [];
+  const usingLibs: string[] = [];
   const nativesLibs: string[] = [];
   for (const l of profile.libraries) {
     if (!l.canApply()) {
@@ -65,20 +66,24 @@ export function generateVMArgs(
     }
   }
   // Specialize for 'client.jar'
+  usingLibs.push(
+    path.join(container.getVersionRoot(profile.id), profile.id + JAR_SUFFIX) // Always navigate to the same
+  );
+  /*
   if (!isNull(profile.clientArtifacts)) {
     usingLibs = usingLibs.concat(
       profile.clientArtifacts.map((a) => {
         return a.path;
       })
     );
-  }
+  }*/
   // All natives directories put together
   vMap.set("natives_directory", nativesLibs.join(FILE_SEPARATOR));
   // 1.17
   vMap.set("library_directory", container.getLibrariesRoot());
   // Attention! Use base version!
   // BAD FORGE CAUSED ALL THIS - I WASTED 2 HOURS WHICH COULD HAVE BE SPENT WITH MY PONY FRIENDS
-  vMap.set("version_name", profile.baseVersion);
+  vMap.set("version_name", profile.id); // This SHOULD WORK NOW ??????? Ye servey dog!
   vMap.set("classpath_separator", FILE_SEPARATOR);
   // All class paths put together
   vMap.set("classpath", usingLibs.join(FILE_SEPARATOR));

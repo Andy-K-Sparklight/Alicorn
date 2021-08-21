@@ -5,10 +5,14 @@
 // Why not automate? We need it!
 // You builds FREE software rather than SPONSOR ones, thank you very much!
 // Anyway, we'll keep on supporting Forge since there are tremendous requirements.
+import { copy } from "fs-extra";
 import objectHash from "object-hash";
+import path from "path";
 import { ReleaseType, SPACE } from "../commons/Constants";
+import { isFileExist } from "../commons/FileUtil";
 import { isNull } from "../commons/Null";
 import { MinecraftContainer } from "../container/MinecraftContainer";
+import { JAR_SUFFIX } from "../launch/NativesLint";
 import { copyProfile, GameProfile } from "./GameProfile";
 import { loadProfile } from "./ProfileLoader";
 
@@ -67,12 +71,9 @@ export async function makeInherit(
     retGF.libraries = gfHead.libraries.concat(retGF.libraries);
   }
   // Which loader use its own client? If it must, it should use library then (
-  for (const ca of gfHead.clientArtifacts) {
-    if (!isNull(ca)) {
-      retGF.clientArtifacts.push(ca);
-    }
+  if (!isNull(gfHead.clientArtifact)) {
+    retGF.clientArtifact = gfHead.clientArtifact.clone();
   }
-
   return retGF;
 }
 // a1 <- a2, a2 overrides a1 if necessary
@@ -105,16 +106,47 @@ export class InheritedProfile extends GameProfile {
     legacyBit = false
   ): Promise<GameProfile> {
     if (isNull(this.inheritsFrom)) {
-      return this;
+      return this; // NULL safe
     }
     if (this.inheritsFrom === this.id) {
-      return this;
+      return this; // No circular
     }
     try {
       const pf = await loadProfile(this.inheritsFrom, container);
+      await prepareClient(this.id, this.inheritsFrom, container);
       return await makeInherit(pf, this, legacyBit);
     } catch {
-      throw "Failed to load dependency profile! Loading: " + this.inheritsFrom;
+      throw (
+        "Failed to load dependency profile or prepare client! Loading: " +
+        this.inheritsFrom
+      );
     }
+  }
+}
+async function prepareClient(
+  modifiedId: string,
+  sourceId: string,
+  container: MinecraftContainer
+): Promise<void> {
+  const t = path.join(
+    container.getVersionRoot(modifiedId),
+    modifiedId + JAR_SUFFIX
+  );
+  if (
+    window.sessionStorage.getItem(
+      "ClientOK." + container.id + "/" + modifiedId
+    ) === "1"
+  ) {
+    return;
+  }
+  if (!(await isFileExist(t))) {
+    await copy(
+      path.join(container.getVersionRoot(sourceId), sourceId + JAR_SUFFIX),
+      t
+    );
+    window.sessionStorage.setItem(
+      "ClientOK." + container.id + "/" + modifiedId,
+      "1"
+    );
   }
 }

@@ -20,13 +20,12 @@ import { getActualDataPath, saveDefaultData } from "../../config/DataSupport";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { DownloadMeta } from "../../download/AbstractDownloader";
 import { addDoing, wrappedDownloadFile } from "../../download/DownloadWrapper";
-import { ensureClient, ensureLibraries } from "../../launch/Ensurance";
+import { ensureLibraries } from "../../launch/Ensurance";
 import { JAR_SUFFIX } from "../../launch/NativesLint";
 import { makeLibrary } from "../../profile/FabricProfileAdaptor";
 import { GameProfile } from "../../profile/GameProfile";
 import { noDuplicateConcat } from "../../profile/InheritedProfileAdaptor";
 import { LibraryMeta } from "../../profile/Meta";
-import { loadProfile } from "../../profile/ProfileLoader";
 
 const FORGE_INSTALLER_HEADLESS = "forge.iw.ald";
 const CP_ARG = "-cp";
@@ -112,7 +111,7 @@ export async function getPolyfillForgeProfile(
   const j2 = await getForgeInstallProfileAndVersionProfile(forgeJar, container);
   const ipf = j2.getFirstValue();
   const vf = j2.getSecondValue();
-  await downloadMappingsAndClient(ipf, container);
+  await downloadMappings(ipf, container);
 
   let finalProfile: GameProfile;
   let modernBit: boolean;
@@ -132,7 +131,7 @@ export async function getPolyfillForgeProfile(
   return new Pair<GameProfile, boolean>(finalProfile, modernBit);
 }
 
-async function downloadMappingsAndClient(
+async function downloadMappings(
   installProfile: Record<string, unknown>,
   container: MinecraftContainer
 ): Promise<void> {
@@ -143,7 +142,7 @@ async function downloadMappingsAndClient(
       .slice(1)
       .slice(0, -1);
     const baseVersion = String(safeGet(installProfile, ["minecraft"], ""));
-    const p = await loadProfile(baseVersion, container);
+    // const p = await loadProfile(baseVersion, container);
     if (mcpVersion.length > 0 && baseVersion.length > 0) {
       // Mappings isn't in GameProfile, parse manually
       const f = await readJSON(container.getProfilePath(baseVersion));
@@ -157,7 +156,7 @@ async function downloadMappingsAndClient(
       await wrappedDownloadFile(new DownloadMeta(mappingsURL, target));
       console.log("Mappings downloaded!");
     }
-    await ensureClient(p);
+    // await ensureClient(p);
   } catch {}
 }
 

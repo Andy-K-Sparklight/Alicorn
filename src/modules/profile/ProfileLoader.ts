@@ -51,17 +51,13 @@ function fixProfileClient<T extends GameProfile>(
   profile: T,
   container: MinecraftContainer
 ): T {
-  const cas = profile.clientArtifacts.concat();
-  profile.clientArtifacts = [];
-  for (const ca of cas) {
-    const c1 = ca.clone();
-    if (!path.isAbsolute(c1.path)) {
-      c1.path = path.resolve(
-        container.getVersionRoot(profile.id),
-        profile.id + JAR_SUFFIX
-      );
-    }
-    profile.clientArtifacts.push(c1);
+  const c1 = profile.clientArtifact.clone();
+  if (!path.isAbsolute(c1.path)) {
+    c1.path = path.resolve(
+      container.getVersionRoot(profile.id),
+      profile.id + JAR_SUFFIX
+    );
+    profile.clientArtifact = c1;
   }
 
   return profile;

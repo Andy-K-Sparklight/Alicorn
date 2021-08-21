@@ -1,18 +1,18 @@
+import { schedulePromiseTask } from "../../renderer/Schedule";
+import { ReleaseType } from "../commons/Constants";
+import { isNull, safeGet } from "../commons/Null";
 import {
   ArtifactMeta,
   AssetIndexArtifactMeta,
   LibraryMeta,
   OptionalArgument,
 } from "./Meta";
-import { isNull, safeGet } from "../commons/Null";
-import { ReleaseType } from "../commons/Constants";
-import { schedulePromiseTask } from "../../renderer/Schedule";
 
 export class GameProfile {
   gameArgs: string[] = [];
   jvmArgs: OptionalArgument[] = [];
   assetIndex = AssetIndexArtifactMeta.emptyAssetIndexArtifactMeta();
-  clientArtifacts = [ArtifactMeta.emptyArtifactMeta()];
+  clientArtifact = ArtifactMeta.emptyArtifactMeta();
   // The 'path' property in 'client' will be reassigned before downloading
   id = "";
   libraries: LibraryMeta[] = [];
@@ -94,9 +94,9 @@ export class GameProfile {
 
       const tClientObj = safeGet(obj, ["downloads", "client"]);
       if (!isNull(tClientObj)) {
-        this.clientArtifacts = [
-          ArtifactMeta.fromObject(Object.assign({}, tClientObj)),
-        ];
+        this.clientArtifact = ArtifactMeta.fromObject(
+          Object.assign({}, tClientObj)
+        );
       }
 
       const allLibraries = obj["libraries"];
@@ -123,9 +123,7 @@ export async function copyProfile(input: GameProfile): Promise<GameProfile> {
     gp.baseVersion = input.baseVersion;
     gp.assetIndex = input.assetIndex.clone();
     gp.time = new Date(input.time.toUTCString());
-    gp.clientArtifacts = input.clientArtifacts.map((c) => {
-      return c.clone();
-    });
+    gp.clientArtifact = input.clientArtifact.clone();
     gp.gameArgs = input.gameArgs.concat();
     gp.mainClass = input.mainClass;
     gp.logFile = input.logFile.clone();
