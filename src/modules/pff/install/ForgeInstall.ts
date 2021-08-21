@@ -154,10 +154,10 @@ async function downloadMappingsAndClient(
         `net/minecraft/client/${baseVersion}-${mcpVersion}/client-${baseVersion}-${mcpVersion}-mappings.txt`
       );
       console.log("Downloading mappings!");
-      wrappedDownloadFile(new DownloadMeta(mappingsURL, target));
+      await wrappedDownloadFile(new DownloadMeta(mappingsURL, target));
       console.log("Mappings downloaded!");
     }
-    ensureClient(p);
+    await ensureClient(p);
   } catch {}
 }
 
