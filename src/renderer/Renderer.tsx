@@ -302,7 +302,8 @@ function bindSuperCowPower(): void {
 }
 
 function configureFontSize(): void {
-  const f = (document.body.clientWidth / 60).toString() + "px";
+  // const f = (document.body.clientWidth / 60).toString() + "px";
+  const f = "14px";
   console.log("Set small font size as " + f);
   window.sessionStorage.setItem("smallFontSize", f);
 }
