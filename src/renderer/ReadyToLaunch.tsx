@@ -217,7 +217,7 @@ function Launching(props: {
       if (NEED_QUERY_STATUS) {
         setWrapperStatus(getWrapperStatus());
       }
-    }, 1000);
+    }, 500);
     return () => {
       clearInterval(timer);
       clearInterval(subscribe);
