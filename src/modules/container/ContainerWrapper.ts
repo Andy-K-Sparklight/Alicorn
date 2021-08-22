@@ -1,5 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
+import { getBasePath } from "../config/PathSolve";
 import {
   getContainer,
   registerContainer,
@@ -14,7 +15,7 @@ export async function createNewContainer(
   name: string,
   isASC = false
 ): Promise<void> {
-  if (path.resolve(rootDir) === path.resolve()) {
+  if (path.resolve(rootDir) === getBasePath()) {
     throw new Error("Invalid target! Cannot operate cwd.");
   }
   let stat;
@@ -50,7 +51,7 @@ export function unlinkContainer(name: string): void {
 // Remove files, don't unlink
 export async function clearContainer(name: string): Promise<void> {
   const dir = getContainer(name).resolvePath();
-  if (dir === path.resolve()) {
+  if (dir === getBasePath()) {
     throw new Error("Invalid target! Cannot operate cwd.");
   }
   try {
