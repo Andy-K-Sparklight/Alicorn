@@ -280,7 +280,7 @@ Alicorn 内置浏览器
 
 # ReadyToLaunch.Progress
 
-正在并发处理 {Current} 个下载任务，最大并发允许 {BufferMax}，还有 {Pending} 个任务队列中
+正在处理 {Current} 个下载任务，最大并发允许 {BufferMax}，还有 {Pending} 个任务队列中
 
 # ReadyToLaunch.Getting
 
