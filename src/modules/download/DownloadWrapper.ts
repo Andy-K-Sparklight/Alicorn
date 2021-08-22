@@ -124,18 +124,12 @@ export async function wrappedDownloadFile(
     FAILED_COUNT_MAP.delete(mirroredMeta);
     addState(tr("ReadyToLaunch.Got", `Url=${ou}`));
     return DownloadStatus.RESOLVED;
-  }
-  FAILED_COUNT_MAP.delete(mirroredMeta);
-  FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
-  const s = await _wrappedDownloadFile(meta);
-  FAILED_COUNT_MAP.delete(meta);
-  if (s === 1) {
-    addState(tr("ReadyToLaunch.Got", `Url=${ou}`));
   } else {
+    FAILED_COUNT_MAP.delete(mirroredMeta);
     addState(tr("ReadyToLaunch.Failed", `Url=${ou}`));
     submitWarn(tr("ReadyToLaunch.Failed", `Url=${ou}`));
+    return DownloadStatus.FATAL;
   }
-  return s;
 }
 
 export async function existsAndValidate(meta: DownloadMeta): Promise<boolean> {
@@ -193,12 +187,14 @@ function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
 
 function scheduleNextTask(): void {
   // An aggressive call! Clear the stack.
-  const CURRENT_MAX = getConfigOptn("max-tasks", 50);
+  const CURRENT_MAX = getConfigOptn("max-tasks", 100);
   while (RUNNING_TASKS.size < CURRENT_MAX && PENDING_TASKS.length > 0) {
     const tsk = PENDING_TASKS.pop();
     if (tsk !== undefined) {
       RUNNING_TASKS.add(tsk);
       downloadSingleFile(tsk, EMITTER);
+    } else {
+      break;
     }
   }
 }
@@ -212,15 +208,16 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
         emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
         return;
       } else if (s === 0) {
+        // Worth retry
         const failed = FAILED_COUNT_MAP.get(meta) || 0;
         if (failed <= 0) {
-          // The last fight!
-          FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
+          // The last fight! Only once.
+          // FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
           void Serial.getInstance()
             .downloadFile(meta)
             .then((s) => {
               if (s === 1) {
-                FAILED_COUNT_MAP.delete(meta);
+                // FAILED_COUNT_MAP.delete(meta);
                 emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
                 return;
               } else {
@@ -231,25 +228,13 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
             });
           return;
         } else {
-          FAILED_COUNT_MAP.set(meta, failed - 1);
+          FAILED_COUNT_MAP.set(meta, failed - 1); // Again
           downloadSingleFile(meta, emitter);
         }
       } else {
-        // Fatal, simply switch to serial
-        FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
-        void Serial.getInstance()
-          .downloadFile(meta)
-          .then((s) => {
-            if (s === 1) {
-              FAILED_COUNT_MAP.delete(meta);
-              emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
-              return;
-            } else {
-              // Fatal
-              emitter.emit(END_GATE, meta, DownloadStatus.FATAL);
-              return;
-            }
-          });
+        // Do not retry
+        FAILED_COUNT_MAP.delete(meta);
+        emitter.emit(END_GATE, meta, DownloadStatus.FATAL);
         return;
       }
     });

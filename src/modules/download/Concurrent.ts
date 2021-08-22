@@ -2,6 +2,8 @@ import fs from "fs-extra";
 import got from "got";
 import os from "os";
 import path from "path";
+import stream from "stream";
+import { promisify } from "util";
 import { basicHash } from "../commons/BasicHash";
 import { isFileExist } from "../commons/FileUtil";
 import { getString } from "../config/ConfigSupport";
@@ -157,16 +159,16 @@ function generatePath(hash: string, start: number, end: number) {
   return `${hash}@${start}-${end}.tmp`;
 }
 
+const pipeline = promisify(stream.pipeline);
 async function downloadSingleChunk(
   url: string,
   tmpSavePath: string,
   chunk: Chunk,
   overrideTimeout?: boolean
 ) {
-  const buffer = (
-    await got.get(url, {
+  await pipeline(
+    got.stream(url, {
       timeout: overrideTimeout ? undefined : getConfigOptn("timeout", 5000),
-      cache: false,
       headers: {
         Range: `bytes=${chunk.start}-${chunk.end}`,
       },
@@ -174,9 +176,9 @@ async function downloadSingleChunk(
         rejectUnauthorized: false,
       },
       agent: getProxyAgent(),
-    })
-  ).rawBody;
-  await fs.writeFile(tmpSavePath, buffer);
+    }),
+    fs.createWriteStream(tmpSavePath)
+  );
 }
 
 class Chunk {
