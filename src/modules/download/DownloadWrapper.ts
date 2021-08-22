@@ -179,7 +179,7 @@ async function _existsAndValidate(pt: string, sha1: string): Promise<boolean> {
 
 function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
   return new Promise<DownloadStatus>((resolve) => {
-    existsAndValidate(meta).then((b) => {
+    void existsAndValidate(meta).then((b) => {
       if (b) {
         resolve(DownloadStatus.RESOLVED);
       } else {
@@ -193,7 +193,7 @@ function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
 
 function scheduleNextTask(): void {
   // An aggressive call! Clear the stack.
-  const CURRENT_MAX = getConfigOptn("max-tasks", 20);
+  const CURRENT_MAX = getConfigOptn("max-tasks", 50);
   while (RUNNING_TASKS.size < CURRENT_MAX && PENDING_TASKS.length > 0) {
     const tsk = PENDING_TASKS.pop();
     if (tsk !== undefined) {
@@ -204,7 +204,7 @@ function scheduleNextTask(): void {
 }
 
 function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
-  Concurrent.getInstance()
+  void Concurrent.getInstance()
     .downloadFile(meta)
     .then((s) => {
       if (s === 1) {
@@ -216,7 +216,7 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
         if (failed <= 0) {
           // The last fight!
           FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
-          Serial.getInstance()
+          void Serial.getInstance()
             .downloadFile(meta)
             .then((s) => {
               if (s === 1) {
@@ -237,7 +237,7 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
       } else {
         // Fatal, simply switch to serial
         FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
-        Serial.getInstance()
+        void Serial.getInstance()
           .downloadFile(meta)
           .then((s) => {
             if (s === 1) {
