@@ -4,7 +4,6 @@ import got from "got";
 import os from "os";
 import path from "path";
 import pkg from "../../../package.json";
-import { isFileExist } from "../commons/FileUtil";
 import { getString } from "../config/ConfigSupport";
 import { getActualDataPath } from "../config/DataSupport";
 import { getBasePath } from "../config/PathSolve";
@@ -97,6 +96,7 @@ export async function checkUpdate(): Promise<void> {
     if (AJV.validate(BuildInfoSchema, res.body)) {
       d = res.body as BuildInfo;
       console.log("Validate passed.");
+      /*
       if (await isFileExist(LOCK_FILE)) {
         if (
           new Date((await fs.readFile(LOCK_FILE)).toString()) >=
@@ -107,7 +107,7 @@ export async function checkUpdate(): Promise<void> {
           notifyAll();
           return;
         }
-      }
+      }*/
       console.log(
         "This update is released at " + new Date(d.date).toLocaleString()
       );
