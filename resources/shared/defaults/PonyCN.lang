@@ -1044,6 +1044,14 @@ Alicorn 特色功能
 
 高级和重置
 
+# Options.action.close-on-exit.title
+
+游戏结束后退出
+
+# Options.action.close-on-exit.desc
+
+在 Minecraft 进程退出后，如无错误，则关闭 Alicorn - 如果你只想玩一次游戏
+
 # Options.download.skip-validate.title
 
 不进行文件校验

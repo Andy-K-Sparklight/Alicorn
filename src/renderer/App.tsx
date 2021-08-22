@@ -568,12 +568,12 @@ export function App(): JSX.Element {
     </Box>
   );
 }
-function remoteHideWindow(): void {
+export function remoteHideWindow(): void {
   console.log("Preparing to exit!");
   ipcRenderer.send("hideWindow");
 }
 
-function remoteCloseWindow(): void {
+export function remoteCloseWindow(): void {
   console.log("Closing!");
   prepareToQuit();
   ipcRenderer.send("closeWindow");

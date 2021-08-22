@@ -48,5 +48,6 @@
   "font-style": "Regular",
   "hardware-acc": true,
   "download.primary-downloader": "Concurrent",
-  "goto.animate": true
+  "goto.animate": true,
+  "action.close-on-exit": false
 }

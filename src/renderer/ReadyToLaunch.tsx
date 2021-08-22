@@ -89,6 +89,8 @@ import { LaunchTracker } from "../modules/launch/Tracker";
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
 import { loadProfile } from "../modules/profile/ProfileLoader";
+import { waitUpdateFinished } from "../modules/selfupdate/Updator";
+import { remoteCloseWindow, remoteHideWindow } from "./App";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { YNDialog } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
@@ -566,8 +568,18 @@ async function startBoot(
       console.log("Crash report committed, continue tasks.");
       clearReboot(profileHash);
       console.log("Cleared reboot flag.");
+    } else {
+      window.localStorage.setItem(
+        LAST_SUCCESSFUL_GAME_KEY,
+        window.location.hash
+      );
+      if (getBoolean("action.close-on-exit")) {
+        remoteHideWindow();
+        waitUpdateFinished(() => {
+          remoteCloseWindow();
+        });
+      }
     }
-    window.localStorage.setItem(LAST_SUCCESSFUL_GAME_KEY, window.location.hash);
 
     console.log("Restoring mods...");
     await restoreMods(container);

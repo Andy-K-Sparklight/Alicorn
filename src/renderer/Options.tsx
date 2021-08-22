@@ -155,6 +155,10 @@ export function OptionsPage(): JSX.Element {
         <TabPanel index={2} value={tabValue}>
           <InputItem type={ConfigType.NUM} bindConfig={"memory"} />
           <InputItem
+            type={ConfigType.BOOL}
+            bindConfig={"action.close-on-exit"}
+          />
+          <InputItem
             type={ConfigType.RADIO}
             bindConfig={"gc1"}
             choices={["pure", "cms", "g1", "z"]}
