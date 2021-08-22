@@ -171,7 +171,7 @@ function SingleContainerDisplay(props: {
   useEffect(() => {
     mounted.current = true;
     if (props.isMounted) {
-      (async () => {
+      void (async () => {
         if (await isSharedContainer(props.container)) {
           if (mounted.current) {
             setASCBit(true);
@@ -450,7 +450,7 @@ function AddNewContainer(props: {
             margin={"dense"}
             onChange={(e) => {
               setSelected(e.target.value);
-              validateDir(e.target.value).then((b) => {
+              void validateDir(e.target.value).then((b) => {
                 setDirError(!b);
               });
             }}
@@ -477,7 +477,7 @@ function AddNewContainer(props: {
             onClick={async () => {
               const d = await remoteSelectDir();
               setSelected(d);
-              validateDir(d).then((b) => {
+              void validateDir(d).then((b) => {
                 setDirError(!b);
               });
             }}
@@ -544,7 +544,7 @@ function AddNewContainer(props: {
             margin={"dense"}
             onChange={(e) => {
               setModpackPath(e.target.value);
-              isFileExist(e.target.value).then((b) => {
+              void isFileExist(e.target.value).then((b) => {
                 setModpackError(!b);
               });
             }}
@@ -571,7 +571,7 @@ function AddNewContainer(props: {
             onClick={async () => {
               const d = await remoteSelectModpack();
               setModpackPath(d);
-              isFileExist(d).then((b) => {
+              void isFileExist(d).then((b) => {
                 setModpackError(!b);
               });
             }}

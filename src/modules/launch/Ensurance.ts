@@ -37,7 +37,7 @@ export async function ensureNatives(
       for (const s of toEnsureLibraries) {
         allPromises.push(
           new Promise<void>((resolve) => {
-            checkExtractTrimNativeLocal(container, s).then(() => {
+            void checkExtractTrimNativeLocal(container, s).then(() => {
               resolve();
             });
           })
@@ -162,7 +162,7 @@ export async function ensureAllAssets(
     const allStatus = await Promise.all(
       allObjects.map((o) => {
         return new Promise<boolean>((resolve) => {
-          ensureAsset(o, container, il).then((b) => {
+          void ensureAsset(o, container, il).then((b) => {
             if (b) {
               tFile.operateRecord.push({
                 file: o.hash,

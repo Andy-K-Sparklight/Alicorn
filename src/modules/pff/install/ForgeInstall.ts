@@ -64,7 +64,7 @@ export async function performForgeInstall(
 }
 
 // Make sure that you call this function AFTER extracted the installer!
-export async function bootForgeInstaller(
+export function bootForgeInstaller(
   jExecutable: string,
   forgeJar: string,
   container: MinecraftContainer

@@ -23,7 +23,7 @@ import {
   Stepper,
   TextField,
   Tooltip,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { FlightTakeoff } from "@material-ui/icons";
 import { ipcRenderer } from "electron";
@@ -36,7 +36,7 @@ import {
   AccountType,
   fillAccessData,
   getAllAccounts,
-  loadAccount
+  loadAccount,
 } from "../modules/auth/AccountUtil";
 import { prefetchData } from "../modules/auth/AJHelper";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
@@ -46,27 +46,27 @@ import {
   MS_LAST_USED_ACTOKEN_KEY,
   MS_LAST_USED_REFRESH_KEY,
   MS_LAST_USED_USERNAME_KEY,
-  MS_LAST_USED_UUID_KEY
+  MS_LAST_USED_UUID_KEY,
 } from "../modules/auth/MicrosoftAccount";
 import { Nide8Account } from "../modules/auth/Nide8Account";
 import { findNotIn, Pair } from "../modules/commons/Collections";
 import {
   PROCESS_END_GATE,
   PROCESS_LOG_GATE,
-  ReleaseType
+  ReleaseType,
 } from "../modules/commons/Constants";
 import { isNull } from "../modules/commons/Null";
 import {
   getBoolean,
   getNumber,
-  getString
+  getString,
 } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { scanReports } from "../modules/crhelper/CrashReportFinder";
 import {
   getWrapperStatus,
-  WrapperStatus
+  WrapperStatus,
 } from "../modules/download/DownloadWrapper";
 import {
   getAllJava,
@@ -74,7 +74,7 @@ import {
   getJavaRunnable,
   getLastUsedJavaHome,
   parseJavaInfo,
-  parseJavaInfoRaw
+  parseJavaInfoRaw,
 } from "../modules/java/JInfo";
 import {
   ensureAllAssets,
@@ -82,7 +82,7 @@ import {
   ensureClient,
   ensureLibraries,
   ensureLog4jFile,
-  ensureNatives
+  ensureNatives,
 } from "../modules/launch/Ensurance";
 import { launchProfile } from "../modules/launch/LaunchPad";
 import { LaunchTracker } from "../modules/launch/Tracker";
@@ -141,7 +141,7 @@ export function ReadyToLaunch(): JSX.Element {
   useEffect(() => {
     mounted.current = true;
 
-    (async () => {
+    void (async () => {
       try {
         const d = await loadProfile(id, getContainer(container));
         if (mounted.current) {
@@ -225,7 +225,7 @@ function Launching(props: {
   }, []);
   useEffect(() => {
     mountedBit.current = true;
-    (async () => {
+    void (async () => {
       const a = await getAllAccounts();
       const builtAccount: Set<Account> = new Set<Account>();
       for (const accountFile of a) {
@@ -275,7 +275,7 @@ function Launching(props: {
         }}
         onChose={(a) => {
           setSelectedAccount(a);
-          (async () => {
+          void (async () => {
             // @ts-ignore
             window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
               (st) => {
@@ -452,9 +452,7 @@ async function startBoot(
   window[LAST_LOGS_KEY] = [];
 
   const GLOBAL_LAUNCH_TRACKER = new LaunchTracker();
-  const jRunnable = await getJavaRunnable(
-    getJavaAndCheckAvailable(profileHash)
-  );
+
   const FAILURE_INFO: MCFailureInfo = {
     container: container,
     tracker: GLOBAL_LAUNCH_TRACKER,
@@ -532,9 +530,9 @@ async function startBoot(
   }
   setStatus(LaunchingStatus.ARGS_GENERATING);
   const originCrashLogs = await scanReports(container);
-  const jInfo = parseJavaInfo(
-    parseJavaInfoRaw(await getJavaInfoRaw(getLastUsedJavaHome()))
-  );
+  const jHome = getJavaAndCheckAvailable(profileHash);
+  const jRunnable = await getJavaRunnable(jHome);
+  const jInfo = parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(jHome)));
   GLOBAL_LAUNCH_TRACKER.java({
     runtime: jInfo.runtime,
     version: jInfo.rootVersion,
@@ -708,7 +706,7 @@ function AccountChoose(props: {
               className={btnClasses.btn}
               disabled={msLogout === "ReadyToLaunch.MSLogoutRunning"}
               onClick={() => {
-                (async () => {
+                void (async () => {
                   // @ts-ignore
                   window[SESSION_ACCESSDATA_CACHED_KEY] = false;
                   setMSLogout("ReadyToLaunch.MSLogoutRunning");
@@ -810,7 +808,7 @@ function MiniJavaSelector(props: {
     };
   }, []);
   useEffect(() => {
-    (async () => {
+    void (async () => {
       const ji = parseJavaInfo(
         parseJavaInfoRaw(
           await getJavaInfoRaw(

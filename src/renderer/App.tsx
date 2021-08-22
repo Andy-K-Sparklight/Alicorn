@@ -305,7 +305,7 @@ export function App(): JSX.Element {
                 color={"inherit"}
                 className={classes.floatButton}
                 onClick={() => {
-                  shell.openExternal("https://al.xuogroup.top/faq/");
+                  void shell.openExternal("https://al.xuogroup.top/faq/");
                 }}
               >
                 <LiveHelp />
@@ -403,7 +403,7 @@ export function App(): JSX.Element {
                   style={genHideStyles("Browser")}
                   className={classes.floatButton}
                   onClick={() => {
-                    (async () => {
+                    void (async () => {
                       await ipcRenderer.invoke(
                         "openBrowser",
                         false,

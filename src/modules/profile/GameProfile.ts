@@ -112,7 +112,7 @@ export class GameProfile {
 }
 
 export async function copyProfile(input: GameProfile): Promise<GameProfile> {
-  return await schedulePromiseTask(async () => {
+  return await schedulePromiseTask(() => {
     const gp = new GameProfile({});
     gp.libraries = input.libraries.concat();
     gp.jvmArgs = input.jvmArgs.concat();
@@ -127,6 +127,6 @@ export async function copyProfile(input: GameProfile): Promise<GameProfile> {
     gp.gameArgs = input.gameArgs.concat();
     gp.mainClass = input.mainClass;
     gp.logFile = input.logFile.clone();
-    return gp;
+    return Promise.resolve(gp);
   });
 }

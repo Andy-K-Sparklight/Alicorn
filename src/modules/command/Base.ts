@@ -3,17 +3,19 @@ import { getString, set } from "../config/ConfigSupport";
 import { registerCommand } from "./CommandListener";
 
 export function initBase(): void {
-  registerCommand("echo", async (a) => {
+  registerCommand("echo", (a) => {
     submitInfo(a.join(" "));
+    return Promise.resolve();
   });
-  registerCommand("dargs", async (a) => {
+  registerCommand("dargs", (a) => {
     submitInfo(a.join("/"));
+    return Promise.resolve();
   });
-  registerCommand("set", async (a) => {
+  registerCommand("set", (a) => {
     const k = a[0];
     if (!k) {
       submitWarn("Invalid config key, ignored.");
-      return;
+      return Promise.resolve();
     }
     let v: string | number | boolean = a[1];
     if (v !== "" && !v) {
@@ -30,16 +32,18 @@ export function initBase(): void {
       }
     }
     set(k, v);
+    return Promise.resolve();
   });
 
-  registerCommand("get", async (a) => {
+  registerCommand("get", (a) => {
     if (!a[0]) {
       submitWarn("No such config key, ignored.");
     }
     submitInfo(getString(a[0]));
+    return Promise.resolve();
   });
 
-  registerCommand("wait", async (a) => {
+  registerCommand("wait", (a) => {
     const x = parseInt(a[0] || "0");
     const t = isNaN(x) ? 0 : x;
     return new Promise<void>((resolve) => {

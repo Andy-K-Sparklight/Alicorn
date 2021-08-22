@@ -116,8 +116,9 @@ export async function analyzeCrashReport(
     const c = new CrashReportCursor(f);
 
     while (c.getLine() !== undefined) {
-      await schedulePromiseTask(async () => {
+      await schedulePromiseTask(() => {
         c.executeLine(loader);
+        return Promise.resolve();
       });
       c.next();
     }

@@ -12,7 +12,7 @@ import { resetJavaList } from "./JInfo";
 export async function whereJava(useCache = false): Promise<string[]> {
   let all: string[] = [];
   all = all.concat(await findJavaViaCommand());
-  all.push(await findJavaInPATH());
+  all.push(findJavaInPATH());
   if (!getBoolean("java.simple-search")) {
     if (os.platform() === "win32") {
       all = all.concat(await findJavaInProgramFilesWin32());
@@ -47,7 +47,7 @@ async function findJavaUNIX(): Promise<string[]> {
   return all;
 }
 
-async function findJavaInPATH(): Promise<string> {
+function findJavaInPATH(): string {
   const javaPath = process.env["JAVA_HOME"];
   if (javaPath === undefined) {
     return "";

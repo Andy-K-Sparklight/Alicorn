@@ -7,7 +7,7 @@ const HISTORY: string[] = [];
 export function initCommandListener(): void {
   window.addEventListener("AlicornCommand", (e) => {
     if (getBoolean("command")) {
-      dispatchCommand(
+      void dispatchCommand(
         String((e as CustomEvent).detail)
           .trim()
           .slice(1)

@@ -30,7 +30,7 @@ async function loadMetas(container: MinecraftContainer): Promise<ModInfo[]> {
     return await Promise.all(
       allMods.map((m) => {
         return new Promise<ModInfo>((resolve) => {
-          loadModInfo(m, container).then((d) => {
+          void loadModInfo(m, container).then((d) => {
             d.fileName = d.fileName || container.getModJar(m);
             // If this meta is loaded from cache we should regenerate
             resolve(d);

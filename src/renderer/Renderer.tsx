@@ -23,7 +23,6 @@ import { initDownloadWrapper } from "../modules/download/DownloadWrapper";
 import { loadMirror } from "../modules/download/Mirror";
 import { initResolveLock } from "../modules/download/ResolveLock";
 import { loadJDT } from "../modules/java/JInfo";
-import { saveJIMFile } from "../modules/launch/JIMSupport";
 import { initModInfo } from "../modules/modx/ModInfo";
 import { prefetchFabricManifest } from "../modules/pff/get/FabricGet";
 import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
@@ -157,11 +156,11 @@ window.addEventListener("error", (e) => {
   window.dispatchEvent(new CustomEvent("sysError", { detail: e.message }));
 });
 
-(async () => {
+void (async () => {
   await initTranslator();
   // @ts-ignore
   window["ashow"] = (a: string) => {
-    shell.openExternal(a);
+    void shell.openExternal(a);
   }; // Binding
   await Promise.allSettled([loadConfig(), loadGDT(), loadJDT()]);
   // GDT & JDT is required by LaunchPad & JavaSelector
@@ -218,7 +217,6 @@ window.addEventListener("error", (e) => {
   initDownloadWrapper();
   // Normal works
   await Promise.allSettled([
-    saveJIMFile(),
     loadMirror(),
     initForgeInstallModule(),
     initConcurrentDownloader(),

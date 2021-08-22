@@ -130,7 +130,7 @@ async function saveLockFile(dir: string): Promise<void> {
     dirFiles.map((f) => {
       return new Promise<void>((resolve) => {
         const pt = path.resolve(path.join(dir, f));
-        getHash(pt).then((s) => {
+        void getHash(pt).then((s) => {
           updateRecord(pt);
           fMap.set(f, s);
           resolve();

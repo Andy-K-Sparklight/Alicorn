@@ -14,7 +14,7 @@ import {
   Switch,
   TextField,
   Tooltip,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import { Add, DeleteForever, Refresh } from "@material-ui/icons";
 import React, { useEffect, useRef, useState } from "react";
@@ -26,7 +26,7 @@ import {
   getAllAccounts,
   loadAccount,
   removeAccount,
-  saveAccount,
+  saveAccount
 } from "../modules/auth/AccountUtil";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
 import { MojangAccount } from "../modules/auth/MojangAccount";
@@ -50,7 +50,7 @@ export function YggdrasilAccountManager(): JSX.Element {
     mountedBit.current = true;
     if (!accountsLoaded.current) {
       accountsLoaded.current = true;
-      (async () => {
+      void (async () => {
         const a = await getAllAccounts();
         const builtAccount: Set<Account> = new Set<Account>();
         for (const accountFile of a) {
@@ -77,10 +77,11 @@ export function YggdrasilAccountManager(): JSX.Element {
         e.preventDefault();
         const data = e.dataTransfer.getData("text/plain");
         if (data.toString().includes("authlib-injector")) {
-          const server = data
+           /* const server = data
             .toString()
             .split("authlib-injector:yggdrasil-server:")[1];
-          setAdding(true);
+          */
+         setAdding(true);
         }
       }}
       onDragOver={(e) => {
@@ -164,17 +165,17 @@ export function SingleAccountDisplay(props: {
   const [isOperating, setOperating] = useState(false);
   const [mjLWOpening, setMjLWOpen] = useState(false);
   const usingAccount = useRef<Account>(accountCopy);
-  const [isAsking, isAskingUpdate] = useState(false);
+  const [isAsking, setIsAsking] = useState(false);
   return (
     <Box>
       {/* Confirm delete */}
       {isAsking ? (
         <YNDialog
           onClose={() => {
-            isAskingUpdate(false);
+            setIsAsking(false);
           }}
           onAccept={async () => {
-            isAskingUpdate(false);
+            setIsAsking(false);
             await removeAccount(
               usingAccount.current.getAccountIdentifier() +
                 ALICORN_ENCRYPTED_DATA_SUFFIX
@@ -214,9 +215,7 @@ export function SingleAccountDisplay(props: {
                 color={"inherit"}
                 className={classes.operateButton}
                 onClick={() => {
-                  (async () => {
-                    isAskingUpdate(true);
-                  })();
+                  setIsAsking(true);
                 }}
               >
                 <DeleteForever />
@@ -229,7 +228,7 @@ export function SingleAccountDisplay(props: {
                 className={classes.operateButton}
                 onClick={() => {
                   setOperating(true);
-                  (async () => {
+                  void (async () => {
                     const status = await usingAccount.current.flushToken();
                     if (status) {
                       await saveAccount(usingAccount.current);
@@ -341,7 +340,7 @@ function YggdrasilForm(props: {
           disabled={pwd.length === 0 || isRunning}
           onClick={() => {
             isRunningUpdate(true);
-            (async () => {
+            void (async () => {
               setError(false);
               const acc = copyAccount(props.account);
               if (await acc.performAuth(pwd)) {

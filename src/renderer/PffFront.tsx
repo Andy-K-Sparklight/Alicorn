@@ -50,7 +50,7 @@ export function PffFront(): JSX.Element {
   const fullWidthClasses = fullWidth();
   useEffect(() => {
     const fun = () => {
-      (async () => {
+      void (async () => {
         const lock = await loadLockFile(getContainer(container));
         if (mounted.current) {
           setLockfile(lock);
@@ -65,7 +65,7 @@ export function PffFront(): JSX.Element {
     };
   }, []);
   useEffect(() => {
-    (async () => {
+    void (async () => {
       const lock = await loadLockFile(getContainer(container));
       if (mounted.current) {
         setLockfile(lock);
@@ -111,7 +111,7 @@ export function PffFront(): JSX.Element {
                     color={"primary"}
                     onClick={() => {
                       setRunning(true);
-                      (async () => {
+                      void (async () => {
                         await pffInstall(
                           packageName,
                           getContainer(container),

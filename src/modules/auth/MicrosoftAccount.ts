@@ -29,11 +29,13 @@ export const MS_LAST_USED_UUID_KEY = "MS.LastUsedUUID";
 export const MS_LAST_USED_REFRESH_KEY = "MS.LastUsedRefresh"; // Encrypt
 
 export class MicrosoftAccount extends Account {
-  async buildAccessData(): Promise<Trio<string, string, string>> {
-    return new Trio<string, string, string>(
-      this.lastUsedUsername,
-      this.lastUsedAccessToken,
-      this.lastUsedUUID
+  buildAccessData(): Promise<Trio<string, string, string>> {
+    return Promise.resolve(
+      new Trio<string, string, string>(
+        this.lastUsedUsername,
+        this.lastUsedAccessToken,
+        this.lastUsedUUID
+      )
     );
   }
 

@@ -10,7 +10,7 @@ export function VersionView(): JSX.Element {
   );
   const [displayMode, setDisplayMode] = useState(0);
   useEffect(() => {
-    (async () => {
+    void (async () => {
       setEcVersion(await ipcRenderer.invoke("getElectronVersion"));
     })();
   }, []);

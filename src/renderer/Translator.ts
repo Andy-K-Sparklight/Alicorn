@@ -21,6 +21,11 @@ export function getLocaleList(): string[] {
   return Array.from(localesMap.keys());
 }
 
+export function hasKey(k: string): boolean {
+  const res = (localesMap.get(currentLocale()) || {})[k];
+  return res === undefined || res.length === 0;
+}
+
 // Main translate function
 // ATTENETION! This function actually CAN return a JSX Element
 // We use string here to 'cheat' TSC

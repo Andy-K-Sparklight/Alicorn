@@ -8,7 +8,7 @@ import { registerCommand } from "./CommandListener";
 let time: Date | undefined;
 
 export function initExtraTools(): void {
-  registerCommand("timer", async () => {
+  registerCommand("timer", () => {
     if (time === undefined) {
       time = new Date();
       submitInfo("Started timing.");
@@ -17,6 +17,7 @@ export function initExtraTools(): void {
       time = undefined;
       submitInfo("Time elapsed: " + s + "s");
     }
+    return Promise.resolve();
   });
   registerCommand("download", async (a) => {
     let u = a.shift();

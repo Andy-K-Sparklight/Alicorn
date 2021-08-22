@@ -44,7 +44,7 @@ export async function performFabricInstall(
   }
 }
 
-async function bootFabricInstaller(
+function bootFabricInstaller(
   jExecutable: string,
   fbURL: string,
   fbv: string,

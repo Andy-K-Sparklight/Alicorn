@@ -32,12 +32,13 @@ export function registerHandlers(): void {
     }
     return await ipcRenderer.invoke("isReachable", String(address));
   });
-  addHandler("JumpTo", async (target, page) => {
+  addHandler("JumpTo", (target, page) => {
     jumpTo(String(target));
     triggerSetPage(String(page));
+    return Promise.resolve();
   });
-  addHandler("GetAllContainers", async () => {
-    return getAllContainers();
+  addHandler("GetAllContainers", () => {
+    return Promise.resolve(getAllContainers());
   });
 }
 

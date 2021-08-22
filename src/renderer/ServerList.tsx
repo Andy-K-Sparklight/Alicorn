@@ -49,7 +49,7 @@ export function ServerList(): JSX.Element {
   const [cores, setCores] = useState<string[]>([]);
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       const ss = await scanCoresInAllMountedContainers(false);
       const j: string[] = [];
       for (const [c, cs] of ss) {
@@ -199,7 +199,7 @@ export function SingleServerDisplay(props: {
   useEffect(() => {
     if (!reachableLock.current) {
       reachableLock.current = true;
-      (async () => {
+      void (async () => {
         const s = !!(await ipcRenderer.invoke("isReachable", props.address));
         setCanConnect(s);
       })();

@@ -20,7 +20,7 @@ export async function scanCoresIn(
             resolve();
             return;
           }
-          isValidCore(path.join(cRoot, v)).then((i) => {
+          void isValidCore(path.join(cRoot, v)).then((i) => {
             if (i) {
               tArr.push(v);
             }

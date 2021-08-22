@@ -79,7 +79,7 @@ export function CrashReportDisplay(): JSX.Element {
   useEffect(() => {
     if (failureInfo.crashReport !== undefined) {
       const f = failureInfo.crashReport;
-      (async () => {
+      void (async () => {
         const pt = failureInfo.container.getCrashReport(f);
         const r = await analyzeCrashReport(pt);
         try {
@@ -94,7 +94,7 @@ export function CrashReportDisplay(): JSX.Element {
       })();
     }
     if (logs.length > 0) {
-      (async () => {
+      void (async () => {
         try {
           const ac = await analyzeCrashReport(
             "",

@@ -3,9 +3,7 @@ import EventEmitter from "events";
 import objectHash from "object-hash";
 import { Pair } from "../commons/Collections";
 import { PROCESS_END_GATE, PROCESS_LOG_GATE } from "../commons/Constants";
-import { getBoolean } from "../config/ConfigSupport";
 import { MinecraftContainer } from "../container/MinecraftContainer";
-import { runJIM } from "./JIMSupport";
 
 const POOL = new Map<string, RunningMinecraft>();
 const REV_POOL = new Map<RunningMinecraft, string>();
@@ -57,7 +55,7 @@ export class RunningMinecraft {
       }
       REV_POOL.delete(this);
     });
-   
+
     this.process?.stdout?.on("data", (d) => {
       const strD = d.toString();
       this.logs.getFirstValue().push(strD);

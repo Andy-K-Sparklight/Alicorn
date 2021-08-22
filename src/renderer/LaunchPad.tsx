@@ -65,7 +65,7 @@ function CoresDisplay(): JSX.Element {
       }
       cachedAllCores = [];
 
-      (async () => {
+      void (async () => {
         let counter = 0;
         const rMap = await scanCoresInAllMountedContainers(true);
         for (const [c, ids] of rMap.entries()) {

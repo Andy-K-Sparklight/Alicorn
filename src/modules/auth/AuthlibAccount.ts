@@ -13,11 +13,13 @@ import { AccountType } from "./AccountUtil";
 // Account using Authlib Injector
 export class AuthlibAccount extends Account {
   // Only gather information, this function doesn't do any authentication!
-  async buildAccessData(): Promise<Trio<string, string, string>> {
-    return new Trio<string, string, string>(
-      this.lastUsedUsername,
-      this.lastUsedAccessToken,
-      this.lastUsedUUID
+  buildAccessData(): Promise<Trio<string, string, string>> {
+    return Promise.resolve(
+      new Trio<string, string, string>(
+        this.lastUsedUsername,
+        this.lastUsedAccessToken,
+        this.lastUsedUUID
+      )
     );
   }
 

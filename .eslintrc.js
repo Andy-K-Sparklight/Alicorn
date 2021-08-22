@@ -1,4 +1,9 @@
 module.exports = {
+  settings: {
+    react: {
+      version: "detect",
+    },
+  },
   env: {
     browser: true,
     es2021: true,
@@ -15,6 +20,7 @@ module.exports = {
     ecmaFeatures: {
       jsx: true,
     },
+    project: ["tsconfig.json"],
     ecmaVersion: 12,
     sourceType: "module",
   },
@@ -30,5 +36,7 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": "off",
     "react-hooks/rules-of-hooks": "error",
     "@typescript-eslint/no-empty-function": "off",
+    "require-await": "warn",
+    "@typescript-eslint/no-floating-promises": "warn",
   },
 };

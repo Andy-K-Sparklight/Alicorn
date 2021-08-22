@@ -215,12 +215,12 @@ export function registerBackgroundListeners(): void {
     await loadConfig();
     console.log("Config reloaded.");
   });
-  ipcMain.on("reportError", async (_e, msg) => {
+  ipcMain.on("reportError", (_e, msg) => {
     if (getBoolean("dev.explicit-error-throw")) {
       dialog.showErrorBox("Oops!", msg);
     }
   });
-  ipcMain.on("registerHotKey", (e, keyBound: string, signal = keyBound) => {
+  ipcMain.on("registerHotKey", (_e, keyBound: string, signal = keyBound) => {
     if (getBoolean("hot-key")) {
       globalShortcut.register(keyBound, () => {
         getMainWindow()?.webContents.send(signal);
@@ -232,16 +232,16 @@ export function registerBackgroundListeners(): void {
       timeout: getNumber("starlight.join-server.timeout", 2000),
     });
   });
-  ipcMain.on("hideWindow", async () => {
+  ipcMain.on("hideWindow", () => {
     getMainWindow()?.hide();
   });
-  ipcMain.on("showWindow", async () => {
+  ipcMain.on("showWindow", () => {
     getMainWindow()?.show();
   });
   ipcMain.on("changeDir", (_e, d: string) => {
     process.chdir(d);
   });
-  ipcMain.handle("getElectronVersion", async () => {
-    return process.versions["electron"];
+  ipcMain.handle("getElectronVersion", () => {
+    return Promise.resolve(process.versions["electron"]);
   });
 }

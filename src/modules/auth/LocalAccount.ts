@@ -21,17 +21,17 @@ export class LocalAccount extends Account {
     );
   }
 
-  async flushToken(): Promise<boolean> {
+  flushToken(): Promise<boolean> {
     this.lastUsedAccessToken = fakeToken();
-    return true;
+    return Promise.resolve(true);
   }
 
-  async isAccessTokenValid(): Promise<boolean> {
-    return true;
+  isAccessTokenValid(): Promise<boolean> {
+    return Promise.resolve(true);
   }
 
-  async performAuth(password: string): Promise<boolean> {
-    return true;
+  performAuth(_password: string): Promise<boolean> {
+    return Promise.resolve(true);
   }
 
   serialize(): string {

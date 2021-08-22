@@ -104,7 +104,7 @@ export function InstallCore(): JSX.Element {
     };
   });
   useEffect(() => {
-    (async () => {
+    void (async () => {
       if (!isLoaded.current) {
         const r = await getAllMojangCores(mojangFilter);
         if (mounted.current) {
@@ -120,7 +120,7 @@ export function InstallCore(): JSX.Element {
     };
   });
   useEffect(() => {
-    (async () => {
+    void (async () => {
       const lForge = await getForgeVersionByMojang(baseMojangVersionForge);
       if (mounted.current) {
         setDetectedForgeVersion(lForge);
@@ -128,7 +128,7 @@ export function InstallCore(): JSX.Element {
     })();
   }, [baseMojangVersionForge]);
   useEffect(() => {
-    (async () => {
+    void (async () => {
       if (!(await canSupportGame(baseMojangVersionFabric))) {
         if (mounted.current) {
           setDetectedFabricVersion("");
@@ -143,7 +143,7 @@ export function InstallCore(): JSX.Element {
   }, [baseMojangVersionFabric]);
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       const aCores = await filterMojangCores();
       if (mounted.current) {
         setPatchableCores(aCores);

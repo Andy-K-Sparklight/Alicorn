@@ -40,7 +40,7 @@ app.on("ready", async () => {
   console.log("Registering event listeners...");
   registerBackgroundListeners();
 
-  mainWindow.once("ready-to-show", async () => {
+  mainWindow.once("ready-to-show", () => {
     console.log("Creating window!");
     mainWindow?.show();
     console.log("All caught up! Alicorn is now initialized.");

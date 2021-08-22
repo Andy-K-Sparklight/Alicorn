@@ -59,7 +59,7 @@ async function selectContainer(): Promise<string> {
   });
 }
 
-async function generateClicker(document: Document): Promise<void> {
+function generateClicker(document: Document): void {
   const version = getCompatibleVersions();
   const name = getModName();
   const loaderRaw = document.querySelector(

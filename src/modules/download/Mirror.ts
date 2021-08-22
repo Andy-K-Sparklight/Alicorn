@@ -6,7 +6,11 @@ import { parseMap } from "../commons/MapUtil";
 import { getString } from "../config/ConfigSupport";
 import { loadData, saveDefaultData } from "../config/DataSupport";
 
-const MIRROR_FILES = ["alicorn.ald", "alicorn-mcbbs-nonfree.ald", "alicorn-bmclapi-nonfree.ald"];
+const MIRROR_FILES = [
+  "alicorn.ald",
+  "alicorn-mcbbs-nonfree.ald",
+  "alicorn-bmclapi-nonfree.ald",
+];
 let mirrorMap: Map<string, string> = new Map();
 const METHOD_KEY = "@method";
 const NO_MIRROR_VAL = "@no-mirror";
@@ -56,8 +60,8 @@ export function applyMirror(url: string): string {
 
 export async function loadMirror(): Promise<void> {
   await Promise.allSettled(
-    MIRROR_FILES.map((f) => {
-      saveDefaultData(f);
+    MIRROR_FILES.map(async (f) => {
+      await saveDefaultData(f);
     })
   );
   const mf = getString("download.mirror", "none").toLowerCase().trim();

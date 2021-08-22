@@ -2,9 +2,9 @@ let WEBSOCKET_CLIENT: WebSocket | null = null;
 const TSS: Map<number, (v: unknown) => unknown> = new Map();
 let cEvent = 0;
 
-export async function initMessenger(): Promise<void> {
+export function initMessenger(): Promise<void> {
   if (WEBSOCKET_CLIENT) {
-    return;
+    return Promise.resolve();
   }
   return new Promise<void>((resolve, reject) => {
     // Alicorn/Starlight uses port 16814 to exchange data
@@ -36,10 +36,7 @@ export async function initMessenger(): Promise<void> {
   });
 }
 
-export async function invoke(
-  channel: string,
-  ...args: unknown[]
-): Promise<unknown> {
+export function invoke(channel: string, ...args: unknown[]): Promise<unknown> {
   const taskId = ++cEvent;
   WEBSOCKET_CLIENT?.send(
     JSON.stringify({

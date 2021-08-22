@@ -11,18 +11,19 @@ export function registerAlicornFunctions(): void {
     }
   });
   // Define a function
-  registerCommand("def", async (a) => {
+  registerCommand("def", (a) => {
     const name = a.shift()?.trim() || "";
     const fun = a.shift()?.trim() || "";
     if (name.length === 0) {
       submitWarn("You should specify the function name!");
-      return;
+      return Promise.resolve();
     }
     if (fun.length === 0) {
       submitWarn("You should specify the function body!");
-      return;
+      return Promise.resolve();
     }
     FUNCTIONS.set(name, fun);
+    return Promise.resolve();
   });
 
   // Run a function
@@ -48,7 +49,8 @@ export function registerAlicornFunctions(): void {
       })
     );
   });
-  registerCommand("moo", async () => {
+  registerCommand("moo", () => {
     submitInfo("...Have you mooed today?");
+    return Promise.resolve();
   });
 }

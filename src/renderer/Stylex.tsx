@@ -150,3 +150,29 @@ export const useTextStyles = makeStyles((theme) =>
     },
   })
 );
+
+export const useTextStylesLight = makeStyles((theme) =>
+  createStyles({
+    root: {},
+    firstText: {
+      color: theme.palette.primary.light,
+      fontSize: "large",
+    },
+    secondText: {
+      color: theme.palette.secondary.light,
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+    },
+    mediumText: {
+      color: theme.palette.secondary.light,
+      fontSize: "medium",
+    },
+    link: {
+      color: theme.palette.primary.light,
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+    },
+    thirdText: {
+      color: theme.palette.primary.light,
+      fontSize: "medium",
+    },
+  })
+);

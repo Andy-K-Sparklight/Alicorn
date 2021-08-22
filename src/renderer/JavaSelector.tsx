@@ -59,7 +59,7 @@ export function JavaSelector(): JSX.Element {
   useEffect(() => {
     mounted.current = true;
 
-    (async () => {
+    void (async () => {
       try {
         const t = parseJavaInfo(
           parseJavaInfoRaw(await getJavaInfoRaw(currentJava))
@@ -79,7 +79,7 @@ export function JavaSelector(): JSX.Element {
     };
   }, [refreshBit]);
   useEffect(() => {
-    (async () => {
+    void (async () => {
       setChangePageWarn(true);
       let javas;
       if (!isJavaInfoLoaded) {
@@ -159,7 +159,7 @@ export function JavaSelector(): JSX.Element {
           variant={"outlined"}
           color={"primary"}
           onClick={() => {
-            (async () => {
+            void (async () => {
               const d = path.dirname(path.dirname(await remoteSelectJava()));
               if (d === "." || d.length === 0) {
                 return;
@@ -306,7 +306,7 @@ function JavaDownloader(): JSX.Element {
         disabled={isRunning}
         onClick={() => {
           setRunning(true);
-          (async () => {
+          void (async () => {
             try {
               await installJRE(false);
             } catch (e) {
@@ -328,7 +328,7 @@ function JavaDownloader(): JSX.Element {
         color={"primary"}
         onClick={() => {
           setRunning(true);
-          (async () => {
+          void (async () => {
             try {
               await installJRE(true);
             } catch (e) {
