@@ -58,6 +58,10 @@ Pff 软件安装器
 
 服务器列表
 
+# UtilitiesIndex
+
+小工具
+
 # System.Info
 
 信息：
@@ -85,6 +89,10 @@ Oops！系统错误：
 # System.JumpPageWarn.No
 
 留在当前页面
+
+# MainMenu.UtilitiesIndex
+
+打开小工具列表
 
 # MainMenu.Help
 
@@ -1304,14 +1312,6 @@ Alicorn 快捷键 ^
 
 启用快捷键以进行高效操作 - 查看帮助以了解使用方法
 
-# Options.dev.quick-reload.title
-
-快速重载
-
-# Options.dev.quick-reload.desc
-
-按 Ctrl+R 快速重新加载启动器 - 使扩展的变更或者部分设置的修改生效
-
 # Options.download.global-proxy.title
 
 下载代理 ^
@@ -2052,4 +2052,12 @@ End
 
 # UtilitiesIndex.Open
 
-启动
+启动此工具
+
+# Utilities.NetCheck.Title
+
+NetCheck
+
+# Utilities.NetCheck.Description
+
+Sparklight 作品 / 检查您的设备到各主流 Minecraft 站点的连通性

@@ -1,7 +1,6 @@
 {
   "dev": false,
   "dev.explicit-error-throw": false,
-  "dev.quick-reload": false,
   "dev.f12": false,
   "hot-key": false,
   "hide-when-game": true,
