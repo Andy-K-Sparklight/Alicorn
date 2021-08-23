@@ -193,15 +193,12 @@ export async function requireFile(
   const st = await wrappedDownloadFile(
     new DownloadMeta(file.downloadUrl, modJar)
   );
-  if (st === 1 && cacheRoot.trim().length > 0) {
+  if (cacheRoot.trim().length > 0) {
     try {
       await writeCachedFile(file, addon, cacheRoot, modJar);
-      return true;
-    } catch {
-      return false;
-    }
+    } catch {} // It won't hurt
   }
-  return false;
+  return st === 1; // All's well that download's well
 }
 
 export async function lookupFileInfo(
