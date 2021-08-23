@@ -1,6 +1,7 @@
 import { copyFile, ensureDir } from "fs-extra";
 import path from "path";
 import { invokeWorker } from "../../../renderer/Schedule";
+import { safeGet } from "../../commons/Null";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { DownloadMeta } from "../../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../../download/DownloadWrapper";
@@ -29,6 +30,13 @@ export async function getAddonInfoBySlug(
     }
     for (const i of r) {
       if (i["slug"] === slug.toLowerCase()) {
+        if (
+          safeGet(i, ["categorySection", "id", 0]) !== 8 &&
+          safeGet(i, ["categorySection", "name", ""]) !== "Mods"
+        ) {
+          // 8 means mods and 11 means modpacks
+          continue;
+        }
         if (typeof i["id"] === "string" || typeof i["id"] === "number") {
           i["thumbNail"] = "";
           if (i["attachments"] instanceof Array) {
