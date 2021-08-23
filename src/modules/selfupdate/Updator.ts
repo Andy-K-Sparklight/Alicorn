@@ -42,12 +42,14 @@ export function waitUpdateFinished(f: () => unknown): void {
   if (!IS_UPDATING) {
     f();
   } else {
+    console.log("Hook attached, waiting for update finish...");
     func = f;
   }
 }
 
 function notifyAll(): void {
   if (func) {
+    console.log("Update finished, calling hooks...");
     func();
   }
 }
@@ -62,7 +64,6 @@ export async function checkUpdate(): Promise<void> {
       return;
     }
     console.log("Start checking updates!");
-    IS_UPDATING = true;
     const HEAD = MAIN_BUILD_FILE_RELEASE;
     console.log("HEAD is " + MAIN_BUILD_FILE_RELEASE);
     const BASE = RELEASE_FOLDER;
@@ -83,12 +84,8 @@ export async function checkUpdate(): Promise<void> {
         console.log(
           "You are running the latest version! (404 / No Later File)"
         );
-        IS_UPDATING = false;
-        notifyAll();
         return;
       }
-      IS_UPDATING = false;
-      notifyAll();
       throw e;
     }
     console.log("Validating build info!");
@@ -122,23 +119,27 @@ export async function checkUpdate(): Promise<void> {
       console.log("Downloading files...");
       if (!AJV.validate(BuildInfoSchema, res_rend.body)) {
         console.log("Invalid build info! Skipped updating this time.");
-        IS_UPDATING = false;
-        notifyAll();
         return;
       }
       if (!(await doUpdate(BASE, res_rend.body as BuildInfo))) {
         console.log("Update failed, let's try again next time.");
-        IS_UPDATING = false;
-        notifyAll();
         return;
       }
       if (!(await doUpdate(BASE, res.body as BuildInfo))) {
         console.log("Update failed, let's try again next time.");
-        IS_UPDATING = false;
-        notifyAll();
         return;
       }
-
+      console.log("Switching files...");
+      IS_UPDATING = true;
+      try {
+        await switchFile(res.body as BuildInfo);
+        await switchFile(res_rend.body as BuildInfo);
+      } catch (e) {
+        console.log(e);
+        console.log("File switch failed! Error is present above.");
+        IS_UPDATING = false;
+        notifyAll();
+      }
       await fs.ensureDir(path.dirname(LOCK_FILE));
       await fs.writeFile(LOCK_FILE, (res.body as BuildInfo).date);
       console.log("Update completed.");
@@ -175,14 +176,11 @@ export async function doUpdate(
   info: BuildInfo
 ): Promise<boolean> {
   try {
-    for (const v of info.files) {
-      const target = path.resolve(getBasePath(), v);
-      console.log("Backing up " + target);
-      await backupFile(target);
-    }
+    const basePath = getBasePath();
     for (const v of info.files) {
       console.log("Downloading " + v);
-      const target = path.resolve(getBasePath(), v);
+      const target = path.resolve(basePath, v + ".local");
+      // First download all, then rename
       const meta = new DownloadMeta(baseUrl + v, target, "");
       if ((await Serial.getInstance().downloadFile(meta, true)) !== 1) {
         throw "Failed to download: " + meta.url;
@@ -191,31 +189,22 @@ export async function doUpdate(
     return true;
   } catch (e) {
     console.log(e);
-    for (const v of info.files) {
-      try {
-        const target = path.resolve(getBasePath(), v);
-        console.log("Restoring " + target);
-        await restoreFile(target);
-      } catch {}
-    }
     return false;
   }
 }
 
-async function backupFile(src: string): Promise<void> {
+async function switchFile(bInfo: BuildInfo): Promise<boolean> {
   try {
-    await fs.access(src);
-  } catch {
-    return;
+    const basePath = getBasePath();
+    await Promise.all(
+      bInfo.files.map((v) => {
+        const origin = path.resolve(basePath, v + ".local");
+        const target = path.resolve(basePath, v);
+        return fs.rename(origin, target); // Pass Promise
+      })
+    );
+    return true;
+  } catch (e) {
+    return false;
   }
-  await fs.copyFile(src, src + ".backup");
-}
-
-async function restoreFile(src: string): Promise<void> {
-  try {
-    await fs.access(src + ".backup");
-  } catch {
-    return;
-  }
-  await fs.copyFile(src + ".backup", src);
 }
