@@ -6,7 +6,6 @@ import { basicHash } from "../../commons/BasicHash";
 import { Pair } from "../../commons/Collections";
 import { isNull, safeGet } from "../../commons/Null";
 import { getNumber, getString } from "../../config/ConfigSupport";
-import { DATA_ROOT } from "../../config/DataSupport";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { addDoing } from "../../download/DownloadWrapper";
 import { getJavaRunnable, getLastUsedJavaHome } from "../../java/JInfo";
@@ -14,25 +13,25 @@ import { ProfileType } from "../../profile/WhatProfile";
 import {
   lookupAddonInfo,
   lookupFileInfo,
-  requireFile
+  requireFile,
 } from "../curseforge/Get";
 import {
   loadLockFile,
   Lockfile,
   saveLockFile,
-  writeToLockFile
+  writeToLockFile,
 } from "../curseforge/Lockfile";
 import { CF_API_BASE_URL } from "../curseforge/Values";
 import { setPffFlag } from "../curseforge/Wrapper";
 import {
   getFabricInstaller,
   getLatestFabricInstallerAndLoader,
-  removeFabricInstaller
+  removeFabricInstaller,
 } from "../get/FabricGet";
 import {
   generateForgeInstallerName,
   getForgeInstaller,
-  removeForgeInstaller
+  removeForgeInstaller,
 } from "../get/ForgeGet";
 import { downloadProfile, getProfileURLById } from "../get/MojangCore";
 import { performFabricInstall } from "../install/FabricInstall";
@@ -44,7 +43,7 @@ import {
   deployAllModLoaders,
   generateBaseVersion,
   generateDefaultModLoader,
-  OverrideFile
+  OverrideFile,
 } from "./CommonModpackModel";
 const MANIFEST_FILE = "manifest.json";
 
@@ -207,7 +206,7 @@ async function installMods(
           timeout,
           lockfile,
           generateBaseVersion(model),
-          profileType2Number(generateDefaultModLoader(model)) // Considering most modepacks uses Forge, this is for our USERS, not for such FORGE!
+          profileType2Number(generateDefaultModLoader(model)) // Considering most modpacks uses Forge, this is for our USERS, not for such FORGE!
         );
       }
     })
