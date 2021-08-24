@@ -1,7 +1,6 @@
-import { LocalAccount } from "./LocalAccount";
+import fs from "fs-extra";
+import path from "path";
 import { Pair, Trio } from "../commons/Collections";
-import { AuthlibAccount } from "./AuthlibAccount";
-import { Account } from "./Account";
 import { ALICORN_ENCRYPTED_DATA_SUFFIX } from "../commons/Constants";
 import {
   getActualDataPath,
@@ -9,11 +8,12 @@ import {
   saveData,
   saveDataSync,
 } from "../config/DataSupport";
-import path from "path";
 import { decryptByMachine, encryptByMachine } from "../security/Encrypt";
-import fs from "fs-extra";
-import { MojangAccount } from "./MojangAccount";
+import { Account } from "./Account";
+import { AuthlibAccount } from "./AuthlibAccount";
+import { LocalAccount } from "./LocalAccount";
 import { MicrosoftAccount } from "./MicrosoftAccount";
+import { MojangAccount } from "./MojangAccount";
 import { Nide8Account } from "./Nide8Account";
 
 // Account Prefix
@@ -196,7 +196,7 @@ export async function removeAccount(fName: string): Promise<void> {
 
 export function copyAccount(aIn: Account | undefined): Account {
   if (aIn === undefined) {
-    return new LocalAccount("Demo");
+    return new LocalAccount("Player");
   }
   switch (aIn.type) {
     case AccountType.NIDE8: {
@@ -245,7 +245,7 @@ export async function fillAccessData(
 ): Promise<Trio<string, string, string>> {
   for (const v of acData.get()) {
     if (v.trim().length === 0) {
-      return await new LocalAccount("Demo").buildAccessData();
+      return await new LocalAccount("Player").buildAccessData();
     }
   }
   return acData;

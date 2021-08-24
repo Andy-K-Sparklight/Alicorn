@@ -635,7 +635,7 @@ function AccountChoose(props: {
   )();
   const [choice, setChoice] = useState<"MZ" | "AL" | "YG">("MZ");
   const [pName, setName] = useState<string>(
-    window.localStorage.getItem(LAST_USED_USER_NAME_KEY) || "Demo"
+    window.localStorage.getItem(LAST_USED_USER_NAME_KEY) || "Player"
   );
   const mounted = useRef<boolean>(false);
   const [sAccount, setAccount] = useState<string>("");
