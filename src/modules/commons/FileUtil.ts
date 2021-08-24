@@ -32,7 +32,7 @@ export async function copyFileStream(
   await fs.ensureDir(path.dirname(dPath));
   const stream = fs
     .createReadStream(path.resolve(from))
-    .pipe(fs.createWriteStream(dPath));
+    .pipe(fs.createWriteStream(dPath, { mode: 0o777 }));
   return new Promise<void>((resolve, reject) => {
     stream.on("finish", () => {
       resolve();

@@ -24,6 +24,7 @@ import { loadMirror } from "../modules/download/Mirror";
 import { initResolveLock } from "../modules/download/ResolveLock";
 import { loadJDT } from "../modules/java/JInfo";
 import { initModInfo } from "../modules/modx/ModInfo";
+import { prepareEdgeExecutable } from "../modules/n2n/BootEdge";
 import { prefetchFabricManifest } from "../modules/pff/get/FabricGet";
 import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
 import { prefetchMojangVersions } from "../modules/pff/get/MojangCore";
@@ -222,6 +223,7 @@ void (async () => {
     initConcurrentDownloader(),
     prepareAJ(),
     prepareND(),
+    prepareEdgeExecutable(),
     loadServers(),
   ]);
   // Heavy works and minor works
@@ -232,26 +234,31 @@ void (async () => {
       (t2.getTime() - t1.getTime()) / 1000 +
       "s."
   );
-  // Update
-  if (getBoolean("updator.use-update")) {
-    console.log("Checking updates...");
-    try {
-      initUpdator();
-      await checkUpdate();
-      console.log("Update completed!");
-    } catch (e) {
-      console.log(e);
-      console.log(
-        "A critical error happened during updating. Try again next time!"
-      );
-    }
-  } else {
-    console.log("Skipped update checking due to user settings.");
-  }
+
   // Optional services
   const t3 = new Date();
   console.log("Running optional services...");
+  const updPm = (async () => {
+    // Conc
+    if (getBoolean("updator.use-update")) {
+      console.log("Checking updates...");
+      try {
+        initUpdator();
+        await checkUpdate();
+        console.log("Update check completed!");
+      } catch (e) {
+        console.log(e);
+        console.log(
+          "A critical error happened during updating. Try again next time!"
+        );
+      }
+    } else {
+      console.log("Skipped update checking due to user settings.");
+    }
+  })();
+
   await Promise.allSettled([
+    updPm,
     prefetchForgeManifest(),
     prefetchFabricManifest(),
     prefetchMojangVersions(),

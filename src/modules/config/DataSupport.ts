@@ -52,3 +52,18 @@ export async function saveDefaultData(dfPath: string): Promise<void> {
     await copyFileStream(path.join(DEFAULTS_ROOT, dfPath), dest);
   } catch {}
 }
+
+export async function saveDefaultDataAs(
+  dfPath: string,
+  filename: string
+): Promise<void> {
+  try {
+    const dest = getActualDataPath(filename);
+    if (await isFileExist(dest)) {
+      return;
+    }
+    await copyFileStream(path.join(DEFAULTS_ROOT, dfPath), dest);
+  } catch (e) {
+    console.log(e);
+  }
+}
