@@ -402,6 +402,7 @@ export function InputItem(props: {
                       return;
                     }
                     set(props.bindConfig, d);
+                    markEdited(props.bindConfig);
                     forceRefresh(!refreshBit);
                   }}
                 >
