@@ -227,11 +227,16 @@ export function registerBackgroundListeners(): void {
       });
     }
   });
-  ipcMain.handle("isReachable", async (e, address: string) => {
-    return await isReachable(address, {
-      timeout: getNumber("starlight.join-server.timeout", 2000),
-    });
-  });
+  ipcMain.handle(
+    "isReachable",
+    async (_e, address: string, timeout?: number) => {
+      return await isReachable(address, {
+        timeout: timeout
+          ? timeout
+          : getNumber("starlight.join-server.timeout", 2000),
+      });
+    }
+  );
   ipcMain.on("hideWindow", () => {
     getMainWindow()?.hide();
   });

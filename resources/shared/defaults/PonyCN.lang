@@ -2061,3 +2061,67 @@ NetCheck
 # Utilities.NetCheck.Description
 
 Sparklight 作品 / 检查您的设备到各主流 Minecraft 站点的连通性
+
+# Utilities.NetCheck.SiteName.MCBBS
+
+我的世界中文论坛
+
+# Utilities.NetCheck.SiteDesc.MCBBS
+
+除了 Alicorn，你需要的一切 Minecraft 资源都在这里……你能访问吗？
+
+# Utilities.NetCheck.SiteName.MCBBSDownload
+
+MCBBS 下载镜像源
+
+# Utilities.NetCheck.SiteDesc.MCBBSDownload
+
+最快的 Minecraft 资源下载镜像，除非被攻击，否则应该一直可以访问。
+
+# Utilities.NetCheck.SiteName.BMCLAPI
+
+BMCLAPI
+
+# Utilities.NetCheck.SiteDesc.BMCLAPI
+
+最重要的 Minecraft 资源下载镜像，如果它都不能工作了……今天就休息下，和我聊聊天吧～
+
+# Utilities.NetCheck.SiteName.AlicornAccess
+
+Alicorn 轻松访问镜像
+
+# Utilities.NetCheck.SiteDesc.AlicornAccess
+
+轻松获取各种核心的版本列表，尤其是 Forge 的……但是，果真那么「轻松」吗？
+
+# Utilities.NetCheck.SiteName.CurseAPI
+
+CurseForge 接口
+
+# Utilities.NetCheck.SiteDesc.CurseAPI
+
+大多数 Mod 创作者将 Mod 发布在这里，此网站的连通性直接决定 Pff 和整合包安装器的工作效率
+
+# Utilities.NetCheck.SiteName.MojangAuth
+
+Mojang 验证服务器
+
+# Utilities.NetCheck.SiteDesc.MojangAuth
+
+Mojang 的 Yggdrasil 验证服务器，如果无法连接，你将无法使用 Mojang （旧版）正版验证……
+
+# Utilities.NetCheck.SiteName.MSAuth
+
+Microsoft 验证服务器
+
+# Utilities.NetCheck.SiteDesc.MSAuth
+
+Microsoft 帐户的验证服务器，如果无法连接，你将无法使用 Microsoft 帐户进行正版验证……
+
+# Utilities.NetCheck.SiteName.AlicornUpdate
+
+Alicorn 更新服务
+
+# Utilities.NetCheck.SiteDesc.AlicornUpdate
+
+Alicorn 使用该服务进行更新，如果它不能使用，你可能需要联系我们。

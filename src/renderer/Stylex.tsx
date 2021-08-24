@@ -140,6 +140,10 @@ export const useTextStyles = makeStyles((theme) =>
       color: theme.palette.primary.main,
       fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
     },
+    thirdTextRaw: {
+      color: theme.palette.primary.main,
+      fontSize: "medium",
+    },
     thirdText: {
       color: theme.palette.primary.main,
       fontSize: "medium",
@@ -155,7 +159,7 @@ export const useTextStylesLight = makeStyles((theme) =>
   createStyles({
     root: {},
     firstText: {
-      color: theme.palette.primary.light,
+      color: theme.palette.secondary.light,
       fontSize: "large",
     },
     secondText: {

@@ -15,6 +15,7 @@ import {
   Apps,
   ArrowBack,
   ArrowForward,
+  Build,
   Code,
   Dns,
   FlightTakeoff,
@@ -65,6 +66,8 @@ import { ReadyToLaunch } from "./ReadyToLaunch";
 import { ServerList } from "./ServerList";
 import { tr } from "./Translator";
 import { getNextTutorUrl, isShow, isTutor, Tutor } from "./Tutor";
+import { NetCheck } from "./utilities/NetCheck";
+import { UtilitiesIndex } from "./utilities/UtilitiesIndex";
 import { VersionView } from "./VersionView";
 import { Welcome } from "./Welcome";
 import { YggdrasilAccountManager } from "./YggdrasilAccountManager";
@@ -345,6 +348,19 @@ export function App(): JSX.Element {
                 <Code />
               </IconButton>
             </Tooltip>
+            <Tooltip title={tr("MainMenu.UtilitiesIndex")}>
+              <IconButton
+                style={genHideStyles("UtilitiesIndex")}
+                color={"inherit"}
+                className={classes.floatButton}
+                onClick={() => {
+                  jumpTo("/UtilitiesIndex");
+                  triggerSetPage("UtilitiesIndex");
+                }}
+              >
+                <Build />
+              </IconButton>
+            </Tooltip>
             <Tooltip title={tr("MainMenu.Version")}>
               <IconButton
                 style={genHideStyles("Version")}
@@ -514,6 +530,8 @@ export function App(): JSX.Element {
         <Route path={"/Welcome"} component={Welcome} />
         <Route path={"/Tutor/:page"} component={Tutor} />
         <Route path={"/ServerList"} component={ServerList} />
+        <Route path={"/UtilitiesIndex"} component={UtilitiesIndex} />
+        <Route path={"/Utilities/NetCheck"} component={NetCheck} />
       </Box>
 
       <YNDialog2
