@@ -34,24 +34,26 @@ export function Welcome(): JSX.Element {
       </Typography>
       <br />
       <Tooltip title={tr("Welcome.Suggest.LastSuccessfulLaunch")}>
-        <Fab
-          disabled={!window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY)}
-          color={"primary"}
-          style={{
-            position: "fixed",
-            right: "16px",
-            bottom: "16px",
-          }}
-          onClick={() => {
-            jumpTo(
-              window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ||
-                "/ReadyToLaunch/undefined/undefined"
-            );
-            triggerSetPage("ReadyToLaunch");
-          }}
-        >
-          <History />
-        </Fab>
+        <Box>
+          <Fab
+            disabled={!window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY)}
+            color={"primary"}
+            style={{
+              position: "fixed",
+              right: "16px",
+              bottom: "16px",
+            }}
+            onClick={() => {
+              jumpTo(
+                window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ||
+                  "/ReadyToLaunch/undefined/undefined"
+              );
+              triggerSetPage("ReadyToLaunch");
+            }}
+          >
+            <History />
+          </Fab>
+        </Box>
       </Tooltip>
     </Box>
   );
