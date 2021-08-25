@@ -3,6 +3,7 @@ import got from "got";
 import path from "path";
 import stream from "stream";
 import { promisify } from "util";
+import { schedulePromiseTask } from "../../renderer/Schedule";
 import { isFileExist } from "../commons/FileUtil";
 import {
   AbstractDownloader,
@@ -55,10 +56,14 @@ export class Serial extends AbstractDownloader {
       const h = await getHash(meta.savePath);
       if (meta.sha1 === h) {
         // No error is ok, add record
-        const id = await getIdentifier(meta.savePath);
-        if (id.length > 0) {
-          addRecord(id, meta.url);
-        }
+        void (async (meta) => {
+          const id = await schedulePromiseTask(() => {
+            return getIdentifier(meta.savePath);
+          });
+          if (id.length > 0) {
+            addRecord(id, meta.url);
+          }
+        })(meta); // 'Drop' this promise
         return DownloadStatus.RESOLVED;
       }
 

@@ -4,6 +4,7 @@ import os from "os";
 import path from "path";
 import stream from "stream";
 import { promisify } from "util";
+import { schedulePromiseTask } from "../../renderer/Schedule";
 import { basicHash } from "../commons/BasicHash";
 import { isFileExist } from "../commons/FileUtil";
 import { getString } from "../config/ConfigSupport";
@@ -107,10 +108,15 @@ async function sealAndVerify(
   if (hash !== h) {
     throw new Error("File hash mismatch for " + savePath);
   }
-  const id = await getIdentifier(savePath);
-  if (id.length > 0) {
-    addRecord(id, url);
-  }
+  void (async (url) => {
+    const id = await schedulePromiseTask(() => {
+      return getIdentifier(savePath);
+    });
+    if (id.length > 0) {
+      addRecord(id, url);
+    }
+  })(url); // 'Drop' this promise
+
   return;
 }
 
