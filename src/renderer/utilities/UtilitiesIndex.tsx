@@ -34,11 +34,6 @@ const useAccStyles = makeStyles((theme) =>
   })
 );
 
-export interface UtilityMeta {
-  version: string;
-  name: string;
-  description: string;
-}
 export function UtilitiesIndex(): JSX.Element {
   const classes = useTextStyles();
 
@@ -47,24 +42,24 @@ export function UtilitiesIndex(): JSX.Element {
       <Typography className={classes.secondText} gutterBottom>
         {tr("UtilitiesIndex.Description")}
       </Typography>
-      <SimpleUtil
-        meta={{ name: "NetCheck", version: "Test", description: "test" }}
-      />
+      <SimpleUtil name={"NetCheck"} />
+      <br />
+      <SimpleUtil name={"CutieConnect"} />
     </Box>
   );
 }
 
-function SimpleUtil(props: { meta: UtilityMeta }): JSX.Element {
+function SimpleUtil(props: { name: string }): JSX.Element {
   const classes = useTextStylesLight();
   const accClasses = useAccStyles();
   return (
     <Card className={accClasses.acc1}>
       <CardContent>
         <Typography className={classes.firstText}>
-          {tr(`Utilities.${props.meta.name}.Title`)}
+          {tr(`Utilities.${props.name}.Title`)}
         </Typography>
-        <Typography className={classes.secondText}>
-          {tr(`Utilities.${props.meta.name}.Description`)}
+        <Typography gutterBottom className={classes.secondText}>
+          {tr(`Utilities.${props.name}.Description`)}
         </Typography>
       </CardContent>
       <CardActions>
@@ -75,8 +70,8 @@ function SimpleUtil(props: { meta: UtilityMeta }): JSX.Element {
           }}
           variant={"outlined"}
           onClick={() => {
-            jumpTo(`/Utilities/${props.meta.name}`);
-            triggerSetPage(tr(`Utilities.${props.meta.name}.Title`));
+            jumpTo(`/Utilities/${props.name}`);
+            triggerSetPage(tr(`Utilities.${props.name}.Title`));
           }}
         >
           {tr("UtilitiesIndex.Open")}

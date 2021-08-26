@@ -2056,11 +2056,11 @@ End
 
 # Utilities.NetCheck.Title
 
-NetCheck
+连通性检查
 
 # Utilities.NetCheck.Description
 
-Sparklight 作品 / 检查您的设备到各主流 Minecraft 站点的连通性
+Sparklight 作品\n检查您的设备到各主流 Minecraft 相关站点的连通性
 
 # Utilities.NetCheck.SiteName.MCBBS
 
@@ -2125,3 +2125,47 @@ Alicorn 更新服务
 # Utilities.NetCheck.SiteDesc.AlicornUpdate
 
 Alicorn 使用该服务进行更新，如果它不能使用，你可能需要联系我们。
+
+# Utilities.CutieConnect.Title
+
+远程折跃
+
+# Utilities.CutieConnect.Description
+
+Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功能的实现靠的就是友谊的魔力！哦，还有无处不在的空气。
+
+# Utilities.CutieConnect.Connect
+
+加入网络
+
+# Utilities.CutieConnect.Disconnect
+
+离开网络
+
+# Utilities.CutieConnect.Community
+
+局域网名称
+
+# Utilities.CutieConnect.Password
+
+局域网密码
+
+# Utilities.CutieConnect.IP
+
+您想使用的 IP 地址
+
+# Utilities.CutieConnect.Supernode
+
+中央服务器地址
+
+# Utilities.CutieConnect.Checking
+
+正在尝试连接到中央服务器……
+
+# Utilities.CutieConnect.WarnCheck.Title
+
+中央服务器没有响应……
+
+# Utilities.CutieConnect.WarnCheck.Description
+
+/
