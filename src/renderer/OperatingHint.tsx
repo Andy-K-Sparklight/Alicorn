@@ -7,6 +7,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
+import { ipcRenderer } from "electron";
 import React, { useEffect, useState } from "react";
 import { randsl, tr } from "./Translator";
 
@@ -75,7 +76,11 @@ export function FailedHint(props: {
     <Dialog open={props.open} onClose={props.closeFunc}>
       <Box>
         <DialogTitle>{tr("Operating.Failed")}</DialogTitle>
-        <DialogContent onClick={() => {}}>
+        <DialogContent
+          onClick={() => {
+            void ipcRenderer.invoke("openDevTools");
+          }}
+        >
           <DialogContentText>{reason}</DialogContentText>
           <DialogContentText>
             <b>{tr("Operating.ClickToDebug")}</b>
