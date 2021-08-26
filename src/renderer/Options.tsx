@@ -23,6 +23,7 @@ import {
   saveConfig,
   set,
 } from "../modules/config/ConfigSupport";
+import { loadMirror } from "../modules/download/Mirror";
 import { remoteSelectDir } from "./ContainerManager";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { useInputStyles } from "./Stylex";
@@ -180,6 +181,9 @@ export function OptionsPage(): JSX.Element {
               "alicorn-bmclapi-nonfree",
             ]}
             bindConfig={"download.mirror"}
+            onChange={() => {
+              void loadMirror();
+            }}
           />
           <InputItem
             type={ConfigType.BOOL}
@@ -268,7 +272,9 @@ export function InputItem(props: {
   choices?: string[];
   onlyOn?: NodeJS.Platform;
   notOn?: NodeJS.Platform;
+  onChange?: () => unknown;
 }): JSX.Element {
+  const callChange = props.onChange ? props.onChange : () => {};
   const [refreshBit, forceRefresh] = useState<boolean>(true);
   const classex = useInputStyles();
   const [cSelect, setSelect] = useState<string>(
@@ -343,8 +349,8 @@ export function InputItem(props: {
                     onChange={(e) => {
                       markEdited(props.bindConfig);
                       set(props.bindConfig, e.target.checked);
-
                       forceRefresh(!refreshBit);
+                      callChange();
                     }}
                     name={
                       getBoolean(props.bindConfig)
@@ -369,6 +375,7 @@ export function InputItem(props: {
                   markEdited(props.bindConfig);
                   set(props.bindConfig, parseNum(e.target.value, 0));
                   forceRefresh(!refreshBit);
+                  callChange();
                 }}
               />
             );
@@ -387,6 +394,7 @@ export function InputItem(props: {
                     markEdited(props.bindConfig);
                     set(props.bindConfig, String(e.target.value || ""));
                     forceRefresh(!refreshBit);
+                    callChange();
                   }}
                 />
                 <Button
@@ -404,6 +412,7 @@ export function InputItem(props: {
                     set(props.bindConfig, d);
                     markEdited(props.bindConfig);
                     forceRefresh(!refreshBit);
+                    callChange();
                   }}
                 >
                   {tr("Options.Select")}
@@ -418,6 +427,7 @@ export function InputItem(props: {
                   markEdited(props.bindConfig);
                   set(props.bindConfig, String(e.target.value));
                   setSelect(String(e.target.value));
+                  callChange();
                 }}
               >
                 {(props.choices || []).map((c) => {
@@ -461,6 +471,7 @@ export function InputItem(props: {
                   markEdited(props.bindConfig);
                   set(props.bindConfig, String(e.target.value || ""));
                   forceRefresh(!refreshBit);
+                  callChange();
                 }}
               />
             );
