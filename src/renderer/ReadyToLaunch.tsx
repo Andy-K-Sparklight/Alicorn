@@ -150,7 +150,8 @@ export function ReadyToLaunch(): JSX.Element {
           setProfile(d);
           setLoaded(1);
         }
-      } catch {
+      } catch (e) {
+        console.log(e);
         if (mounted.current) {
           setLoaded(2);
         }
