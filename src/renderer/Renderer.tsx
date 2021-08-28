@@ -30,6 +30,7 @@ import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
 import { prefetchMojangVersions } from "../modules/pff/get/MojangCore";
 import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
 import { initEncrypt } from "../modules/security/Encrypt";
+import { getMachineUniqueID } from "../modules/security/Unique";
 import { checkUpdate, initUpdator } from "../modules/selfupdate/Updator";
 import { loadServers } from "../modules/server/ServerFiles";
 import { App } from "./App";
@@ -40,6 +41,17 @@ import { initTranslator } from "./Translator";
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
+/*
+CLAIM FOR EXTERNAL RESOURCE
+
+Any font present is NOT a part of Alicorn and might not be licensed under a free software license. These fonts are only a component of ON OF the DIRTRIBUTIONS of Alicorn.
+
+However, distributions is not maintained by Alicorn Official (or PinkAX), and we DO NOT guarantee they are always free as in freedom. Based on friendship, we keep a copy in our repo, but that DOESN NOT MEAN they are a part of Alicorn.
+
+Alicorn have them packaged for a better display performance, but it IS NOT necessary for Alicorn to run, simply remove them, and you will have an free Alicorn.
+
+However, even if it is a controversial evil, it is still a kind of evil. We will try our best to replace those non-free fonts - as soon as possible.
+*/
 const WIN_FONT_FAMILY =
   'Consolas, "Microsoft YaHei UI", "Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
 const GNU_FONT_FAMILY =
@@ -225,6 +237,7 @@ void (async () => {
     prepareND(),
     prepareEdgeExecutable(),
     loadServers(),
+    getMachineUniqueID(), // Cache
   ]);
   // Heavy works and minor works
   await Promise.allSettled([initResolveLock(), initVF()]);

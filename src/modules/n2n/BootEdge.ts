@@ -1,6 +1,18 @@
 import os from "os";
 import sudo from "sudo-prompt";
+import { uniqueHash } from "../commons/BasicHash";
 import { getActualDataPath, saveDefaultDataAs } from "../config/DataSupport";
+
+/*
+CLAIM FOR EXTERNAL RESOURCE
+
+This modules (BootEdge.ts) uses N2N Edge (edge-win.ald and edge-gnu.ald), which is ntop's work.
+N2N Edge is licensed under the GNU GENERAL PUBLIC LICENSE 3.0 (aka. GPL-3.0) and it's a free software (free as in freedom).
+It's license is compatible with ours, since we use GPL-3.0 too.
+For details, please see https://github.com/ntop/n2n/blob/dev/LICENSE
+
+A copy of edge-win.ald and edge-gnu.ald will be saved to the root dir of alicorn data.
+*/
 
 let EDGE_LOCK = false; // One instance once
 export async function prepareEdgeExecutable(): Promise<void> {
@@ -29,10 +41,13 @@ export function generateEdgeArgs(
   ip: string,
   supernode: string
 ): string {
-  const o = ["-a", ip, "-c", community, "-k", psw, "-l", supernode].join(" ");
+  const o = ["-c", uniqueHash(community), "-l", supernode]
+    .concat(ip.length > 0 ? ["-a", ip] : [])
+    .concat(psw.length > 0 ? ["-k", uniqueHash(psw)] : []) // Beat command inject!
+    .join(" ");
   return os.platform() === "win32"
     ? `start "${getActualDataPath(getEdgeTargetName())}" ${o}`
-    : `bash -c "'${getActualDataPath(getEdgeTargetName())}' ${o}"`;
+    : `sh -c "'${getActualDataPath(getEdgeTargetName())}' ${o}"`;
 }
 
 export function runEdge(

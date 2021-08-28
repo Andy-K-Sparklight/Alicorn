@@ -66,6 +66,7 @@ import { ReadyToLaunch } from "./ReadyToLaunch";
 import { ServerList } from "./ServerList";
 import { tr } from "./Translator";
 import { getNextTutorUrl, isShow, isTutor, Tutor } from "./Tutor";
+import { CutieConnet } from "./utilities/CutieConnect";
 import { NetCheck } from "./utilities/NetCheck";
 import { UtilitiesIndex } from "./utilities/UtilitiesIndex";
 import { VersionView } from "./VersionView";
@@ -532,6 +533,7 @@ export function App(): JSX.Element {
         <Route path={"/ServerList"} component={ServerList} />
         <Route path={"/UtilitiesIndex"} component={UtilitiesIndex} />
         <Route path={"/Utilities/NetCheck"} component={NetCheck} />
+        <Route path={"/Utilities/CutieConnect"} component={CutieConnet} />
       </Box>
 
       <YNDialog2

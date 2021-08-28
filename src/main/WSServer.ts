@@ -3,7 +3,6 @@ import { Server } from "ws";
 import { getMainWindow } from "./Bootstrap";
 
 let WS_SERVER: Server;
-const conns = 0;
 export function initWS(): void {
   WS_SERVER = new Server({ port: 16814 });
   WS_SERVER.on("connection", (ws) => {

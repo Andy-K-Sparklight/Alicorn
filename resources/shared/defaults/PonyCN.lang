@@ -610,11 +610,11 @@ Minecraft 容器名
 
 # ContainerManager.Dir
 
-挂载点
+目标文件夹
 
 # ContainerManager.Select
 
-选择挂载点
+选择目标文件夹
 
 # ContainerManager.InvalidName
 
@@ -622,7 +622,7 @@ Minecraft 容器名
 
 # ContainerManager.InvalidDir
 
-无效挂载点
+无效的目标文件夹
 
 # ContainerManager.Type.Physical
 
@@ -2128,7 +2128,7 @@ Alicorn 使用该服务进行更新，如果它不能使用，你可能需要联
 
 # Utilities.CutieConnect.Title
 
-远程折跃
+友谊接力
 
 # Utilities.CutieConnect.Description
 
@@ -2152,20 +2152,68 @@ Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功�
 
 # Utilities.CutieConnect.IP
 
-您想使用的 IP 地址
+虚拟 IP 地址
+
+# Utilities.CutieConnect.InvalidIP
+
+请使用标准 IPv4 地址，避免保留 IP！
 
 # Utilities.CutieConnect.Supernode
 
-中央服务器地址
+中央服务器地址（包含主机与端口）
 
-# Utilities.CutieConnect.Checking
+# Utilities.CutieConnect.InvalidSupernode
 
-正在尝试连接到中央服务器……
+请使用有效的完整中央服务器地址，包括端口
 
-# Utilities.CutieConnect.WarnCheck.Title
+# Utilities.CutieConnect.QuickHint
 
-中央服务器没有响应……
+@HTML<ul><li><span style="color: red;"><b>请仔细阅读本说明！</b></span></li><li>如果你要加入游戏，虚拟 IP 地址不必填写；如果你要让别人加入，<b>最好</b>设置虚拟 IP 地址。<s>不然你就自己查去吧</s></li><li>组网是个大型操作，需要管理员权限，不过 Alicorn 只在加入和离开网络时使用。</li><li><b>请勿</b>使用保留的 IP 地址（如 127.0.0.1）！如果你担心的话，那就试试 <span style="user-select: text;">{RandIP}</span>（如果你没填，我为你填好了哦）</li><li>记住，这项技术靠的是友谊的魔力，请确保你拥有足够的友谊哦～</li></ul>
 
-# Utilities.CutieConnect.WarnCheck.Description
+# Utilities.CutieConnect.Connected
 
-/
+已发送启动命令，请等一下，然后尝试连接到你好友的游戏。
+
+# Utilities.CutieConnect.Disconnected
+
+已发送终止命令，如未终止，请手动终止 edge 进程
+
+# Utilities.CutieConnect.AvailablePrefix
+
+cutie-connect-
+alicorn-game-
+starlight-
+love-al-
+support-fsf-
+noble-node-
+fabric-good-
+hello-world-
+ethernet-
+equestria-
+pony-up-
+kirin-tale-
+pvpin-reborn-
+
+# Utilities.CutieConnect.AvailablePassword
+
+i-am-pony-
+best-friends-
+my-little-pony-girls-
+foo-bar-
+free-software-
+gnu-gpl-
+twilighting-
+cutie-map-
+guix-
+sparklight-filly-
+earth-ponies-
+shutterfly-
+sudo-rm-rf-
+qwerty-uiop-
+var-let-const-
+tar-zxvf-
+lorem-ipsum-
+hippopotomonstrosesquippedaliophobia-
+honorificabilitudinitatibus-
+floccinaucinihilipipification-
+supercalifragilisticexpiadocious-
