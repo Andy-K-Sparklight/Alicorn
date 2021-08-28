@@ -46,7 +46,9 @@ export function generateEdgeArgs(
     .concat(psw.length > 0 ? ["-k", uniqueHash(psw)] : []) // Beat command inject!
     .join(" ");
   return os.platform() === "win32"
-    ? `start "${getActualDataPath(getEdgeTargetName())}" ${o}`
+    ? `start "CutieConnect N2N Edge" "${getActualDataPath(
+        getEdgeTargetName()
+      )}" ${o}`
     : `sh -c "'${getActualDataPath(getEdgeTargetName())}' ${o}"`;
 }
 
@@ -61,6 +63,7 @@ export function runEdge(
   }
   EDGE_LOCK = true;
   const cmd = generateEdgeArgs(community, psw, ip, supernode);
+  console.log(cmd);
   sudo.exec(cmd, {
     name: "Alicorn Sudo Prompt Actions",
   });
