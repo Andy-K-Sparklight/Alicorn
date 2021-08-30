@@ -2196,7 +2196,7 @@ Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功�
 
 # Utilities.CutieConnect.QuickHint
 
-@HTML<ul><li>如果你要加入游戏，虚拟 IP 地址不必填写；如果你要让别人加入，<b>最好</b>设置虚拟 IP 地址。<s>不然你就自己查去吧</s></li><li>组网是个大型操作，需要管理员权限，不过 Alicorn 只在加入和离开网络时使用。</li><li><b>请勿</b>使用保留的 IP 地址（如 127.0.0.1）！如果你担心的话，那就试试 <span style="user-select: text;">{RandIP}</span>（如果你没填，我为你填好了哦）</li><li><b>请注意！叫做 <span style="user-select: text;">internet</span> 的网络被认为是公共区域</b>，此网络没有密码，你可以在这里与任何人分享你的世界！（不过请注意安全）</li></ul>
+@HTML<ul><li>如果你要加入游戏，虚拟 IP 地址不必填写；如果你要让别人加入，<b>最好</b>设置虚拟 IP 地址。<s>不然你就自己查去吧</s></li><li>组网是个大型操作，需要管理员权限，不过 Alicorn 只在加入和离开网络时使用。</li><li><b>请勿</b>使用保留的 IP 地址（如 127.0.0.1）！如果你担心的话，那就试试 <span style="user-select: text;">{RandIP}</span>（如果你没填，我为你填好了哦）</li><li><b>请注意！叫做 <span style="user-select: text;">internet</span> 的网络被认为是公共区域</b>，此网络没有密码，你可以在这里与任何人分享你的世界！（不过请注意安全）</li><li>加入另一个网络前<b>一定要退出</b>之前的网络！！！（跺蹄蹄）</li></ul>
 
 # Utilities.CutieConnect.Connected
 
@@ -2212,7 +2212,7 @@ Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功�
 
 # Utilities.CutieConnect.PublishOK
 
-已向 {Community} 公开你的世界 {WorldName}\n记得游戏结束后注销哦！
+已向 {Community} 公开你的世界 {WorldName}\n记得在游戏结束后取消公开哦！
 
 # Utilities.CutieConnect.RemoveOK
 
@@ -2237,6 +2237,14 @@ Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功�
 # Utilities.CutieConnect.Result
 
 酷！我们找到了 {Count} 个游戏！
+
+# Utilities.CutieConnect.GoBack
+
+返回网络控制台
+
+# Utilities.CutieConnect.ClickToJoin
+
+@HTML<b>你需要切实加入此网络后，才能使用此网络进行游戏</b>，因此如果你忘了点击「加入网络」，请先返回加入。\n
 
 # Utilities.CutieConnect.Error
 

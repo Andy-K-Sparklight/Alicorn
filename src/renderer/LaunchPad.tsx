@@ -17,6 +17,7 @@ import {
 import { remove } from "fs-extra";
 import objectHash from "object-hash";
 import React, { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { loadProfile } from "../modules/profile/ProfileLoader";
@@ -39,15 +40,15 @@ interface SimplifiedCoreInfo {
 
 export function LaunchPad(): JSX.Element {
   const classes = usePadStyles();
-
+  const { server } = useParams<{ server?: string }>();
   return (
     <Box className={classes.para}>
-      <CoresDisplay />
+      <CoresDisplay server={server} />
     </Box>
   );
 }
 
-function CoresDisplay(): JSX.Element {
+function CoresDisplay(props: { server?: string }): JSX.Element {
   const mountedBit = useRef<boolean>(false);
   const [cores, setCores] = useState<SimplifiedCoreInfo[]>([]);
   const [isLoading, setLoading] = useState(false);
@@ -150,6 +151,7 @@ function CoresDisplay(): JSX.Element {
         return (
           <SingleCoreDisplay
             key={c.location}
+            server={props.server}
             refresh={() => {
               setDirty();
               setRefresh(!refreshBit);
@@ -164,6 +166,7 @@ function CoresDisplay(): JSX.Element {
 
 function SingleCoreDisplay(props: {
   profile: SimplifiedCoreInfo;
+  server?: string;
   refresh: () => unknown;
 }): JSX.Element {
   const classes = useCardStyles();
@@ -178,7 +181,13 @@ function SingleCoreDisplay(props: {
         onClick={() => {
           markUsed(hash);
           jumpTo(
-            "/ReadyToLaunch/" + props.profile.container + "/" + props.profile.id
+            "/ReadyToLaunch/" +
+              props.profile.container +
+              "/" +
+              props.profile.id +
+              props.server
+              ? "/" + props.server
+              : ""
           );
           triggerSetPage("ReadyToLaunch");
         }}

@@ -509,7 +509,7 @@ export function App(): JSX.Element {
         </Toolbar>
       </AppBar>
       <Box className={classes.content} id={"app_main"}>
-        <Route path={"/LaunchPad"} component={LaunchPad} />
+        <Route path={"/LaunchPad/:server?"} component={LaunchPad} />
         <Route path={"/InstallCore"} component={InstallCore} />
         <Route
           path={"/ReadyToLaunch/:container/:id/:server?"}

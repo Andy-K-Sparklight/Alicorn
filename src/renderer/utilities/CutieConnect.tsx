@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { ipcRenderer } from "electron";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { killEdge, runEdge } from "../../modules/cutie/BootEdge";
 import {
   askCreate,
@@ -16,7 +16,11 @@ import {
   QueryResult,
 } from "../../modules/cutie/CutieMap";
 import { generateWorldAnyUniqueId } from "../../modules/security/Unique";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "../Renderer";
+import { jumpTo, triggerSetPage } from "../GoTo";
+import {
+  ALICORN_DEFAULT_THEME_DARK,
+  ALICORN_DEFAULT_THEME_LIGHT,
+} from "../Renderer";
 import { useTextStyles } from "../Stylex";
 import { randsl, tr } from "../Translator";
 
@@ -72,7 +76,15 @@ export function CutieConnet(): JSX.Element {
           <Typography className={text.firstText}>
             {tr("Utilities.CutieConnect.Games")}
           </Typography>
-          {console.log(result)}
+          <Button
+            color={"primary"}
+            variant={"contained"}
+            onClick={() => {
+              setSeeSearchResult(false);
+            }}
+          >
+            {tr("Utilities.CutieConnect.GoBack")}
+          </Button>
           {Object.keys(result).map((host) => {
             return (
               <GameDisplay
@@ -486,9 +498,45 @@ function GameDisplay(props: {
   host: string;
 }): JSX.Element {
   const text = useTextStyles();
+  const [reachable, setReachable] = useState();
+  const mounted = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  });
+  useEffect(() => {
+    void (async () => {
+      const st = await ipcRenderer.invoke("isReachable", props.host);
+      if (mounted.current) {
+        setReachable(st);
+      }
+    })();
+  }, []);
   return (
-    <Box>
-      <Typography className={text.thirdTextRaw}>{props.name}</Typography>
+    <Box
+      style={{
+        marginLeft: "4%",
+      }}
+      onClick={() => {
+        jumpTo("/LaunchPad/" + props.host);
+        triggerSetPage("LaunchPad");
+      }}
+    >
+      <Typography
+        className={text.thirdTextRaw}
+        style={{
+          color:
+            reachable === undefined
+              ? ALICORN_DEFAULT_THEME_DARK.palette.primary.light
+              : reachable
+              ? ALICORN_DEFAULT_THEME_DARK.palette.primary.main
+              : "gray",
+        }}
+      >
+        {props.name}
+      </Typography>
       <Typography className={text.secondText}>
         {props.host + " - " + props.desc}
       </Typography>
