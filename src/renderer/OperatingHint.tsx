@@ -78,7 +78,7 @@ export function FailedHint(props: {
         <DialogTitle>{tr("Operating.Failed")}</DialogTitle>
         <DialogContent
           onClick={() => {
-            void ipcRenderer.invoke("openDevTools");
+            void ipcRenderer.send("openDevTools");
           }}
         >
           <DialogContentText>{reason}</DialogContentText>
