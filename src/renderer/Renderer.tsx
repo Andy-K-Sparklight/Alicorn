@@ -24,7 +24,7 @@ import { loadMirror } from "../modules/download/Mirror";
 import { initResolveLock } from "../modules/download/ResolveLock";
 import { loadJDT } from "../modules/java/JInfo";
 import { initModInfo } from "../modules/modx/ModInfo";
-import { prepareEdgeExecutable } from "../modules/n2n/BootEdge";
+import { prepareEdgeExecutable } from "../modules/cutie/BootEdge";
 import { prefetchFabricManifest } from "../modules/pff/get/FabricGet";
 import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
 import { prefetchMojangVersions } from "../modules/pff/get/MojangCore";

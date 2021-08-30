@@ -13,7 +13,7 @@ For details, please see https://github.com/ntop/n2n/blob/dev/LICENSE
 
 A copy of edge-win.ald and edge-gnu.ald will be saved to the root dir of alicorn data.
 */
-
+const INTERNET = "internet";
 let EDGE_LOCK = false; // One instance once
 export async function prepareEdgeExecutable(): Promise<void> {
   await saveDefaultDataAs(getEdgeName(), getEdgeTargetName());
@@ -41,15 +41,23 @@ export function generateEdgeArgs(
   ip: string,
   supernode: string
 ): string {
-  const o = ["-c", uniqueHash(community), "-l", supernode]
+  const o = [
+    "-c",
+    community === INTERNET ? INTERNET : uniqueHash(community),
+    "-l",
+    supernode,
+  ]
+
     .concat(ip.length > 0 ? ["-a", ip] : [])
-    .concat(psw.length > 0 ? ["-k", uniqueHash(psw)] : []) // Beat command inject!
+    .concat(
+      psw.length > 0 && community !== INTERNET ? ["-k", uniqueHash(psw)] : []
+    ) // Beat command inject!
     .join(" ");
   return os.platform() === "win32"
     ? `start "CutieConnect N2N Edge" "${getActualDataPath(
         getEdgeTargetName()
       )}" ${o}`
-    : `sh -c "'${getActualDataPath(getEdgeTargetName())}' ${o}"`;
+    : `sh -c "'${getActualDataPath(getEdgeTargetName())}' -f ${o} "`;
 }
 
 export function runEdge(
@@ -63,7 +71,6 @@ export function runEdge(
   }
   EDGE_LOCK = true;
   const cmd = generateEdgeArgs(community, psw, ip, supernode);
-  console.log(cmd);
   sudo.exec(cmd, {
     name: "Alicorn Sudo Prompt Actions",
   });
@@ -71,7 +78,7 @@ export function runEdge(
 }
 
 export function killEdge(): void {
-  const cmd = os.platform() === "win32" ? "taskkill edge" : "pkill edge";
+  const cmd = os.platform() === "win32" ? "tskill edge" : "pkill edge";
   EDGE_LOCK = false; // This will not work fine if user cancelled, but normally then won't
   sudo.exec(cmd, {
     name: "Alicorn Sudo Prompt Actions",

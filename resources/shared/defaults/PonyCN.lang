@@ -2134,6 +2134,10 @@ Alicorn 使用该服务进行更新，如果它不能使用，你可能需要联
 
 Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功能的实现靠的就是友谊的魔力！哦，还有无处不在的空气。
 
+# Utilities.CutieConnect.Games
+
+此网络中的游戏
+
 # Utilities.CutieConnect.Connect
 
 加入网络
@@ -2146,9 +2150,17 @@ Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功�
 
 局域网名称
 
+# Utilities.CutieConnect.CommunityIsInternet
+
+！！您正处于公共区域中！！
+
 # Utilities.CutieConnect.Password
 
 局域网密码
+
+# Utilities.CutieConnect.NoPassword
+
+公共网络是没有密码的哦～
 
 # Utilities.CutieConnect.IP
 
@@ -2162,13 +2174,29 @@ Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功�
 
 中央服务器地址（包含主机与端口）
 
+# Utilities.CutieConnect.WorldName
+
+世界名称
+
+# Utilities.CutieConnect.Port
+
+游戏端口号
+
+# Utilities.CutieConnect.InvalidPort
+
+无效的端口，请在游戏内对局域网开放后在此输入显示的端口
+
+# Utilities.CutieConnect.DescWorld
+
+描述你的世界
+
 # Utilities.CutieConnect.InvalidSupernode
 
 请使用有效的完整中央服务器地址，包括端口
 
 # Utilities.CutieConnect.QuickHint
 
-@HTML<ul><li><span style="color: red;"><b>请仔细阅读本说明！</b></span></li><li>如果你要加入游戏，虚拟 IP 地址不必填写；如果你要让别人加入，<b>最好</b>设置虚拟 IP 地址。<s>不然你就自己查去吧</s></li><li>组网是个大型操作，需要管理员权限，不过 Alicorn 只在加入和离开网络时使用。</li><li><b>请勿</b>使用保留的 IP 地址（如 127.0.0.1）！如果你担心的话，那就试试 <span style="user-select: text;">{RandIP}</span>（如果你没填，我为你填好了哦）</li><li>记住，这项技术靠的是友谊的魔力，请确保你拥有足够的友谊哦～</li></ul>
+@HTML<ul><li>如果你要加入游戏，虚拟 IP 地址不必填写；如果你要让别人加入，<b>最好</b>设置虚拟 IP 地址。<s>不然你就自己查去吧</s></li><li>组网是个大型操作，需要管理员权限，不过 Alicorn 只在加入和离开网络时使用。</li><li><b>请勿</b>使用保留的 IP 地址（如 127.0.0.1）！如果你担心的话，那就试试 <span style="user-select: text;">{RandIP}</span>（如果你没填，我为你填好了哦）</li><li><b>请注意！叫做 <span style="user-select: text;">internet</span> 的网络被认为是公共区域</b>，此网络没有密码，你可以在这里与任何人分享你的世界！（不过请注意安全）</li></ul>
 
 # Utilities.CutieConnect.Connected
 
@@ -2177,6 +2205,65 @@ Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功�
 # Utilities.CutieConnect.Disconnected
 
 已发送终止命令，如未终止，请手动终止 edge 进程
+
+# Utilities.CutieConnect.PublishPrecheckFailed
+
+在 {Host} 上没有找到 Minecraft，无法公开你的游戏\n请确保你启动了游戏并输入了正确的端口
+
+# Utilities.CutieConnect.PublishOK
+
+已向 {Community} 公开你的世界 {WorldName}\n记得游戏结束后注销哦！
+
+# Utilities.CutieConnect.RemoveOK
+
+你的世界 {WorldName} 不再向 {Community} 公开\n友谊就是魔法～
+
+# Utilities.CutieConnect.NetworkSearch
+
+搜索网络中的世界
+
+# Utilities.CutieConnect.PublishToMap
+
+公开我当前的游戏
+
+# Utilities.CutieConnect.Unpublish
+
+不再公开我的游戏
+
+# Utilities.CutieConnect.NoResult
+
+啊哈！这个网络中还没有公开的世界！你想试试公开你的世界吗？\n……或者换个网络搜索？
+
+# Utilities.CutieConnect.Result
+
+酷！我们找到了 {Count} 个游戏！
+
+# Utilities.CutieConnect.Error
+
+糟糕！地图无法访问，或者似乎它拒绝了你的请求……\n{Message}
+
+# Utilities.CutieConnect.AvailableWorldName
+
+Ponyville
+Canterlot
+Everfree Forest
+Appleloosa
+Cloudsdale
+Crystal Empire
+World
+New World
+
+# Utilities.CutieConnect.AvailableDesc
+
+Equestria our home
+The place where we belong
+Everypony come and play!
+Everything's gonna be just fine
+Home to everyone
+A new adventure waits for us
+What a strange new world
+Join in our utopia
+
 
 # Utilities.CutieConnect.AvailablePrefix
 
