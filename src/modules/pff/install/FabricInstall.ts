@@ -5,7 +5,7 @@ import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { addDoing } from "../../download/DownloadWrapper";
 import { xgot } from "../../download/GotWrapper";
 import { ensureLibraries } from "../../launch/Ensurance";
-import { convertFromFabric } from "../../profile/FabricProfileAdaptor";
+import { convertLibsByName } from "../../profile/LibrariesConvert";
 import { GameProfile } from "../../profile/GameProfile";
 import {
   FABRIC_VERSIONS_LOADER,
@@ -98,7 +98,7 @@ async function ensureFabricLibrariesOL(
   const url = FABRIC_VERSIONS_LOADER + `/${mcv}/${fbv}` + PROFILE_JSON_SUFFIX;
   try {
     const profJ = await xgot(url);
-    const gp = new GameProfile(convertFromFabric(Object.assign({}, profJ)));
+    const gp = new GameProfile(convertLibsByName(Object.assign({}, profJ)));
     await ensureLibraries(gp, container);
   } catch {
     return;

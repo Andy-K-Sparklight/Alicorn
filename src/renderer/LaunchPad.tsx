@@ -71,7 +71,7 @@ function CoresDisplay(): JSX.Element {
         for (const [c, ids] of rMap.entries()) {
           for (const id of ids) {
             try {
-              const p = await loadProfile(id, c);
+              const p = await loadProfile(id, c, true); // Faster
               cachedAllCores.push({
                 id: p.id,
                 baseVersion: p.baseVersion,

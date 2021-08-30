@@ -1,12 +1,12 @@
-import { isNull } from "../commons/Null";
-
+import path from "path";
+import { isNull, safeGet } from "../commons/Null";
 const JAR_SUFFIX = ".jar";
 const SPOILER = ":";
 const U_SEPARATOR = "/";
 const LINKER = "-";
 const DOT = /\./g;
 
-export function convertFromFabric(
+export function convertLibsByName(
   obj: Record<string, unknown>
 ): Record<string, unknown> {
   const all = obj["libraries"];
@@ -21,7 +21,15 @@ export function convertFromFabric(
 export function makeLibrary(
   obj: Record<string, unknown>
 ): Record<string, unknown> {
+  // DONE safe
+  if (
+    !isNull(safeGet(obj, ["downloads", "artifact", "url"])) &&
+    !isNull(safeGet(obj, ["downloads", "artifact", "path"]))
+  ) {
+    return obj; // This should work... ?
+  }
   if (!isNull(obj["url"])) {
+    // This url is only a root
     const name = String(obj["name"]) || "";
     return {
       name: name,
@@ -34,18 +42,67 @@ export function makeLibrary(
         },
       },
     };
+  } else {
+    // Thus, we can only give path
+    const name = String(obj["name"]) || "";
+    return {
+      name: name,
+      downloads: {
+        artifact: {
+          path: makePath(name),
+          url: "",
+          sha1: "",
+          size: 0,
+        },
+      },
+    };
   }
-  return obj;
 }
 
+const KNOWN_EXTS: string[] = [
+  ".jar",
+  ".zip",
+  ".tgz",
+  ".tar",
+  ".ald",
+  ".gz",
+  ".json",
+  ".yml",
+  ".yaml",
+  ".toml",
+  ".mca",
+  ".dat",
+  ".png",
+  ".jpg",
+  ".jpeg",
+  ".dat_old",
+  ".lock",
+  ".gif",
+  ".ico",
+  ".txt",
+  ".log",
+  ".md",
+];
+
 function makeURL(name: string, urlBase: string) {
+  try {
+    if (urlBase.length > 0) {
+      if (!urlBase.endsWith("/")) {
+        const u = new URL(urlBase);
+        const ext = path.extname(u.pathname);
+        if (KNOWN_EXTS.includes(ext.toLowerCase())) {
+          return urlBase;
+        }
+      }
+    }
+  } catch {}
   if (!urlBase.endsWith(U_SEPARATOR)) {
     urlBase += U_SEPARATOR;
   }
   return urlBase + makePath(name);
 }
 
-function makePath(name: string) {
+export function makePath(name: string): string {
   try {
     const spt = name.split(SPOILER);
     if (spt.length < 3) {

@@ -2,10 +2,10 @@ import fs from "fs-extra";
 import path from "path";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { JAR_SUFFIX } from "../launch/NativesLint";
-import { convertFromFabric } from "./FabricProfileAdaptor";
 import { GameProfile } from "./GameProfile";
 import { InheritedProfile } from "./InheritedProfileAdaptor";
 import { convertFromLegacy } from "./LegacyProfileAdaptor";
+import { convertLibsByName } from "./LibrariesConvert";
 import { isLegacy, ProfileType, whatProfile } from "./WhatProfile";
 
 export async function loadProfileDirectly(
@@ -21,7 +21,8 @@ export async function loadProfileDirectly(
 
 export async function loadProfile(
   id: string,
-  container: MinecraftContainer
+  container: MinecraftContainer,
+  basicLoad = false
 ): Promise<GameProfile> {
   let jsonObj;
   try {
@@ -29,18 +30,19 @@ export async function loadProfile(
   } catch {
     throw "Profile not exist! Reading: " + id;
   }
-  const vType = whatProfile(String(jsonObj["id"]));
   let legacyBit = false;
   if (isLegacy(jsonObj)) {
     legacyBit = true;
     jsonObj = convertFromLegacy(jsonObj);
   }
+  if (basicLoad) {
+    return new GameProfile(jsonObj);
+  }
+  const vType = whatProfile(String(jsonObj["id"]));
   if (vType === ProfileType.MOJANG) {
     return fixProfileClient(new GameProfile(jsonObj), container);
   }
-  if (vType === ProfileType.FABRIC) {
-    jsonObj = convertFromFabric(jsonObj);
-  }
+  jsonObj = convertLibsByName(jsonObj); // Except mojang, others might convert
   return await fixProfileClient(
     new InheritedProfile(JSON.stringify(jsonObj)),
     container

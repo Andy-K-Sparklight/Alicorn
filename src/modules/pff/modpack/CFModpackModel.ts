@@ -76,6 +76,12 @@ function extractModLoader(o: string): SimpleModLoaderInfo | null {
         type: ProfileType.FORGE,
         version: mv,
       };
+
+    /* case "optifine":
+      return {
+        type: ProfileType.OPTIFINE,
+        version: mv,
+      }; */ // Included, but not yet supported
     case "fabric":
     default:
       return {

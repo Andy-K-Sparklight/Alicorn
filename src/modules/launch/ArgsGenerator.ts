@@ -12,6 +12,7 @@ import { isNull } from "../commons/Null";
 import { getBoolean } from "../config/ConfigSupport";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { GameProfile } from "../profile/GameProfile";
+import { makePath } from "../profile/LibrariesConvert";
 import { JAR_SUFFIX } from "./NativesLint";
 const COMMON_VM_ARGS = ["-Dfile.encoding=UTF-8", "-showversion"];
 
@@ -51,7 +52,7 @@ export function generateVMArgs(
     if (!l.canApply()) {
       continue;
     }
-    const tPath = l.artifact.path.trim();
+    const tPath = makePath(l.name).trim();
     if (tPath !== "") {
       const lb = container.getLibraryPath(tPath);
       if (!usingLibs.includes(lb)) {

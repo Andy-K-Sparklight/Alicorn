@@ -22,7 +22,7 @@ import { DownloadMeta } from "../../download/AbstractDownloader";
 import { addDoing, wrappedDownloadFile } from "../../download/DownloadWrapper";
 import { ensureLibraries } from "../../launch/Ensurance";
 import { JAR_SUFFIX } from "../../launch/NativesLint";
-import { makeLibrary } from "../../profile/FabricProfileAdaptor";
+import { makeLibrary } from "../../profile/LibrariesConvert";
 import { GameProfile } from "../../profile/GameProfile";
 import { noDuplicateConcat } from "../../profile/InheritedProfileAdaptor";
 import { LibraryMeta } from "../../profile/Meta";
