@@ -1,11 +1,11 @@
-import { Account } from "./Account";
-import { Trio } from "../commons/Collections";
 import { ipcRenderer } from "electron";
 import got from "got";
+import { Trio } from "../commons/Collections";
 import { isNull, safeGet } from "../commons/Null";
-import { AccountType } from "./AccountUtil";
 import { getString } from "../config/ConfigSupport";
 import { decryptByMachine, encryptByMachine } from "../security/Encrypt";
+import { Account } from "./Account";
+import { AccountType } from "./AccountUtil";
 
 // The auth progress for MS accounts:
 // User -> Code (Browser)
@@ -82,6 +82,8 @@ export class MicrosoftAccount extends Account {
       }
       this.lastUsedUsername = String(r5.name);
       this.lastUsedUUID = String(r5.uuid);
+      saveUUID(this.lastUsedUUID);
+      saveUserName(this.lastUsedUsername);
       saveRefreshToken(this.refreshToken);
       saveAccessToken(this.lastUsedAccessToken);
       return true;
@@ -115,6 +117,8 @@ export class MicrosoftAccount extends Account {
       if (!(await this.flushToken())) {
         return await this.flushToken();
       }
+      saveUUID(this.lastUsedUUID);
+      saveUserName(this.lastUsedUsername);
       saveRefreshToken(this.refreshToken);
       saveAccessToken(this.lastUsedAccessToken);
       return true;
@@ -138,6 +142,14 @@ export class MicrosoftAccount extends Account {
 
 function saveRefreshToken(v: string): void {
   localStorage.setItem(MS_LAST_USED_REFRESH_KEY, encryptByMachine(v));
+}
+
+function saveUUID(v: string): void {
+  localStorage.setItem(MS_LAST_USED_UUID_KEY, v);
+}
+
+function saveUserName(v: string): void {
+  localStorage.setItem(MS_LAST_USED_USERNAME_KEY, v);
 }
 
 function saveAccessToken(v: string): void {
