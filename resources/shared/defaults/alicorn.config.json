@@ -45,7 +45,7 @@
   "command": false,
   "assistant": "PonyCN",
   "font-style": "Regular",
-  "hardware-acc": true,
+  "hardware-acc": false,
   "download.primary-downloader": "Concurrent",
   "goto.animate": true,
   "action.close-on-exit": false
