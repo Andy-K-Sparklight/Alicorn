@@ -464,14 +464,14 @@ async function startBoot(
   setStatus(LaunchingStatus.ACCOUNT_AUTHING);
   if (account.type === AccountType.MICROSOFT) {
     // @ts-ignore
-    if (!window[SESSION_ACCESSDATA_CACHED_KEY]) {
-      if (!(await account.isAccessTokenValid())) {
-        // Check if the access token is valid
-        await account.performAuth("");
-      }
-      // @ts-ignore
-      window[SESSION_ACCESSDATA_CACHED_KEY] = true;
+    // if (!window[SESSION_ACCESSDATA_CACHED_KEY]) {
+    if (!(await account.isAccessTokenValid())) {
+      // Check if the access token is valid
+      await account.performAuth("");
     }
+    // @ts-ignore
+    //window[SESSION_ACCESSDATA_CACHED_KEY] = true;
+    //}
   } else if (account.type !== AccountType.ALICORN) {
     // Alicorn don't need to flush fake token
     if (!(await account.isAccessTokenValid())) {
