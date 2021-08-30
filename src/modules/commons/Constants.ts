@@ -22,7 +22,7 @@ export const ALICORN_ENCRYPTED_DATA_SUFFIX = ".alpp";
 export const MOJANG_VERSIONS_MANIFEST =
   "https://launchermeta.mojang.com/mc/game/version_manifest.json";
 
-export const FORGE_MAVEN_ROOT = "https://files.minecraftforge.net/maven";
+export const FORGE_MAVEN_ROOT = "https://maven.minecraftforge.net";
 export const FORGE_VERSIONS_MANIFEST =
   "https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json";
 
