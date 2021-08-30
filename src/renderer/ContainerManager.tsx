@@ -446,6 +446,7 @@ function AddNewContainer(props: {
           <TextField
             error={dirError}
             className={classes.input}
+            color={"secondary"}
             autoFocus
             margin={"dense"}
             onChange={(e) => {
@@ -462,7 +463,6 @@ function AddNewContainer(props: {
             type={"text"}
             spellCheck={false}
             fullWidth
-            disabled
             variant={"outlined"}
             value={selectedDir}
           />
@@ -537,6 +537,7 @@ function AddNewContainer(props: {
           <TextField
             error={modpackError}
             className={classes.input}
+            color={"secondary"}
             autoFocus
             style={{
               display: allowModpack ? "inherit" : "none",
@@ -556,7 +557,6 @@ function AddNewContainer(props: {
             type={"text"}
             spellCheck={false}
             fullWidth
-            disabled
             variant={"outlined"}
             value={modpackPath}
           />
