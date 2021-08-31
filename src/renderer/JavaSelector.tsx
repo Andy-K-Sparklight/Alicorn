@@ -310,7 +310,7 @@ function JavaDownloader(): JSX.Element {
             try {
               await installJRE(false);
             } catch (e) {
-              submitError(e);
+              submitError(String(e));
             } finally {
               if (mounted.current) {
                 setRunning(false);
@@ -332,7 +332,7 @@ function JavaDownloader(): JSX.Element {
             try {
               await installJRE(true);
             } catch (e) {
-              submitError(e);
+              submitError(String(e));
             } finally {
               if (mounted.current) {
                 setRunning(false);

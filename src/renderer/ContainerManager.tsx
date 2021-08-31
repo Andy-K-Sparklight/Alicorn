@@ -621,7 +621,7 @@ function AddNewContainer(props: {
               }
               props.refresh();
             } catch (e) {
-              props.setFailed(e);
+              props.setFailed(String(e));
             }
 
             setName("");

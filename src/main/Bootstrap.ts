@@ -30,7 +30,6 @@ app.on("ready", async () => {
       nodeIntegrationInWorker: true, // Worker needs mdiff
       contextIsolation: false, // Node
       sandbox: false, // Node
-      enableRemoteModule: false, // No sync
     },
     frame: false,
     show: false,

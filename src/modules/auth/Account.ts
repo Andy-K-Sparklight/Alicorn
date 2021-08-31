@@ -2,7 +2,6 @@ import got from "got";
 import { uniqueHash } from "../commons/BasicHash";
 import { Trio } from "../commons/Collections";
 import { isNull, safeGet } from "../commons/Null";
-import { getProxyAgent } from "../download/ProxyConfigure";
 import { getUniqueID32 } from "../security/Encrypt";
 import { AccountType } from "./AccountUtil";
 import { AuthlibAccount } from "./AuthlibAccount";
@@ -79,7 +78,6 @@ export async function refreshToken(
     };
   } catch (e) {
     console.log(e);
-    console.log(e.response);
     return { success: false, accessToken: "", availableProfiles: [] };
   }
 }
@@ -136,7 +134,6 @@ export async function authenticate(
     };
   } catch (e) {
     console.log(e);
-    console.log(e.response);
     return {
       success: false,
       accessToken: "",

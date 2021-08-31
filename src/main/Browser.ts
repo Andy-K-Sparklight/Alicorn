@@ -17,7 +17,6 @@ export async function openBrowser(
       contextIsolation: false,
       sandbox: false,
       preload: path.resolve(app.getAppPath(), PRELOAD_FILE),
-      enableRemoteModule: false,
     },
     height: Math.floor(height * 0.7),
     width: Math.floor(width * 0.7),
