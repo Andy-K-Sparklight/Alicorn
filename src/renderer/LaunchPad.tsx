@@ -185,9 +185,7 @@ function SingleCoreDisplay(props: {
               props.profile.container +
               "/" +
               props.profile.id +
-              props.server
-              ? "/" + props.server
-              : ""
+              (props.server ? "/" + props.server : "")
           );
           triggerSetPage("ReadyToLaunch");
         }}
