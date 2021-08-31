@@ -2,7 +2,7 @@
   "private": true,
   "appVersion": "Crystal",
   "version": "1.0.0",
-  "updatorVersion": 16,
+  "updatorVersion": 17,
   "sideEffects": false,
   "scripts": {
     "lc": "yarn lcd",
