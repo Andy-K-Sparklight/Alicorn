@@ -94,10 +94,7 @@ export class MicrosoftAccount extends Account {
 
   async isAccessTokenValid(): Promise<boolean> {
     try {
-      if (!(await this.flushToken())) {
-        return await this.flushToken(); // Give it another try
-      }
-      return true;
+      return (await getUUIDAndUserName(this.lastUsedAccessToken)).success;
     } catch {
       return false;
     }

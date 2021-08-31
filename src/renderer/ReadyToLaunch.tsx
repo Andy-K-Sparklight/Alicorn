@@ -282,9 +282,11 @@ function Launching(props: {
             // @ts-ignore
             window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
               (st) => {
-                setStatus(st);
-                setActiveStep(REV_LAUNCH_STEPS[st]);
-                setChangePageWarn(st !== LaunchingStatus.PENDING);
+                if (mountedBit.current) {
+                  setStatus(st);
+                  setActiveStep(REV_LAUNCH_STEPS[st]);
+                  setChangePageWarn(st !== LaunchingStatus.PENDING);
+                }
               },
               props.profile,
               profileHash.current,
@@ -407,9 +409,11 @@ function Launching(props: {
                 // @ts-ignore
                 window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
                   (st) => {
-                    setStatus(st);
-                    setActiveStep(REV_LAUNCH_STEPS[st]);
-                    setChangePageWarn(st !== LaunchingStatus.PENDING);
+                    if (mountedBit.current) {
+                      setStatus(st);
+                      setActiveStep(REV_LAUNCH_STEPS[st]);
+                      setChangePageWarn(st !== LaunchingStatus.PENDING);
+                    }
                   },
                   props.profile,
                   profileHash.current,
@@ -465,9 +469,20 @@ async function startBoot(
   if (account.type === AccountType.MICROSOFT) {
     // @ts-ignore
     // if (!window[SESSION_ACCESSDATA_CACHED_KEY]) {
-    if (!(await account.isAccessTokenValid())) {
-      // Check if the access token is valid
-      await account.performAuth("");
+    if (!isReboot(profileHash)) {
+      // If not reboot then validate
+      if (!(await account.isAccessTokenValid())) {
+        // Check if the access token is valid
+        console.log("Token has expired! Refreshing.");
+        if (!(await account.flushToken())) {
+          console.log("Flush failed! Reauthing.");
+          await account.performAuth("");
+        } else {
+          console.log("Token flushed successfully, continue.");
+        }
+      } else {
+        console.log("Token valid, skipped auth.");
+      }
     }
     // @ts-ignore
     //window[SESSION_ACCESSDATA_CACHED_KEY] = true;
