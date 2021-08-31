@@ -2244,7 +2244,7 @@ Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功�
 
 # Utilities.CutieConnect.ClickToJoin
 
-@HTML<b>你需要切实加入此网络后，才能使用此网络进行游戏</b>，因此如果你忘了点击「加入网络」，请先返回加入。\n
+@HTML<b>你需要切实加入此网络后，才能使用此网络进行游戏</b>，因此如果你忘了点击「加入网络」，请先返回加入。\n如果一个游戏显示为灰色，说明 Alicorn 认为它无法连接，类似地，如果显示为紫色，就是可以连接。\n<b><span style="color: red;">游戏内容是由第三方提供的，你可能会接触到令你不适的内容，对于可能发生的后果和潜在的风险，你应当充分了解。\nAlicorn、CutieConnect 和 CutieMap 不会为你的损失承担任何责任。</span></b>
 
 # Utilities.CutieConnect.Error
 

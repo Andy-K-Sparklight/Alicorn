@@ -15,7 +15,10 @@ import {
   makeQuery,
   QueryResult,
 } from "../../modules/cutie/CutieMap";
-import { generateWorldAnyUniqueId } from "../../modules/security/Unique";
+import {
+  generateWorldAnyUniqueId,
+  instantGetMachineUniqueID,
+} from "../../modules/security/Unique";
 import { jumpTo, triggerSetPage } from "../GoTo";
 import {
   ALICORN_DEFAULT_THEME_DARK,
@@ -75,6 +78,9 @@ export function CutieConnet(): JSX.Element {
         <Box>
           <Typography className={text.firstText}>
             {tr("Utilities.CutieConnect.Games")}
+          </Typography>
+          <Typography className={text.secondText}>
+            {tr("Utilities.CutieConnect.ClickToJoin")}
           </Typography>
           <Button
             color={"primary"}
@@ -349,7 +355,7 @@ export function CutieConnet(): JSX.Element {
                       await askCreate(
                         communityName,
                         o,
-                        password,
+                        instantGetMachineUniqueID(),
                         worldName,
                         desc,
                         getMapHostBySupernode(superNode)
@@ -393,7 +399,7 @@ export function CutieConnet(): JSX.Element {
                     await askRemove(
                       communityName,
                       o,
-                      password,
+                      instantGetMachineUniqueID(),
                       getMapHostBySupernode(superNode)
                     );
                     setNotice(
