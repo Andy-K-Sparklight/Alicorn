@@ -1,10 +1,10 @@
 # Changelog.title
 
-欢迎使用 Alicorn Crystal
+欢迎使用 Alicorn AppleSauce
 
 # Changelog.content
 
-@HTMLAlicorn Crystal 是 Alicorn 的第一个正式版本，然而为准备此版本，我们也花了很多精力（全都为了你！），我们相信你会喜欢的。<br/><br/>将来，这里会放上版本更新的日志，以供你了解我们都添加了什么新功能。<br/><br/>如果我们让你失望了，请千万别对 Alicorn 生气！请找我们（开发者）帮你解决问题。你可以在「启动器信息」页面找到我们的官网网址。<br/><br/>开始畅玩吧！Alicorn 始终在你身边。
+@HTMLAlicorn AppleSauce 提供了一些实用的小工具，并进行了性能优化。\n以下是主要变更列表：\n\n整合包导出\nOptiFine 安装\n更快的请求速度\n容器检查与清理\n更多的崩溃报告和日志分析源\nMod 及整合包搜索\n备份和还原\n\n欲知完整的变更，请访问<a href="javascript:ashow('https://al.xuogroup.top')">我们的网站</a>。\nAlicorn 保护你的自由，开始畅玩吧！你熟悉的世界还在那里等你！
 
 # LaunchPad
 
