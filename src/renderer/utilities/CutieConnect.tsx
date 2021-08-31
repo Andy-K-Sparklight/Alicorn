@@ -82,6 +82,7 @@ export function CutieConnet(): JSX.Element {
           <Typography className={text.secondText}>
             {tr("Utilities.CutieConnect.ClickToJoin")}
           </Typography>
+          <br />
           <Button
             color={"primary"}
             variant={"contained"}
@@ -91,6 +92,7 @@ export function CutieConnet(): JSX.Element {
           >
             {tr("Utilities.CutieConnect.GoBack")}
           </Button>
+          <br />
           {Object.keys(result).map((host) => {
             return (
               <GameDisplay
@@ -543,10 +545,9 @@ function GameDisplay(props: {
       >
         {props.name}
       </Typography>
-      <Typography className={text.secondText}>
+      <Typography className={text.secondText} gutterBottom>
         {props.host + " - " + props.desc}
       </Typography>
-      <hr />
     </Box>
   );
 }
