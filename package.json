@@ -1,8 +1,8 @@
 {
   "private": true,
-  "appVersion": "Crystal",
+  "appVersion": "AppleSauce",
   "version": "1.0.0",
-  "updatorVersion": 17,
+  "updatorVersion": 18,
   "sideEffects": false,
   "scripts": {
     "lc": "yarn lcd",
