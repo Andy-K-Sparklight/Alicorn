@@ -4,7 +4,7 @@
 
 # Changelog.content
 
-@HTMLAlicorn AppleSauce 提供了一些实用的小工具，并进行了性能优化。\n以下是主要变更列表：\n\n整合包导出\nOptiFine 安装\n更快的请求速度\n容器检查与清理\n更多的崩溃报告和日志分析源\nMod 及整合包搜索\n备份和还原\n\n欲知完整的变更，请访问<a href="javascript:ashow('https://al.xuogroup.top')">我们的网站</a>。\nAlicorn 保护你的自由，开始畅玩吧！你熟悉的世界还在那里等你！
+@HTMLAlicorn AppleSauce 提供了一些实用工具，并进行了性能优化。\n以下是主要变更列表：\n\n整合包导出\nOptiFine 安装\n更快的请求速度\n容器检查与清理\n更多的崩溃报告和日志分析源\nMod 及整合包搜索\n备份和还原\n\n欲知完整的变更，请访问<a href="javascript:ashow('https://al.xuogroup.top')">我们的网站</a>。\nAlicorn 保护你的自由，开始畅玩吧！你熟悉的世界还在那里等你！
 
 # LaunchPad
 
@@ -60,7 +60,7 @@ Pff 软件安装器
 
 # UtilitiesIndex
 
-小工具
+实用工具
 
 # System.Info
 
@@ -92,7 +92,7 @@ Oops！系统错误：
 
 # MainMenu.UtilitiesIndex
 
-打开小工具列表
+打开实用工具
 
 # MainMenu.Help
 
@@ -2044,7 +2044,7 @@ End
 
 # UtilitiesIndex.Description
 
-@HTML欢迎来到 Alicorn 工具库！这里有你想要的工具吗？\nAlicorn 可以很方便地与很多工具集成，如果你有自己的小工具并且想要接入 Alicorn，欢迎<a href="javascript:ashow('https://al.xuogroup.top/contact/')">联系我们</a>！\n单击来进入一个或多个小工具。
+@HTML欢迎来到 Alicorn 工具库！这里有你想要的工具吗？\nAlicorn 可以很方便地与很多工具集成，如果你有自己的工具并且想要接入 Alicorn，欢迎<a href="javascript:ashow('https://al.xuogroup.top/contact/')">联系我们</a>！\n单击来进入一个或多个工具。
 
 # UtilitiesIndex.Item
 
