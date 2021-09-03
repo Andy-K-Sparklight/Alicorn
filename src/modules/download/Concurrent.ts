@@ -6,6 +6,7 @@ import stream from "stream";
 import { promisify } from "util";
 import { schedulePromiseTask } from "../../renderer/Schedule";
 import { basicHash } from "../commons/BasicHash";
+import { COMMON_HEADER } from "../commons/Constants";
 import { isFileExist } from "../commons/FileUtil";
 import { getString } from "../config/ConfigSupport";
 import {
@@ -13,8 +14,8 @@ import {
   DownloadMeta,
   DownloadStatus,
 } from "./AbstractDownloader";
+import { getBuiltAgent } from "./AgentManager";
 import { getConfigOptn } from "./DownloadWrapper";
-import { getProxyAgent } from "./ProxyConfigure";
 import { addRecord } from "./ResolveLock";
 import { Serial } from "./Serial";
 import { getHash, getIdentifier, validate } from "./Validate";
@@ -46,7 +47,8 @@ export class Concurrent extends AbstractDownloader {
           return DownloadStatus.RESOLVED;
         }
       }
-      const fileSize = await getSize(meta.url);
+
+      const fileSize = meta.size ? meta.size : await getSize(meta.url);
       if (fileSize <= getConfigOptn("chunk-size", 1024) * 1024) {
         return await Serial.getInstance().downloadFile(meta);
       }
@@ -124,11 +126,11 @@ async function getSize(url: string): Promise<number> {
   try {
     const response = await got.get(url, {
       timeout: getConfigOptn("timeout", 5000),
-      headers: { Range: "bytes=0-1" },
+      headers: { Range: "bytes=0-1", ...COMMON_HEADER },
       https: {
         rejectUnauthorized: false,
       },
-      agent: getProxyAgent(),
+      agent: getBuiltAgent(url),
     });
     const rangeString = response.headers["content-range"];
     if (typeof rangeString !== "string") {
@@ -177,11 +179,12 @@ async function downloadSingleChunk(
       timeout: overrideTimeout ? undefined : getConfigOptn("timeout", 5000),
       headers: {
         Range: `bytes=${chunk.start}-${chunk.end}`,
+        ...COMMON_HEADER,
       },
       https: {
         rejectUnauthorized: false,
       },
-      agent: getProxyAgent(),
+      agent: getBuiltAgent(url),
     }),
     fs.createWriteStream(tmpSavePath)
   );

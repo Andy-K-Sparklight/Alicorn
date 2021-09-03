@@ -4,14 +4,15 @@ import path from "path";
 import stream from "stream";
 import { promisify } from "util";
 import { schedulePromiseTask } from "../../renderer/Schedule";
+import { COMMON_HEADER } from "../commons/Constants";
 import { isFileExist } from "../commons/FileUtil";
 import {
   AbstractDownloader,
   DownloadMeta,
   DownloadStatus,
 } from "./AbstractDownloader";
+import { getBuiltAgent } from "./AgentManager";
 import { getConfigOptn } from "./DownloadWrapper";
-import { getProxyAgent } from "./ProxyConfigure";
 import { addRecord } from "./ResolveLock";
 import { getHash, getIdentifier, validate } from "./Validate";
 
@@ -45,7 +46,8 @@ export class Serial extends AbstractDownloader {
           https: {
             rejectUnauthorized: false,
           },
-          agent: getProxyAgent(),
+          headers: COMMON_HEADER,
+          agent: getBuiltAgent(meta.url),
         }),
         fs.createWriteStream(meta.savePath)
       );

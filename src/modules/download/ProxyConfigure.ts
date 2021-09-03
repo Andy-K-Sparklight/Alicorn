@@ -28,3 +28,22 @@ export function getProxyAgent(): any {
   }
   return undefined;
 }
+
+export function needsProxy(u: string): boolean {
+  if (getProxy().getSecondValue() < 0) {
+    return false;
+  }
+  for (const x of NO_PROXY_URLS) {
+    if (u.includes(x)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+const NO_PROXY_URLS = [
+  "mcbbs.net",
+  "bmclapi.com",
+  "littleservice.cn",
+  "lss233.com",
+];

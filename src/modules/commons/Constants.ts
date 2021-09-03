@@ -1,5 +1,5 @@
-import pkg from "../../../package.json";
 import path from "path";
+import pkg from "../../../package.json";
 
 // MAINTAINERS ONLY
 // DO NOT EDIT THE FOLLOWING VALUES
@@ -40,3 +40,7 @@ export enum ReleaseType {
 }
 
 export const PLACE_HOLDER = "#//!?PH>>";
+
+export const COMMON_HEADER = {
+  connection: "keep-alive",
+};

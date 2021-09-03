@@ -2,6 +2,7 @@ import fs from "fs-extra";
 import { isNull } from "../commons/Null";
 import { getBoolean } from "../config/ConfigSupport";
 import { MinecraftContainer } from "../container/MinecraftContainer";
+import { isSharedContainer } from "../container/SharedFiles";
 import { DownloadMeta, DownloadStatus } from "../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../download/DownloadWrapper";
 import { GameProfile } from "../profile/GameProfile";
@@ -104,12 +105,14 @@ async function performSingleCheck(
   container: MinecraftContainer,
   operate?: FileOperateReport
 ): Promise<DownloadStatus> {
+  const containerIsShared = await isSharedContainer(container);
   const downloadMeta = new DownloadMeta(
     artifact.url,
     container.getLibraryPath(artifact.path),
-    artifact.sha1
+    artifact.sha1,
+    artifact.size
   );
-  const t = await wrappedDownloadFile(downloadMeta);
+  const t = await wrappedDownloadFile(downloadMeta, !containerIsShared);
   if (t === 1) {
     operate?.operateRecord.push({
       file: artifact.path,
@@ -134,9 +137,11 @@ export async function ensureAssetsIndex(
   const meta = new DownloadMeta(
     profile.assetIndex.url,
     container.getAssetsIndexPath(profile.assetIndex.id),
-    profile.assetIndex.sha1
+    profile.assetIndex.sha1,
+    profile.assetIndex.size
   );
-  return (await wrappedDownloadFile(meta)) === 1;
+  const containerIsShared = await isSharedContainer(container);
+  return (await wrappedDownloadFile(meta, !containerIsShared)) === 1;
 }
 
 // Ensure all assets of a profile
@@ -147,6 +152,7 @@ export async function ensureAllAssets(
   tracker?: LaunchTracker
 ): Promise<number> {
   try {
+    const containerIsShared = await isSharedContainer(container);
     const tFile: FileOperateReport = {
       total: 0,
       resolved: 0,
@@ -162,7 +168,7 @@ export async function ensureAllAssets(
     const allStatus = await Promise.all(
       allObjects.map((o) => {
         return new Promise<boolean>((resolve) => {
-          void ensureAsset(o, container, il).then((b) => {
+          void ensureAsset(o, container, il, containerIsShared).then((b) => {
             if (b) {
               tFile.operateRecord.push({
                 file: o.hash,
@@ -198,16 +204,18 @@ export async function ensureAllAssets(
 export async function ensureAsset(
   assetMeta: AssetMeta,
   container: MinecraftContainer,
-  isLegacy: boolean
+  isLegacy: boolean,
+  containerShared: boolean
 ): Promise<boolean> {
   const meta = new DownloadMeta(
     generateAssetURL(assetMeta),
     isLegacy
       ? container.getAssetPathLegacy(assetMeta.path)
       : container.getAssetPath(assetMeta.hash),
-    assetMeta.hash
+    assetMeta.hash,
+    assetMeta.size
   );
-  return (await wrappedDownloadFile(meta)) === 1;
+  return (await wrappedDownloadFile(meta, !containerShared)) === 1;
 }
 
 export function generateAssetURL(assetMeta: AssetMeta): string {

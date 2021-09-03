@@ -342,13 +342,9 @@ Yggdrasil 帐户
 
 准备就绪
 
-# ReadyToLaunch.Status.CheckingLibs
+# ReadyToLaunch.Status.CheckingFiles
 
-正在检查和补充支援库
-
-# ReadyToLaunch.Status.CheckingAssets
-
-正在检查和补充游戏资源
+正在获取游戏文件
 
 # ReadyToLaunch.Status.PreparingMods
 
@@ -414,13 +410,9 @@ Minecraft 似乎未正常运行……
 
 Minecraft 实例（看上去）没有正常退出，你想要对本次启动进行故障排除吗？
 
-# ReadyToLaunch.Status.Short.CheckingLibs
+# ReadyToLaunch.Status.Short.CheckingFiles
 
-检查支援库
-
-# ReadyToLaunch.Status.Short.CheckingAssets
-
-检查游戏资源
+检查游戏文件
 
 # ReadyToLaunch.Status.Short.PerformingAuth
 

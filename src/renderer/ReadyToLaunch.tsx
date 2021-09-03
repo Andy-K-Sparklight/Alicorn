@@ -254,8 +254,7 @@ function Launching(props: {
   const LAUNCH_STEPS = [
     "Pending",
     "PerformingAuth",
-    "CheckingLibs",
-    "CheckingAssets",
+    "CheckingFiles",
     "PreparingMods",
     "GeneratingArgs",
     "Finished",
@@ -263,11 +262,10 @@ function Launching(props: {
   const REV_LAUNCH_STEPS = {
     Pending: 0,
     PerformingAuth: 1,
-    CheckingLibs: 2,
-    CheckingAssets: 3,
-    PreparingMods: 4,
-    GeneratingArgs: 5,
-    Finished: 6,
+    CheckingFiles: 2,
+    PreparingMods: 3,
+    GeneratingArgs: 4,
+    Finished: 5,
   };
   return (
     <Box className={classes.root}>
@@ -527,16 +525,19 @@ async function startBoot(
   }
   if (!isReboot(profileHash)) {
     NEED_QUERY_STATUS = true;
-    setStatus(LaunchingStatus.LIBRARIES_FILLING);
+    setStatus(LaunchingStatus.FILES_FILLING);
+    await ensureAssetsIndex(profile, container);
     await Promise.all([
       ensureClient(profile),
       ensureLog4jFile(profile, container),
-      ensureLibraries(profile, container, GLOBAL_LAUNCH_TRACKER),
+      (async () => {
+        await ensureLibraries(profile, container, GLOBAL_LAUNCH_TRACKER);
+        await ensureNatives(profile, container);
+      })(),
+      (async () => {
+        await ensureAllAssets(profile, container, GLOBAL_LAUNCH_TRACKER);
+      })(),
     ]); // Parallel
-    await ensureNatives(profile, container); // Depends on libraries
-    setStatus(LaunchingStatus.ASSETS_FILLING);
-    await ensureAssetsIndex(profile, container);
-    await ensureAllAssets(profile, container, GLOBAL_LAUNCH_TRACKER); // Depends on assets index
     if (getBoolean("launch.fast-reboot")) {
       markReboot(profileHash);
     }
@@ -627,8 +628,7 @@ async function startBoot(
 enum LaunchingStatus {
   PENDING = "Pending",
   ACCOUNT_AUTHING = "PerformingAuth",
-  LIBRARIES_FILLING = "CheckingLibs",
-  ASSETS_FILLING = "CheckingAssets",
+  FILES_FILLING = "CheckingFiles",
   MODS_PREPARING = "PreparingMods",
   ARGS_GENERATING = "GeneratingArgs",
   FINISHED = "Finished",

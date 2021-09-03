@@ -13,7 +13,7 @@
   "download.global-proxy": "",
   "download.pff.chunk-size": 1024,
   "download.pff.timeout": 300000,
-  "download.skip-validate": false,
+  "download.skip-validate": true,
   "show-downloading-item": false,
   "modx.default-save-path": "",
   "modx.ignore-non-standard-mods": true,

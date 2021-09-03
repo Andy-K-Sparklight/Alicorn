@@ -6,11 +6,12 @@ export class DownloadMeta {
   readonly url: string;
   readonly savePath: string;
   readonly sha1: string;
-
-  constructor(url: string, savePath: string, sha1 = "") {
+  readonly size: number;
+  constructor(url: string, savePath: string, sha1 = "", size = 0) {
     this.url = url;
     this.savePath = savePath;
     this.sha1 = sha1;
+    this.size = size;
   }
 }
 
