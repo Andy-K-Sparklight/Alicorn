@@ -1,3 +1,4 @@
+import { throttle } from "throttle-debounce";
 import { LAUNCHER_VERSION } from "../modules/commons/Constants";
 import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
 import { setContainerListDirty } from "./ContainerManager";
@@ -5,8 +6,7 @@ import { setDirty } from "./LaunchPad";
 
 const PAGES_HISTORY: string[] = [];
 const TITLE_HISTORY: string[] = [];
-
-export function jumpTo(target: string, keepHistory = true): void {
+export const jumpTo = throttle(500, (target: string, keepHistory = true) => {
   // @ts-ignore
   if (window[CHANGE_PAGE_WARN]) {
     window.dispatchEvent(
@@ -45,7 +45,7 @@ export function jumpTo(target: string, keepHistory = true): void {
     ifLeavingConfigThenReload();
     window.location.hash = target;
   }
-}
+});
 
 function ifLeavingLaunchPadThenSetDirty(): void {
   setDirty();
@@ -63,20 +63,22 @@ function ifLeavingConfigThenReload(): void {
   }
 }
 
-export function triggerSetPage(page: string, _keepHistory = true): void {
-  // @ts-ignore
-  if (window[CHANGE_PAGE_WARN]) {
-    window.dispatchEvent(
-      new CustomEvent("changePageWarnTitle", { detail: page })
-    );
-    return;
+export const triggerSetPage = throttle(
+  500,
+  (page: string, _keepHistory = true) => {
+    // @ts-ignore
+    if (window[CHANGE_PAGE_WARN]) {
+      window.dispatchEvent(
+        new CustomEvent("changePageWarnTitle", { detail: page })
+      );
+      return;
+    }
+    //if (keepHistory) {
+    TITLE_HISTORY.push(page);
+    //}
+    document.dispatchEvent(new CustomEvent("setPage", { detail: page }));
   }
-  //if (keepHistory) {
-  TITLE_HISTORY.push(page);
-  //}
-  document.dispatchEvent(new CustomEvent("setPage", { detail: page }));
-}
-
+);
 export function canGoBack(): boolean {
   return PAGES_HISTORY.length > 1 && TITLE_HISTORY.length > 1;
 }
