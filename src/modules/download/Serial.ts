@@ -42,12 +42,10 @@ export class Serial extends AbstractDownloader {
       );
       const r = await fetch(meta.url, {
         method: "GET",
-        cache: "no-store",
         signal: ac.signal,
         keepalive: true,
       });
       sti();
-      console.log("Piping!");
       const f = getFileWriteStream(meta.savePath);
       if (r.body) {
         await r.body?.pipeTo(f);

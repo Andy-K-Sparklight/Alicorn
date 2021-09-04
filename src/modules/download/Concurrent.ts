@@ -134,7 +134,6 @@ async function getSize(url: string): Promise<number> {
       method: "GET",
       headers: { Range: "bytes=0-1" },
       signal: ac.signal,
-      cache: "no-store",
       keepalive: true,
     });
     sti();
@@ -188,7 +187,6 @@ async function downloadSingleChunk(
     signal: ac.signal,
     method: "GET",
     headers: { Range: `bytes=${chunk.start}-${chunk.end}` },
-    cache: "no-store",
     keepalive: true,
   });
   sti();
