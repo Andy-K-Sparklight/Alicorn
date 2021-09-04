@@ -1,7 +1,6 @@
-import got from "got";
 import { getNumber } from "../config/ConfigSupport";
 import { applyMirror } from "./Mirror";
-import { getProxyAgent } from "./ProxyConfigure";
+import { getTimeoutController } from "./RainbowFetch";
 
 export async function xgot(
   url: string,
@@ -11,34 +10,32 @@ export async function xgot(
 ): Promise<unknown> {
   if (noMirror) {
     try {
-      return (
-        await got.get(url, {
-          responseType: "json",
-          timeout: getNumber("download.concurrent.timeout", 5000),
-          https: {
-            rejectUnauthorized: false,
-          },
-          agent: getProxyAgent(),
-        })
-      ).body;
+      const [ac, sti] = getTimeoutController(
+        getNumber("download.concurrent.timeout", 5000)
+      );
+      const res = await fetch(url, {
+        method: "GET",
+        signal: ac.signal,
+        keepalive: true,
+      });
+      sti();
+      return await res.json();
     } catch (e) {
       console.log(e);
       return {};
     }
   }
   try {
-    return (
-      await got.get(applyMirror(url), {
-        responseType: "json",
-        timeout: noTimeout
-          ? undefined
-          : getNumber("download.concurrent.timeout", 5000),
-        https: {
-          rejectUnauthorized: false,
-        },
-        agent: getProxyAgent(),
-      })
-    ).body;
+    const [ac, sti] = getTimeoutController(
+      getNumber("download.concurrent.timeout", 5000)
+    );
+    const res = await fetch(applyMirror(url), {
+      method: "GET",
+      signal: ac.signal,
+      keepalive: true,
+    });
+    sti();
+    return await res.json();
   } catch (e) {
     console.log(e);
     console.log("Relative url(origin): " + url);
@@ -48,14 +45,12 @@ export async function xgot(
 }
 
 export async function pgot(url: string, timeout: number): Promise<unknown> {
-  return (
-    await got.get(url, {
-      responseType: "json",
-      timeout: timeout,
-      https: {
-        rejectUnauthorized: false,
-      },
-      agent: getProxyAgent(),
-    })
-  ).body;
+  const [ac, sti] = getTimeoutController(timeout);
+  const res = await fetch(url, {
+    method: "GET",
+    signal: ac.signal,
+    keepalive: true,
+  });
+  sti();
+  return await res.json();
 }
