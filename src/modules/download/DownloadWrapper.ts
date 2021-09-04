@@ -81,8 +81,6 @@ export function initDownloadWrapper(): void {
 
 // Download one file
 // Mirror will be applied here
-// There are no options for user to choose downloader
-// Concurrent will always be used first
 // If file already exists, downloader will resolve if hash matches
 export async function wrappedDownloadFile(
   meta: DownloadMeta,
