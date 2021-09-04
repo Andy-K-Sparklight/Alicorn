@@ -1010,7 +1010,7 @@ Minecraft 在 Client Java VM 上可能无法发挥出最好性能，建议安装
 
 # Options.Hint
 
-@HTML<b>不要胡乱设置</b> - Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请不要修改它。\n带 ^ 的项目在重新加载启动器后才能生效。带 * 的项目是开发人员选项，随意更改可能导致重大问题。
+@HTML<b>不要胡乱设置</b> - Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请<b>不要</b>修改它。\n带 ^ 的项目在重新加载启动器后才能生效。带 * 的项目是开发人员选项，随意更改可能导致重大问题。
 
 # Options.Enabled
 
@@ -1043,6 +1043,14 @@ Alicorn 特色功能
 # Options.Page.Advanced
 
 高级和重置
+
+# Options.download.proxy-bypass.title
+
+以下站点不使用代理 ^
+
+# Options.download.proxy-bypass.desc
+
+当访问以下站点时直接连接，不使用代理服务器，仅对下载器有效 - 请小心，Alicorn 没有验证这里的输入，错误的设置将可能导致无法连接！
 
 # Options.action.close-on-exit.title
 

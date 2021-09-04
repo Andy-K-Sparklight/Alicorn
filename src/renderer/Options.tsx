@@ -232,6 +232,10 @@ export function OptionsPage(): JSX.Element {
             bindConfig={"download.global-proxy"}
           />
           <InputItem
+            type={ConfigType.STR}
+            bindConfig={"download.proxy-bypass"}
+          />
+          <InputItem
             type={ConfigType.NUM}
             bindConfig={"starlight.join-server.timeout"}
           />

@@ -2,7 +2,11 @@ import { app, BrowserWindow, globalShortcut, screen } from "electron";
 import { btoa } from "js-base64";
 import os from "os";
 import path from "path";
-import { getBoolean, loadConfigSync } from "../modules/config/ConfigSupport";
+import {
+  getBoolean,
+  getString,
+  loadConfigSync,
+} from "../modules/config/ConfigSupport";
 import { registerBackgroundListeners } from "./Background";
 import { getUserBrowser } from "./Browser";
 import { closeWS, initWS } from "./WSServer";
@@ -65,6 +69,7 @@ app.on("ready", async () => {
   console.log("Preparing WS!");
   initWS();
   console.log("Setting up proxy!");
+  initProxy();
 });
 
 app.on("window-all-closed", () => {
@@ -101,4 +106,24 @@ process.on("unhandledRejection", async (r) => {
 
 export function getMainWindow(): BrowserWindow | null {
   return mainWindow;
+}
+
+function initProxy(): void {
+  const proc = getString(
+    "download.global-proxy",
+    "<local>,.cn,.mcbbs.net,.bangbang93.com,.littleservice.cn",
+    true
+  );
+  const t = proc.split(":");
+  if (t.length !== 2) {
+    getMainWindow()?.webContents.session.setProxy({
+      proxyRules: `direct://`,
+    });
+    return;
+  }
+  getMainWindow()?.webContents.session.setProxy({
+    proxyRules: `http=${proc},direct://`,
+    proxyBypassRules: getString("download.proxy-bypass"),
+  });
+  console.log("MainWindow Proxy set.");
 }

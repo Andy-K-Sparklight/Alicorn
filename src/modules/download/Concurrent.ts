@@ -1,21 +1,19 @@
 import fs from "fs-extra";
-import got from "got";
 import os from "os";
 import path from "path";
 import stream from "stream";
 import { promisify } from "util";
 import { schedulePromiseTask } from "../../renderer/Schedule";
 import { basicHash } from "../commons/BasicHash";
-import { COMMON_HEADER } from "../commons/Constants";
 import { isFileExist } from "../commons/FileUtil";
-import { getString } from "../config/ConfigSupport";
+import { getBoolean, getString } from "../config/ConfigSupport";
 import {
   AbstractDownloader,
   DownloadMeta,
   DownloadStatus,
 } from "./AbstractDownloader";
-import { getBuiltAgent } from "./AgentManager";
 import { getConfigOptn } from "./DownloadWrapper";
+import { getFileWriteStream, getTimeoutController } from "./RainbowFetch";
 import { addRecord } from "./ResolveLock";
 import { Serial } from "./Serial";
 import { getHash, getIdentifier, validate } from "./Validate";
@@ -97,16 +95,23 @@ async function sealAndVerify(
   }
 
   wStream.close();
-  if (hash === "") {
+  if (hash === "" || getBoolean("download.skip-validate")) {
+    void (async (url) => {
+      const id = await schedulePromiseTask(() => {
+        return getIdentifier(savePath);
+      });
+      if (id.length > 0) {
+        addRecord(id, url);
+      }
+    })(url); // 'Drop' this promise
     return;
   }
-  const h = await getHash(savePath);
 
   const s = await fs.stat(savePath);
   if (s.size !== size) {
     throw new Error("File size mismatch for " + savePath);
   }
-
+  const h = await getHash(savePath);
   if (hash !== h) {
     throw new Error("File hash mismatch for " + savePath);
   }
@@ -124,15 +129,16 @@ async function sealAndVerify(
 
 async function getSize(url: string): Promise<number> {
   try {
-    const response = await got.get(url, {
-      timeout: getConfigOptn("timeout", 5000),
-      headers: { Range: "bytes=0-1", ...COMMON_HEADER },
-      https: {
-        rejectUnauthorized: false,
-      },
-      agent: getBuiltAgent(url),
+    const [ac, sti] = getTimeoutController(getConfigOptn("timeout", 5000));
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { Range: "bytes=0-1" },
+      signal: ac.signal,
+      cache: "no-store",
+      keepalive: true,
     });
-    const rangeString = response.headers["content-range"];
+    sti();
+    const rangeString = response.headers.get("content-range");
     if (typeof rangeString !== "string") {
       return 0;
     }
@@ -174,20 +180,23 @@ async function downloadSingleChunk(
   chunk: Chunk,
   overrideTimeout?: boolean
 ) {
-  await pipeline(
-    got.stream(url, {
-      timeout: overrideTimeout ? undefined : getConfigOptn("timeout", 5000),
-      headers: {
-        Range: `bytes=${chunk.start}-${chunk.end}`,
-        ...COMMON_HEADER,
-      },
-      https: {
-        rejectUnauthorized: false,
-      },
-      agent: getBuiltAgent(url),
-    }),
-    fs.createWriteStream(tmpSavePath)
+  const f = getFileWriteStream(tmpSavePath);
+  const [ac, sti] = getTimeoutController(
+    overrideTimeout ? 0 : getConfigOptn("timeout", 5000)
   );
+  const r = await fetch(url, {
+    signal: ac.signal,
+    method: "GET",
+    headers: { Range: `bytes=${chunk.start}-${chunk.end}` },
+    cache: "no-store",
+    keepalive: true,
+  });
+  sti();
+  if (r.body) {
+    await r.body.pipeTo(f);
+  } else {
+    throw "Body is empty!";
+  }
 }
 
 class Chunk {

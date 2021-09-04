@@ -1,18 +1,17 @@
 import fs from "fs-extra";
-import got from "got";
 import path from "path";
 import stream from "stream";
 import { promisify } from "util";
 import { schedulePromiseTask } from "../../renderer/Schedule";
-import { COMMON_HEADER } from "../commons/Constants";
 import { isFileExist } from "../commons/FileUtil";
+import { getBoolean } from "../config/ConfigSupport";
 import {
   AbstractDownloader,
   DownloadMeta,
   DownloadStatus,
 } from "./AbstractDownloader";
-import { getBuiltAgent } from "./AgentManager";
 import { getConfigOptn } from "./DownloadWrapper";
+import { getFileWriteStream, getTimeoutController } from "./RainbowFetch";
 import { addRecord } from "./ResolveLock";
 import { getHash, getIdentifier, validate } from "./Validate";
 
@@ -38,21 +37,32 @@ export class Serial extends AbstractDownloader {
       }
       // Ensure directory
       await fs.ensureDir(path.dirname(meta.savePath));
-
-      // Pipe data
-      await pipeline(
-        got.stream(meta.url, {
-          timeout: noTimeout ? undefined : getConfigOptn("timeout", 5000),
-          https: {
-            rejectUnauthorized: false,
-          },
-          headers: COMMON_HEADER,
-          agent: getBuiltAgent(meta.url),
-        }),
-        fs.createWriteStream(meta.savePath)
+      const [ac, sti] = getTimeoutController(
+        noTimeout ? 0 : getConfigOptn("timeout", 3000)
       );
-
-      if (meta.sha1 === "") {
+      const r = await fetch(meta.url, {
+        method: "GET",
+        cache: "no-store",
+        signal: ac.signal,
+        keepalive: true,
+      });
+      sti();
+      console.log("Piping!");
+      const f = getFileWriteStream(meta.savePath);
+      if (r.body) {
+        await r.body?.pipeTo(f);
+      } else {
+        throw "Body is empty!";
+      }
+      if (meta.sha1 === "" || getBoolean("download.skip-validate")) {
+        void (async (meta) => {
+          const id = await schedulePromiseTask(() => {
+            return getIdentifier(meta.savePath);
+          });
+          if (id.length > 0) {
+            addRecord(id, meta.url);
+          }
+        })(meta); // 'Drop' this promise
         return DownloadStatus.RESOLVED;
       }
       const h = await getHash(meta.savePath);
@@ -71,7 +81,8 @@ export class Serial extends AbstractDownloader {
 
       // Mismatch
       return DownloadStatus.RETRY;
-    } catch {
+    } catch (e) {
+      console.log(e);
       // Oops
       return DownloadStatus.RETRY;
     }
