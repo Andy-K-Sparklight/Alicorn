@@ -292,15 +292,27 @@ Alicorn 内置浏览器
 
 # ReadyToLaunch.Getting
 
-正在获取 {Url}
+获取：{Url}
+
+# ReadyToLaunch.Validated
+
+命中：{Url}
+
+# ReadyToLaunch.Retry
+
+重试：{Url}
+
+# ReadyToLaunch.Ignored
+
+忽略：{Url}
 
 # ReadyToLaunch.Got
 
-已经获取了 {Url}
+成功：{Url}
 
 # ReadyToLaunch.Failed
 
-没能够获取 {Url}
+失败：{Url}
 
 # ReadyToLaunch.StartAuthTitle
 
@@ -442,17 +454,17 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 你知道吗？之前这些工作是由玩家手工完成的。
 
-你知道吗？Alicorn 的作者是一只小马！
-
 你知道吗？Fabric 在高版本中的表现更好。
 
-您知道 Microsoft 帐户背后的验证过程吗？大致有五步。
+你知道 Microsoft 帐户背后的验证过程吗？大致有五步。
 
 你知道吗？Mojang 又名 Bugjump……哦，当然，我是开玩笑的啦～
 
-{UserName} 可爱~
+{UserName} 可爱，我和 {UserName} 贴贴～
 
 Alicorn 是自由软件！您完全可以将她用于任何用途！
+
+我？我不过是个有点思想的 Shell，只能传达你的命令而已啦。
 
 感谢 Node.js，现在验证您的资源文件又快又准确。
 
@@ -480,9 +492,7 @@ Minecraft 和我的世界真的不是一个东西！
 
 可以，但没必要。
 
-你知道吗？被认为「使用无比痛苦」的 Vim，就是创建 Alicorn 的编辑器。
-
-你知道吗？开发 Alicorn 主要是为了解决 Forge 的问题：一部分是 Minecraft Forge 的安装问题，一部分是 CurseForge 的下载问题，还有一部分是 Electron Forge 的打包问题。
+哪里有什么奇技淫巧，苍穹木曾经也是树苗。
 
 「能用 JS 改写的，终将用 JS 改写」—— Jeff Atwood
 
@@ -498,8 +508,6 @@ Minecraft 和我的世界真的不是一个东西！
 
 「我们要把天空，涂上五颜六色」—— Equestria Girls Forever
 
-「他们不用魔法，更无双翼飞翔」—— This Strange World
-
 「我们会逃避，会找借口，但正是缺点让我们进步」—— Flawless
 
 「我知道这不对，可那又如何」—— I'll Fly
@@ -510,9 +518,17 @@ Minecraft 和我的世界真的不是一个东西！
 
 「生活少不了冲突和麻烦，但歌声和欢笑将与我们作伴」—— The Heart Carol
 
-友谊就是魔法！！！（真的是这样！）
+「若要远离梦魇，最好永不入眠」—— In Our Town
 
-就快到了 —— 只差九亿八千六百七十五万四千二百三十一个维度了……
+「希望有一天，不需要呼救，就有人帮忙」—— 混乱
+
+请不要说「开源」—— 这是个阴谋！（我会骗你吗？）请支持像 GCC 这样的自由软件！
+
+我希望你们人类和我们小马一起努力，让所有的软件都自由。\n这既有利于你，也有利于地球。
+
+正在抛出末影珍珠……
+
+友谊就是魔法！！！（真的是这样！）
 
 让黛茜飞一会……
 

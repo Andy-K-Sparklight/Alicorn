@@ -1,5 +1,4 @@
 import EventEmitter from "events";
-import { submitWarn } from "../../renderer/Message";
 import { tr } from "../../renderer/Translator";
 import { getModifiedDate, isFileExist } from "../commons/FileUtil";
 import { getBoolean, getNumber } from "../config/ConfigSupport";
@@ -92,10 +91,9 @@ export async function wrappedDownloadFile(
   const ou = meta.url;
   // POST
   if (meta.url.trim().length === 0 || meta.savePath.trim().length === 0) {
-    addState(tr("ReadyToLaunch.Got", `Url=${ou}`));
+    addState(tr("ReadyToLaunch.Ignored", `Url=${ou}`));
     return DownloadStatus.RESOLVED;
   }
-  addState(tr("ReadyToLaunch.Getting", `Url=${ou}`));
   if (!noAutoLn) {
     const a = getAllContainers();
     let targetContainer = "";
@@ -109,7 +107,7 @@ export async function wrappedDownloadFile(
       (await isSharedContainer(getContainer(targetContainer)))
     ) {
       if (await fetchSharedFile(meta)) {
-        addState(tr("ReadyToLaunch.Got", `Url=${ou}`));
+        addState(tr("ReadyToLaunch.Validated", `Url=${ou}`));
         return DownloadStatus.RESOLVED;
       }
     }
@@ -122,12 +120,9 @@ export async function wrappedDownloadFile(
   FAILED_COUNT_MAP.set(mirroredMeta, getConfigOptn("tries-per-chunk", 3));
   if ((await _wrappedDownloadFile(mirroredMeta)) === 1) {
     FAILED_COUNT_MAP.delete(mirroredMeta);
-    addState(tr("ReadyToLaunch.Got", `Url=${ou}`));
     return DownloadStatus.RESOLVED;
   } else {
     FAILED_COUNT_MAP.delete(mirroredMeta);
-    addState(tr("ReadyToLaunch.Failed", `Url=${ou}`));
-    submitWarn(tr("ReadyToLaunch.Failed", `Url=${ou}`));
     return DownloadStatus.FATAL;
   }
 }
@@ -175,6 +170,7 @@ function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
   return new Promise<DownloadStatus>((resolve) => {
     void existsAndValidate(meta).then((b) => {
       if (b) {
+        addState(tr("ReadyToLaunch.Validated", `Url=${meta.url}`));
         resolve(DownloadStatus.RESOLVED);
       } else {
         WAITING_RESOLVES_MAP.set(meta, resolve);
@@ -192,6 +188,7 @@ function scheduleNextTask(): void {
     const tsk = PENDING_TASKS.pop();
     if (tsk !== undefined) {
       RUNNING_TASKS.add(tsk);
+      addState(tr("ReadyToLaunch.Getting", `Url=${tsk.url}`));
       downloadSingleFile(tsk, EMITTER);
     } else {
       break;
@@ -204,6 +201,7 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
     .downloadFile(meta)
     .then((s) => {
       if (s === 1) {
+        addState(tr("ReadyToLaunch.Got", `Url=${meta.url}`));
         FAILED_COUNT_MAP.delete(meta);
         emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
         return;
@@ -213,15 +211,18 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
         if (failed <= 0) {
           // The last fight! Only once.
           // FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
+          addState(tr("ReadyToLaunch.Retry", `Url=${meta.url}`));
           void Serial.getInstance()
             .downloadFile(meta)
             .then((s) => {
               if (s === 1) {
                 // FAILED_COUNT_MAP.delete(meta);
+                addState(tr("ReadyToLaunch.Got", `Url=${meta.url}`));
                 emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
                 return;
               } else {
                 // Simply fatal, retry is meaningless
+                addState(tr("ReadyToLaunch.Failed", `Url=${meta.url}`));
                 emitter.emit(END_GATE, meta, DownloadStatus.FATAL);
                 return;
               }
@@ -229,11 +230,13 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
           return;
         } else {
           FAILED_COUNT_MAP.set(meta, failed - 1); // Again
+          addState(tr("ReadyToLaunch.Retry", `Url=${meta.url}`));
           downloadSingleFile(meta, emitter);
         }
       } else {
         // Do not retry
         FAILED_COUNT_MAP.delete(meta);
+        addState(tr("ReadyToLaunch.Failed", `Url=${meta.url}`));
         emitter.emit(END_GATE, meta, DownloadStatus.FATAL);
         return;
       }
