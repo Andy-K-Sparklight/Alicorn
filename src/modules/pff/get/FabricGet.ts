@@ -79,7 +79,6 @@ async function _getLatestFabricInstallerAndLoader(
         }
       }
     }
-    // eslint-disable-next-line no-empty
   } catch {}
 
   try {

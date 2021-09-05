@@ -58,6 +58,7 @@ import { tr } from "./Translator";
 
 export function InstallCore(): JSX.Element {
   const classes = useFormStyles();
+  const fullWidthClasses = fullWidth();
   const [foundCores, setCores] = useState<string[]>([]);
   const isLoaded = useRef<boolean>(false);
   const mounted = useRef<boolean>();
@@ -88,7 +89,6 @@ export function InstallCore(): JSX.Element {
   const [progressMsg, _setProgressMsg] = useState("");
   const [tabValue, setTabValue] = useState(0);
   const [updatePatchableCoresBit, updatePatchableCores] = useState(false);
-  const fullWidthClasses = fullWidth();
   function setProgressMsg(msg: string): void {
     // Binding
     if (mounted.current) {
@@ -378,7 +378,7 @@ export function InstallCore(): JSX.Element {
             <Select
               labelId={"CoreInstall-Mojang-SelectArch"}
               color={"primary"}
-              className={classes.selector}
+              className={classes.selector + " " + fullWidthClasses.form}
               onChange={(e) => {
                 isLoaded.current = false;
                 setSelectedMojangVersion("");
@@ -400,6 +400,8 @@ export function InstallCore(): JSX.Element {
               </MenuItem>
             </Select>
           </FormControl>
+          <br />
+          <br />
           <FormControl className={classes.formControl}>
             <InputLabel
               id={"CoreInstall-Mojang-SelectVersion"}
@@ -410,7 +412,7 @@ export function InstallCore(): JSX.Element {
             <Select
               labelId={"CoreInstall-Mojang-SelectVersion"}
               color={"primary"}
-              className={classes.selector}
+              className={classes.selector + " " + fullWidthClasses.form}
               onChange={(e) => {
                 setSelectedMojangVersion(String(e.target.value || ""));
               }}
@@ -425,6 +427,8 @@ export function InstallCore(): JSX.Element {
               })}
             </Select>
           </FormControl>
+          <br />
+          <br />
           <FormControl className={classes.formControl}>
             <InputLabel
               id={"CoreInstall-Mojang-TargetContainer"}
@@ -435,7 +439,7 @@ export function InstallCore(): JSX.Element {
             <Select
               labelId={"CoreInstall-Mojang-TargetContainer"}
               color={"primary"}
-              className={classes.selector}
+              className={classes.selector + " " + fullWidthClasses.form}
               onChange={(e) => {
                 setMojangContainer(String(e.target.value || ""));
               }}
