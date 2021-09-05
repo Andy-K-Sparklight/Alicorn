@@ -1,5 +1,4 @@
 import { ipcRenderer } from "electron";
-import got from "got";
 import { Trio } from "../commons/Collections";
 import { isNull, safeGet } from "../commons/Null";
 import { getString } from "../config/ConfigSupport";
@@ -188,15 +187,16 @@ async function tokenRequest(
   const grantType = isRefresh ? "refresh_token" : "authorization_code";
   const grantTag = isRefresh ? "refresh_token" : "code";
   try {
-    const ret = (
-      await got.post(MS_TOKEN_URL, {
+    const ret = await (
+      await fetch(MS_TOKEN_URL, {
+        method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        responseType: "json",
+        cache: "no-cache",
         body: `client_id=00000000402b5328&${grantTag}=${credit}&grant_type=${grantType}&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL`,
       })
-    ).body;
+    ).json();
     if (!isNull(safeGet(ret, ["error"]))) {
       return {
         success: false,
@@ -230,13 +230,14 @@ async function getXBLToken(
   msToken: string
 ): Promise<AcquireXBLXSTSTokenCallback> {
   try {
-    const response = (
-      await got.post(XBL_URL, {
-        responseType: "json",
+    const response = await (
+      await fetch(XBL_URL, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
+        cache: "no-cache",
         body: JSON.stringify({
           Properties: {
             AuthMethod: "RPS",
@@ -247,7 +248,7 @@ async function getXBLToken(
           TokenType: "JWT",
         }),
       })
-    ).body;
+    ).json();
     const token = safeGet(response, ["Token"]);
     const uhs = safeGet(response, ["DisplayClaims", "xui", 0, "uhs"]);
     if (isNull(token) || isNull(uhs)) {
@@ -268,13 +269,14 @@ async function getXSTSToken(
   xblToken: string
 ): Promise<AcquireXBLXSTSTokenCallback> {
   try {
-    const response = (
-      await got.post(XSTS_URL, {
-        responseType: "json",
+    const response = await (
+      await fetch(XSTS_URL, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
+        cache: "no-cache",
         body: JSON.stringify({
           Properties: {
             SandboxId: "RETAIL",
@@ -284,7 +286,7 @@ async function getXSTSToken(
           TokenType: "JWT",
         }),
       })
-    ).body;
+    ).json();
     const token = safeGet(response, ["Token"]);
     if (isNull(token)) {
       return { success: false };
@@ -302,17 +304,18 @@ async function getXSTSToken(
 // Xbox uhs & XSTS Token -> MC Token
 async function getMojangToken(uhs: string, xstsToken: string): Promise<string> {
   try {
-    const response = (
-      await got.post(MJ_LOGIN_XBOX, {
+    const response = await (
+      await fetch(MJ_LOGIN_XBOX, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        cache: "no-cache",
         body: JSON.stringify({
           identityToken: `XBL3.0 x=${uhs};${xstsToken}`,
         }),
-        responseType: "json",
       })
-    ).body;
+    ).json();
     return String(safeGet(response, ["access_token"], ""));
   } catch {
     return "";
@@ -330,15 +333,16 @@ async function getUUIDAndUserName(
   acToken: string
 ): Promise<MinecraftUserProfileCallback> {
   try {
-    const response = (
-      await got.get(MJ_PROFILE_API, {
-        responseType: "json",
+    const response = await (
+      await fetch(MJ_PROFILE_API, {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${acToken}`,
         },
+        cache: "no-cache",
       })
-    ).body;
+    ).json();
     const uuid = safeGet(response, ["id"]);
     const name = safeGet(response, ["name"]);
     if (isNull(uuid) || isNull(name)) {

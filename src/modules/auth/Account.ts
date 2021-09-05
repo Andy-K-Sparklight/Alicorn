@@ -1,4 +1,3 @@
-import got from "got";
 import { uniqueHash } from "../commons/BasicHash";
 import { Trio } from "../commons/Collections";
 import { isNull, safeGet } from "../commons/Null";
@@ -48,11 +47,12 @@ export async function refreshToken(
 ): Promise<AuthenticateDataCallback> {
   try {
     const rtt = (
-      await got.post(trimURL(authServer) + "/refresh", {
+      await fetch(trimURL(authServer) + "/refresh", {
         headers: {
           "Content-Type": "application/json",
         },
-        responseType: "json",
+        method: "POST",
+        cache: "no-cache",
         body: JSON.stringify({
           accessToken: acToken,
         }),
@@ -90,11 +90,12 @@ export async function authenticate(
   try {
     const tURL = trimURL(authServer) + "/authenticate";
     const res = (
-      await got.post(tURL, {
-        responseType: "json",
+      await fetch(tURL, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        cache: "no-cache",
         body: JSON.stringify({
           username: accountName,
           password: password,
@@ -154,11 +155,12 @@ export async function validateToken(
   authServer: string
 ): Promise<boolean> {
   try {
-    await got.post(trimURL(authServer) + "/validate", {
+    await fetch(trimURL(authServer) + "/validate", {
       headers: {
         "Content-Type": "application/json",
       },
-      responseType: "json",
+      method: "POST",
+      cache: "no-cache",
       body: JSON.stringify({
         accessToken: acToken,
       }),
