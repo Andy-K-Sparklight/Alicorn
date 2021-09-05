@@ -1,6 +1,5 @@
 import Ajv from "ajv";
 import fs from "fs-extra";
-import got from "got";
 import os from "os";
 import path from "path";
 import pkg from "../../../package.json";
@@ -8,7 +7,6 @@ import { getString } from "../config/ConfigSupport";
 import { getActualDataPath } from "../config/DataSupport";
 import { getBasePath } from "../config/PathSolve";
 import { DownloadMeta } from "../download/AbstractDownloader";
-import { getProxyAgent } from "../download/ProxyConfigure";
 import { Serial } from "../download/Serial";
 import BuildInfoSchema from "./BuildInfoSchema.json";
 // MAINTAINERS ONLY
@@ -71,13 +69,12 @@ export async function checkUpdate(): Promise<void> {
     let res: any;
     console.log("Fetching version info...");
     try {
-      res = await got.get(HEAD, {
-        https: {
-          rejectUnauthorized: false,
-        },
-        responseType: "json",
-        agent: getProxyAgent(),
-      });
+      res = await (
+        await fetch(HEAD, {
+          method: "GET",
+          cache: "no-cache",
+        })
+      ).json();
       console.log("Fetched a manifest.");
     } catch (e) {
       if (String(e).includes("404")) {
@@ -90,8 +87,8 @@ export async function checkUpdate(): Promise<void> {
     }
     console.log("Validating build info!");
     let d: BuildInfo;
-    if (AJV.validate(BuildInfoSchema, res.body)) {
-      d = res.body as BuildInfo;
+    if (AJV.validate(BuildInfoSchema, res)) {
+      d = res as BuildInfo;
       console.log("Validate passed.");
       /*
       if (await isFileExist(LOCK_FILE)) {
@@ -109,31 +106,30 @@ export async function checkUpdate(): Promise<void> {
         "This update is released at " + new Date(d.date).toLocaleString()
       );
       console.log("Fetching extra manifest...");
-      const res_rend = await got.get(RENDERER_BUILD_FILE_RELEASE, {
-        https: {
-          rejectUnauthorized: false,
-        },
-        agent: getProxyAgent(),
-        responseType: "json",
-      });
-      console.log("Downloading files...");
-      if (!AJV.validate(BuildInfoSchema, res_rend.body)) {
+      const res_rend = await (
+        await fetch(RENDERER_BUILD_FILE_RELEASE, {
+          method: "GET",
+          cache: "no-cache",
+        })
+      ).json();
+      if (!AJV.validate(BuildInfoSchema, res_rend)) {
         console.log("Invalid build info! Skipped updating this time.");
         return;
       }
-      if (!(await doUpdate(BASE, res_rend.body as BuildInfo))) {
+      console.log("Downloading files...");
+      if (!(await doUpdate(BASE, res_rend as BuildInfo))) {
         console.log("Update failed, let's try again next time.");
         return;
       }
-      if (!(await doUpdate(BASE, res.body as BuildInfo))) {
+      if (!(await doUpdate(BASE, res as BuildInfo))) {
         console.log("Update failed, let's try again next time.");
         return;
       }
       console.log("Switching files...");
       IS_UPDATING = true;
       try {
-        await switchFile(res.body as BuildInfo);
-        await switchFile(res_rend.body as BuildInfo);
+        await switchFile(res as BuildInfo);
+        await switchFile(res_rend as BuildInfo);
       } catch (e) {
         console.log(e);
         console.log("File switch failed! Error is present above.");
@@ -141,7 +137,7 @@ export async function checkUpdate(): Promise<void> {
         notifyAll();
       }
       await fs.ensureDir(path.dirname(LOCK_FILE));
-      await fs.writeFile(LOCK_FILE, (res.body as BuildInfo).date);
+      await fs.writeFile(LOCK_FILE, (res as BuildInfo).date);
       console.log("Update completed.");
       IS_UPDATING = false;
       notifyAll();

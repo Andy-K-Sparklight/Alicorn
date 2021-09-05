@@ -1,7 +1,5 @@
 import fs from "fs-extra";
-import got from "got";
 import { schedulePromiseTask } from "../../renderer/Schedule";
-import { getProxyAgent } from "../download/ProxyConfigure";
 import { CMC_CRASH_LOADER } from "./CutieMCCrashLoader";
 
 // Not only for crash reports, but also logs
@@ -135,15 +133,11 @@ async function getOnlineCrashLoader(
   url: string
 ): Promise<CrashLoader | undefined> {
   try {
-    const r = (
-      await got.get(url, {
-        https: {
-          rejectUnauthorized: false,
-        },
-        agent: getProxyAgent(),
-        responseType: "text",
+    const r = await (
+      await fetch(url, {
+        method: "GET",
       })
-    ).body;
+    ).text();
     const obj = eval(r);
     if (obj) {
       return obj as CrashLoader;

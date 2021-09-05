@@ -1,12 +1,10 @@
 import { load } from "cheerio";
 import childProcess from "child_process";
-import got from "got";
 import os from "os";
 import { basicHash } from "../commons/BasicHash";
 import { getActualDataPath } from "../config/DataSupport";
 import { DownloadMeta } from "../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../download/DownloadWrapper";
-import { getProxyAgent } from "../download/ProxyConfigure";
 
 const JDK_BASE_URL = "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/";
 const OLD_JAVA = "8";
@@ -27,14 +25,10 @@ export async function getLatestJREURL(old = false): Promise<string> {
     throw new Error("Does not support this arch!");
   }
   const u = `${JDK_BASE_URL}${old ? OLD_JAVA : NEW_JAVA}/jre/${cv}/windows/`;
-  const res = await got.get(u, {
-    https: {
-      rejectUnauthorized: false,
-    },
-    agent: getProxyAgent(),
-    responseType: "text",
+  const res = await fetch(u, {
+    method: "GET",
   });
-  const X = load(res.body);
+  const X = load(await res.text());
   const ls = X("table#list > tbody > tr");
   if (ls.length === 0) {
     return "";

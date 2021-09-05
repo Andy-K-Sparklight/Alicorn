@@ -48,7 +48,7 @@ export class Serial extends AbstractDownloader {
       sti();
       const f = getFileWriteStream(meta.savePath);
       if (r.body) {
-        await r.body?.pipeTo(f);
+        await r.body.pipeTo(f);
       } else {
         throw "Body is empty!";
       }

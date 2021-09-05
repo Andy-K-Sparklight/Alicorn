@@ -1,6 +1,4 @@
 import fs, { WriteStream } from "fs-extra";
-import { IncomingMessage } from "http";
-import https from "https";
 import { IntervalChecker } from "../commons/WatchDog";
 export function guardPipeFile(
   origin: NodeJS.ReadableStream,
@@ -42,31 +40,6 @@ export function guardPipeFile(
       }
       rej(e);
     });
-  });
-}
-
-export function getStream(
-  url: string,
-  timeout?: number
-): Promise<IncomingMessage> {
-  const pu = new URL(url);
-  console.log(pu);
-  return new Promise<IncomingMessage>((res, rej) => {
-    const req = https.request(url, (s) => {
-      if (s.statusCode && s.statusCode >= 200 && s.statusCode < 300) {
-        res(s);
-      } else {
-        rej(s.statusMessage);
-      }
-    });
-    req.setHeader("Connection", "keep-alive");
-    if (timeout) {
-      req.setTimeout(timeout, rej);
-    }
-    req.setNoDelay(true);
-    req.setSocketKeepAlive(true);
-    req.method = "GET";
-    req.end();
   });
 }
 

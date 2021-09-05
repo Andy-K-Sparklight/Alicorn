@@ -1,7 +1,5 @@
-import got from "got";
 import { toBase64 } from "js-base64";
 import { getActualDataPath, saveDefaultData } from "../config/DataSupport";
-import { getProxyAgent } from "../download/ProxyConfigure";
 
 /*
 CLAIM FOR EXTERNAL RESOURCE
@@ -27,15 +25,11 @@ export function whereAJ(): string {
 export async function prefetchData(authServer: string): Promise<string> {
   try {
     return toBase64(
-      (
-        await got.get(authServer, {
-          https: {
-            rejectUnauthorized: false,
-          },
-          agent: getProxyAgent(),
-          responseType: "text",
+      await (
+        await fetch(authServer, {
+          method: "GET",
         })
-      ).body
+      ).text()
     );
   } catch {
     return "";
