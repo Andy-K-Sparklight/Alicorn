@@ -20,8 +20,8 @@ import {
   Dns,
   FlightTakeoff,
   GetApp,
+  HelpRounded,
   Info,
-  LiveHelp,
   PowerSettingsNew,
   Refresh,
   Settings,
@@ -312,7 +312,7 @@ export function App(): JSX.Element {
                   void shell.openExternal("https://al.xuogroup.top/faq/");
                 }}
               >
-                <LiveHelp />
+                <HelpRounded />
               </IconButton>
             </Tooltip>
             {getBoolean("dev") ? (
