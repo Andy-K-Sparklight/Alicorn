@@ -190,6 +190,9 @@ async function downloadSingleChunk(
     keepalive: true,
   });
   sti();
+  if (!(r.status >= 200 && r.status < 300)) {
+    throw "Failed to download! Code: " + r.status;
+  }
   if (r.body) {
     await r.body.pipeTo(f);
   } else {

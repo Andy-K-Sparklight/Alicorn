@@ -19,6 +19,9 @@ export async function xgot(
         keepalive: true,
       });
       sti();
+      if (!(res.status >= 200 && res.status < 300)) {
+        throw "Failed to fetch! Code: " + res.status;
+      }
       return await res.json();
     } catch (e) {
       console.log(e);
@@ -35,6 +38,9 @@ export async function xgot(
       keepalive: true,
     });
     sti();
+    if (!(res.status >= 200 && res.status < 300)) {
+      throw "Failed to fetch! Code: " + res.status;
+    }
     return await res.json();
   } catch (e) {
     console.log(e);
@@ -52,5 +58,8 @@ export async function pgot(url: string, timeout: number): Promise<unknown> {
     keepalive: true,
   });
   sti();
+  if (!(res.status >= 200 && res.status < 300)) {
+    throw "Failed to fetch! Code: " + res.status;
+  }
   return await res.json();
 }

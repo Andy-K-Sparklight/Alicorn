@@ -46,6 +46,9 @@ export class Serial extends AbstractDownloader {
         keepalive: true,
       });
       sti();
+      if (!(r.status >= 200 && r.status < 300)) {
+        throw "Failed to download! Code: " + r.status;
+      }
       const f = getFileWriteStream(meta.savePath);
       if (r.body) {
         await r.body.pipeTo(f);
