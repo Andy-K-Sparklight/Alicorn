@@ -1,3 +1,4 @@
+import { jumpTo, triggerSetPage } from "../../renderer/GoTo";
 import { submitInfo, submitWarn } from "../../renderer/Message";
 import { getString, set } from "../config/ConfigSupport";
 import { registerCommand } from "./CommandListener";
@@ -35,6 +36,11 @@ export function initBase(): void {
     return Promise.resolve();
   });
 
+  registerCommand("jmp", (a) => {
+    jumpTo(a[0].replaceAll("\\", "/"));
+    triggerSetPage(a[1]);
+    return Promise.resolve();
+  });
   registerCommand("get", (a) => {
     if (!a[0]) {
       submitWarn("No such config key, ignored.");
