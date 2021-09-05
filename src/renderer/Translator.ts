@@ -70,7 +70,8 @@ async function buildLocale(
   name: string
 ): Promise<Record<string, string | string[]>> {
   try {
-    const f = (await readFile(getPathInDefaults(name + ".lang"))).toString();
+    let f = (await readFile(getPathInDefaults(name + ".lang"))).toString();
+    f = f.replaceAll("\\\n", "");
     const a = f.split("\n");
     const b: string[] = [];
     for (const l1 of a) {
@@ -114,7 +115,8 @@ async function buildLocale(
       }
     }
     return out;
-  } catch {
+  } catch (e) {
+    console.log(e);
     return {};
   }
 }
