@@ -8,7 +8,7 @@ import { ConfigType, InputItem } from "./Options";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { useTextStyles } from "./Stylex";
 import { tr } from "./Translator";
-const NEXT_TUTOR_URL = "Tutor.NextUrl";
+const NEXT_TUTOR_INDEX = "Tutor.NextUrl";
 const SHOW_ICNS: Set<string> = new Set();
 export function isTutor(): boolean {
   return getString("startup-page.name") === "Tutor";
@@ -18,12 +18,35 @@ export function isShow(iconName: string): boolean {
   return SHOW_ICNS.has(iconName);
 }
 
-export function setNextTutorUrl(u: string): void {
-  window.sessionStorage.setItem(NEXT_TUTOR_URL, u);
+export function setNextTutorIndex(u: string): void {
+  window.sessionStorage.setItem(NEXT_TUTOR_INDEX, u);
 }
-export function getNextTutorUrl(): string {
-  return window.sessionStorage.getItem(NEXT_TUTOR_URL) || "";
+
+export function getNextTutorIndex(): string {
+  return window.sessionStorage.getItem(NEXT_TUTOR_INDEX) || "0";
 }
+
+export function getNextTutorName(): string {
+  return TUTOR_PAGES[parseInt(getNextTutorIndex())];
+}
+
+const TUTOR_PAGES = [
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "11",
+  "12",
+  "13",
+  "EG1",
+  "End1",
+];
 
 export function Tutor(): JSX.Element {
   const classes = useTextStyles();
@@ -37,10 +60,8 @@ export function Tutor(): JSX.Element {
     }
   }, []);
   useEffect(() => {
-    const url = window.location.hash;
-    const page = parseInt(url.charAt(url.length - 1));
-    const nu = url.slice(0, -1) + (page + 1);
-    setNextTutorUrl(nu);
+    const h = window.location.hash.split("/").pop();
+    setNextTutorIndex(TUTOR_PAGES.indexOf(h || "").toString());
   });
   useEffect(() => {
     control.split(";").forEach((a) => {
