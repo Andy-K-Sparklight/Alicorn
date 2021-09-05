@@ -1,6 +1,7 @@
 import { throttle } from "throttle-debounce";
 import { LAUNCHER_VERSION } from "../modules/commons/Constants";
 import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
+import { loadMirror } from "../modules/download/Mirror";
 import { setContainerListDirty } from "./ContainerManager";
 import { setDirty } from "./LaunchPad";
 
@@ -57,9 +58,8 @@ function ifLeavingContainerManagerThenSetContainerListDirty(): void {
 
 function ifLeavingConfigThenReload(): void {
   if (window.location.hash.includes("Options")) {
-    saveAndReloadMain()
-      .then(() => {})
-      .catch(() => {});
+    void saveAndReloadMain();
+    void loadMirror();
   }
 }
 

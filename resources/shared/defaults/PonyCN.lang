@@ -1334,11 +1334,11 @@ Alicorn 快捷键 ^
 
 # Options.download.global-proxy.desc
 
-访问网络时所使用的代理服务器，应当以 <主机名>:<端口> 的格式设置，如 localhost:1080，除帐户验证外的所有网络请求都将从此服务器转发 - 如果你不知道你在做什么，请留空，不要胡乱设置！
+访问网络时所使用的代理服务器，应当以 <协议>://<主机名>:<端口> 的格式设置，如 http://localhost:1080，所有网络请求都将从此服务器转发 - 如果你不知道你在做什么，请留空，不要胡乱设置！
 
 # Options.download.mirror.title
 
-下载源镜像 ^
+下载源镜像
 
 # Options.download.mirror.desc
 
