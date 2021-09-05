@@ -65,7 +65,7 @@ import { PffFront } from "./PffFront";
 import { ReadyToLaunch } from "./ReadyToLaunch";
 import { ServerList } from "./ServerList";
 import { tr } from "./Translator";
-import { getNextTutorUrl, isShow, isTutor, Tutor } from "./Tutor";
+import { getNextTutorName, isShow, isTutor, Tutor } from "./Tutor";
 import { CutieConnet } from "./utilities/CutieConnect";
 import { NetCheck } from "./utilities/NetCheck";
 import { UtilitiesIndex } from "./utilities/UtilitiesIndex";
@@ -81,8 +81,8 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.secondary.light,
     },
     content: {
-      marginLeft: theme.spacing(3.5),
-      marginRight: theme.spacing(3.5),
+      marginLeft: theme.spacing(4.5),
+      marginRight: theme.spacing(4.5),
       marginTop: theme.spacing(4),
     },
     exitButton: {
@@ -280,7 +280,7 @@ export function App(): JSX.Element {
                 color={"inherit"}
                 className={classes.floatButton}
                 onClick={() => {
-                  jumpTo(getNextTutorUrl());
+                  jumpTo("/Tutor/" + getNextTutorName());
                   triggerSetPage("Tutor");
                 }}
               >
