@@ -110,15 +110,14 @@ function initProxy(): void {
     "<local>,.cn,.mcbbs.net,.bangbang93.com,.littleservice.cn",
     true
   );
-  const t = proc.split(":");
-  if (t.length !== 2) {
+  if (proc.trim().length === 0) {
     getMainWindow()?.webContents.session.setProxy({
-      proxyRules: `direct://`,
+      proxyRules: "direct://",
     });
     return;
   }
   getMainWindow()?.webContents.session.setProxy({
-    proxyRules: `http=${proc},direct://`,
+    proxyRules: proc,
     proxyBypassRules: getString("download.proxy-bypass"),
   });
   console.log("MainWindow Proxy set.");
