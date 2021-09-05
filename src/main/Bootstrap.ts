@@ -1,6 +1,5 @@
 import { app, BrowserWindow, globalShortcut, screen } from "electron";
 import { btoa } from "js-base64";
-import os from "os";
 import path from "path";
 import {
   getBoolean,
@@ -73,12 +72,9 @@ app.on("ready", async () => {
 });
 
 app.on("window-all-closed", () => {
-  if (os.platform() !== "darwin") {
-    console.log("Stopping!");
-    console.log("Stopping WS!");
-    closeWS();
-    app.quit();
-  }
+  console.log("Stopping!");
+  closeWS();
+  app.quit();
 });
 // This function doesn't support async!
 // Use sync functions.
