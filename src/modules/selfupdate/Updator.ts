@@ -77,7 +77,7 @@ export async function checkUpdate(): Promise<void> {
       ).json();
       console.log("Fetched a manifest.");
     } catch (e) {
-      if (String(e).includes("404")) {
+      if (String(e).includes("404") || String(e).includes("SyntaxError")) {
         console.log(
           "You are running the latest version! (404 / No Later File)"
         );
