@@ -4,6 +4,7 @@ import path from "path";
 import { tr } from "../../../renderer/Translator";
 import { basicHash } from "../../commons/BasicHash";
 import { Pair } from "../../commons/Collections";
+import { isFileExist } from "../../commons/FileUtil";
 import { isNull, safeGet } from "../../commons/Null";
 import { getNumber, getString } from "../../config/ConfigSupport";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
@@ -31,6 +32,7 @@ import {
 import {
   generateForgeInstallerName,
   getForgeInstaller,
+  getMojangByForge,
   removeForgeInstaller,
 } from "../get/ForgeGet";
 import { downloadProfile, getProfileURLById } from "../get/MojangCore";
@@ -46,7 +48,7 @@ import {
   OverrideFile,
 } from "./CommonModpackModel";
 const MANIFEST_FILE = "manifest.json";
-
+const PACK_META = "mcbbs.packmeta";
 async function parseModpack(
   container: MinecraftContainer,
   source: string
@@ -60,16 +62,24 @@ async function parseModpack(
     return new Pair("CF", null);
   }
   const mf = path.join(baseDir, MANIFEST_FILE);
+  const mp = path.join(baseDir, PACK_META);
+  let f;
+  let type;
+  if (await isFileExist(mp)) {
+    f = await readJSON(mp);
+    type = "CM";
+  } else if (await isFileExist(mf)) {
+    f = await readJSON(mf);
+    type = "CF";
+  } else {
+    throw "Unsupported modpack!";
+  }
   try {
-    const f = await readJSON(mf);
-    if (safeGet(f, ["manifestVersion"]) === 1) {
+    if (type == "CM") {
       f["overrideSourceDir"] = path.join(baseDir, OVERRIDE_CONTENT);
       return new Pair("CM", f as CommonModpackModel);
     }
-    if (
-      safeGet(f, ["manifestVersion"]) === 5 ||
-      safeGet(f, ["manifestVersion"]) === undefined
-    ) {
+    if (type === "CF") {
       return new Pair("CF", transformManifest5(f, baseDir));
     }
     throw "Unsupported manifest version: " + safeGet(f, ["manifestVersion"]);
@@ -103,7 +113,7 @@ async function deployOverrides(
 const OVERRIDE_CONTENT = "overrides";
 // FIXME: Unchecked
 async function deployFileOverrides(
-  o: OverrideFile[] | SimpleFile[],
+  o: (OverrideFile | SimpleFile)[],
   unpackRoot: string,
   container: MinecraftContainer
 ): Promise<void> {
@@ -137,11 +147,12 @@ export async function deployProfile(
 export async function deployModLoader(
   type: ProfileType,
   version: string,
-  mcVersion: string,
-  container: MinecraftContainer
+  container: MinecraftContainer,
+  mcVersions: string[] = [] // Optinal, Fabric only, since it doesn't rely on version
 ): Promise<void> {
   switch (type) {
-    case ProfileType.FORGE:
+    case ProfileType.FORGE: {
+      const mcVersion = await getMojangByForge(version);
       if (!(await getForgeInstaller(container, mcVersion, version))) {
         throw "Could not fetch installer: No such installer!";
       }
@@ -156,6 +167,7 @@ export async function deployModLoader(
       }
       await removeForgeInstaller(container, mcVersion, version);
       break;
+    }
     case ProfileType.FABRIC:
     default: {
       const u = (await getLatestFabricInstallerAndLoader()).getFirstValue();
@@ -165,18 +177,25 @@ export async function deployModLoader(
       if (!(await getFabricInstaller(u, container))) {
         throw "Failed to fetch installer!";
       }
-      if (
-        !(await performFabricInstall(
-          await getJavaRunnable(getLastUsedJavaHome()),
-          u,
-          version,
-          mcVersion,
-          container
-        ))
-      ) {
-        throw "Could not perform install!";
-      }
-      await removeFabricInstaller(u, container);
+      const jr = await getJavaRunnable(getLastUsedJavaHome());
+      await Promise.allSettled(
+        mcVersions.map((mcVersion) => {
+          return (async () => {
+            if (
+              !(await performFabricInstall(
+                jr,
+                u,
+                version,
+                mcVersion,
+                container
+              ))
+            ) {
+              throw "Could not perform install!";
+            }
+            await removeFabricInstaller(u, container);
+          })();
+        })
+      );
     }
   }
 }
@@ -269,10 +288,9 @@ export async function wrappedInstallModpack(
     case "CM":
       {
         model = model as CommonModpackModel;
-        const bv = generateBaseVersion(model);
         await deployAllGameProfiles(model, container);
         addDoing(tr("ContainerManager.DeployingModLoader"));
-        await deployAllModLoaders(model, container, bv);
+        await deployAllModLoaders(model, container);
         addDoing(tr("ContainerManager.DeployingMods"));
         await installMods(container, model);
         addDoing(tr("ContainerManager.DeployingDeltas"));
@@ -294,7 +312,6 @@ export async function wrappedInstallModpack(
         await deployModLoader(
           model.modLoaders[0].type || ProfileType.FORGE,
           model.modLoaders[0].version || "",
-          model.baseVersion,
           container
         );
       }

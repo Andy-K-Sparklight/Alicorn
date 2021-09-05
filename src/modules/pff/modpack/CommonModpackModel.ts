@@ -15,7 +15,7 @@ export interface CommonModpackModel {
   description: string;
   url: string;
   addons: { id: string; version: string }[];
-  files: OverrideFile[] | SimpleFile[]; // Compatibility,
+  files: (OverrideFile | SimpleFile)[]; // Compatibility
   overrideSourceDir: string; // Binding
 }
 export interface OverrideFile {
@@ -41,22 +41,36 @@ export function generateBaseVersion(
     return m.baseVersion;
   }
 }
-
 export async function xdeploy(
   o: { id: string; version: string },
-  bv: string,
+  model: CommonModpackModel,
   container: MinecraftContainer
 ): Promise<void> {
   switch (o.id.toLowerCase()) {
     case "forge":
-      await deployModLoader(ProfileType.FORGE, o.version, bv, container);
+      await deployModLoader(ProfileType.FORGE, o.version, container);
       break;
     case "game":
       break; // Base Profile Should have been installed
     case "fabric":
     default:
-      await deployModLoader(ProfileType.FABRIC, o.version, bv, container);
+      await deployModLoader(
+        ProfileType.FABRIC,
+        o.version,
+        container,
+        getAllGames(model)
+      );
   }
+}
+
+function getAllGames(model: CommonModpackModel): string[] {
+  const ax = new Set<string>();
+  model.addons.forEach((a) => {
+    if (a.id.trim().toLowerCase() === "game") {
+      ax.add(a.version.trim());
+    }
+  });
+  return Array.from(ax);
 }
 
 export async function deployAllGameProfiles(
@@ -74,12 +88,11 @@ export async function deployAllGameProfiles(
 
 export async function deployAllModLoaders(
   m: CommonModpackModel,
-  container: MinecraftContainer,
-  bv: string
+  container: MinecraftContainer
 ): Promise<void> {
   await Promise.allSettled(
     m.addons.map(async (l) => {
-      await xdeploy(l, bv, container);
+      await xdeploy(l, m, container);
     })
   );
 }

@@ -113,7 +113,6 @@ async function _getLatestFabricInstallerAndLoader(
         }
       }
     }
-    // eslint-disable-next-line no-empty
   } catch {}
 
   return new Pair<string, string>(installerURL, loaderVersion);

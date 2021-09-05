@@ -1,4 +1,5 @@
 import fs from "fs-extra";
+import semver from "semver";
 import {
   FORGE_MAVEN_ROOT,
   FORGE_VERSIONS_MANIFEST,
@@ -30,6 +31,42 @@ export async function getForgeVersionByMojang(
 
 export async function prefetchForgeManifest(): Promise<void> {
   await _getForgeVersionByMojang("", ForgeFilter.RECOMMENDED, false, true);
+}
+
+export async function getMojangByForge(fgv: string): Promise<string> {
+  try {
+    let tBody;
+    try {
+      if (
+        // @ts-ignore
+        window[FORGE_MANIFEST_CACHE_KEY] !== undefined &&
+        // @ts-ignore
+        Object.keys(window[FORGE_MANIFEST_CACHE_KEY]).length > 0
+      ) {
+        // @ts-ignore
+        tBody = window[FORGE_MANIFEST_CACHE_KEY];
+      } else {
+        // @ts-ignore
+        tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror, false, noTimeout);
+
+        // @ts-ignore
+        window[FORGE_MANIFEST_CACHE_KEY] = tBody;
+      }
+    } catch {
+      // @ts-ignore
+      tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror, false, noTimeout);
+
+      // @ts-ignore
+      window[FORGE_MANIFEST_CACHE_KEY] = tBody;
+    }
+    const d = safeGet(tBody, ["promos"], {}) as Record<string, string>;
+    if (isNull(d)) {
+      return "";
+    }
+    return getMCVersionByForgeVersion(fgv, d);
+  } catch {
+    return "";
+  }
 }
 
 async function _getForgeVersionByMojang(
@@ -128,4 +165,42 @@ export async function removeForgeInstaller(
   } catch {
     return;
   }
+}
+
+// You need to provide 'promos'
+// Forge doesn't open their full versions list, but thanks to semver, we can infer it.
+// I don't want to do this, but I have to!
+// Forge only leads to harm!!!
+export function getMCVersionByForgeVersion(
+  fgv: string,
+  promos: Record<string, string>
+): string {
+  const tVer = semver.coerce(fgv);
+  if (!tVer) {
+    return "";
+  }
+  // Trim promos key
+  const o: Record<string, string> = {};
+  Object.keys(promos).forEach((m) => {
+    if (m.includes("latest")) {
+      // Only fetch the latest
+      o[String(semver.valid(semver.coerce(m)))] = promos[m];
+    }
+  });
+  const k = Object.keys(o);
+  k.reverse();
+  let ll = "";
+  for (const v of k) {
+    // From high to low
+    const cVer = semver.coerce(o[v]);
+    if (cVer) {
+      if (semver.gt(tVer, cVer)) {
+        return ll; // Last one
+      } else if (semver.eq(tVer, cVer)) {
+        return v;
+      }
+    }
+    ll = v;
+  }
+  return "";
 }
