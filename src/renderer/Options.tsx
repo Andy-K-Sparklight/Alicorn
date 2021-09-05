@@ -231,6 +231,7 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.STR}
             bindConfig={"download.global-proxy"}
           />
+          <InputItem type={ConfigType.STR} bindConfig={"web.global-proxy"} />
           <InputItem
             type={ConfigType.STR}
             bindConfig={"download.proxy-bypass"}

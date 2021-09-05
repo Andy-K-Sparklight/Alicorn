@@ -1438,7 +1438,7 @@ Alicorn 会用这个名字亲切地称呼您 - 嗯……可爱~
 
 # Options.web.global-proxy.desc
 
-设置用于 Alicorn 附属浏览器的代理 - 所有流量都将通过代理服务器转发，下载器不受此设置影响，部分操作系统对此设置不敏感
+设置用于 Alicorn 附属浏览器的代理，包括 Microsoft 帐户登录 - 所有流量都将通过代理服务器转发，下载器不受此设置影响
 
 # Options.updator.use-update.title
 

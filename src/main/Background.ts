@@ -118,7 +118,7 @@ export function registerBackgroundListeners(): void {
         });
       if (proxy.trim().length > 0) {
         await loginWindow.webContents.session.setProxy({
-          proxyRules: `${proxy},direct://`,
+          proxyRules: proxy,
         });
       }
       await loginWindow.loadURL(LOGIN_START);
@@ -173,7 +173,7 @@ export function registerBackgroundListeners(): void {
     });
     if (proxy.trim().length > 0) {
       await logoutWindow.webContents.session.setProxy({
-        proxyRules: `${proxy},direct://`,
+        proxyRules: proxy,
       });
     }
     await logoutWindow.loadURL(BASE_ACCOUNT_URL);
