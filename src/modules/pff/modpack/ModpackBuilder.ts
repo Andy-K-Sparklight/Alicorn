@@ -1,7 +1,13 @@
 import path from "path";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
-import { ModpackModel, SimpleFile } from "./CFModpackModel";
+import { ProfileType } from "../../profile/WhatProfile";
+import {
+  ModpackModel,
+  SimpleFile,
+  SimpleModLoaderInfo,
+} from "./CFModpackModel";
 import { CommonModpackModel, OverrideFile } from "./CommonModpackModel";
+import { OVERRIDE_CONTENT } from "./InstallModpack";
 
 export function createBaseCommonModel(): CommonModpackModel {
   return {
@@ -91,7 +97,53 @@ export function addCore(
   }
 }
 
-function buildCommonModpackJSON(model: CommonModpackModel): string {
+export function convertCommonToCF(model: CommonModpackModel): ModpackModel {
+  return {
+    displayName: model.name,
+    author: model.author,
+    baseVersion: findGameBase(model),
+    overrideSourceDir: OVERRIDE_CONTENT,
+    files: trimFiles(model),
+    modLoaders: getModLoaders(model),
+    packVersion: model.version,
+  };
+}
+
+function getModLoaders(model: CommonModpackModel): SimpleModLoaderInfo[] {
+  const p: SimpleModLoaderInfo[] = [];
+  model.addons.forEach((a) => {
+    switch (a.id.toLowerCase()) {
+      case "forge":
+        p.push({ type: ProfileType.FORGE, version: a.version });
+        break;
+      case "fabric":
+      default:
+        p.push({ type: ProfileType.FABRIC, version: a.version });
+    }
+  });
+  return p;
+}
+
+function trimFiles(model: CommonModpackModel): SimpleFile[] {
+  const p: SimpleFile[] = [];
+  model.files.forEach((f) => {
+    // @ts-ignore
+    if (f["projectID"]) {
+      p.push(f as SimpleFile);
+    }
+  });
+  return p;
+}
+function findGameBase(model: CommonModpackModel): string {
+  for (const a of model.addons) {
+    if (a.id.trim().toLowerCase() === "game") {
+      return a.version;
+    }
+  }
+  return "";
+}
+
+export function buildCommonModpackJSON(model: CommonModpackModel): string {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const o: any = {};
   o.manifestType = "minecraftModpack";
@@ -128,5 +180,35 @@ function buildCommonModpackJSON(model: CommonModpackModel): string {
     launchArgument: [],
     javaArgument: [], // Safety
   };
+  return JSON.stringify(o);
+}
+
+export function buildCFModpackJSON(model: ModpackModel): string {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const o: any = {};
+  o.manifestType = "minecraftModpack";
+  o.manifestVersion = 1;
+  o.name = model.displayName;
+  o.version = model.packVersion;
+  o.author = model.author;
+  o.overrides = OVERRIDE_CONTENT; // Lock
+  o.minecraft = {
+    version: model.baseVersion,
+    modLoaders: model.modLoaders.map((m) => {
+      return {
+        id: m.type.toLowerCase() + "-" + m.version,
+        primary: false,
+      };
+    }),
+  };
+  if (o.minecraft.modLoaders.length > 0) {
+    o.minecraft.modLoaders[0].primary = true; // Activate
+  }
+  o.files = model.files.map((f) => {
+    return {
+      projectID: f.projectID,
+      fileID: f.fileID,
+    };
+  });
   return JSON.stringify(o);
 }

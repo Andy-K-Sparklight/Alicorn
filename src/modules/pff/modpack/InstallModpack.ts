@@ -47,8 +47,8 @@ import {
   generateDefaultModLoader,
   OverrideFile,
 } from "./CommonModpackModel";
-const MANIFEST_FILE = "manifest.json";
-const PACK_META = "mcbbs.packmeta";
+export const MANIFEST_FILE = "manifest.json";
+export const PACK_META = "mcbbs.packmeta";
 async function parseModpack(
   container: MinecraftContainer,
   source: string
@@ -110,8 +110,8 @@ async function deployOverrides(
   } catch {}
 }
 
-const OVERRIDE_CONTENT = "overrides";
-// FIXME: Unchecked
+export const OVERRIDE_CONTENT = "overrides";
+
 async function deployFileOverrides(
   o: (OverrideFile | SimpleFile)[],
   unpackRoot: string,
