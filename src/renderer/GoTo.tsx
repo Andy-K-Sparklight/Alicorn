@@ -1,5 +1,4 @@
 import { throttle } from "throttle-debounce";
-import { LAUNCHER_VERSION } from "../modules/commons/Constants";
 import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
 import { loadMirror } from "../modules/download/Mirror";
 import { setContainerListDirty } from "./ContainerManager";
@@ -20,11 +19,6 @@ export const jumpTo = throttle(500, (target: string, keepHistory = true) => {
   // if (keepHistory) {
   PAGES_HISTORY.push(target);
   // }
-  if (window.location.hash.includes("Welcome")) {
-    if (window.localStorage.getItem("CurrentVersion") !== LAUNCHER_VERSION) {
-      window.localStorage.setItem("CurrentVersion", LAUNCHER_VERSION);
-    }
-  }
   if (getBoolean("goto.animate")) {
     const e = document.getElementById("app_main");
     const ANIMATION_TIME = 250;
