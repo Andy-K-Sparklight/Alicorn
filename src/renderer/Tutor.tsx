@@ -31,12 +31,11 @@ export function getNextTutorName(): string {
 }
 
 const TUTOR_PAGES = [
+  "0",
   "1",
   "2",
   "3",
   "4",
-  "5",
-  "6",
   "7",
   "8",
   "9",
@@ -61,13 +60,12 @@ export function Tutor(): JSX.Element {
   }, []);
   useEffect(() => {
     const h = window.location.hash.split("/").pop();
-    setNextTutorIndex(TUTOR_PAGES.indexOf(h || "").toString());
+    setNextTutorIndex((TUTOR_PAGES.indexOf(h || "") + 1).toString());
   });
   useEffect(() => {
     control.split(";").forEach((a) => {
       if (a.startsWith("-")) {
         SHOW_ICNS.delete(a.slice(1));
-        console.log("Sending signal!");
         window.dispatchEvent(new CustomEvent("refreshApp"));
       }
       if (a.startsWith("+")) {
