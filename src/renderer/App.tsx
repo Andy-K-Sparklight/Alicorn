@@ -2,6 +2,7 @@ import {
   AppBar,
   Box,
   createStyles,
+  Fab,
   IconButton,
   makeStyles,
   Snackbar,
@@ -20,7 +21,7 @@ import {
   Dns,
   FlightTakeoff,
   GetApp,
-  HelpRounded,
+  Help,
   Info,
   PowerSettingsNew,
   Refresh,
@@ -81,12 +82,19 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.secondary.light,
     },
     content: {
-      marginLeft: theme.spacing(4.5),
-      marginRight: theme.spacing(4.5),
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
       marginTop: theme.spacing(4),
+    },
+    buttonText: {
+      marginRight: theme.spacing(1),
     },
     exitButton: {
       marginRight: 0,
+    },
+    floatMore: {
+      marginRight: 0,
+      marginLeft: theme.spacing(0.8),
     },
     floatButton: {
       marginRight: theme.spacing(-0.8),
@@ -303,18 +311,19 @@ export function App(): JSX.Element {
             ) : (
               ""
             )}
-            <Tooltip title={tr("MainMenu.Help")}>
-              <IconButton
-                style={genHideStyles("Help")}
-                color={"inherit"}
-                className={classes.floatButton}
-                onClick={() => {
-                  void shell.openExternal("https://al.xuogroup.top/faq/");
-                }}
-              >
-                <HelpRounded />
-              </IconButton>
-            </Tooltip>
+            <Fab
+              variant={"extended"}
+              style={genHideStyles("Help")}
+              color={"secondary"}
+              className={classes.floatMore}
+              size={"medium"}
+              onClick={() => {
+                void shell.openExternal("https://al.xuogroup.top/faq/");
+              }}
+            >
+              <Help className={classes.buttonText} />
+              {tr("MainMenu.Help")}
+            </Fab>
             {getBoolean("dev") ? (
               <Tooltip title={tr("MainMenu.Reload")}>
                 <IconButton
@@ -331,24 +340,23 @@ export function App(): JSX.Element {
             ) : (
               ""
             )}
-            <Tooltip
-              title={
-                getBoolean("dev")
-                  ? tr("MainMenu.OpenDevToolsFormal")
-                  : tr("MainMenu.OpenDevToolsKidding")
-              }
-            >
-              <IconButton
-                style={genHideStyles("Dev")}
-                color={"inherit"}
-                className={classes.floatButton}
-                onClick={() => {
-                  remoteOpenDevTools();
-                }}
-              >
-                <Code />
-              </IconButton>
-            </Tooltip>
+            {getBoolean("dev") ? (
+              <Tooltip title={tr("MainMenu.OpenDevToolsFormal")}>
+                <IconButton
+                  style={genHideStyles("Dev")}
+                  color={"inherit"}
+                  className={classes.floatButton}
+                  onClick={() => {
+                    remoteOpenDevTools();
+                  }}
+                >
+                  <Code />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              ""
+            )}
+
             <Tooltip title={tr("MainMenu.UtilitiesIndex")}>
               <IconButton
                 style={genHideStyles("UtilitiesIndex")}
@@ -476,20 +484,20 @@ export function App(): JSX.Element {
                 <GetApp />
               </IconButton>
             </Tooltip>
-
-            <Tooltip title={tr("MainMenu.QuickLaunchPad")}>
-              <IconButton
-                style={genHideStyles("LaunchPad")}
-                color={"inherit"}
-                className={classes.floatButton}
-                onClick={() => {
-                  jumpTo("/LaunchPad");
-                  triggerSetPage("LaunchPad");
-                }}
-              >
-                <FlightTakeoff />
-              </IconButton>
-            </Tooltip>
+            <Fab
+              style={genHideStyles("LaunchPad")}
+              color={"secondary"}
+              variant={"extended"}
+              size={"medium"}
+              className={classes.floatMore}
+              onClick={() => {
+                jumpTo("/LaunchPad");
+                triggerSetPage("LaunchPad");
+              }}
+            >
+              <FlightTakeoff className={classes.buttonText} />
+              {tr("LaunchPad")}
+            </Fab>
             <Tooltip title={tr("MainMenu.Exit")}>
               <IconButton
                 style={genHideStyles("Exit")}

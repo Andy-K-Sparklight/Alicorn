@@ -1,60 +1,124 @@
 import { Box, Fab, Tooltip, Typography } from "@material-ui/core";
-import { History } from "@material-ui/icons";
-import React from "react";
-import { LAUNCHER_VERSION } from "../modules/commons/Constants";
+import { FlightTakeoff, GetApp, History } from "@material-ui/icons";
+import React, { useState } from "react";
 import { jumpTo, triggerSetPage } from "./GoTo";
 import { LAST_SUCCESSFUL_GAME_KEY } from "./ReadyToLaunch";
+import { ALICORN_DEFAULT_THEME_DARK } from "./Renderer";
 import { useTextStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
-
 export function Welcome(): JSX.Element {
   const classes = useTextStyles();
-  const cv = window.localStorage.getItem("CurrentVersion");
-  let shouldShowChangelog = true;
-  if (cv) {
-    if (cv === LAUNCHER_VERSION) {
-      shouldShowChangelog = false;
-    }
-  }
+  const [refreshBit, setRefresh] = useState(false);
   return (
-    <Box className={classes.root}>
+    <Box
+      style={{
+        textAlign: "center",
+      }}
+      className={classes.root}
+    >
+      <br />
       <Typography color={"primary"} className={classes.firstText} gutterBottom>
-        {shouldShowChangelog
-          ? tr("Changelog.title")
-          : randsl("Welcome.Suggest.Part1")}
-      </Typography>
-      <Typography
-        color={"secondary"}
-        className={classes.secondText}
-        gutterBottom
-      >
-        {shouldShowChangelog
-          ? tr("Changelog.content")
-          : randsl("Welcome.Suggest.Part2")}
+        {randsl("Welcome.Suggest.Part1")}
       </Typography>
       <br />
-      <Tooltip title={tr("Welcome.Suggest.LastSuccessfulLaunch")}>
-        <Box>
-          <Fab
-            disabled={!window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY)}
-            color={"primary"}
+      <Box
+        onClick={() => {
+          setRefresh(!refreshBit);
+        }}
+      >
+        <Typography
+          color={"secondary"}
+          className={classes.secondText}
+          gutterBottom
+        >
+          <b
             style={{
-              position: "fixed",
-              right: "16px",
-              bottom: "16px",
-            }}
-            onClick={() => {
-              jumpTo(
-                window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ||
-                  "/ReadyToLaunch/undefined/undefined"
-              );
-              triggerSetPage("ReadyToLaunch");
+              color: ALICORN_DEFAULT_THEME_DARK.palette.primary.main,
+              fontSize: "larger",
             }}
           >
-            <History />
-          </Fab>
-        </Box>
-      </Tooltip>
+            {"> "}
+          </b>
+          {randsl("Welcome.TipName")}
+          {randsl("Welcome.Tips")}
+          <b
+            style={{
+              color: ALICORN_DEFAULT_THEME_DARK.palette.primary.main,
+              fontSize: "larger",
+            }}
+          >
+            {" <"}
+          </b>
+        </Typography>
+      </Box>
+      {/* TODO: Mid Buttons */}
+      <br />
+      <Box
+        style={{
+          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <RoundBtn
+          disabled={false}
+          onClick={() => {
+            jumpTo("/InstallCore");
+            triggerSetPage("InstallCore");
+          }}
+          tooltip={tr("MainMenu.QuickInstallCore")}
+          icon={<GetApp />}
+          short={tr("Welcome.Short.Install")}
+        />
+        <RoundBtn
+          disabled={!window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY)}
+          onClick={() => {
+            jumpTo(
+              window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ||
+                "/ReadyToLaunch/undefined/undefined"
+            );
+            triggerSetPage("ReadyToLaunch");
+          }}
+          tooltip={tr("Welcome.Suggest.LastSuccessfulLaunch")}
+          icon={<History />}
+          short={tr("Welcome.Short.LastLaunch")}
+        />
+        <RoundBtn
+          disabled={false}
+          onClick={() => {
+            jumpTo("/LaunchPad");
+            triggerSetPage("LaunchPad");
+          }}
+          tooltip={tr("MainMenu.QuickLaunchPad")}
+          icon={<FlightTakeoff />}
+          short={tr("Welcome.Short.LaunchPad")}
+        />
+      </Box>
     </Box>
+  );
+}
+
+function RoundBtn(props: {
+  disabled: boolean;
+  onClick: () => unknown;
+  tooltip: string;
+  icon: JSX.Element;
+  short: string;
+}): JSX.Element {
+  return (
+    <Tooltip title={props.tooltip}>
+      <Box style={{ display: "inline", marginLeft: "8px" }}>
+        <Fab
+          variant={"extended"}
+          size={"medium"}
+          disabled={props.disabled}
+          color={"primary"}
+          onClick={props.onClick}
+        >
+          {props.icon}
+          {<span style={{ marginLeft: "5px" }}>{props.short}</span>}
+        </Fab>
+      </Box>
+    </Tooltip>
   );
 }
