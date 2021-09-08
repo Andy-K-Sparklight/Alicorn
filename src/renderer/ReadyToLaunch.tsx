@@ -25,7 +25,7 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import { FlightTakeoff } from "@material-ui/icons";
+import { FlightLand, FlightTakeoff } from "@material-ui/icons";
 import { ipcRenderer } from "electron";
 import EventEmitter from "events";
 import objectHash from "object-hash";
@@ -85,6 +85,7 @@ import {
   ensureNatives,
 } from "../modules/launch/Ensurance";
 import { launchProfile } from "../modules/launch/LaunchPad";
+import { stopMinecraft } from "../modules/launch/MinecraftBootstrap";
 import { LaunchTracker } from "../modules/launch/Tracker";
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
@@ -203,7 +204,7 @@ function Launching(props: {
   const classes = useStyles();
   const mountedBit = useRef<boolean>(true);
   const [warning, setWarning] = useState(false);
-
+  const runID = useRef("");
   const [status, setStatus] = useState(LaunchingStatus.PENDING);
   const [hint, setHint] = useState(randsl("ReadyToLaunch.WaitingText"));
   const [activeStep, setActiveStep] = useState(0);
@@ -277,6 +278,7 @@ function Launching(props: {
         onChose={(a) => {
           setSelectedAccount(a);
           void (async () => {
+            runID.current = "";
             // @ts-ignore
             window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
               (st) => {
@@ -290,7 +292,10 @@ function Launching(props: {
               profileHash.current,
               props.container,
               a,
-              props.server
+              props.server,
+              (id) => {
+                runID.current = id;
+              }
             );
           })();
         }}
@@ -394,37 +399,55 @@ function Launching(props: {
       <Tooltip
         title={
           status === LaunchingStatus.FINISHED
-            ? tr("ReadyToLaunch.Restart")
+            ? tr("ReadyToLaunch.Kill")
             : tr("ReadyToLaunch.Start")
         }
       >
         <Box>
           <Fab
             color={"primary"}
-            disabled={status !== LaunchingStatus.PENDING}
+            disabled={
+              status !== LaunchingStatus.PENDING &&
+              status !== LaunchingStatus.FINISHED
+            }
             onClick={async () => {
-              if (selectedAccount !== undefined) {
-                // @ts-ignore
-                window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
-                  (st) => {
-                    if (mountedBit.current) {
-                      setStatus(st);
-                      setActiveStep(REV_LAUNCH_STEPS[st]);
-                      setChangePageWarn(st !== LaunchingStatus.PENDING);
+              if (status === LaunchingStatus.PENDING) {
+                runID.current = "";
+                if (selectedAccount !== undefined) {
+                  // @ts-ignore
+                  window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
+                    (st) => {
+                      if (mountedBit.current) {
+                        setStatus(st);
+                        setActiveStep(REV_LAUNCH_STEPS[st]);
+                        setChangePageWarn(st !== LaunchingStatus.PENDING);
+                      }
+                    },
+                    props.profile,
+                    profileHash.current,
+                    props.container,
+                    selectedAccount,
+                    props.server,
+                    (id) => {
+                      runID.current = id;
                     }
-                  },
-                  props.profile,
-                  profileHash.current,
-                  props.container,
-                  selectedAccount,
-                  props.server
-                );
-              } else {
-                setSelecting(true);
+                  );
+                } else {
+                  setSelecting(true);
+                }
+              } else if (status === LaunchingStatus.FINISHED) {
+                if (runID.current) {
+                  console.log(`Forcefully stopping instance ${runID.current}!`);
+                  stopMinecraft(runID.current);
+                }
               }
             }}
           >
-            <FlightTakeoff />
+            {status !== LaunchingStatus.FINISHED ? (
+              <FlightTakeoff />
+            ) : (
+              <FlightLand />
+            )}
           </Fab>
         </Box>
       </Tooltip>
@@ -447,7 +470,8 @@ async function startBoot(
   profileHash: string,
   container: MinecraftContainer,
   account: Account,
-  server?: string
+  server?: string,
+  setRunID: (id: string) => unknown = () => {}
 ): Promise<LaunchTracker> {
   // @ts-ignore
   window[LAST_FAILURE_INFO_KEY] = undefined;
@@ -616,7 +640,7 @@ async function startBoot(
     gc1: getString("gc1", "pure"),
     gc2: getString("gc2", "pure"),
   });
-
+  setRunID(runID);
   setStatus(LaunchingStatus.FINISHED);
   console.log(`A new Minecraft instance (${runID}) has been launched.`);
   if (getBoolean("hide-when-game")) {

@@ -1,6 +1,7 @@
-import { ChildProcess, spawn } from "child_process";
+import { ChildProcess, exec, spawn } from "child_process";
 import EventEmitter from "events";
 import objectHash from "object-hash";
+import os from "os";
 import { Pair } from "../commons/Collections";
 import { PROCESS_END_GATE, PROCESS_LOG_GATE } from "../commons/Constants";
 import { MinecraftContainer } from "../container/MinecraftContainer";
@@ -75,7 +76,14 @@ export class RunningMinecraft {
 
   kill(): void {
     this.status = RunningStatus.STOPPING;
-    this.process?.kill(0);
+    const pid = this.process?.pid;
+    if (pid) {
+      if (os.platform() === "win32") {
+        exec(`taskkill /pid ${pid} /t /f`);
+      } else {
+        exec("kill -KILL " + pid);
+      }
+    }
   }
 
   disconnect(): void {
