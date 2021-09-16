@@ -51,7 +51,9 @@ export const useInputStyles = makeStyles((theme) =>
 export const useFormStyles = makeStyles((theme) =>
   createStyles({
     root: {},
-    formControl: {},
+    formControl: {
+      margin: theme.spacing(1),
+    },
     input: {
       color: theme.palette.secondary.light,
     },
@@ -64,7 +66,7 @@ export const useFormStyles = makeStyles((theme) =>
       fontSize: "medium",
     },
     selector: {
-      borderColor: theme.palette.primary.main,
+      //  borderColor: theme.palette.primary.main,
       color: theme.palette.primary.main,
       width: theme.spacing(25),
     },
@@ -77,11 +79,11 @@ export const useFormStyles = makeStyles((theme) =>
       color: theme.palette.primary.main,
     },
     labelLight: {
-      marginLeft: theme.spacing(0.5),
+      marginLeft: theme.spacing(0.25),
       color: theme.palette.primary.light,
     },
     btn: {
-      marginLeft: theme.spacing(1),
+      // marginLeft: theme.spacing(1),
       marginTop: theme.spacing(1),
     },
     instr: {

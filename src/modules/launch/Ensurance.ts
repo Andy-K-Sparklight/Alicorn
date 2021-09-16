@@ -80,11 +80,9 @@ export async function ensureLibraries(
   }
   tFiles.total = allLibrariesToCheck.length;
   const values = await Promise.all(
-    (() => {
-      return allLibrariesToCheck.map((artifact) => {
-        return performSingleCheck(artifact, container, tFiles);
-      });
-    })()
+    allLibrariesToCheck.map((artifact) => {
+      return performSingleCheck(artifact, container, tFiles);
+    })
   );
   let failedCount = 0;
   for (const x of values) {

@@ -14,7 +14,12 @@ export interface CommonModpackModel {
   author: string;
   description: string;
   url: string;
-  addons: { id: string; version: string }[];
+  addons: {
+    id: string;
+    version: string;
+    mcversion?: string;
+    "-al-mcversion"?: string; // Alicorn private support for mcversion on fabric
+  }[];
   files: (OverrideFile | SimpleFile)[]; // Compatibility
   overrideSourceDir: string; // Binding
 }
@@ -42,7 +47,12 @@ export function generateBaseVersion(
   }
 }
 export async function xdeploy(
-  o: { id: string; version: string },
+  o: {
+    id: string;
+    version: string;
+    mcversion?: string;
+    "-al-mcversion"?: string;
+  },
   model: CommonModpackModel,
   container: MinecraftContainer
 ): Promise<void> {
@@ -53,13 +63,15 @@ export async function xdeploy(
     case "game":
       break; // Base Profile Should have been installed
     case "fabric":
-    default:
+    default: {
+      const v = (o.mcversion || o["-al-mcversion"] || "").trim();
       await deployModLoader(
         ProfileType.FABRIC,
         o.version,
         container,
-        getAllGames(model)
+        v.length === 0 ? getAllGames(model) : [v]
       );
+    }
   }
 }
 

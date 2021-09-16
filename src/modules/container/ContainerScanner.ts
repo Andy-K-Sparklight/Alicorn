@@ -1,8 +1,8 @@
-import { MinecraftContainer } from "./MinecraftContainer";
 import fs from "fs-extra";
 import path from "path";
-import { getAllContainers, getContainer, isMounted } from "./ContainerUtil";
 import { GameProfile } from "../profile/GameProfile";
+import { getAllContainers, getContainer, isMounted } from "./ContainerUtil";
+import { MinecraftContainer } from "./MinecraftContainer";
 
 export async function scanCoresIn(
   c: MinecraftContainer,
@@ -39,7 +39,7 @@ async function isValidCore(profileRoot: string): Promise<boolean> {
   try {
     const v = path.basename(profileRoot);
     const expectedProfile = path.join(profileRoot, v + ".json");
-    new GameProfile(await fs.readJSON(expectedProfile));
+    new GameProfile(await fs.readJSON(expectedProfile)); // This contains validate
     return true;
   } catch {
     return false;

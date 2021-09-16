@@ -20,7 +20,7 @@
 
 # AccountManager
 
-Yggdrasil 帐户管理器
+帐户管理器
 
 # JavaSelector
 
@@ -1322,7 +1322,7 @@ Alicorn 快捷键 ^
 
 # Options.download.global-proxy.desc
 
-访问网络时所使用的代理服务器，应当以 <协议>://<主机名>:<端口> 的格式设置，如 http://localhost:1080，所有网络请求都将从此服务器转发 - 如果你不知道你在做什么，请留空，不要胡乱设置！
+访问网络时所使用的代理服务器，应当以 <协议>://<主机名>:<端口> 的格式设置，如 http://localhost:1080，所有网络请求都将从此服务器转发，浏览器不受此设置影响 - 如果你不知道你在做什么，请留空，不要胡乱设置！
 
 # Options.download.mirror.title
 
@@ -1690,8 +1690,6 @@ Mojang 版本
 
 # Welcome.TipName
 
-机智过人：
-使用技巧：
 小提醒：
 请了解：
 你知道吗？
@@ -1718,6 +1716,11 @@ ASC 是 Alicorn Shared Container 的缩写！
 生成的 BBCode 代码已经为您进行了排版，可以直接在 MCBBS 使用！（或者其它 BBCode 兼容编辑器）
 Alicorn 随时都可能有更新！请记得常回来看看！
 @HTMLMinecraft <b>不是</b>一个傻瓜式操作的游戏 —— 特别是安装 Mod！
+@HTML<b style="color: red;">永远不要</b>在<b style="color: red;">任何</b>第三方服务器输入你的<b style="color: red;">任何</b>隐私信息！—— <b style="color: red;">这非常危险！</b>
+当你能够正常关闭游戏时，不要使用强制退出。
+遇到问题？可以单击上面的「寻求帮助」哦～
+我们支持自由软件，我们的终极目标是全人类的数字自由，一个没有非自由软件的世界。
+@HTMLAlicorn 的众多功能，都是由自由软件构成的！请支持我们 —— <b>简单到多使用一次 Firefox 或者 Fabric，<span style="color: red;">哪怕只有一次！</span></b>
 
 # Welcome.Suggest.LastSuccessfulLaunch
 
@@ -2346,10 +2349,130 @@ honorificabilitudinitatibus-
 floccinaucinihilipipification-
 supercalifragilisticexpiadocious-
 
-# Utilities.EquestriaLogistics.Title
+# Utilities.BuildUp.Title
 
-小马利亚物流
+包裹构建器
 
-# Utilities.EquestriaLogistics.Description
+# Utilities.BuildUp.Description
 
-Sparklight 作品\n通过几个简单的操作，开始创造你的整合包！
+Sparklight 作品\n从已有容器打包需要的资源，整合包创作的基础
+
+# Utilities.BuildUp.Meta.Name
+
+显示名称
+
+# Utilities.BuildUp.Meta.Desc
+
+描述
+
+# Utilities.BuildUp.Meta.Author
+
+您的名字
+
+# Utilities.BuildUp.Meta.Version
+
+版本号
+
+# Utilities.BuildUp.BaseContainer
+
+选择用于构建的容器
+
+# Utilities.BuildUp.Asset
+
+可用资源 - 单击以添加到左侧
+
+# Utilities.BuildUp.SelectedAsset
+
+已选资源
+
+# Utilities.BuildUp.Asset.OptionFile
+
+选项
+
+# Utilities.BuildUp.Asset.Config
+
+配置
+
+# Utilities.BuildUp.Asset.ResourcePack
+
+纹理
+
+# Utilities.BuildUp.Asset.ShaderPack
+
+光影
+
+# Utilities.BuildUp.Asset.PffMod
+
+模组
+
+# Utilities.BuildUp.Asset.ModFile
+
+模组
+
+# Utilities.BuildUp.Asset.World
+
+世界
+
+# Utilities.BuildUp.Asset.ModLoader
+
+改装
+
+# Utilities.BuildUp.Asset.Game
+
+核心
+
+# Utilities.BuildUp.Scan
+
+扫描
+
+# Utilities.BuildUp.ScanResult
+
+容器 {Container} 上有 {Count} 个可用资源
+
+# Utilities.BuildUp.SelectContainer
+
+选择容器并扫描
+
+# Utilities.BuildUp.SelectAssets
+
+选择资源并打包
+
+# Utilities.BuildUp.FillInfo
+
+修改和完善信息
+
+# Utilities.BuildUp.Asset.ClickToAdd
+
+单击可将一个资源选中或取消选中。
+
+# Utilities.BuildUp.Build
+
+开始构建！
+
+# Utilities.BuildUp.Show
+
+显示构建产物
+
+# Utilities.BuildUp.Asset.SelectAll
+
+全部选中
+
+# Utilities.BuildUp.Asset.SelectMods
+
+选择所有模组
+
+# Utilities.BuildUp.Resolving
+
+解析资源路径……
+
+# Utilities.BuildUp.Indexing
+
+生成引导文件……
+
+# Utilities.BuildUp.Compressing
+
+打包压缩文件……
+
+# Utilities.BuildUp.Done
+
+好了，完成了，快打开看看吧！

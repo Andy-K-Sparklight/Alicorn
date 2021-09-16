@@ -77,7 +77,8 @@ export function addOverride(
 export function addCore(
   type: string,
   version: string,
-  model: CommonModpackModel | ModpackModel
+  model: CommonModpackModel | ModpackModel,
+  mcversion?: string
 ): void {
   type = type.trim().toLowerCase();
   // @ts-ignore
@@ -93,7 +94,12 @@ export function addCore(
         return;
       }
     }
-    model.addons.push({ id: type, version: version });
+    model.addons.push({
+      id: type,
+      version: version,
+      mcversion: mcversion,
+      "-al-mcversion": mcversion,
+    });
   }
 }
 
@@ -118,7 +124,7 @@ function getModLoaders(model: CommonModpackModel): SimpleModLoaderInfo[] {
         break;
       case "fabric":
       default:
-        p.push({ type: ProfileType.FABRIC, version: a.version });
+        p.push({ type: ProfileType.FABRIC, version: a.version }); // Fabric mcv will be discarded
     }
   });
   return p;
@@ -158,7 +164,12 @@ export function buildCommonModpackJSON(model: CommonModpackModel): string {
   o.origin = []; // Currently don't know how to use
   o.addons = [];
   for (const x of model.addons) {
-    o.addons.push({ id: x.id, version: x.version });
+    o.addons.push({
+      id: x.id,
+      version: x.version,
+      mcversion: x.mcversion || undefined,
+      "-al-mcversion": x["-al-mcversion"] || undefined,
+    });
   }
   o.libraries = []; // Currently don't know how to use
   o.files = [];
