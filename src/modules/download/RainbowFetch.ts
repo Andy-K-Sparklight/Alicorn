@@ -5,7 +5,6 @@ export function guardPipeFile(
   target: WriteStream,
   timeout?: number
 ): Promise<void> {
-  console.log("Guarded pipe!");
   const pipingStream = origin.pipe(target);
 
   return new Promise((res, rej) => {
