@@ -2,7 +2,6 @@ import { isNull } from "../commons/Null";
 
 const FABRIC_NAME = /fabric/i;
 const FORGE_NAME = /forge/i;
-const OPTIFINE_NAME = /optifine/i;
 const MOJANG_NAME_RELEASE = /^[0-9]+?\.[0-9]+?(\.)?[0-9]*$/i;
 const MOJANG_NAME_SNAPSHOT = /^[0-9]+?w[0-9]+?[a-z]+$/i;
 const LEGACY_VERSIONS = /^1\.([0-9]|1[0-2])([-.a-z].*?)?$/i;
@@ -10,11 +9,13 @@ const MOJANG_OLD_AB = /^[ab][0-9]+?\.[0-9]+?.*$/i;
 const MOJANG_OLD_CX = /^c[0-9_.]+?[a-z]*?$/i;
 const MOJANG_OLD_RD = /^rd-[0-9]+?$/i;
 const MOJANG_PRE_RC = /^[0-9]+?\.[0-9]+?(\.)?[0-9]*-(pre|rc)[0-9]*$/i;
+const MOJANG_EXPERIMENTAL = /_experimental-snapshot/;
 const INSTALLER = /-installer$/i;
 export function whatProfile(id: string): ProfileType {
   if (
     MOJANG_NAME_RELEASE.test(id) ||
     MOJANG_NAME_SNAPSHOT.test(id) ||
+    MOJANG_EXPERIMENTAL.test(id) ||
     MOJANG_OLD_AB.test(id) ||
     MOJANG_OLD_CX.test(id) ||
     MOJANG_OLD_RD.test(id) ||
@@ -24,9 +25,6 @@ export function whatProfile(id: string): ProfileType {
   }
   if (FABRIC_NAME.test(id)) {
     return ProfileType.FABRIC;
-  }
-  if (OPTIFINE_NAME.test(id)) {
-    return ProfileType.OPTIFINE;
   }
   if (FORGE_NAME.test(id)) {
     return ProfileType.FORGE;
@@ -43,7 +41,6 @@ export enum ProfileType {
   FABRIC = "Fabric",
   UNIVERSAL = "Universal",
   INSTALLER = "Installer",
-  OPTIFINE = "OptiFine",
 }
 
 export function isLegacy(obj: Record<string, unknown>): boolean {
@@ -61,4 +58,20 @@ export function isLegacy(obj: Record<string, unknown>): boolean {
     }
   }
   return false;
+}
+
+export function inferModLoaderVersionForge(id: string): string {
+  return id.split("-").pop() || "";
+}
+
+const SEMVER_REGEX = /^0\.[0-9]+\.[0-9]+(\.[0-9+])?(\+build\.[0-9]+)?$/i; // Currently Fabric starts from 0
+
+export function inferModLoaderVersionFabric(id: string): string {
+  const a = id.split("-");
+  for (const x of a) {
+    if (SEMVER_REGEX.test(x)) {
+      return x;
+    }
+  }
+  return a[a.length - 2] || "";
 }
