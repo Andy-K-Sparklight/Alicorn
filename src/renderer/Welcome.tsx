@@ -1,6 +1,6 @@
-import { Box, Fab, Tooltip, Typography } from "@material-ui/core";
+import { Box, Fab, Typography } from "@material-ui/core";
 import { FlightTakeoff, GetApp, History } from "@material-ui/icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { jumpTo, triggerSetPage } from "./GoTo";
 import { LAST_SUCCESSFUL_GAME_KEY } from "./ReadyToLaunch";
 import { ALICORN_DEFAULT_THEME_DARK } from "./Renderer";
@@ -9,10 +9,20 @@ import { randsl, tr } from "./Translator";
 export function Welcome(): JSX.Element {
   const classes = useTextStyles();
   const [refreshBit, setRefresh] = useState(false);
+  useEffect(() => {
+    const i = setInterval(() => {
+      setRefresh(!refreshBit);
+    }, 5000);
+    return () => {
+      clearInterval(i);
+    };
+  });
+
   return (
     <Box
       style={{
         textAlign: "center",
+        marginTop: "10%",
       }}
       className={classes.root}
     >
@@ -51,7 +61,6 @@ export function Welcome(): JSX.Element {
           </b>
         </Typography>
       </Box>
-      {/* TODO: Mid Buttons */}
       <br />
       <Box
         style={{
@@ -66,7 +75,6 @@ export function Welcome(): JSX.Element {
             jumpTo("/InstallCore");
             triggerSetPage("InstallCore");
           }}
-          tooltip={tr("MainMenu.QuickInstallCore")}
           icon={<GetApp />}
           short={tr("Welcome.Short.Install")}
         />
@@ -79,7 +87,6 @@ export function Welcome(): JSX.Element {
             );
             triggerSetPage("ReadyToLaunch");
           }}
-          tooltip={tr("Welcome.Suggest.LastSuccessfulLaunch")}
           icon={<History />}
           short={tr("Welcome.Short.LastLaunch")}
         />
@@ -89,7 +96,6 @@ export function Welcome(): JSX.Element {
             jumpTo("/LaunchPad");
             triggerSetPage("LaunchPad");
           }}
-          tooltip={tr("MainMenu.QuickLaunchPad")}
           icon={<FlightTakeoff />}
           short={tr("Welcome.Short.LaunchPad")}
         />
@@ -101,24 +107,21 @@ export function Welcome(): JSX.Element {
 function RoundBtn(props: {
   disabled: boolean;
   onClick: () => unknown;
-  tooltip: string;
   icon: JSX.Element;
   short: string;
 }): JSX.Element {
   return (
-    <Tooltip title={props.tooltip}>
-      <Box style={{ display: "inline", marginLeft: "8px" }}>
-        <Fab
-          variant={"extended"}
-          size={"medium"}
-          disabled={props.disabled}
-          color={"primary"}
-          onClick={props.onClick}
-        >
-          {props.icon}
-          {<span style={{ marginLeft: "5px" }}>{props.short}</span>}
-        </Fab>
-      </Box>
-    </Tooltip>
+    <Box style={{ display: "inline", marginLeft: "8px" }}>
+      <Fab
+        variant={"extended"}
+        size={"medium"}
+        disabled={props.disabled}
+        color={"primary"}
+        onClick={props.onClick}
+      >
+        {props.icon}
+        {<span style={{ marginLeft: "5px" }}>{props.short}</span>}
+      </Fab>
+    </Box>
   );
 }
