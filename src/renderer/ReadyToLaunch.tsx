@@ -610,10 +610,6 @@ async function startBoot(
       clearReboot(profileHash);
       console.log("Cleared reboot flag.");
     } else {
-      window.localStorage.setItem(
-        LAST_SUCCESSFUL_GAME_KEY,
-        window.location.hash
-      );
       if (getBoolean("action.close-on-exit")) {
         remoteHideWindow();
         waitUpdateFinished(() => {
@@ -641,6 +637,7 @@ async function startBoot(
     gc2: getString("gc2", "pure"),
   });
   setRunID(runID);
+  window.localStorage.setItem(LAST_SUCCESSFUL_GAME_KEY, window.location.hash);
   setStatus(LaunchingStatus.FINISHED);
   console.log(`A new Minecraft instance (${runID}) has been launched.`);
   if (getBoolean("hide-when-game")) {
