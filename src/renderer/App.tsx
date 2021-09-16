@@ -13,7 +13,6 @@ import {
 import {
   AccountCircle,
   AllInbox,
-  Apps,
   ArrowBack,
   ArrowForward,
   Build,
@@ -26,6 +25,7 @@ import {
   PowerSettingsNew,
   Refresh,
   Settings,
+  ViewModule,
   Web,
 } from "@material-ui/icons";
 import { ipcRenderer, shell } from "electron";
@@ -67,6 +67,7 @@ import { ReadyToLaunch } from "./ReadyToLaunch";
 import { ServerList } from "./ServerList";
 import { tr } from "./Translator";
 import { getNextTutorName, isShow, isTutor, Tutor } from "./Tutor";
+import { BuildUp } from "./utilities/BuildUp";
 import { CutieConnet } from "./utilities/CutieConnect";
 import { NetCheck } from "./utilities/NetCheck";
 import { UtilitiesIndex } from "./utilities/UtilitiesIndex";
@@ -406,7 +407,7 @@ export function App(): JSX.Element {
                 }}
                 color={"inherit"}
               >
-                <Apps />
+                <ViewModule />
               </IconButton>
             </Tooltip>
             <Tooltip title={tr("MainMenu.QuickServerList")}>
@@ -542,6 +543,7 @@ export function App(): JSX.Element {
         <Route path={"/UtilitiesIndex"} component={UtilitiesIndex} />
         <Route path={"/Utilities/NetCheck"} component={NetCheck} />
         <Route path={"/Utilities/CutieConnect"} component={CutieConnet} />
+        <Route path={"/Utilities/BuildUp"} component={BuildUp} />
       </Box>
 
       <YNDialog2
