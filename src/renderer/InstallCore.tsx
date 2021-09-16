@@ -401,7 +401,6 @@ export function InstallCore(): JSX.Element {
             </Select>
           </FormControl>
           <br />
-          <br />
           <FormControl className={classes.formControl}>
             <InputLabel
               id={"CoreInstall-Mojang-SelectVersion"}
@@ -428,7 +427,6 @@ export function InstallCore(): JSX.Element {
             </Select>
           </FormControl>
           <br />
-          <br />
           <FormControl className={classes.formControl}>
             <InputLabel
               id={"CoreInstall-Mojang-TargetContainer"}
@@ -453,20 +451,20 @@ export function InstallCore(): JSX.Element {
                 );
               })}
             </Select>
+            <Button
+              className={classes.btn}
+              variant={"contained"}
+              color={"primary"}
+              disabled={
+                isNull(selectedMojangVersion) || isNull(selectedMojangContainer)
+              }
+              onClick={() => {
+                setMojangConfirmOpen(true);
+              }}
+            >
+              {tr("InstallCore.Start")}
+            </Button>
           </FormControl>
-          <Button
-            className={classes.btn}
-            variant={"outlined"}
-            color={"primary"}
-            disabled={
-              isNull(selectedMojangVersion) || isNull(selectedMojangContainer)
-            }
-            onClick={() => {
-              setMojangConfirmOpen(true);
-            }}
-          >
-            {tr("InstallCore.Start")}
-          </Button>
         </TabPanel>
         {/* Forge */}
         <TabPanel value={tabValue} index={1}>
@@ -515,22 +513,21 @@ export function InstallCore(): JSX.Element {
                 );
               })}
             </Select>
+            <Button
+              className={classes.btn}
+              variant={"contained"}
+              color={"primary"}
+              disabled={
+                isNull(selectedForgeContainer) || isNull(detectedForgeVersion)
+              }
+              onClick={() => {
+                setForgeConfirmOpen(true);
+              }}
+            >
+              {tr("InstallCore.Start")}
+            </Button>
           </FormControl>
-          <Button
-            className={classes.btn}
-            variant={"outlined"}
-            color={"primary"}
-            disabled={
-              isNull(selectedForgeContainer) || isNull(detectedForgeVersion)
-            }
-            onClick={() => {
-              setForgeConfirmOpen(true);
-            }}
-          >
-            {tr("InstallCore.Start")}
-          </Button>
         </TabPanel>
-
         {/* Fabric */}
         <TabPanel value={tabValue} index={2}>
           <Typography className={classes.instr}>
@@ -578,20 +575,21 @@ export function InstallCore(): JSX.Element {
                 );
               })}
             </Select>
+            <br />
+            <Button
+              className={classes.btn}
+              variant={"contained"}
+              color={"primary"}
+              disabled={
+                isNull(selectedFabricContainer) || isNull(detectedFabricVersion)
+              }
+              onClick={() => {
+                setFabricConfirmOpen(true);
+              }}
+            >
+              {tr("InstallCore.Start")}
+            </Button>
           </FormControl>
-          <Button
-            className={classes.btn}
-            variant={"outlined"}
-            color={"primary"}
-            disabled={
-              isNull(selectedFabricContainer) || isNull(detectedFabricVersion)
-            }
-            onClick={() => {
-              setFabricConfirmOpen(true);
-            }}
-          >
-            {tr("InstallCore.Start")}
-          </Button>
         </TabPanel>
       </Box>
     </MuiThemeProvider>
