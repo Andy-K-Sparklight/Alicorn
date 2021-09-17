@@ -1292,6 +1292,14 @@ ASC 允许在多个容器间共享相同的文件，那么这些文件应当存�
 
 背景等位置使用此颜色
 
+# Options.dev.experimental.title
+
+实验特性
+
+# Options.dev.experimental.desc
+
+开启 Alicorn 默认没有开启的特性 - 通常来说，某个特性默认不被开启肯定有其合理的原因，开启将可能造成各种功能不稳定甚至崩溃！但如果你想试试嘛……
+
 # Options.interactive.i-have-a-crush-on-al.title
 
 Alicorn 的小秘密

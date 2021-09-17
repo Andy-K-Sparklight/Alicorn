@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import React from "react";
+import { getBoolean } from "../../modules/config/ConfigSupport";
 import { jumpTo, triggerSetPage } from "../GoTo";
 import { ALICORN_DEFAULT_THEME_DARK } from "../Renderer";
 import { useTextStyles, useTextStylesLight } from "../Stylex";
@@ -43,8 +44,14 @@ export function UtilitiesIndex(): JSX.Element {
       </Typography>
       <SimpleUtil name={"NetCheck"} />
       <br />
-      <SimpleUtil name={"CutieConnect"} />
-      <br />
+      {getBoolean("dev.experimental") ? (
+        <>
+          <SimpleUtil name={"CutieConnect"} />
+          <br />
+        </>
+      ) : (
+        ""
+      )}
       <SimpleUtil name={"BuildUp"} />
     </Box>
   );

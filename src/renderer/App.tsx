@@ -410,19 +410,23 @@ export function App(): JSX.Element {
                 <ViewModule />
               </IconButton>
             </Tooltip>
-            <Tooltip title={tr("MainMenu.QuickServerList")}>
-              <IconButton
-                style={genHideStyles("ServerList")}
-                className={classes.floatButton}
-                onClick={() => {
-                  jumpTo("/ServerList");
-                  triggerSetPage("ServerList");
-                }}
-                color={"inherit"}
-              >
-                <Dns />
-              </IconButton>
-            </Tooltip>
+            {getBoolean("dev.experimental") ? (
+              <Tooltip title={tr("MainMenu.QuickServerList")}>
+                <IconButton
+                  style={genHideStyles("ServerList")}
+                  className={classes.floatButton}
+                  onClick={() => {
+                    jumpTo("/ServerList");
+                    triggerSetPage("ServerList");
+                  }}
+                  color={"inherit"}
+                >
+                  <Dns />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              ""
+            )}
             {getBoolean("dev") ? (
               <Tooltip title={tr("MainMenu.Browser")}>
                 <IconButton
