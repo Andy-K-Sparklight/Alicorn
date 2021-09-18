@@ -1,5 +1,5 @@
 import { zip } from "compressing";
-import { copy, ensureDir, readdir, stat, writeFile } from "fs-extra";
+import { copy, ensureDir, readdir, remove, stat, writeFile } from "fs-extra";
 import { createWriteStream } from "original-fs";
 import path from "path";
 import { pipeline } from "stream";
@@ -90,6 +90,7 @@ export async function sealPackCommon(
   await writeFile(path.join(MODPACK_WORK_DIR, PACK_META), j);
   await writeFile(path.join(MODPACK_WORK_DIR, MANIFEST_FILE), j2);
   await compressPack(MODPACK_WORK_DIR, container.rootDir, model.name);
+  await remove(MODPACK_WORK_DIR);
   setState("Build");
 }
 
