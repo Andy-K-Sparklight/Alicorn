@@ -21,7 +21,7 @@ import { initVF } from "../modules/container/ValidateRecord";
 import { prepareEdgeExecutable } from "../modules/cutie/BootEdge";
 import { initConcurrentDownloader } from "../modules/download/Concurrent";
 import { initDownloadWrapper } from "../modules/download/DownloadWrapper";
-import { loadMirror } from "../modules/download/Mirror";
+import { loadAllMirrors, loadMirror } from "../modules/download/Mirror";
 import { initResolveLock } from "../modules/download/ResolveLock";
 import { loadJDT } from "../modules/java/JInfo";
 import { initModInfo } from "../modules/modx/ModInfo";
@@ -223,7 +223,10 @@ void (async () => {
   initDownloadWrapper();
   // Normal works
   await Promise.allSettled([
-    loadMirror(),
+    (async () => {
+      await loadMirror();
+      await loadAllMirrors();
+    })(),
     initForgeInstallModule(),
     initConcurrentDownloader(),
     prepareAJ(),

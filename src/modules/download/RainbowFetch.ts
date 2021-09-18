@@ -42,10 +42,18 @@ export function guardPipeFile(
   });
 }
 
-export function getFileWriteStream(pt: string): WritableStream {
+export function getFileWriteStream(
+  pt: string,
+  sti: () => unknown = () => {}
+): WritableStream {
   const f = fs.createWriteStream(pt);
+  let p = true;
   return new WritableStream({
     write(chk) {
+      if (p) {
+        sti();
+        p = false;
+      }
       return new Promise<void>((res, rej) => {
         f.write(chk, (e) => {
           if (e) {

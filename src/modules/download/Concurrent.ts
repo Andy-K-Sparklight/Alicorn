@@ -1,8 +1,6 @@
 import fs from "fs-extra";
 import os from "os";
 import path from "path";
-import stream from "stream";
-import { promisify } from "util";
 import { schedulePromiseTask } from "../../renderer/Schedule";
 import { basicHash } from "../commons/BasicHash";
 import { isFileExist } from "../commons/FileUtil";
@@ -172,30 +170,29 @@ function generatePath(hash: string, start: number, end: number) {
   return `${hash}@${start}-${end}.tmp`;
 }
 
-const pipeline = promisify(stream.pipeline);
 async function downloadSingleChunk(
   url: string,
   tmpSavePath: string,
   chunk: Chunk,
   overrideTimeout?: boolean
 ) {
-  const f = getFileWriteStream(tmpSavePath);
   const [ac, sti] = getTimeoutController(
     overrideTimeout ? 0 : getConfigOptn("timeout", 5000)
   );
+  const f = getFileWriteStream(tmpSavePath, sti);
   const r = await fetch(url, {
     signal: ac.signal,
     method: "GET",
     headers: { Range: `bytes=${chunk.start}-${chunk.end}` },
     keepalive: true,
   });
-  sti();
   if (!(r.status >= 200 && r.status < 300)) {
     throw "Failed to download! Code: " + r.status;
   }
   if (r.body) {
     await r.body.pipeTo(f);
   } else {
+    sti();
     throw "Body is empty!";
   }
 }

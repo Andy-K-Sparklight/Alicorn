@@ -11,7 +11,7 @@ import {
 } from "../container/ValidateRecord";
 import { DownloadMeta, DownloadStatus } from "./AbstractDownloader";
 import { Concurrent } from "./Concurrent";
-import { applyMirror } from "./Mirror";
+import { MirrorChain } from "./Mirror";
 import { Serial } from "./Serial";
 import { validate } from "./Validate";
 
@@ -56,6 +56,7 @@ const DOING: string[] = [];
 const PENDING_TASKS: DownloadMeta[] = [];
 const RUNNING_TASKS = new Set<DownloadMeta>();
 
+const MIRROR_CHAIN = new Map<DownloadMeta, MirrorChain>();
 const WAITING_RESOLVES_MAP = new Map<
   DownloadMeta,
   (value: DownloadStatus | PromiseLike<DownloadStatus>) => void
@@ -110,17 +111,12 @@ export async function wrappedDownloadFile(
       }
     }
   }
-  const mirroredMeta = new DownloadMeta(
-    applyMirror(meta.url),
-    meta.savePath,
-    meta.sha1
-  );
-  FAILED_COUNT_MAP.set(mirroredMeta, getConfigOptn("tries-per-chunk", 3));
-  if ((await _wrappedDownloadFile(mirroredMeta)) === 1) {
-    FAILED_COUNT_MAP.delete(mirroredMeta);
+
+  if ((await _wrappedDownloadFile(meta)) === 1) {
+    MIRROR_CHAIN.delete(meta);
     return DownloadStatus.RESOLVED;
   } else {
-    FAILED_COUNT_MAP.delete(mirroredMeta);
+    MIRROR_CHAIN.delete(meta);
     return DownloadStatus.FATAL;
   }
 }
@@ -171,8 +167,12 @@ function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
         addState(tr("ReadyToLaunch.Validated", `Url=${meta.url}`));
         resolve(DownloadStatus.RESOLVED);
       } else {
+        // TODO: Apply mirror here
+        FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
         WAITING_RESOLVES_MAP.set(meta, resolve);
         PENDING_TASKS.push(meta);
+        const chain = new MirrorChain(meta.url);
+        MIRROR_CHAIN.set(meta, chain);
         scheduleNextTask();
       }
     });
@@ -187,16 +187,30 @@ function scheduleNextTask(): void {
     if (tsk !== undefined) {
       RUNNING_TASKS.add(tsk);
       addState(tr("ReadyToLaunch.Getting", `Url=${tsk.url}`));
-      downloadSingleFile(tsk, EMITTER);
+      downloadSingleFile(
+        tsk,
+        EMITTER,
+        MIRROR_CHAIN.get(tsk) || new MirrorChain(tsk.url)
+      );
     } else {
       break;
     }
   }
 }
 
-function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
+function downloadSingleFile(
+  meta: DownloadMeta,
+  emitter: EventEmitter,
+  chain: MirrorChain
+): void {
+  const du = new DownloadMeta(
+    chain.mirror(),
+    meta.savePath,
+    meta.sha1,
+    meta.size
+  );
   void Concurrent.getInstance()
-    .downloadFile(meta)
+    .downloadFile(du)
     .then((s) => {
       if (s === 1) {
         addState(tr("ReadyToLaunch.Got", `Url=${meta.url}`));
@@ -211,15 +225,16 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
           // FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
           addState(tr("ReadyToLaunch.Retry", `Url=${meta.url}`));
           void Serial.getInstance()
-            .downloadFile(meta)
+            .downloadFile(meta) // No Mirror
             .then((s) => {
               if (s === 1) {
-                // FAILED_COUNT_MAP.delete(meta);
+                FAILED_COUNT_MAP.delete(meta);
                 addState(tr("ReadyToLaunch.Got", `Url=${meta.url}`));
                 emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
                 return;
               } else {
                 // Simply fatal, retry is meaningless
+                FAILED_COUNT_MAP.delete(meta);
                 addState(tr("ReadyToLaunch.Failed", `Url=${meta.url}`));
                 emitter.emit(END_GATE, meta, DownloadStatus.FATAL);
                 return;
@@ -228,8 +243,10 @@ function downloadSingleFile(meta: DownloadMeta, emitter: EventEmitter): void {
           return;
         } else {
           FAILED_COUNT_MAP.set(meta, failed - 1); // Again
-          addState(tr("ReadyToLaunch.Retry", `Url=${meta.url}`));
-          downloadSingleFile(meta, emitter);
+          const mChain = MIRROR_CHAIN.get(meta) || new MirrorChain(meta.url);
+          mChain.next();
+          addState(tr("ReadyToLaunch.Retry", `Url=${mChain.mirror()}`));
+          downloadSingleFile(meta, emitter, mChain);
         }
       } else {
         // Do not retry

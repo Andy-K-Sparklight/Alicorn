@@ -1,7 +1,5 @@
 import fs from "fs-extra";
 import path from "path";
-import stream from "stream";
-import { promisify } from "util";
 import { schedulePromiseTask } from "../../renderer/Schedule";
 import { isFileExist } from "../commons/FileUtil";
 import { getBoolean } from "../config/ConfigSupport";
@@ -14,8 +12,6 @@ import { getConfigOptn } from "./DownloadWrapper";
 import { getFileWriteStream, getTimeoutController } from "./RainbowFetch";
 import { addRecord } from "./ResolveLock";
 import { getHash, getIdentifier, validate } from "./Validate";
-
-const pipeline = promisify(stream.pipeline);
 
 export class Serial extends AbstractDownloader {
   private static instance = new Serial();
@@ -45,14 +41,15 @@ export class Serial extends AbstractDownloader {
         signal: ac.signal,
         keepalive: true,
       });
-      sti();
+
       if (!(r.status >= 200 && r.status < 300)) {
-        return DownloadStatus.FATAL;
+        return DownloadStatus.RETRY;
       }
-      const f = getFileWriteStream(meta.savePath);
+      const f = getFileWriteStream(meta.savePath, sti); // Require first byte
       if (r.body) {
         await r.body.pipeTo(f);
       } else {
+        sti();
         throw "Body is empty!";
       }
       if (meta.sha1 === "" || getBoolean("download.skip-validate")) {
