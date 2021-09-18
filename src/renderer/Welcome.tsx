@@ -1,6 +1,8 @@
 import { Box, Fab, Typography } from "@material-ui/core";
 import { FlightTakeoff, GetApp, History } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
+import { getContainer } from "../modules/container/ContainerUtil";
+import { loadProfile } from "../modules/profile/ProfileLoader";
 import { jumpTo, triggerSetPage } from "./GoTo";
 import { LAST_SUCCESSFUL_GAME_KEY } from "./ReadyToLaunch";
 import { ALICORN_DEFAULT_THEME_DARK } from "./Renderer";
@@ -9,6 +11,7 @@ import { randsl, tr } from "./Translator";
 export function Welcome(): JSX.Element {
   const classes = useTextStyles();
   const [refreshBit, setRefresh] = useState(false);
+  const [lastGameAvailable, setLastGameAvailable] = useState(false);
   useEffect(() => {
     const i = setInterval(() => {
       setRefresh(!refreshBit);
@@ -17,6 +20,25 @@ export function Welcome(): JSX.Element {
       clearInterval(i);
     };
   });
+  useEffect(() => {
+    void (async () => {
+      const l = window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY);
+      if (l) {
+        const h = l.split("/");
+        while (h.shift()?.toLowerCase() !== "readytolaunch") {}
+        const c = h.shift();
+        const i = h.shift();
+        if (c) {
+          if (i) {
+            try {
+              await loadProfile(i, getContainer(c), true);
+              setLastGameAvailable(true);
+            } catch {}
+          }
+        }
+      }
+    })();
+  }, []);
 
   return (
     <Box
@@ -79,7 +101,7 @@ export function Welcome(): JSX.Element {
           short={tr("Welcome.Short.Install")}
         />
         <RoundBtn
-          disabled={!window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY)}
+          disabled={!lastGameAvailable}
           onClick={() => {
             jumpTo(
               window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ||
