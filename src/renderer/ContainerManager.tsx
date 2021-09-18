@@ -10,6 +10,7 @@ import {
   DialogTitle,
   FormControlLabel,
   IconButton,
+  MuiThemeProvider,
   Radio,
   RadioGroup,
   Switch,
@@ -59,6 +60,7 @@ import {
   OperatingHintCustom,
 } from "./OperatingHint";
 import { hasEdited } from "./Options";
+import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
 
@@ -408,234 +410,243 @@ function AddNewContainer(props: {
   const [modpackPath, setModpackPath] = useState("");
   const classes = useInputStyles();
   return (
-    <Dialog
-      open={props.open}
-      onClose={() => {
-        setName("");
-        setSelected("");
-      }}
-    >
-      <DialogTitle>{tr("ContainerManager.Add")}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          {tr("ContainerManager.AddDescription")}
-        </DialogContentText>
-        <TextField
-          error={nameError}
-          autoFocus
-          className={classes.input}
-          margin={"dense"}
-          color={"secondary"}
-          onChange={(e) => {
-            const v = e.target.value;
-            setNameError(!validateName(v));
-            setName(v);
-          }}
-          label={
-            nameError
-              ? tr("ContainerManager.InvalidName")
-              : tr("ContainerManager.EnterName")
-          }
-          type={"text"}
-          spellCheck={false}
-          fullWidth
-          variant={"outlined"}
-        />
-        {/* Choose Dir */}
-        <Box>
+    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+      <Dialog
+        open={props.open}
+        onClose={() => {
+          setName("");
+          setSelected("");
+        }}
+      >
+        <DialogTitle>{tr("ContainerManager.Add")}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {tr("ContainerManager.AddDescription")}
+          </DialogContentText>
           <TextField
-            error={dirError}
-            className={classes.input}
-            color={"secondary"}
+            error={nameError}
             autoFocus
+            className={classes.input}
             margin={"dense"}
+            color={"secondary"}
             onChange={(e) => {
-              setSelected(e.target.value);
-              void validateDir(e.target.value).then((b) => {
-                setDirError(!b);
-              });
+              const v = e.target.value;
+              setNameError(!validateName(v));
+              setName(v);
             }}
             label={
-              dirError
-                ? tr("ContainerManager.InvalidDir")
-                : tr("ContainerManager.Dir")
+              nameError
+                ? tr("ContainerManager.InvalidName")
+                : tr("ContainerManager.EnterName")
             }
             type={"text"}
             spellCheck={false}
             fullWidth
             variant={"outlined"}
-            value={selectedDir}
           />
+          {/* Choose Dir */}
+          <Box>
+            <TextField
+              error={dirError}
+              className={classes.input}
+              color={"secondary"}
+              autoFocus
+              margin={"dense"}
+              onChange={(e) => {
+                setSelected(e.target.value);
+                void validateDir(e.target.value).then((b) => {
+                  setDirError(!b);
+                });
+              }}
+              label={
+                dirError
+                  ? tr("ContainerManager.InvalidDir")
+                  : tr("ContainerManager.Dir")
+              }
+              type={"text"}
+              spellCheck={false}
+              fullWidth
+              variant={"outlined"}
+              value={selectedDir}
+            />
 
-          <Button
-            className={classes.input}
-            type={"button"}
-            style={{
-              display: "inline",
+            <Button
+              className={classes.input}
+              type={"button"}
+              style={{
+                display: "inline",
+              }}
+              variant={"outlined"}
+              onClick={async () => {
+                const d = await remoteSelectDir();
+                setSelected(d);
+                void validateDir(d).then((b) => {
+                  setDirError(!b);
+                });
+              }}
+            >
+              {tr("ContainerManager.Select")}
+            </Button>
+          </Box>
+          <RadioGroup
+            row
+            onChange={(e) => {
+              switch (e.target.value) {
+                case "Physical":
+                  setCreateASC(false);
+                  break;
+                case "Shared":
+                  setCreateASC(true);
+              }
             }}
-            variant={"outlined"}
-            onClick={async () => {
-              const d = await remoteSelectDir();
-              setSelected(d);
-              void validateDir(d).then((b) => {
-                setDirError(!b);
-              });
-            }}
-          >
-            {tr("ContainerManager.Select")}
-          </Button>
-        </Box>
-        <RadioGroup
-          row
-          onChange={(e) => {
-            switch (e.target.value) {
-              case "Physical":
-                setCreateASC(false);
-                break;
-              case "Shared":
-                setCreateASC(true);
-            }
-          }}
-        >
-          <FormControlLabel
-            value={"Physical"}
-            control={<Radio checked={!createASC} />}
-            label={tr("ContainerManager.Type.Physical")}
-          />
-          <Tooltip
-            title={tr("ContainerManager.ASCCacheNotSet")}
-            disableHoverListener={hasEdited("cx.shared-root")}
-            disableFocusListener={hasEdited("cx.shared-root")}
-            disableTouchListener={hasEdited("cx.shared-root")}
           >
             <FormControlLabel
-              value={"Shared"}
-              control={
-                hasEdited("cx.shared-root") ? (
-                  <Radio checked={createASC} />
-                ) : (
-                  <Radio disabled checked={false} />
-                )
-              }
-              label={tr("ContainerManager.Type.Shared")}
+              value={"Physical"}
+              control={<Radio checked={!createASC} />}
+              label={tr("ContainerManager.Type.Physical")}
             />
-          </Tooltip>
-        </RadioGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={allowModpack}
-              onChange={(e) => {
-                setAllowModpack(e.target.checked);
-              }}
-            />
-          }
-          label={tr("ContainerManager.CreateModpack")}
-        />
-        {/* Choose Modpack */}
-        <Box>
-          <TextField
-            error={modpackError}
-            className={classes.input}
-            color={"secondary"}
-            autoFocus
-            style={{
-              display: allowModpack ? "inherit" : "none",
-            }}
-            margin={"dense"}
-            onChange={(e) => {
-              setModpackPath(e.target.value);
-              void isFileExist(e.target.value).then((b) => {
-                setModpackError(!b);
-              });
-            }}
-            label={
-              modpackError
-                ? tr("ContainerManager.InvalidModpackPath")
-                : tr("ContainerManager.ModpackPath")
+            <Tooltip
+              title={tr("ContainerManager.ASCCacheNotSet")}
+              disableHoverListener={hasEdited("cx.shared-root")}
+              disableFocusListener={hasEdited("cx.shared-root")}
+              disableTouchListener={hasEdited("cx.shared-root")}
+            >
+              <FormControlLabel
+                value={"Shared"}
+                control={
+                  hasEdited("cx.shared-root") ? (
+                    <Radio checked={createASC} />
+                  ) : (
+                    <Radio disabled checked={false} />
+                  )
+                }
+                label={tr("ContainerManager.Type.Shared")}
+              />
+            </Tooltip>
+          </RadioGroup>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={allowModpack}
+                onChange={(e) => {
+                  setAllowModpack(e.target.checked);
+                }}
+              />
             }
-            type={"text"}
-            spellCheck={false}
-            fullWidth
-            variant={"outlined"}
-            value={modpackPath}
+            label={tr("ContainerManager.CreateModpack")}
           />
+          {/* Choose Modpack */}
+          <Box>
+            <DialogContentText
+              style={{
+                display: allowModpack ? "inherit" : "none",
+              }}
+            >
+              {tr("ContainerManager.ModpackWarn")}
+            </DialogContentText>
+            <TextField
+              error={modpackError}
+              className={classes.input}
+              color={"secondary"}
+              autoFocus
+              style={{
+                display: allowModpack ? "inherit" : "none",
+              }}
+              margin={"dense"}
+              onChange={(e) => {
+                setModpackPath(e.target.value);
+                void isFileExist(e.target.value).then((b) => {
+                  setModpackError(!b);
+                });
+              }}
+              label={
+                modpackError
+                  ? tr("ContainerManager.InvalidModpackPath")
+                  : tr("ContainerManager.ModpackPath")
+              }
+              type={"text"}
+              spellCheck={false}
+              fullWidth
+              variant={"outlined"}
+              value={modpackPath}
+            />
 
+            <Button
+              className={classes.input}
+              type={"button"}
+              style={{
+                display: allowModpack ? "inherit" : "none",
+              }}
+              variant={"outlined"}
+              onClick={async () => {
+                const d = await remoteSelectModpack();
+                setModpackPath(d);
+                void isFileExist(d).then((b) => {
+                  setModpackError(!b);
+                });
+              }}
+            >
+              {tr("ContainerManager.ChooseModpack")}
+            </Button>
+          </Box>
+        </DialogContent>
+        <DialogActions>
           <Button
-            className={classes.input}
-            type={"button"}
-            style={{
-              display: allowModpack ? "inherit" : "none",
-            }}
-            variant={"outlined"}
-            onClick={async () => {
-              const d = await remoteSelectModpack();
-              setModpackPath(d);
-              void isFileExist(d).then((b) => {
-                setModpackError(!b);
-              });
+            onClick={() => {
+              props.closeFunc();
+              setName("");
+              setSelected("");
+              setAllowModpack(false);
+              setCreateASC(hasEdited("cx.shared-root"));
+              setModpackPath("");
+              setDirError(false);
+              setModpackError(false);
             }}
           >
-            {tr("ContainerManager.ChooseModpack")}
+            {tr("ContainerManager.Cancel")}
           </Button>
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={() => {
-            props.closeFunc();
-            setName("");
-            setSelected("");
-            setAllowModpack(false);
-            setCreateASC(hasEdited("cx.shared-root"));
-            setModpackPath("");
-            setDirError(false);
-            setModpackError(false);
-          }}
-        >
-          {tr("ContainerManager.Cancel")}
-        </Button>
-        <Button
-          disabled={
-            nameError ||
-            dirError ||
-            modpackError ||
-            usedName.trim().length <= 0 ||
-            selectedDir.trim().length <= 0 ||
-            (allowModpack && modpackPath.trim().length <= 0)
-          }
-          onClick={async () => {
-            props.closeFunc();
-            props.setOperate(true);
-
-            try {
-              await createContainer(usedName, selectedDir, createASC);
-              if (modpackPath.endsWith(".zip")) {
-                await wrappedInstallModpack(
-                  getContainer(usedName),
-                  modpackPath
-                );
-              }
-              if (modpackPath.endsWith(".json")) {
-                await deployIJPack(getContainer(usedName), modpackPath);
-              }
-              props.refresh();
-            } catch (e) {
-              props.setFailed(String(e));
+          <Button
+            disabled={
+              nameError ||
+              dirError ||
+              modpackError ||
+              usedName.trim().length <= 0 ||
+              selectedDir.trim().length <= 0 ||
+              (allowModpack && modpackPath.trim().length <= 0)
             }
+            onClick={async () => {
+              props.closeFunc();
+              props.setOperate(true);
 
-            setName("");
-            setSelected("");
-            setAllowModpack(false);
-            setCreateASC(hasEdited("cx.shared-root"));
-            setModpackPath("");
-            props.setOperate(false);
-          }}
-        >
-          {tr("ContainerManager.Continue")}
-        </Button>
-      </DialogActions>
-    </Dialog>
+              try {
+                await createContainer(usedName, selectedDir, createASC);
+                if (modpackPath.endsWith(".zip")) {
+                  await wrappedInstallModpack(
+                    getContainer(usedName),
+                    modpackPath
+                  );
+                }
+                if (modpackPath.endsWith(".json")) {
+                  await deployIJPack(getContainer(usedName), modpackPath);
+                }
+                props.refresh();
+              } catch (e) {
+                props.setFailed(String(e));
+              }
+
+              setName("");
+              setSelected("");
+              setAllowModpack(false);
+              setCreateASC(hasEdited("cx.shared-root"));
+              setModpackPath("");
+              props.setOperate(false);
+            }}
+          >
+            {tr("ContainerManager.Continue")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </MuiThemeProvider>
   );
 }
 

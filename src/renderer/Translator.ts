@@ -4,6 +4,9 @@ import path from "path";
 import React from "react";
 import { getString } from "../modules/config/ConfigSupport";
 import { getPathInDefaults } from "../modules/config/DataSupport";
+
+export const ALL_ASSISTANTS = ["PonyCN", "Maud"];
+
 function currentLocale(): string {
   return getString("assistant", "PonyCN");
 }
@@ -26,12 +29,28 @@ export function hasKey(k: string): boolean {
   return res === undefined || res.length === 0;
 }
 
+const TEMP_CHANGE_TR_ACTION_KEY = "Translator.UseLocale";
+
 // Main translate function
 // ATTENETION! This function actually CAN return a JSX Element
 // We use string here to 'cheat' TSC
 export function tr(key: string, ...values: string[]): string {
-  let res = (localesMap.get(currentLocale()) || {})[key];
+  const lc = window.sessionStorage.getItem(TEMP_CHANGE_TR_ACTION_KEY);
+  let lang;
+  if (typeof lc === "string") {
+    lang = localesMap.get(lc);
+  } else {
+    lang = localesMap.get(currentLocale());
+  }
+  let res = (lang || {})[key];
   if (res === undefined) {
+    const t = (lang || {})["_BaseOn"];
+    if (typeof t === "string") {
+      window.sessionStorage.setItem(TEMP_CHANGE_TR_ACTION_KEY, t);
+      const b = tr(key, ...values);
+      window.sessionStorage.removeItem(TEMP_CHANGE_TR_ACTION_KEY);
+      return b;
+    }
     res = key;
   }
   let p = String(res);
@@ -48,11 +67,25 @@ export function tr(key: string, ...values: string[]): string {
 }
 
 export function randsl(key: string, ...values: string[]): string {
-  const res = (localesMap.get(currentLocale()) || {})[key];
+  const lc = window.sessionStorage.getItem(TEMP_CHANGE_TR_ACTION_KEY);
+  let lang;
+  if (typeof lc === "string") {
+    lang = localesMap.get(lc);
+  } else {
+    lang = localesMap.get(currentLocale());
+  }
+  const res = (lang || {})[key];
   if (typeof res === "string") {
     return res;
   }
   if (typeof res === "undefined") {
+    const t = (lang || {})["_BaseOn"];
+    if (typeof t === "string") {
+      window.sessionStorage.setItem(TEMP_CHANGE_TR_ACTION_KEY, t);
+      const b = randsl(key, ...values);
+      window.sessionStorage.removeItem(TEMP_CHANGE_TR_ACTION_KEY);
+      return b;
+    }
     return key;
   }
   if (res.length === 0) {
@@ -63,7 +96,11 @@ export function randsl(key: string, ...values: string[]): string {
 }
 
 export async function initTranslator(): Promise<void> {
-  registryLocale("PonyCN", await buildLocale("PonyCN"));
+  await Promise.allSettled(
+    ALL_ASSISTANTS.map(async (a) => {
+      registryLocale(a, await buildLocale(a));
+    })
+  );
 }
 
 async function buildLocale(

@@ -11,10 +11,11 @@ import {
   FormControlLabel,
   IconButton,
   LinearProgress,
+  MuiThemeProvider,
   Switch,
   TextField,
   Tooltip,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { Add, DeleteForever, Refresh } from "@material-ui/icons";
 import React, { useEffect, useRef, useState } from "react";
@@ -26,13 +27,14 @@ import {
   getAllAccounts,
   loadAccount,
   removeAccount,
-  saveAccount
+  saveAccount,
 } from "../modules/auth/AccountUtil";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
 import { MojangAccount } from "../modules/auth/MojangAccount";
 import { Nide8Account } from "../modules/auth/Nide8Account";
 import { ALICORN_ENCRYPTED_DATA_SUFFIX } from "../modules/commons/Constants";
 import { YNDialog } from "./OperatingHint";
+import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
 
@@ -77,11 +79,11 @@ export function YggdrasilAccountManager(): JSX.Element {
         e.preventDefault();
         const data = e.dataTransfer.getData("text/plain");
         if (data.toString().includes("authlib-injector")) {
-           /* const server = data
+          /* const server = data
             .toString()
             .split("authlib-injector:yggdrasil-server:")[1];
           */
-         setAdding(true);
+          setAdding(true);
         }
       }}
       onDragOver={(e) => {
@@ -299,64 +301,66 @@ function YggdrasilForm(props: {
   const [isRunning, isRunningUpdate] = useState(false);
   const [hasError, setError] = useState(false);
   return (
-    <Dialog open={props.open} onClose={props.onClose}>
-      <DialogTitle>{tr("AccountManager.EnterPassword")}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          {tr("AccountManager.EnterPasswordHint")}
-        </DialogContentText>
-        <TextField
-          className={classes.input}
-          autoFocus
-          margin={"dense"}
-          onChange={(e) => {
-            setPwd(e.target.value);
-          }}
-          label={tr("AccountManager.Password")}
-          type={"password"}
-          spellCheck={false}
-          color={"secondary"}
-          disabled={isRunning}
-          fullWidth
-          variant={"outlined"}
-          value={pwd}
-        />
-        {hasError ? (
-          <DialogContentText
-            style={{
-              fontSize:
-                window.sessionStorage.getItem("smallFontSize") || "16px",
-              color: "#ff8400",
+    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+      <Dialog open={props.open} onClose={props.onClose}>
+        <DialogTitle>{tr("AccountManager.EnterPassword")}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {tr("AccountManager.EnterPasswordHint")}
+          </DialogContentText>
+          <TextField
+            className={classes.input}
+            autoFocus
+            margin={"dense"}
+            onChange={(e) => {
+              setPwd(e.target.value);
+            }}
+            label={tr("AccountManager.Password")}
+            type={"password"}
+            spellCheck={false}
+            color={"secondary"}
+            disabled={isRunning}
+            fullWidth
+            variant={"outlined"}
+            value={pwd}
+          />
+          {hasError ? (
+            <DialogContentText
+              style={{
+                fontSize:
+                  window.sessionStorage.getItem("smallFontSize") || "16px",
+                color: "#ff8400",
+              }}
+            >
+              {tr("AccountManager.Failed")}
+            </DialogContentText>
+          ) : (
+            ""
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            disabled={pwd.length === 0 || isRunning}
+            onClick={() => {
+              isRunningUpdate(true);
+              void (async () => {
+                setError(false);
+                const acc = copyAccount(props.account);
+                if (await acc.performAuth(pwd)) {
+                  props.updateAccount(acc);
+                } else {
+                  setError(true);
+                }
+                isRunningUpdate(false);
+                setPwd("");
+              })();
             }}
           >
-            {tr("AccountManager.Failed")}
-          </DialogContentText>
-        ) : (
-          ""
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button
-          disabled={pwd.length === 0 || isRunning}
-          onClick={() => {
-            isRunningUpdate(true);
-            void (async () => {
-              setError(false);
-              const acc = copyAccount(props.account);
-              if (await acc.performAuth(pwd)) {
-                props.updateAccount(acc);
-              } else {
-                setError(true);
-              }
-              isRunningUpdate(false);
-              setPwd("");
-            })();
-          }}
-        >
-          {tr("AccountManager.Validate")}
-        </Button>
-      </DialogActions>
-    </Dialog>
+            {tr("AccountManager.Validate")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </MuiThemeProvider>
   );
 }
 
@@ -405,110 +409,114 @@ function AddAccount(props: {
         e.dataTransfer.dropEffect = "move";
       }}
     >
-      <Dialog
-        open={props.open}
-        onClose={() => {
-          props.onClose();
-          setEmail("");
-        }}
-      >
-        <DialogContent>
-          <DialogTitle>{tr("AccountManager.AddTitle")}</DialogTitle>
-          <TextField
-            autoFocus
-            className={classes.input}
-            margin={"dense"}
-            color={"secondary"}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-            label={tr("AccountManager.Email")}
-            type={"email"}
-            spellCheck={false}
-            fullWidth
-            variant={"outlined"}
-            value={email}
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={isCustom}
-                onChange={(e) => {
-                  setIsCustom(e.target.checked);
-                  if (!e.target.checked) {
-                    setNide(false);
+      <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+        <Dialog
+          open={props.open}
+          onClose={() => {
+            props.onClose();
+            setEmail("");
+          }}
+        >
+          <DialogContent>
+            <DialogTitle>{tr("AccountManager.AddTitle")}</DialogTitle>
+            <TextField
+              autoFocus
+              className={classes.input}
+              margin={"dense"}
+              color={"secondary"}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+              label={tr("AccountManager.Email")}
+              type={"email"}
+              spellCheck={false}
+              fullWidth
+              variant={"outlined"}
+              value={email}
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={isCustom}
+                  onChange={(e) => {
+                    setIsCustom(e.target.checked);
+                    if (!e.target.checked) {
+                      setNide(false);
+                    }
+                  }}
+                />
+              }
+              label={tr("AccountManager.UseCustomHost")}
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  disabled={!isCustom}
+                  checked={isCustom && isNide}
+                  onChange={(e) => {
+                    setNide(e.target.checked);
+                  }}
+                />
+              }
+              label={tr("AccountManager.UseNide8")}
+            />
+            <TextField
+              disabled={!isCustom}
+              className={classes.input}
+              margin={"dense"}
+              color={"secondary"}
+              onChange={(e) => {
+                setAuthHost(e.target.value);
+              }}
+              label={tr("AccountManager.Host")}
+              spellCheck={false}
+              value={authHost}
+              fullWidth
+              variant={"outlined"}
+            />
+            {isCustom ? (
+              <DialogContentText
+                style={{
+                  fontSize:
+                    window.sessionStorage.getItem("smallFontSize") || "16px",
+                  color: "#ff8400",
+                }}
+              >
+                {tr("AccountManager.Warn")}
+              </DialogContentText>
+            ) : (
+              ""
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button
+              disabled={
+                email.length === 0 || (isCustom && authHost.trim().length === 0)
+              }
+              onClick={() => {
+                if (isCustom) {
+                  if (isNide) {
+                    props.handleNewAccount(new Nide8Account(email, authHost));
+                  } else {
+                    props.handleNewAccount(
+                      new AuthlibAccount(
+                        email,
+                        authHost.endsWith("/")
+                          ? authHost.slice(0, -1)
+                          : authHost
+                      )
+                    );
                   }
-                }}
-              />
-            }
-            label={tr("AccountManager.UseCustomHost")}
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                disabled={!isCustom}
-                checked={isCustom && isNide}
-                onChange={(e) => {
-                  setNide(e.target.checked);
-                }}
-              />
-            }
-            label={tr("AccountManager.UseNide8")}
-          />
-          <TextField
-            disabled={!isCustom}
-            className={classes.input}
-            margin={"dense"}
-            color={"secondary"}
-            onChange={(e) => {
-              setAuthHost(e.target.value);
-            }}
-            label={tr("AccountManager.Host")}
-            spellCheck={false}
-            value={authHost}
-            fullWidth
-            variant={"outlined"}
-          />
-          {isCustom ? (
-            <DialogContentText
-              style={{
-                fontSize:
-                  window.sessionStorage.getItem("smallFontSize") || "16px",
-                color: "#ff8400",
+                } else {
+                  props.handleNewAccount(new MojangAccount(email));
+                }
               }}
             >
-              {tr("AccountManager.Warn")}
-            </DialogContentText>
-          ) : (
-            ""
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button
-            disabled={
-              email.length === 0 || (isCustom && authHost.trim().length === 0)
-            }
-            onClick={() => {
-              if (isCustom) {
-                if (isNide) {
-                  props.handleNewAccount(new Nide8Account(email, authHost));
-                } else {
-                  props.handleNewAccount(
-                    new AuthlibAccount(
-                      email,
-                      authHost.endsWith("/") ? authHost.slice(0, -1) : authHost
-                    )
-                  );
-                }
-              } else {
-                props.handleNewAccount(new MojangAccount(email));
-              }
-            }}
-          >
-            {tr("AccountManager.Next")}
-          </Button>
-        </DialogActions>
-      </Dialog>
+              {tr("AccountManager.Next")}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </MuiThemeProvider>
     </Box>
   );
 }

@@ -37,21 +37,11 @@ import { App } from "./App";
 import { registerHandlers } from "./Handlers";
 import { activateHotKeyFeature } from "./HotKeyHandler";
 import { initWorker } from "./Schedule";
-import { initTranslator } from "./Translator";
+import { initTranslator, tr } from "./Translator";
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
-/*
-CLAIM FOR EXTERNAL RESOURCE
 
-Any font present is NOT a part of Alicorn and might not be licensed under a free software license. These fonts are only a component of ON OF the DIRTRIBUTIONS of Alicorn.
-
-However, distributions is not maintained by Alicorn Official (or PinkAX), and we DO NOT guarantee they are always free as in freedom. Based on friendship, we keep a copy in our repo, but that DOESN NOT MEAN they are a part of Alicorn.
-
-Alicorn have them packaged for a better display performance, but it IS NOT necessary for Alicorn to run, simply remove them, and you will have an free Alicorn.
-
-However, even if it is a controversial evil, it is still a kind of evil. We will try our best to replace those non-free fonts - as soon as possible.
-*/
 const WIN_FONT_FAMILY =
   'Consolas, "Microsoft YaHei UI", "Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
 const GNU_FONT_FAMILY =
@@ -169,6 +159,23 @@ window.addEventListener("error", (e) => {
   window.dispatchEvent(new CustomEvent("sysError", { detail: e.message }));
 });
 
+function flushColors(): void {
+  setThemeParams(
+    getString("theme.primary.main") || "#" + tr("Colors.Primary.Main"),
+    getString("theme.primary.light") || "#" + tr("Colors.Primary.Light"),
+    getString("theme.secondary.main") || "#" + tr("Colors.Secondary.Main"),
+    getString("theme.secondary.light") || "#" + tr("Colors.Secondary.Light"),
+    tr("Font") + FONT_FAMILY
+  );
+  const e = document.createElement("style");
+  e.innerText = `html {background-color:${
+    getString("theme.secondary.light") || "#" + tr("Colors.Secondary.Light")
+  };} a {color:${getString("theme.primary.main", "#5d2391")};}`;
+  // Set background
+  document.head.insertAdjacentElement("beforeend", e);
+  window.dispatchEvent(new CustomEvent("ForceRefreshApp"));
+}
+
 void (async () => {
   await initTranslator();
   // @ts-ignore
@@ -199,21 +206,7 @@ void (async () => {
     console.log("Reloading window...");
     window.location.reload();
   }
-  setThemeParams(
-    getString("theme.primary.main", "#5d2391"),
-    getString("theme.primary.light", "#d796f0"),
-    getString("theme.secondary.main", "#df307f"),
-    getString("theme.secondary.light", "#ffe0f0"),
-    (getString("font-style", "Regular") === "Regular" ? "" : "CutieX, ") +
-      FONT_FAMILY
-  );
-  const e = document.createElement("style");
-  e.innerText = `html {background-color:${getString(
-    "theme.secondary.light",
-    "#ffe0f0"
-  )};} a {color:${getString("theme.primary.main", "#5d2391")};}`;
-  // Set background
-  document.head.insertAdjacentElement("beforeend", e);
+  flushColors();
   initCommandListener();
   ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
   console.log("This Alicorn has super cow powers.");

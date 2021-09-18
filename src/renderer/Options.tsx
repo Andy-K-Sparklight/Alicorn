@@ -27,7 +27,7 @@ import { loadMirror } from "../modules/download/Mirror";
 import { remoteSelectDir } from "./ContainerManager";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { useInputStyles } from "./Stylex";
-import { tr } from "./Translator";
+import { ALL_ASSISTANTS, tr } from "./Translator";
 
 export enum ConfigType {
   BOOL,
@@ -104,12 +104,7 @@ export function OptionsPage(): JSX.Element {
           <InputItem
             type={ConfigType.RADIO}
             bindConfig={"assistant"}
-            choices={["PonyCN"]}
-          />
-          <InputItem
-            type={ConfigType.RADIO}
-            choices={["Regular", "Cutie"]}
-            bindConfig={"font-style"}
+            choices={ALL_ASSISTANTS}
           />
           <InputItem type={ConfigType.STR} bindConfig={"theme.primary.main"} />
           <InputItem type={ConfigType.STR} bindConfig={"theme.primary.light"} />

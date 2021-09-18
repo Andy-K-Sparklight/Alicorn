@@ -6,9 +6,11 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  MuiThemeProvider,
 } from "@material-ui/core";
 import { ipcRenderer } from "electron";
 import React, { useEffect, useState } from "react";
+import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { randsl, tr } from "./Translator";
 
 export function OperatingHint(props: { open: boolean }): JSX.Element {
@@ -154,44 +156,46 @@ export function YNDialog2(props: {
   noProp?: boolean;
 }): JSX.Element {
   return (
-    <Dialog
-      open={props.open}
-      onClose={(e) => {
-        props.onClose();
-      }}
-      onClick={(e) => {
-        if (props.noProp) {
-          e.stopPropagation();
-        }
-      }}
-    >
-      <DialogTitle>{props.title}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>{props.content}</DialogContentText>
-        <DialogActions>
-          <Button
-            onClick={(e) => {
-              if (props.noProp) {
-                e.stopPropagation();
-              }
-              props.onAccept();
-              props.onClose();
-            }}
-          >
-            {props.yes}
-          </Button>
-          <Button
-            onClick={(e) => {
-              if (props.noProp) {
-                e.stopPropagation();
-              }
-              props.onClose();
-            }}
-          >
-            {props.no}
-          </Button>
-        </DialogActions>
-      </DialogContent>
-    </Dialog>
+    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+      <Dialog
+        open={props.open}
+        onClose={(e) => {
+          props.onClose();
+        }}
+        onClick={(e) => {
+          if (props.noProp) {
+            e.stopPropagation();
+          }
+        }}
+      >
+        <DialogTitle>{props.title}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{props.content}</DialogContentText>
+          <DialogActions>
+            <Button
+              onClick={(e) => {
+                if (props.noProp) {
+                  e.stopPropagation();
+                }
+                props.onAccept();
+                props.onClose();
+              }}
+            >
+              {props.yes}
+            </Button>
+            <Button
+              onClick={(e) => {
+                if (props.noProp) {
+                  e.stopPropagation();
+                }
+                props.onClose();
+              }}
+            >
+              {props.no}
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
+    </MuiThemeProvider>
   );
 }

@@ -1,3 +1,23 @@
+# Colors.Primary.Main
+
+5d2391
+
+# Colors.Primary.Light
+
+d796f0
+
+# Colors.Secondary.Main
+
+df307f
+
+# Colors.Secondary.Light
+
+ffe0f0
+
+# Font
+
+@empty
+
 # LaunchPad
 
 启动游戏
@@ -261,10 +281,6 @@ Alicorn 内置浏览器
 # ReadyToLaunch.CouldNotLoad
 
 无法加载 - 该核心可能已经被移动或损毁\n如果你是通过除启动台之外的地方进入这里，那么原始链接的指向可能已经失效
-
-# ReadyToLaunch.Go
-
-出发吧！
 
 # ReadyToLaunch.Hint
 
@@ -736,10 +752,6 @@ Pff 正安装 Mod……
 
 没能执行安装程序……
 
-# InstallCore.Progress.CouldNotExecuteInstallCore.Progress.CouldNotExecute
-
-没能启动安装程序，或安装程序没能正确完成任务，请检查 Java 运行时设置、目的目录权限和网络连接，然后再试一次
-
 # InstallCore.Progress.FailedToInstallProfile
 
 安装失败，目的目录是否存在？你是否有权限写入它？
@@ -1096,22 +1108,6 @@ Alicorn 特色功能
 
 在启动监控页面显示正在获取和已经获取的内容 - 对性能有较大影响，请谨慎使用
 
-# Options.font-style.title
-
-字体风格 ^
-
-# Options.font-style.desc
-
-@HTML选择 Alicorn 字体风格，「端庄」看上去更清晰，「亲近」看上去更可爱 - 分别是为技术向和美观向设计的，可不是根据你的性别！\n（在我心中，谁都有一颗<s>女孩的</s>善良温柔而可爱的心～）
-
-# Options.font-style.Regular
-
-端庄
-
-# Options.font-style.Cutie
-
-亲近
-
 # Options.command.title
 
 Alicorn Functions
@@ -1130,7 +1126,7 @@ Alicorn Functions
 
 # Options.assistant.title
 
-助理（语言） Assistant (Language)
+助理（语言） Assistant (Language) ^
 
 # Options.assistant.desc
 
@@ -1138,7 +1134,11 @@ Alicorn Functions
 
 # Options.assistant.PonyCN
 
-小马（小马语/中国）
+ThatRarityEG（小马语/中国）
+
+# Options.assistant.Maud
+
+Maud 2（小马语/中国）
 
 # Options.gc1.title
 
@@ -1262,7 +1262,7 @@ ASC 允许在多个容器间共享相同的文件，那么这些文件应当存�
 
 # Options.theme.primary.main.title
 
-基本颜色（主要）
+基本颜色（主要）^
 
 # Options.theme.primary.main.desc
 
@@ -1270,7 +1270,7 @@ ASC 允许在多个容器间共享相同的文件，那么这些文件应当存�
 
 # Options.theme.primary.light.title
 
-基本颜色（亮色）
+基本颜色（亮色）^
 
 # Options.theme.primary.light.desc
 
@@ -1278,7 +1278,7 @@ ASC 允许在多个容器间共享相同的文件，那么这些文件应当存�
 
 # Options.theme.secondary.main.title
 
-次要颜色（主要）
+次要颜色（主要）^
 
 # Options.theme.secondary.main.desc
 
@@ -1286,7 +1286,7 @@ ASC 允许在多个容器间共享相同的文件，那么这些文件应当存�
 
 # Options.theme.secondary.light.title
 
-次要颜色（亮色）
+次要颜色（亮色）^
 
 # Options.theme.secondary.light.desc
 
@@ -1442,7 +1442,7 @@ Alicorn 会用这个名字亲切地称呼您 - 嗯……可爱~
 
 # Options.updator.use-update.desc
 
-启用来自 Alicorn 的自动更新，以及时获取新功能 - 在测试阶段，这尤其重要
+启用来自 Alicorn 的自动更新，以及时获取新功能
 
 # Options.download.primary-downloader.title
 
@@ -1820,7 +1820,7 @@ Alicorn 随时都可能有更新！请记得常回来看看！
 
 # Tutor.1.Setting
 
-assistant;RADIO;PonyCN
+assistant;RADIO;PonyCN/Maud
 
 # Tutor.2.Title
 
