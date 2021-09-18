@@ -7,7 +7,7 @@
   "updator.use-update": true,
   "updator.url": "",
   "download.concurrent.chunk-size": 2048,
-  "download.concurrent.timeout": 10000,
+  "download.concurrent.timeout": 5000,
   "download.concurrent.tries-per-chunk": 5,
   "download.concurrent.max-tasks": 20,
   "download.global-proxy": "",
@@ -44,5 +44,6 @@
   "download.primary-downloader": "Concurrent",
   "goto.animate": true,
   "action.close-on-exit": false,
-  "dev.experimental": false
+  "dev.experimental": false,
+  "web.global-proxy": ""
 }
