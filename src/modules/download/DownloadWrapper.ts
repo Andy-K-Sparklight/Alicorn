@@ -244,6 +244,7 @@ function downloadSingleFile(
         } else {
           FAILED_COUNT_MAP.set(meta, failed - 1); // Again
           const mChain = MIRROR_CHAIN.get(meta) || new MirrorChain(meta.url);
+          mChain.markBad();
           mChain.next();
           addState(tr("ReadyToLaunch.Retry", `Url=${mChain.mirror()}`));
           downloadSingleFile(meta, emitter, mChain);

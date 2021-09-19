@@ -97,8 +97,9 @@ export class MirrorChain {
     }
     let m = applyMirror(this.url, mirrors[this.cIndex] || new Map());
     while (BLACKLIST_URL.has(m) && mirrors[this.cIndex] !== undefined) {
-      m = applyMirror(this.url, mirrors[this.cIndex] || new Map());
+      // Skip bad url
       this.next();
+      m = applyMirror(this.url, mirrors[this.cIndex] || new Map());
     }
     return m;
   }
