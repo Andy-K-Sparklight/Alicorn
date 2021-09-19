@@ -471,7 +471,7 @@ function AddNewContainer(props: {
             />
 
             <Button
-              className={classes.input}
+              className={classes.inputDark}
               type={"button"}
               style={{
                 display: "inline",
@@ -572,7 +572,7 @@ function AddNewContainer(props: {
             />
 
             <Button
-              className={classes.input}
+              className={classes.inputDark}
               type={"button"}
               style={{
                 display: allowModpack ? "inherit" : "none",
