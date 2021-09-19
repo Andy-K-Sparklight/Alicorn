@@ -1,4 +1,4 @@
-import { Box, MuiThemeProvider, Typography } from "@material-ui/core";
+import { Box, Button, MuiThemeProvider, Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getString, set } from "../modules/config/ConfigSupport";
@@ -32,6 +32,7 @@ export function getNextTutorName(): string {
 
 const TUTOR_PAGES = [
   "0",
+  "Quick",
   "1",
   "2",
   "3",
@@ -52,7 +53,7 @@ export function Tutor(): JSX.Element {
   const { page } = useParams<{ page: string }>();
   const control = tr(`Tutor.${page}.Controller`);
   useEffect(() => {
-    if (page === "1") {
+    if (page === "0") {
       whereJava(true)
         .then(() => {})
         .catch(() => {}); // Pre init task
@@ -73,6 +74,7 @@ export function Tutor(): JSX.Element {
         window.dispatchEvent(new CustomEvent("refreshApp"));
       }
       if (control === "End") {
+        window.dispatchEvent(new CustomEvent("refreshApp"));
         jumpTo("/Welcome");
         triggerSetPage("Welcome");
         set("startup-page.name", "Welcome");
@@ -85,7 +87,8 @@ export function Tutor(): JSX.Element {
   }
   const settingItem = tr(`Tutor.${page}.Setting`);
   const setting = settingItem.split(";");
-  // bind-config;RADIO;key-a/key-b/key-c
+  // bind-config;RADIO;key-a/key-b/key-c (Setting)
+  // !!;content;target;title (Button)
   return (
     <Box className={classes.root}>
       <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
@@ -105,6 +108,17 @@ export function Tutor(): JSX.Element {
         </Typography>
         {settingItem.length === 0 ? (
           ""
+        ) : setting[0] === "!!" ? (
+          <Button
+            variant={"contained"}
+            color={"primary"}
+            onClick={() => {
+              jumpTo(setting[2]);
+              triggerSetPage(setting[3]);
+            }}
+          >
+            {setting[1]}
+          </Button>
         ) : (
           <Box>
             <br />

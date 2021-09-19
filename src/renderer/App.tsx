@@ -63,6 +63,7 @@ import { LaunchPad } from "./LaunchPad";
 import { YNDialog2 } from "./OperatingHint";
 import { OptionsPage } from "./Options";
 import { PffFront } from "./PffFront";
+import { QuickSetup } from "./QuickSetup";
 import { ReadyToLaunch } from "./ReadyToLaunch";
 import { ServerList } from "./ServerList";
 import { tr } from "./Translator";
@@ -544,6 +545,7 @@ export function App(): JSX.Element {
         <Route path={"/Welcome"} component={Welcome} />
         <Route path={"/Tutor/:page"} component={Tutor} />
         <Route path={"/ServerList"} component={ServerList} />
+        <Route path={"/QuickSetup"} component={QuickSetup} />
         <Route path={"/UtilitiesIndex"} component={UtilitiesIndex} />
         <Route path={"/Utilities/NetCheck"} component={NetCheck} />
         <Route path={"/Utilities/CutieConnect"} component={CutieConnet} />

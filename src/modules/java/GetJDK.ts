@@ -74,6 +74,29 @@ async function downloadAndStartJREInstaller(u: string): Promise<void> {
   }
 }
 
+export async function downloadJREInstaller(u: string): Promise<void> {
+  const tD = getActualDataPath(`jre_installer_tmp_${basicHash(u)}.msi`);
+  const s = await wrappedDownloadFile(new DownloadMeta(u, tD, ""));
+  if (s !== 1) {
+    throw new Error("Could not download!");
+  }
+}
+
+export function waitJREInstaller(u: string): Promise<void> {
+  const tD = getActualDataPath(`jre_installer_tmp_${basicHash(u)}.msi`);
+  return new Promise<void>((res) => {
+    void (() => {
+      const s = childProcess.spawn(tD);
+      s.on("exit", () => {
+        res();
+      });
+      s.on("error", () => {
+        res();
+      });
+    })();
+  });
+}
+
 export async function installJRE(old = false): Promise<void> {
   const u = await getLatestJREURL(old);
   const url = new URL(u);

@@ -30,6 +30,10 @@ ffe0f0
 
 管理容器
 
+# QuickSetup
+
+快速自动设置
+
 # ReadyToLaunch
 
 出发吧!
@@ -1790,6 +1794,22 @@ Alicorn 随时都可能有更新！请记得常回来看看！
 
 @HTML这里只显示由 Pff 安装的软件包，单击软件包名称可以在文件资源管理器中查看它。\n<span style="color: #ff8400;">安装 Mod 前请当心！不兼容的 Mod 可以<b style="color: red;">摧毁你的游戏</b>！请确保你<b style="color: red;">知道</b>而不是<b style="color: red;">猜测</b>它的作用！</span>
 
+# Tutor.Quick.Title
+
+快速设置
+
+# Tutor.Quick.Content
+
+@HTML<b style="color: red">这是给新手的说明！</b>\n如果你什么都不了解，你可以使用<b>Alicorn 自动配置</b>，可以在只需少量交互的情况下完成基本配置。\n\n<b style="color: red">老玩家请注意！</b>自动配置的功能非常简单，许多重要参数只是被简单地自动设置，如果你使用过其它启动器，或者有基本的计算机素养，请<b>单击右上角</b>，进入手动设置。
+
+# Tutor.Quick.Setting
+
+!!;使用自动设置;/QuickSetup;QuickSetup
+
+# Tutor.Quick.Controller
+
+@empty
+
 # Tutor.0.Title
 
 你好！Hello!
@@ -2484,3 +2504,35 @@ Sparklight 作品\n从已有容器打包需要的资源，整合包创作的基�
 # Utilities.BuildUp.Done
 
 好了，完成了，快打开看看吧！
+
+# QuickSetup.Start
+
+欢迎使用全自动配置程序！单击这行文字以开始……
+
+# QuickSetup.Error
+
+产生错误……你可能需要手动完成配置。
+
+# QuickSetup.CreatingContainer
+
+正在创建容器……
+
+# QuickSetup.ConfiguringJava
+
+正在配置 Java……
+
+# QuickSetup.InstallingJava
+
+@HTML这里是 Java 8 和 Java 16 的安装程序。\n如果你想要进行安装，或者不知道该做什么，请<b>跟随安装程序的指示完成安装</b>（通常一直「下一步」就好）。\n如果你知道你已经安装了 Java，请关闭弹出的安装程序，稍后我会自动查找你的 Java。
+
+# QuickSetup.InstallingCore
+
+正在安装核心……
+
+# QuickSetup.Done
+
+完成！马上你就会前往主菜单。\n……祝你好运，玩得开心！
+
+# QuickSetup.Default
+
+Minecraft 默认位置
