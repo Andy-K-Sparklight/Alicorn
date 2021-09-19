@@ -407,6 +407,16 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
               <ListItemText
                 style={{
                   wordBreak: "break-all",
+                  color:
+                    l.includes("ERROR") || l.includes("FATAL")
+                      ? "#ff0000"
+                      : l.includes("WARN")
+                      ? "#ff8400"
+                      : "gray",
+                  backgroundColor:
+                    l.includes("ERROR") || l.includes("FATAL")
+                      ? "white"
+                      : "inherit",
                 }}
                 key={i}
               >
