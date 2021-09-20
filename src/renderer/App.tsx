@@ -71,6 +71,7 @@ import { getNextTutorName, isShow, isTutor, Tutor } from "./Tutor";
 import { BuildUp } from "./utilities/BuildUp";
 import { CutieConnet } from "./utilities/CutieConnect";
 import { NetCheck } from "./utilities/NetCheck";
+import { PffVisual } from "./utilities/PffVisual";
 import { UtilitiesIndex } from "./utilities/UtilitiesIndex";
 import { VersionView } from "./VersionView";
 import { Welcome } from "./Welcome";
@@ -550,6 +551,7 @@ export function App(): JSX.Element {
         <Route path={"/Utilities/NetCheck"} component={NetCheck} />
         <Route path={"/Utilities/CutieConnect"} component={CutieConnet} />
         <Route path={"/Utilities/BuildUp"} component={BuildUp} />
+        <Route path={"/Utilities/PffVisual"} component={PffVisual} />
       </Box>
 
       <YNDialog2

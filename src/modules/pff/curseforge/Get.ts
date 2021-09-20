@@ -9,6 +9,53 @@ import { pgot } from "../../download/GotWrapper";
 import { findCachedFile, writeCachedFile } from "./Cache";
 import { GAME_ID } from "./Values";
 
+export async function moreAddonInfoBySlug(
+  slug: string,
+  apiBase: string,
+  extraParams: string,
+  pageSize: string | number,
+  timeout: number
+): Promise<AddonInfo[]> {
+  const ACCESS_URL =
+    apiBase +
+    `/api/v2/addon/search?gameId=${GAME_ID}&pageSize=${pageSize}&searchFilter=${slug}&sort=1${extraParams}`;
+  try {
+    const r = await pgot(ACCESS_URL, timeout);
+    if (!(r instanceof Array)) {
+      return [];
+    }
+    if (r.length === 0) {
+      return [];
+    }
+    const o: AddonInfo[] = [];
+    r.forEach((i) => {
+      if (
+        safeGet(i, ["categorySection", "id"], 0) !== 8 &&
+        safeGet(i, ["categorySection", "name"], "") !== "Mods"
+      ) {
+        // 8 means mods and 11 means modpacks
+        console.log("Non mod! " + i.name);
+        return;
+      }
+      i["thumbNail"] = ""; // Fix thumbnail
+      if (i["attachments"] instanceof Array) {
+        if (i["attachments"][0]) {
+          if (i["attachments"][0]["thumbnailUrl"]) {
+            i["thumbNail"] = i["attachments"][0]["thumbnailUrl"];
+          }
+        }
+      }
+      console.log("Add " + i.name);
+      o.push(i);
+    });
+
+    return o;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+}
+
 export async function getAddonInfoBySlug(
   slug: string,
   apiBase: string,
@@ -31,8 +78,8 @@ export async function getAddonInfoBySlug(
     for (const i of r) {
       if (i["slug"] === slug.toLowerCase()) {
         if (
-          safeGet(i, ["categorySection", "id", 0]) !== 8 &&
-          safeGet(i, ["categorySection", "name", ""]) !== "Mods"
+          safeGet(i, ["categorySection", "id"], 0) !== 8 &&
+          safeGet(i, ["categorySection", "name"], "") !== "Mods"
         ) {
           // 8 means mods and 11 means modpacks
           continue;
@@ -57,6 +104,13 @@ export async function getAddonInfoBySlug(
       let lowestSlug = "";
       let lowestObject: AddonInfo | undefined = undefined;
       for (const i of r) {
+        if (
+          safeGet(i, ["categorySection", "id"], 0) !== 8 &&
+          safeGet(i, ["categorySection", "name"], "") !== "Mods"
+        ) {
+          // 8 means mods and 11 means modpacks
+          continue;
+        }
         i["thumbNail"] = "";
         if (i["attachments"] instanceof Array) {
           if (i["attachments"][0]) {

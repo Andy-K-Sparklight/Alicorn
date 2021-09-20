@@ -53,6 +53,8 @@ export function UtilitiesIndex(): JSX.Element {
         ""
       )}
       <SimpleUtil name={"BuildUp"} />
+      <br />
+      <SimpleUtil name={"PffVisual"} />
     </Box>
   );
 }

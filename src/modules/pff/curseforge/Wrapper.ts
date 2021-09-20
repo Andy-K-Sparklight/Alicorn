@@ -1,6 +1,5 @@
 import { tr } from "../../../renderer/Translator";
 import { getNumber, getString } from "../../config/ConfigSupport";
-import { DATA_ROOT } from "../../config/DataSupport";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import {
   AddonInfo,

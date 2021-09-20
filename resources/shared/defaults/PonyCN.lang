@@ -2511,6 +2511,42 @@ Sparklight 作品\n从已有容器打包需要的资源，整合包创作的基�
 
 好了，完成了，快打开看看吧！
 
+# Utilities.PffVisual.Title
+
+Pff 搜索
+
+# Utilities.PffVisual.Description
+
+Sparklight 作品\n查找 Mod 并获取 Slug，用于 Pff 软件安装器安装
+
+# Utilities.PffVisual.Search
+
+搜索
+
+# Utilities.PffVisual.VersionRange
+
+支持：
+
+# Utilities.PffVisual.Copied
+
+已复制！快到 Pff 软件安装器中看看吧！
+
+# Utilities.PffVisual.Hint
+
+@HTML在这里搜索 Mod。\n此工具<b>不能直接安装 Mod</b>！（因为不知道你需要哪个版本）\n请<b>单击一下你心仪的 Mod</b> 来复制它的名字，然后前往核心右上角的 <b>Pff 软件安装器</b>使用。
+
+# Utilities.PffVisual.Slug
+
+输入名称来查找……
+
+# Utilities.PffVisual.Downloads
+
+{Count} 次下载
+
+# Utilities.PffVisual.ModLoaders
+
+支持的加载器：
+
 # QuickSetup.Start
 
 欢迎使用全自动配置程序！单击这行文字以开始……
