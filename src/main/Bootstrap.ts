@@ -23,10 +23,11 @@ app.on("ready", async () => {
   );
   const appPath = app.getAppPath();
   console.log("App is ready, preparing window...");
-  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  const { height } = screen.getPrimaryDisplay().workAreaSize;
+  const calH = Math.floor(height * 0.5);
   mainWindow = new BrowserWindow({
-    width: Math.floor(width * 0.5),
-    height: Math.floor(height * 0.5),
+    width: Math.floor((calH * 48) / 25),
+    height: calH,
     webPreferences: {
       webSecurity: false, // No more CORS!
       nodeIntegration: true, // Obviously
