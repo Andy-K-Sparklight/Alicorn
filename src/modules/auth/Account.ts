@@ -46,19 +46,20 @@ export async function refreshToken(
   selectedProfile?: RemoteUserProfile
 ): Promise<AuthenticateDataCallback> {
   try {
-    const rtt = (
-      await fetch(trimURL(authServer) + "/refresh", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        cache: "no-cache",
-        body: JSON.stringify({
-          accessToken: acToken,
-        }),
-      })
-    ).body;
-
+    const res = await fetch(trimURL(authServer) + "/refresh", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      cache: "no-cache",
+      body: JSON.stringify({
+        accessToken: acToken,
+      }),
+    });
+    if (!(res.status >= 200 && res.status < 300)) {
+      throw "Failed to auth! Code: " + res.status;
+    }
+    const rtt = await res.json();
     const tk = String(safeGet(rtt, ["accessToken"], acToken));
     const sp = safeGet(rtt, ["selectedProfile"]);
     const all = safeGet(rtt, ["availableProfiles"]);
@@ -89,24 +90,26 @@ export async function authenticate(
 ): Promise<AuthenticateDataCallback> {
   try {
     const tURL = trimURL(authServer) + "/authenticate";
-    const res = (
-      await fetch(tURL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    const ress = await fetch(tURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-cache",
+      body: JSON.stringify({
+        username: accountName,
+        password: password,
+        clientToken: getUniqueID32(),
+        agent: {
+          name: "Minecraft",
+          version: 1,
         },
-        cache: "no-cache",
-        body: JSON.stringify({
-          username: accountName,
-          password: password,
-          clientToken: getUniqueID32(),
-          agent: {
-            name: "Minecraft",
-            version: 1,
-          },
-        }),
-      })
-    ).body;
+      }),
+    });
+    if (!(ress.status >= 200 && ress.status < 300)) {
+      throw "Failed to auth! Code: " + ress.status;
+    }
+    const res = await ress.json();
     const accessToken = String(safeGet(res, ["accessToken"], "") || "");
     if (accessToken === "undefined" || accessToken.length === 0) {
       return { success: false, accessToken: "", availableProfiles: [] };
@@ -155,7 +158,7 @@ export async function validateToken(
   authServer: string
 ): Promise<boolean> {
   try {
-    await fetch(trimURL(authServer) + "/validate", {
+    const res = await fetch(trimURL(authServer) + "/validate", {
       headers: {
         "Content-Type": "application/json",
       },
@@ -165,6 +168,9 @@ export async function validateToken(
         accessToken: acToken,
       }),
     });
+    if (!(res.status >= 200 && res.status < 300)) {
+      throw "Failed to auth! Code: " + res.status;
+    }
     return true;
   } catch {
     return false;
