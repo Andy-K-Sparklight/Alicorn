@@ -6,6 +6,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { HashRouter } from "react-router-dom";
 import pkg from "../../package.json";
+import { reloadAccounts } from "../modules/auth/AccountUtil";
 import { prepareAJ } from "../modules/auth/AJHelper";
 import { prepareND } from "../modules/auth/NDHelper";
 import { initCommandListener } from "../modules/command/CommandListener";
@@ -227,6 +228,7 @@ void (async () => {
       await loadMirror();
       await loadAllMirrors();
     })(),
+    reloadAccounts(),
     initForgeInstallModule(),
     initConcurrentDownloader(),
     prepareAJ(),

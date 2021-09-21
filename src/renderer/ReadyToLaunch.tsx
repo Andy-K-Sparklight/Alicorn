@@ -35,8 +35,7 @@ import { Account } from "../modules/auth/Account";
 import {
   AccountType,
   fillAccessData,
-  getAllAccounts,
-  loadAccount,
+  getPresentAccounts,
 } from "../modules/auth/AccountUtil";
 import { prefetchData } from "../modules/auth/AJHelper";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
@@ -210,7 +209,6 @@ function Launching(props: {
   const [activeStep, setActiveStep] = useState(0);
   const [selectedAccount, setSelectedAccount] = useState<Account>();
   const [selecting, setSelecting] = useState<boolean>(false);
-  const [allAccounts, setAccounts] = useState<Set<Account>>(new Set<Account>());
   const [ws, setWrapperStatus] = useState<WrapperStatus>(getWrapperStatus());
   const profileHash = useRef<string>(objectHash(props.profile));
   useEffect(() => {
@@ -229,19 +227,6 @@ function Launching(props: {
   }, []);
   useEffect(() => {
     mountedBit.current = true;
-    void (async () => {
-      const a = await getAllAccounts();
-      const builtAccount: Set<Account> = new Set<Account>();
-      for (const accountFile of a) {
-        const r = await loadAccount(accountFile);
-        if (r) {
-          builtAccount.add(r);
-        }
-      }
-      if (mountedBit.current) {
-        setAccounts(builtAccount);
-      }
-    })();
   }, []);
   useEffect(() => {
     const fun = () => {
@@ -299,7 +284,8 @@ function Launching(props: {
             );
           })();
         }}
-        allAccounts={allAccounts}
+        allAccounts={getPresentAccounts()}
+        profileHash={profileHash.current}
       />
       {warning ? (
         <YNDialog
@@ -655,11 +641,14 @@ enum LaunchingStatus {
   FINISHED = "Finished",
 }
 
+const LAST_ACCOUNT_TAB_KEY = "ReadyToLaunch.LastSelectedAccountType";
+const LAST_YG_ACCOUNT_NAME = "ReadyToLaunch.LastSelectedYggdrasilName";
 function AccountChoose(props: {
   open: boolean;
   closeFunc: () => void;
   onChose: (a: Account) => unknown;
   allAccounts: Set<Account>;
+  profileHash: string;
 }): JSX.Element {
   const classes = useInputStyles();
   const btnClasses = makeStyles((theme) =>
@@ -670,12 +659,18 @@ function AccountChoose(props: {
       },
     })
   )();
-  const [choice, setChoice] = useState<"MZ" | "AL" | "YG">("MZ");
+  const [choice, setChoice] = useState<"MZ" | "AL" | "YG">(
+    (window.localStorage.getItem(LAST_ACCOUNT_TAB_KEY + props.profileHash) as
+      | "MZ"
+      | "AL"
+      | "YG") || "MZ"
+  );
   const [pName, setName] = useState<string>(
-    window.localStorage.getItem(LAST_USED_USER_NAME_KEY) || "Player"
+    window.localStorage.getItem(LAST_USED_USER_NAME_KEY + props.profileHash) ||
+      "Player"
   );
   const mounted = useRef<boolean>(false);
-  const [sAccount, setAccount] = useState<string>("");
+
   const accountMap: Record<string, Account> = {};
   const [msLogout, setMSLogout] = useState<
     | "ReadyToLaunch.MSLogout"
@@ -685,6 +680,15 @@ function AccountChoose(props: {
   for (const a of props.allAccounts) {
     accountMap[objectHash(a)] = a;
   }
+  const la =
+    window.localStorage.getItem(LAST_YG_ACCOUNT_NAME + props.profileHash) || "";
+  let ll = "";
+  if (la && accountMap[la] !== undefined) {
+    ll = la;
+  } else {
+    // ll = Object.keys(accountMap)[0] || "";
+  }
+  const [sAccount, setAccount] = useState<string>(ll);
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -710,6 +714,10 @@ function AccountChoose(props: {
             if (["MZ", "AL", "YG"].includes(e.target.value)) {
               // @ts-ignore
               setChoice(e.target.value);
+              window.localStorage.setItem(
+                LAST_ACCOUNT_TAB_KEY + props.profileHash,
+                e.target.value
+              );
             }
           }}
         >
@@ -789,6 +797,10 @@ function AccountChoose(props: {
               labelId={"Select-Account"}
               onChange={(e) => {
                 setAccount(String(e.target.value));
+                window.localStorage.setItem(
+                  LAST_YG_ACCOUNT_NAME + props.profileHash,
+                  String(e.target.value)
+                );
               }}
               value={sAccount}
             >

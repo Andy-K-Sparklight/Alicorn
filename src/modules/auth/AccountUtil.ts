@@ -42,6 +42,7 @@ export async function saveAccount(a: Account): Promise<boolean> {
       path.join(ACCOUNT_ROOT, fName),
       encryptByMachine(decideWhichAccountByCls(a) + a.serialize())
     );
+    await reloadAccounts();
     return true;
   } catch {
     return false;
@@ -249,4 +250,23 @@ export async function fillAccessData(
     }
   }
   return acData;
+}
+
+let ACCOUNT_SET: Set<Account> = new Set();
+
+export async function reloadAccounts(): Promise<void> {
+  try {
+    const a = await getAllAccounts();
+    const builtAccount: Set<Account> = new Set<Account>();
+    for (const accountFile of a) {
+      const r = await loadAccount(accountFile);
+      if (r) {
+        builtAccount.add(r);
+      }
+    }
+    ACCOUNT_SET = builtAccount;
+  } catch {}
+}
+export function getPresentAccounts(): Set<Account> {
+  return ACCOUNT_SET;
 }
