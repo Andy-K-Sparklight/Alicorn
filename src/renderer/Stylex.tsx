@@ -12,6 +12,10 @@ export const useCardStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.primary.main,
       width: "80%",
     },
+    card2: {
+      backgroundColor: theme.palette.primary.dark,
+      width: "80%",
+    },
     uCard: {
       backgroundColor: theme.palette.primary.light,
       width: "80%",

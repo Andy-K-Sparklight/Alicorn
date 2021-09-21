@@ -2527,13 +2527,21 @@ Sparklight 作品\n查找 Mod 并获取 Slug，用于 Pff 软件安装器安装
 
 支持：
 
+# Utilities.PffVisual.CopiedUrl
+
+已复制！使用你喜欢的方式下载这个整合包吧！
+
 # Utilities.PffVisual.Copied
 
 已复制！快到 Pff 软件安装器中看看吧！
 
+# Utilities.PffVisual.CouldNotCopy
+
+没法复制……可能是系统问题，或者信息无效
+
 # Utilities.PffVisual.Hint
 
-@HTML在这里搜索 Mod。\n此工具<b>不能直接安装 Mod</b>！（因为不知道你需要哪个版本）\n请<b>单击一下你心仪的 Mod</b> 来复制它的名字，然后前往核心右上角的 <b>Pff 软件安装器</b>使用。
+@HTML在这里搜索 Mod 和整合包，整合包的颜色要深一些。\n此工具<b>不能直接安装 Mod</b>！（因为不知道你需要哪个版本）\n请<b>单击一下你心仪的 Mod</b> 来复制它的名字，然后前往核心右上角的 <b>Pff 软件安装器</b>使用。\n单击整合包将复制下载链接。
 
 # Utilities.PffVisual.Slug
 

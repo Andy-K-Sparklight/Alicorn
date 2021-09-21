@@ -9,13 +9,14 @@ import { pgot } from "../../download/GotWrapper";
 import { findCachedFile, writeCachedFile } from "./Cache";
 import { GAME_ID } from "./Values";
 
+// With modpack
 export async function moreAddonInfoBySlug(
   slug: string,
   apiBase: string,
   extraParams: string,
   pageSize: string | number,
   timeout: number
-): Promise<AddonInfo[]> {
+): Promise<ExtraAddonInfo[]> {
   const ACCESS_URL =
     apiBase +
     `/api/v2/addon/search?gameId=${GAME_ID}&pageSize=${pageSize}&searchFilter=${slug}&sort=1${extraParams}`;
@@ -27,14 +28,15 @@ export async function moreAddonInfoBySlug(
     if (r.length === 0) {
       return [];
     }
-    const o: AddonInfo[] = [];
+    const o: ExtraAddonInfo[] = [];
     r.forEach((i) => {
-      if (
-        safeGet(i, ["categorySection", "id"], 0) !== 8 &&
-        safeGet(i, ["categorySection", "name"], "") !== "Mods"
-      ) {
-        // 8 means mods and 11 means modpacks
-        console.log("Non mod! " + i.name);
+      const c = safeGet(i, ["categorySection", "id"], 0);
+      const p = safeGet(i, ["categorySection", "name"], "");
+      if (c === 8 || p === "Mods") {
+        i.type = "MOD";
+      } else if (c === 11 || p === "Modpacks") {
+        i.type = "MODPACK";
+      } else {
         return;
       }
       i["thumbNail"] = ""; // Fix thumbnail
@@ -45,7 +47,25 @@ export async function moreAddonInfoBySlug(
           }
         }
       }
-      console.log("Add " + i.name);
+      const lf = i.latestFiles;
+      if (!(lf instanceof Array)) {
+        i.url = "";
+      } else {
+        let d: Date = new Date(0);
+        let ou = "";
+        lf.forEach((v) => {
+          if (!v.downloadUrl) {
+            return;
+          }
+          const d2 = new Date(String(v.fileDate));
+          if (d2.getTime() > d.getTime()) {
+            d = d2;
+            ou = String(v.downloadUrl);
+          }
+        });
+        i.url = ou;
+      }
+
       o.push(i);
     });
 
@@ -160,6 +180,11 @@ export async function getAddonInfoBySlug(
 
 export async function strDiff(str1: string, str2: string): Promise<number> {
   return (await invokeWorker("StrDiff", str1, str2)) as number;
+}
+
+export interface ExtraAddonInfo extends AddonInfo {
+  type: "MODPACK" | "MOD";
+  url: string;
 }
 
 export interface AddonInfo {

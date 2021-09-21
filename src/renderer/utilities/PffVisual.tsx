@@ -15,18 +15,18 @@ import copy from "copy-to-clipboard";
 import React, { useEffect, useRef, useState } from "react";
 import { getNumber, getString } from "../../modules/config/ConfigSupport";
 import {
-  AddonInfo,
+  ExtraAddonInfo,
   moreAddonInfoBySlug,
 } from "../../modules/pff/curseforge/Get";
 import { CF_API_BASE_URL } from "../../modules/pff/curseforge/Values";
-import { submitInfo } from "../Message";
+import { submitInfo, submitWarn } from "../Message";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "../Renderer";
 import { fullWidth, useCardStyles, usePadStyles } from "../Stylex";
 import { tr } from "../Translator";
 
 export function PffVisual(): JSX.Element {
   const [slug, setSlug] = useState("");
-  const [searchResults, setResults] = useState<AddonInfo[]>([]);
+  const [searchResults, setResults] = useState<ExtraAddonInfo[]>([]);
   const [searching, setSearching] = useState(false);
   const fullWidthClasses = fullWidth();
   const classes = usePadStyles();
@@ -119,7 +119,7 @@ export function PffVisual(): JSX.Element {
   );
 }
 
-function SingleAddonDisplay(props: { info: AddonInfo }): JSX.Element {
+function SingleAddonDisplay(props: { info: ExtraAddonInfo }): JSX.Element {
   const classes = useCardStyles();
   const a: string[] = [];
   props.info.gameVersionLatestFiles.forEach((f) => {
@@ -131,10 +131,20 @@ function SingleAddonDisplay(props: { info: AddonInfo }): JSX.Element {
   return (
     <Box style={{ textAlign: "left" }}>
       <Card
-        className={classes.card}
+        className={props.info.type === "MOD" ? classes.card : classes.card2}
         onClick={() => {
-          if (copy(props.info.slug)) {
-            submitInfo(tr("Utilities.PffVisual.Copied"));
+          if (props.info.type === "MOD") {
+            if (copy(props.info.slug)) {
+              submitInfo(tr("Utilities.PffVisual.Copied"));
+            } else {
+              submitWarn("Utilities.PffVisual.CouldNotCopy");
+            }
+          } else if (props.info.type === "MODPACK") {
+            if (props.info.url && copy(props.info.url)) {
+              submitInfo(tr("Utilities.PffVisual.CopiedUrl"));
+            } else {
+              submitWarn("Utilities.PffVisual.CouldNotCopy");
+            }
           }
         }}
       >
