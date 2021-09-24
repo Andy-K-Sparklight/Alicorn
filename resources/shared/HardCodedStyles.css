@@ -27,5 +27,5 @@ body {
   opacity: 0;
 }
 .yggdrasil_droppable {
-  height: 100vh; /* Easy to drop */
+  height: 10000vh; /* Easy to drop */
 }
