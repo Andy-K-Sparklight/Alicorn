@@ -26,6 +26,6 @@ body {
   transition: opacity 200ms;
   opacity: 0;
 }
-#yggdrasil_droppable {
-  height: 10000px; /* Easy to drop */
+.yggdrasil_droppable {
+  height: 100vh; /* Easy to drop */
 }

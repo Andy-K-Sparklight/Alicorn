@@ -523,7 +523,7 @@ export function App(): JSX.Element {
           </Box>
         </Toolbar>
       </AppBar>
-      <Box className={classes.content} id={"app_main"}>
+      <Box className={classes.content + " yggdrasil_droppable"} id={"app_main"}>
         <Route path={"/LaunchPad/:server?"} component={LaunchPad} />
         <Route path={"/InstallCore"} component={InstallCore} />
         <Route

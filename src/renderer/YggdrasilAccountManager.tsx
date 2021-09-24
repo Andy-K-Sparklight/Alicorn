@@ -73,8 +73,7 @@ export function YggdrasilAccountManager(): JSX.Element {
 
   return (
     <Box
-      className={classes.para}
-      id={"yggdrasil_droppable"}
+      className={classes.para + " yggdrasil_droppable"}
       onDrop={(e) => {
         e.preventDefault();
         const data = e.dataTransfer.getData("text/plain");
