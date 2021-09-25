@@ -1,5 +1,6 @@
 import { jumpTo, triggerSetPage } from "../../renderer/GoTo";
 import { submitInfo, submitWarn } from "../../renderer/Message";
+import { setFlag } from "../commons/Flags";
 import { getString, set } from "../config/ConfigSupport";
 import { registerCommand } from "./CommandListener";
 
@@ -10,6 +11,10 @@ export function initBase(): void {
   });
   registerCommand("dargs", (a) => {
     submitInfo(a.join("/"));
+    return Promise.resolve();
+  });
+  registerCommand("sflag", (a) => {
+    setFlag(String(a[0]), a[1] !== "!");
     return Promise.resolve();
   });
   registerCommand("set", (a) => {
