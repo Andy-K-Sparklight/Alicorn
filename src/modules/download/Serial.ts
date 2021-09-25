@@ -27,7 +27,7 @@ export class Serial extends AbstractDownloader {
     try {
       // If file already exists then check if HASH matches
       if (meta.sha1 !== "" && (await isFileExist(meta.savePath))) {
-        if (await validate(meta.savePath, meta.sha1)) {
+        if (await validate(meta.savePath, meta.sha1, meta.size)) {
           return DownloadStatus.RESOLVED;
         }
       }
