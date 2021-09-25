@@ -86,6 +86,11 @@ import {
 import { launchProfile } from "../modules/launch/LaunchPad";
 import { stopMinecraft } from "../modules/launch/MinecraftBootstrap";
 import { LaunchTracker } from "../modules/launch/Tracker";
+import {
+  initLocalYggdrasilServer,
+  ROOT_YG_URL,
+  skinTypeFor,
+} from "../modules/localskin/LocalYggdrasilServer";
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
 import { loadProfile } from "../modules/profile/ProfileLoader";
@@ -507,13 +512,34 @@ async function startBoot(
   let prefetch = "";
   let useNd = false;
   let ndServerId = "";
+
+  // Setup skin if configured
+  if (account.type === AccountType.ALICORN) {
+    try {
+      const skin = await skinTypeFor(account);
+      if (skin !== "NONE") {
+        await initLocalYggdrasilServer(account, skin);
+        useAj = true;
+        ajHost = ROOT_YG_URL; // Use local yggdrasil
+        console.log("Successfully set skin!");
+      } else {
+        console.log("No skin detected, will use default...");
+      }
+    } catch (e) {
+      console.log("Skin setup failed!");
+      console.log(e);
+    }
+  }
   if (account.type === AccountType.AUTHLIB_INJECTOR) {
     useAj = true;
     ajHost = (account as AuthlibAccount).authServer;
+    console.log("Auth server is " + ajHost);
+    console.log("Prefetching data!");
     prefetch = await prefetchData((account as AuthlibAccount).authServer);
   } else if (account.type === AccountType.NIDE8) {
     useNd = true;
     ndServerId = (account as Nide8Account).serverId;
+    console.log("Nide server id is " + ndServerId);
   }
   let useServer = false;
   let serverHost = "";
@@ -699,7 +725,6 @@ function AccountChoose(props: {
     <Dialog
       open={props.open}
       onClose={() => {
-        setChoice("MZ");
         props.closeFunc();
       }}
     >
@@ -836,7 +861,10 @@ function AccountChoose(props: {
                 return;
               case "AL":
               default:
-                window.localStorage.setItem(LAST_USED_USER_NAME_KEY, pName);
+                window.localStorage.setItem(
+                  LAST_USED_USER_NAME_KEY + props.profileHash,
+                  pName
+                );
                 props.onChose(new LocalAccount(pName));
             }
           }}

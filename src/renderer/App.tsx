@@ -69,6 +69,7 @@ import { ServerList } from "./ServerList";
 import { tr } from "./Translator";
 import { getNextTutorName, isShow, isTutor, Tutor } from "./Tutor";
 import { BuildUp } from "./utilities/BuildUp";
+import { CarouselBoutique } from "./utilities/CarouselBoutique";
 import { CutieConnet } from "./utilities/CutieConnect";
 import { NetCheck } from "./utilities/NetCheck";
 import { PffVisual } from "./utilities/PffVisual";
@@ -552,6 +553,10 @@ export function App(): JSX.Element {
         <Route path={"/Utilities/CutieConnect"} component={CutieConnet} />
         <Route path={"/Utilities/BuildUp"} component={BuildUp} />
         <Route path={"/Utilities/PffVisual"} component={PffVisual} />
+        <Route
+          path={"/Utilities/CarouselBoutique"}
+          component={CarouselBoutique}
+        />
       </Box>
 
       <YNDialog2

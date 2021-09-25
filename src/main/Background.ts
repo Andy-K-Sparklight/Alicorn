@@ -67,6 +67,21 @@ export function registerBackgroundListeners(): void {
     }
     return r.filePaths[0] || "";
   });
+  ipcMain.handle("selectPng", async () => {
+    const r = await dialog.showOpenDialog({
+      properties: ["openFile"],
+      filters: [
+        {
+          name: "Minecraft Skin or Cape",
+          extensions: ["png"],
+        },
+      ],
+    });
+    if (r.canceled) {
+      return "";
+    }
+    return r.filePaths[0] || "";
+  });
   ipcMain.handle("selectModpack", async () => {
     const r = await dialog.showOpenDialog({
       properties: ["openFile"],

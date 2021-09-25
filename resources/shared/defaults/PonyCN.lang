@@ -2547,13 +2547,61 @@ Sparklight 作品\n查找 Mod 并获取 Slug，用于 Pff 软件安装器安装
 
 输入名称来查找……
 
-# Utilities.PffVisual.Downloads
+# Utilities.CarouselBoutique.Title
 
-{Count} 次下载
+旋转木马精品服装店
 
-# Utilities.PffVisual.ModLoaders
+# Utilities.CarouselBoutique.Description
 
-支持的加载器：
+Sparklight 作品\n本地帐户服装和披风配送
+
+# Utilities.CarouselBoutique.Hint
+
+@HTML欢迎！想在离线帐户使用皮肤，或是想要一件披风？简单到选择一张图片，就可以为你的本地帐户设置皮肤<b>和披风</b>！\n设置默认皮肤和披风将对任何本地帐户生效，但你可以为特定的玩家名设置特定的皮肤或披风。\n不过，<b>自定义皮肤和披风无法在 Yggdrasil 帐户和 Microsoft 帐户中使用！</b>如果你在游玩需要验证的服务器，请先想一下……\n\n下面会显示已经设置了皮肤的玩家。
+
+# Utilities.CarouselBoutique.RemoveSkin
+
+清除皮肤
+
+# Utilities.CarouselBoutique.RemoveCape
+
+清除披风
+
+# Utilities.CarouselBoutique.AddAsSkin
+
+设置皮肤
+
+# Utilities.CarouselBoutique.AddAsCape
+
+设置披风
+
+# Utilities.CarouselBoutique.SetAsDefaultSkin
+
+设置为默认皮肤
+
+# Utilities.CarouselBoutique.SetAsDefaultCape
+
+设置为默认披风
+
+# Utilities.CarouselBoutique.SetSuccessful
+
+已设置，现在就在游戏中使用……？\n（记得选择「本地帐户」，并修改玩家名）
+
+# Utilities.CarouselBoutique.PlayerName
+
+玩家名
+
+# Utilities.CarouselBoutique.FileName
+
+选取文件
+
+# Utilities.CarouselBoutique.Model.Default
+
+史蒂夫（Default）
+
+# Utilities.CarouselBoutique.Model.Alex
+
+爱丽克丝（Slim）
 
 # QuickSetup.Start
 

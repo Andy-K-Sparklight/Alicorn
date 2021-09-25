@@ -42,51 +42,54 @@ export function UtilitiesIndex(): JSX.Element {
       <Typography className={classes.secondText} gutterBottom>
         {tr("UtilitiesIndex.Description")}
       </Typography>
-      <SimpleUtil name={"NetCheck"} />
-      <br />
-      {getBoolean("dev.experimental") ? (
-        <>
-          <SimpleUtil name={"CutieConnect"} />
-          <br />
-        </>
-      ) : (
-        ""
-      )}
-      <SimpleUtil name={"BuildUp"} />
-      <br />
       <SimpleUtil name={"PffVisual"} />
+      <SimpleUtil experimental name={"CarouselBoutique"} />
+      <SimpleUtil experimental name={"CutieConnect"} />
+      <SimpleUtil name={"NetCheck"} />
+      <SimpleUtil name={"BuildUp"} />
     </Box>
   );
 }
 
-function SimpleUtil(props: { name: string }): JSX.Element {
+function SimpleUtil(props: {
+  name: string;
+  experimental?: boolean;
+}): JSX.Element {
   const classes = useTextStylesLight();
   const accClasses = useAccStyles();
+  if (props.experimental) {
+    if (!getBoolean("dev.experimental")) {
+      return <></>;
+    }
+  }
   return (
-    <Card className={accClasses.acc1}>
-      <CardContent>
-        <Typography className={classes.firstText}>
-          {tr(`Utilities.${props.name}.Title`)}
-        </Typography>
-        <Typography gutterBottom className={classes.secondText}>
-          {tr(`Utilities.${props.name}.Description`)}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button
-          style={{
-            color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.light,
-            float: "right",
-          }}
-          variant={"outlined"}
-          onClick={() => {
-            jumpTo(`/Utilities/${props.name}`);
-            triggerSetPage(tr(`Utilities.${props.name}.Title`));
-          }}
-        >
-          {tr("UtilitiesIndex.Open")}
-        </Button>
-      </CardActions>
-    </Card>
+    <Box>
+      <Card className={accClasses.acc1}>
+        <CardContent>
+          <Typography className={classes.firstText}>
+            {tr(`Utilities.${props.name}.Title`)}
+          </Typography>
+          <Typography gutterBottom className={classes.secondText}>
+            {tr(`Utilities.${props.name}.Description`)}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button
+            style={{
+              color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.light,
+              float: "right",
+            }}
+            variant={"outlined"}
+            onClick={() => {
+              jumpTo(`/Utilities/${props.name}`);
+              triggerSetPage(tr(`Utilities.${props.name}.Title`));
+            }}
+          >
+            {tr("UtilitiesIndex.Open")}
+          </Button>
+        </CardActions>
+      </Card>
+      <br />
+    </Box>
   );
 }
