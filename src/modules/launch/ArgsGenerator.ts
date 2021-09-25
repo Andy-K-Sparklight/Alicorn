@@ -152,14 +152,13 @@ export function applyAJ(
 ): string[] {
   const tPath = ajPath.trim();
   const vHost = verifyHost.trim();
-  if (isNull(tPath) || isNull(vHost) || isNull(prefetch)) {
+  if (isNull(tPath) || isNull(vHost) /*|| isNull(prefetch)*/) {
     return [];
   }
   // Prefetch is essential
-  return [
-    `-javaagent:${tPath}=${vHost}`,
-    `-Dauthlibinjector.yggdrasil.prefetched=${prefetch}`,
-  ];
+  return [`-javaagent:${tPath}=${vHost}`].concat(
+    prefetch ? [`-Dauthlibinjector.yggdrasil.prefetched=${prefetch}`] : []
+  );
 }
 
 // Nide8

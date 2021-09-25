@@ -49,5 +49,5 @@ function fakeToken(): string {
 }
 
 function buildOfflinePlayerUUID(p: string): string {
-  return v3(OFFLINE_PLAYER_PREFIX + p, AL_UUID);
+  return v3(OFFLINE_PLAYER_PREFIX + p, AL_UUID).replaceAll("-", "");
 }
