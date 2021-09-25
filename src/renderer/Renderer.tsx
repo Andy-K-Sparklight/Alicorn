@@ -171,7 +171,10 @@ function flushColors(): void {
   const e = document.createElement("style");
   e.innerText = `html {background-color:${
     getString("theme.secondary.light") || "#" + tr("Colors.Secondary.Light")
-  };} a {color:${getString("theme.primary.main", "#5d2391")};}`;
+  }; font-family:${FONT_FAMILY};} a {color:${getString(
+    "theme.primary.main",
+    "#5d2391"
+  )};}`;
   // Set background
   document.head.insertAdjacentElement("beforeend", e);
   window.dispatchEvent(new CustomEvent("ForceRefreshApp"));
