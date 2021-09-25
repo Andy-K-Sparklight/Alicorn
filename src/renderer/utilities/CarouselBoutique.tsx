@@ -3,8 +3,6 @@ import {
   Button,
   FormControl,
   FormControlLabel,
-  List,
-  ListItem,
   MuiThemeProvider,
   Radio,
   RadioGroup,
@@ -15,9 +13,9 @@ import {
 import { ipcRenderer } from "electron";
 import React, { useEffect, useState } from "react";
 import { LocalAccount } from "../../modules/auth/LocalAccount";
-import { Pair } from "../../modules/commons/Collections";
 import { ALICORN_SEPARATOR } from "../../modules/commons/Constants";
 import {
+  configureDefaultSkin,
   configureSkin,
   removeSkin,
   skinTypeFor,
@@ -28,7 +26,7 @@ import { tr } from "../Translator";
 
 const ALL_SET_ACCOUNTS_KEY = "Utilities.CarouselBoutique.AllAccounts";
 export function CarouselBoutique(): JSX.Element {
-  const [names, setNames] = useState<Pair<string, "DEFAULT" | "SLIM">[]>([]);
+  const [names, setNames] = useState<string[]>([]);
   const [selectedFile, setSelectedFile] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [isSlim, setIsSlim] = useState(false);
@@ -37,13 +35,12 @@ export function CarouselBoutique(): JSX.Element {
     const allAc = (
       window.localStorage.getItem(ALL_SET_ACCOUNTS_KEY) || ""
     ).split(ALICORN_SEPARATOR);
-    const oc: Pair<string, "DEFAULT" | "SLIM">[] = [];
+    const oc: string[] = [];
     void Promise.all(
       allAc.map(async (a) => {
-        const la = new LocalAccount(a);
-        const s = await skinTypeFor(la);
-        if (s !== "NONE") {
-          oc.push(new Pair(a, s));
+        const s = await skinTypeFor(new LocalAccount(a));
+        if (s !== "NONE" && !oc.includes(a)) {
+          oc.push(a);
         }
       })
     ).then(() => {
@@ -62,23 +59,22 @@ export function CarouselBoutique(): JSX.Element {
           message={tr("Utilities.CarouselBoutique.SetSuccessful")}
           autoHideDuration={5000}
         />
-        <Typography className={classes.secondText}>
+        <Typography className={classes.secondText} gutterBottom>
           {tr("Utilities.CarouselBoutique.Hint")}
         </Typography>
-        <List>
-          {names.map((n) => {
-            return (
-              <ListItem
-                key={n.getFirstValue()}
-                onClick={() => {
-                  setPlayerName(n.getFirstValue());
-                }}
-              >
-                <Typography>{n.getFirstValue()}</Typography>
-              </ListItem>
-            );
-          })}
-        </List>
+        {names.map((n) => {
+          return (
+            <span
+              key={n}
+              onClick={() => {
+                setPlayerName(n);
+              }}
+            >
+              {n + " "}
+            </span>
+          );
+        })}
+        <br />
         <br />
         <FormControl>
           <TextField
@@ -148,18 +144,15 @@ export function CarouselBoutique(): JSX.Element {
               "-"
             );
             setOpenSnack(true);
-            const n = names.concat([
-              new Pair(playerName, isSlim ? "SLIM" : "DEFAULT"),
-            ]);
-            setNames(n);
-            window.localStorage.setItem(
-              ALL_SET_ACCOUNTS_KEY,
-              n
-                .map((s) => {
-                  return s.getFirstValue();
-                })
-                .join(ALICORN_SEPARATOR)
-            );
+            const n = names.concat();
+            if (!n.includes(playerName)) {
+              n.push(playerName);
+              setNames(n);
+              window.localStorage.setItem(
+                ALL_SET_ACCOUNTS_KEY,
+                n.join(ALICORN_SEPARATOR)
+              );
+            }
           }}
         >
           {tr("Utilities.CarouselBoutique.AddAsSkin")}
@@ -191,23 +184,14 @@ export function CarouselBoutique(): JSX.Element {
           onClick={async () => {
             await removeSkin(playerName, "-");
             const n = names.concat();
-            let ix = -1;
-            n.forEach((n, i) => {
-              if (n.getFirstValue() === playerName) {
-                ix = i;
-              }
-            });
-            if (ix >= 0) {
-              n.splice(ix, 1);
+            const i = n.indexOf(playerName);
+            if (i >= 0) {
+              n.splice(i, 0);
             }
             setNames(n);
             window.localStorage.setItem(
               ALL_SET_ACCOUNTS_KEY,
-              n
-                .map((s) => {
-                  return s.getFirstValue();
-                })
-                .join(ALICORN_SEPARATOR)
+              n.join(ALICORN_SEPARATOR)
             );
           }}
         >
@@ -223,6 +207,38 @@ export function CarouselBoutique(): JSX.Element {
           }}
         >
           {tr("Utilities.CarouselBoutique.RemoveCape")}
+        </Button>
+        <Button
+          disabled={selectedFile.trim().length === 0}
+          style={{ marginLeft: "4px" }}
+          color={"primary"}
+          variant={"contained"}
+          onClick={async () => {
+            await configureDefaultSkin(
+              selectedFile,
+              isSlim ? "SLIM" : "DEFAULT",
+              "-"
+            );
+            setOpenSnack(true);
+          }}
+        >
+          {tr("Utilities.CarouselBoutique.SetAsDefaultSkin")}
+        </Button>
+        <Button
+          disabled={selectedFile.trim().length === 0}
+          style={{ marginLeft: "4px" }}
+          color={"primary"}
+          variant={"contained"}
+          onClick={async () => {
+            await configureDefaultSkin(
+              selectedFile,
+              isSlim ? "SLIM" : "DEFAULT",
+              "-CAPE-"
+            );
+            setOpenSnack(true);
+          }}
+        >
+          {tr("Utilities.CarouselBoutique.SetAsDefaultCape")}
         </Button>
       </Box>
     </MuiThemeProvider>
