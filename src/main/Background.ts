@@ -15,7 +15,7 @@ import {
   saveConfigSync,
   set,
 } from "../modules/config/ConfigSupport";
-import { feedWatchPony, getMainWindow } from "./Bootstrap";
+import { endWatchPony, feedWatchPony, getMainWindow } from "./Bootstrap";
 import { getUserBrowser, openBrowser } from "./Browser";
 
 const LOGIN_START =
@@ -32,6 +32,7 @@ const LOGOUT_FINAL = "https://account.microsoft.com/account/Account";
 export function registerBackgroundListeners(): void {
   ipcMain.on("closeWindow", () => {
     console.log("Closing window!");
+    endWatchPony();
     // My poor hooves!!!
     // Use destroy to make sure they close
     try {
@@ -137,6 +138,10 @@ export function registerBackgroundListeners(): void {
         await loginWindow.webContents.session.setProxy({
           proxyRules: proxy,
         });
+      } else {
+        await loginWindow.webContents.session.setProxy({
+          mode: "system",
+        });
       }
       await loginWindow.loadURL(LOGIN_START);
       return new Promise<string>((resolve) => {
@@ -192,6 +197,8 @@ export function registerBackgroundListeners(): void {
       await logoutWindow.webContents.session.setProxy({
         proxyRules: proxy,
       });
+    } else {
+      await logoutWindow.webContents.session.setProxy({ mode: "system" });
     }
     await logoutWindow.loadURL(BASE_ACCOUNT_URL);
     return new Promise<void>((resolve) => {

@@ -120,20 +120,20 @@ export function getMainWindow(): BrowserWindow | null {
 }
 
 async function initProxy(): Promise<void> {
-  const proc = getString(
-    "download.global-proxy",
-    "<local>,.cn,.mcbbs.net,.bangbang93.com,.littleservice.cn",
-    true
-  );
+  const proc = getString("download.global-proxy");
   if (proc.trim().length === 0) {
-    // getMainWindow()?.webContents.session.setProxy({
-    // proxyRules: "direct://",
-    // });
+    console.log("Proxy is empty!");
+    getMainWindow()?.webContents.session.setProxy({
+      mode: "system",
+    });
     return;
   }
   await getMainWindow()?.webContents.session.setProxy({
     proxyRules: proc,
-    proxyBypassRules: getString("download.proxy-bypass"),
+    proxyBypassRules: getString(
+      "download.proxy-bypass",
+      "<local>,.cn,.mcbbs.net,.bangbang93.com,.littleservice.cn"
+    ),
   });
   console.log("MainWindow Proxy set.");
 }

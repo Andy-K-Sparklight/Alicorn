@@ -26,6 +26,8 @@ export async function openBrowser(
     await USER_BROWSER.webContents.session.setProxy({
       proxyRules: `${proxy}`,
     });
+  } else {
+    await USER_BROWSER.webContents.session.setProxy({ mode: "system" });
   }
   USER_BROWSER.setMenu(null);
   // XXX This is not recommended
