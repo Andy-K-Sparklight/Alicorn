@@ -9,7 +9,7 @@
   "download.concurrent.chunk-size": 2048,
   "download.concurrent.timeout": 5000,
   "download.concurrent.tries-per-chunk": 5,
-  "download.concurrent.max-tasks": 20,
+  "download.concurrent.max-tasks": 12,
   "download.global-proxy": "",
   "download.proxy-bypass": "<local>,.cn,.mcbbs.net,.bangbang93.com,.littleservice.cn",
   "download.pff.chunk-size": 1024,
