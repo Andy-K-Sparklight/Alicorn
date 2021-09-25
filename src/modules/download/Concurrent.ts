@@ -60,7 +60,7 @@ export class Concurrent extends AbstractDownloader {
       return DownloadStatus.RESOLVED;
     } catch (e) {
       console.log(e);
-      return await Serial.getInstance().downloadFile(meta);
+      return DownloadStatus.RETRY; // Let wrapper retry, but not herself
     }
   }
 }
@@ -170,31 +170,48 @@ function generatePath(hash: string, start: number, end: number) {
   return `${hash}@${start}-${end}.tmp`;
 }
 
-async function downloadSingleChunk(
+function downloadSingleChunk(
   url: string,
   tmpSavePath: string,
   chunk: Chunk,
   overrideTimeout?: boolean
 ) {
-  const [ac, sti] = getTimeoutController(
-    overrideTimeout ? 0 : getConfigOptn("timeout", 5000)
-  );
-  const f = getFileWriteStream(tmpSavePath, sti);
-  const r = await fetch(url, {
-    signal: ac.signal,
-    method: "GET",
-    headers: { Range: `bytes=${chunk.start}-${chunk.end}` },
-    keepalive: true,
+  return new Promise<void>((resolve, reject) => {
+    (async () => {
+      const [ac, sti] = getTimeoutController(
+        overrideTimeout ? 0 : getConfigOptn("timeout", 5000)
+      );
+      const f = getFileWriteStream(
+        tmpSavePath,
+        sti,
+        () => {
+          reject();
+        },
+        overrideTimeout ? 0 : getConfigOptn("timeout", 5000)
+      );
+      const r = await fetch(url, {
+        signal: ac.signal,
+        method: "GET",
+        headers: { Range: `bytes=${chunk.start}-${chunk.end}` },
+        keepalive: true,
+      });
+      if (!(r.status >= 200 && r.status < 300)) {
+        throw "Failed to download! Code: " + r.status;
+      }
+      if (r.body) {
+        await r.body.pipeTo(f);
+      } else {
+        sti();
+        throw "Body is empty!";
+      }
+    })()
+      .then((b) => {
+        resolve(b);
+      })
+      .catch((e) => {
+        reject(e);
+      });
   });
-  if (!(r.status >= 200 && r.status < 300)) {
-    throw "Failed to download! Code: " + r.status;
-  }
-  if (r.body) {
-    await r.body.pipeTo(f);
-  } else {
-    sti();
-    throw "Body is empty!";
-  }
 }
 
 class Chunk {

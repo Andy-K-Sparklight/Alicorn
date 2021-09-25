@@ -1,5 +1,5 @@
 import fs, { WriteStream } from "fs-extra";
-import { IntervalChecker } from "../commons/WatchDog";
+import { IntervalChecker, WatchDog } from "../commons/WatchDog";
 export function guardPipeFile(
   origin: NodeJS.ReadableStream,
   target: WriteStream,
@@ -44,9 +44,18 @@ export function guardPipeFile(
 
 export function getFileWriteStream(
   pt: string,
-  sti: () => unknown = () => {}
+  sti: () => unknown = () => {},
+  thrower: () => unknown = () => {},
+  timeout = 0
 ): WritableStream {
+  let dog: WatchDog | null = null;
   const f = fs.createWriteStream(pt);
+  if (timeout > 0) {
+    dog = new WatchDog(timeout, () => {
+      f.close();
+      thrower();
+    });
+  }
   let p = true;
   return new WritableStream({
     write(chk) {
@@ -59,16 +68,19 @@ export function getFileWriteStream(
           if (e) {
             rej(e);
           } else {
+            dog?.feed();
             res();
           }
         });
       });
     },
     close() {
+      dog?.kill();
       f.close();
     },
     abort(e) {
       console.log(e);
+      f.close();
     },
   });
 }
