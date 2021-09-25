@@ -2,22 +2,12 @@ import { Box, CircularProgress, Typography } from "@material-ui/core";
 import { Check, CloudOff } from "@material-ui/icons";
 import { ipcRenderer } from "electron";
 import React, { useEffect, useRef, useState } from "react";
-import pkg from "../../../package.json";
-import { getString } from "../../modules/config/ConfigSupport";
 import { useTextStyles } from "../Stylex";
 import { tr } from "../Translator";
 export function NetCheck(): JSX.Element {
-  const uurl = getString(
-    "updator.url",
-    `https://cdn.jsdelivr.net/gh/Andy-K-Sparklight/Alicorn@${
-      pkg.updatorVersion - 1 // + 1, -1 because we need to "check"
-    }/`,
-    true
-  ).replace("${version}", (pkg.updatorVersion + 1).toString());
-  const turl = uurl + "release/MainBuild.json";
   return (
     <Box>
-      <TestReachable site={turl} name={"AlicornUpdate"} />
+      <TestReachable site={"cdn.jsdelivr.net"} name={"AlicornUpdate"} />
       <TestReachable site={"www.mcbbs.net"} name={"MCBBS"} />
       <TestReachable
         site={"https://versions.al.xuogroup.top/"}
