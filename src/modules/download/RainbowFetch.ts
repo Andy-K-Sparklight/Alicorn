@@ -63,16 +63,19 @@ export function getFileWriteStream(
         sti();
         p = false;
       }
-      return new Promise<void>((res, rej) => {
-        f.write(chk, (e) => {
-          if (e) {
-            rej(e);
-          } else {
-            dog?.feed();
-            res();
-          }
+      if (f.writable) {
+        return new Promise<void>((res, rej) => {
+          f.write(chk, (e) => {
+            if (e) {
+              rej(e);
+            } else {
+              dog?.feed();
+              res();
+            }
+          });
         });
-      });
+      }
+      return Promise.reject();
     },
     close() {
       dog?.kill();
