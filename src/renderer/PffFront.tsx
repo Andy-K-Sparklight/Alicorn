@@ -112,12 +112,20 @@ export function PffFront(): JSX.Element {
                     onClick={() => {
                       setRunning(true);
                       void (async () => {
-                        await pffInstall(
-                          packageName,
-                          getContainer(container),
-                          version,
-                          emitter.current,
-                          loader === "Forge" ? 1 : 4
+                        const packages = packageName.split(" ");
+                        await Promise.allSettled(
+                          packages.map(async (p, i) => {
+                            if (p.trim().length) {
+                              await pffInstall(
+                                p.trim(),
+                                getContainer(container),
+                                version,
+                                emitter.current,
+                                loader === "Forge" ? 1 : 4,
+                                `${i + 1}/${p}`
+                              );
+                            }
+                          })
                         );
                         if (mounted.current) {
                           setRunning(false);
@@ -249,7 +257,8 @@ async function pffInstall(
   container: MinecraftContainer,
   version: string,
   emitter: EventEmitter,
-  modLoader: number
+  modLoader: number,
+  tskIndex: string
 ): Promise<void> {
   setChangePageWarn(true);
   let i: string | number = name;
@@ -263,7 +272,7 @@ async function pffInstall(
     const u = new URL(proxy);
     setProxy(u.host, parseInt(u.port));
   } catch {}
-  await requireMod(i, version, container, emitter, modLoader);
+  await requireMod(i, version, container, emitter, modLoader, tskIndex);
   setPffFlag("0");
   setProxy("", 0);
   setChangePageWarn(false);

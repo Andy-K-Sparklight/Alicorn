@@ -18,9 +18,11 @@ export async function requireMod(
   gameVersion: string,
   container: MinecraftContainer,
   emitter = NULL_OUTPUT,
-  modLoader: number
+  modLoader: number,
+  tskIndex: string
 ): Promise<boolean> {
-  emitter.emit(PFF_MSG_GATE, tr("PffFront.LoadingLock"));
+  const prefix = `[${tskIndex}] `;
+  emitter.emit(PFF_MSG_GATE, prefix + tr("PffFront.LoadingLock"));
   const lockfile = await loadLockFile(container);
   let apiBase = getString("pff.api-base", CF_API_BASE_URL);
   apiBase = apiBase.endsWith("/") ? apiBase.slice(0, -1) : apiBase;
@@ -28,7 +30,7 @@ export async function requireMod(
   const cacheRoot = getString("pff.cache-root", "");
   const timeout = getNumber("download.concurrent.timeout");
   let aInfo: AddonInfo | undefined;
-  emitter.emit(PFF_MSG_GATE, tr("PffFront.Query", `Slug=${slug}`));
+  emitter.emit(PFF_MSG_GATE, prefix + tr("PffFront.Query", `Slug=${slug}`));
   if (typeof slug === "string") {
     slug = encodeURI(slug.toLowerCase());
     aInfo = await getAddonInfoBySlug(
@@ -43,7 +45,7 @@ export async function requireMod(
     aInfo = await lookupAddonInfo(slug, apiBase, timeout);
   }
   if (aInfo === undefined) {
-    emitter.emit(PFF_MSG_GATE, tr("PffFront.NoSuchAddon"));
+    emitter.emit(PFF_MSG_GATE, prefix + tr("PffFront.NoSuchAddon"));
     return false;
   }
   const latestFileId = getLatestFileByVersion(
@@ -55,13 +57,13 @@ export async function requireMod(
   if (latestFileId === 0) {
     emitter.emit(
       PFF_MSG_GATE,
-      tr("PffFront.NotCompatible", `Version=${gameVersion}`)
+      prefix + tr("PffFront.NotCompatible", `Version=${gameVersion}`)
     );
     return false;
   }
   emitter.emit(
     PFF_MSG_GATE,
-    tr("PffFront.LookingUpFile", `File=${latestFileId}`)
+    prefix + tr("PffFront.LookingUpFile", `File=${latestFileId}`)
   );
   const latestFile = await lookupFileInfo(
     aInfo,
@@ -70,24 +72,24 @@ export async function requireMod(
     timeout
   );
   if (latestFile === undefined) {
-    emitter.emit(PFF_MSG_GATE, tr("PffFront.NoSuchFile"));
+    emitter.emit(PFF_MSG_GATE, prefix + tr("PffFront.NoSuchFile"));
     return false;
   }
   emitter.emit(
     PFF_MSG_GATE,
-    tr("PffFront.Downloading", `Url=${latestFile.downloadUrl}`)
+    prefix + tr("PffFront.Downloading", `Url=${latestFile.downloadUrl}`)
   );
   const st = await requireFile(latestFile, aInfo, cacheRoot, container);
   if (st) {
-    emitter.emit(PFF_MSG_GATE, tr("PffFront.Locking"));
+    emitter.emit(PFF_MSG_GATE, prefix + tr("PffFront.Locking"));
     writeToLockFile(aInfo, latestFile, lockfile, gameVersion, modLoader);
     await saveLockFile(lockfile, container);
-    emitter.emit(PFF_MSG_GATE, tr("PffFront.Done"));
+    emitter.emit(PFF_MSG_GATE, prefix + tr("PffFront.Done"));
     return true;
   } else {
     emitter.emit(
       PFF_MSG_GATE,
-      tr("PffFront.Failed", `Url=${latestFile.downloadUrl}`)
+      prefix + tr("PffFront.Failed", `Url=${latestFile.downloadUrl}`)
     );
     return false;
   }
