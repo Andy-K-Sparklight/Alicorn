@@ -149,6 +149,12 @@ console.log(
 console.log(
   "This is free software, and you are welcome to redistribute it under certain conditions; see the license file for details."
 );
+ipcRenderer.on("finalPing", () => {
+  ipcRenderer.send("wPong");
+});
+setInterval(() => {
+  ipcRenderer.send("wPing");
+}, 2000);
 configureFontSize();
 window.addEventListener("unhandledrejection", (e) => {
   console.log(e.reason);

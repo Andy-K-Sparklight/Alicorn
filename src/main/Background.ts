@@ -12,8 +12,10 @@ import {
   getBoolean,
   getNumber,
   loadConfig,
+  saveConfigSync,
+  set,
 } from "../modules/config/ConfigSupport";
-import { getMainWindow } from "./Bootstrap";
+import { feedWatchPony, getMainWindow } from "./Bootstrap";
 import { getUserBrowser, openBrowser } from "./Browser";
 
 const LOGIN_START =
@@ -49,7 +51,7 @@ export function registerBackgroundListeners(): void {
     console.log("Waiting for application exit...");
     setTimeout(() => {
       console.log("Too long! Forcefully stopping!");
-      app.quit();
+      app.exit();
     }, 5000);
   });
   ipcMain.on("getAppPath", (e) => {
@@ -262,5 +264,17 @@ export function registerBackgroundListeners(): void {
   });
   ipcMain.handle("getElectronVersion", () => {
     return Promise.resolve(process.versions["electron"]);
+  });
+  ipcMain.on("rcRecovery", () => {
+    set("reset", true);
+    set("clean-storage", true);
+    saveConfigSync();
+  });
+  ipcMain.on("rcClose", () => {
+    getMainWindow()?.close();
+    app.exit();
+  });
+  ipcMain.on("wPing", () => {
+    feedWatchPony();
   });
 }

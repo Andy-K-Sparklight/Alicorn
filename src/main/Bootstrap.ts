@@ -1,6 +1,7 @@
-import { app, BrowserWindow, globalShortcut, screen } from "electron";
+import { app, BrowserWindow, globalShortcut, ipcMain, screen } from "electron";
 import { btoa } from "js-base64";
 import path from "path";
+import { WatchDog } from "../modules/commons/WatchDog";
 import {
   getBoolean,
   getString,
@@ -12,6 +13,19 @@ import { closeWS, initWS } from "./WSServer";
 
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow | null = null;
+const WATCH_PONY = new WatchDog(4000, () => {
+  console.log(
+    "Alicorn has lost connection for 4000ms! Sending last confirm message."
+  );
+  mainWindow?.webContents.send("finalPing");
+  const t = setTimeout(() => {
+    console.log("Alicorn didn't respond, starting SOS!");
+    void SOS();
+  }, 1000);
+  ipcMain.once("wPong", () => {
+    clearTimeout(t);
+  });
+});
 console.log("Loading config...");
 loadConfigSync();
 if (!getBoolean("hardware-acc")) {
@@ -122,4 +136,36 @@ async function initProxy(): Promise<void> {
     proxyBypassRules: getString("download.proxy-bypass"),
   });
   console.log("MainWindow Proxy set.");
+}
+
+export async function SOS(): Promise<void> {
+  const dh: number[] | undefined = mainWindow?.getSize();
+  const bv = new BrowserWindow();
+  mainWindow?.destroy();
+  mainWindow = new BrowserWindow({
+    width: dh ? dh[0] : undefined,
+    height: dh ? dh[1] : undefined,
+    webPreferences: {
+      webSecurity: false,
+      sandbox: false,
+      contextIsolation: false,
+      nodeIntegration: true,
+    },
+    frame: false,
+  });
+  mainWindow.setMenu(null);
+  bv.destroy();
+  try {
+    await mainWindow.webContents.loadFile("Recovery.html");
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function feedWatchPony(): void {
+  WATCH_PONY.feed();
+}
+
+export function endWatchPony(): void {
+  WATCH_PONY.kill();
 }
