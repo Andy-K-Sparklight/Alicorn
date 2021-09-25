@@ -44,3 +44,11 @@ export const PLACE_HOLDER = "#//!?PH>>";
 export const COMMON_HEADER = {
   connection: "keep-alive",
 };
+
+export const DOH_CONFIGURE: Record<string, string> = {
+  iQDNS: "https://a.passcloud.xyz/dns-query",
+  Cloudflare: "https://cloudflare-dns.com/dns-query",
+  RubyFish: "https://rubyfish.cn/dns-query",
+  AdGuard: "https://dns.adguard.com/dns-query",
+  OpenDNS: "https://doh.opendns.com/dns-query",
+};

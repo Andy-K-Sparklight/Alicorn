@@ -45,5 +45,6 @@
   "goto.animate": true,
   "action.close-on-exit": false,
   "dev.experimental": false,
-  "web.global-proxy": ""
+  "web.global-proxy": "",
+  "doh-server": "Native"
 }

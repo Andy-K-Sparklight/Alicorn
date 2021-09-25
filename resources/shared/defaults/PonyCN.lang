@@ -1438,6 +1438,38 @@ JRE 快速搜索
 
 Alicorn 会用这个名字亲切地称呼您 - 嗯……可爱~
 
+# Options.doh-server.title
+
+基于 HTTPS 的 DNS（DoH）^
+
+# Options.doh-server.desc
+
+配置首选的 DNS 解析装置用于解析 URL，以提升下载稳定性等 - 无法预知各个 DNS 服务器的效果，可能需要试几次
+
+# Options.doh-server.Native
+
+系统（不使用）
+
+# Options.doh-server.iQDNS
+
+iQDNS
+
+# Options.doh-server.Cloudflare
+
+Cloudflare
+
+# Options.doh-server.RubyFish
+
+红鱼
+
+# Options.doh-server.OpenDNS
+
+OpenDNS
+
+# Options.doh-server.AdGuard
+
+AdGuard
+
 # Options.web.global-proxy.title
 
 浏览器 HTTP 代理

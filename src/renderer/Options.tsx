@@ -15,6 +15,7 @@ import {
 } from "@material-ui/core";
 import os from "os";
 import React, { useEffect, useState } from "react";
+import { DOH_CONFIGURE } from "../modules/commons/Constants";
 import {
   getBoolean,
   getNumber,
@@ -144,7 +145,11 @@ export function OptionsPage(): JSX.Element {
             bindConfig={"cmc.disable-log4j-config"}
           />
 
-          <InputItem type={ConfigType.BOOL} bindConfig={"hot-key"} />
+          <InputItem
+            type={ConfigType.BOOL}
+            experimental
+            bindConfig={"hot-key"}
+          />
           <InputItem type={ConfigType.BOOL} bindConfig={"java.simple-search"} />
           <InputItem type={ConfigType.NUM} bindConfig={"java.search-depth"} />
         </TabPanel>
@@ -228,6 +233,12 @@ export function OptionsPage(): JSX.Element {
           />
           <InputItem type={ConfigType.STR} bindConfig={"web.global-proxy"} />
           <InputItem
+            type={ConfigType.RADIO}
+            bindConfig={"doh-server"}
+            experimental
+            choices={Object.keys(DOH_CONFIGURE).concat(["Native"])}
+          />
+          <InputItem
             type={ConfigType.STR}
             bindConfig={"download.proxy-bypass"}
           />
@@ -243,7 +254,11 @@ export function OptionsPage(): JSX.Element {
             bindConfig={"updator.use-update"}
           />
           <InputItem type={ConfigType.BOOL} bindConfig={"dev.experimental"} />
-          <InputItem type={ConfigType.STR} bindConfig={"updator.url"} />
+          <InputItem
+            type={ConfigType.STR}
+            experimental
+            bindConfig={"updator.url"}
+          />
           <InputItem type={ConfigType.BOOL} bindConfig={"hardware-acc"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"dev"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"dev.f12"} />
@@ -274,6 +289,7 @@ export function InputItem(props: {
   onlyOn?: NodeJS.Platform;
   notOn?: NodeJS.Platform;
   onChange?: () => unknown;
+  experimental?: boolean;
 }): JSX.Element {
   const callChange = props.onChange ? props.onChange : () => {};
   const [refreshBit, forceRefresh] = useState<boolean>(true);
@@ -319,6 +335,11 @@ export function InputItem(props: {
       },
     })
   )();
+  if (props.experimental) {
+    if (!getBoolean("dev.experimental")) {
+      return <></>;
+    }
+  }
   return (
     <Box>
       <Typography color={"primary"} className={classes.title} gutterBottom>

@@ -1,6 +1,7 @@
 import { app, BrowserWindow, globalShortcut, ipcMain, screen } from "electron";
 import { btoa } from "js-base64";
 import path from "path";
+import { DOH_CONFIGURE } from "../modules/commons/Constants";
 import { WatchDog } from "../modules/commons/WatchDog";
 import {
   getBoolean,
@@ -82,6 +83,7 @@ app.on("ready", async () => {
   await mainWindow.loadFile(path.resolve(appPath, "Renderer.html"));
   console.log("Preparing WS!");
   initWS();
+  applyDoHSettings();
   console.log("Setting up proxy!");
   await initProxy();
 });
@@ -122,7 +124,6 @@ export function getMainWindow(): BrowserWindow | null {
 async function initProxy(): Promise<void> {
   const proc = getString("download.global-proxy");
   if (proc.trim().length === 0) {
-    console.log("Proxy is empty!");
     getMainWindow()?.webContents.session.setProxy({
       mode: "system",
     });
@@ -136,6 +137,28 @@ async function initProxy(): Promise<void> {
     ),
   });
   console.log("MainWindow Proxy set.");
+}
+
+export function applyDoHSettings(): void {
+  // @ts-ignore
+  if (app.configureHostResolver) {
+    // Compatibility
+    const dh = getString("doh-server", "Native");
+    const p = DOH_CONFIGURE[dh] || "";
+    const k = Object.values(DOH_CONFIGURE);
+    k.splice(k.indexOf(p), 1);
+    if (p.length > 0) {
+      console.log("Configuring DoH server as " + p);
+      app.configureHostResolver({
+        secureDnsMode: "secure",
+        secureDnsServers: [p, ...k], // Align the rest
+      });
+    }
+  } else {
+    console.log(
+      "Current Electron binary doesn't support DoH settings, skipped."
+    );
+  }
 }
 
 export async function SOS(): Promise<void> {
