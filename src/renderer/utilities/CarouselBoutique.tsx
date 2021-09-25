@@ -186,7 +186,7 @@ export function CarouselBoutique(): JSX.Element {
             const n = names.concat();
             const i = n.indexOf(playerName);
             if (i >= 0) {
-              n.splice(i, 0);
+              n.splice(i, 1);
             }
             setNames(n);
             window.localStorage.setItem(
