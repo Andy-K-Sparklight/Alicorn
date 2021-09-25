@@ -25,7 +25,7 @@ export function Welcome(): JSX.Element {
       const l = window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY);
       if (l) {
         const h = l.split("/");
-        while (h.shift()?.toLowerCase() !== "readytolaunch") {}
+        while (h.length > 0 && h.shift()?.toLowerCase() !== "readytolaunch") {}
         const c = h.shift();
         const i = h.shift();
         if (c) {
