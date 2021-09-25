@@ -69,7 +69,7 @@ app.on("ready", async () => {
   console.log("Preparing WS!");
   initWS();
   console.log("Setting up proxy!");
-  initProxy();
+  await initProxy();
 });
 
 app.on("window-all-closed", () => {
@@ -105,19 +105,19 @@ export function getMainWindow(): BrowserWindow | null {
   return mainWindow;
 }
 
-function initProxy(): void {
+async function initProxy(): Promise<void> {
   const proc = getString(
     "download.global-proxy",
     "<local>,.cn,.mcbbs.net,.bangbang93.com,.littleservice.cn",
     true
   );
   if (proc.trim().length === 0) {
-    getMainWindow()?.webContents.session.setProxy({
-      proxyRules: "direct://",
-    });
+    // getMainWindow()?.webContents.session.setProxy({
+    // proxyRules: "direct://",
+    // });
     return;
   }
-  getMainWindow()?.webContents.session.setProxy({
+  await getMainWindow()?.webContents.session.setProxy({
     proxyRules: proc,
     proxyBypassRules: getString("download.proxy-bypass"),
   });
