@@ -24,7 +24,7 @@ export async function openBrowser(
   });
   if (proxy.trim().length > 0) {
     await USER_BROWSER.webContents.session.setProxy({
-      proxyRules: `${proxy},direct://`,
+      proxyRules: `${proxy}`,
     });
   }
   USER_BROWSER.setMenu(null);
