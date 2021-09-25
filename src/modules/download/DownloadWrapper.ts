@@ -1,7 +1,7 @@
 import EventEmitter from "events";
 import { tr } from "../../renderer/Translator";
 import { getModifiedDate, isFileExist } from "../commons/FileUtil";
-import { getBoolean, getNumber } from "../config/ConfigSupport";
+import { getNumber } from "../config/ConfigSupport";
 import { getAllContainers, getContainer } from "../container/ContainerUtil";
 import { fetchSharedFile, isSharedContainer } from "../container/SharedFiles";
 import {
@@ -134,7 +134,11 @@ export async function existsAndValidateRaw(
 
 // Cached file validate
 // If no sha provided, we'll ignore it
-async function _existsAndValidate(pt: string, sha1: string): Promise<boolean> {
+async function _existsAndValidate(
+  pt: string,
+  sha1: string,
+  size = 0
+): Promise<boolean> {
   if (!(await isFileExist(pt))) {
     deleteRecord(pt);
     return false;
@@ -143,15 +147,15 @@ async function _existsAndValidate(pt: string, sha1: string): Promise<boolean> {
     // This might be a wrong SHA, we should not cache it
     return true;
   }
-  if (getBoolean("download.skip-validate")) {
-    return true;
-  }
+  /* if (getBoolean("download.skip-validate")) {
+    return await sizeValidate(pt, size);
+  } */
   const lastValidated = getLastValidateModified(pt);
   const actualModifiedDate = await getModifiedDate(pt);
   if (actualModifiedDate <= lastValidated) {
     return true;
   }
-  const res = await validate(pt, sha1);
+  const res = await validate(pt, sha1, size); // We can accept the result of sizeValidate
   if (res) {
     updateRecord(pt);
   } else {
