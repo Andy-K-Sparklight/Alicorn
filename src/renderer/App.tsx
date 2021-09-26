@@ -541,7 +541,7 @@ export function App(): JSX.Element {
         <Route path={"/Options"} component={OptionsPage} />
         <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
         <Route
-          path={"/PffFront/:container/:version/:loader/:name?"}
+          path={"/PffFront/:container/:version/:loader/:name?/:autostart?"}
           component={PffFront}
         />
         <Route path={"/Welcome"} component={Welcome} />

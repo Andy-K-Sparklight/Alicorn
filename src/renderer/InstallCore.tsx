@@ -50,7 +50,10 @@ import {
 } from "../modules/pff/get/MojangCore";
 import { performFabricInstall } from "../modules/pff/install/FabricInstall";
 import { performForgeInstall } from "../modules/pff/install/ForgeInstall";
+import { loadProfile } from "../modules/profile/ProfileLoader";
 import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
+import { jumpTo, triggerSetPage } from "./GoTo";
+import { submitWarn } from "./Message";
 import { FailedHint, OperatingHintCustom } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { fullWidth, useFormStyles } from "./Stylex";
@@ -69,6 +72,7 @@ export function InstallCore(): JSX.Element {
     ReleaseType.RELEASE
   );
   const [patchableCores, setPatchableCores] = useState<PatchableCore[]>([]);
+  const [fabricCores, setFabricCores] = useState<PatchableCore[]>([]);
   const [baseMojangVersionForge, setBaseMojangVersionForge] =
     useState<string>("");
   const [failedMsg, setFailedMsg] = useState<string>();
@@ -89,6 +93,9 @@ export function InstallCore(): JSX.Element {
   const [progressMsg, _setProgressMsg] = useState("");
   const [tabValue, setTabValue] = useState(0);
   const [updatePatchableCoresBit, updatePatchableCores] = useState(false);
+  const [updateFabricCoresBit, updateFabricCores] = useState(false);
+  const [selectedIrisBase, setSelectedIrisBase] = useState("");
+  const [selectedIrisContainer, setSelectedIrisContainer] = useState("");
   function setProgressMsg(msg: string): void {
     // Binding
     if (mounted.current) {
@@ -141,6 +148,15 @@ export function InstallCore(): JSX.Element {
       }
     })();
   }, [baseMojangVersionFabric]);
+
+  useEffect(() => {
+    void (async () => {
+      const aCores = await filterFabricCores();
+      if (mounted.current) {
+        setFabricCores(aCores);
+      }
+    })();
+  }, [updateFabricCoresBit]);
 
   useEffect(() => {
     void (async () => {
@@ -282,6 +298,7 @@ export function InstallCore(): JSX.Element {
               }
               return;
             }
+            updateFabricCores(!updateFabricCoresBit);
             setProgressMsg("Done! Cleaning up files...");
             await removeFabricInstaller(u, ct);
             if (mounted.current) {
@@ -359,6 +376,13 @@ export function InstallCore(): JSX.Element {
             label={
               <Typography color={"primary"}>
                 {tr("InstallCore.InstallFabric")}
+              </Typography>
+            }
+          />
+          <Tab
+            label={
+              <Typography color={"primary"}>
+                {tr("InstallCore.InstallIris")}
               </Typography>
             }
           />
@@ -591,6 +615,74 @@ export function InstallCore(): JSX.Element {
             </Button>
           </FormControl>
         </TabPanel>
+        {/* Iris */}
+        <TabPanel value={tabValue} index={3}>
+          <Typography className={classes.instr}>
+            {tr("InstallCore.InstallIrisInstr")}
+          </Typography>
+          <FormControl className={classes.formControl}>
+            <InputLabel
+              id={"CoreInstall-Iris-SelectBase"}
+              className={classes.label}
+            >
+              {tr("InstallCore.IrisBaseVersion")}
+            </InputLabel>
+            <Select
+              labelId={"CoreInstall-Iris-SelectBase"}
+              color={"primary"}
+              className={classes.selector + " " + fullWidthClasses.form}
+              onChange={(e) => {
+                const s = String(e.target.value).split(ALICORN_SEPARATOR);
+                if (s.length >= 2) {
+                  const c = String(s.shift());
+                  const i = String(s.shift());
+                  setSelectedIrisBase(i);
+                  setSelectedIrisContainer(c);
+                }
+              }}
+              value={
+                selectedIrisContainer + ALICORN_SEPARATOR + selectedIrisBase
+              }
+            >
+              {fabricCores.map((r) => {
+                return (
+                  <MenuItem
+                    key={r.container + "/" + r.id}
+                    value={r.container + ALICORN_SEPARATOR + r.id}
+                  >
+                    {`${r.container}/${r.id}`}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+            <br />
+            <Button
+              className={classes.btn}
+              variant={"contained"}
+              color={"primary"}
+              disabled={isNull(selectedIrisContainer)}
+              onClick={async () => {
+                try {
+                  const prof = await loadProfile(
+                    selectedIrisBase,
+                    getContainer(selectedIrisContainer),
+                    true
+                  );
+                  if (!isNull(prof.baseVersion)) {
+                    jumpTo(
+                      `/PffFront/${selectedIrisContainer}/${prof.baseVersion}/Fabric/iris-shaders/1`
+                    );
+                    triggerSetPage("PffFront");
+                  }
+                } catch (e) {
+                  submitWarn(String(e));
+                }
+              }}
+            >
+              {tr("InstallCore.Start")}
+            </Button>
+          </FormControl>
+        </TabPanel>
       </Box>
     </MuiThemeProvider>
   );
@@ -645,6 +737,18 @@ async function filterMojangCores(): Promise<PatchableCore[]> {
   for (const [c, ids] of cores) {
     for (const i of ids) {
       if (whatProfile(i) === ProfileType.MOJANG) {
+        b.push({ id: i, container: c.id });
+      }
+    }
+  }
+  return b;
+}
+async function filterFabricCores(): Promise<PatchableCore[]> {
+  const cores = await scanCoresInAllMountedContainers();
+  const b: PatchableCore[] = [];
+  for (const [c, ids] of cores) {
+    for (const i of ids) {
+      if (whatProfile(i) === ProfileType.FABRIC) {
         b.push({ id: i, container: c.id });
       }
     }

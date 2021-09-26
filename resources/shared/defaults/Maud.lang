@@ -590,7 +590,7 @@ ASC
 
 # InstallCore.InstallMinecraftInstr
 
-安装 Minecraft 核心。
+安装 Minecraft 原版核心。
 
 # InstallCore.InstallForge
 
@@ -598,7 +598,7 @@ Forge
 
 # InstallCore.InstallForgeInstr
 
-安装 Forge
+安装 Forge，注意，需要已经安装对应原版核心。
 
 # InstallCore.InstallFabric
 
@@ -606,7 +606,15 @@ Fabric
 
 # InstallCore.InstallFabricInstr
 
-安装 Fabric
+安装 Fabric，注意，需要已经安装对应原版核心。
+
+# InstallCore.InstallIris
+
+高清修复
+
+# InstallCore.InstallIrisInstr
+
+安装高清修复，注意，需要 Fabric。
 
 # InstallCore.TargetContainer
 

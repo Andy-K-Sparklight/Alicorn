@@ -822,6 +822,18 @@ Pff 正安装 Mod……
 
 @HTML为已有的 Minecraft 核心进行改装并安装 Fabric，Fabric Mod 需要进行此改装后才可用。\n<span style="color:#ff8400;">注意：你必须安装了对应版本的 Minecraft 核心才可以进行改装！</span>
 
+# InstallCore.InstallIris
+
+安装高清修复
+
+# InstallCore.InstallIrisInstr
+
+@HTML<b>高清修复</b>是指对着色器……算了，说那么多也没什么用，总之，会让你的 Minecraft 看上去非常漂亮！\nAlicorn 为你准备了 Iris，不仅支持绝大多数顶级光影，还与几乎所有的 Mod 兼容（包括 Sodium）！\n你需要<b>先改装一个已有的核心为 Fabric</b>，随后便可在这里选择并安装。
+
+# InstallCore.IrisBaseVersion
+
+安装到此 Fabric 上：
+
 # InstallCore.TargetContainer
 
 目标容器

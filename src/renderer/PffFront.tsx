@@ -36,13 +36,14 @@ import { tr } from "./Translator";
 
 export function PffFront(): JSX.Element {
   const emitter = useRef(new EventEmitter());
-  const { container, version, name, loader } = useParams<{
+  const { container, version, name, loader, autostart } = useParams<{
     container: string;
     version: string;
     name?: string;
+    autostart?: string;
     loader: string;
   }>();
-  const [isRunning, setRunning] = useState(false);
+  const [isRunning, setRunning] = useState(autostart === "1");
   const [info, setInfo] = useState("");
   const [packageName, setPackageName] = useState(name || "");
   const [lockfile, setLockfile] = useState<Lockfile>();
@@ -88,6 +89,31 @@ export function PffFront(): JSX.Element {
     return () => {
       emitter.current.removeListener(PFF_MSG_GATE, fun);
     };
+  }, []);
+  useEffect(() => {
+    if (autostart === "1") {
+      // setRunning(true);
+      void (async () => {
+        const packages = packageName.split(" ");
+        await Promise.allSettled(
+          packages.map(async (p, i) => {
+            if (p.trim().length) {
+              await pffInstall(
+                p.trim(),
+                getContainer(container),
+                version,
+                emitter.current,
+                loader === "Forge" ? 1 : 4,
+                `${i + 1}/${p}`
+              );
+            }
+          })
+        );
+        if (mounted.current) {
+          setRunning(false);
+        }
+      })();
+    }
   }, []);
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
