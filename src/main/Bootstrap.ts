@@ -192,3 +192,19 @@ export function feedWatchPony(): void {
 export function endWatchPony(): void {
   WATCH_PONY.kill();
 }
+
+let t: NodeJS.Timeout;
+export function cliWatchPony(): void {
+  try {
+    clearInterval(t);
+  } catch {}
+  t = setInterval(() => {
+    feedWatchPony();
+  }, 2000);
+}
+
+export function stiWatchPony(): void {
+  try {
+    clearInterval(t);
+  } catch {}
+}

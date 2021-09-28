@@ -15,7 +15,13 @@ import {
   saveConfigSync,
   set,
 } from "../modules/config/ConfigSupport";
-import { endWatchPony, feedWatchPony, getMainWindow } from "./Bootstrap";
+import {
+  cliWatchPony,
+  endWatchPony,
+  feedWatchPony,
+  getMainWindow,
+  stiWatchPony,
+} from "./Bootstrap";
 import { getUserBrowser, openBrowser } from "./Browser";
 
 const LOGIN_START =
@@ -261,10 +267,12 @@ export function registerBackgroundListeners(): void {
     }
   );
   ipcMain.on("hideWindow", () => {
+    cliWatchPony();
     getMainWindow()?.hide();
   });
   ipcMain.on("showWindow", () => {
     getMainWindow()?.show();
+    stiWatchPony();
   });
   ipcMain.on("changeDir", (_e, d: string) => {
     process.chdir(d);
