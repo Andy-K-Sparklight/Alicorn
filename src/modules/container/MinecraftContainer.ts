@@ -35,10 +35,16 @@ export class MinecraftContainer {
     return path.resolve(this.assetsRoot, "legacy");
   }
 
+  /**
+   * @deprecated
+   */
   getPffLockFile(): string {
     return path.resolve(this.rootDir, "pff.lock");
   }
 
+  getPff2LockFile(): string {
+    return path.resolve(this.rootDir, "pff2.lock");
+  }
   getTempFileStorePath(relativePath: string): string {
     return path.resolve(this.tempFileRoot, relativePath);
   }

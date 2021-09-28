@@ -8,7 +8,9 @@ import {
   requireFile,
 } from "./Get";
 import { Lockfile, writeToLockFile } from "./Lockfile";
-
+/**
+ * @deprecated
+ */
 export async function upgradeFile(
   lockfile: Lockfile,
   apiBase: string,

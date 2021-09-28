@@ -1,12 +1,16 @@
-import { MinecraftContainer } from "../../container/MinecraftContainer";
-import { isFileExist } from "../../commons/FileUtil";
 import { readJSON, writeFile } from "fs-extra";
+import { isFileExist } from "../../commons/FileUtil";
+import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { AddonInfo, File } from "./Get";
-
+/**
+ * @deprecated
+ */
 export interface Lockfile {
   files: Record<string, FileMeta>;
 }
-
+/**
+ * @deprecated
+ */
 export interface FileMeta {
   fileName: string;
   addonId: number;
@@ -19,6 +23,9 @@ export interface FileMeta {
 }
 
 // This operation modify the lockfile
+/**
+ * @deprecated
+ */
 export async function fixLockFile(
   lockfile: Lockfile,
   container: MinecraftContainer
@@ -33,7 +40,9 @@ export async function fixLockFile(
     })
   );
 }
-
+/**
+ * @deprecated
+ */
 export function writeToLockFile(
   addon: AddonInfo,
   file: File,
@@ -52,7 +61,9 @@ export function writeToLockFile(
     modLoader: modLoader,
   };
 }
-
+/**
+ * @deprecated
+ */
 export async function saveLockFile(
   lockfile: Lockfile,
   container: MinecraftContainer
@@ -64,7 +75,9 @@ export async function saveLockFile(
     );
   } catch {}
 }
-
+/**
+ * @deprecated
+ */
 export async function loadLockFile(
   container: MinecraftContainer
 ): Promise<Lockfile> {

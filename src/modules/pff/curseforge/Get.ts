@@ -237,7 +237,7 @@ export function getLatestFileByVersion(
   const indexes = addonInfo.gameVersionLatestFiles;
   for (const i of indexes) {
     if (i.gameVersion === gameVersion) {
-      if (modLoader === 0 || modLoader === i.modLoader) {
+      if (modLoader === -1 || modLoader === i.modLoader) {
         return i.projectFileId;
       }
     }

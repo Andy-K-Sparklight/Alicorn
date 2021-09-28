@@ -12,7 +12,9 @@ import {
 import { loadLockFile, saveLockFile, writeToLockFile } from "./Lockfile";
 import { upgradeFile } from "./Upgrade";
 import { CF_API_BASE_URL, NULL_OUTPUT, PFF_MSG_GATE } from "./Values";
-
+/**
+ * @deprecated
+ */
 export async function requireMod(
   slug: string | number,
   gameVersion: string,

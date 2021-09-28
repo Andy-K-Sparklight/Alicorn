@@ -4,6 +4,9 @@ import { uniqueHash } from "../../commons/BasicHash";
 import { AddonInfo, File } from "./Get";
 import { GLOBAL_CACHE_NAME, GLOBAL_FILE_NAME } from "./Values";
 
+/**
+ * @deprecated
+ */
 export async function findCachedFile(
   file: File,
   addon: AddonInfo,
@@ -24,7 +27,9 @@ export async function findCachedFile(
     return undefined;
   }
 }
-
+/**
+ * @deprecated
+ */
 export async function writeCachedFile(
   file: File,
   addon: AddonInfo,
