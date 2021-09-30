@@ -65,7 +65,7 @@ export async function checkUpdate(): Promise<void> {
     const lv = await findLatestCanUpdateVersion();
     console.log("Latest can update version is " + lv);
     initUpdator(lv);
-    if (lv === pkg.updatorVersion + 1) {
+    if (lv === pkg.updatorVersion) {
       console.log(
         "You are running the latest version! (Latest Equals To Current)"
       );
