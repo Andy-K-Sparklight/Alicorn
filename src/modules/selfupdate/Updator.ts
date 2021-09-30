@@ -165,7 +165,12 @@ export async function findLatestCanUpdateVersion(): Promise<number> {
   while (status) {
     try {
       status =
-        (await fetch(bu, { method: "GET", cache: "no-cache" })).status === 200;
+        (
+          await fetch(bu, {
+            method: "GET",
+            cache: "no-cache",
+          })
+        ).status === 200;
     } catch {
       status = false;
     }
