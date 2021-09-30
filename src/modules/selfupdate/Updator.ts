@@ -18,14 +18,14 @@ let RENDERER_BUILD_FILE_RELEASE: string;
 let LOCK_FILE: string;
 let IS_UPDATING = false;
 let func: (() => unknown) | null = null;
-export function initUpdator(): void {
+export function initUpdator(lv?: number): void {
   BASE_URL = getString(
     "updator.url",
     `https://cdn.jsdelivr.net/gh/Andy-K-Sparklight/Alicorn@${
-      pkg.updatorVersion + 1
+      lv || pkg.updatorVersion + 1
     }/`,
     true
-  ).replace("${version}", (pkg.updatorVersion + 1).toString());
+  ).replace("${version}", (lv || pkg.updatorVersion + 1).toString());
   RELEASE_FOLDER = BASE_URL + "release/";
   MAIN_BUILD_FILE_RELEASE = RELEASE_FOLDER + "MainBuild.json";
   RENDERER_BUILD_FILE_RELEASE = RELEASE_FOLDER + "RendererBuild.json";
@@ -62,6 +62,15 @@ export async function checkUpdate(): Promise<void> {
       return;
     }
     console.log("Start checking updates!");
+    const lv = await findLatestCanUpdateVersion();
+    console.log("Latest can update version is " + lv);
+    initUpdator(lv);
+    if (lv === pkg.updatorVersion + 1) {
+      console.log(
+        "You are running the latest version! (Latest Equals To Current)"
+      );
+      return;
+    }
     const HEAD = MAIN_BUILD_FILE_RELEASE;
     console.log("HEAD is " + MAIN_BUILD_FILE_RELEASE);
     const BASE = RELEASE_FOLDER;
@@ -90,18 +99,6 @@ export async function checkUpdate(): Promise<void> {
     if (AJV.validate(BuildInfoSchema, res)) {
       d = res as BuildInfo;
       console.log("Validate passed.");
-      /*
-      if (await isFileExist(LOCK_FILE)) {
-        if (
-          new Date((await fs.readFile(LOCK_FILE)).toString()) >=
-          new Date(d.date)
-        ) {
-          console.log("You are running the latest version! (Date)");
-          IS_UPDATING = false;
-          notifyAll();
-          return;
-        }
-      }*/
       console.log(
         "This update is released at " + new Date(d.date).toLocaleString()
       );
@@ -155,33 +152,57 @@ export async function checkUpdate(): Promise<void> {
     throw e;
   }
 }
-/*
-async function hintUpdate(d: { version: string; date: string }): Promise<void> {
-  const bw = getMainWindow();
-  if (bw) {
-    await dialog.showMessageBox(bw, {
-      title: "我们已为您更新至最新版本",
-      message: `这里是 Alicorn Launcher 版本 ${d.version}，创建于 ${d.date}。\n更新已经安装，但当您下一次启动 Alicorn 时它们才会生效。\n感谢您使用 Alicorn 启动器！`,
-      buttons: ["不用谢"],
-    });
+
+export async function findLatestCanUpdateVersion(): Promise<number> {
+  let target = pkg.updatorVersion + 1;
+  let bu = getString(
+    "updator.url",
+    `https://cdn.jsdelivr.net/gh/Andy-K-Sparklight/Alicorn@${target}/release/MainBuild.json`,
+    true
+  ).replace("${version}", target.toString());
+  console.log("Checking version " + target);
+  let status = true;
+  while (status) {
+    try {
+      status =
+        (await fetch(bu, { method: "GET", cache: "no-cache" })).status === 200;
+    } catch {
+      status = false;
+    }
+    if (status) {
+      target++;
+      bu = getString(
+        "updator.url",
+        `https://cdn.jsdelivr.net/gh/Andy-K-Sparklight/Alicorn@${target}/release/MainBuild.json`,
+        true
+      ).replace("${version}", target.toString());
+    }
   }
+  return target - 1;
 }
-*/
+
 export async function doUpdate(
   baseUrl: string,
   info: BuildInfo
 ): Promise<boolean> {
   try {
     const basePath = getBasePath();
+    const o: Promise<void>[] = [];
     for (const v of info.files) {
       console.log("Downloading " + v);
       const target = path.resolve(basePath, v + ".local");
       // First download all, then rename
       const meta = new DownloadMeta(baseUrl + v, target, "");
-      if ((await Serial.getInstance().downloadFile(meta, true)) !== 1) {
-        throw "Failed to download: " + meta.url;
-      }
+      o.push(
+        (async () => {
+          const s = await Serial.getInstance().downloadFile(meta, true);
+          if (s !== 1) {
+            throw "Failed to download: " + v;
+          }
+        })()
+      );
     }
+    await Promise.all(o);
     return true;
   } catch (e) {
     console.log(e);
