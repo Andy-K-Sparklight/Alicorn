@@ -18,8 +18,8 @@ export interface SimpleModLoaderInfo {
   version: string;
 }
 export interface SimpleFile {
-  projectID: number;
-  fileID: number;
+  projectID: number | string;
+  fileID: number | string;
 }
 
 export function transformManifest5(

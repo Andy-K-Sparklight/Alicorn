@@ -35,20 +35,24 @@ export function createBaseCFModel(): ModpackModel {
 }
 
 export function addPffMod(
-  addonId: number,
-  fileId: number,
+  addonId: string,
+  fileId: string,
   model: ModpackModel | CommonModpackModel
 ): void {
+  const aid: string | number =
+    parseInt(addonId).toString() === addonId ? parseInt(addonId) : addonId;
+  const fid: string | number =
+    parseInt(fileId).toString() === fileId ? parseInt(fileId) : fileId;
   for (let f of model.files) {
     // @ts-ignore
     if (f["projectID"]) {
       f = f as SimpleFile;
-      if (f.projectID === addonId && f.fileID === fileId) {
+      if (f.projectID === aid && f.fileID === fid) {
         return;
       }
     }
   }
-  model.files.push({ projectID: addonId, fileID: fileId });
+  model.files.push({ projectID: aid, fileID: fid });
 }
 
 export function addOverride(

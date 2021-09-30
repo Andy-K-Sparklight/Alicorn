@@ -14,6 +14,7 @@ import {
   lookupModMetaInfo,
   searchMetaBySlug,
 } from "../modrinth/Get";
+import { addToLockfile, Lockfile2 } from "./Lockfile";
 import { ModArtifact, ModMeta } from "./ModDefine";
 
 // One resolver is for one mod slug
@@ -34,17 +35,25 @@ export interface ModResolver {
     mainId: string | undefined,
     artifactId: string | undefined
   ): Promise<void>;
+  writeLock(lockfile: Lockfile2): Promise<void>;
   clearCached(): Promise<void>;
 }
 
 export abstract class AbstractModResolver implements ModResolver {
   public mainId: string | undefined; // Selected, like dpkg
   public artifactId: string | undefined; // Selected
-  protected slug: string;
-  protected cachedMeta: ModMeta | undefined;
-  protected cachedArtifact: ModArtifact | undefined;
+  public slug: string;
+  public cachedMeta: ModMeta | undefined;
+  public cachedArtifact: ModArtifact | undefined;
   public constructor(slug: string) {
     this.slug = slug;
+  }
+  writeLock(lockfile: Lockfile2): Promise<void> {
+    if (!this.cachedMeta || !this.cachedArtifact) {
+      throw "Must resolve first!";
+    }
+    addToLockfile(lockfile, this.cachedMeta, this.cachedArtifact);
+    return Promise.resolve();
   }
   abstract resolveMod(): Promise<ModMeta>;
   abstract searchMods(num: number): Promise<ModMeta[]>;
@@ -93,9 +102,8 @@ export class CurseforgeModResolver extends AbstractModResolver {
       this.cachedMeta = m;
       this.mainId = m.id; // Select
       return m;
-    } else {
-      throw `Could not resolve '${this.slug}'!`;
     }
+    throw `Could not resolve '${this.slug}'!`;
   }
   async searchMods(num: number): Promise<ModMeta[]> {
     const s = await moreAddonInfoBySlug(
@@ -158,7 +166,7 @@ export class CurseforgeModResolver extends AbstractModResolver {
     modLoader: "Fabric" | "Forge"
   ): Promise<boolean> {
     if (!this.insideCachedAddonInfo) {
-      return Promise.resolve(false);
+      throw "Must resolve first!";
     }
     for (const gf of this.insideCachedAddonInfo.gameVersionLatestFiles) {
       if (
@@ -305,7 +313,7 @@ function transformAddonInfoToMeta(aInfo: AddonInfo): ModMeta {
   };
 }
 
-function modLoaderOf(type: number): "Forge" | "Fabric" | undefined {
+export function modLoaderOf(type: number): "Forge" | "Fabric" | undefined {
   if (type === 1) {
     return "Forge";
   }

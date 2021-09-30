@@ -856,9 +856,17 @@ Maud 2 不支持此功能，但其他助理可能支持。
 
 进行模糊查询时请求的的分页大小
 
-# Options.pff.api-base.desc
+# Options.pff.first-source.desc
 
-指定 Pff 在安装软件包时使用的起始 URL
+选择优先搜索 Mod 的地方
+
+# Options.pff.first-source.Curseforge
+
+Curseforge
+
+# Options.pff.first-source.Modrinth
+
+Modrinth
 
 # Options.java.simple-search.desc
 
@@ -948,13 +956,17 @@ Pff 的请求等待时间
 
 没有设置缓存。
 
-# PffFront.Downloading
+# PffFront.Loading
 
-正获取文件 {Url}，请等一会儿。
+获取中。
+
+# PffFront.Done
+
+完成。
 
 # PffFront.Failed
 
-获取失败：不能获取 {Url}
+获取失败。
 
 # PffFront.QuickWatch
 
@@ -962,7 +974,7 @@ Pff 的请求等待时间
 
 # PffFront.Hint
 
-@HTML这里只显示由 Pff 安装的软件包，单击软件包名称可以在文件资源管理器中查看它。
+@HTML这里只显示由 Pff 安装的软件包，单击软件包可以查看它。
 
 # ServerList.AddNewServer.SincereWarn
 

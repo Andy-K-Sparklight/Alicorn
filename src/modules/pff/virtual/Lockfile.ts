@@ -1,5 +1,5 @@
 import { readFile, writeFile } from "fs-extra";
-import { uniqueHash } from "../../commons/BasicHash";
+import { basicHash } from "../../commons/BasicHash";
 import { isFileExist } from "../../commons/FileUtil";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { ModArtifact, ModMeta } from "./ModDefine";
@@ -18,7 +18,9 @@ export async function loadLockfile(
     if (await isFileExist(lockPath)) {
       const f = await readFile(lockPath);
       try {
-        return JSON.parse(f.toString());
+        const l = JSON.parse(f.toString());
+        await fixLockfile(l, container);
+        return l;
       } catch {
         await writeFile(lockPath, "{}");
         return {};
@@ -66,7 +68,7 @@ export function addToLockfile(
   meta: ModMeta,
   artifact: ModArtifact
 ): void {
-  const hsh = uniqueHash(meta.id) + "/" + uniqueHash(artifact.id);
+  const hsh = basicHash(meta.id) + "#" + basicHash(artifact.id);
   lockfile[hsh] = {
     ...meta,
     selectedArtifact: artifact,

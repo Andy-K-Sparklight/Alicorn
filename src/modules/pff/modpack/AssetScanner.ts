@@ -10,7 +10,7 @@ import {
   ProfileType,
   whatProfile,
 } from "../../profile/WhatProfile";
-import { loadLockFile } from "../curseforge/Lockfile";
+import { loadLockfile } from "../virtual/Lockfile";
 
 type DefinedDesc =
   | "ResourcePack" // resourcepacks/* FILE
@@ -49,15 +49,15 @@ async function scanPffMods(
   container: MinecraftContainer
 ): Promise<UnifiedAsset[]> {
   try {
-    const pf = await loadLockFile(container);
-    return Object.values(pf.files).map((f) => {
+    const pf = await loadLockfile(container);
+    return Object.values(pf).map((f) => {
       return {
         type: "MOD",
         desc: "PffMod",
-        v1: f.addonId.toString(),
-        v2: f.fileId.toString(),
-        pffName: f.addonName,
-        pffFileName: f.fileName,
+        v1: f.id.toString(),
+        v2: f.selectedArtifact.id.toString(),
+        pffName: f.displayName,
+        pffFileName: f.selectedArtifact.fileName,
       };
     });
   } catch {

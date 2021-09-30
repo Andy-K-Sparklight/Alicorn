@@ -224,7 +224,11 @@ export function OptionsPage(): JSX.Element {
             bindConfig={"download.pff.chunk-size"}
           />
 
-          <InputItem type={ConfigType.STR} bindConfig={"pff.api-base"} />
+          <InputItem
+            type={ConfigType.RADIO}
+            bindConfig={"pff.first-source"}
+            choices={["Curseforge", "Modrinth"]}
+          />
           <InputItem type={ConfigType.DIR} bindConfig={"pff.cache-root"} />
           <InputItem type={ConfigType.NUM} bindConfig={"pff.page-size"} />
           <InputItem

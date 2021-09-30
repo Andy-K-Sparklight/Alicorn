@@ -25,9 +25,10 @@ import { getString } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { setProxy } from "../modules/download/DownloadWrapper";
-import { loadLockFile, Lockfile } from "../modules/pff/curseforge/Lockfile";
 import { PFF_MSG_GATE } from "../modules/pff/curseforge/Values";
-import { requireMod, setPffFlag } from "../modules/pff/curseforge/Wrapper";
+import { loadLockfile, Lockfile2 } from "../modules/pff/virtual/Lockfile";
+import { fetchModByName, setPffFlag } from "../modules/pff/virtual/PffWrapper";
+import { modLoaderOf } from "../modules/pff/virtual/Resolver";
 import { setChangePageWarn } from "./GoTo";
 import { hasEdited } from "./Options";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
@@ -46,13 +47,14 @@ export function PffFront(): JSX.Element {
   const [isRunning, setRunning] = useState(autostart === "1");
   const [info, setInfo] = useState("");
   const [packageName, setPackageName] = useState(name || "");
-  const [lockfile, setLockfile] = useState<Lockfile>();
+  const [lockfile, setLockfile] = useState<Lockfile2>();
   const mounted = useRef(false);
+  const logs = useRef<string[]>([]);
   const fullWidthClasses = fullWidth();
   useEffect(() => {
     const fun = () => {
       void (async () => {
-        const lock = await loadLockFile(getContainer(container));
+        const lock = await loadLockfile(getContainer(container));
         if (mounted.current) {
           setLockfile(lock);
         }
@@ -67,7 +69,7 @@ export function PffFront(): JSX.Element {
   }, []);
   useEffect(() => {
     void (async () => {
-      const lock = await loadLockFile(getContainer(container));
+      const lock = await loadLockfile(getContainer(container));
       if (mounted.current) {
         setLockfile(lock);
       }
@@ -82,7 +84,11 @@ export function PffFront(): JSX.Element {
   useEffect(() => {
     const fun = (msg: string) => {
       if (mounted.current) {
-        setInfo(msg);
+        logs.current.push(msg);
+        while (logs.current.length > 5) {
+          logs.current.shift();
+        }
+        setInfo(logs.current.join("\n"));
       }
     };
     emitter.current.on(PFF_MSG_GATE, fun);
@@ -104,7 +110,7 @@ export function PffFront(): JSX.Element {
                 version,
                 emitter.current,
                 loader === "Forge" ? 1 : 4,
-                `${i + 1}/${p}`
+                `${i + 1}`
               );
             }
           })
@@ -148,7 +154,7 @@ export function PffFront(): JSX.Element {
                                 version,
                                 emitter.current,
                                 loader === "Forge" ? 1 : 4,
-                                `${i + 1}/${p}`
+                                `${i + 1}`
                               );
                             }
                           })
@@ -216,24 +222,24 @@ export function PffFront(): JSX.Element {
         </Typography>
         <List>
           {lockfile
-            ? Object.keys(lockfile.files).map((name) => {
-                const f = lockfile.files[name];
+            ? Object.keys(lockfile).map((name) => {
+                const f = lockfile[name];
                 return (
                   <ListItem key={name}>
                     <ListItemIcon>
-                      {version === f.gameVersion &&
-                      (loader === "Forge" ? 1 : 4) === f.modLoader ? (
+                      {f.selectedArtifact.gameVersion.includes(version) &&
+                      loader === f.selectedArtifact.modLoader ? (
                         <AssignmentTurnedIn color={"primary"} />
                       ) : (
                         <AssignmentLate />
                       )}
                     </ListItemIcon>
-                    {lockfile.files[name].thumbNail.length > 0 ? (
+                    {lockfile[name].thumbNail.length > 0 ? (
                       <img
                         style={{
                           marginLeft: "-2.5%",
                         }}
-                        src={lockfile.files[name].thumbNail}
+                        src={lockfile[name].thumbNail}
                         alt={"LOGO"}
                         height={32}
                         width={32}
@@ -244,7 +250,9 @@ export function PffFront(): JSX.Element {
                     <ListItemText
                       onClick={() => {
                         shell.showItemInFolder(
-                          getContainer(container).getModJar(f.fileName)
+                          getContainer(container).getModJar(
+                            f.selectedArtifact.fileName
+                          )
                         );
                       }}
                     >
@@ -256,16 +264,16 @@ export function PffFront(): JSX.Element {
                               "16px",
                             marginLeft: "1%",
                           },
-                          version === f.gameVersion &&
-                            (loader === "Forge" ? 1 : 4) === f.modLoader
+                          f.selectedArtifact.gameVersion.includes(version) &&
+                            loader === f.selectedArtifact.modLoader
                             ? {}
                             : { color: "gray", textDecoration: "line-through" }
                         )}
                         color={"secondary"}
-                      >{`${f.addonName} [${f.addonId}] / ${f.fileName} [${
-                        f.fileId
-                      }] # ${new Date(
-                        f.fileDate
+                      >{`${f.displayName} [${f.id}] / ${
+                        f.selectedArtifact.fileName
+                      } [${f.selectedArtifact.id}] # ${new Date(
+                        f.insallDate
                       ).toLocaleString()}`}</Typography>
                     </ListItemText>
                   </ListItem>
@@ -287,10 +295,14 @@ async function pffInstall(
   tskIndex: string
 ): Promise<void> {
   setChangePageWarn(true);
-  let i: string | number = name;
-  const p = parseInt(name);
-  if (String(p) == name) {
-    i = p;
+  const ml = modLoaderOf(modLoader);
+  const idx = `[${tskIndex}/${name}] `;
+  if (!ml) {
+    emitter.emit(
+      PFF_MSG_GATE,
+      `[${tskIndex}/${name}] ` + tr("PffFront.UnsupportedLoader")
+    );
+    return;
   }
   setPffFlag("1");
   const proxy = getString("pff.proxy");
@@ -298,7 +310,17 @@ async function pffInstall(
     const u = new URL(proxy);
     setProxy(u.host, parseInt(u.port));
   } catch {}
-  await requireMod(i, version, container, emitter, modLoader, tskIndex);
+  emitter.emit(PFF_MSG_GATE, idx + tr("PffFront.Loading"));
+  try {
+    if (await fetchModByName(name, version, ml, container)) {
+      emitter.emit(PFF_MSG_GATE, idx + tr("PffFront.Done"));
+    } else {
+      emitter.emit(PFF_MSG_GATE, idx + tr("PffFront.Failed"));
+    }
+  } catch (e) {
+    console.log(e);
+    emitter.emit(PFF_MSG_GATE, idx + tr("PffFront.Failed"));
+  }
   setPffFlag("0");
   setProxy("", 0);
   setChangePageWarn(false);

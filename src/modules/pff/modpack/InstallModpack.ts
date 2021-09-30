@@ -6,24 +6,10 @@ import { basicHash } from "../../commons/BasicHash";
 import { Pair } from "../../commons/Collections";
 import { isFileExist } from "../../commons/FileUtil";
 import { isNull, safeGet } from "../../commons/Null";
-import { getNumber, getString } from "../../config/ConfigSupport";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { addDoing } from "../../download/DownloadWrapper";
 import { getJavaRunnable, getLastUsedJavaHome } from "../../java/JInfo";
 import { ProfileType } from "../../profile/WhatProfile";
-import {
-  lookupAddonInfo,
-  lookupFileInfo,
-  requireFile,
-} from "../curseforge/Get";
-import {
-  loadLockFile,
-  Lockfile,
-  saveLockFile,
-  writeToLockFile,
-} from "../curseforge/Lockfile";
-import { CF_API_BASE_URL } from "../curseforge/Values";
-import { setPffFlag } from "../curseforge/Wrapper";
 import {
   getFabricInstaller,
   getLatestFabricInstallerAndLoader,
@@ -38,6 +24,12 @@ import {
 import { downloadProfile, getProfileURLById } from "../get/MojangCore";
 import { performFabricInstall } from "../install/FabricInstall";
 import { performForgeInstall } from "../install/ForgeInstall";
+import { fetchSelectedMod, setPffFlag } from "../virtual/PffWrapper";
+import {
+  AbstractModResolver,
+  CurseforgeModResolver,
+  ModrinthModResolver,
+} from "../virtual/Resolver";
 import { ModpackModel, SimpleFile, transformManifest5 } from "./CFModpackModel";
 import {
   CommonModpackModel,
@@ -199,20 +191,14 @@ export async function deployModLoader(
     }
   }
 }
-
 async function installMods(
   container: MinecraftContainer,
   model: ModpackModel | CommonModpackModel
 ): Promise<void> {
   setPffFlag("1");
-  const lockfile = await loadLockFile(container);
-  let apiBase = getString("pff.api-base", CF_API_BASE_URL);
-  apiBase = apiBase.endsWith("/") ? apiBase.slice(0, -1) : apiBase;
-  const cacheRoot = getString("pff.cache-root", "");
-  const timeout = getNumber("download.concurrent.timeout");
   await Promise.all(
     model.files.map((m) => {
-      // We only deal with CurseForge Mods as specified
+      // We only deal with CurseForge and Modrinth Mods as specified
       // @ts-ignore
       if (m["projectID"]) {
         m = m as SimpleFile;
@@ -220,57 +206,33 @@ async function installMods(
           m.projectID,
           m.fileID,
           container,
-          cacheRoot,
-          apiBase,
-          timeout,
-          lockfile,
           generateBaseVersion(model),
-          profileType2Number(generateDefaultModLoader(model)) // Considering most modpacks uses Forge, this is for our USERS, not for such FORGE!
+          generateDefaultModLoader(model) === "Forge" ? "Forge" : "Fabric" // Considering most modpacks uses Forge, this is for our USERS, not for such FORGE!
         );
       }
     })
   );
-  await saveLockFile(lockfile, container);
   setPffFlag("0");
 }
 
 async function installSingleMod(
-  aid: number,
-  fid: number,
+  aid: string | number,
+  fid: string | number,
   container: MinecraftContainer,
-  cacheRoot: string,
-  apiBase: string,
-  timeout: number,
-  lockfile: Lockfile,
   gameVersion: string,
-  modLoader: number
+  modLoader: "Fabric" | "Forge"
 ): Promise<void> {
-  addDoing(tr("PffFront.Query", `Slug=${aid}`));
-  const addon = await lookupAddonInfo(aid, apiBase, timeout);
-  if (!addon) {
-    throw tr("PffFront.NoSuchAddon");
-  }
-  addDoing(tr("PffFront.LookingUpFile", `File=${fid}`));
-  const file = await lookupFileInfo(addon, fid, apiBase, timeout);
-  if (!file) {
-    throw tr("PffFront.NoSuchFile");
-  }
-  addDoing(tr("PffFront.Downloading", `Url=${file.downloadUrl}`));
-  if (await requireFile(file, addon, cacheRoot, container)) {
-    writeToLockFile(addon, file, lockfile, gameVersion, modLoader);
+  let mr: AbstractModResolver;
+  if (typeof aid === "number" || typeof fid === "number") {
+    aid = aid.toString();
+    fid = fid.toString();
+    mr = new CurseforgeModResolver("");
   } else {
-    throw tr("PffFront.Failed", `Url=${file.downloadUrl}`);
+    mr = new ModrinthModResolver("");
   }
-}
-
-function profileType2Number(pType: ProfileType): number {
-  switch (pType) {
-    case ProfileType.FORGE:
-      return 1;
-    case ProfileType.FABRIC:
-    default:
-      return 4;
-  }
+  await mr.setSelected(aid, fid);
+  await mr.resolveMod();
+  await fetchSelectedMod(mr, gameVersion, modLoader, container);
 }
 
 export async function wrappedInstallModpack(

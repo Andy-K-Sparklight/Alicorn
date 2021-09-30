@@ -23,12 +23,11 @@
   "user.name": "",
   "java.simple-search": false,
   "java.search-depth": 8,
-  "pff.api-base": "https://addons-ecs.forgesvc.net",
   "pff.page-size": 5,
   "pff.cache-root": "",
   "reset": false,
   "clean-storage": false,
-  "download.mirror": "alicorn-bmclapi-nonfree",
+  "download.mirror": "alicorn-mcbbs-nonfree",
   "interactive.i-have-a-crush-on-al": false,
   "startup-page.name": "Tutor",
   "startup-page.url": "/Tutor/0",
@@ -46,5 +45,6 @@
   "action.close-on-exit": false,
   "dev.experimental": false,
   "web.global-proxy": "",
-  "doh-server": "Native"
+  "doh-server": "Native",
+  "pff.first-source": "Curseforge"
 }

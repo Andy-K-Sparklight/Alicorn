@@ -13,12 +13,9 @@ import {
 import { Search } from "@material-ui/icons";
 import copy from "copy-to-clipboard";
 import React, { useEffect, useRef, useState } from "react";
-import { getNumber, getString } from "../../modules/config/ConfigSupport";
-import {
-  ExtraAddonInfo,
-  moreAddonInfoBySlug,
-} from "../../modules/pff/curseforge/Get";
-import { CF_API_BASE_URL } from "../../modules/pff/curseforge/Values";
+import { getNumber } from "../../modules/config/ConfigSupport";
+import { ModMeta } from "../../modules/pff/virtual/ModDefine";
+import { getResolvers } from "../../modules/pff/virtual/PffWrapper";
 import { submitInfo, submitWarn } from "../Message";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "../Renderer";
 import { fullWidth, useCardStyles, usePadStyles } from "../Stylex";
@@ -26,7 +23,7 @@ import { tr } from "../Translator";
 
 export function PffVisual(): JSX.Element {
   const [slug, setSlug] = useState("");
-  const [searchResults, setResults] = useState<ExtraAddonInfo[]>([]);
+  const [searchResults, setResults] = useState<ModMeta[]>([]);
   const [searching, setSearching] = useState(false);
   const fullWidthClasses = fullWidth();
   const classes = usePadStyles();
@@ -69,28 +66,22 @@ export function PffVisual(): JSX.Element {
                         onClick={() => {
                           setSearching(true);
                           void (async () => {
-                            let apiBase = getString(
-                              "pff.api-base",
-                              CF_API_BASE_URL
+                            const rsvs = getResolvers(slug);
+                            const rets = await Promise.allSettled(
+                              rsvs.map((r) => {
+                                return r.searchMods(
+                                  getNumber("pff.page-size", 20)
+                                );
+                              })
                             );
-                            apiBase = apiBase.endsWith("/")
-                              ? apiBase.slice(0, -1)
-                              : apiBase;
-                            const pageSize =
-                              getNumber("pff.page-size", 10) || 10;
-
-                            const timeout = getNumber(
-                              "download.concurrent.timeout"
-                            );
-                            const a = await moreAddonInfoBySlug(
-                              slug,
-                              apiBase,
-                              "",
-                              pageSize,
-                              timeout
-                            );
+                            let o: ModMeta[] = [];
+                            rets.forEach((r) => {
+                              if (r.status === "fulfilled") {
+                                o = o.concat(r.value);
+                              }
+                            });
                             if (mounted.current) {
-                              setResults(a);
+                              setResults(o);
                               setSearching(false);
                             }
                           })();
@@ -119,32 +110,18 @@ export function PffVisual(): JSX.Element {
   );
 }
 
-function SingleAddonDisplay(props: { info: ExtraAddonInfo }): JSX.Element {
+function SingleAddonDisplay(props: { info: ModMeta }): JSX.Element {
   const classes = useCardStyles();
-  const a: string[] = [];
-  props.info.gameVersionLatestFiles.forEach((f) => {
-    const ml = f.modLoader === 4 ? "(Fb)" : f.modLoader === 1 ? "(Fg)" : "";
-    if (!a.includes(f.gameVersion + ml)) {
-      a.push(f.gameVersion + ml);
-    }
-  });
+  const a = props.info.supportVersions;
   return (
     <Box style={{ textAlign: "left" }}>
       <Card
-        className={props.info.type === "MOD" ? classes.card : classes.card2}
+        className={classes.card}
         onClick={() => {
-          if (props.info.type === "MOD") {
-            if (copy(props.info.slug)) {
-              submitInfo(tr("Utilities.PffVisual.Copied"));
-            } else {
-              submitWarn("Utilities.PffVisual.CouldNotCopy");
-            }
-          } else if (props.info.type === "MODPACK") {
-            if (props.info.url && copy(props.info.url)) {
-              submitInfo(tr("Utilities.PffVisual.CopiedUrl"));
-            } else {
-              submitWarn("Utilities.PffVisual.CouldNotCopy");
-            }
+          if (copy("@" + props.info.provider + ":" + props.info.id)) {
+            submitInfo(tr("Utilities.PffVisual.Copied"));
+          } else {
+            submitWarn("Utilities.PffVisual.CouldNotCopy");
           }
         }}
       >
@@ -158,10 +135,23 @@ function SingleAddonDisplay(props: { info: ExtraAddonInfo }): JSX.Element {
           />
           <Box>
             <Typography className={classes.text} color={"textSecondary"}>
-              {`${props.info.slug} (${props.info.id})`}
+              {props.info.id}
             </Typography>
-            <Typography variant={"h6"}>{props.info.name}</Typography>
+            <Typography variant={"h6"}>{props.info.displayName}</Typography>
             <br />
+            <Typography
+              className={classes.text}
+              style={{
+                fontSize:
+                  window.sessionStorage.getItem("smallFontSize") || "16px",
+              }}
+              color={"textSecondary"}
+            >
+              {tr(
+                "Utilities.PffVisual.Provider",
+                `Name=${props.info.provider}`
+              )}
+            </Typography>
             <Typography
               className={classes.text}
               style={{

@@ -1402,6 +1402,22 @@ Alicorn/MCBBS 镜像组（合并的记录，非自由）
 
 在下次启动时将设置重置为当前版本的默认内容 - 当你觉得你玩脱了的时候很有用，但所有改动都将丢失
 
+# Options.pff.first-source.title
+
+Pff 优先搜索源
+
+# Options.pff.first-source.desc
+
+选择优先搜索 Mod 的软件源 - 通常，当安装的 Mod 不是你想要的时候，切换源可能有用
+
+# Options.pff.first-source.Curseforge
+
+Curseforge
+
+# Options.pff.first-source.Modrinth
+
+Modrinth
+
 # Options.pff.cache-root.title
 
 Pff 文件缓存位置
@@ -1417,14 +1433,6 @@ Pff 查询分页大小
 # Options.pff.page-size.desc
 
 进行模糊查询时请求的的分页大小 - 这项设置可能并不很有用，但如果 Pff 不能正确查找您的 Mod，可以扩大该值
-
-# Options.pff.api-base.title
-
-Pff API 起始 URL
-
-# Options.pff.api-base.desc
-
-指定 Pff 在安装软件包时使用的起始 URL，所有的请求都将发往该 URL - 如果你使用自己的软件源，这会很有用
 
 # Options.java.search-depth.title
 
@@ -1792,45 +1800,21 @@ Alicorn 随时都可能有更新！请记得常回来看看！
 
 警告 - 你没有为 Pff 设置下载缓存，二次安装 Mod 时将无法得到加速！
 
-# PffFront.NoSuchAddon
+# PffFront.Loading
 
-获取失败：没有那个 Addon 或者服务暂时不可用
+正在获取……
 
-# PffFront.LoadingLock
+# PffFront.UnsupportedLoader
 
-正在获取前端锁……
-
-# PffFront.Query
-
-正在查询 {Slug}
-
-# PffFront.NotCompatible
-
-警告：该 Addon 没有与 {Version} 兼容的版本，无法继续
-
-# PffFront.LookingUpFile
-
-正查找文件 {File}
-
-# PffFront.NoSuchFile
-
-获取失败：没有那个文件或者服务暂时不可用
-
-# PffFront.Downloading
-
-正获取文件 {Url}，取决于网络环境，获取可能失败或消耗很长时间，请耐心等一下……
-
-# PffFront.Locking
-
-正在更新前端锁……
+不支持此加载器
 
 # PffFront.Done
 
-完成
+已经成功安装
 
 # PffFront.Failed
 
-获取失败：不能获取 {Url}，请再试一次，或者手动下载该文件
+获取失败：没能获取此 Mod，请再试一次，或至 Mod 平台手动安装它们。
 
 # PffFront.Slug
 
@@ -2566,6 +2550,10 @@ Sparklight 作品\n查找 Mod 并获取 Slug，用于 Pff 软件安装器安装
 # Utilities.PffVisual.Search
 
 搜索
+
+# Utilities.PffVisual.Provider
+
+来源：{Name}
 
 # Utilities.PffVisual.VersionRange
 

@@ -64,12 +64,7 @@ export async function sealPackCommon(
           addCore(a.v1, a.v2, model, a.mcv);
           break;
         case "MOD": {
-          const a1 = parseInt(a.v1);
-          const a2 = parseInt(a.v2);
-          if (isNaN(a1) || isNaN(a2)) {
-            return;
-          }
-          addPffMod(a1, a2, model);
+          addPffMod(a.v1, a.v2, model);
           break;
         }
         case "FILE": {
