@@ -22,9 +22,9 @@ import { DownloadMeta } from "../../download/AbstractDownloader";
 import { addDoing, wrappedDownloadFile } from "../../download/DownloadWrapper";
 import { ensureLibraries } from "../../launch/Ensurance";
 import { JAR_SUFFIX } from "../../launch/NativesLint";
-import { makeLibrary } from "../../profile/LibrariesConvert";
 import { GameProfile } from "../../profile/GameProfile";
 import { noDuplicateConcat } from "../../profile/InheritedProfileAdaptor";
+import { makeLibrary } from "../../profile/LibrariesConvert";
 import { LibraryMeta } from "../../profile/Meta";
 
 const FORGE_INSTALLER_HEADLESS = "forge.iw.ald";
@@ -153,8 +153,15 @@ async function downloadMappings(
         `net/minecraft/client/${baseVersion}-${mcpVersion}/client-${baseVersion}-${mcpVersion}-mappings.txt`
       );
       console.log("Downloading mappings!");
-      await wrappedDownloadFile(new DownloadMeta(mappingsURL, target));
-      console.log("Mappings downloaded!");
+      if (
+        (await wrappedDownloadFile(new DownloadMeta(mappingsURL, target))) === 1
+      ) {
+        console.log("Mappings downloaded to " + target);
+        return;
+      }
+      console.log(
+        "Failed to download mappings, get ready for Forge's slowwwwww speed!"
+      );
     }
     // await ensureClient(p);
   } catch {}
