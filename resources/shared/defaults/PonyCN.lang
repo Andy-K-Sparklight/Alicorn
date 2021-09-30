@@ -2545,7 +2545,7 @@ Pff 搜索
 
 # Utilities.PffVisual.Description
 
-Sparklight 作品\n查找 Mod 并获取 Slug，用于 Pff 软件安装器安装
+Sparklight 作品\n查找 Mod 并获取编号，用于 Pff 软件安装器安装
 
 # Utilities.PffVisual.Search
 
@@ -2559,10 +2559,6 @@ Sparklight 作品\n查找 Mod 并获取 Slug，用于 Pff 软件安装器安装
 
 支持：
 
-# Utilities.PffVisual.CopiedUrl
-
-已复制！使用你喜欢的方式下载这个整合包吧！
-
 # Utilities.PffVisual.Copied
 
 已复制！快到 Pff 软件安装器中看看吧！
@@ -2573,7 +2569,7 @@ Sparklight 作品\n查找 Mod 并获取 Slug，用于 Pff 软件安装器安装
 
 # Utilities.PffVisual.Hint
 
-@HTML在这里搜索 Mod 和整合包，整合包的颜色要深一些。\n此工具<b>不能直接安装 Mod</b>！（因为不知道你需要哪个版本）\n请<b>单击一下你心仪的 Mod</b> 来复制它的名字，然后前往核心右上角的 <b>Pff 软件安装器</b>使用。\n单击整合包将复制下载链接。
+@HTML在这里搜索 Mod，包括 Curseforge 和 Modrinth。\n此工具<b>不能直接安装 Mod</b>！（因为不知道你需要哪个版本）\n请<b>单击一下你心仪的 Mod</b> 来复制它的名字，然后前往核心右上角的 <b>Pff 软件安装器</b>使用。
 
 # Utilities.PffVisual.Slug
 
