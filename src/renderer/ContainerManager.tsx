@@ -450,7 +450,6 @@ function AddNewContainer(props: {
               error={dirError}
               className={classes.input}
               color={"secondary"}
-              autoFocus
               margin={"dense"}
               onChange={(e) => {
                 setSelected(e.target.value);
