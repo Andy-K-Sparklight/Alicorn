@@ -1,6 +1,6 @@
 import { Box, Fab, Typography } from "@material-ui/core";
 import { FlightTakeoff, GetApp, History } from "@material-ui/icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { jumpTo, triggerSetPage } from "./GoTo";
@@ -122,6 +122,9 @@ export function Welcome(): JSX.Element {
           short={tr("Welcome.Short.LaunchPad")}
         />
       </Box>
+      <Box style={{ marginTop: "10%" }}>
+        <SpecialKnowledge />
+      </Box>
     </Box>
   );
 }
@@ -144,6 +147,62 @@ function RoundBtn(props: {
         {props.icon}
         {<span style={{ marginLeft: "5px" }}>{props.short}</span>}
       </Fab>
+    </Box>
+  );
+}
+
+export function SpecialKnowledge(): JSX.Element {
+  const [currentItem, setCurrentItem] = useState<string>(
+    randsl("Welcome.Knowledges")
+  );
+  const timer = useRef<NodeJS.Timeout>();
+  useEffect(() => {
+    timer.current = setInterval(() => {
+      setCurrentItem(randsl("Welcome.Knowledges"));
+    }, 10000);
+    return () => {
+      if (timer.current) {
+        clearInterval(timer.current);
+      }
+    };
+  }, []);
+  const [a, b] = currentItem.split("|");
+  return (
+    <Box
+      style={{
+        color: ALICORN_DEFAULT_THEME_DARK.palette.primary.main,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        lineBreak: "auto",
+        overflow: "hidden",
+        maxWidth: "90%",
+        marginLeft: "5%",
+      }}
+      onClick={() => {
+        setCurrentItem(randsl("Welcome.Knowledges"));
+        if (timer.current) {
+          clearInterval(timer.current);
+        }
+        timer.current = setInterval(() => {
+          setCurrentItem(randsl("Welcome.Knowledges"));
+        }, 10000);
+      }}
+    >
+      <span
+        style={{ fontSize: "x-large", marginRight: "12px" }}
+        dangerouslySetInnerHTML={{ __html: a }}
+      />
+      <span style={{ fontSize: "xxx-large" }}>|</span>
+      <span
+        style={{
+          fontSize: "small",
+          maxWidth: "80%",
+          marginLeft: "12px",
+          textAlign: "left",
+        }}
+        dangerouslySetInnerHTML={{ __html: b }}
+      />
     </Box>
   );
 }

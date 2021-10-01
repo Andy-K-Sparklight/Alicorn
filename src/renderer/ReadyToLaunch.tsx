@@ -101,6 +101,7 @@ import { YNDialog } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
+import { SpecialKnowledge } from "./Welcome";
 import { toReadableType } from "./YggdrasilAccountManager";
 
 const SESSION_ACCESSDATA_CACHED_KEY = "ReadyToLaunch.SessionAccessData"; // Microsoft account only
@@ -363,15 +364,6 @@ function Launching(props: {
               `Pending=${ws.pending}`
             )}
           </Typography>
-          <Typography
-            style={{
-              display: getBoolean("show-downloading-item") ? undefined : "none",
-            }}
-            className={classes.text}
-            gutterBottom
-          >
-            {ws.doing}
-          </Typography>
         </Box>
       )}
       <MiniJavaSelector
@@ -383,10 +375,16 @@ function Launching(props: {
           status !== LaunchingStatus.FINISHED
         }
       />
+      {getBoolean("show-downloading-item") ? (
+        <Typography className={classes.text} gutterBottom>
+          {ws.doing}
+        </Typography>
+      ) : (
+        <Typography className={classes.text} gutterBottom>
+          {hint}
+        </Typography>
+      )}
 
-      <Typography className={classes.text} gutterBottom>
-        {hint}
-      </Typography>
       <Tooltip
         title={
           status === LaunchingStatus.FINISHED
@@ -442,6 +440,9 @@ function Launching(props: {
           </Fab>
         </Box>
       </Tooltip>
+      <br />
+      <br />
+      <SpecialKnowledge />
     </Box>
   );
 }
