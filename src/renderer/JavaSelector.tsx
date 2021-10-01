@@ -105,6 +105,10 @@ export function JavaSelector(): JSX.Element {
         }
         if (mounted.current) {
           setJavaInfo(tMap);
+          if (currentJava.trim().length === 0 && javas.length > 0) {
+            // If not selected then select
+            setCurrentJava(javas[0] || "");
+          }
         }
         setLoaded(true);
       }
