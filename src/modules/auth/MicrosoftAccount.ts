@@ -53,6 +53,9 @@ export class MicrosoftAccount extends Account {
 
   async flushToken(): Promise<boolean> {
     try {
+      if (isNull(this.refreshToken)) {
+        return false;
+      }
       const r1 = await refreshToken(this.refreshToken);
       if (!r1.success) {
         return false;
@@ -93,6 +96,9 @@ export class MicrosoftAccount extends Account {
 
   async isAccessTokenValid(): Promise<boolean> {
     try {
+      if (isNull(this.lastUsedAccessToken)) {
+        return false;
+      }
       return (await getUUIDAndUserName(this.lastUsedAccessToken)).success;
     } catch {
       return false;

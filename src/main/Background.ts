@@ -31,9 +31,8 @@ let logoutWindow: BrowserWindow | null = null;
 const CODE_REGEX = /(?<=\?code=)[^&]+/gi;
 const ERROR_REGEX = /(?<=\?error=)[^&]+/gi;
 const ERROR_DESCRIPTION = /(?<=&error_description=)[^&]+/gi;
-const SIGN_OUT_SELECTOR = "mectrl_body_signOut";
-const BASE_ACCOUNT_URL = "https://account.microsoft.com/";
-const LOGOUT_FINAL = "https://account.microsoft.com/account/Account";
+const LOGOUT_URL =
+  "https://login.live.com/oauth20_logout.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf";
 
 export function registerBackgroundListeners(): void {
   ipcMain.on("closeWindow", () => {
@@ -59,6 +58,7 @@ export function registerBackgroundListeners(): void {
     setTimeout(() => {
       console.log("Too long! Forcefully stopping!");
       app.exit();
+      process.exit();
     }, 5000);
   });
   ipcMain.on("getAppPath", (e) => {
@@ -206,30 +206,13 @@ export function registerBackgroundListeners(): void {
     } else {
       await logoutWindow.webContents.session.setProxy({ mode: "system" });
     }
-    await logoutWindow.loadURL(BASE_ACCOUNT_URL);
+    await logoutWindow.loadURL(LOGOUT_URL);
     return new Promise<void>((resolve) => {
-      logoutWindow?.webContents.on("dom-ready", () => {
-        const r = logoutWindow?.webContents.executeJavaScript(
-          `var e=document.getElementById("${SIGN_OUT_SELECTOR}");if(e!==null&&typeof e==="object"&&typeof e["click"]==="function"){e.click()}`
-        );
-        if (r !== undefined) {
-          r.then(() => {
-            console.log(
-              "Command sent, but this window will not be closed until totally finished."
-            );
-            resolve();
-          }).catch(() => {
-            // This should not happen!
-            resolve();
-          });
-        }
-      });
       logoutWindow?.webContents.on("did-stop-loading", () => {
-        if (logoutWindow?.webContents.getURL().startsWith(LOGOUT_FINAL)) {
-          console.log("Logout finished, closing window!");
+        const url = logoutWindow?.webContents.getURL();
+        if (url?.startsWith("https://login.live.com/oauth20_desktop.srf")) {
+          console.log("Logout successful.");
           resolve();
-          logoutWindow?.close();
-          logoutWindow = null;
         }
       });
     });
