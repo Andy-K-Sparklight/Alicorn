@@ -282,6 +282,10 @@ Alicorn 内置浏览器
 
 在此核心上运行 Pff
 
+# ReadyToLaunch.NoJava
+
+没有设置 Java 运行时（JRE）！游戏将无法启动！
+
 # ReadyToLaunch.CouldNotLoad
 
 无法加载 - 该核心可能已经被移动或损毁\n如果你是通过除启动台之外的地方进入这里，那么原始链接的指向可能已经失效

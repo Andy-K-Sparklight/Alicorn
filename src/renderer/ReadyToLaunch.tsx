@@ -97,6 +97,7 @@ import { loadProfile } from "../modules/profile/ProfileLoader";
 import { waitUpdateFinished } from "../modules/selfupdate/Updator";
 import { remoteCloseWindow, remoteHideWindow } from "./App";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
+import { submitWarn } from "./Message";
 import { YNDialog } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
@@ -899,18 +900,22 @@ function MiniJavaSelector(props: {
   }, []);
   useEffect(() => {
     void (async () => {
-      const ji = parseJavaInfo(
-        parseJavaInfoRaw(
-          await getJavaInfoRaw(
-            currentJava === DEF
-              ? getJavaAndCheckAvailable(props.hash)
-              : currentJava
+      try {
+        const ji = parseJavaInfo(
+          parseJavaInfoRaw(
+            await getJavaInfoRaw(
+              currentJava === DEF
+                ? getJavaAndCheckAvailable(props.hash)
+                : currentJava
+            )
           )
-        )
-      );
-      loaded.current = true;
-      if (mounted.current) {
-        setCurrentJavaVersion(ji.rootVersion);
+        );
+        loaded.current = true;
+        if (mounted.current) {
+          setCurrentJavaVersion(ji.rootVersion);
+        }
+      } catch {
+        submitWarn(tr("ReadyToLaunch.NoJava"));
       }
     })();
   }, [currentJava]);
