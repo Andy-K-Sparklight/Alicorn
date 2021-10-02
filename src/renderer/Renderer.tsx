@@ -24,7 +24,7 @@ import { initConcurrentDownloader } from "../modules/download/Concurrent";
 import { initDownloadWrapper } from "../modules/download/DownloadWrapper";
 import { loadAllMirrors, loadMirror } from "../modules/download/Mirror";
 import { initResolveLock } from "../modules/download/ResolveLock";
-import { loadJDT } from "../modules/java/JInfo";
+import { loadJDT, preCacheJavaInfo } from "../modules/java/JInfo";
 import { initModInfo } from "../modules/modx/ModInfo";
 import { prefetchFabricManifest } from "../modules/pff/get/FabricGet";
 import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
@@ -266,7 +266,7 @@ void (async () => {
     getMachineUniqueID(), // Cache
   ]);
   // Heavy works and minor works
-  await Promise.allSettled([initResolveLock(), initVF()]);
+  await Promise.allSettled([initResolveLock(), initVF(), preCacheJavaInfo()]);
   const t2 = new Date();
   console.log(
     "Delayed init tasks finished. Time elapsed: " +

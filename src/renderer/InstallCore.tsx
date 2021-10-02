@@ -30,7 +30,7 @@ import {
   subscribeDoing,
   unsubscribeDoing,
 } from "../modules/download/DownloadWrapper";
-import { getJavaRunnable, getLastUsedJavaHome } from "../modules/java/JInfo";
+import { getJavaRunnable, getDefaultJavaHome } from "../modules/java/JInfo";
 import {
   canSupportGame,
   getFabricInstaller,
@@ -219,7 +219,7 @@ export function InstallCore(): JSX.Element {
             }
             setProgressMsg(tr("InstallCore.Progress.ExecutingForge"));
             const istat = await performForgeInstall(
-              await getJavaRunnable(getLastUsedJavaHome()),
+              await getJavaRunnable(getDefaultJavaHome()),
               generateForgeInstallerName(mcv, fgv),
               ct
             );
@@ -284,7 +284,7 @@ export function InstallCore(): JSX.Element {
             setProgressMsg(tr("InstallCore.Progress.ExecutingFabric"));
 
             const stat2 = await performFabricInstall(
-              await getJavaRunnable(getLastUsedJavaHome()),
+              await getJavaRunnable(getDefaultJavaHome()),
               u,
               fbv,
               mcv,

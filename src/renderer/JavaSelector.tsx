@@ -20,12 +20,12 @@ import { installJRE } from "../modules/java/GetJDK";
 import {
   getAllJava,
   getJavaInfoRaw,
-  getLastUsedJavaHome,
+  getDefaultJavaHome,
   JavaInfo,
   parseJavaInfo,
   parseJavaInfoRaw,
   resetJavaList,
-  setLastUsedJavaHome,
+  setDefaultJavaHome,
 } from "../modules/java/JInfo";
 import { whereJava } from "../modules/java/WhereJava";
 import { setChangePageWarn } from "./GoTo";
@@ -51,7 +51,7 @@ export function JavaSelector(): JSX.Element {
   const mounted = useRef<boolean>(false);
   const [javaList, setJavaList] = useState<string[]>(getAllJava());
   const [javaInfo, setJavaInfo] = useState<Map<string, JavaInfo>>(new Map());
-  const [currentJava, setCurrentJava] = useState<string>(getLastUsedJavaHome());
+  const [currentJava, setCurrentJava] = useState<string>(getDefaultJavaHome());
   const [currentJavaInfo, setCurrentJavaInfo] =
     useState<JavaInfo>(CANNOT_LOAD_INFO);
   const display = useRef<boolean>(os.platform() === "win32");
@@ -133,7 +133,7 @@ export function JavaSelector(): JSX.Element {
             onChange={(e) => {
               const sj = String(e.target.value);
               setCurrentJava(sj);
-              setLastUsedJavaHome(sj);
+              setDefaultJavaHome(sj);
             }}
             value={currentJava}
           >

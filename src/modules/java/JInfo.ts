@@ -16,33 +16,47 @@ const JAVA = (() => {
     return path.join("bin", "java");
   }
 })();
-const JAVA_ORACLE = (() => {
-  return path.join("javapath", "java.exe");
-})();
+const JAVA_ORACLE = path.join("javapath", "java.exe");
+
+const JAVA_INFO_CACHE: Map<string, string> = new Map();
 
 export async function getJavaInfoRaw(jHome: string): Promise<string> {
-  const jRPath = path.resolve(await getJavaRunnable(jHome));
+  const p = await getJavaRunnable(jHome, false);
+  if (p === "") {
+    return "";
+  }
+  const jRPath = path.resolve(p);
+  if (JAVA_INFO_CACHE.has(jRPath)) {
+    return JAVA_INFO_CACHE.get(jRPath) || "";
+  }
   return new Promise<string>((resolve, reject) => {
     childProcess.execFile(jRPath, ["-version"], (e, stdout, stderr) => {
       if (e) {
         reject();
       } else {
         if (stdout.trim().length > 0) {
+          JAVA_INFO_CACHE.set(jRPath, stdout);
           resolve(stdout);
-        } else {
+        } else if (stderr.trim().length > 0) {
+          JAVA_INFO_CACHE.set(jRPath, stderr);
           resolve(stderr);
+        } else {
+          reject();
         }
       }
     });
   });
 }
 
-export async function getJavaRunnable(jHome: string): Promise<string> {
+export async function getJavaRunnable(
+  jHome: string,
+  useName = true
+): Promise<string> {
   const p1 = path.resolve(path.join(jHome, JAVA));
   if (!(await isFileExist(p1))) {
     const p2 = path.resolve(path.join(jHome, JAVA_ORACLE));
     if (!(await isFileExist(p2))) {
-      return "java";
+      return useName ? "java" : "";
     }
     return p2;
   }
@@ -82,11 +96,11 @@ export function resetJavaList(list: string[]): void {
   }
 }
 
-export function getLastUsedJavaHome(): string {
+export function getDefaultJavaHome(): string {
   return JDT.get(LATEST_TAG) || getAllJava()[0] || "";
 }
 
-export function setLastUsedJavaHome(jHome: string): void {
+export function setDefaultJavaHome(jHome: string): void {
   JDT.set(LATEST_TAG, jHome);
 }
 
@@ -155,4 +169,57 @@ export function parseJavaInfo(ji: {
     runtime: ji.runtime,
     isFree: OPEN_JDK.test(ji.runtime),
   };
+}
+
+export async function getLegacyJDK(): Promise<string | undefined> {
+  try {
+    const df = getDefaultJavaHome();
+    if (
+      parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(df))).rootVersion ===
+      8
+    ) {
+      return df;
+    }
+  } catch {}
+
+  for (const c of getAllJava()) {
+    try {
+      if (
+        parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(c))).rootVersion ===
+        8
+      ) {
+        return c;
+      }
+    } catch {}
+  }
+}
+export async function getNewJDK(): Promise<string | undefined> {
+  try {
+    const df = getDefaultJavaHome();
+    if (
+      parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(df))).rootVersion >=
+      16
+    ) {
+      return df;
+    }
+  } catch {}
+
+  for (const c of getAllJava()) {
+    try {
+      if (
+        parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(c))).rootVersion >=
+        16
+      ) {
+        return c;
+      }
+    } catch {}
+  }
+}
+
+export async function preCacheJavaInfo(): Promise<void> {
+  await Promise.allSettled(
+    getAllJava().map(async (j) => {
+      await getJavaInfoRaw(j);
+    })
+  );
 }

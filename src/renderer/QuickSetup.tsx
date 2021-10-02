@@ -15,7 +15,7 @@ import {
   getJavaInfoRaw,
   parseJavaInfo,
   parseJavaInfoRaw,
-  setLastUsedJavaHome,
+  setDefaultJavaHome,
 } from "../modules/java/JInfo";
 import { whereJava } from "../modules/java/WhereJava";
 import {
@@ -61,7 +61,7 @@ export function QuickSetup(): JSX.Element {
               setState("ConfiguringJava");
               await whereJava(true);
               let a = "";
-              await Promise.all(
+              await Promise.allSettled(
                 getAllJava().map(async (j) => {
                   const jf = parseJavaInfo(
                     parseJavaInfoRaw(await getJavaInfoRaw(j))
@@ -71,7 +71,7 @@ export function QuickSetup(): JSX.Element {
                   }
                 })
               );
-              setLastUsedJavaHome(a || getAllJava()[0] || "java");
+              setDefaultJavaHome(a || getAllJava()[0] || "");
             }
             setState("InstallingCore");
             const ct = getContainer("Minecraft");

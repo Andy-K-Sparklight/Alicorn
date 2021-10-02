@@ -69,9 +69,11 @@ import {
 } from "../modules/download/DownloadWrapper";
 import {
   getAllJava,
+  getDefaultJavaHome,
   getJavaInfoRaw,
   getJavaRunnable,
-  getLastUsedJavaHome,
+  getLegacyJDK,
+  getNewJDK,
   parseJavaInfo,
   parseJavaInfoRaw,
 } from "../modules/java/JInfo";
@@ -97,7 +99,7 @@ import { loadProfile } from "../modules/profile/ProfileLoader";
 import { waitUpdateFinished } from "../modules/selfupdate/Updator";
 import { remoteCloseWindow, remoteHideWindow } from "./App";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
-import { submitWarn } from "./Message";
+import { submitError, submitWarn } from "./Message";
 import { YNDialog } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
@@ -587,13 +589,22 @@ async function startBoot(
   }
   setStatus(LaunchingStatus.ARGS_GENERATING);
   const originCrashLogs = await scanReports(container);
-  const jHome = getJavaAndCheckAvailable(profileHash);
+  let jHome = getJavaAndCheckAvailable(profileHash, true);
+  if (jHome === DEF) {
+    jHome = await trySelectProperJava(profile.baseVersion);
+  }
   const jRunnable = await getJavaRunnable(jHome);
-  const jInfo = parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(jHome)));
-  GLOBAL_LAUNCH_TRACKER.java({
-    runtime: jInfo.runtime,
-    version: jInfo.rootVersion,
-  });
+  let jInfo;
+  try {
+    jInfo = parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(jHome)));
+    GLOBAL_LAUNCH_TRACKER.java({
+      runtime: jInfo.runtime,
+      version: jInfo.rootVersion,
+    });
+  } catch {
+    submitError(tr("ReadyToLaunch.InvalidJava"));
+    return GLOBAL_LAUNCH_TRACKER;
+  }
   const em = new EventEmitter();
   em.on(PROCESS_LOG_GATE, (d) => {
     // @ts-ignore
@@ -905,7 +916,7 @@ function MiniJavaSelector(props: {
           parseJavaInfoRaw(
             await getJavaInfoRaw(
               currentJava === DEF
-                ? getJavaAndCheckAvailable(props.hash)
+                ? await trySelectProperJava(props.gameVersion)
                 : currentJava
             )
           )
@@ -996,7 +1007,7 @@ function getJavaAndCheckAvailable(hash: string, allowDefault = false): string {
       if (allowDefault) {
         return DEF;
       }
-      return getLastUsedJavaHome();
+      return getDefaultJavaHome();
     }
     if (getAllJava().includes(t)) {
       return t;
@@ -1005,7 +1016,19 @@ function getJavaAndCheckAvailable(hash: string, allowDefault = false): string {
   if (allowDefault) {
     return DEF;
   }
-  return getLastUsedJavaHome();
+  return getDefaultJavaHome();
+}
+
+async function trySelectProperJava(id: string): Promise<string> {
+  console.log("Selecting proper java for " + id);
+  let b: string | undefined;
+  if (LEGACY_VERSIONS.test(id)) {
+    b = await getLegacyJDK();
+  } else {
+    b = await getNewJDK();
+  }
+  console.log("Configured java: " + b);
+  return b || getDefaultJavaHome();
 }
 
 const LEGACY_VERSIONS = /^1\.([0-9]|1[0-2])([-.a-z].*?)?$/i;

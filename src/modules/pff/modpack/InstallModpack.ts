@@ -8,7 +8,7 @@ import { isFileExist } from "../../commons/FileUtil";
 import { isNull, safeGet } from "../../commons/Null";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { addDoing } from "../../download/DownloadWrapper";
-import { getJavaRunnable, getLastUsedJavaHome } from "../../java/JInfo";
+import { getJavaRunnable, getDefaultJavaHome } from "../../java/JInfo";
 import { ProfileType } from "../../profile/WhatProfile";
 import {
   getFabricInstaller,
@@ -150,7 +150,7 @@ export async function deployModLoader(
       }
       if (
         !(await performForgeInstall(
-          await getJavaRunnable(getLastUsedJavaHome()),
+          await getJavaRunnable(getDefaultJavaHome()),
           generateForgeInstallerName(mcVersion, version),
           container
         ))
@@ -169,7 +169,7 @@ export async function deployModLoader(
       if (!(await getFabricInstaller(u, container))) {
         throw "Failed to fetch installer!";
       }
-      const jr = await getJavaRunnable(getLastUsedJavaHome());
+      const jr = await getJavaRunnable(getDefaultJavaHome());
       await Promise.allSettled(
         mcVersions.map((mcVersion) => {
           return (async () => {
