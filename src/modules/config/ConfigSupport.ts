@@ -3,6 +3,7 @@ import fs from "fs-extra";
 import os from "os";
 import path from "path";
 import { isFileExist } from "../commons/FileUtil";
+import { DEFAULTS_ROOT } from "./DataSupport";
 import { getBasePath } from "./PathSolve";
 
 const CONFIG_FILE = path.resolve(
@@ -66,9 +67,15 @@ export async function loadConfig(): Promise<void> {
   }
   try {
     defaultConfig = Object.freeze(
-      JSON.parse((await fs.readFile(CONFIG_FILE)).toString())
+      JSON.parse(
+        (
+          await fs.readFile(path.join(DEFAULTS_ROOT, "alicorn.config.json"))
+        ).toString()
+      )
     );
-  } catch {}
+  } catch (e) {
+    console.log(e);
+  }
 }
 export function loadConfigSync(): void {
   try {
@@ -90,7 +97,7 @@ export function saveConfigSync(): void {
 }
 
 export async function saveConfig(): Promise<void> {
-  await fs.ensureDirSync(path.dirname(CONFIG_FILE));
+  await fs.ensureDir(path.dirname(CONFIG_FILE));
   await fs.writeFile(CONFIG_FILE, JSON.stringify(cachedConfig, null, 4));
 }
 
