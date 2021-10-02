@@ -67,6 +67,16 @@ app.on("ready", async () => {
       mainWindow?.webContents.openDevTools();
     }
   });
+  mainWindow.once("closed", () => {
+    endWatchPony();
+    closeWS();
+    console.log("Stopping!");
+    setTimeout(() => {
+      console.log("Too long! Forcefully stopping!");
+      process.abort();
+    }, 5000);
+    app.quit();
+  });
   console.log("Preparing window!");
   if (getBoolean("hot-key")) {
     globalShortcut.register("Ctrl+F12", () => {
@@ -88,11 +98,6 @@ app.on("ready", async () => {
   await initProxy();
 });
 
-app.on("window-all-closed", () => {
-  console.log("Stopping!");
-  closeWS();
-  app.quit();
-});
 // This function doesn't support async!
 // Use sync functions.
 app.on("will-quit", () => {

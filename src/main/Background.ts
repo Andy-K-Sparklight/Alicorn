@@ -52,14 +52,17 @@ export function registerBackgroundListeners(): void {
     try {
       getUserBrowser()?.destroy();
     } catch {}
+    try {
+      getMainWindow()?.destroy();
+    } catch {}
 
     console.log("All windows are closed.");
     console.log("Waiting for application exit...");
     setTimeout(() => {
       console.log("Too long! Forcefully stopping!");
-      app.exit();
-      process.exit();
+      process.abort();
     }, 5000);
+    app.exit();
   });
   ipcMain.on("getAppPath", (e) => {
     e.returnValue = app.getAppPath();
