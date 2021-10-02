@@ -138,7 +138,7 @@ function RendererBootstrap(): JSX.Element {
     </Box>
   );
 }
-
+printScreen("Log system enabled.");
 console.log(`Alicorn ${pkg.appVersion} Renderer Process`);
 console.log("❤ From Andy K Rarity Sparklight");
 console.log("Sparklight is a girl - a filly, to be accurate.");
@@ -149,20 +149,27 @@ console.log(
 console.log(
   "This is free software, and you are welcome to redistribute it under certain conditions; see the license file for details."
 );
+printScreen("Setting up health trigger...");
 ipcRenderer.on("finalPing", () => {
   ipcRenderer.send("wPong");
 });
 setInterval(() => {
   ipcRenderer.send("wPing");
 }, 2000);
+printScreen("Configuring font size...");
 configureFontSize();
+printScreen("Setting up error pop system...");
 window.addEventListener("unhandledrejection", (e) => {
   console.log(e.reason);
+  printScreen(e.reason);
+  showLogs();
   window.dispatchEvent(new CustomEvent("sysError", { detail: e.reason }));
 });
 
 window.addEventListener("error", (e) => {
   console.log(e.message);
+  printScreen(e.message);
+  showLogs();
   window.dispatchEvent(new CustomEvent("sysError", { detail: e.message }));
 });
 
@@ -185,13 +192,16 @@ function flushColors(): void {
   document.head.insertAdjacentElement("beforeend", e);
   window.dispatchEvent(new CustomEvent("ForceRefreshApp"));
 }
-
+printScreen("Pre init works done, running main tasks.");
 void (async () => {
+  printScreen("Initializing translator...");
   await initTranslator();
+  printScreen("Setting up link trigger...");
   // @ts-ignore
   window["ashow"] = (a: string) => {
     void shell.openExternal(a);
   }; // Binding
+  printScreen("Loading config, gdt, jdt...");
   await Promise.allSettled([loadConfig(), loadGDT(), loadJDT()]);
   // GDT & JDT is required by LaunchPad & JavaSelector
   if (getBoolean("clean-storage")) {
@@ -216,9 +226,18 @@ void (async () => {
     console.log("Reloading window...");
     window.location.reload();
   }
+  printScreen("Flushing theme colors...");
   flushColors();
+  printScreen("Initializing command listener...");
   initCommandListener();
-  ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
+  printScreen("Rendering main application...");
+  try {
+    ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
+    clearScreen();
+  } catch (e) {
+    printScreen("ERR! " + String(e));
+    throw e;
+  }
   console.log("This Alicorn has super cow powers.");
   bindSuperCowPower();
   console.log("Initializing modules...");
@@ -333,4 +352,18 @@ function configureFontSize(): void {
   const f = "14px";
   console.log("Set small font size as " + f);
   window.sessionStorage.setItem("smallFontSize", f);
+}
+
+function printScreen(msg: string): void {
+  // @ts-ignore
+  window.logToScreen("<br/>" + msg);
+}
+
+function clearScreen(): void {
+  // @ts-ignore
+  window.clearLogScreen();
+}
+function showLogs(): void {
+  // @ts-ignore
+  window.showLogScreen();
 }

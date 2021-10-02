@@ -18,6 +18,24 @@
         }
       };
     </script>
+    <p
+      id="preboot_log"
+      style="font-family: 'UbuntuMono', 'Courier New', Courier, monospace"
+    ></p>
+    <script>
+      window.logToScreen = (msg) => {
+        let e = document.getElementById("preboot_log");
+        if (e) {
+          e.innerHTML = e.innerHTML + msg;
+        }
+      };
+      window.clearLogScreen = () => {
+        document.getElementById("preboot_log").style.display = "none";
+      };
+      window.showLogScreen = () => {
+        document.getElementById("preboot_log").style.display = "none";
+      };
+    </script>
     <script src="Renderer.js"></script>
   </body>
 </html>
