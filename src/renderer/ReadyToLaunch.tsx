@@ -382,10 +382,12 @@ function Launching(props: {
         <Typography className={classes.text} gutterBottom>
           {ws.doing}
         </Typography>
-      ) : (
+      ) : getBoolean("features.saying") ? (
         <Typography className={classes.text} gutterBottom>
           {hint}
         </Typography>
+      ) : (
+        <br />
       )}
 
       <Tooltip

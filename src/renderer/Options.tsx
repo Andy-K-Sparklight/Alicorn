@@ -74,6 +74,13 @@ export function OptionsPage(): JSX.Element {
           <Tab
             label={
               <Typography color={"primary"}>
+                {tr("Options.Page.FeaturesConfigure")}
+              </Typography>
+            }
+          />
+          <Tab
+            label={
+              <Typography color={"primary"}>
                 {tr("Options.Page.Features")}
               </Typography>
             }
@@ -126,10 +133,15 @@ export function OptionsPage(): JSX.Element {
           />
         </TabPanel>
         <TabPanel index={1} value={tabValue}>
+          <InputItem type={ConfigType.BOOL} bindConfig={"features.saying"} />
+          <InputItem type={ConfigType.BOOL} bindConfig={"features.miniwiki"} />
+        </TabPanel>
+        <TabPanel index={2} value={tabValue}>
           {/* AL Features */}
 
           <InputItem type={ConfigType.BOOL} bindConfig={"command"} />
           <InputItem type={ConfigType.DIR} bindConfig={"cx.shared-root"} />
+
           <InputItem type={ConfigType.BOOL} bindConfig={"hide-when-game"} />
           <InputItem
             type={ConfigType.BOOL}
@@ -153,7 +165,7 @@ export function OptionsPage(): JSX.Element {
           <InputItem type={ConfigType.BOOL} bindConfig={"java.simple-search"} />
           <InputItem type={ConfigType.NUM} bindConfig={"java.search-depth"} />
         </TabPanel>
-        <TabPanel index={2} value={tabValue}>
+        <TabPanel index={3} value={tabValue}>
           <InputItem type={ConfigType.NUM} bindConfig={"memory"} />
           <InputItem
             type={ConfigType.BOOL}
@@ -171,7 +183,7 @@ export function OptionsPage(): JSX.Element {
           />
           <InputItem type={ConfigType.STR} bindConfig={"gw-size"} />
         </TabPanel>
-        <TabPanel index={3} value={tabValue}>
+        <TabPanel index={4} value={tabValue}>
           <InputItem
             type={ConfigType.RADIO}
             choices={[
@@ -251,7 +263,7 @@ export function OptionsPage(): JSX.Element {
             bindConfig={"starlight.join-server.timeout"}
           />
         </TabPanel>
-        <TabPanel index={4} value={tabValue}>
+        <TabPanel index={5} value={tabValue}>
           <InputItem
             type={ConfigType.BOOL}
             notOn={"darwin"}

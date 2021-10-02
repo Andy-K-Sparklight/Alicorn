@@ -1,6 +1,7 @@
 import { Box, Fab, Typography } from "@material-ui/core";
 import { FlightTakeoff, GetApp, History } from "@material-ui/icons";
 import React, { useEffect, useRef, useState } from "react";
+import { getBoolean } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { jumpTo, triggerSetPage } from "./GoTo";
@@ -109,6 +110,7 @@ export function Welcome(): JSX.Element {
             );
             triggerSetPage("ReadyToLaunch");
           }}
+          highlight
           icon={<History />}
           short={tr("Welcome.Short.LastLaunch")}
         />
@@ -134,14 +136,20 @@ function RoundBtn(props: {
   onClick: () => unknown;
   icon: JSX.Element;
   short: string;
+  highlight?: boolean;
 }): JSX.Element {
   return (
-    <Box style={{ display: "inline", marginLeft: "8px" }}>
+    <Box
+      style={{
+        display: "inline",
+        marginLeft: "8px",
+      }}
+    >
       <Fab
         variant={"extended"}
         size={"medium"}
         disabled={props.disabled}
-        color={"primary"}
+        color={props.highlight ? "secondary" : "primary"}
         onClick={props.onClick}
       >
         {props.icon}
@@ -166,6 +174,9 @@ export function SpecialKnowledge(): JSX.Element {
       }
     };
   }, []);
+  if (!getBoolean("features.miniwiki")) {
+    return <></>;
+  }
   const [a, b] = currentItem.split("|");
   return (
     <Box

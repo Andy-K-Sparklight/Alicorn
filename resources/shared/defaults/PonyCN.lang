@@ -1074,6 +1074,10 @@ Minecraft 在 Client Java VM 上可能无法发挥出最好性能，建议安装
 
 你与 Alicorn
 
+# Options.Page.FeaturesConfigure
+
+功能开关
+
 # Options.Page.Features
 
 Alicorn 特色功能
@@ -1089,6 +1093,22 @@ Alicorn 特色功能
 # Options.Page.Advanced
 
 高级和重置
+
+# Options.features.saying.title
+
+小贴士
+
+# Options.features.saying.desc
+
+位于启动游戏界面进度条下方的小贴士
+
+# Options.features.miniwiki.title
+
+迷你 Wiki
+
+# Options.features.miniwiki.desc
+
+位于主页和启动游戏界面底部的小型条目
 
 # Options.download.proxy-bypass.title
 
@@ -1774,11 +1794,11 @@ Mojang 版本
 
 # Welcome.Short.LaunchPad
 
-启动核心
+核心列表
 
 # Welcome.Short.LastLaunch
 
-最近启动
+上次启动的游戏
 
 # Welcome.Short.Install
 
