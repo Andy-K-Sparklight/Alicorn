@@ -2294,6 +2294,18 @@ Alicorn 使用该服务进行更新，如果它不能使用，你可能需要联
 
 Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功能的实现靠的就是友谊的魔力！哦，还有无处不在的空气。
 
+# Utilities.CutieConnect.JoinWithCode
+
+心灵感应连接（邀请码）
+
+# Utilities.CutieConnect.CodeDesc
+
+使用从好友那里得到的心灵感应代码，直接启动到游戏。
+
+# Utilities.CutieConnect.Advanced
+
+高级模式（IP 和网络）
+
 # Utilities.CutieConnect.Games
 
 此网络中的游戏
