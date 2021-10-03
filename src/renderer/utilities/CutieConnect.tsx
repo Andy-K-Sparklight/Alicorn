@@ -121,7 +121,7 @@ export function CutieConnet(): JSX.Element {
                     await runEdge(
                       d.network,
                       d.password,
-                      "", // randip, auto assign
+                      generateRandIP10(), // randip
                       getString("hoofoff.central", HOOFOFF_CENTRAL, true) +
                         ":" +
                         NETWORK_PORT
@@ -356,6 +356,17 @@ function generateRandIP(): string {
 
     o.push("172", get16to31Num(), get255Num(), get255Num());
   }
+  return o.join(".");
+}
+
+function generateRandIP10(): string {
+  const o = [];
+  o.push(
+    "10",
+    (Math.floor(Math.random() * 14) + 1).toString(),
+    get255Num(),
+    get255Num()
+  );
   return o.join(".");
 }
 
