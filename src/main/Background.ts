@@ -15,13 +15,7 @@ import {
   saveConfigSync,
   set,
 } from "../modules/config/ConfigSupport";
-import {
-  cliWatchPony,
-  endWatchPony,
-  feedWatchPony,
-  getMainWindow,
-  stiWatchPony,
-} from "./Bootstrap";
+import { getMainWindow } from "./Bootstrap";
 import { getUserBrowser, openBrowser } from "./Browser";
 
 const LOGIN_START =
@@ -37,7 +31,6 @@ const LOGOUT_URL =
 export function registerBackgroundListeners(): void {
   ipcMain.on("closeWindow", () => {
     console.log("Closing window!");
-    endWatchPony();
     // My poor hooves!!!
     // Use destroy to make sure they close
     try {
@@ -253,12 +246,10 @@ export function registerBackgroundListeners(): void {
     }
   );
   ipcMain.on("hideWindow", () => {
-    cliWatchPony();
     getMainWindow()?.hide();
   });
   ipcMain.on("showWindow", () => {
     getMainWindow()?.show();
-    stiWatchPony();
   });
   ipcMain.on("changeDir", (_e, d: string) => {
     process.chdir(d);
@@ -274,8 +265,5 @@ export function registerBackgroundListeners(): void {
   ipcMain.on("rcClose", () => {
     getMainWindow()?.close();
     app.exit();
-  });
-  ipcMain.on("wPing", () => {
-    feedWatchPony();
   });
 }
