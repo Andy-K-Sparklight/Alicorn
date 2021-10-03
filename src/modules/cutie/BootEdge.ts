@@ -16,7 +16,6 @@ For details, please see https://github.com/ntop/n2n/blob/dev/LICENSE
 A copy of edge-win.ald and edge-gnu.ald will be saved to the root dir of alicorn data.
 */
 const INTERNET = "internet";
-let EDGE_LOCK = false; // One instance once
 export async function prepareEdgeExecutable(): Promise<void> {
   await saveDefaultDataAs(getEdgeName(), getEdgeTargetName());
 }
@@ -84,10 +83,6 @@ export async function runEdge(
   ip: string,
   supernode: string
 ): Promise<void> {
-  if (EDGE_LOCK) {
-    throw "Edge is already running!";
-  }
-  EDGE_LOCK = true;
   const cmd = generateEdgeArgs(community, psw, ip, supernode);
   console.log("Starting edge with command line: " + cmd);
 
@@ -99,7 +94,6 @@ export async function runEdge(
 
 export function killEdge(): Promise<void> {
   const cmd = os.platform() === "win32" ? "tskill edge" : "pkill edge";
-  EDGE_LOCK = false; // This will not work fine if user cancelled, but normally then won't
   console.log("Terminating edge...");
   return new Promise<void>((res) => {
     sudo.exec(
