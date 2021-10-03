@@ -65,7 +65,7 @@ import {
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { scanReports } from "../modules/crhelper/CrashReportFinder";
-import { runEdge } from "../modules/cutie/BootEdge";
+import { killEdge, runEdge } from "../modules/cutie/BootEdge";
 import { acquireCode } from "../modules/cutie/Hoofoff";
 import {
   getWrapperStatus,
@@ -262,6 +262,24 @@ function Launching(props: {
     window.addEventListener("WorldServing", fun);
     return () => {
       window.removeEventListener("WorldServing", fun);
+    };
+  }, []);
+  useEffect(() => {
+    const fun = async () => {
+      let ke = false;
+      if (lanPort > 0) {
+        ke = true;
+      }
+      setLanPort(0);
+      setOpenLanWindow(false);
+      setOpenLanButtonEnabled(false);
+      if (ke) {
+        await killEdge();
+      }
+    };
+    window.addEventListener("MinecraftExitCleanUp", fun);
+    return () => {
+      window.removeEventListener("MinecraftExitCleanUp", fun);
     };
   }, []);
   useEffect(() => {
@@ -676,6 +694,7 @@ async function startBoot(
   em.on(PROCESS_END_GATE, async (c) => {
     console.log(`Minecraft(${runID}) exited with exit code ${c}.`);
     setStatus(LaunchingStatus.PENDING);
+    window.dispatchEvent(new CustomEvent("MinecraftExitCleanUp"));
     if (c !== "0" && c !== "SIGINT") {
       console.log(
         `Attention! Minecraft(${runID}) might not have run properly!`
@@ -1132,6 +1151,17 @@ function OpenWorldDialog(props: {
   const [code, setCode] = useState<string>();
   const [isRunning, setRunning] = useState(false);
   const [err, setErr] = useState<string>();
+  useEffect(() => {
+    const fun = () => {
+      setCode(undefined);
+      setRunning(false);
+      setErr(undefined);
+    };
+    window.addEventListener("MinecraftExitCleanUp", fun);
+    return () => {
+      window.removeEventListener("MinecraftExitCleanUp", fun);
+    };
+  }, []);
   return (
     <Dialog
       open={props.open}
@@ -1244,15 +1274,16 @@ function OpenWorldDialog(props: {
             const gPort = props.port;
             const n = uniqueHash(await getMachineUniqueID());
             const p = uniqueHash(Math.random().toString());
-            await runEdge(
-              uniqueHash(await getMachineUniqueID()),
-              uniqueHash(Math.random().toString()),
-              "10.16.32.128",
-              getString("hoofoff.central", HOOFOFF_CENTRAL, true) +
-                ":" +
-                NETWORK_PORT
-            );
             try {
+              await runEdge(
+                n,
+                p,
+                "10.16.32.128",
+                getString("hoofoff.central", HOOFOFF_CENTRAL, true) +
+                  ":" +
+                  NETWORK_PORT
+              );
+
               const c = await acquireCode(
                 {
                   message: message,
