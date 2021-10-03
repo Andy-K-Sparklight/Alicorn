@@ -150,12 +150,6 @@ console.log(
   "This is free software, and you are welcome to redistribute it under certain conditions; see the license file for details."
 );
 printScreen("Setting up health trigger...");
-ipcRenderer.on("finalPing", () => {
-  ipcRenderer.send("wPong");
-});
-setInterval(() => {
-  ipcRenderer.send("wPing");
-}, 2000);
 printScreen("Configuring font size...");
 configureFontSize();
 printScreen("Setting up error pop system...");
