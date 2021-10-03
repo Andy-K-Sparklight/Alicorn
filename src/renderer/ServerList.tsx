@@ -319,11 +319,13 @@ function GameCoreSelector(props: {
   );
   return (
     <Box className={classes.root}>
-      <FormControl>
+      <FormControl variant={"outlined"}>
         <InputLabel id={"Select-Core"} className={classes.labelLight}>
           {tr("ServerList.UseCore")}
         </InputLabel>
         <Select
+          label={tr("ServerList.UseCore")}
+          variant={"outlined"}
           labelId={"Select-Core"}
           className={classes.selectorLight + " " + fullWidthClasses.largerForm}
           onChange={(e) => {

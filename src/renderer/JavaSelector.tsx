@@ -19,8 +19,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { installJRE } from "../modules/java/GetJDK";
 import {
   getAllJava,
-  getJavaInfoRaw,
   getDefaultJavaHome,
+  getJavaInfoRaw,
   JavaInfo,
   parseJavaInfo,
   parseJavaInfoRaw,
@@ -122,11 +122,13 @@ export function JavaSelector(): JSX.Element {
           {tr("JavaSelector.SelectJavaTitle")}
         </Typography>
 
-        <FormControl>
+        <FormControl variant={"outlined"}>
           <InputLabel id={"Select-JRE"} className={classes.label}>
             {tr("JavaSelector.SelectJava")}
           </InputLabel>
           <Select
+            label={tr("JavaSelector.SelectJava")}
+            variant={"outlined"}
             labelId={"Select-JRE"}
             color={"primary"}
             className={classes.selector + " " + fullWidthClasses.form}
@@ -160,7 +162,7 @@ export function JavaSelector(): JSX.Element {
         <br />
         <br />
         <Button
-          variant={"outlined"}
+          variant={"contained"}
           color={"primary"}
           onClick={() => {
             void (async () => {

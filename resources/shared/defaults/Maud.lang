@@ -804,10 +804,6 @@ Client VM 不适合 Minecraft。
 
 摧毁 Alicorn 存储的一切数据
 
-# Options.hide-when-game.desc
-
-在游戏运行时暂停启动器渲染
-
 # Options.starlight.join-server.timeout.desc
 
 Starlight 等待的最长时间

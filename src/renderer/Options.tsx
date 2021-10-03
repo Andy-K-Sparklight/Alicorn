@@ -135,14 +135,16 @@ export function OptionsPage(): JSX.Element {
         <TabPanel index={1} value={tabValue}>
           <InputItem type={ConfigType.BOOL} bindConfig={"features.saying"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"features.miniwiki"} />
+          <InputItem
+            type={ConfigType.BOOL}
+            bindConfig={"features.detect-lan"}
+          />
         </TabPanel>
         <TabPanel index={2} value={tabValue}>
           {/* AL Features */}
 
           <InputItem type={ConfigType.BOOL} bindConfig={"command"} />
           <InputItem type={ConfigType.DIR} bindConfig={"cx.shared-root"} />
-
-          <InputItem type={ConfigType.BOOL} bindConfig={"hide-when-game"} />
           <InputItem
             type={ConfigType.BOOL}
             bindConfig={"modx.global-dynamic-load-mods"}

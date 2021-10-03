@@ -102,11 +102,13 @@ function SelectContainer(props: {
   const classes = useFormStyles();
   const fullWidthClasses = fullWidth();
   return (
-    <FormControl>
+    <FormControl variant={"outlined"}>
       <InputLabel id={"Select-Pack-Container"} className={classes.label}>
         {tr("Utilities.BuildUp.BaseContainer")}
       </InputLabel>
       <Select
+        label={tr("Utilities.BuildUp.BaseContainer")}
+        variant={"outlined"}
         labelId={"Select-Pack-Container"}
         color={"primary"}
         className={fullWidthClasses.form}

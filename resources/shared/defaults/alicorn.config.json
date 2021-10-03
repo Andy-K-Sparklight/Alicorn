@@ -3,7 +3,6 @@
   "dev.explicit-error-throw": false,
   "dev.f12": false,
   "hot-key": false,
-  "hide-when-game": true,
   "updator.use-update": true,
   "updator.url": "",
   "download.concurrent.chunk-size": 8192,
@@ -48,5 +47,7 @@
   "doh-server": "Native",
   "pff.first-source": "Curseforge",
   "features.saying": true,
-  "features.miniwiki": true
+  "features.miniwiki": true,
+  "features.detect-lan": true,
+  "hoofoff.central": ""
 }

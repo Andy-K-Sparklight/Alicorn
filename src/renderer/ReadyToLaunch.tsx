@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   createStyles,
   Dialog,
   DialogActions,
@@ -25,7 +26,7 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import { FlightLand, FlightTakeoff } from "@material-ui/icons";
+import { FlightLand, FlightTakeoff, RssFeed } from "@material-ui/icons";
 import { ipcRenderer } from "electron";
 import EventEmitter from "events";
 import objectHash from "object-hash";
@@ -48,6 +49,7 @@ import {
   MS_LAST_USED_UUID_KEY,
 } from "../modules/auth/MicrosoftAccount";
 import { Nide8Account } from "../modules/auth/Nide8Account";
+import { uniqueHash } from "../modules/commons/BasicHash";
 import { findNotIn, Pair } from "../modules/commons/Collections";
 import {
   PROCESS_END_GATE,
@@ -63,6 +65,8 @@ import {
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { scanReports } from "../modules/crhelper/CrashReportFinder";
+import { runEdge } from "../modules/cutie/BootEdge";
+import { acquireCode } from "../modules/cutie/Hoofoff";
 import {
   getWrapperStatus,
   WrapperStatus,
@@ -96,14 +100,23 @@ import {
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
 import { loadProfile } from "../modules/profile/ProfileLoader";
+import { getMachineUniqueID } from "../modules/security/Unique";
 import { waitUpdateFinished } from "../modules/selfupdate/Updator";
 import { remoteCloseWindow, remoteHideWindow } from "./App";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { submitError, submitWarn } from "./Message";
 import { YNDialog } from "./OperatingHint";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import {
+  ALICORN_DEFAULT_THEME_DARK,
+  ALICORN_DEFAULT_THEME_LIGHT,
+} from "./Renderer";
 import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
+import {
+  HOOFOFF_CENTRAL,
+  NETWORK_PORT,
+  QUERY_PORT,
+} from "./utilities/CutieConnect";
 import { SpecialKnowledge } from "./Welcome";
 import { toReadableType } from "./YggdrasilAccountManager";
 
@@ -219,6 +232,9 @@ function Launching(props: {
   const [selectedAccount, setSelectedAccount] = useState<Account>();
   const [selecting, setSelecting] = useState<boolean>(false);
   const [ws, setWrapperStatus] = useState<WrapperStatus>(getWrapperStatus());
+  const [lanPort, setLanPort] = useState(0);
+  const [openLanWindow, setOpenLanWindow] = useState(false);
+  const [openLanButtonEnabled, setOpenLanButtonEnabled] = useState(false);
   const profileHash = useRef<string>(objectHash(props.profile));
   useEffect(() => {
     const timer = setInterval(() => {
@@ -232,6 +248,20 @@ function Launching(props: {
     return () => {
       clearInterval(timer);
       clearInterval(subscribe);
+    };
+  }, []);
+  useEffect(() => {
+    const fun = (e: Event) => {
+      if (e instanceof CustomEvent) {
+        if (typeof e.detail === "number" && !isNaN(e.detail)) {
+          setLanPort(e.detail);
+          setOpenLanButtonEnabled(true);
+        }
+      }
+    };
+    window.addEventListener("WorldServing", fun);
+    return () => {
+      window.removeEventListener("WorldServing", fun);
     };
   }, []);
   useEffect(() => {
@@ -356,7 +386,7 @@ function Launching(props: {
       status === LaunchingStatus.FINISHED ||
       status === LaunchingStatus.ACCOUNT_AUTHING ||
       status === LaunchingStatus.ARGS_GENERATING ? (
-        ""
+        <br />
       ) : (
         <Box>
           <Typography className={classes.text} gutterBottom>
@@ -393,7 +423,9 @@ function Launching(props: {
       <Tooltip
         title={
           status === LaunchingStatus.FINISHED
-            ? tr("ReadyToLaunch.Kill")
+            ? openLanButtonEnabled
+              ? tr("ReadyToLaunch.OpenGameToLan")
+              : tr("ReadyToLaunch.Kill")
             : tr("ReadyToLaunch.Start")
         }
       >
@@ -430,6 +462,10 @@ function Launching(props: {
                   setSelecting(true);
                 }
               } else if (status === LaunchingStatus.FINISHED) {
+                if (openLanButtonEnabled) {
+                  setOpenLanWindow(true);
+                  return;
+                }
                 if (runID.current) {
                   console.log(`Forcefully stopping instance ${runID.current}!`);
                   stopMinecraft(runID.current);
@@ -439,6 +475,8 @@ function Launching(props: {
           >
             {status !== LaunchingStatus.FINISHED ? (
               <FlightTakeoff />
+            ) : openLanButtonEnabled ? (
+              <RssFeed />
             ) : (
               <FlightLand />
             )}
@@ -448,6 +486,14 @@ function Launching(props: {
       <br />
       <br />
       <SpecialKnowledge />
+      <OpenWorldDialog
+        open={openLanWindow}
+        baseVersion={props.profile.baseVersion}
+        port={lanPort}
+        onClose={() => {
+          setOpenLanWindow(false);
+        }}
+      />
     </Box>
   );
 }
@@ -612,12 +658,23 @@ async function startBoot(
     // @ts-ignore
     window[LAST_LOGS_KEY].push(d);
     console.log(d);
+    if (getBoolean("features.detect-lan")) {
+      if (String(d).toLowerCase().includes("started serving on")) {
+        // "Started serving on 32997"
+        const p = String(d).split("on").pop();
+        if (p) {
+          const px = parseInt(p.trim());
+          if (!isNaN(px)) {
+            window.dispatchEvent(
+              new CustomEvent("WorldServing", { detail: px })
+            );
+          }
+        }
+      }
+    }
   });
   em.on(PROCESS_END_GATE, async (c) => {
     console.log(`Minecraft(${runID}) exited with exit code ${c}.`);
-    if (getBoolean("hide-when-game")) {
-      ipcRenderer.send("showWindow");
-    }
     setStatus(LaunchingStatus.PENDING);
     if (c !== "0" && c !== "SIGINT") {
       console.log(
@@ -667,9 +724,6 @@ async function startBoot(
   window.localStorage.setItem(LAST_SUCCESSFUL_GAME_KEY, window.location.hash);
   setStatus(LaunchingStatus.FINISHED);
   console.log(`A new Minecraft instance (${runID}) has been launched.`);
-  if (getBoolean("hide-when-game")) {
-    ipcRenderer.send("hideWindow");
-  }
   return GLOBAL_LAUNCH_TRACKER;
 }
 
@@ -829,30 +883,34 @@ function AccountChoose(props: {
         )}
         {choice === "YG" ? (
           <Box>
-            <InputLabel id={"Select-Account"}>
-              {tr("ReadyToLaunch.UseYGChoose")}
-            </InputLabel>
-            <Select
-              fullWidth
-              labelId={"Select-Account"}
-              onChange={(e) => {
-                setAccount(String(e.target.value));
-                window.localStorage.setItem(
-                  LAST_YG_ACCOUNT_NAME + props.profileHash,
-                  String(e.target.value)
-                );
-              }}
-              value={sAccount}
-            >
-              {Array.from(props.allAccounts.keys()).map((a) => {
-                const hash = objectHash(a);
-                return (
-                  <MenuItem key={hash} value={hash}>
-                    {a.accountName + " - " + toReadableType(a.type)}
-                  </MenuItem>
-                );
-              })}
-            </Select>
+            <FormControl variant={"outlined"}>
+              <InputLabel variant={"outlined"} id={"Select-Account"}>
+                {tr("ReadyToLaunch.UseYGChoose")}
+              </InputLabel>
+              <Select
+                label={tr("ReadyToLaunch.UseYGChoose")}
+                variant={"outlined"}
+                fullWidth
+                labelId={"Select-Account"}
+                onChange={(e) => {
+                  setAccount(String(e.target.value));
+                  window.localStorage.setItem(
+                    LAST_YG_ACCOUNT_NAME + props.profileHash,
+                    String(e.target.value)
+                  );
+                }}
+                value={sAccount}
+              >
+                {Array.from(props.allAccounts.keys()).map((a) => {
+                  const hash = objectHash(a);
+                  return (
+                    <MenuItem key={hash} value={hash}>
+                      {a.accountName + " - " + toReadableType(a.type)}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
           </Box>
         ) : (
           ""
@@ -940,11 +998,14 @@ function MiniJavaSelector(props: {
           marginTop: "5px",
         }}
       >
-        <FormControl>
+        <FormControl variant={"outlined"}>
           <InputLabel id={"Select-JRE"} className={classes.label}>
             {tr("JavaSelector.SelectJava")}
           </InputLabel>
           <Select
+            margin={"dense"}
+            label={tr("JavaSelector.SelectJava")}
+            variant={"outlined"}
             labelId={"Select-JRE"}
             color={"primary"}
             className={classes.selector + " " + fullWidthClasses.form}
@@ -1056,4 +1117,172 @@ function clearReboot(hash: string): void {
 
 function isReboot(hash: string): boolean {
   return window.sessionStorage.getItem(REBOOT_KEY_BASE + hash) === "1";
+}
+
+function OpenWorldDialog(props: {
+  open: boolean;
+  baseVersion: string;
+  port: number;
+  onClose: () => unknown;
+}): JSX.Element {
+  const [message, setMessage] = useState("Hi there!");
+  const [expires, setExpires] = useState(1); // in hours
+  const [count, setCount] = useState(5);
+  const [premium, setPremium] = useState(true);
+  const [code, setCode] = useState<string>();
+  const [isRunning, setRunning] = useState(false);
+  const [err, setErr] = useState<string>();
+  return (
+    <Dialog
+      open={props.open}
+      onClose={() => {
+        props.onClose();
+      }}
+    >
+      <DialogTitle>{tr("ReadyToLaunch.GenerateLink")}</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          {tr("ReadyToLaunch.GenerateLinkDesc")}
+        </DialogContentText>
+        <FormControl fullWidth variant={"outlined"}>
+          <InputLabel id={"ReadyToLaunch-Expires"}>
+            {tr("ReadyToLaunch.Expires")}
+          </InputLabel>
+          <Select
+            label={tr("ReadyToLaunch.Expires")}
+            variant={"outlined"}
+            labelId={"ReadyToLaunch-Expires"}
+            fullWidth
+            color={"primary"}
+            autoFocus
+            margin={"dense"}
+            value={expires}
+            onChange={(e) => {
+              setExpires(parseInt(String(e.target.value)));
+            }}
+          >
+            <MenuItem value={1}>{tr("ReadyToLaunch.10Min")}</MenuItem>
+            <MenuItem value={3}>{tr("ReadyToLaunch.30Min")}</MenuItem>
+            <MenuItem value={6}>{tr("ReadyToLaunch.1Hour")}</MenuItem>
+            <MenuItem value={18}>{tr("ReadyToLaunch.3Hour")}</MenuItem>
+          </Select>
+        </FormControl>
+        <br /> <br />
+        <FormControl fullWidth variant={"outlined"}>
+          <InputLabel id={"ReadyToLaunch-Count"}>
+            {tr("ReadyToLaunch.CanUse")}
+          </InputLabel>
+          <Select
+            fullWidth
+            label={tr("ReadyToLaunch.CanUse")}
+            variant={"outlined"}
+            labelId={"ReadyToLaunch-Count"}
+            color={"primary"}
+            margin={"dense"}
+            value={count}
+            onChange={(e) => {
+              setCount(parseInt(String(e.target.value)));
+            }}
+          >
+            <MenuItem value={1}>{tr("ReadyToLaunch.Once")}</MenuItem>
+            <MenuItem value={5}>{tr("ReadyToLaunch.FiveTimes")}</MenuItem>
+            <MenuItem value={20}>{tr("ReadyToLaunch.TwentyTimes")}</MenuItem>
+            <MenuItem value={-1}>{tr("ReadyToLaunch.Unlimited")}</MenuItem>
+          </Select>
+        </FormControl>
+        <br />
+        <Tooltip title={tr("ReadyToLaunch.RequirePremiumDesc")}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={premium}
+                onChange={(e) => {
+                  setPremium(e.target.checked);
+                }}
+              />
+            }
+            label={tr("ReadyToLaunch.RequirePremium")}
+          />
+        </Tooltip>
+        <DialogContentText>{tr("ReadyToLaunch.Message")}</DialogContentText>
+        <TextField
+          autoFocus
+          margin={"dense"}
+          onChange={(e) => {
+            setMessage(e.target.value);
+          }}
+          type={"text"}
+          spellCheck={false}
+          color={"primary"}
+          disabled={isRunning}
+          fullWidth
+          variant={"outlined"}
+          value={message}
+        />
+        {err ? (
+          <DialogContentText style={{ color: "#ff8400" }}>
+            {tr("ReadyToLaunch.Errors." + err)}
+          </DialogContentText>
+        ) : (
+          ""
+        )}
+        {code ? (
+          <DialogContentText
+            style={{ color: ALICORN_DEFAULT_THEME_DARK.palette.primary.main }}
+          >
+            {tr("ReadyToLaunch.HoofoffCode", `Code=${code}`)}
+          </DialogContentText>
+        ) : (
+          ""
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button
+          disabled={isRunning}
+          onClick={async () => {
+            setRunning(true);
+            const gPort = props.port;
+            const n = uniqueHash(await getMachineUniqueID());
+            const p = uniqueHash(Math.random().toString());
+            await runEdge(
+              uniqueHash(await getMachineUniqueID()),
+              uniqueHash(Math.random().toString()),
+              "10.16.32.128",
+              getString("hoofoff.central", HOOFOFF_CENTRAL, true) +
+                ":" +
+                NETWORK_PORT
+            );
+            try {
+              const c = await acquireCode(
+                {
+                  message: message,
+                  ip: "10.16.32.128",
+                  port: gPort,
+                  network: n,
+                  password: p,
+                  premium: premium,
+                  baseVersion: props.baseVersion,
+                },
+                expires * 600000,
+                count,
+                getString("hoofoff.central", HOOFOFF_CENTRAL, true) +
+                  ":" +
+                  QUERY_PORT
+              );
+              if (c.length === 6) {
+                setCode(c);
+                setErr("");
+                setRunning(false);
+              }
+            } catch {
+              setErr("AcquireFailed");
+              setRunning(false);
+            }
+          }}
+        >
+          {tr("ReadyToLaunch.GetLink")}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 }

@@ -30,7 +30,7 @@ import {
   subscribeDoing,
   unsubscribeDoing,
 } from "../modules/download/DownloadWrapper";
-import { getJavaRunnable, getDefaultJavaHome } from "../modules/java/JInfo";
+import { getDefaultJavaHome, getJavaRunnable } from "../modules/java/JInfo";
 import {
   canSupportGame,
   getFabricInstaller,
@@ -392,7 +392,7 @@ export function InstallCore(): JSX.Element {
           <Typography className={classes.instr}>
             {tr("InstallCore.InstallMinecraftInstr")}
           </Typography>
-          <FormControl className={classes.formControl}>
+          <FormControl variant={"outlined"} className={classes.formControl}>
             <InputLabel
               id={"CoreInstall-Mojang-SelectArch"}
               className={classes.label}
@@ -400,6 +400,7 @@ export function InstallCore(): JSX.Element {
               {tr("InstallCore.MinecraftArch")}
             </InputLabel>
             <Select
+              variant={"outlined"}
               labelId={"CoreInstall-Mojang-SelectArch"}
               color={"primary"}
               className={classes.selector + " " + fullWidthClasses.form}
@@ -409,6 +410,7 @@ export function InstallCore(): JSX.Element {
                 setMojangFilter(e.target.value as ReleaseType);
               }}
               value={mojangFilter || ReleaseType.RELEASE}
+              label={tr("InstallCore.MinecraftArch")}
             >
               <MenuItem value={ReleaseType.RELEASE}>
                 {tr("InstallCore.Release")}
@@ -425,7 +427,7 @@ export function InstallCore(): JSX.Element {
             </Select>
           </FormControl>
           <br />
-          <FormControl className={classes.formControl}>
+          <FormControl variant={"outlined"} className={classes.formControl}>
             <InputLabel
               id={"CoreInstall-Mojang-SelectVersion"}
               className={classes.label}
@@ -433,8 +435,10 @@ export function InstallCore(): JSX.Element {
               {tr("InstallCore.MinecraftVersion")}
             </InputLabel>
             <Select
+              variant={"outlined"}
               labelId={"CoreInstall-Mojang-SelectVersion"}
               color={"primary"}
+              label={tr("InstallCore.MinecraftVersion")}
               className={classes.selector + " " + fullWidthClasses.form}
               onChange={(e) => {
                 setSelectedMojangVersion(String(e.target.value || ""));
@@ -451,7 +455,7 @@ export function InstallCore(): JSX.Element {
             </Select>
           </FormControl>
           <br />
-          <FormControl className={classes.formControl}>
+          <FormControl variant={"outlined"} className={classes.formControl}>
             <InputLabel
               id={"CoreInstall-Mojang-TargetContainer"}
               className={classes.label}
@@ -459,6 +463,8 @@ export function InstallCore(): JSX.Element {
               {tr("InstallCore.TargetContainer")}
             </InputLabel>
             <Select
+              label={tr("InstallCore.TargetContainer")}
+              variant={"outlined"}
               labelId={"CoreInstall-Mojang-TargetContainer"}
               color={"primary"}
               className={classes.selector + " " + fullWidthClasses.form}
@@ -500,7 +506,7 @@ export function InstallCore(): JSX.Element {
               " " +
               (detectedForgeVersion || tr("InstallCore.Unknown"))}
           </Typography>
-          <FormControl className={classes.formControl}>
+          <FormControl variant={"outlined"} className={classes.formControl}>
             <InputLabel
               id={"CoreInstall-Forge-SelectBase"}
               className={classes.label}
@@ -508,6 +514,8 @@ export function InstallCore(): JSX.Element {
               {tr("InstallCore.ForgeBaseVersion")}
             </InputLabel>
             <Select
+              label={tr("InstallCore.ForgeBaseVersion")}
+              variant={"outlined"}
               labelId={"CoreInstall-Forge-SelectBase"}
               color={"primary"}
               className={classes.selector + " " + fullWidthClasses.form}
@@ -562,7 +570,7 @@ export function InstallCore(): JSX.Element {
               " " +
               (detectedFabricVersion || tr("InstallCore.Unknown"))}
           </Typography>
-          <FormControl className={classes.formControl}>
+          <FormControl variant={"outlined"} className={classes.formControl}>
             <InputLabel
               id={"CoreInstall-Fabric-SelectBase"}
               className={classes.label}
@@ -570,6 +578,8 @@ export function InstallCore(): JSX.Element {
               {tr("InstallCore.FabricBaseVersion")}
             </InputLabel>
             <Select
+              label={tr("InstallCore.FabricBaseVersion")}
+              variant={"outlined"}
               labelId={"CoreInstall-Fabric-SelectBase"}
               color={"primary"}
               className={classes.selector + " " + fullWidthClasses.form}
@@ -620,7 +630,7 @@ export function InstallCore(): JSX.Element {
           <Typography className={classes.instr}>
             {tr("InstallCore.InstallIrisInstr")}
           </Typography>
-          <FormControl className={classes.formControl}>
+          <FormControl variant={"outlined"} className={classes.formControl}>
             <InputLabel
               id={"CoreInstall-Iris-SelectBase"}
               className={classes.label}
@@ -628,6 +638,8 @@ export function InstallCore(): JSX.Element {
               {tr("InstallCore.IrisBaseVersion")}
             </InputLabel>
             <Select
+            label={tr("InstallCore.IrisBaseVersion")}
+              variant={"outlined"}
               labelId={"CoreInstall-Iris-SelectBase"}
               color={"primary"}
               className={classes.selector + " " + fullWidthClasses.form}

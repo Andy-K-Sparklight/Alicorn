@@ -1,8 +1,6 @@
 import {
   Box,
-  Button,
   Card,
-  CardActions,
   CardContent,
   createStyles,
   makeStyles,
@@ -11,7 +9,6 @@ import {
 import React from "react";
 import { getBoolean } from "../../modules/config/ConfigSupport";
 import { jumpTo, triggerSetPage } from "../GoTo";
-import { ALICORN_DEFAULT_THEME_DARK } from "../Renderer";
 import { useTextStyles, useTextStylesLight } from "../Stylex";
 import { tr } from "../Translator";
 
@@ -63,31 +60,21 @@ function SimpleUtil(props: {
     }
   }
   return (
-    <Box>
+    <Box
+      onClick={() => {
+        jumpTo(`/Utilities/${props.name}`);
+        triggerSetPage(tr(`Utilities.${props.name}.Title`));
+      }}
+    >
       <Card className={accClasses.acc1}>
         <CardContent>
           <Typography className={classes.firstText}>
             {tr(`Utilities.${props.name}.Title`)}
           </Typography>
-          <Typography gutterBottom className={classes.secondText}>
+          <Typography className={classes.secondText}>
             {tr(`Utilities.${props.name}.Description`)}
           </Typography>
         </CardContent>
-        <CardActions>
-          <Button
-            style={{
-              color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.light,
-              float: "right",
-            }}
-            variant={"outlined"}
-            onClick={() => {
-              jumpTo(`/Utilities/${props.name}`);
-              triggerSetPage(tr(`Utilities.${props.name}.Title`));
-            }}
-          >
-            {tr("UtilitiesIndex.Open")}
-          </Button>
-        </CardActions>
       </Card>
       <br />
     </Box>

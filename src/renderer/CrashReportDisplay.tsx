@@ -49,7 +49,7 @@ const useAccStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.primary.dark,
     },
     table: {
-      backgroundColor: theme.palette.primary.light,
+      backgroundColor: theme.palette.primary.dark,
       color: theme.palette.primary.main,
     },
     btn: {
@@ -476,8 +476,9 @@ function BBCodeDisplay(props: {
             marginLeft: "auto",
             width: "15%",
           }}
-          variant={"outlined"}
-          className={classes.btn}
+          variant={"contained"}
+          color={"primary"}
+          // className={classes.btn}
         >
           {tr("CrashReportDisplay.Copy")}
         </Button>

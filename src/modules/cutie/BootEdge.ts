@@ -1,6 +1,8 @@
+import { remove } from "fs-extra";
 import os from "os";
 import sudo from "sudo-prompt";
 import { uniqueHash } from "../commons/BasicHash";
+import { isFileExist } from "../commons/FileUtil";
 import { getActualDataPath, saveDefaultDataAs } from "../config/DataSupport";
 
 /*
@@ -35,6 +37,7 @@ export function getEdgeTargetName(): string {
   }
 }
 
+const EDGE_LOCK_FILE = "proc.lock";
 export function generateEdgeArgs(
   community: string,
   psw: string,
@@ -47,41 +50,66 @@ export function generateEdgeArgs(
     "-l",
     supernode,
   ]
-
     .concat(ip.length > 0 ? ["-a", ip] : [])
     .concat(
       psw.length > 0 && community !== INTERNET ? ["-k", uniqueHash(psw)] : []
     ) // Beat command inject!
     .join(" ");
   return os.platform() === "win32"
-    ? `start "CutieConnect N2N Edge" "${getActualDataPath(
+    ? `echo 0 >> "${getActualDataPath(
+        EDGE_LOCK_FILE
+      )}" && start "CutieConnect N2N Edge" "${getActualDataPath(
         getEdgeTargetName()
       )}" ${o}`
-    : `sh -c "'${getActualDataPath(getEdgeTargetName())}' -f ${o} "`;
+    : `sh -c "echo 0 >> '${getActualDataPath(
+        EDGE_LOCK_FILE
+      )}' && '${getActualDataPath(getEdgeTargetName())}' -f ${o}"`;
 }
 
-export function runEdge(
+function queryFile(f: string): Promise<void> {
+  return new Promise<void>((res) => {
+    const i = setInterval(async () => {
+      if (await isFileExist(f)) {
+        clearInterval(i);
+        res();
+        await remove(f);
+      }
+    }, 500);
+  });
+}
+
+export async function runEdge(
   community: string,
   psw: string,
   ip: string,
   supernode: string
-): void {
+): Promise<void> {
   if (EDGE_LOCK) {
     throw "Edge is already running!";
   }
   EDGE_LOCK = true;
   const cmd = generateEdgeArgs(community, psw, ip, supernode);
+  console.log("Starting edge with command line: " + cmd);
+
   sudo.exec(cmd, {
     name: "Alicorn Sudo Prompt Actions",
   });
-  console.log("Starting edge with command line: " + cmd);
+  await queryFile(getActualDataPath(EDGE_LOCK_FILE));
 }
 
-export function killEdge(): void {
+export function killEdge(): Promise<void> {
   const cmd = os.platform() === "win32" ? "tskill edge" : "pkill edge";
   EDGE_LOCK = false; // This will not work fine if user cancelled, but normally then won't
-  sudo.exec(cmd, {
-    name: "Alicorn Sudo Prompt Actions",
-  });
   console.log("Terminating edge...");
+  return new Promise<void>((res) => {
+    sudo.exec(
+      cmd,
+      {
+        name: "Alicorn Sudo Prompt Actions",
+      },
+      () => {
+        res(); // This should work
+      }
+    );
+  });
 }

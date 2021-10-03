@@ -79,8 +79,8 @@ export const useFormStyles = makeStyles((theme) =>
       color: theme.palette.primary.light,
     },
     label: {
-      marginLeft: theme.spacing(0.5),
-      color: theme.palette.primary.main,
+      // marginLeft: theme.spacing(0.5),
+      // color: theme.palette.primary.main,
     },
     labelLight: {
       marginLeft: theme.spacing(0.25),

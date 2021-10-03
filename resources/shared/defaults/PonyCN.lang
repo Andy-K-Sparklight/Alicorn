@@ -394,6 +394,10 @@ Mod 兼容性检查……
 
 开始
 
+# ReadyToLaunch.OpenGameToLan
+
+生成心灵感应代码
+
 # ReadyToLaunch.Start
 
 启动
@@ -457,6 +461,82 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 # ReadyToLaunch.Status.Short.Finished
 
 完毕
+
+# ReadyToLaunch.GenerateLink
+
+生成心灵感应代码
+
+# ReadyToLaunch.GenerateLinkDesc
+
+@HTML将此代码提供给你的好友，他（她）将能够在「友谊接力」中使用它加入你的世界！\n<b style="color: red;">有效期指代码有效期，你需要保持世界开启！</b>
+
+# ReadyToLaunch.Expires
+
+有效期
+
+# ReadyToLaunch.10Min
+
+10 分钟
+
+# ReadyToLaunch.30Min
+
+30 分钟
+
+# ReadyToLaunch.1Hour
+
+1 小时
+
+# ReadyToLaunch.3Hour
+
+3 小时
+
+# ReadyToLaunch.CanUse
+
+使用次数
+
+# ReadyToLaunch.Once
+
+一次性
+
+# ReadyToLaunch.FiveTimes
+
+5 次
+
+# ReadyToLaunch.TwentyTimes
+
+20 次
+
+# ReadyToLaunch.Unlimited
+
+无限（真的很多！）
+
+# ReadyToLaunch.Message
+
+可以在这里留言，加入你的世界的玩家会看到这条信息：
+
+# ReadyToLaunch.Count
+
+最大使用次数
+
+# ReadyToLaunch.GetLink
+
+公开并生成代码
+
+# ReadyToLaunch.Errors.AcquireFailed
+
+接力服务器似乎无法连接，没能获取代码。
+
+# ReadyToLaunch.HoofoffCode
+
+你的心灵感应代码是：{Code}。请记住它，它不会再出现了！
+
+# ReadyToLaunch.RequirePremium
+
+需要正版验证
+
+# ReadyToLaunch.RequirePremiumDesc
+
+如果没有使用 Mod 关闭正版验证，则此选项可以通知好友
 
 # ReadyToLaunch.WaitingText
 
@@ -840,7 +920,7 @@ Pff 正安装 Mod……
 
 # InstallCore.IrisBaseVersion
 
-安装到此 Fabric 上：
+安装到此 Fabric 上
 
 # InstallCore.TargetContainer
 
@@ -1094,6 +1174,14 @@ Alicorn 特色功能
 
 高级和重置
 
+# Options.features.detect-lan.title
+
+检测局域网游戏
+
+# Options.features.detect-lan.desc
+
+在游戏运行时检测局域网游戏的开启，并允许你和好友联机
+
 # Options.features.saying.title
 
 小贴士
@@ -1269,14 +1357,6 @@ Z（ZGC）
 # Options.clean-storage.desc
 
 摧毁 Alicorn 存储的一切数据，包括设置、效用缓存和使用记录 - 几乎相当于重新安装
-
-# Options.hide-when-game.title
-
-游戏时挂起 Alicorn 窗口
-
-# Options.hide-when-game.desc
-
-在游戏运行时暂停启动器渲染，为 Minecraft 争取约 20 MiB 的 RAM - 有些许的性能提升，同时 Alicorn 能够继续观察游戏状态
 
 # Options.starlight.join-server.timeout.title
 
@@ -2321,6 +2401,34 @@ Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功�
 # Utilities.CutieConnect.JoinWithCode
 
 心灵感应连接（邀请码）
+
+# Utilities.CutieConnect.EnterCode
+
+输入你获取的代码
+
+# Utilities.CutieConnect.Activate
+
+激活心灵感应
+
+# Utilities.CutieConnect.FailedToQuery
+
+激活失败：无法连接或者代码失效
+
+# Utilities.CutieConnect.GameMeta
+
+@HTML这是一个使用版本 {BaseVersion} 的世界。<b>{IsPremium}</b>。\n世界创建者的留言：\n\n&nbsp;&nbsp;&nbsp;&nbsp;<b>“</b><pre>{Message}</pre><b>”</b>\n\n友谊接力提醒您：<b>我们不保证世界现在还存在，也不保证它的安全，请小心！</b>\n\n5 秒后将为您连接。
+
+# Utilities.CutieConnect.AllDone
+
+已经尝试建立连接！请再看一眼版本要求，因为 10 秒后我将带你前往启动台启动～
+
+# Utilities.CutieConnet.Premium
+
+需要正版帐户
+
+# Utilities.CutieConnet.NonPremium
+
+不需要正版帐户
 
 # Utilities.CutieConnect.CodeDesc
 

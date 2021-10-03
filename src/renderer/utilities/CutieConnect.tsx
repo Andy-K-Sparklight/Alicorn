@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  FormControl,
   MuiThemeProvider,
   Snackbar,
   Tab,
@@ -10,16 +11,21 @@ import {
 } from "@material-ui/core";
 import { ipcRenderer } from "electron";
 import React, { useEffect, useRef, useState } from "react";
-import { getBoolean } from "../../modules/config/ConfigSupport";
+import { getBoolean, getString } from "../../modules/config/ConfigSupport";
 import { killEdge, runEdge } from "../../modules/cutie/BootEdge";
+import { applyCode, OnlineGameInfo } from "../../modules/cutie/Hoofoff";
 import { generateWorldAnyUniqueId } from "../../modules/security/Unique";
-import { jumpTo, triggerSetPage } from "../GoTo";
+import { jumpTo, setChangePageWarn, triggerSetPage } from "../GoTo";
 import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
 } from "../Renderer";
 import { useTextStyles } from "../Stylex";
 import { randsl, tr } from "../Translator";
+
+export const HOOFOFF_CENTRAL = "hoofoff.xuogroup.top";
+export const NETWORK_PORT = 30282;
+export const QUERY_PORT = 30280;
 
 const SUPERNODE_KEY = "Utilities.CutieConnect.Supernode";
 const COMMUNITY_KEY = "Utilities.CutieConnect.Community";
@@ -52,6 +58,8 @@ export function CutieConnet(): JSX.Element {
   const text = useTextStyles();
   const [notice, setNotice] = useState("");
   const [tabIndex, setTabIndex] = useState(0);
+  const [hoofoffCode, setHoofoffCode] = useState("");
+  const [gameMeta, setGameMeta] = useState<OnlineGameInfo>();
   return (
     <Box>
       <Tabs
@@ -78,7 +86,97 @@ export function CutieConnet(): JSX.Element {
           }
         />
       </Tabs>
-      <TabPanel index={0} value={tabIndex}></TabPanel>
+      <TabPanel index={0} value={tabIndex}>
+        <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+          <br />
+          <br />
+          <FormControl>
+            <TextField
+              autoFocus
+              color={"primary"}
+              variant={"outlined"}
+              error={hoofoffCode.length > 0 && hoofoffCode.length !== 6}
+              spellCheck={false}
+              margin={"dense"}
+              value={hoofoffCode}
+              label={tr("Utilities.CutieConnect.EnterCode")}
+              onChange={(e) => {
+                setHoofoffCode(e.target.value);
+              }}
+            />
+            <Button
+              color={"primary"}
+              variant={"contained"}
+              onClick={async () => {
+                try {
+                  setChangePageWarn(true);
+                  const d = await applyCode(
+                    hoofoffCode,
+                    getString("hoofoff.central", HOOFOFF_CENTRAL, true) +
+                      ":" +
+                      QUERY_PORT
+                  );
+                  setGameMeta(d);
+                  setTimeout(async () => {
+                    await runEdge(
+                      d.network,
+                      d.password,
+                      "", // randip, auto assign
+                      getString("hoofoff.central", HOOFOFF_CENTRAL, true) +
+                        ":" +
+                        NETWORK_PORT
+                    );
+                    setNotice(tr("Utilities.CutieConnect.AllDone"));
+                    setOpenHint(true);
+                    setTimeout(() => {
+                      jumpTo("/LaunchPad/" + d.ip + ":" + d.port);
+                      triggerSetPage("LaunchPad");
+                    }, 10000);
+                  }, 5000);
+                  setChangePageWarn(false);
+                } catch {
+                  setNotice(tr("Utilities.CutieConnect.FailedToQuery"));
+                  setOpenHint(true);
+                }
+              }}
+            >
+              {tr("Utilities.CutieConnect.Activate")}
+            </Button>
+            <br />
+            <Button
+              color={"primary"}
+              variant={"contained"}
+              onClick={async () => {
+                await killEdge();
+                setNotice(tr("Utilities.CutieConnect.Disconnected"));
+                setOpenHint(true);
+              }}
+            >
+              {tr("Utilities.CutieConnect.Disconnect")}
+            </Button>
+          </FormControl>
+        </MuiThemeProvider>
+        <br />
+        <br />
+        {gameMeta ? (
+          <Typography className={text.secondText} color={"secondary"}>
+            {tr(
+              "Utilities.CutieConnect.GameMeta",
+              `BaseVersion=${gameMeta.baseVersion}`,
+              `IsPremium=${tr(
+                gameMeta.premium
+                  ? "Utilities.CutieConnet.Premium"
+                  : "Utilities.CutieConnet.NonPremium"
+              )}`,
+              `Message=${gameMeta.message
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")}`
+            )}
+          </Typography>
+        ) : (
+          ""
+        )}
+      </TabPanel>
       <TabPanel index={1} value={tabIndex}>
         <Box>
           <Box>
@@ -193,12 +291,12 @@ export function CutieConnet(): JSX.Element {
                 }
                 color={"primary"}
                 variant={"contained"}
-                onClick={() => {
+                onClick={async () => {
                   window.localStorage.setItem(SUPERNODE_KEY, superNode);
                   window.localStorage.setItem(PASSWORD_KEY, password);
                   window.localStorage.setItem(COMMUNITY_KEY, communityName);
                   window.localStorage.setItem(IP_KEY, hostIp); // Freeze Data
-                  runEdge(
+                  await runEdge(
                     communityName,
                     communityName === INTERNET ? "" : password,
                     hostIp,
@@ -214,8 +312,8 @@ export function CutieConnet(): JSX.Element {
                 style={{ marginLeft: "4px" }}
                 color={"primary"}
                 variant={"contained"}
-                onClick={() => {
-                  killEdge();
+                onClick={async () => {
+                  await killEdge();
                   setNotice(tr("Utilities.CutieConnect.Disconnected"));
                   setOpenHint(true);
                 }}
@@ -224,17 +322,16 @@ export function CutieConnet(): JSX.Element {
               </Button>
             </MuiThemeProvider>
           </Box>
-
-          <Snackbar
-            open={openHint}
-            message={notice}
-            autoHideDuration={5000}
-            onClose={() => {
-              setOpenHint(false);
-            }}
-          />
         </Box>
       </TabPanel>
+      <Snackbar
+        open={openHint}
+        message={notice}
+        autoHideDuration={5000}
+        onClose={() => {
+          setOpenHint(false);
+        }}
+      />
     </Box>
   );
 }
