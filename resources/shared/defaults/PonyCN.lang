@@ -1174,6 +1174,14 @@ Alicorn 特色功能
 
 高级和重置
 
+# Options.hoofoff.central.title
+
+接力服务器
+
+# Options.hoofoff.central.desc
+
+设定接力服务器地址，它用于沟通不同计算机上的 Alicorn
+
 # Options.features.detect-lan.title
 
 检测局域网游戏

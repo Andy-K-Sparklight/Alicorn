@@ -142,7 +142,11 @@ export function OptionsPage(): JSX.Element {
         </TabPanel>
         <TabPanel index={2} value={tabValue}>
           {/* AL Features */}
-
+          <InputItem
+            type={ConfigType.STR}
+            experimental
+            bindConfig={"hoofoff.central"}
+          />
           <InputItem type={ConfigType.BOOL} bindConfig={"command"} />
           <InputItem type={ConfigType.DIR} bindConfig={"cx.shared-root"} />
           <InputItem
