@@ -74,18 +74,6 @@ JRE
 
 工具
 
-# System.Info
-
-@empty
-
-# System.Error
-
-@empty
-
-# System.Warn
-
-@empty
-
 # System.JumpPageWarn.Title
 
 切换？

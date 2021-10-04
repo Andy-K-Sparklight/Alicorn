@@ -11,7 +11,6 @@ import {
   MenuItem,
   MuiThemeProvider,
   Select,
-  Snackbar,
   Tab,
   Tabs,
   Typography,
@@ -53,7 +52,7 @@ import { performForgeInstall } from "../modules/pff/install/ForgeInstall";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
 import { jumpTo, triggerSetPage } from "./GoTo";
-import { submitWarn } from "./Message";
+import { submitSucc, submitWarn } from "./Message";
 import { FailedHint, OperatingHintCustom } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { fullWidth, useFormStyles } from "./Stylex";
@@ -89,7 +88,6 @@ export function InstallCore(): JSX.Element {
   const [fabricConfirmOpenBit, setFabricConfirmOpen] = useState(false);
   const [operating, setOperating] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [openNotice, setOpenNotice] = useState(false);
   const [progressMsg, _setProgressMsg] = useState("");
   const [tabValue, setTabValue] = useState(0);
   const [updatePatchableCoresBit, updatePatchableCores] = useState(false);
@@ -169,14 +167,6 @@ export function InstallCore(): JSX.Element {
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box className={classes.root}>
-        <Snackbar
-          open={openNotice}
-          message={tr("InstallCore.Success")}
-          autoHideDuration={3000}
-          onClose={() => {
-            setOpenNotice(false);
-          }}
-        />
         <FailedHint
           open={failed}
           closeFunc={() => {
@@ -235,7 +225,7 @@ export function InstallCore(): JSX.Element {
               if (mounted.current) {
                 setOperating(false);
                 setFailed(false);
-                setOpenNotice(true);
+                submitSucc(tr("InstallCore.Success"));
               }
             }
           }}
@@ -304,7 +294,7 @@ export function InstallCore(): JSX.Element {
             if (mounted.current) {
               setOperating(false);
               setFailed(false);
-              setOpenNotice(true);
+              submitSucc(tr("InstallCore.Success"));
             }
           }}
         />
@@ -341,7 +331,7 @@ export function InstallCore(): JSX.Element {
               if (mounted.current) {
                 setOperating(false);
                 setFailed(false);
-                setOpenNotice(true);
+                submitSucc(tr("InstallCore.Success"));
               }
             } catch {
               if (mounted.current) {
@@ -638,7 +628,7 @@ export function InstallCore(): JSX.Element {
               {tr("InstallCore.IrisBaseVersion")}
             </InputLabel>
             <Select
-            label={tr("InstallCore.IrisBaseVersion")}
+              label={tr("InstallCore.IrisBaseVersion")}
               variant={"outlined"}
               labelId={"CoreInstall-Iris-SelectBase"}
               color={"primary"}

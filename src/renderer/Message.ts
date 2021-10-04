@@ -8,3 +8,6 @@ export function submitWarn(msg: string): void {
 export function submitInfo(msg: string): void {
   window.dispatchEvent(new CustomEvent("sysInfo", { detail: msg }));
 }
+export function submitSucc(msg: string): void {
+  window.dispatchEvent(new CustomEvent("sysSucc", { detail: msg }));
+}

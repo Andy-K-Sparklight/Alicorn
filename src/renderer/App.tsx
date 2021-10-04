@@ -28,6 +28,7 @@ import {
   ViewModule,
   Web,
 } from "@material-ui/icons";
+import { Alert } from "@material-ui/lab";
 import { ipcRenderer, shell } from "electron";
 import React, { useEffect, useState } from "react";
 import { Route } from "react-router-dom";
@@ -124,6 +125,8 @@ export function App(): JSX.Element {
   const [warn, setWarn] = useState("");
   const [info, setInfo] = useState("");
   const [openInfo, setInfoOpen] = useState(false);
+  const [openSucc, setSuccOpen] = useState(false);
+  const [succ, setSucc] = useState("");
   const [refreshBit, setRefreshBit] = useState(false);
   useEffect(() => {
     if (window.location.hash === "#/") {
@@ -189,6 +192,10 @@ export function App(): JSX.Element {
     window.addEventListener("sysInfo", (e) => {
       setInfo(String(safeGet(e, ["detail"], "")));
       setInfoOpen(true);
+    });
+    window.addEventListener("sysSucc", (e) => {
+      setSucc(String(safeGet(e, ["detail"], "")));
+      setSuccOpen(true);
     });
   }, []);
 
@@ -580,34 +587,49 @@ export function App(): JSX.Element {
         style={{
           width: "90%",
         }}
-        message={tr("System.Error") + err}
-        autoHideDuration={10000}
+        autoHideDuration={5000}
         onClose={() => {
           setNoticeOpen(false);
         }}
-      />
+      >
+        <Alert severity={"error"}>{err}</Alert>
+      </Snackbar>
+      <Snackbar
+        open={openSucc}
+        style={{
+          width: "90%",
+        }}
+        autoHideDuration={2000}
+        onClose={() => {
+          setSuccOpen(false);
+        }}
+      >
+        <Alert severity={"success"}>{succ}</Alert>
+      </Snackbar>
       <Snackbar
         open={openWarn}
         style={{
           width: "90%",
         }}
-        message={tr("System.Warn") + warn}
-        autoHideDuration={10000}
+        autoHideDuration={5000}
         onClose={() => {
           setWarnOpen(false);
         }}
-      />
+      >
+        <Alert severity={"warning"}>{warn}</Alert>
+      </Snackbar>
       <Snackbar
         open={openInfo}
         style={{
           width: "90%",
         }}
-        message={tr("System.Info") + info}
-        autoHideDuration={5000}
+        autoHideDuration={3000}
         onClose={() => {
           setInfoOpen(false);
         }}
-      />
+      >
+        <Alert severity={"info"}>{info}</Alert>
+      </Snackbar>
     </Box>
   );
 }

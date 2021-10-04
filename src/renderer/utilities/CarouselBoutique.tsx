@@ -6,7 +6,6 @@ import {
   MuiThemeProvider,
   Radio,
   RadioGroup,
-  Snackbar,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -20,6 +19,7 @@ import {
   removeSkin,
   skinTypeFor,
 } from "../../modules/localskin/LocalYggdrasilServer";
+import { submitSucc } from "../Message";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "../Renderer";
 import { useTextStyles } from "../Stylex";
 import { tr } from "../Translator";
@@ -30,7 +30,6 @@ export function CarouselBoutique(): JSX.Element {
   const [selectedFile, setSelectedFile] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [isSlim, setIsSlim] = useState(false);
-  const [openSnack, setOpenSnack] = useState(false);
   useEffect(() => {
     const allAc = (
       window.localStorage.getItem(ALL_SET_ACCOUNTS_KEY) || ""
@@ -51,14 +50,6 @@ export function CarouselBoutique(): JSX.Element {
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box>
-        <Snackbar
-          open={openSnack}
-          onClose={() => {
-            setOpenSnack(false);
-          }}
-          message={tr("Utilities.CarouselBoutique.SetSuccessful")}
-          autoHideDuration={5000}
-        />
         <Typography className={classes.secondText} gutterBottom>
           {tr("Utilities.CarouselBoutique.Hint")}
         </Typography>
@@ -143,7 +134,7 @@ export function CarouselBoutique(): JSX.Element {
               isSlim ? "SLIM" : "DEFAULT",
               "-"
             );
-            setOpenSnack(true);
+            submitSucc(tr("Utilities.CarouselBoutique.SetSuccessful"));
             const n = names.concat();
             if (!n.includes(playerName)) {
               n.push(playerName);
@@ -171,7 +162,7 @@ export function CarouselBoutique(): JSX.Element {
               isSlim ? "SLIM" : "DEFAULT",
               "-CAPE-"
             );
-            setOpenSnack(true);
+            submitSucc(tr("Utilities.CarouselBoutique.SetSuccessful"));
           }}
         >
           {tr("Utilities.CarouselBoutique.AddAsCape")}
@@ -219,7 +210,7 @@ export function CarouselBoutique(): JSX.Element {
               isSlim ? "SLIM" : "DEFAULT",
               "-"
             );
-            setOpenSnack(true);
+            submitSucc(tr("Utilities.CarouselBoutique.SetSuccessful"));
           }}
         >
           {tr("Utilities.CarouselBoutique.SetAsDefaultSkin")}
@@ -235,7 +226,7 @@ export function CarouselBoutique(): JSX.Element {
               isSlim ? "SLIM" : "DEFAULT",
               "-CAPE-"
             );
-            setOpenSnack(true);
+            submitSucc(tr("Utilities.CarouselBoutique.SetSuccessful"));
           }}
         >
           {tr("Utilities.CarouselBoutique.SetAsDefaultCape")}
