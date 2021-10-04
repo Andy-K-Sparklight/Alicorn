@@ -277,10 +277,8 @@ void (async () => {
     if (getBoolean("updator.use-update")) {
       console.log("Checking updates...");
       try {
-        submitInfo(tr("System.HasUpdate"));
         initUpdator();
         await checkUpdate();
-        submitSucc(tr("System.UpdateOK"));
       } catch (e) {
         console.log(e);
         console.log(

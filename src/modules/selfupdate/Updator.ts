@@ -3,6 +3,8 @@ import fs from "fs-extra";
 import os from "os";
 import path from "path";
 import pkg from "../../../package.json";
+import { submitInfo, submitSucc } from "../../renderer/Message";
+import { tr } from "../../renderer/Translator";
 import { getString } from "../config/ConfigSupport";
 import { getActualDataPath } from "../config/DataSupport";
 import { getBasePath } from "../config/PathSolve";
@@ -65,7 +67,7 @@ export async function checkUpdate(): Promise<void> {
     const lv = await findLatestCanUpdateVersion();
     console.log("Latest can update version is " + lv);
     initUpdator(lv);
-    if (lv === pkg.updatorVersion) {
+    if (lv <= pkg.updatorVersion) {
       console.log(
         "You are running the latest version! (Latest Equals To Current)"
       );
@@ -113,6 +115,7 @@ export async function checkUpdate(): Promise<void> {
         console.log("Invalid build info! Skipped updating this time.");
         return;
       }
+      submitInfo(tr("System.HasUpdate"));
       console.log("Downloading files...");
       if (!(await doUpdate(BASE, res_rend as BuildInfo))) {
         console.log("Update failed, let's try again next time.");
@@ -136,6 +139,7 @@ export async function checkUpdate(): Promise<void> {
       await fs.ensureDir(path.dirname(LOCK_FILE));
       await fs.writeFile(LOCK_FILE, (res as BuildInfo).date);
       console.log("Update completed.");
+      submitSucc(tr("System.UpdateOK"));
       IS_UPDATING = false;
       notifyAll();
       // await hintUpdate(u); We have a page to show update
