@@ -5,7 +5,6 @@ import toml from "toml";
 import { ALICORN_DATA_SUFFIX } from "../commons/Constants";
 import { isFileExist } from "../commons/FileUtil";
 import { isNull, safeGet } from "../commons/Null";
-import { getString } from "../config/ConfigSupport";
 import { getActualDataPath } from "../config/DataSupport";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { getHash } from "../download/Validate";
@@ -24,11 +23,8 @@ const META_INF = "META-INF";
 // This might solve most problem
 
 const MOD_META_SUFFIX = ".modx" + ALICORN_DATA_SUFFIX;
-// const MOD_CACHE_SUFFIX = ".modx" + JAR_SUFFIX;
 const MOD_INFO_ROOT_NAME = "modx";
 const DEFAULT_DIR = getActualDataPath(MOD_INFO_ROOT_NAME);
-let MOD_INFO_DIR: string;
-// let MOD_CACHE_DIR: string;
 let MOD_META_DIR: string;
 
 enum ModMetaHeaders {
@@ -59,9 +55,7 @@ enum ModLoader {
 export { ModLoader };
 
 export async function initModInfo(): Promise<void> {
-  MOD_INFO_DIR = getString("modx.default-save-path", DEFAULT_DIR, true);
-  // MOD_CACHE_DIR = path.join(MOD_INFO_DIR, "mods");
-  MOD_META_DIR = path.join(MOD_INFO_DIR, "metas");
+  MOD_META_DIR = path.join(DEFAULT_DIR, "metas");
   await fs.ensureDir(MOD_META_DIR);
   // await fs.ensureDir(MOD_CACHE_DIR);
 }
