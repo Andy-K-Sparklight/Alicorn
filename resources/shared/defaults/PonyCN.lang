@@ -2412,7 +2412,7 @@ Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功�
 
 # Utilities.CutieConnect.GameMeta
 
-@HTML这是一个使用版本 {BaseVersion} 的世界。<b>{IsPremium}</b>。\n世界创建者的留言：\n\n&nbsp;&nbsp;&nbsp;&nbsp;<b>“</b><pre>{Message}</pre><b>”</b>\n\n友谊接力提醒您：<b>我们不保证世界现在还存在，也不保证它的安全，请小心！</b>\n\n5 秒后将为您连接。
+@HTML这是一个使用版本 {BaseVersion} 的世界。<b>{IsPremium}</b>。\n世界创建者的留言：\n\n&nbsp;&nbsp;&nbsp;&nbsp;<b>“</b>{Message}<b>”</b>\n\n友谊接力提醒您：<b>我们不保证世界现在还存在，也不保证它的安全，请小心！</b>\n\n5 秒后将为您连接。
 
 # Utilities.CutieConnect.AllDone
 
