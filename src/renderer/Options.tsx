@@ -159,6 +159,7 @@ export function OptionsPage(): JSX.Element {
           />
           <InputItem type={ConfigType.BOOL} bindConfig={"launch.fast-reboot"} />
           <InputItem
+            experimental
             type={ConfigType.BOOL}
             bindConfig={"cmc.disable-log4j-config"}
           />
