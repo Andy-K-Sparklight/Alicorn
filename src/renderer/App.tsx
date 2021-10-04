@@ -599,7 +599,7 @@ export function App(): JSX.Element {
         style={{
           width: "90%",
         }}
-        autoHideDuration={2000}
+        autoHideDuration={5000}
         onClose={() => {
           setSuccOpen(false);
         }}
@@ -623,7 +623,7 @@ export function App(): JSX.Element {
         style={{
           width: "90%",
         }}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         onClose={() => {
           setInfoOpen(false);
         }}
