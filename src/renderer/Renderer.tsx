@@ -37,6 +37,7 @@ import { loadServers } from "../modules/server/ServerFiles";
 import { App } from "./App";
 import { registerHandlers } from "./Handlers";
 import { activateHotKeyFeature } from "./HotKeyHandler";
+import { submitInfo, submitSucc, submitWarn } from "./Message";
 import { initWorker } from "./Schedule";
 import { initTranslator, tr } from "./Translator";
 const GLOBAL_STYLES: React.CSSProperties = {
@@ -276,14 +277,16 @@ void (async () => {
     if (getBoolean("updator.use-update")) {
       console.log("Checking updates...");
       try {
+        submitInfo(tr("System.HasUpdate"));
         initUpdator();
         await checkUpdate();
-        console.log("Update check completed!");
+        submitSucc(tr("System.UpdateOK"));
       } catch (e) {
         console.log(e);
         console.log(
           "A critical error happened during updating. Try again next time!"
         );
+        submitWarn(tr("System.UpdateFailed"));
       }
     } else {
       console.log("Skipped update checking due to user settings.");

@@ -94,6 +94,18 @@ Pff 软件安装器
 
 留在当前页面
 
+# System.HasUpdate
+
+发现了一个新版本，请稍等，我们正在为您更新……
+
+# System.UpdateOK
+
+我们已为您更新至最新版本：Alicorn {CoreVersion}！
+
+# System.UpdateFailed
+
+更新失败……不过别担心！您的文件丝毫不受影响。
+
 # MainMenu.UtilitiesIndex
 
 打开实用工具
