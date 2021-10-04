@@ -118,10 +118,11 @@ export function CutieConnet(): JSX.Element {
                   );
                   setGameMeta(d);
                   setTimeout(async () => {
+                    await killEdge();
                     await runEdge(
                       d.network,
                       d.password,
-                      generateRandIP10(), // randip
+                      "10.16.32." + d.nextIP,
                       getString("hoofoff.central", HOOFOFF_CENTRAL, true) +
                         ":" +
                         NETWORK_PORT
@@ -296,6 +297,7 @@ export function CutieConnet(): JSX.Element {
                   window.localStorage.setItem(PASSWORD_KEY, password);
                   window.localStorage.setItem(COMMUNITY_KEY, communityName);
                   window.localStorage.setItem(IP_KEY, hostIp); // Freeze Data
+                  await killEdge();
                   await runEdge(
                     communityName,
                     communityName === INTERNET ? "" : password,
@@ -361,12 +363,9 @@ function generateRandIP(): string {
 
 function generateRandIP10(): string {
   const o = [];
-  o.push(
-    "10",
-    (Math.floor(Math.random() * 14) + 1).toString(),
-    get255Num(),
-    get255Num()
-  );
+  o.push("10", "16", "32");
+  const ds = new Date().getTime();
+  o.push((ds - Math.floor(ds / 256) * 256).toString()); // FIXME: This duplicates fast!
   return o.join(".");
 }
 

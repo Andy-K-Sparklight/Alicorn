@@ -101,8 +101,6 @@ import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { getMachineUniqueID } from "../modules/security/Unique";
-import { waitUpdateFinished } from "../modules/selfupdate/Updator";
-import { remoteCloseWindow, remoteHideWindow } from "./App";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { submitError, submitWarn } from "./Message";
 import { YNDialog } from "./OperatingHint";
@@ -712,13 +710,6 @@ async function startBoot(
       console.log("Crash report committed, continue tasks.");
       clearReboot(profileHash);
       console.log("Cleared reboot flag.");
-    } else {
-      if (getBoolean("action.close-on-exit")) {
-        remoteHideWindow();
-        waitUpdateFinished(() => {
-          remoteCloseWindow();
-        });
-      }
     }
 
     console.log("Restoring mods...");
@@ -1275,6 +1266,7 @@ function OpenWorldDialog(props: {
             const n = uniqueHash(await getMachineUniqueID());
             const p = uniqueHash(Math.random().toString());
             try {
+              await killEdge();
               await runEdge(
                 n,
                 p,
@@ -1293,6 +1285,7 @@ function OpenWorldDialog(props: {
                   password: p,
                   premium: premium,
                   baseVersion: props.baseVersion,
+                  nextIP: 0, // This is not necessary
                 },
                 expires * 600000,
                 count,

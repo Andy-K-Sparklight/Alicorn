@@ -8,6 +8,7 @@ export interface OnlineGameInfo {
   port: number;
   baseVersion: string;
   premium: boolean;
+  nextIP: number;
 }
 export function applyCode(
   code: string,
