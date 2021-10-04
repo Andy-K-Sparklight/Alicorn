@@ -145,9 +145,9 @@ function generateCount(total: number, done: number): string {
 
 export function generateCrashAnalytics(
   cr: CrashReportMap | undefined,
-  originCrashReport: string,
+  originCrashReport: string[],
   tracker: LaunchTracker,
-  logs: string,
+  logs: string[],
   logsReport: CrashReportMap | undefined
 ): string {
   let c;
@@ -231,7 +231,7 @@ export function makeFirstPage(): string {
 
 export function makeCrashAnalytics(
   crashReport: CrashReportMap,
-  originCrashReport: string,
+  originCrashReport: string[],
   type: string
 ): string {
   const group = new ComponentsGroup();
@@ -242,7 +242,7 @@ export function makeCrashAnalytics(
   sc.size = "5";
   group.db(sc);
   group.dbRaw("\n");
-  group.db(new Spoiler(`[code]${originCrashReport}[/code]`));
+  group.db(new Spoiler(`[code]${originCrashReport.join("\n")}[/code]`));
   group.dbRaw("\n");
   group.db(sc.make(type + "分析"));
   group.dbRaw("\n");

@@ -1,4 +1,3 @@
-import fs from "fs-extra";
 import { schedulePromiseTask } from "../../renderer/Schedule";
 import { CMC_CRASH_LOADER } from "./CutieMCCrashLoader";
 
@@ -30,12 +29,11 @@ export class CrashReportCursor {
   lineMap: Map<number, { origin: string; report: CrashLoaderReport[] }> =
     new Map();
 
-  constructor(content: string) {
-    let all = content.split("\n");
-    all = all.map((l) => {
+  constructor(content: string[]) {
+    content = content.map((l) => {
       return l.trimEnd(); // Don't trim head - indent required
     });
-    this.lines = all;
+    this.lines = content;
   }
 
   // Move cursor forward
@@ -100,18 +98,12 @@ export class CrashReportCursor {
 }
 
 export async function analyzeCrashReport(
-  fPath: string,
-  loader = CMC_CRASH_LOADER,
-  directData?: string
+  crashReport: string[],
+  loader = CMC_CRASH_LOADER
 ): Promise<Map<number, { origin: string; report: CrashLoaderReport[] }>> {
   try {
     let f: string;
-    if (directData === undefined) {
-      f = (await fs.readFile(fPath)).toString();
-    } else {
-      f = directData;
-    }
-    const c = new CrashReportCursor(f);
+    const c = new CrashReportCursor(crashReport);
 
     while (c.getLine() !== undefined) {
       await schedulePromiseTask(() => {
@@ -146,17 +138,6 @@ async function getOnlineCrashLoader(
   } catch {
     return undefined;
   }
-}
-
-export async function onlineAnalyzeCrashReport(
-  fPath: string,
-  url: string
-): Promise<Map<number, { origin: string; report: CrashLoaderReport[] }>> {
-  const d = await getOnlineCrashLoader(url);
-  if (!d) {
-    return new Map<number, { origin: string; report: CrashLoaderReport[] }>();
-  }
-  return analyzeCrashReport(fPath, d);
 }
 
 export type CrashReportMap = Map<

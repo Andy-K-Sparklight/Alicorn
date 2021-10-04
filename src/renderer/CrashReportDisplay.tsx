@@ -19,18 +19,17 @@ import {
 } from "@material-ui/core";
 import { ExpandMore } from "@material-ui/icons";
 import copy from "copy-to-clipboard";
-import fs from "fs-extra";
 import React, { useEffect, useRef, useState } from "react";
 import { generateCrashAnalytics } from "../modules/crhelper/CrashAnalyticsGenerator";
 import {
   analyzeCrashReport,
   CrashReportMap,
 } from "../modules/crhelper/CrashLoader";
-import { CMC_CRASH_LOADER } from "../modules/crhelper/CutieMCCrashLoader";
 import { LaunchTracker } from "../modules/launch/Tracker";
 import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
 import { submitError } from "./Message";
 import {
+  LAST_CRASH_KEY,
   LAST_FAILURE_INFO_KEY,
   LAST_LAUNCH_REPORT_KEY,
   LAST_LOGS_KEY,
@@ -71,7 +70,7 @@ export function CrashReportDisplay(): JSX.Element {
   const logs = window[LAST_LOGS_KEY] as string[];
   const [report, setReport] = useState<CrashReportMap>();
   const [logsReport, setLogsReport] = useState<CrashReportMap>(new Map());
-  const [oc, setOC] = useState<string>("");
+  const [oc, setOC] = useState<string[]>([]);
   const [showFullLogsReport, setShowFullLogsReport] = useState(false);
   useEffect(() => {
     window.addEventListener("EnableShowFullLogsReport", () => {
@@ -86,15 +85,15 @@ export function CrashReportDisplay(): JSX.Element {
     };
   });
   useEffect(() => {
-    if (failureInfo.crashReport !== undefined) {
-      const f = failureInfo.crashReport;
+    // @ts-ignore
+    if (window[LAST_CRASH_KEY] !== undefined) {
+      // @ts-ignore
+      const crashReports = window[LAST_CRASH_KEY] as string[];
       void (async () => {
-        const pt = failureInfo.container.getCrashReport(f);
-        const r = await analyzeCrashReport(pt);
+        const r = await analyzeCrashReport(crashReports);
         try {
-          const dt = (await fs.readFile(pt)).toString();
           if (mounted.current) {
-            setOC(dt);
+            setOC(crashReports);
           }
         } catch {}
         if (mounted.current) {
@@ -108,17 +107,14 @@ export function CrashReportDisplay(): JSX.Element {
       if (!showFullLogsReport) {
         s = e - LOGS_BUFFER_SIZE;
         if (s < 0) {
+          setShowFullLogsReport(true);
           s = 0;
         }
       }
       const ls = logs.slice(s, e);
       void (async () => {
         try {
-          const ac = await analyzeCrashReport(
-            "",
-            CMC_CRASH_LOADER,
-            ls.join("\n")
-          );
+          const ac = await analyzeCrashReport(ls);
           if (mounted.current) {
             setLogsReport(ac);
           }
@@ -133,7 +129,7 @@ export function CrashReportDisplay(): JSX.Element {
         originCrashReport={oc}
         failureInfo={failureInfo}
         tracker={launchTracker}
-        logs={logs.join("\n")}
+        logs={logs}
         logsReport={logsReport}
       />
       <br />
@@ -166,10 +162,7 @@ export function CrashReportDisplay(): JSX.Element {
             isFull
             title={tr("CrashReportDisplay.Analyze")}
           />
-          <LogsDisplay
-            title={tr("CrashReportDisplay.CrashReport")}
-            logs={oc.split("\n")}
-          />
+          <LogsDisplay title={tr("CrashReportDisplay.CrashReport")} logs={oc} />
         </Box>
       )}
       {
@@ -340,14 +333,22 @@ function Analyze(props: {
         {props.isFull ? (
           ""
         ) : (
-          <Typography
-            color={"secondary"}
-            onClick={() => {
-              window.dispatchEvent(new CustomEvent("EnableShowFullLogs"));
-            }}
-          >
-            {tr("CrashReportDisplay.AnalyzeLogs.PerformanceIssue")}
-          </Typography>
+          <Box>
+            <Typography
+              style={{
+                color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.light,
+              }}
+              onClick={() => {
+                window.dispatchEvent(
+                  new CustomEvent("EnableShowFullLogsReport")
+                );
+              }}
+            >
+              {tr("CrashReportDisplay.AnalyzeLogs.PerformanceIssue")}
+            </Typography>
+            <br />
+            <br />
+          </Box>
         )}
         <List>
           {(() => {
@@ -518,10 +519,10 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
 
 function BBCodeDisplay(props: {
   crashAnalytics?: CrashReportMap;
-  originCrashReport: string;
+  originCrashReport: string[];
   failureInfo: MCFailureInfo;
   tracker: LaunchTracker;
-  logs: string;
+  logs: string[];
   logsReport?: CrashReportMap;
 }): JSX.Element {
   const code = generateCrashAnalytics(

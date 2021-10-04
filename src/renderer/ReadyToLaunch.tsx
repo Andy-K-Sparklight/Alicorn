@@ -50,7 +50,7 @@ import {
 } from "../modules/auth/MicrosoftAccount";
 import { Nide8Account } from "../modules/auth/Nide8Account";
 import { uniqueHash } from "../modules/commons/BasicHash";
-import { findNotIn, Pair } from "../modules/commons/Collections";
+import { Pair } from "../modules/commons/Collections";
 import {
   PROCESS_END_GATE,
   PROCESS_LOG_GATE,
@@ -64,7 +64,6 @@ import {
 } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
-import { scanReports } from "../modules/crhelper/CrashReportFinder";
 import { killEdge, runEdge } from "../modules/cutie/BootEdge";
 import { acquireCode } from "../modules/cutie/Hoofoff";
 import {
@@ -151,7 +150,7 @@ let NEED_QUERY_STATUS = false;
 export const LAST_LAUNCH_REPORT_KEY = "ReadyToLaunch.LastLaunchReport";
 export const LAST_FAILURE_INFO_KEY = "ReadyToLaunch.LastFailureInfo";
 export const LAST_LOGS_KEY = "ReadyToLaunch.LastLogs";
-
+export const LAST_CRASH_KEY = "ReadyToLaunch.LastCrash";
 export function ReadyToLaunch(): JSX.Element {
   const [coreProfile, setProfile] = useState(new GameProfile({}));
   const [profileLoadedBit, setLoaded] = useState(0);
@@ -515,7 +514,6 @@ function Launching(props: {
 }
 
 export interface MCFailureInfo {
-  crashReport?: string;
   tracker: LaunchTracker;
   profile: GameProfile;
   container: MinecraftContainer;
@@ -652,7 +650,6 @@ async function startBoot(
     await prepareModsCheckFor(profile, container, GLOBAL_LAUNCH_TRACKER);
   }
   setStatus(LaunchingStatus.ARGS_GENERATING);
-  const originCrashLogs = await scanReports(container);
   let jHome = getJavaAndCheckAvailable(profileHash, true);
   if (jHome === DEF) {
     jHome = await trySelectProperJava(profile.baseVersion);
@@ -694,15 +691,21 @@ async function startBoot(
     setStatus(LaunchingStatus.PENDING);
     window.dispatchEvent(new CustomEvent("MinecraftExitCleanUp"));
     if (c !== "0" && c !== "SIGINT") {
+      let crashReports: string[] = [];
       console.log(
         `Attention! Minecraft(${runID}) might not have run properly!`
       );
+      // @ts-ignore
+      const e = window[LAST_LOGS_KEY] as string[];
+      const ei = e.lastIndexOf("---- Minecraft Crash Report ----");
+      if (ei >= 0) {
+        crashReports = e.splice(ei);
+      }
+      // @ts-ignore
+      window[LAST_LOGS_KEY] = e;
       console.log("Gathering information...");
-      const finalCrashLogs = await scanReports(container);
-      const logFile = findNotIn(finalCrashLogs, originCrashLogs);
-      logFile.sort();
-      FAILURE_INFO.crashReport = logFile[logFile.length - 1];
-      // Get the last one, undefined if not exists
+      // @ts-ignore
+      window[LAST_CRASH_KEY] = crashReports;
       console.log("Reporting...");
       // @ts-ignore
       window[LAST_FAILURE_INFO_KEY] = FAILURE_INFO;
