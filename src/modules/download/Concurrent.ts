@@ -3,7 +3,6 @@ import os from "os";
 import path from "path";
 import { schedulePromiseTask } from "../../renderer/Schedule";
 import { basicHash } from "../commons/BasicHash";
-import { isFileExist } from "../commons/FileUtil";
 import { getBoolean, getString } from "../config/ConfigSupport";
 import {
   AbstractDownloader,
@@ -14,7 +13,7 @@ import { getConfigOptn } from "./DownloadWrapper";
 import { getFileWriteStream, getTimeoutController } from "./RainbowFetch";
 import { addRecord } from "./ResolveLock";
 import { Serial } from "./Serial";
-import { getHash, getIdentifier, validate } from "./Validate";
+import { getHash, getIdentifier } from "./Validate";
 
 const TEMP_SAVE_PATH_ROOT = path.join(os.tmpdir(), "alicorn-download");
 
@@ -38,11 +37,11 @@ export class Concurrent extends AbstractDownloader {
     }
     try {
       // If file already exists then check if HASH matches
-      if (meta.sha1 !== "" && (await isFileExist(meta.savePath))) {
+      /* if (meta.sha1 !== "" && (await isFileExist(meta.savePath))) {
         if (await validate(meta.savePath, meta.sha1, meta.size)) {
           return DownloadStatus.RESOLVED;
         }
-      }
+      } */
 
       const fileSize = meta.size ? meta.size : await getSize(meta.url);
       if (fileSize <= getConfigOptn("chunk-size", 1024) * 1024) {

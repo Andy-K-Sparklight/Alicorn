@@ -1,7 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
 import { schedulePromiseTask } from "../../renderer/Schedule";
-import { isFileExist } from "../commons/FileUtil";
 import { getBoolean } from "../config/ConfigSupport";
 import {
   AbstractDownloader,
@@ -11,7 +10,7 @@ import {
 import { getConfigOptn } from "./DownloadWrapper";
 import { getFileWriteStream, getTimeoutController } from "./RainbowFetch";
 import { addRecord } from "./ResolveLock";
-import { getHash, getIdentifier, validate } from "./Validate";
+import { getHash, getIdentifier } from "./Validate";
 
 export class Serial extends AbstractDownloader {
   private static instance = new Serial();
@@ -28,11 +27,11 @@ export class Serial extends AbstractDownloader {
       (async () => {
         try {
           // If file already exists then check if HASH matches
-          if (meta.sha1 !== "" && (await isFileExist(meta.savePath))) {
+          /* if (meta.sha1 !== "" && (await isFileExist(meta.savePath))) {
             if (await validate(meta.savePath, meta.sha1, meta.size)) {
               return DownloadStatus.RESOLVED;
             }
-          }
+          } */
           // Ensure directory
           await fs.ensureDir(path.dirname(meta.savePath));
           const [ac, sti] = getTimeoutController(
