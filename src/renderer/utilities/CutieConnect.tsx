@@ -3,7 +3,6 @@ import {
   Button,
   FormControl,
   MuiThemeProvider,
-  Snackbar,
   Tab,
   Tabs,
   TextField,
@@ -16,6 +15,7 @@ import { killEdge, runEdge } from "../../modules/cutie/BootEdge";
 import { applyCode, OnlineGameInfo } from "../../modules/cutie/Hoofoff";
 import { generateWorldAnyUniqueId } from "../../modules/security/Unique";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "../GoTo";
+import { submitInfo, submitSucc, submitWarn } from "../Message";
 import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
@@ -54,9 +54,7 @@ export function CutieConnet(): JSX.Element {
         generateWorldAnyUniqueId().slice(-20)
   );
   const [ipError, setIPError] = useState(!validateIP(hostIp));
-  const [openHint, setOpenHint] = useState(false);
   const text = useTextStyles();
-  const [notice, setNotice] = useState("");
   const [tabIndex, setTabIndex] = useState(0);
   const [hoofoffCode, setHoofoffCode] = useState("");
   const [gameMeta, setGameMeta] = useState<OnlineGameInfo>();
@@ -127,8 +125,7 @@ export function CutieConnet(): JSX.Element {
                         ":" +
                         NETWORK_PORT
                     );
-                    setNotice(tr("Utilities.CutieConnect.AllDone"));
-                    setOpenHint(true);
+                    submitSucc(tr("Utilities.CutieConnect.AllDone"));
                     setTimeout(() => {
                       jumpTo("/LaunchPad/" + d.ip + ":" + d.port);
                       triggerSetPage("LaunchPad");
@@ -136,8 +133,7 @@ export function CutieConnet(): JSX.Element {
                   }, 5000);
                   setChangePageWarn(false);
                 } catch {
-                  setNotice(tr("Utilities.CutieConnect.FailedToQuery"));
-                  setOpenHint(true);
+                  submitWarn(tr("Utilities.CutieConnect.FailedToQuery"));
                 }
               }}
             >
@@ -149,8 +145,7 @@ export function CutieConnet(): JSX.Element {
               variant={"contained"}
               onClick={async () => {
                 await killEdge();
-                setNotice(tr("Utilities.CutieConnect.Disconnected"));
-                setOpenHint(true);
+                submitInfo(tr("Utilities.CutieConnect.Disconnected"));
               }}
             >
               {tr("Utilities.CutieConnect.Disconnect")}
@@ -304,8 +299,7 @@ export function CutieConnet(): JSX.Element {
                     hostIp,
                     superNode
                   );
-                  setNotice(tr("Utilities.CutieConnect.Connected"));
-                  setOpenHint(true);
+                  submitSucc(tr("Utilities.CutieConnect.Connected"));
                 }}
               >
                 {tr("Utilities.CutieConnect.Connect")}
@@ -316,8 +310,7 @@ export function CutieConnet(): JSX.Element {
                 variant={"contained"}
                 onClick={async () => {
                   await killEdge();
-                  setNotice(tr("Utilities.CutieConnect.Disconnected"));
-                  setOpenHint(true);
+                  submitInfo(tr("Utilities.CutieConnect.Disconnected"));
                 }}
               >
                 {tr("Utilities.CutieConnect.Disconnect")}
@@ -326,14 +319,6 @@ export function CutieConnet(): JSX.Element {
           </Box>
         </Box>
       </TabPanel>
-      <Snackbar
-        open={openHint}
-        message={notice}
-        autoHideDuration={5000}
-        onClose={() => {
-          setOpenHint(false);
-        }}
-      />
     </Box>
   );
 }
