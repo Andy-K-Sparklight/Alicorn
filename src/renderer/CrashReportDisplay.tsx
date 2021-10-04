@@ -426,7 +426,14 @@ function Analyze(props: {
   );
 }
 
-const ERR_LN_REGEX = /(error|exception|fatal)/i;
+function isWarn(s: string): boolean {
+  return WARN_LN_REGEX.test(s);
+}
+function isException(s: string): boolean {
+  return ERR_LN_REGEX.test(s) || EXCEPTION_LN_REGEX.test(s);
+}
+const EXCEPTION_LN_REGEX = /^([0-9A-Za-z_]+\.)+?.+?(Exception|Error).+?:/i;
+const ERR_LN_REGEX = /(error|fatal|caused by)/i;
 const WARN_LN_REGEX = /warn/i;
 const LOGS_BUFFER_SIZE = 100;
 function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
@@ -473,20 +480,19 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
               return "";
             }
             return (
-              <ListItemText
+              <Typography
+                key={i}
                 style={{
                   wordBreak: "break-all",
-                  color: ERR_LN_REGEX.test(l)
+                  color: isException(l)
                     ? "#ff0000"
-                    : WARN_LN_REGEX.test(l)
+                    : isWarn(l)
                     ? "#ff8400"
                     : "gray",
-                  backgroundColor: ERR_LN_REGEX.test(l) ? "white" : "inherit",
+                  backgroundColor: isException(l) ? "white" : "inherit",
                 }}
-                key={i}
-              >
-                {l}
-              </ListItemText>
+                dangerouslySetInnerHTML={{ __html: tab2Space(l) }}
+              />
             );
           })}
           {endIndex < cLogs.length - 1 ? (
@@ -499,6 +505,7 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
                 setcIndex(x);
               }}
             >
+              <hr />
               <ListItemText
                 style={{
                   color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.light,
@@ -506,7 +513,6 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
               >
                 <b>{tr("CrashReportDisplay.AnalyzeLogs.Down")}</b>
               </ListItemText>
-              <hr />
             </Box>
           ) : (
             ""
@@ -570,4 +576,26 @@ function BBCodeDisplay(props: {
       </MuiThemeProvider>
     </Box>
   );
+}
+
+function tab2Space(s: string): string {
+  let i = 0;
+  let p = 0;
+  const o: string[] = [];
+  while (s[i] !== undefined) {
+    if (s[i] !== "\t") {
+      o.push(s[i]);
+      p++;
+    } else {
+      const r = 4 - ((p + 1) % 4);
+      o.push("&nbsp;".repeat(r));
+      p += r;
+    }
+    i++;
+  }
+  return o
+    .join("")
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replaceAll("\n", "<br/>");
 }

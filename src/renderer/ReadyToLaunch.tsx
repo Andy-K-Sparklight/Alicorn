@@ -667,24 +667,34 @@ async function startBoot(
     return GLOBAL_LAUNCH_TRACKER;
   }
   const em = new EventEmitter();
-  em.on(PROCESS_LOG_GATE, (d) => {
-    // @ts-ignore
-    window[LAST_LOGS_KEY].push(d);
-    console.log(d);
-    if (getBoolean("features.detect-lan")) {
-      if (String(d).toLowerCase().includes("started serving on")) {
-        // "Started serving on 32997"
-        const p = String(d).split("on").pop();
-        if (p) {
-          const px = parseInt(p.trim());
-          if (!isNaN(px)) {
-            window.dispatchEvent(
-              new CustomEvent("WorldServing", { detail: px })
-            );
+  em.on(PROCESS_LOG_GATE, (d: string) => {
+    const ds = d.split("\n");
+    ds.forEach((d) => {
+      if (d.includes("---- Minecraft Crash Report ----")) {
+        d = d.trim();
+      } else {
+        d = d.trimRight();
+      }
+      if (d.length > 0) {
+        // @ts-ignore
+        window[LAST_LOGS_KEY].push(d);
+        console.log(d);
+        if (getBoolean("features.detect-lan")) {
+          if (d.toLowerCase().includes("started serving on")) {
+            // "Started serving on 32997"
+            const p = d.split("on").pop();
+            if (p) {
+              const px = parseInt(p.trim());
+              if (!isNaN(px)) {
+                window.dispatchEvent(
+                  new CustomEvent("WorldServing", { detail: px })
+                );
+              }
+            }
           }
         }
       }
-    }
+    });
   });
   em.on(PROCESS_END_GATE, async (c) => {
     console.log(`Minecraft(${runID}) exited with exit code ${c}.`);
