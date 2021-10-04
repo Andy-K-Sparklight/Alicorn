@@ -55,12 +55,12 @@ export function generateEdgeArgs(
     ) // Beat command inject!
     .join(" ");
   return os.platform() === "win32"
-    ? `tskill edge && echo 0 >> "${getActualDataPath(
+    ? `echo 0 >> "${getActualDataPath(
         EDGE_LOCK_FILE
       )}" && start "CutieConnect N2N Edge" "${getActualDataPath(
         getEdgeTargetName()
       )}" ${o}`
-    : `sh -c "pkill edge && echo 0 >> '${getActualDataPath(
+    : `sh -c "echo 0 >> '${getActualDataPath(
         EDGE_LOCK_FILE
       )}' && '${getActualDataPath(getEdgeTargetName())}' -f ${o}"`;
 }
