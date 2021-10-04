@@ -65,6 +65,7 @@ export function PffVisual(): JSX.Element {
                         color={"primary"}
                         onClick={() => {
                           setSearching(true);
+                          setResults([]);
                           void (async () => {
                             const rsvs = getResolvers(slug);
                             const rets = await Promise.allSettled(
@@ -103,7 +104,7 @@ export function PffVisual(): JSX.Element {
         <br />
         <br />
         {searchResults.map((s) => {
-          return <SingleAddonDisplay key={s.id} info={s}></SingleAddonDisplay>;
+          return <SingleAddonDisplay key={s.id} info={s} />;
         })}
       </Box>
     </Box>
