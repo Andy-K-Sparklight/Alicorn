@@ -102,7 +102,7 @@ import { GameProfile } from "../modules/profile/GameProfile";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { getMachineUniqueID } from "../modules/security/Unique";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
-import { submitError, submitWarn } from "./Message";
+import { submitError, submitSucc, submitWarn } from "./Message";
 import { YNDialog } from "./OperatingHint";
 import {
   ALICORN_DEFAULT_THEME_DARK,
@@ -1165,6 +1165,15 @@ function OpenWorldDialog(props: {
         <DialogContentText>
           {tr("ReadyToLaunch.GenerateLinkDesc")}
         </DialogContentText>
+        {code ? (
+          <DialogContentText
+            style={{ color: ALICORN_DEFAULT_THEME_DARK.palette.primary.main }}
+          >
+            {tr("ReadyToLaunch.HoofoffCode", `Code=${code}`)}
+          </DialogContentText>
+        ) : (
+          ""
+        )}
         <FormControl fullWidth variant={"outlined"}>
           <InputLabel id={"ReadyToLaunch-Expires"}>
             {tr("ReadyToLaunch.Expires")}
@@ -1208,7 +1217,9 @@ function OpenWorldDialog(props: {
             <MenuItem value={1}>{tr("ReadyToLaunch.Once")}</MenuItem>
             <MenuItem value={5}>{tr("ReadyToLaunch.FiveTimes")}</MenuItem>
             <MenuItem value={20}>{tr("ReadyToLaunch.TwentyTimes")}</MenuItem>
-            <MenuItem value={-1}>{tr("ReadyToLaunch.Unlimited")}</MenuItem>
+            <MenuItem value={2147483647}>
+              {tr("ReadyToLaunch.Unlimited")}
+            </MenuItem>
           </Select>
         </FormControl>
         <br />
@@ -1243,15 +1254,6 @@ function OpenWorldDialog(props: {
         {err ? (
           <DialogContentText style={{ color: "#ff8400" }}>
             {tr("ReadyToLaunch.Errors." + err)}
-          </DialogContentText>
-        ) : (
-          ""
-        )}
-        {code ? (
-          <DialogContentText
-            style={{ color: ALICORN_DEFAULT_THEME_DARK.palette.primary.main }}
-          >
-            {tr("ReadyToLaunch.HoofoffCode", `Code=${code}`)}
           </DialogContentText>
         ) : (
           ""
@@ -1295,6 +1297,7 @@ function OpenWorldDialog(props: {
               );
               if (c.length === 6) {
                 setCode(c);
+                submitSucc(tr("ReadyToLaunch.HoofoffCode", `Code=${c}`));
                 setErr("");
                 setRunning(false);
               }
