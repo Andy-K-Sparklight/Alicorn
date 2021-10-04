@@ -100,7 +100,7 @@ Pff 软件安装器
 
 # System.UpdateOK
 
-我们已为您更新至最新版本：Alicorn {CoreVersion}！
+我们已为您更新至最新版本
 
 # System.UpdateFailed
 
@@ -1797,6 +1797,18 @@ Mojang 版本
 # CrashReportDisplay.AnalyzeLogs
 
 日志分析
+
+# CrashReportDisplay.AnalyzeLogs.Up
+
+上方还有更多内容，单击以查看……
+
+# CrashReportDisplay.AnalyzeLogs.Down
+
+下方还有更多内容，单击以查看……
+
+# CrashReportDisplay.AnalyzeLogs.PerformanceIssue
+
+出于性能方面的考虑，我们仅分析了一部分内容，单击来分析全部……
 
 # CrashReportDisplay.Analyze.Line
 

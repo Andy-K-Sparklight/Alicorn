@@ -36,7 +36,10 @@ import {
   LAST_LOGS_KEY,
   MCFailureInfo,
 } from "./ReadyToLaunch";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import {
+  ALICORN_DEFAULT_THEME_DARK,
+  ALICORN_DEFAULT_THEME_LIGHT,
+} from "./Renderer";
 import { tr } from "./Translator";
 
 const useAccStyles = makeStyles((theme) =>
@@ -69,6 +72,12 @@ export function CrashReportDisplay(): JSX.Element {
   const [report, setReport] = useState<CrashReportMap>();
   const [logsReport, setLogsReport] = useState<CrashReportMap>(new Map());
   const [oc, setOC] = useState<string>("");
+  const [showFullLogsReport, setShowFullLogsReport] = useState(false);
+  useEffect(() => {
+    window.addEventListener("EnableShowFullLogsReport", () => {
+      setShowFullLogsReport(true);
+    });
+  }, []);
   const mounted = useRef<boolean>(false);
   useEffect(() => {
     mounted.current = true;
@@ -94,12 +103,21 @@ export function CrashReportDisplay(): JSX.Element {
       })();
     }
     if (logs.length > 0) {
+      let s = 0;
+      const e = logs.length - 1;
+      if (!showFullLogsReport) {
+        s = e - LOGS_BUFFER_SIZE;
+        if (s < 0) {
+          s = 0;
+        }
+      }
+      const ls = logs.slice(s, e);
       void (async () => {
         try {
           const ac = await analyzeCrashReport(
             "",
             CMC_CRASH_LOADER,
-            logs.join("\n")
+            ls.join("\n")
           );
           if (mounted.current) {
             setLogsReport(ac);
@@ -143,7 +161,11 @@ export function CrashReportDisplay(): JSX.Element {
         ""
       ) : (
         <Box>
-          <Analyze analyze={report} title={tr("CrashReportDisplay.Analyze")} />
+          <Analyze
+            analyze={report}
+            isFull
+            title={tr("CrashReportDisplay.Analyze")}
+          />
           <LogsDisplay
             title={tr("CrashReportDisplay.CrashReport")}
             logs={oc.split("\n")}
@@ -157,6 +179,7 @@ export function CrashReportDisplay(): JSX.Element {
         ) : (
           <Box>
             <Analyze
+              isFull={showFullLogsReport}
               analyze={logsReport}
               title={tr("CrashReportDisplay.AnalyzeLogs")}
             />
@@ -295,6 +318,7 @@ function ModList(props: { tracker: LaunchTracker }): JSX.Element {
 function Analyze(props: {
   analyze: CrashReportMap;
   title: string;
+  isFull: boolean;
 }): JSX.Element {
   const classes = useAccStyles();
   const analyzeList = Array.from(props.analyze.keys());
@@ -313,6 +337,18 @@ function Analyze(props: {
         </Badge>
       </AccordionSummary>
       <AccordionDetails className={classes.acc1}>
+        {props.isFull ? (
+          ""
+        ) : (
+          <Typography
+            color={"secondary"}
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent("EnableShowFullLogs"));
+            }}
+          >
+            {tr("CrashReportDisplay.AnalyzeLogs.PerformanceIssue")}
+          </Typography>
+        )}
         <List>
           {(() => {
             const li = analyzeList;
@@ -389,9 +425,19 @@ function Analyze(props: {
   );
 }
 
+const ERR_LN_REGEX = /(error|exception|fatal)/i;
+const WARN_LN_REGEX = /warn/i;
+const LOGS_BUFFER_SIZE = 100;
 function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
   const classes = useAccStyles();
   const cLogs = props.logs.join("\n").split("\n");
+  const [cIndex, setcIndex] = useState(0); // Reversed, form the last line, offset up, 0: -100 ~ end, 1: -101 ~ -1
+  const endIndex = cLogs.length - cIndex - 1;
+  let startIndex = endIndex - LOGS_BUFFER_SIZE;
+  if (startIndex < 0) {
+    startIndex = 0;
+  }
+  const oLogs = cLogs.slice(startIndex, endIndex);
   return (
     <Accordion>
       <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
@@ -399,7 +445,29 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
       </AccordionSummary>
       <AccordionDetails className={classes.acc1}>
         <List>
-          {cLogs.map((l, i) => {
+          {startIndex > 0 ? (
+            <Box
+              onClick={() => {
+                let x = cIndex + LOGS_BUFFER_SIZE / 2;
+                if (x > cLogs.length - LOGS_BUFFER_SIZE - 1) {
+                  x = cLogs.length - LOGS_BUFFER_SIZE - 1;
+                }
+                setcIndex(x);
+              }}
+            >
+              <ListItemText
+                style={{
+                  color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.light,
+                }}
+              >
+                <b>{tr("CrashReportDisplay.AnalyzeLogs.Up")}</b>
+              </ListItemText>
+              <hr />
+            </Box>
+          ) : (
+            ""
+          )}
+          {oLogs.map((l, i) => {
             if (l.trim().length === 0) {
               return "";
             }
@@ -407,16 +475,12 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
               <ListItemText
                 style={{
                   wordBreak: "break-all",
-                  color:
-                    l.includes("ERROR") || l.includes("FATAL")
-                      ? "#ff0000"
-                      : l.includes("WARN")
-                      ? "#ff8400"
-                      : "gray",
-                  backgroundColor:
-                    l.includes("ERROR") || l.includes("FATAL")
-                      ? "white"
-                      : "inherit",
+                  color: ERR_LN_REGEX.test(l)
+                    ? "#ff0000"
+                    : WARN_LN_REGEX.test(l)
+                    ? "#ff8400"
+                    : "gray",
+                  backgroundColor: ERR_LN_REGEX.test(l) ? "white" : "inherit",
                 }}
                 key={i}
               >
@@ -424,6 +488,28 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
               </ListItemText>
             );
           })}
+          {endIndex < cLogs.length - 1 ? (
+            <Box
+              onClick={() => {
+                let x = cIndex - LOGS_BUFFER_SIZE / 2;
+                if (x < 0) {
+                  x = 0;
+                }
+                setcIndex(x);
+              }}
+            >
+              <ListItemText
+                style={{
+                  color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.light,
+                }}
+              >
+                <b>{tr("CrashReportDisplay.AnalyzeLogs.Down")}</b>
+              </ListItemText>
+              <hr />
+            </Box>
+          ) : (
+            ""
+          )}
         </List>
       </AccordionDetails>
     </Accordion>
@@ -438,7 +524,6 @@ function BBCodeDisplay(props: {
   logs: string;
   logsReport?: CrashReportMap;
 }): JSX.Element {
-  const classes = useAccStyles();
   const code = generateCrashAnalytics(
     props.crashAnalytics,
     props.originCrashReport,
@@ -478,7 +563,6 @@ function BBCodeDisplay(props: {
           }}
           variant={"contained"}
           color={"primary"}
-          // className={classes.btn}
         >
           {tr("CrashReportDisplay.Copy")}
         </Button>
