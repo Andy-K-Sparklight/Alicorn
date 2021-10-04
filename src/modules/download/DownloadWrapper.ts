@@ -171,7 +171,6 @@ function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
         addState(tr("ReadyToLaunch.Validated", `Url=${meta.url}`));
         resolve(DownloadStatus.RESOLVED);
       } else {
-        // TODO: Apply mirror here
         FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
         WAITING_RESOLVES_MAP.set(meta, resolve);
         PENDING_TASKS.push(meta);
