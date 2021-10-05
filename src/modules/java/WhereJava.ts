@@ -75,13 +75,13 @@ async function findJavaInProgramFilesWin32(): Promise<string[]> {
     "java.exe",
     programBaseMain,
     all,
-    getNumber("java.search-depth", 8)
+    getNumber("java.search-depth", 5)
   );
   await diveSearch(
     "java.exe",
     programBase86,
     all,
-    getNumber("java.search-depth", 8)
+    getNumber("java.search-depth", 5)
   );
   // Find 32 bit, diveSearch can 'afford' error
   return all;
@@ -142,7 +142,7 @@ async function diveSearch(
   fileName: string,
   rootDir: string,
   concatArray: string[],
-  depth = 8,
+  depth = 5,
   counter = 0
 ): Promise<void> {
   if (depth !== 0 && counter > depth) {

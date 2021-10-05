@@ -20,7 +20,7 @@
   "cmc.disable-log4j-config": true,
   "user.name": "",
   "java.simple-search": false,
-  "java.search-depth": 8,
+  "java.search-depth": 5,
   "pff.page-size": 5,
   "pff.cache-root": "",
   "reset": false,
