@@ -468,11 +468,11 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 # ReadyToLaunch.GenerateLink
 
-生成友谊接力代码
+想要联机游戏？我能帮你吗？
 
 # ReadyToLaunch.GenerateLinkDesc
 
-@HTML将此代码提供给你的好友，他（她）将能够在「友谊接力」中使用它加入你的世界！\n<b style="color: red;">有效期指代码有效期，你需要保持世界开启！</b>
+@HTML使用下面的设置<b>生成代码</b>，将其提供给你的好友，他（她）就能够在「友谊接力」中使用它加入你的世界！\n<b style="color: red;">（有效期指代码有效期，你需要保持世界开启！）</b>
 
 # ReadyToLaunch.Expires
 
@@ -529,6 +529,14 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 # ReadyToLaunch.Errors.AcquireFailed
 
 接力服务器似乎无法连接，没能获取代码。
+
+# ReadyToLaunch.GoBack
+
+关闭
+
+# ReadyToLaunch.CodeDeactivated
+
+你退出了世界，因此我为你吊销了对应的代码。
 
 # ReadyToLaunch.HoofoffCode
 

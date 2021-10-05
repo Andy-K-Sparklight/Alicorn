@@ -65,7 +65,7 @@ import {
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { killEdge, runEdge } from "../modules/cutie/BootEdge";
-import { acquireCode } from "../modules/cutie/Hoofoff";
+import { acquireCode, deactiveCode } from "../modules/cutie/Hoofoff";
 import {
   getWrapperStatus,
   WrapperStatus,
@@ -255,6 +255,7 @@ function Launching(props: {
         if (typeof e.detail === "number" && !isNaN(e.detail)) {
           setLanPort(e.detail);
           setOpenLanButtonEnabled(true);
+          setOpenLanWindow(true);
         }
       }
     };
@@ -263,6 +264,26 @@ function Launching(props: {
       window.removeEventListener("WorldServing", fun);
     };
   }, []);
+  useEffect(() => {
+    const fun = async () => {
+      setLanPort(0);
+      setOpenLanButtonEnabled(false);
+      setOpenLanWindow(false);
+      const m = window.sessionStorage.getItem(CODE_KEY + lanPort);
+      if (m) {
+        await deactiveCode(
+          m,
+          getString("hoofoff.central", HOOFOFF_CENTRAL, true) + ":" + QUERY_PORT
+        );
+        window.sessionStorage.removeItem(CODE_KEY + lanPort);
+        submitSucc(tr("ReadyToLaunch.CodeDeactivated"));
+      }
+    };
+    window.addEventListener("WorldStoppedServing", fun);
+    return () => {
+      window.removeEventListener("WorldStoppedServing", fun);
+    };
+  });
   useEffect(() => {
     const fun = async () => {
       let ke = false;
@@ -698,6 +719,8 @@ async function startBoot(
                 );
               }
             }
+          } else if (d.toLowerCase().includes("stopping server")) {
+            window.dispatchEvent(new CustomEvent("WorldStoppedServing"));
           }
         }
       }
@@ -1149,6 +1172,8 @@ function isReboot(hash: string): boolean {
   return window.sessionStorage.getItem(REBOOT_KEY_BASE + hash) === "1";
 }
 
+const CODE_KEY = "Hoofoff.Code";
+
 function OpenWorldDialog(props: {
   open: boolean;
   baseVersion: string;
@@ -1162,6 +1187,7 @@ function OpenWorldDialog(props: {
   const [code, setCode] = useState<string>();
   const [isRunning, setRunning] = useState(false);
   const [err, setErr] = useState<string>();
+  const [shouldClose, setShouldClose] = useState(false);
   useEffect(() => {
     const fun = () => {
       setCode(undefined);
@@ -1283,6 +1309,12 @@ function OpenWorldDialog(props: {
         <Button
           disabled={isRunning}
           onClick={async () => {
+            if (shouldClose) {
+              setShouldClose(false);
+              setErr(undefined);
+              props.onClose();
+              return;
+            }
             setRunning(true);
             const gPort = props.port;
             const n = uniqueHash(await getMachineUniqueID());
@@ -1317,8 +1349,10 @@ function OpenWorldDialog(props: {
               );
               if (c.length === 6) {
                 setCode(c);
+                window.sessionStorage.setItem(CODE_KEY + props.port, c);
                 submitSucc(tr("ReadyToLaunch.HoofoffCode", `Code=${c}`));
                 setErr("");
+                setShouldClose(true);
                 setRunning(false);
               }
             } catch {
@@ -1327,7 +1361,9 @@ function OpenWorldDialog(props: {
             }
           }}
         >
-          {tr("ReadyToLaunch.GetLink")}
+          {shouldClose
+            ? tr("ReadyToLaunch.GoBack")
+            : tr("ReadyToLaunch.GetLink")}
         </Button>
       </DialogActions>
     </Dialog>
