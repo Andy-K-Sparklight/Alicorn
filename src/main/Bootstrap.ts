@@ -1,5 +1,8 @@
 import { app, BrowserWindow, globalShortcut, screen } from "electron";
+import fs from "fs";
+import http from "http";
 import { btoa } from "js-base64";
+import os from "os";
 import path from "path";
 import { DOH_CONFIGURE } from "../modules/commons/Constants";
 import {
@@ -14,12 +17,70 @@ import { closeWS, initWS } from "./WSServer";
 console.log("Starting Alicorn!");
 let mainWindow: BrowserWindow | null = null;
 
-console.log("Loading config...");
-loadConfigSync();
-if (!getBoolean("hardware-acc")) {
-  app.disableHardwareAcceleration();
+let READY_LOCK = false;
+export const SESSION_LOCK = path.join(os.homedir(), "alicorn", "session.lock");
+process.on("beforeExit", () => {
+  try {
+    fs.unlinkSync(SESSION_LOCK);
+  } catch {}
+});
+try {
+  fs.readFileSync(SESSION_LOCK);
+  console.log("Another Alicorn is running! Calling her...");
+
+  http
+    .get("http://localhost:9170", (res) => {
+      if (res.statusCode === 204) {
+        process.exit();
+      }
+    })
+    .on("error", () => {
+      console.log("Session lock invalid, continue!");
+      READY_LOCK = true;
+      try {
+        fs.unlinkSync(SESSION_LOCK);
+      } catch {}
+      fs.writeFileSync(SESSION_LOCK, "0");
+      http
+        .createServer((_req, res) => {
+          res.writeHead(204, "No Content").end();
+          if (getMainWindow()?.isMinimized()) {
+            getMainWindow()?.restore();
+            getMainWindow()?.webContents.send("CallFromSleep");
+          }
+        })
+        .listen(9170);
+      void whenAppReady();
+    });
+} catch {
+  READY_LOCK = true;
+  fs.writeFileSync(SESSION_LOCK, "0");
+  http
+    .createServer((_req, res) => {
+      res.writeHead(204, "No Content").end();
+      if (getMainWindow()?.isMinimized()) {
+        getMainWindow()?.restore();
+        getMainWindow()?.webContents.send("CallFromSleep");
+      }
+    })
+    .listen(9170);
 }
-app.on("ready", async () => {
+
+main();
+
+process.on("SIGINT", () => {
+  if (READY_LOCK) {
+    try {
+      fs.unlinkSync(SESSION_LOCK);
+    } catch {}
+  }
+  process.exit();
+});
+
+async function whenAppReady() {
+  if (!app.isReady()) {
+    return;
+  }
   console.log(
     `With Electron ${process.versions["electron"]}, Node.js ${process.versions["node"]} and Chrome ${process.versions["chrome"]}`
   );
@@ -45,9 +106,12 @@ app.on("ready", async () => {
   console.log("Registering event listeners...");
   registerBackgroundListeners();
 
-  mainWindow.once("ready-to-show", () => {
+  mainWindow.once("ready-to-show", async () => {
     console.log("Creating window!");
     mainWindow?.show();
+    applyDoHSettings();
+    console.log("Setting up proxy!");
+    await initProxy();
     console.log("All caught up! Alicorn is now initialized.");
     if (getBoolean("dev")) {
       console.log("Development mode detected, opening devtools...");
@@ -76,37 +140,57 @@ app.on("ready", async () => {
       }
     });
   }
-  await mainWindow.loadFile(path.resolve(appPath, "Renderer.html"));
+
   console.log("Preparing WS!");
   initWS();
-  applyDoHSettings();
-  console.log("Setting up proxy!");
-  await initProxy();
-});
+  await mainWindow.loadFile(path.resolve(appPath, "Renderer.html"));
+}
 
-// This function doesn't support async!
-// Use sync functions.
-app.on("will-quit", () => {
-  console.log("Finalizing and exiting...");
-});
+function main() {
+  console.log("Loading config...");
+  loadConfigSync();
+  if (!getBoolean("hardware-acc")) {
+    try {
+      app.disableHardwareAcceleration();
+    } catch {}
+  }
+  app.on("before-quit", () => {
+    if (READY_LOCK) {
+      try {
+        fs.unlinkSync(SESSION_LOCK);
+      } catch {}
+    }
+  });
+  app.on("ready", async () => {
+    if (READY_LOCK) {
+      await whenAppReady();
+    }
+  });
 
-process.on("uncaughtException", async (e) => {
-  try {
-    console.log(e);
-    await mainWindow?.webContents.loadFile("Error.html", {
-      hash: btoa(escape(String(e.message))),
-    });
-  } catch {}
-});
+  // This function doesn't support async!
+  // Use sync functions.
+  app.on("will-quit", () => {
+    console.log("Finalizing and exiting...");
+  });
 
-process.on("unhandledRejection", async (r) => {
-  try {
-    console.log(String(r));
-    await mainWindow?.webContents.loadFile("Error.html", {
-      hash: btoa(encodeURI(String(r))),
-    });
-  } catch {}
-});
+  process.on("uncaughtException", async (e) => {
+    try {
+      console.log(e);
+      await mainWindow?.webContents.loadFile("Error.html", {
+        hash: btoa(escape(String(e.message))),
+      });
+    } catch {}
+  });
+
+  process.on("unhandledRejection", async (r) => {
+    try {
+      console.log(String(r));
+      await mainWindow?.webContents.loadFile("Error.html", {
+        hash: btoa(encodeURI(String(r))),
+      });
+    } catch {}
+  });
+}
 
 export function getMainWindow(): BrowserWindow | null {
   return mainWindow;

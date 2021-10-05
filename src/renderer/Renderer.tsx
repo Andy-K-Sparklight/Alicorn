@@ -37,7 +37,7 @@ import { loadServers } from "../modules/server/ServerFiles";
 import { App } from "./App";
 import { registerHandlers } from "./Handlers";
 import { activateHotKeyFeature } from "./HotKeyHandler";
-import { submitWarn } from "./Message";
+import { submitInfo, submitWarn } from "./Message";
 import { initWorker } from "./Schedule";
 import { initTranslator, tr } from "./Translator";
 const GLOBAL_STYLES: React.CSSProperties = {
@@ -238,6 +238,9 @@ void (async () => {
   const t1 = new Date();
   await initWorker();
   registerHandlers();
+  ipcRenderer.on("CallFromSleep", () => {
+    submitInfo(tr("System.WakeUp"));
+  });
   if (getBoolean("hot-key")) {
     activateHotKeyFeature();
   }

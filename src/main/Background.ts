@@ -6,18 +6,16 @@ import {
   ipcMain,
   screen,
 } from "electron";
+import fs from "fs";
 import isReachable from "is-reachable";
 import os from "os";
 import {
   getBoolean,
   getNumber,
   loadConfig,
-  saveConfigSync,
-  set,
 } from "../modules/config/ConfigSupport";
-import { getMainWindow } from "./Bootstrap";
+import { getMainWindow, SESSION_LOCK } from "./Bootstrap";
 import { getUserBrowser, openBrowser } from "./Browser";
-
 const LOGIN_START =
   "https://login.live.com/oauth20_authorize.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf";
 let loginWindow: BrowserWindow | null = null;
@@ -55,6 +53,9 @@ export function registerBackgroundListeners(): void {
       console.log("Too long! Forcefully stopping!");
       process.abort();
     }, 5000);
+    try {
+      fs.unlinkSync(SESSION_LOCK);
+    } catch {}
     app.exit();
   });
   ipcMain.on("getAppPath", (e) => {
@@ -260,14 +261,5 @@ export function registerBackgroundListeners(): void {
   });
   ipcMain.handle("getElectronVersion", () => {
     return Promise.resolve(process.versions["electron"]);
-  });
-  ipcMain.on("rcRecovery", () => {
-    set("reset", true);
-    set("clean-storage", true);
-    saveConfigSync();
-  });
-  ipcMain.on("rcClose", () => {
-    getMainWindow()?.close();
-    app.exit();
   });
 }
