@@ -144,7 +144,6 @@ export function OptionsPage(): JSX.Element {
           {/* AL Features */}
           <InputItem
             type={ConfigType.STR}
-            experimental
             bindConfig={"hoofoff.central"}
           />
           <InputItem type={ConfigType.BOOL} bindConfig={"command"} />
@@ -258,7 +257,6 @@ export function OptionsPage(): JSX.Element {
           <InputItem
             type={ConfigType.RADIO}
             bindConfig={"doh-server"}
-            experimental
             choices={Object.keys(DOH_CONFIGURE).concat(["Native"])}
           />
           <InputItem

@@ -40,8 +40,8 @@ export function UtilitiesIndex(): JSX.Element {
         {tr("UtilitiesIndex.Description")}
       </Typography>
       <SimpleUtil name={"PffVisual"} />
-      <SimpleUtil experimental name={"CarouselBoutique"} />
-      <SimpleUtil experimental name={"CutieConnect"} />
+      <SimpleUtil name={"CarouselBoutique"} />
+      <SimpleUtil name={"CutieConnect"} />
       <SimpleUtil name={"NetCheck"} />
       <SimpleUtil name={"BuildUp"} />
     </Box>
