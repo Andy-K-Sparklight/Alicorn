@@ -53,7 +53,7 @@ export async function installTAPDeviceWin(): Promise<void> {
 export function waitTAPInstaller(t: string): Promise<void> {
   return new Promise<void>((res) => {
     void (() => {
-      const s = childProcess.spawn(t);
+      const s = childProcess.exec(`"${t}"`);
       s.on("exit", () => {
         res();
       });
