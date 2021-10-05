@@ -40,7 +40,8 @@ interface SimplifiedCoreInfo {
 
 export function LaunchPad(): JSX.Element {
   const classes = usePadStyles();
-  const { server } = useParams<{ server?: string }>();
+  let { server } = useParams<{ server?: string }>();
+  server = server ? decodeURIComponent(server) : undefined;
   return (
     <Box className={classes.para}>
       <CoresDisplay server={server} />

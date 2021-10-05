@@ -158,7 +158,9 @@ export function registerBackgroundListeners(): void {
           if (url?.startsWith("https://login.live.com/oauth20_desktop.srf")) {
             if (CODE_REGEX.test(url)) {
               console.log("Code found. Closing login window.");
-              sCode = unescape((url.match(CODE_REGEX) || [])[0] || "");
+              sCode = decodeURIComponent(
+                (url.match(CODE_REGEX) || [])[0] || ""
+              );
               loginWindow?.close();
               loginWindow = null;
               resolve(sCode);
@@ -168,11 +170,13 @@ export function registerBackgroundListeners(): void {
               sCode = "NOT FOUND";
               console.log(
                 "Error during login: " +
-                  unescape((url.match(ERROR_REGEX) || [])[0] || "")
+                  decodeURIComponent((url.match(ERROR_REGEX) || [])[0] || "")
               );
               console.log(
                 "Caused by: " +
-                  unescape((url.match(ERROR_DESCRIPTION) || [])[0] || "")
+                  decodeURIComponent(
+                    (url.match(ERROR_DESCRIPTION) || [])[0] || ""
+                  )
               );
             }
             console.log("Error occurred. Closing login window.");

@@ -40,7 +40,6 @@
   "hardware-acc": false,
   "download.primary-downloader": "Concurrent",
   "goto.animate": true,
-  "action.close-on-exit": false,
   "dev.experimental": false,
   "web.global-proxy": "",
   "doh-server": "Native",

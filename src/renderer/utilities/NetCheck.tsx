@@ -7,21 +7,39 @@ import { tr } from "../Translator";
 export function NetCheck(): JSX.Element {
   return (
     <Box>
-      <TestReachable site={"cdn.jsdelivr.net"} name={"AlicornUpdate"} />
-      <TestReachable site={"www.mcbbs.net"} name={"MCBBS"} />
+      <TestReachable
+        site={
+          "https://cdn.jsdelivr.net/gh/Andy-K-Sparklight/Alicorn@main/package.json"
+        }
+        name={"AlicornUpdate"}
+      />
+      <TestReachable site={"https://www.mcbbs.net/portal.php"} name={"MCBBS"} />
       <TestReachable
         site={"https://versions.al.xuogroup.top/"}
         name={"AlicornAccess"}
       />
-      <TestReachable site={"download.mcbbs.net"} name={"MCBBSDownload"} />
-      <TestReachable site={"bmclapi2.bangbang93.com"} name={"BMCLAPI"} />
+      <TestReachable
+        site={"https://download.mcbbs.net/mc/game/version_manifest.json"}
+        name={"MCBBSDownload"}
+      />
+      <TestReachable
+        site={"https://bmclapi2.bangbang93.com/mc/game/version_manifest.json"}
+        name={"BMCLAPI"}
+      />
       <TestReachable
         site={
           "https://addons-ecs.forgesvc.net/api/v2/addon/search?categoryId=0&gameId=432&searchFilter=foobar"
         }
         name={"CurseAPI"}
       />
-      <TestReachable site={"live.com"} name={"MSAuth"} />
+      <TestReachable
+        site={"https://api.modrinth.com/api/v1/mod?query=foobar"}
+        name={"Modrinth"}
+      />
+      <TestReachable
+        site={"https://login.live.com/oauth20_desktop.srf"}
+        name={"MSAuth"}
+      />
       <TestReachable site={"authserver.mojang.com"} name={"MojangAuth"} />
     </Box>
   );

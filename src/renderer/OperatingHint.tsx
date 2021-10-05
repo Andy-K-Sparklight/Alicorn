@@ -71,9 +71,9 @@ export function OperatingHintCustom(props: {
 export function FailedHint(props: {
   open: boolean;
   closeFunc: () => unknown;
-  reason?: string;
+  reason: string;
 }): JSX.Element {
-  const reason = props.reason || tr("Operating.FailedInfo");
+  const reason = tr("Operating.FailedInfo", `Reason=${props.reason}`);
   return (
     <Dialog open={props.open} onClose={props.closeFunc}>
       <Box>

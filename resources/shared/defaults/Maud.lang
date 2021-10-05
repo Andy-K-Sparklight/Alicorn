@@ -740,14 +740,6 @@ Client VM 不适合 Minecraft。
 
 当访问以下站点时直接连接
 
-# Options.action.close-on-exit.title
-
-结束后退出
-
-# Options.action.close-on-exit.desc
-
-在 Minecraft 进程退出后，如无错误，则关闭 Alicorn
-
 # Options.download.skip-validate.desc
 
 在下载时不对文件进行完整性检验

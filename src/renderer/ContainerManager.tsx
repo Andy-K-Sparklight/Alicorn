@@ -76,7 +76,7 @@ export function ContainerManager(): JSX.Element {
   const classes2 = usePadStyles();
   const [doing, setDoing] = useState(getDoing());
   const [failedOpen, setFailedOpen] = useState(false);
-  const [reason, setReason] = useState("");
+  const [reason, setReason] = useState("Untracked Error");
   useEffect(() => {
     isEleMounted.current = true;
     const fun = () => {

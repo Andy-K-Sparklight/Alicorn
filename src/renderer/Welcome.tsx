@@ -27,8 +27,8 @@ export function Welcome(): JSX.Element {
       if (l) {
         const h = l.split("/");
         while (h.length > 0 && h.shift()?.toLowerCase() !== "readytolaunch") {}
-        const c = h.shift();
-        const i = h.shift();
+        const c = decodeURIComponent(h.shift() || "undefined");
+        const i = decodeURIComponent(h.shift() || "undefined");
         if (c) {
           if (i) {
             try {

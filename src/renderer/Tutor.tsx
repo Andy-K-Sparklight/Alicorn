@@ -50,7 +50,8 @@ const TUTOR_PAGES = [
 
 export function Tutor(): JSX.Element {
   const classes = useTextStyles();
-  const { page } = useParams<{ page: string }>();
+  let { page } = useParams<{ page: string }>();
+  page = decodeURIComponent(page);
   const control = tr(`Tutor.${page}.Controller`);
   useEffect(() => {
     if (page === "0") {

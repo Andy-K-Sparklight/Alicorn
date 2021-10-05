@@ -46,7 +46,9 @@ export function YggdrasilAccountManager(): JSX.Element {
   const mountedBit = useRef(true);
   const accountsLoaded = useRef(false);
   const [accounts, setAccounts] = useState<Set<Account>>(new Set<Account>());
-  const { adding, server } = useParams<{ adding: string; server: string }>();
+  let { adding, server } = useParams<{ adding: string; server: string }>();
+  server = decodeURIComponent(server);
+  adding = decodeURIComponent(adding);
   const [isAdding, setAdding] = useState(String(adding) === "1");
   useEffect(() => {
     mountedBit.current = true;

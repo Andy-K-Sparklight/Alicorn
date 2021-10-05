@@ -188,7 +188,7 @@ Alicorn 内置浏览器
 
 # Operating.FailedInfo
 
-进行操作时遇到问题，请重试，如果问题依然存在，请向我们反馈。
+别担心！你的文件应该没有受到影响。\n引发问题的原因是：\n{Reason}
 
 # Operating.FailedSayings
 
@@ -362,6 +362,10 @@ Yggdrasil 帐户
 
 使用该帐户
 
+# ReadyToLaunch.FailedToAuth
+
+验证帐户失败，不过我能尝试继续启动……
+
 # ReadyToLaunch.DefaultJava
 
 默认（尝试自动选择）
@@ -532,11 +536,11 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 # ReadyToLaunch.RequirePremium
 
-需要正版验证
+我没有关闭正版验证
 
 # ReadyToLaunch.RequirePremiumDesc
 
-如果没有使用 Mod 关闭正版验证，则此选项可以通知好友
+如果没有在 Minecraft 中使用 Mod 关闭正版验证，则此选项可以通知好友
 
 # ReadyToLaunch.WaitingText
 
@@ -1214,14 +1218,6 @@ Alicorn 特色功能
 
 当访问以下站点时直接连接，不使用代理服务器，仅对下载器有效 - 请小心，Alicorn 没有验证这里的输入，错误的设置将可能导致无法连接！
 
-# Options.action.close-on-exit.title
-
-游戏结束后退出
-
-# Options.action.close-on-exit.desc
-
-在 Minecraft 进程退出后，如无错误，则关闭 Alicorn - 如果你只想玩一次游戏
-
 # Options.download.skip-validate.title
 
 不进行文件校验
@@ -1244,7 +1240,7 @@ Alicorn 特色功能
 
 # Options.hardware-acc.desc
 
-使用图形卡进行动画绘制，以节省时间给中央处理器 - 请注意这不同于硬件解码，效果并没有你想象的那么好
+使用图形卡进行动画绘制 - 请注意这不同于硬件解码，效果并没有你想象的那么好
 
 # Options.show-downloading-item.title
 
@@ -1982,6 +1978,8 @@ eee|一种梗语言，大致就是把每个字都改成 e。幸好，我不会�
 
 小马利亚|也就是「Equestria」，小马们生活的国度。那里遍布友谊的魔法，没有人世间的黑暗。
 
+Pff|也就是「Package File Finder」，Alicorn 用来搜索和安装 Mod 的工具。具有 Pff Front 和 Pff Visual 两个组件，前者通过 ID 直接安装 Mod，后者通过搜索查找 ID。具有类似 Maven 的缓存能力。
+
 # PffFront.WarnNoCache
 
 警告 - 你没有为 Pff 设置下载缓存，二次安装 Mod 时将无法得到加速！
@@ -2020,7 +2018,7 @@ eee|一种梗语言，大致就是把每个字都改成 e。幸好，我不会�
 
 # Tutor.Quick.Content
 
-@HTML<b style="color: red">这是给新手的说明！</b>\n如果你什么都不了解，你可以使用<b>Alicorn 自动配置</b>，可以在只需少量交互的情况下完成基本配置。\n\n<b style="color: red">老玩家请注意！</b>自动配置的功能非常简单，许多重要参数只是被简单地自动设置，如果你使用过其它启动器，或者有基本的计算机素养，请<b>单击右上角</b>，进入手动设置。
+@HTML<b style="color: red">这是给新手的说明！</b>\n如果你什么都不了解，你可以使用<b>Alicorn 自动配置</b>，可以在只需少量交互的情况下完成基本配置。\n\n<b><span style="font-size: large;">点按下方的按钮以开始。</span></b>\n\n如果你很勇或者很有经验，你可以尝试使用手动配置，可使用右上角的箭头。
 
 # Tutor.Quick.Setting
 
@@ -2036,7 +2034,7 @@ eee|一种梗语言，大致就是把每个字都改成 e。幸好，我不会�
 
 # Tutor.0.Content
 
-@HTML欢迎使用 Alicorn Launcher！\nWelcome to Alicorn Launcher!\n\nAlicorn Launcher（就是我）是一个 Minecraft 启动器，使用超酷的前端技术构建！\nAlicorn Launcher (me) is a Minecraft game launcher, built with some awesome front-end technologies!\n\n在我开始为您工作之前，我想向您进行一个简短的自我介绍，以帮助您完成配置。\nBefore we started, I'd like to give a brief introduction of myself which may help you to configure.\n\n这不会需要很久，<b>点按右上角的箭头，来前往教程的下一页</b>。\nThis won't take long, <b>click the arrow to the next page</b>.
+@HTML欢迎使用 Alicorn Launcher！\nWelcome to Alicorn Launcher!\n\n若要开始，请点按右上角的箭头。\nTo get started, click the arrow.
 
 # Tutor.0.Controller
 
@@ -2385,6 +2383,14 @@ CurseForge 接口
 # Utilities.NetCheck.SiteDesc.CurseAPI
 
 大多数 Mod 创作者将 Mod 发布在这里，此网站的连通性直接决定 Pff 和整合包安装器的工作效率
+
+# Utilities.NetCheck.SiteName.Modrinth
+
+Modrinth 接口
+
+# Utilities.NetCheck.SiteDesc.Modrinth
+
+未来主流 Mod 发布之处，此网站的连通性影响着 Pff 和整合包安装器的工作效率
 
 # Utilities.NetCheck.SiteName.MojangAuth
 

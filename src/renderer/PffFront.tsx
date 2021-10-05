@@ -37,13 +37,19 @@ import { tr } from "./Translator";
 
 export function PffFront(): JSX.Element {
   const emitter = useRef(new EventEmitter());
-  const { container, version, name, loader, autostart } = useParams<{
+  let { container, version, name, loader, autostart } = useParams<{
     container: string;
     version: string;
     name?: string;
     autostart?: string;
     loader: string;
   }>();
+  container = decodeURIComponent(container);
+  version = decodeURIComponent(version);
+  name = name ? decodeURIComponent(name) : undefined;
+  loader = decodeURIComponent(loader);
+  autostart = autostart ? decodeURIComponent(autostart) : undefined;
+
   const [isRunning, setRunning] = useState(autostart === "1");
   const [info, setInfo] = useState("");
   const [packageName, setPackageName] = useState(name || "");

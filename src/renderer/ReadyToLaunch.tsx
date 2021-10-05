@@ -154,9 +154,11 @@ export const LAST_CRASH_KEY = "ReadyToLaunch.LastCrash";
 export function ReadyToLaunch(): JSX.Element {
   const [coreProfile, setProfile] = useState(new GameProfile({}));
   const [profileLoadedBit, setLoaded] = useState(0);
-  const { id, container, server } =
+  let { id, container, server } =
     useParams<{ id: string; container: string; server?: string }>();
-
+  id = decodeURIComponent(id);
+  container = decodeURIComponent(container);
+  server = server ? decodeURIComponent(server) : undefined;
   const mounted = useRef<boolean>();
 
   useEffect(() => {
@@ -555,7 +557,9 @@ async function startBoot(
         console.log("Token has expired! Refreshing.");
         if (!(await account.flushToken())) {
           console.log("Flush failed! Reauthing.");
-          await account.performAuth("");
+          if (!(await account.performAuth(""))) {
+            submitWarn(tr("ReadyToLaunch.FailedToAuth"));
+          }
         } else {
           console.log("Token flushed successfully, continue.");
         }
@@ -569,7 +573,10 @@ async function startBoot(
   } else if (account.type !== AccountType.ALICORN) {
     // Alicorn don't need to flush fake token
     if (!(await account.isAccessTokenValid())) {
-      await account.flushToken(); // Don't know whether this will work or not, but we have to give a try
+      // Don't know whether this will work or not, but we have to give a try
+      if (!(await account.flushToken())) {
+        submitWarn(tr("ReadyToLaunch.FailedToAuth"));
+      }
     }
   }
   const acData = await fillAccessData(await account.buildAccessData());

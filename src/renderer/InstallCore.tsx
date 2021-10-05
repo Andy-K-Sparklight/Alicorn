@@ -74,7 +74,7 @@ export function InstallCore(): JSX.Element {
   const [fabricCores, setFabricCores] = useState<PatchableCore[]>([]);
   const [baseMojangVersionForge, setBaseMojangVersionForge] =
     useState<string>("");
-  const [failedMsg, setFailedMsg] = useState<string>();
+  const [failedMsg, setFailedMsg] = useState<string>("Untracked Error");
   const [baseMojangVersionFabric, setBaseMojangVersionFabric] =
     useState<string>("");
   const [detectedForgeVersion, setDetectedForgeVersion] = useState("");
