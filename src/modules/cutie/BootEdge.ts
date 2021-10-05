@@ -1,10 +1,12 @@
+import childProcess from "child_process";
 import { remove } from "fs-extra";
 import os from "os";
 import sudo from "sudo-prompt";
+import { submitInfo } from "../../renderer/Message";
+import { tr } from "../../renderer/Translator";
 import { uniqueHash } from "../commons/BasicHash";
 import { isFileExist } from "../commons/FileUtil";
 import { getActualDataPath, saveDefaultDataAs } from "../config/DataSupport";
-
 /*
 CLAIM FOR EXTERNAL RESOURCE
 
@@ -34,6 +36,32 @@ export function getEdgeTargetName(): string {
   } else {
     return "edge";
   }
+}
+
+const TAP_NAME = "tap.exe";
+const TAP_ORIGIN = "tap-win.ald";
+const TAP_INSTALLED_BIT = "CutieConnet.TAPInstalled";
+
+export async function installTAPDeviceWin(): Promise<void> {
+  if (os.platform() !== "win32") {
+    return;
+  }
+  await saveDefaultDataAs(TAP_ORIGIN, TAP_NAME);
+  await waitTAPInstaller(getActualDataPath(TAP_NAME));
+}
+
+export function waitTAPInstaller(t: string): Promise<void> {
+  return new Promise<void>((res) => {
+    void (() => {
+      const s = childProcess.spawn(t);
+      s.on("exit", () => {
+        res();
+      });
+      s.on("error", () => {
+        res();
+      });
+    })();
+  });
 }
 
 const EDGE_LOCK_FILE = "proc.lock";
@@ -83,6 +111,19 @@ export async function runEdge(
   ip: string,
   supernode: string
 ): Promise<void> {
+  if (
+    window.localStorage.getItem(TAP_INSTALLED_BIT) !== "1" &&
+    os.platform() === "win32"
+  ) {
+    submitInfo(tr("Utilities.CutieConnect.InstallingTAP"));
+    await new Promise<void>((res) => {
+      setTimeout(() => {
+        res();
+      }, 3000);
+    });
+    await installTAPDeviceWin();
+    window.localStorage.setItem(TAP_INSTALLED_BIT, "1");
+  }
   const cmd = generateEdgeArgs(community, psw, ip, supernode);
   console.log("Starting edge with command line: " + cmd);
 

@@ -400,7 +400,7 @@ Mod 兼容性检查……
 
 # ReadyToLaunch.OpenGameToLan
 
-生成心灵感应代码
+生成友谊接力代码
 
 # ReadyToLaunch.Start
 
@@ -468,7 +468,7 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 # ReadyToLaunch.GenerateLink
 
-生成心灵感应代码
+生成友谊接力代码
 
 # ReadyToLaunch.GenerateLinkDesc
 
@@ -532,7 +532,7 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 # ReadyToLaunch.HoofoffCode
 
-你的心灵感应代码是：{Code}。请记住它，它不会再出现了！
+你的友谊接力代码是：{Code}。请记住它，它不会再出现了！
 
 # ReadyToLaunch.RequirePremium
 
@@ -2416,6 +2416,10 @@ Alicorn 更新服务
 
 Alicorn 使用该服务进行更新，如果它不能使用，你可能需要联系我们。
 
+# Utilities.CutieConnect.InstallingTAP
+
+这是你第一次使用友谊接力，我们需要安装一个 TAP 适配器，请在弹出窗口中完成操作\n（如果你已经安装过 TAP，可以直接关闭安装程序）
+
 # Utilities.CutieConnect.Title
 
 友谊接力
@@ -2426,7 +2430,7 @@ Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功�
 
 # Utilities.CutieConnect.JoinWithCode
 
-心灵感应连接（邀请码）
+友谊接力代码
 
 # Utilities.CutieConnect.EnterCode
 
@@ -2434,7 +2438,7 @@ Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功�
 
 # Utilities.CutieConnect.Activate
 
-激活心灵感应
+激活友谊接力
 
 # Utilities.CutieConnect.FailedToQuery
 
@@ -2458,7 +2462,7 @@ Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功�
 
 # Utilities.CutieConnect.CodeDesc
 
-使用从好友那里得到的心灵感应代码，直接启动到游戏。
+使用从好友那里得到的友谊接力代码，直接启动到游戏。
 
 # Utilities.CutieConnect.Advanced
 
