@@ -68,7 +68,7 @@ async function downloadAndStartJREInstaller(u: string): Promise<void> {
 
   const s = await wrappedDownloadFile(new DownloadMeta(u, tD, ""));
   if (s === 1) {
-    childProcess.exec(tD);
+    childProcess.exec(`"${tD}"`);
   } else {
     throw new Error("Could not download!");
   }
@@ -86,7 +86,7 @@ export function waitJREInstaller(u: string): Promise<void> {
   const tD = getActualDataPath(`jre_installer_tmp_${basicHash(u)}.msi`);
   return new Promise<void>((res) => {
     void (() => {
-      const s = childProcess.spawn(tD);
+      const s = childProcess.exec(`"${tD}""`);
       s.on("exit", () => {
         res();
       });
