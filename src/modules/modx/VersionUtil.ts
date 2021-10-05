@@ -71,8 +71,9 @@ export function canModVersionApply(mod: string, mc: string): boolean {
   return cmpVersion(trimVersionRange(mod), mc);
 }
 
-export function gatherVersionInfo(
-  profile: GameProfile
-): { type: ProfileType; version: string } {
+export function gatherVersionInfo(profile: GameProfile): {
+  type: ProfileType;
+  version: string;
+} {
   return { type: whatProfile(profile.id), version: profile.baseVersion };
 }

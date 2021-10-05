@@ -114,6 +114,11 @@ export function OptionsPage(): JSX.Element {
             bindConfig={"assistant"}
             choices={ALL_ASSISTANTS}
           />
+          <InputItem
+            type={ConfigType.RADIO}
+            bindConfig={"font-type"}
+            choices={["SysDefault", "GNU", "Win"]}
+          />
           <InputItem type={ConfigType.STR} bindConfig={"theme.primary.main"} />
           <InputItem type={ConfigType.STR} bindConfig={"theme.primary.light"} />
           <InputItem
@@ -142,10 +147,7 @@ export function OptionsPage(): JSX.Element {
         </TabPanel>
         <TabPanel index={2} value={tabValue}>
           {/* AL Features */}
-          <InputItem
-            type={ConfigType.STR}
-            bindConfig={"hoofoff.central"}
-          />
+          <InputItem type={ConfigType.STR} bindConfig={"hoofoff.central"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"command"} />
           <InputItem type={ConfigType.DIR} bindConfig={"cx.shared-root"} />
           <InputItem

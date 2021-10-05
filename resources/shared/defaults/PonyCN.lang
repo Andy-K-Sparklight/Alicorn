@@ -1402,6 +1402,26 @@ ASC 允许在多个容器间共享相同的文件，那么这些文件应当存�
 
 选择进入启动器时主页的名称 - 用于显示标题
 
+# Options.font-type.title
+
+字体
+
+# Options.font-type.desc
+
+字体渲染在不同的平台上清晰度不同，你可以选取一种看上去更舒适的字体
+
+# Options.font-type.GNU
+
+GNU/Linux 族（UbuntuMono 和 OpenSans）
+
+# Options.font-type.Win
+
+Windows 族（Consolas 和 Microsoft YaHei UI）
+
+# Options.font-type.SysDefault
+
+系统默认
+
 # Options.theme.primary.main.title
 
 基本颜色（主要）^

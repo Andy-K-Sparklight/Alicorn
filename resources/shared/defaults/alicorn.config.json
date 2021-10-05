@@ -47,5 +47,6 @@
   "features.saying": true,
   "features.miniwiki": true,
   "features.detect-lan": true,
-  "hoofoff.central": ""
+  "hoofoff.central": "",
+  "font-type": "SysDefault"
 }

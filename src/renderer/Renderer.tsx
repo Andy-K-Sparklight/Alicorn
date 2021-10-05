@@ -37,7 +37,7 @@ import { loadServers } from "../modules/server/ServerFiles";
 import { App } from "./App";
 import { registerHandlers } from "./Handlers";
 import { activateHotKeyFeature } from "./HotKeyHandler";
-import { submitInfo, submitSucc, submitWarn } from "./Message";
+import { submitWarn } from "./Message";
 import { initWorker } from "./Schedule";
 import { initTranslator, tr } from "./Translator";
 const GLOBAL_STYLES: React.CSSProperties = {
@@ -174,15 +174,14 @@ function flushColors(): void {
     getString("theme.primary.light") || "#" + tr("Colors.Primary.Light"),
     getString("theme.secondary.main") || "#" + tr("Colors.Secondary.Main"),
     getString("theme.secondary.light") || "#" + tr("Colors.Secondary.Light"),
-    tr("Font") + FONT_FAMILY
+    getConfiguredFont() + tr("Font") + FONT_FAMILY
   );
   const e = document.createElement("style");
   e.innerText = `html {background-color:${
     getString("theme.secondary.light") || "#" + tr("Colors.Secondary.Light")
-  }; font-family:${FONT_FAMILY};} a {color:${getString(
-    "theme.primary.main",
-    "#5d2391"
-  )};}`;
+  }; font-family:${
+    getConfiguredFont() + tr("Font") + FONT_FAMILY
+  };} a {color:${getString("theme.primary.main", "#5d2391")};}`;
   // Set background
   document.head.insertAdjacentElement("beforeend", e);
   window.dispatchEvent(new CustomEvent("ForceRefreshApp"));
@@ -361,4 +360,12 @@ function clearScreen(): void {
 function showLogs(): void {
   // @ts-ignore
   window.showLogScreen();
+}
+
+function getConfiguredFont(): string {
+  const s = getString("font-type");
+  if (s.trim().length === 0 || s === "SysDefault") {
+    return "";
+  }
+  return (s === "GNU" ? GNU_FONT_FAMILY : WIN_FONT_FAMILY) + ", ";
 }
