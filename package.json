@@ -2,7 +2,7 @@
   "private": true,
   "appVersion": "AppleSauce",
   "version": "1.0.0",
-  "updatorVersion": 21,
+  "updatorVersion": 22,
   "sideEffects": false,
   "scripts": {
     "lc": "yarn lcd",
