@@ -2,7 +2,6 @@ import { ChildProcess, exec, spawn } from "child_process";
 import EventEmitter from "events";
 import objectHash from "object-hash";
 import os from "os";
-import { Pair } from "../commons/Collections";
 import { PROCESS_END_GATE, PROCESS_LOG_GATE } from "../commons/Constants";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 
@@ -21,7 +20,7 @@ export class RunningMinecraft {
   emitter: EventEmitter | null = null;
   exitCode = "";
   private process: ChildProcess | null = null;
-  logs: Pair<string[], string[]> = new Pair<string[], string[]>([], []);
+  // logs: Pair<string[], string[]> = new Pair<string[], string[]>([], []);
 
   constructor(
     args: string[],
@@ -59,12 +58,12 @@ export class RunningMinecraft {
 
     this.process?.stdout?.on("data", (d) => {
       const strD = d.toString();
-      this.logs.getFirstValue().push(strD);
+      // this.logs.getFirstValue().push(strD);
       this.emitter?.emit(PROCESS_LOG_GATE, strD, false);
     });
     this.process?.stderr?.on("data", (d) => {
       const strD = d.toString();
-      this.logs.getSecondValue().push(strD);
+      // this.logs.getSecondValue().push(strD);
       this.emitter?.emit(PROCESS_LOG_GATE, strD, true);
     });
     const id = objectHash([this.executable, this.args, this.process]);
@@ -167,10 +166,6 @@ export function onError(runID: string, fn: (data: string) => void): void {
       fn(s);
     }
   );
-}
-
-export function getLogPair(id: string): Pair<string[], string[]> {
-  return POOL.get(id)?.logs || new Pair<string[], string[]>([], []);
 }
 
 export function getExitCode(id: string): string {

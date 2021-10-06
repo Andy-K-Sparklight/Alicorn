@@ -187,6 +187,11 @@ function flushColors(): void {
   window.dispatchEvent(new CustomEvent("ForceRefreshApp"));
 }
 printScreen("Pre init works done, running main tasks.");
+if (gc) {
+  console.log("GC Enabled.");
+} else {
+  console.log("GC Disabled.");
+}
 void (async () => {
   printScreen("Initializing translator...");
   await initTranslator();

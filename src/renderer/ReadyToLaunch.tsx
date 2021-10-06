@@ -706,6 +706,11 @@ async function startBoot(
       if (d.length > 0) {
         // @ts-ignore
         window[LAST_LOGS_KEY].push(d);
+        // @ts-ignore
+        while (window[LAST_LOGS_KEY].length > 10000) {
+          // @ts-ignore
+          window[LAST_LOGS_KEY].shift();
+        }
         console.log(d);
         if (getBoolean("features.detect-lan")) {
           if (d.toLowerCase().includes("started serving on")) {
@@ -754,7 +759,11 @@ async function startBoot(
       clearReboot(profileHash);
       console.log("Cleared reboot flag.");
     }
-
+    // @ts-ignore
+    window[LAST_LOGS_KEY] = [];
+    if (gc) {
+      gc();
+    }
     console.log("Restoring mods...");
     await restoreMods(container);
     console.log("Done!");
