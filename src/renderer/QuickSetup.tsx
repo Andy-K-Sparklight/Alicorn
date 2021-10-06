@@ -74,7 +74,7 @@ export function QuickSetup(): JSX.Element {
               setDefaultJavaHome(a || getAllJava()[0] || "");
             }
             setState("InstallingCore");
-            const ct = getContainer("Minecraft");
+            const ct = getContainer(tr("QuickSetup.Default") || "Minecraft");
             const u = await getProfileURLById("1.17.1");
             await downloadProfile(u, ct, "1.17.1");
             setState("Done");
