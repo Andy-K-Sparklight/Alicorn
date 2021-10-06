@@ -129,6 +129,12 @@ async function whenAppReady() {
     applyDoHSettings();
     console.log("Setting up proxy!");
     await initProxy();
+    mainWindow?.on("resize", () => {
+      mainWindow?.webContents.send("mainWindowResized", mainWindow.getSize());
+    });
+    mainWindow?.on("move", () => {
+      mainWindow?.webContents.send("mainWindowMoved", mainWindow.getPosition());
+    });
     console.log("All caught up! Alicorn is now initialized.");
     if (getBoolean("dev")) {
       console.log("Development mode detected, opening devtools...");

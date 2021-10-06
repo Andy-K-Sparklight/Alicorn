@@ -262,4 +262,18 @@ export function registerBackgroundListeners(): void {
   ipcMain.handle("getElectronVersion", () => {
     return Promise.resolve(process.versions["electron"]);
   });
+  ipcMain.on("configureWindowSize", (_e, w: number, h: number) => {
+    const mw = getMainWindow();
+    if (isNaN(w) || isNaN(h)) {
+      return;
+    }
+    mw?.setSize(w, h);
+  });
+  ipcMain.on("configureWindowPos", (_e, w: number, h: number) => {
+    const mw = getMainWindow();
+    if (isNaN(w) || isNaN(h)) {
+      return;
+    }
+    mw?.setPosition(w, h);
+  });
 }

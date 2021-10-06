@@ -192,6 +192,26 @@ if (gc) {
 } else {
   console.log("GC Disabled.");
 }
+const windowPos = window.localStorage.getItem("System.WindowPos");
+const windowSize = window.localStorage.getItem("System.WindowSize");
+if (windowSize) {
+  const s = windowSize.split(",").map((r) => {
+    return parseInt(r);
+  });
+  ipcRenderer.send("configureWindowSize", ...s);
+}
+if (windowPos) {
+  const s = windowPos.split(",").map((r) => {
+    return parseInt(r);
+  });
+  ipcRenderer.send("configureWindowPos", ...s);
+}
+ipcRenderer.on("mainWindowMoved", (_e, pos: number[]) => {
+  window.localStorage.setItem("System.WindowPos", pos.join(","));
+});
+ipcRenderer.on("mainWindowResize", (_e, sz: number[]) => {
+  window.localStorage.setItem("System.WindowSize", sz.join(","));
+});
 void (async () => {
   printScreen("Initializing translator...");
   await initTranslator();
