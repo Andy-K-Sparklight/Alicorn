@@ -209,7 +209,7 @@ if (windowPos) {
 ipcRenderer.on("mainWindowMoved", (_e, pos: number[]) => {
   window.localStorage.setItem("System.WindowPos", pos.join(","));
 });
-ipcRenderer.on("mainWindowResize", (_e, sz: number[]) => {
+ipcRenderer.on("mainWindowResized", (_e, sz: number[]) => {
   window.localStorage.setItem("System.WindowSize", sz.join(","));
 });
 void (async () => {
