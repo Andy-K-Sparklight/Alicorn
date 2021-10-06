@@ -30,7 +30,7 @@ import {
 } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
 import { ipcRenderer, shell } from "electron";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Route } from "react-router-dom";
 import { safeGet } from "../modules/commons/Null";
 import {
@@ -128,6 +128,14 @@ export function App(): JSX.Element {
   const [openSucc, setSuccOpen] = useState(false);
   const [succ, setSucc] = useState("");
   const [refreshBit, setRefreshBit] = useState(false);
+  const sessionID = useRef(0);
+  const clearSnacks = () => {
+    setInfoOpen(false);
+    setSuccOpen(false);
+    setWarnOpen(false);
+    setNoticeOpen(false);
+    sessionID.current++;
+  };
   useEffect(() => {
     if (window.location.hash === "#/") {
       jumpTo(getString("startup-page.url", "/Tutor/1"));
@@ -179,6 +187,7 @@ export function App(): JSX.Element {
   useEffect(() => {
     window.addEventListener("sysError", (e) => {
       setErr(String(safeGet(e, ["detail"], "Unknown Error")));
+      clearSnacks();
       setNoticeOpen(true);
       ipcRenderer.send(
         "reportError",
@@ -187,14 +196,17 @@ export function App(): JSX.Element {
     });
     window.addEventListener("sysWarn", (e) => {
       setWarn(String(safeGet(e, ["detail"], "Unknown Warning")));
+      clearSnacks();
       setWarnOpen(true);
     });
     window.addEventListener("sysInfo", (e) => {
       setInfo(String(safeGet(e, ["detail"], "")));
+      clearSnacks();
       setInfoOpen(true);
     });
     window.addEventListener("sysSucc", (e) => {
       setSucc(String(safeGet(e, ["detail"], "")));
+      clearSnacks();
       setSuccOpen(true);
     });
   }, []);
@@ -588,9 +600,14 @@ export function App(): JSX.Element {
           width: "90%",
         }}
         autoHideDuration={5000}
-        onClose={() => {
-          setNoticeOpen(false);
-        }}
+        onClose={(() => {
+          const s = sessionID.current;
+          return () => {
+            if (sessionID.current === s) {
+              setNoticeOpen(false);
+            }
+          };
+        })()}
       >
         <Alert severity={"error"}>{err}</Alert>
       </Snackbar>
@@ -600,9 +617,14 @@ export function App(): JSX.Element {
           width: "90%",
         }}
         autoHideDuration={5000}
-        onClose={() => {
-          setSuccOpen(false);
-        }}
+        onClose={(() => {
+          const s = sessionID.current;
+          return () => {
+            if (sessionID.current === s) {
+              setSuccOpen(false);
+            }
+          };
+        })()}
       >
         <Alert severity={"success"}>{succ}</Alert>
       </Snackbar>
@@ -612,9 +634,14 @@ export function App(): JSX.Element {
           width: "90%",
         }}
         autoHideDuration={5000}
-        onClose={() => {
-          setWarnOpen(false);
-        }}
+        onClose={(() => {
+          const s = sessionID.current;
+          return () => {
+            if (sessionID.current === s) {
+              setWarnOpen(false);
+            }
+          };
+        })()}
       >
         <Alert severity={"warning"}>{warn}</Alert>
       </Snackbar>
@@ -624,9 +651,14 @@ export function App(): JSX.Element {
           width: "90%",
         }}
         autoHideDuration={5000}
-        onClose={() => {
-          setInfoOpen(false);
-        }}
+        onClose={(() => {
+          const s = sessionID.current;
+          return () => {
+            if (sessionID.current === s) {
+              setInfoOpen(false);
+            }
+          };
+        })()}
       >
         <Alert severity={"info"}>{info}</Alert>
       </Snackbar>
