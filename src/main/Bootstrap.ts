@@ -54,6 +54,9 @@ try {
     });
 } catch {
   READY_LOCK = true;
+  if (!fs.existsSync(path.join(os.homedir(), "alicorn"))) {
+    fs.mkdirSync(path.join(os.homedir(), "alicorn"));
+  }
   fs.writeFileSync(SESSION_LOCK, "0");
   http
     .createServer((_req, res) => {
