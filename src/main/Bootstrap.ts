@@ -27,15 +27,17 @@ process.on("beforeExit", () => {
 try {
   fs.readFileSync(SESSION_LOCK);
   console.log("Another Alicorn is running! Calling her...");
-
+  const t = setTimeout(() => {
+    process.exit();
+  }, 10000);
   http
     .get("http://localhost:9170", (res) => {
-      if (res.statusCode === 204) {
-        process.exit();
-      }
+      clearTimeout(t);
+      process.exit();
     })
     .on("error", () => {
       console.log("Session lock invalid, continue!");
+      clearTimeout(t);
       READY_LOCK = true;
       try {
         fs.unlinkSync(SESSION_LOCK);
@@ -44,10 +46,8 @@ try {
       http
         .createServer((_req, res) => {
           res.writeHead(204, "No Content").end();
-          if (getMainWindow()?.isMinimized()) {
-            getMainWindow()?.restore();
-            getMainWindow()?.webContents.send("CallFromSleep");
-          }
+          getMainWindow()?.restore();
+          getMainWindow()?.webContents.send("CallFromSleep");
         })
         .listen(9170);
       void whenAppReady();
@@ -58,10 +58,8 @@ try {
   http
     .createServer((_req, res) => {
       res.writeHead(204, "No Content").end();
-      if (getMainWindow()?.isMinimized()) {
-        getMainWindow()?.restore();
-        getMainWindow()?.webContents.send("CallFromSleep");
-      }
+      getMainWindow()?.restore();
+      getMainWindow()?.webContents.send("CallFromSleep");
     })
     .listen(9170);
 }
@@ -75,6 +73,22 @@ process.on("SIGINT", () => {
     } catch {}
   }
   process.exit();
+});
+
+process.on("beforeExit", () => {
+  if (READY_LOCK) {
+    try {
+      fs.unlinkSync(SESSION_LOCK);
+    } catch {}
+  }
+});
+
+process.on("exit", () => {
+  if (READY_LOCK) {
+    try {
+      fs.unlinkSync(SESSION_LOCK);
+    } catch {}
+  }
 });
 
 async function whenAppReady() {
@@ -154,6 +168,35 @@ function main() {
       app.disableHardwareAcceleration();
     } catch {}
   }
+  const CONNECTION_UNLIMITED_DOMAINS = [
+    "mcbbs.net",
+    "download.mcbbs.net",
+    "bangbang93.com",
+    "bmclapi2.bangbang93.com",
+    "forgecdn.net",
+    "media.forgecdn.net",
+    "modrinth.com",
+    "cdn.modrinth.com",
+    "minecraft.net",
+    "libraries.minecraft.net",
+    "mojang.com",
+    "launcher.mojang.com",
+    "launchermeta.mojang.com",
+    "minecraftforge.net",
+    "maven.minecraftforge.net",
+    "files.minecraftforge.net",
+    "resources.download.minecraft.net",
+    "maven.fabricmc.net",
+    "meta.fabricmc.net",
+    "fabricmc.net",
+  ];
+  app.commandLine.appendSwitch("ignore-certificate-errors");
+  app.commandLine.appendSwitch(
+    "ignore-connections-limit",
+    CONNECTION_UNLIMITED_DOMAINS.join(",")
+  );
+  app.commandLine.appendSwitch("js-flags", "--expose_gc"); // Enable gc
+  // app.commandLine.appendSwitch("--force_high_performance_gpu"); // Enable High Performance GPU
   app.on("before-quit", () => {
     if (READY_LOCK) {
       try {
