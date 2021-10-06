@@ -2,8 +2,10 @@ import {
   Box,
   Card,
   CardContent,
+  Checkbox,
   CircularProgress,
   FormControl,
+  FormControlLabel,
   IconButton,
   InputAdornment,
   MuiThemeProvider,
@@ -16,7 +18,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { getNumber } from "../../modules/config/ConfigSupport";
 import { ModMeta } from "../../modules/pff/virtual/ModDefine";
 import { getResolvers } from "../../modules/pff/virtual/PffWrapper";
-import { submitInfo, submitWarn } from "../Message";
+import { submitInfo, submitSucc, submitWarn } from "../Message";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "../Renderer";
 import { fullWidth, useCardStyles, usePadStyles } from "../Stylex";
 import { tr } from "../Translator";
@@ -28,6 +30,9 @@ export function PffVisual(): JSX.Element {
   const fullWidthClasses = fullWidth();
   const classes = usePadStyles();
   const mounted = useRef(false);
+  const [multiSelect, setMultiSelect] = useState(false);
+  const [selections, setSelections] = useState<Set<string>>(new Set());
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -100,29 +105,90 @@ export function PffVisual(): JSX.Element {
               />
             </FormControl>
           </Box>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={multiSelect}
+                onChange={(e) => {
+                  setMultiSelect(e.target.checked);
+                  if (!e.target.checked) {
+                    if (selections.size > 0) {
+                      const s = Array.from(selections).join(" ");
+                      if (copy(s, { format: "text/plain" })) {
+                        submitSucc(tr("Utilities.PffVisual.Copied"));
+                      } else {
+                        submitWarn("Utilities.PffVisual.CouldNotCopy");
+                      }
+                      setSelections(new Set());
+                      setSelectedIds(new Set());
+                    }
+                  }
+                }}
+              />
+            }
+            label={tr("Utilities.PffVisual.MultiSelect")}
+          />
         </MuiThemeProvider>
-        <br />
+
         <br />
         {searchResults.map((s) => {
-          return <SingleAddonDisplay key={s.id} info={s} />;
+          return (
+            <SingleAddonDisplay
+              key={s.id}
+              info={s}
+              isSelected={selectedIds.has(s.id)}
+              multiSelect={multiSelect}
+              onSelect={(x) => {
+                if (selections.has(x)) {
+                  const s = new Set(selections);
+                  s.delete(x);
+                  setSelections(s);
+                } else {
+                  const s = new Set(selections);
+                  s.add(x);
+                  setSelections(s);
+                }
+                if (selectedIds.has(s.id)) {
+                  const si = new Set(selectedIds);
+                  si.delete(s.id);
+                  setSelectedIds(si);
+                } else {
+                  const si = new Set(selectedIds);
+                  si.add(s.id);
+                  setSelectedIds(si);
+                }
+              }}
+            />
+          );
         })}
       </Box>
     </Box>
   );
 }
 
-function SingleAddonDisplay(props: { info: ModMeta }): JSX.Element {
+function SingleAddonDisplay(props: {
+  info: ModMeta;
+  multiSelect: boolean;
+  isSelected: boolean;
+  onSelect: (s: string) => unknown;
+}): JSX.Element {
   const classes = useCardStyles();
   const a = props.info.supportVersions;
+  console.log(props.isSelected);
   return (
     <Box style={{ textAlign: "left" }}>
       <Card
-        className={classes.card}
+        className={props.isSelected ? classes.card2 : classes.card}
         onClick={() => {
-          if (copy("@" + props.info.provider + ":" + props.info.id)) {
-            submitInfo(tr("Utilities.PffVisual.Copied"));
+          const installName = "@" + props.info.provider + ":" + props.info.id;
+          if (!props.multiSelect) {
+            if (copy(installName)) {
+              submitInfo(tr("Utilities.PffVisual.Copied"));
+            } else {
+              submitWarn("Utilities.PffVisual.CouldNotCopy");
+            }
           } else {
-            submitWarn("Utilities.PffVisual.CouldNotCopy");
+            props.onSelect(installName);
           }
         }}
       >

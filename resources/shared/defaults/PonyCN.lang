@@ -2819,6 +2819,10 @@ Sparklight 作品\n查找 Mod 并获取编号，用于 Pff 软件安装器安装
 
 搜索
 
+# Utilities.PffVisual.MultiSelect
+
+多选（取消勾选时复制）
+
 # Utilities.PffVisual.Provider
 
 来源：{Name}
