@@ -55,7 +55,8 @@ export function setThemeParams(
   primaryLight: string,
   secondaryMain: string,
   secondaryLight: string,
-  fontFamily: string
+  fontFamily: string,
+  overrideCursor?: boolean
 ): void {
   ALICORN_DEFAULT_THEME_LIGHT = createTheme({
     palette: {
@@ -72,6 +73,30 @@ export function setThemeParams(
     typography: {
       fontFamily: fontFamily,
     },
+    overrides: overrideCursor
+      ? {
+          MuiButtonBase: {
+            root: {
+              cursor: undefined,
+            },
+          },
+          MuiInputBase: {
+            root: {
+              cursor: undefined,
+            },
+          },
+          MuiCheckbox: {
+            root: {
+              cursor: undefined,
+            },
+          },
+          MuiSelect: {
+            select: {
+              cursor: undefined,
+            },
+          },
+        }
+      : undefined,
   });
   ALICORN_DEFAULT_THEME_DARK = createTheme({
     palette: {
@@ -88,6 +113,30 @@ export function setThemeParams(
     typography: {
       fontFamily: fontFamily,
     },
+    overrides: overrideCursor
+      ? {
+          MuiButtonBase: {
+            root: {
+              cursor: undefined,
+            },
+          },
+          MuiInputBase: {
+            root: {
+              cursor: undefined,
+            },
+          },
+          MuiCheckbox: {
+            root: {
+              cursor: undefined,
+            },
+          },
+          MuiSelect: {
+            select: {
+              cursor: undefined,
+            },
+          },
+        }
+      : undefined,
   });
 }
 
@@ -174,7 +223,8 @@ function flushColors(): void {
     getString("theme.primary.light") || "#" + tr("Colors.Primary.Light"),
     getString("theme.secondary.main") || "#" + tr("Colors.Secondary.Main"),
     getString("theme.secondary.light") || "#" + tr("Colors.Secondary.Light"),
-    getConfiguredFont() + tr("Font") + FONT_FAMILY
+    getConfiguredFont() + tr("Font") + FONT_FAMILY,
+    getBoolean("features.cursor")
   );
   const e = document.createElement("style");
   e.innerText = `html {background-color:${
@@ -186,6 +236,36 @@ function flushColors(): void {
   document.head.insertAdjacentElement("beforeend", e);
   window.dispatchEvent(new CustomEvent("ForceRefreshApp"));
 }
+
+let normalCursorEle: HTMLStyleElement | null = null;
+let pressCursorEle: HTMLStyleElement | null = null;
+function setDefCursor(): void {
+  if (getBoolean("features.cursor")) {
+    if (pressCursorEle) {
+      pressCursorEle.parentNode?.removeChild(pressCursorEle);
+      pressCursorEle = null;
+    }
+    const x = normalCursorEle || document.createElement("style");
+    x.innerText =
+      'html, .MuiButtonBase-root, .MuiBox-root, button, input, input[type="text"], input[type="url"], input[type="checkbox"], input[type="radio"] { cursor: url(Mouse.png), auto !important; }';
+    document.head.insertAdjacentElement("afterbegin", x);
+    normalCursorEle = x;
+  }
+}
+function setActCursor(): void {
+  if (getBoolean("features.cursor")) {
+    if (normalCursorEle) {
+      normalCursorEle.parentNode?.removeChild(normalCursorEle);
+      normalCursorEle = null;
+    }
+    const x = document.createElement("style");
+    x.innerText =
+      'html, .MuiButtonBase-root, .MuiBox-root, button, input, input[type="text"], input[type="url"], input[type="checkbox"], input[type="radio"] { cursor: url(Mouse2.png), auto !important; }';
+    document.head.insertAdjacentElement("afterbegin", x);
+    pressCursorEle = x;
+  }
+}
+
 printScreen("Pre init works done, running main tasks.");
 if (gc) {
   console.log("GC Enabled.");
@@ -247,6 +327,21 @@ void (async () => {
   }
   printScreen("Flushing theme colors...");
   flushColors();
+  let t: NodeJS.Timeout | undefined;
+  setDefCursor();
+  if (getBoolean("features.cursor")) {
+    window.addEventListener("mousedown", () => {
+      if (t) {
+        clearTimeout(t);
+      }
+      setActCursor();
+    });
+    window.addEventListener("mouseup", () => {
+      t = setTimeout(() => {
+        setDefCursor();
+      }, 10);
+    });
+  }
   printScreen("Initializing command listener...");
   initCommandListener();
   printScreen("Rendering main application...");

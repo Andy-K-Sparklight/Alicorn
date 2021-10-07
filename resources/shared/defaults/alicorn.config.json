@@ -46,6 +46,7 @@
   "pff.first-source": "Curseforge",
   "features.saying": true,
   "features.miniwiki": true,
+  "features.cursor": true,
   "features.detect-lan": true,
   "hoofoff.central": "",
   "font-type": "SysDefault"
