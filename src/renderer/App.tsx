@@ -304,7 +304,13 @@ export function App(): JSX.Element {
               {showCommand ? enteredCommand : tr(page)}
             </Typography>
           </Box>
-          <Box style={showCommand ? { display: "none" } : {}}>
+          <Box
+            style={
+              showCommand || window.location.hash.includes("QuickSetup")
+                ? { display: "none" }
+                : {}
+            }
+          >
             <Tooltip title={tr("MainMenu.NextTutorPage")}>
               <IconButton
                 style={isTutor() ? {} : { display: "none" }}
