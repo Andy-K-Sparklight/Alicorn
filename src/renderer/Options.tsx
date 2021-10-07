@@ -14,9 +14,10 @@ import {
   Typography,
 } from "@material-ui/core";
 import os from "os";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { DOH_CONFIGURE } from "../modules/commons/Constants";
 import {
+  get,
   getBoolean,
   getNumber,
   getString,
@@ -112,21 +113,33 @@ export function OptionsPage(): JSX.Element {
           <InputItem
             type={ConfigType.RADIO}
             bindConfig={"assistant"}
+            reload
             choices={ALL_ASSISTANTS}
           />
           <InputItem
             type={ConfigType.RADIO}
+            reload
             bindConfig={"font-type"}
             choices={["SysDefault", "GNU", "Win"]}
           />
-          <InputItem type={ConfigType.STR} bindConfig={"theme.primary.main"} />
-          <InputItem type={ConfigType.STR} bindConfig={"theme.primary.light"} />
+          <InputItem
+            reload
+            type={ConfigType.STR}
+            bindConfig={"theme.primary.main"}
+          />
+          <InputItem
+            reload
+            type={ConfigType.STR}
+            bindConfig={"theme.primary.light"}
+          />
           <InputItem
             type={ConfigType.STR}
+            reload
             bindConfig={"theme.secondary.main"}
           />
           <InputItem
             type={ConfigType.STR}
+            reload
             bindConfig={"theme.secondary.light"}
           />
           <InputItem type={ConfigType.BOOL} bindConfig={"goto.animate"} />
@@ -310,8 +323,20 @@ export function InputItem(props: {
   notOn?: NodeJS.Platform;
   onChange?: () => unknown;
   experimental?: boolean;
+  reload?: boolean;
 }): JSX.Element {
-  const callChange = props.onChange ? props.onChange : () => {};
+  const originVal = useRef(get(props.bindConfig, undefined));
+  const callChange = () => {
+    if (
+      get(props.bindConfig, undefined) !== originVal.current &&
+      props.reload
+    ) {
+      window.sessionStorage.setItem("Options.Reload", "1");
+    }
+    if (props.onChange) {
+      props.onChange();
+    }
+  };
   const [refreshBit, forceRefresh] = useState<boolean>(true);
   const classex = useInputStyles();
   const [cSelect, setSelect] = useState<string>(

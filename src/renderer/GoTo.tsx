@@ -1,3 +1,4 @@
+import { ipcRenderer } from "electron";
 import { throttle } from "throttle-debounce";
 import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
 import { loadMirror } from "../modules/download/Mirror";
@@ -54,6 +55,10 @@ function ifLeavingConfigThenReload(): void {
   if (window.location.hash.includes("Options")) {
     void saveAndReloadMain();
     void loadMirror();
+  }
+  if (window.sessionStorage.getItem("Options.Reload") === "1") {
+    window.sessionStorage.removeItem("Options.Reload");
+    ipcRenderer.send("ReloadWindow");
   }
 }
 
