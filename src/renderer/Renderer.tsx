@@ -95,6 +95,11 @@ export function setThemeParams(
               cursor: undefined,
             },
           },
+          MuiFormControlLabel: {
+            root: {
+              cursor: undefined,
+            },
+          },
         }
       : undefined,
   });
@@ -132,6 +137,11 @@ export function setThemeParams(
           },
           MuiSelect: {
             select: {
+              cursor: undefined,
+            },
+          },
+          MuiFormControlLabel: {
+            root: {
               cursor: undefined,
             },
           },
@@ -247,7 +257,7 @@ function setDefCursor(): void {
     }
     const x = normalCursorEle || document.createElement("style");
     x.innerText =
-      'html, .MuiButtonBase-root, .MuiBox-root, button, input, input[type="text"], input[type="url"], input[type="checkbox"], input[type="radio"] { cursor: url(Mouse.png), auto !important; }';
+      'html, .MuiButtonBase-root, .MuiBox-root, label, button, input, input[type="text"], input[type="url"], input[type="checkbox"], input[type="radio"] { cursor: url(Mouse.png), auto !important; }';
     document.head.insertAdjacentElement("afterbegin", x);
     normalCursorEle = x;
   }
@@ -260,7 +270,7 @@ function setActCursor(): void {
     }
     const x = document.createElement("style");
     x.innerText =
-      'html, .MuiButtonBase-root, .MuiBox-root, button, input, input[type="text"], input[type="url"], input[type="checkbox"], input[type="radio"] { cursor: url(Mouse2.png), auto !important; }';
+      'html, .MuiButtonBase-root, .MuiBox-root, label, button, input, input[type="text"], input[type="url"], input[type="checkbox"], input[type="radio"] { cursor: url(Mouse2.png), auto !important; }';
     document.head.insertAdjacentElement("afterbegin", x);
     pressCursorEle = x;
   }
