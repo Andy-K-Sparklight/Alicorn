@@ -213,6 +213,7 @@ export function InstallCore(): JSX.Element {
               generateForgeInstallerName(mcv, fgv),
               ct
             );
+            await removeForgeInstaller(ct, mcv, fgv);
             if (!istat) {
               if (mounted.current) {
                 setOperating(false);
@@ -221,7 +222,6 @@ export function InstallCore(): JSX.Element {
               }
               return;
             } else {
-              await removeForgeInstaller(ct, mcv, fgv);
               if (mounted.current) {
                 setOperating(false);
                 setFailed(false);
@@ -280,6 +280,7 @@ export function InstallCore(): JSX.Element {
               mcv,
               ct
             );
+            await removeFabricInstaller(u, ct);
             if (!stat2) {
               if (mounted.current) {
                 setOperating(false);
@@ -290,7 +291,6 @@ export function InstallCore(): JSX.Element {
             }
             updateFabricCores(!updateFabricCoresBit);
             setProgressMsg("Done! Cleaning up files...");
-            await removeFabricInstaller(u, ct);
             if (mounted.current) {
               setOperating(false);
               setFailed(false);
