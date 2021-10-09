@@ -43,14 +43,14 @@ export function makeLibrary(
       },
     };
   } else {
-    // Thus, we can only give path
+    // Url is https://libraries.minecraft.net/
     const name = String(obj["name"]) || "";
     return {
       name: name,
       downloads: {
         artifact: {
           path: makePath(name),
-          url: "",
+          url: makeURL(name, "https://libraries.minecraft.net"),
           sha1: "",
           size: 0,
         },
