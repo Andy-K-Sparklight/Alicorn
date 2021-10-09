@@ -194,7 +194,7 @@ function downloadSingleChunk(
         headers: { Range: `bytes=${chunk.start}-${chunk.end}` },
         keepalive: true,
       });
-      if (!(r.status >= 200 && r.status < 300)) {
+      if (!r.ok) {
         throw "Failed to download! Code: " + r.status;
       }
       if (r.body) {

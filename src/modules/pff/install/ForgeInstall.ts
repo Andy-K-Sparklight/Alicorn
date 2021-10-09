@@ -26,6 +26,7 @@ import { GameProfile } from "../../profile/GameProfile";
 import { noDuplicateConcat } from "../../profile/InheritedProfileAdaptor";
 import { makeLibrary } from "../../profile/LibrariesConvert";
 import { LibraryMeta } from "../../profile/Meta";
+import { rebuildForgeInstaller } from "./ForgeInstallerMixer";
 
 const FORGE_INSTALLER_HEADLESS = "forge.iw.ald";
 const CP_ARG = "-cp";
@@ -111,7 +112,7 @@ export async function getPolyfillForgeProfile(
   const j2 = await getForgeInstallProfileAndVersionProfile(forgeJar, container);
   const ipf = j2.getFirstValue();
   const vf = j2.getSecondValue();
-  await downloadMappings(ipf, container);
+  await downloadMappings(ipf, container, forgeJar);
 
   let finalProfile: GameProfile;
   let modernBit: boolean;
@@ -133,7 +134,8 @@ export async function getPolyfillForgeProfile(
 
 async function downloadMappings(
   installProfile: Record<string, unknown>,
-  container: MinecraftContainer
+  container: MinecraftContainer,
+  jar: string
 ): Promise<void> {
   try {
     const mcpVersion = String(
@@ -149,14 +151,33 @@ async function downloadMappings(
       const mappingsURL = String(
         safeGet(f, ["downloads", "client_mappings", "url"], "")
       );
+      const mappingsHash = String(
+        safeGet(f, ["downloads", "client_mappings", "sha1"], "")
+      );
+      const mappingsSize = parseInt(
+        String(safeGet(f, ["downloads", "client_mappings", "size"], 0))
+      );
       const target = container.getLibraryPath(
         `net/minecraft/client/${baseVersion}-${mcpVersion}/client-${baseVersion}-${mcpVersion}-mappings.txt`
       );
       console.log("Downloading mappings!");
       if (
-        (await wrappedDownloadFile(new DownloadMeta(mappingsURL, target))) === 1
+        (await wrappedDownloadFile(
+          new DownloadMeta(mappingsURL, target, mappingsHash, mappingsSize)
+        )) === 1
       ) {
         console.log("Mappings downloaded to " + target);
+        console.log("Rebuilding installer!");
+        try {
+          await rebuildForgeInstaller(
+            container,
+            container.getTempFileStorePath(jar)
+          );
+          console.log("Rebuild installer successful.");
+        } catch (e) {
+          console.log(e);
+          console.log("Rebuild installer failed!");
+        }
         return;
       }
       console.log(

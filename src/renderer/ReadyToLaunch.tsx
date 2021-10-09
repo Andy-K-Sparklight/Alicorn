@@ -758,11 +758,12 @@ async function startBoot(
       console.log("Crash report committed, continue tasks.");
       clearReboot(profileHash);
       console.log("Cleared reboot flag.");
-    }
-    // @ts-ignore
-    window[LAST_LOGS_KEY] = [];
-    if (gc) {
-      gc();
+    } else {
+      // @ts-ignore
+      window[LAST_LOGS_KEY] = [];
+      if (gc) {
+        gc();
+      }
     }
     console.log("Restoring mods...");
     await restoreMods(container);

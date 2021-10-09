@@ -229,8 +229,6 @@ function SingleCoreDisplay(props: {
                   onClick={(e) => {
                     setDestroy(props.profile.id);
                     setWarningOpen(true);
-                    markUsed(hash, 0);
-                    props.refresh();
                     e.stopPropagation();
                   }}
                 >
@@ -298,9 +296,14 @@ function SingleCoreDisplay(props: {
           open={warningOpen}
           onAccept={async () => {
             if (toDestroy) {
-              await remove(
-                getContainer(props.profile.container).getVersionRoot(toDestroy)
-              );
+              try{
+                await remove(
+                    getContainer(props.profile.container).getVersionRoot(toDestroy)
+                );
+              } finally {
+                markUsed(hash, 0);
+                props.refresh();
+              }
             }
           }}
           onClose={() => {

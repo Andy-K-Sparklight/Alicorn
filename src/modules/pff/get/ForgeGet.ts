@@ -9,6 +9,7 @@ import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { DownloadMeta } from "../../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../../download/DownloadWrapper";
 import { xgot } from "../../download/GotWrapper";
+import { isWebFileExist } from "../../download/RainbowFetch";
 import { JAR_SUFFIX } from "../../launch/NativesLint";
 
 // Forge Getter
@@ -129,9 +130,40 @@ function generateForgeWebJarPath(mcv: string, fgv: string): string {
     `/${mcv}-${fgv}/${generateForgeInstallerName(mcv, fgv)}`
   );
 }
+function generateForgeWebJarPathWithBranch(mcv: string, fgv: string): string {
+  return (
+    FORGE_MAVEN_ROOT +
+    FORGE_WEB_ROOT +
+    `/${mcv}-${fgv}-${mcv}/${generateForgeInstallerNameOld(mcv, fgv)}`
+  );
+}
+function generateForgeWebJarPathWithBranchNew(
+  mcv: string,
+  fgv: string
+): string {
+  return (
+    FORGE_MAVEN_ROOT +
+    FORGE_WEB_ROOT +
+    `/${mcv}-${fgv}-new/${generateForgeInstallerNameNew(mcv, fgv)}`
+  );
+}
 
 export function generateForgeInstallerName(mcv: string, fgv: string): string {
   return `forge-${mcv}-${fgv}-${SUFFIX}`;
+}
+
+export function generateForgeInstallerNameOld(
+  mcv: string,
+  fgv: string
+): string {
+  return `forge-${mcv}-${fgv}-${mcv}-${SUFFIX}`;
+}
+
+export function generateForgeInstallerNameNew(
+  mcv: string,
+  fgv: string
+): string {
+  return `forge-${mcv}-${fgv}-new-${SUFFIX}`;
 }
 
 // Download Forge installer to a temp path
@@ -141,13 +173,28 @@ export async function getForgeInstaller(
   fgv: string
 ): Promise<boolean> {
   try {
-    const pt = generateForgeWebJarPath(mcv, fgv);
+    const pt1 = generateForgeWebJarPath(mcv, fgv);
+    const pt2 = generateForgeWebJarPathWithBranch(mcv, fgv);
+    const pt3 = generateForgeWebJarPathWithBranchNew(mcv, fgv);
     const dest = container.getTempFileStorePath(
       generateForgeInstallerName(mcv, fgv)
     );
     // No validating
-    const meta = new DownloadMeta(pt, dest, "");
-    return (await wrappedDownloadFile(meta, true)) === 1;
+    try {
+      const pt = await Promise.any([
+        isWebFileExist(pt1),
+        isWebFileExist(pt2),
+        isWebFileExist(pt3),
+      ]);
+      if (pt) {
+        return (
+          (await wrappedDownloadFile(new DownloadMeta(pt, dest, ""))) === 1
+        );
+      }
+      return false;
+    } catch {
+      return false;
+    }
   } catch {
     return false;
   }

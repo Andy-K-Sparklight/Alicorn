@@ -445,7 +445,7 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
   if (startIndex < 0) {
     startIndex = 0;
   }
-  const oLogs = cLogs.slice(startIndex, endIndex);
+  const oLogs = cLogs.slice(startIndex, endIndex + 1);
   return (
     <Accordion>
       <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>

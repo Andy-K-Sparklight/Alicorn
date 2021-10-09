@@ -8,7 +8,7 @@ import { isFileExist } from "../../commons/FileUtil";
 import { isNull, safeGet } from "../../commons/Null";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { addDoing } from "../../download/DownloadWrapper";
-import { getJavaRunnable, getDefaultJavaHome } from "../../java/JInfo";
+import { getDefaultJavaHome, getJavaRunnable } from "../../java/JInfo";
 import { ProfileType } from "../../profile/WhatProfile";
 import {
   getFabricInstaller,
@@ -146,6 +146,7 @@ export async function deployModLoader(
     case ProfileType.FORGE: {
       const mcVersion = await getMojangByForge(version);
       if (!(await getForgeInstaller(container, mcVersion, version))) {
+        await removeForgeInstaller(container, mcVersion, version); // Mostly this file does not exist
         throw "Could not fetch installer: No such installer!";
       }
       if (
@@ -155,6 +156,7 @@ export async function deployModLoader(
           container
         ))
       ) {
+        await removeForgeInstaller(container, mcVersion, version);
         throw "Could not perform install!";
       }
       await removeForgeInstaller(container, mcVersion, version);
@@ -167,6 +169,7 @@ export async function deployModLoader(
         throw "Could not fetch installer: No such installer!";
       }
       if (!(await getFabricInstaller(u, container))) {
+        await removeFabricInstaller(u, container);
         throw "Failed to fetch installer!";
       }
       const jr = await getJavaRunnable(getDefaultJavaHome());
@@ -182,6 +185,7 @@ export async function deployModLoader(
                 container
               ))
             ) {
+              await removeFabricInstaller(u, container);
               throw "Could not perform install!";
             }
             await removeFabricInstaller(u, container);
