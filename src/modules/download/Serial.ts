@@ -43,7 +43,7 @@ export class Serial extends AbstractDownloader {
             keepalive: true,
           });
 
-          if (!(r.status >= 200 && r.status < 300)) {
+          if (!r.ok) {
             return DownloadStatus.RETRY;
           }
           const f = getFileWriteStream(

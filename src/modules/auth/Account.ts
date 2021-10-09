@@ -56,7 +56,7 @@ export async function refreshToken(
         accessToken: acToken,
       }),
     });
-    if (!(res.status >= 200 && res.status < 300)) {
+    if (!res.ok) {
       throw "Failed to auth! Code: " + res.status;
     }
     const rtt = await res.json();
@@ -106,7 +106,7 @@ export async function authenticate(
         },
       }),
     });
-    if (!(ress.status >= 200 && ress.status < 300)) {
+    if (!ress.ok) {
       throw "Failed to auth! Code: " + ress.status;
     }
     const res = await ress.json();
@@ -168,7 +168,7 @@ export async function validateToken(
         accessToken: acToken,
       }),
     });
-    if (!(res.status >= 200 && res.status < 300)) {
+    if (!res.ok) {
       throw "Failed to auth! Code: " + res.status;
     }
     return true;
