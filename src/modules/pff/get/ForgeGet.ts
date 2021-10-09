@@ -181,12 +181,12 @@ export async function getForgeInstaller(
     );
     // No validating
     try {
-      const pt = Promise.any([
+      const pt = await Promise.any([
         isWebFileExist(pt1),
         isWebFileExist(pt2),
         isWebFileExist(pt3),
       ]);
-      if (typeof pt === "string") {
+      if (pt) {
         return (
           (await wrappedDownloadFile(new DownloadMeta(pt, dest, ""))) === 1
         );
