@@ -611,14 +611,11 @@ async function startBoot(
   if (account.type === AccountType.ALICORN) {
     try {
       const skin = await skinTypeFor(account);
-      if (skin !== "NONE") {
-        await initLocalYggdrasilServer(account, skin);
-        useAj = true;
-        ajHost = ROOT_YG_URL; // Use local yggdrasil
-        console.log("Successfully set skin!");
-      } else {
-        console.log("No skin detected, will use default...");
-      }
+
+      await initLocalYggdrasilServer(account, skin);
+      useAj = true;
+      ajHost = ROOT_YG_URL; // Use local yggdrasil
+      console.log("Successfully set skin!");
     } catch (e) {
       console.log("Skin setup failed!");
       console.log(e);

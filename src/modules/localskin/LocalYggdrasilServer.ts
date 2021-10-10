@@ -2,7 +2,7 @@ import { copyFile, createReadStream, remove } from "fs-extra";
 import { createServer, Server } from "http";
 import { toBase64 } from "js-base64";
 import path from "path";
-import { LocalAccount } from "../auth/LocalAccount";
+import { buildOfflinePlayerUUID, LocalAccount } from "../auth/LocalAccount";
 import { basicHash } from "../commons/BasicHash";
 import { isFileExist } from "../commons/FileUtil";
 import { getActualDataPath } from "../config/DataSupport";
@@ -15,46 +15,57 @@ This server only allows single user (most player only start one instance!)
 let SERVER: Server | null = null;
 
 const YG_PORT = 16377;
+const MATCH_USERNAME_REGEX = /(?<=username=).+?(?=&)/i;
+const MATCH_UUID_REGEX = /(?<=\/)[0-9A-Fa-f-]+/i;
 export const ROOT_YG_URL = "http://localhost:" + YG_PORT;
 export function initLocalYggdrasilServer(
   account: LocalAccount,
-  model: "DEFAULT" | "SLIM"
+  model: "DEFAULT" | "SLIM" | "NONE"
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     void (async () => {
       try {
-        const mx = model === "DEFAULT" ? "default" : "slim";
-        let fName = getActualDataPath(
-          path.join(
-            "skins",
-            model.slice(0, 1) + "-" + basicHash(account.lastUsedUUID)
-          )
-        ); // Use uuid to find skin
         let capeEnabled = true;
         let skinEnabled = true;
-        let capeName = getActualDataPath(
-          path.join(
-            "skins",
-            model.slice(0, 1) + "-CAPE-" + basicHash(account.lastUsedUUID)
-          )
-        );
-        if (!(await isFileExist(fName))) {
+        let fName = "";
+        let capeName = "";
+        let mx = "NONE";
+        if (model !== "NONE") {
+          mx = model === "DEFAULT" ? "default" : "slim";
           fName = getActualDataPath(
-            path.join("skins", model.slice(0, 1) + "-" + "DEF")
+            path.join(
+              "skins",
+              model.slice(0, 1) + "-" + basicHash(account.lastUsedUUID)
+            )
+          ); // Use uuid to find skin
+
+          capeName = getActualDataPath(
+            path.join(
+              "skins",
+              model.slice(0, 1) + "-CAPE-" + basicHash(account.lastUsedUUID)
+            )
           );
           if (!(await isFileExist(fName))) {
-            console.log("Skin not found, disabled skin: " + fName);
-            skinEnabled = false;
+            fName = getActualDataPath(
+              path.join("skins", model.slice(0, 1) + "-" + "DEF")
+            );
+            if (!(await isFileExist(fName))) {
+              console.log("Skin not found, disabled skin: " + fName);
+              skinEnabled = false;
+            }
           }
-        }
-        if (!(await isFileExist(capeName))) {
-          capeName = getActualDataPath(
-            path.join("skins", model.slice(0, 1) + "-CAPE-" + "DEF")
-          );
           if (!(await isFileExist(capeName))) {
-            console.log("Cape not found, disabled cape: " + capeName);
-            capeEnabled = false;
+            capeName = getActualDataPath(
+              path.join("skins", model.slice(0, 1) + "-CAPE-" + "DEF")
+            );
+            if (!(await isFileExist(capeName))) {
+              console.log("Cape not found, disabled cape: " + capeName);
+              capeEnabled = false;
+            }
           }
+        } else {
+          capeEnabled = false;
+          skinEnabled = false;
         }
 
         const SKIN_HASH = skinEnabled ? await getHash(fName) : "";
@@ -99,6 +110,7 @@ export function initLocalYggdrasilServer(
           SERVER = null;
         }
         SERVER = createServer((req, res) => {
+          const NAME_MAP_UUID = new Map<string, string>();
           if (!req.url) {
             res.writeHead(400, "Bad Request").end();
             return;
@@ -162,7 +174,34 @@ export function initLocalYggdrasilServer(
               .toLowerCase()
               .startsWith("/sessionserver/session/minecraft/profile")
           ) {
-            const outcome = JSON.stringify(CHAR_INFO);
+            let uname = "";
+            let uid = "";
+            if (req.url) {
+              const unameResult = req.url.match(MATCH_USERNAME_REGEX);
+              if (unameResult) {
+                uname = unameResult[0] || "";
+              }
+              const uidResult = req.url.match(MATCH_UUID_REGEX);
+              if (uidResult) {
+                uid = uidResult[0] || "";
+              }
+            }
+            if (uname) {
+              NAME_MAP_UUID.set(
+                buildOfflinePlayerUUID(uname).toLowerCase(),
+                uname
+              );
+            }
+            if (uid) {
+              if (NAME_MAP_UUID.has(uid.toLowerCase())) {
+                uname = NAME_MAP_UUID.get(uid.toLowerCase()) || "";
+              }
+            }
+
+            const outcome =
+              uname.toLowerCase() !== account.lastUsedUsername.toLowerCase()
+                ? buildCharInfo(uname)
+                : JSON.stringify(CHAR_INFO);
             res.writeHead(200, "OK", {
               "Content-Type": "application/json; charset=utf-8",
             });
@@ -170,7 +209,13 @@ export function initLocalYggdrasilServer(
             return;
           }
           if (req.url.toLowerCase() === "/api/profiles/minecraft") {
-            const outcome = JSON.stringify([CHAR_INFO]);
+            const outcome = JSON.stringify(
+              [CHAR_INFO].concat(
+                Array.from(NAME_MAP_UUID.values()).map((n) => {
+                  return JSON.parse(buildCharInfo(n));
+                })
+              )
+            );
             res.writeHead(200, "OK", {
               "Content-Type": "application/json; charset=utf-8",
             });
@@ -283,4 +328,11 @@ export async function removeSkin(
     );
     await Promise.allSettled([remove(f1), remove(f2)]);
   } catch {}
+}
+
+function buildCharInfo(name: string): string {
+  return JSON.stringify({
+    id: buildOfflinePlayerUUID(name),
+    name: name,
+  });
 }

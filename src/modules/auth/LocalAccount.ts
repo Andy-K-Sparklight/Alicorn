@@ -48,6 +48,6 @@ function fakeToken(): string {
   return basicHash(Math.random()).slice(0, 32);
 }
 
-function buildOfflinePlayerUUID(p: string): string {
+export function buildOfflinePlayerUUID(p: string): string {
   return v3(OFFLINE_PLAYER_PREFIX + p, AL_UUID).replaceAll("-", "");
 }
