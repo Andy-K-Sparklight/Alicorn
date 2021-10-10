@@ -164,19 +164,17 @@ export function getCurrentLocale(): string {
 // {Config:key.key} returns the config
 function applyEnvironmentVars(strIn: string): string {
   let primary = strIn
-    .replace(/{Date}/g, new Date().toLocaleDateString())
-    .replace(/{UserName}/g, getString("user.name") || os.userInfo().username)
-    .replace(/{Home}/g, os.homedir())
-    .replace(/{AlicornHome}/g, path.join(os.homedir(), "alicorn"))
-    .replace(/{Platform}/g, os.platform());
+    .replaceAll("{Date}", new Date().toLocaleDateString())
+    .replaceAll("{UserName}", getString("user.name") || os.userInfo().username)
+    .replaceAll("{Home}", os.homedir())
+    .replaceAll("{AlicornHome}", path.join(os.homedir(), "alicorn"))
+    .replaceAll("{Platform}", os.platform());
 
   const extractRegex = /(?<={Config:).*?(?=})/g;
   const allConfig = primary.match(extractRegex);
   if (allConfig) {
     allConfig.forEach((cKey) => {
-      const tKey = cKey.replace(/\./g, "\\.");
-      const regex = new RegExp(`\\{Config\\:${tKey}\\}`, "g");
-      primary = primary.replace(regex, getString(cKey));
+      primary = primary.replaceAll(`{Config:${cKey}}`, getString(cKey));
     });
   }
   return primary;
