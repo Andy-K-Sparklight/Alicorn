@@ -337,19 +337,13 @@ void (async () => {
   }
   printScreen("Flushing theme colors...");
   flushColors();
-  let t: NodeJS.Timeout | undefined;
   setDefCursor();
   if (getBoolean("features.cursor")) {
     window.addEventListener("mousedown", () => {
-      if (t) {
-        clearTimeout(t);
-      }
       setActCursor();
     });
     window.addEventListener("mouseup", () => {
-      t = setTimeout(() => {
-        setDefCursor();
-      }, 10);
+      setDefCursor();
     });
   }
   printScreen("Initializing command listener...");
