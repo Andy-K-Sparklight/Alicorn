@@ -45,7 +45,7 @@ const GLOBAL_STYLES: React.CSSProperties = {
 };
 
 const WIN_FONT_FAMILY =
-  'Consolas, "Microsoft YaHei UI", "Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
+  '"UbuntuMono", "Microsoft YaHei UI", "Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
 const GNU_FONT_FAMILY =
   '"UbuntuMono", "Open Sans", "Roboto Medium", "Fira Code", Monaco, Consolas, "Courier New", Courier, monospace';
 const FONT_FAMILY =
