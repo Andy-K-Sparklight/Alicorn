@@ -222,22 +222,18 @@ export function App(): JSX.Element {
         }
         if (showCommand) {
           if (e.key === "Delete") {
-            if (showCommand) {
-              if (enteredCommand === "/") {
-                setShowCommand(false);
-                window.sessionStorage.removeItem("isCommand");
-              } else {
-                setEnteredCommand(enteredCommand.slice(0, -1));
-              }
+            if (enteredCommand === "/") {
+              setShowCommand(false);
+              window.sessionStorage.removeItem("isCommand");
+            } else {
+              setEnteredCommand(enteredCommand.slice(0, -1));
             }
             return;
           }
           if (e.key === "Enter") {
-            if (showCommand) {
-              window.dispatchEvent(
-                new CustomEvent("AlicornCommand", { detail: enteredCommand })
-              );
-            }
+            window.dispatchEvent(
+              new CustomEvent("AlicornCommand", { detail: enteredCommand })
+            );
             setEnteredCommand("/");
             setShowCommand(false);
             window.sessionStorage.removeItem("isCommand");
