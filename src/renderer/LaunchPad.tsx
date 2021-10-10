@@ -230,7 +230,6 @@ function SingleCoreDisplay(props: {
               </Tooltip>
               <Tooltip title={tr("CoreInfo.Destroy")}>
                 <IconButton
-                  disabled={props.loading}
                   color={"inherit"}
                   className={classes.operateButton}
                   onClick={(e) => {
@@ -244,7 +243,6 @@ function SingleCoreDisplay(props: {
               </Tooltip>
               <Tooltip title={tr("CoreInfo.ClearUse")}>
                 <IconButton
-                  disabled={props.loading}
                   color={"inherit"}
                   className={classes.operateButton}
                   onClick={(e) => {
