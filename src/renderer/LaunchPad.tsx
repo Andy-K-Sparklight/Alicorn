@@ -183,6 +183,9 @@ function SingleCoreDisplay(props: {
       <Card
         className={classes.card}
         onClick={() => {
+          if (props.profile.corrupted) {
+            return;
+          }
           markUsed(hash);
           jumpTo(
             "/ReadyToLaunch/" +
