@@ -39,12 +39,19 @@ import {
   generateDefaultModLoader,
   OverrideFile,
 } from "./CommonModpackModel";
+import { mmc2common, MMCModpackMeta } from "./MMCSupport";
 export const MANIFEST_FILE = "manifest.json";
+export const MMC_PACK = "mmc-pack.json";
 export const PACK_META = "mcbbs.packmeta";
 async function parseModpack(
   container: MinecraftContainer,
   source: string
-): Promise<Pair<"CF" | "CM", ModpackModel | CommonModpackModel | null>> {
+): Promise<
+  Pair<
+    "CF" | "CM" | "MMC",
+    ModpackModel | CommonModpackModel | MMCModpackMeta | null
+  >
+> {
   const sourceHash = basicHash(path.basename(source));
   const baseDir = container.getTempFileStorePath(path.join(sourceHash));
   try {
@@ -55,6 +62,7 @@ async function parseModpack(
   }
   const mf = path.join(baseDir, MANIFEST_FILE);
   const mp = path.join(baseDir, PACK_META);
+  const mmc = path.join(baseDir, MMC_PACK);
   let f;
   let type;
   if (await isFileExist(mp)) {
@@ -63,6 +71,9 @@ async function parseModpack(
   } else if (await isFileExist(mf)) {
     f = await readJSON(mf);
     type = "CF";
+  } else if (await isFileExist(mmc)) {
+    f = await readJSON(mmc);
+    type = "MMC";
   } else {
     throw "Unsupported modpack!";
   }
@@ -73,6 +84,9 @@ async function parseModpack(
     }
     if (type === "CF") {
       return new Pair("CF", transformManifest5(f, baseDir));
+    }
+    if (type === "MMC") {
+      return new Pair("MMC", f as MMCModpackMeta);
     }
     throw "Unsupported manifest version: " + safeGet(f, ["manifestVersion"]);
   } catch (e) {
@@ -269,6 +283,23 @@ export async function wrappedInstallModpack(
         await removeTempFiles(container, source);
       }
       break;
+
+    case "MMC": {
+      model = model as MMCModpackMeta;
+      const asCommon = mmc2common(model);
+      await deployAllGameProfiles(asCommon, container);
+      addDoing(tr("ContainerManager.DeployingModLoader"));
+      await deployAllModLoaders(asCommon, container);
+      addDoing(tr("ContainerManager.DeployingDeltas"));
+      const overrideSource = path.join(
+        container.getTempFileStorePath(basicHash(path.basename(source))),
+        asCommon.overrideSourceDir
+      );
+      await deployOverrides(overrideSource, container.rootDir);
+      addDoing(tr("ContainerManager.CleaningUp"));
+      await removeTempFiles(container, source);
+      break;
+    }
     case "CF":
     default:
       model = model as ModpackModel;
