@@ -46,9 +46,9 @@ export function YggdrasilAccountManager(): JSX.Element {
   const mountedBit = useRef(true);
   const accountsLoaded = useRef(false);
   const [accounts, setAccounts] = useState<Set<Account>>(new Set<Account>());
-  let { adding, server } = useParams<{ adding: string; server: string }>();
-  server = decodeURIComponent(server);
-  adding = decodeURIComponent(adding);
+  let { adding, server } = useParams<{ adding?: string; server?: string }>();
+  server = server ? decodeURIComponent(server) : undefined;
+  adding = adding ? decodeURIComponent(adding) : undefined;
   const [isAdding, setAdding] = useState(String(adding) === "1");
   useEffect(() => {
     mountedBit.current = true;
@@ -270,6 +270,7 @@ export function SingleAccountDisplay(props: {
           />
         </CardContent>
       </Card>
+      <br />
     </Box>
   );
 }
@@ -303,7 +304,15 @@ function YggdrasilForm(props: {
   const [hasError, setError] = useState(false);
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-      <Dialog open={props.open} onClose={props.onClose}>
+      <Dialog
+        open={props.open}
+        onClose={() => {
+          setError(false);
+          setPwd("");
+          isRunningUpdate(false);
+          props.onClose();
+        }}
+      >
         <DialogTitle>{tr("AccountManager.EnterPassword")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
