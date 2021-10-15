@@ -343,7 +343,7 @@ export function App(): JSX.Element {
               className={classes.floatMore}
               size={"medium"}
               onClick={() => {
-                void shell.openExternal("https://al.xuogroup.top/faq/");
+                void shell.openExternal("https://almc.pages.dev/");
               }}
             >
               <Help className={classes.buttonText} />

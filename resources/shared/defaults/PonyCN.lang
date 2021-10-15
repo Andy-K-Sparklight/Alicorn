@@ -704,7 +704,7 @@ Alicorn 启动器是自由软件，复制、修改和重新分发等行为应遵
 
 # VersionView.Credit
 
-@HTMLAlicorn 的创建离不开超过 505 个 NPM 可重用软件包，其中包括 Material UI、React、Electron 这些框架软件包，got、crypto-js、ajv 这些效用软件包，Webpack、TypeScript 这些构建软件包，以及许多许多被大量依赖的基础软件包。\nAlicorn 还要感谢包括 VSCodium 和 Vim 在内的开发工具，因为有它们，Alicorn 的开发效率成倍地提升。\n\n您是否想支持 Alicorn？或者只是想了解更多内容？欢迎访问 <a href="javascript:ashow('https://al.xuogroup.top')">Alicorn Launcher 官方网站</a>
+@HTMLAlicorn 的创建离不开超过 505 个 NPM 可重用软件包，其中包括 Material UI、React、Electron 这些框架软件包，got、crypto-js、ajv 这些效用软件包，Webpack、TypeScript 这些构建软件包，以及许多许多被大量依赖的基础软件包。\nAlicorn 还要感谢包括 VSCodium 和 Vim 在内的开发工具，因为有它们，Alicorn 的开发效率成倍地提升。\n\n您是否想支持 Alicorn？或者只是想了解更多内容？欢迎访问 <a href="javascript:ashow('https://alc.pages.dev')">Alicorn Launcher 官方网站</a>
 
 # VersionView.FreeSoftwareClaim
 
@@ -2234,7 +2234,7 @@ Java 平台相关设置
 
 # Tutor.12.Content
 
-@HTML本教程的内容到此就结束了，这只是对我的一个非常简略的介绍。你可以在使用过程中逐渐了解我～\n\n接下来你可以选择<b>设置一个帐户来进行第三方验证</b>，或者<b>设置 ASC 缓存位置</b>来启用 ASC 容器这一超酷的功能，亦或是<b>登录 Mojang 帐户、第三方验证</b>，当然还可以马上<b>开始一次游戏</b>！\n\n（题外话：Alicorn 的作者 —— Sparklight 是只可爱的坎特拉女孩哦～）\n\n快捷栏按钮将在你<b>单击右上角的按钮</b>后全部解锁。\n\n欢迎访问 <a href="javascript:ashow('https://al.xuogroup.top')">Alicorn Launcher 官方网站</a>～
+@HTML本教程的内容到此就结束了，这只是对我的一个非常简略的介绍。你可以在使用过程中逐渐了解我～\n\n接下来你可以选择<b>设置一个帐户来进行第三方验证</b>，或者<b>设置 ASC 缓存位置</b>来启用 ASC 容器这一超酷的功能，亦或是<b>登录 Mojang 帐户、第三方验证</b>，当然还可以马上<b>开始一次游戏</b>！\n\n（题外话：Alicorn 的作者 —— Sparklight 是只可爱的坎特拉女孩哦～）\n\n快捷栏按钮将在你<b>单击右上角的按钮</b>后全部解锁。\n\n欢迎访问 <a href="javascript:ashow('https://alc.pages.dev')">Alicorn Launcher 官方网站</a>～
 
 # Tutor.12.Setting
 
@@ -2366,7 +2366,7 @@ End
 
 # UtilitiesIndex.Description
 
-@HTML欢迎来到 Alicorn 工具库！这里有你想要的工具吗？\nAlicorn 可以很方便地与很多工具集成，如果你有自己的工具并且想要接入 Alicorn，欢迎<a href="javascript:ashow('https://al.xuogroup.top/contact/')">联系我们</a>！\n单击来进入一个或多个工具。
+@HTML欢迎来到 Alicorn 工具库！这里有你想要的吗？没有？那也可以要求我们添加哦～
 
 # UtilitiesIndex.Item
 
