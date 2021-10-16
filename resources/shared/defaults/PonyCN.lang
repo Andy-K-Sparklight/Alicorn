@@ -78,6 +78,14 @@ Pff 软件安装器
 
 实用工具
 
+# System.DnDProcessing
+
+处理这些文件中……请稍候，我将尽快完成。
+
+# System.DnDOK
+
+我已经帮你处理好了刚刚递给我的文件哦～
+
 # System.WakeUp
 
 嗨！你叫我吗？
@@ -1096,11 +1104,7 @@ Minecraft 版本号
 
 # JavaSelector.CustomAdd
 
-让我选择一个 Java 运行时
-
-# JavaSelector.SelectJavaTitle
-
-Java 运行时
+让我手动定位一个 Java 运行时
 
 # JavaSelector.SelectJava
 

@@ -118,10 +118,6 @@ export function JavaSelector(): JSX.Element {
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box className={classes.root}>
-        <Typography color={"primary"} className={classes.title} gutterBottom>
-          {tr("JavaSelector.SelectJavaTitle")}
-        </Typography>
-
         <FormControl variant={"outlined"}>
           <InputLabel id={"Select-JRE"} className={classes.label}>
             {tr("JavaSelector.SelectJava")}

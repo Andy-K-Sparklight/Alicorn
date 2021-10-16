@@ -47,7 +47,9 @@ async function openServer(
 ): Promise<void> {
   await invokeAlicorn(
     "JumpTo",
-    `/ReadyToLaunch/${container}/${id}/${serverAddress}`,
+    `/ReadyToLaunch/${encodeURIComponent(container)}/${encodeURIComponent(
+      id
+    )}/${encodeURIComponent(serverAddress)}`,
     "ReadyToLaunch"
   );
 }

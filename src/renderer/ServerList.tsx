@@ -253,9 +253,9 @@ export function SingleServerDisplay(props: {
               }}
               onClick={() => {
                 jumpTo(
-                  `/ReadyToLaunch/${getLastUsedCore(props.address)}/${
-                    props.address
-                  }`
+                  `/ReadyToLaunch/${encodeURIComponent(
+                    getLastUsedCore(props.address)
+                  )}/${encodeURIComponent(props.address)}`
                 );
                 triggerSetPage("ReadyToLaunch");
               }}

@@ -189,10 +189,10 @@ function SingleCoreDisplay(props: {
           markUsed(hash);
           jumpTo(
             "/ReadyToLaunch/" +
-              props.profile.container +
+              encodeURIComponent(props.profile.container) +
               "/" +
-              props.profile.id +
-              (props.server ? "/" + props.server : "")
+              encodeURIComponent(props.profile.id) +
+              (props.server ? "/" + encodeURIComponent(props.server) : "")
           );
           triggerSetPage("ReadyToLaunch");
         }}
@@ -210,7 +210,11 @@ function SingleCoreDisplay(props: {
                     className={classes.operateButton}
                     onClick={(e) => {
                       jumpTo(
-                        `/PffFront/${props.profile.container}/${props.profile.baseVersion}/${props.profile.versionType}`
+                        `/PffFront/${encodeURIComponent(
+                          props.profile.container
+                        )}/${encodeURIComponent(
+                          props.profile.baseVersion
+                        )}/${encodeURIComponent(props.profile.versionType)}`
                       );
                       triggerSetPage("PffFront");
                       e.stopPropagation();

@@ -127,7 +127,9 @@ export function CutieConnet(): JSX.Element {
                     );
                     submitSucc(tr("Utilities.CutieConnect.AllDone"));
                     setTimeout(() => {
-                      jumpTo("/LaunchPad/" + d.ip + ":" + d.port);
+                      jumpTo(
+                        "/LaunchPad/" + encodeURIComponent(d.ip + ":" + d.port)
+                      );
                       triggerSetPage("LaunchPad");
                     }, 10000);
                   }, 5000);
@@ -421,7 +423,7 @@ function GameDisplay(props: {
         marginLeft: "4%",
       }}
       onClick={() => {
-        jumpTo("/LaunchPad/" + props.host);
+        jumpTo("/LaunchPad/" + encodeURIComponent(props.host));
         triggerSetPage("LaunchPad");
       }}
     >

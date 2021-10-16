@@ -51,6 +51,15 @@ export function YggdrasilAccountManager(): JSX.Element {
   adding = adding ? decodeURIComponent(adding) : undefined;
   const [isAdding, setAdding] = useState(String(adding) === "1");
   useEffect(() => {
+    const fun = (e: Event) => {
+      setAdding(true);
+    };
+    window.addEventListener("YggdrasilAccountInfoDropped", fun);
+    return () => {
+      window.removeEventListener("YggdrasilAccountInfoDropped", fun);
+    };
+  }, []);
+  useEffect(() => {
     mountedBit.current = true;
     if (!accountsLoaded.current) {
       accountsLoaded.current = true;
@@ -74,24 +83,7 @@ export function YggdrasilAccountManager(): JSX.Element {
   });
 
   return (
-    <Box
-      className={classes.para + " yggdrasil_droppable"}
-      onDrop={(e) => {
-        e.preventDefault();
-        const data = e.dataTransfer.getData("text/plain");
-        if (data.toString().includes("authlib-injector")) {
-          /* const server = data
-            .toString()
-            .split("authlib-injector:yggdrasil-server:")[1];
-          */
-          setAdding(true);
-        }
-      }}
-      onDragOver={(e) => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = "move";
-      }}
-    >
+    <Box className={classes.para + " yggdrasil_droppable"}>
       <Typography className={classes.smallText} color={"secondary"}>
         {tr("AccountManager.Note")}
       </Typography>

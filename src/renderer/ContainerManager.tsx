@@ -30,6 +30,7 @@ import { ipcRenderer, shell } from "electron";
 import fs from "fs-extra";
 import path from "path";
 import React, { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router";
 import { isFileExist } from "../modules/commons/FileUtil";
 import { scanCoresIn } from "../modules/container/ContainerScanner";
 import {
@@ -69,14 +70,16 @@ export function setContainerListDirty(): void {
 }
 
 export function ContainerManager(): JSX.Element {
+  let { modpack } = useParams<{ modpack?: string }>();
+  modpack = modpack ? decodeURIComponent(modpack) : undefined;
   const isEleMounted = useRef<boolean>();
   const [refreshTrigger, triggerRefresh] = useState(true);
   const [operating, setOpen] = useState(false);
-  const [opening, setCreating] = useState(false);
   const classes2 = usePadStyles();
   const [doing, setDoing] = useState(getDoing());
   const [failedOpen, setFailedOpen] = useState(false);
   const [reason, setReason] = useState("Untracked Error");
+  const [opening, setCreating] = useState(!!modpack);
   useEffect(() => {
     isEleMounted.current = true;
     const fun = () => {
@@ -110,6 +113,7 @@ export function ContainerManager(): JSX.Element {
         reason={reason}
       />
       <AddNewContainer
+        modpack={modpack}
         setOperate={(s) => {
           if (isEleMounted.current) {
             setOpen(s);
@@ -393,21 +397,34 @@ async function validateDir(n: string): Promise<boolean> {
   return (await fs.stat(n)).isDirectory();
 }
 
+function genContainerName(s: string): string {
+  const s2 = path.basename(s).split(".");
+  s2.pop();
+  const s3 = s2.join(".").replace(/^\S/, (s) => s.toUpperCase());
+  console.log(s3);
+  return s3 || "Container" + Math.floor(Math.random() * 10000);
+}
+
 function AddNewContainer(props: {
   open: boolean;
   closeFunc: () => unknown;
   setOperate: (s: boolean) => unknown;
   setFailed: (s: string) => unknown;
   refresh: () => unknown;
+  modpack?: string;
 }): JSX.Element {
-  const [selectedDir, setSelected] = useState("");
-  const [usedName, setName] = useState("");
+  const [selectedDir, setSelected] = useState(
+    props.modpack ? path.dirname(props.modpack) : ""
+  );
+  const [usedName, setName] = useState(
+    props.modpack ? genContainerName(props.modpack) : ""
+  );
   const [nameError, setNameError] = useState(false);
   const [dirError, setDirError] = useState(false);
   const [modpackError, setModpackError] = useState(false);
   const [createASC, setCreateASC] = useState(hasEdited("cx.shared-root"));
-  const [allowModpack, setAllowModpack] = useState(false);
-  const [modpackPath, setModpackPath] = useState("");
+  const [allowModpack, setAllowModpack] = useState(!!props.modpack);
+  const [modpackPath, setModpackPath] = useState(props.modpack || "");
   const classes = useInputStyles();
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
@@ -443,6 +460,7 @@ function AddNewContainer(props: {
             spellCheck={false}
             fullWidth
             variant={"outlined"}
+            value={usedName}
           />
           {/* Choose Dir */}
           <Box>

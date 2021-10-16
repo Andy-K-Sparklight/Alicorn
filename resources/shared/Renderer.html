@@ -1,41 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Alicorn</title>
-    <link rel="stylesheet" href="HardCodedStyles.css" type="text/css" />
-    <link rel="stylesheet" href="Fonts.css" type="text/css" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script>
-      document.body.onkeydown = (e) => {
-        if (e.key === " ") {
-          if (window.sessionStorage.getItem("isCommand") === "1") {
-            e.preventDefault();
-            window.dispatchEvent(new CustomEvent("HelpSpace"));
-          }
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Alicorn</title>
+  <link rel="stylesheet" href="HardCodedStyles.css" type="text/css" />
+  <link rel="stylesheet" href="Fonts.css" type="text/css" />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script>
+    document.body.onkeydown = (e) => {
+      if (e.key === " ") {
+        if (window.sessionStorage.getItem("isCommand") === "1") {
+          e.preventDefault();
+          window.dispatchEvent(new CustomEvent("HelpSpace"));
         }
-      };
-    </script>
-    <p
-      id="preboot_log"
-      style="font-family: 'UbuntuMono', 'Courier New', Courier, monospace"
-    ></p>
-    <script>
-      window.logToScreen = (msg) => {
-        let e = document.getElementById("preboot_log");
-        if (e) {
-          e.innerHTML = e.innerHTML + msg;
-        }
-      };
-      window.clearLogScreen = () => {
-        document.getElementById("preboot_log").style.display = "none";
-      };
-      window.showLogScreen = () => {
-        document.getElementById("preboot_log").style.display = "none";
-      };
-    </script>
-    <script src="Renderer.js"></script>
-  </body>
+      }
+    };
+  </script>
+  <p id="preboot_log" style="font-family: 'UbuntuMono', 'Courier New', Courier, monospace"></p>
+  <script>
+    window.logToScreen = (msg) => {
+      let e = document.getElementById("preboot_log");
+      if (e) {
+        e.innerHTML = e.innerHTML + msg;
+      }
+    };
+    window.clearLogScreen = () => {
+      document.getElementById("preboot_log").style.display = "none";
+    };
+    window.showLogScreen = () => {
+      document.getElementById("preboot_log").style.display = "none";
+    };
+  </script>
+  <script src="Renderer.js"></script>
+</body>
+
 </html>
