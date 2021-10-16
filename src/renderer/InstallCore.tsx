@@ -672,7 +672,11 @@ export function InstallCore(): JSX.Element {
                   );
                   if (!isNull(prof.baseVersion)) {
                     jumpTo(
-                      `/PffFront/${encodeURIComponent(selectedIrisContainer)}/${encodeURIComponent(prof.baseVersion)}/Fabric/iris-shaders/1`
+                      `/PffFront/${encodeURIComponent(
+                        selectedIrisContainer
+                      )}/${encodeURIComponent(
+                        prof.baseVersion
+                      )}/Fabric/iris-shaders/1`
                     );
                     triggerSetPage("PffFront");
                   }

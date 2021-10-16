@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Alicorn has crashed!</title>
     <style>
-        html {
-            font-family: "Microsoft YaHei UI Light", Tahoma, Verdana, sans-serif;
-            user-select: none;
-        }
+      html {
+        font-family: "Microsoft YaHei UI Light", Tahoma, Verdana, sans-serif;
+        user-select: none;
+      }
     </style>
-</head>
-<body style="background-color: #0078d7;color: white;margin-left: 8%">
-<p style="font-size: xxx-large">:(</p>
-<p>Alicorn has met a fatal error and cannot continue. Please try to restart the launcher.<br/>
-    Alicorn 遇到了一个致命问题，无法继续。请尝试重启启动器。
-</p>
-<p>Error message 错误信息：
-    <span id="err_name" style="font-family: 'Courier New','Microsoft YaHei UI Light', monospace"></span>
-</p>
-<script>
-    let data = window.location.hash.slice(1)
+  </head>
+  <body style="background-color: #0078d7; color: white; margin-left: 8%">
+    <p style="font-size: xxx-large">:(</p>
+    <p>
+      Alicorn has met a fatal error and cannot continue. Please try to restart
+      the launcher.<br />
+      Alicorn 遇到了一个致命问题，无法继续。请尝试重启启动器。
+    </p>
+    <p>
+      Error message 错误信息：
+      <span
+        id="err_name"
+        style="
+          font-family: 'Courier New', 'Microsoft YaHei UI Light', monospace;
+        "
+      ></span>
+    </p>
+    <script>
+      let data = window.location.hash.slice(1);
 
-    document.getElementById("err_name").innerHTML = decodeURI(atob(data))
-</script>
-</body>
+      document.getElementById("err_name").innerHTML = decodeURI(atob(data));
+    </script>
+  </body>
 </html>
