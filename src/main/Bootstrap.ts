@@ -15,6 +15,9 @@ import { getUserBrowser } from "./Browser";
 import { closeWS, initWS } from "./WSServer";
 
 console.log("Starting Alicorn!");
+try {
+  eval("require")("v8-compile-cache");
+} catch {}
 let mainWindow: BrowserWindow | null = null;
 
 let READY_LOCK = false;

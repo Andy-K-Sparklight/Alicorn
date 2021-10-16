@@ -198,6 +198,18 @@ function RendererBootstrap(): JSX.Element {
     </Box>
   );
 }
+console.log("Enabling V8 Compile cache.");
+try {
+  let vm = eval("require")("vm");
+  if (vm) {
+    eval("require")("v8-compile-cache");
+    console.log("V8 Compile Cache Enabled.");
+  } else {
+    console.log("V8 Compile Cache Not Supported.");
+  }
+} catch {
+  console.log("V8 Compile Cache Failed!");
+}
 printScreen("Log system enabled.");
 console.log(`Alicorn ${pkg.appVersion} Renderer Process`);
 console.log("❤ From Andy K Rarity Sparklight");

@@ -84,6 +84,7 @@
     "throttle-debounce": "^3.0.1",
     "toml": "^3.0.0",
     "uuid": "^8.3.2",
+    "v8-compile-cache": "^2.3.0",
     "ws": "^8.2.3"
   }
 }
