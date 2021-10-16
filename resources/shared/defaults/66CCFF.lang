@@ -1,0 +1,191 @@
+# _BaseOn
+
+PonyCN
+
+# Colors.Primary.Main
+
+7777f0
+
+# Colors.Primary.Light
+
+88aaff
+
+# Colors.Secondary.Main
+
+60c0f0
+
+# Colors.Secondary.Light
+
+f0ffff
+
+# Font
+
+@empty
+
+# System.DnDProcessing
+
+好哒！你的文件已经在处理啦～
+
+# System.DnDOK
+
+OK！搞定啦～
+
+# System.WakeUp
+
+嗨？
+
+# System.JumpPageWarn.Title
+
+要离开吗？
+
+# System.JumpPageWarn.Description
+
+在这时离开可能会导致数据丢失或者操作中断的哦！
+
+# System.JumpPageWarn.Yes
+
+嗯！
+
+# System.JumpPageWarn.No
+
+……算了
+
+# System.HasUpdate
+
+这里似乎有一个新版本……？
+
+# System.UpdateOK
+
+太好啦！更新成功！
+
+# System.UpdateFailed
+
+更新失败……不过文件还是好好的哦！
+
+# MainMenu.Help
+
+紧急求援
+
+# Operating.ClickToDebug
+
+需要帮助吗？可单击一下打开日志……
+
+# Operating.PleaseWait
+
+就快好啦～
+
+# Operating.Failed
+
+噢！真糟糕！
+
+# Operating.FailedInfo
+
+可恶，怎么会这样呢？\n引发问题的原因是：\n{Reason}
+
+# Operating.FailedSayings
+
+为什么会变成这样呢？为什么，为什么呢？
+
+唔？蛤？
+
+['{Platform}'==='win32'||'{Platform}'==='darwin']我都告诉过你，不要用专有软件啦……
+
+['{Platform}'==='win32'||'{Platform}'==='darwin']嗨，你知道吗？Alicorn 在 GNU/Linux 上工作得更出色唷！
+
+# Operating.PleaseWaitDetail
+
+请等我一下……马上马上就好……
+
+# CoreInfo.Destroy.Content
+
+@HTML摧毁 {Name} 会删除对应的档案，统计信息也会一并移除，<b>没办法撤销这个操作的</b>！\n还要继续吗？
+
+# ReadyToLaunch.NoJava
+
+没有设置 Java 运行时（JRE）！我可没法帮你启动的啦……
+
+# ReadyToLaunch.InvalidJava
+
+噢！糟糕！无法读取此 JRE 的信息，无法启动游戏。
+
+# ReadyToLaunch.Progress
+
+只差 {Pending} 个文件啦（并发：{Current}/{BufferMax}）
+
+# ReadyToLaunch.StartAuthTitle
+
+是你吗？
+
+# ReadyToLaunch.FailedToAuth
+
+验证帐户失败！不过，我会继续启动！
+
+# ReadyToLaunch.WarnError.Description
+
+Minecraft 实例（看上去）没有正常退出，你需要帮忙吗？
+
+# ReadyToLaunch.CodeDeactivated
+
+你退出了世界，因此我为你吊销了对应的代码～
+
+# ReadyToLaunch.WaitingText
+
+{UserName} 可爱～
+
+等下，你说什么啊？
+
+（这套数据还不够完整，所以也许我没有多少话可以选择）
+
+这些颜色里，其实没有一个是 66ccff，不过不影响主色调……
+
+嗨！哦，别急别急，马上就好啦！
+
+别急嘛，听我说两句……
+
+我的设计者告诉我要「很萌的那种」，可是我也不知道什么是「很萌的那种」……
+
+我可是第一个人类助理！（虽然也只是个数据体……）
+
+好像……有点小麻烦——哦不用，你坐着，我来……
+
+# ContainerManager.ModpackWarn
+
+@HTML我会自动为你安装这个整合包……但是请你<b style="color:red;">当心病毒或恶意软件</b>！
+
+# ContainerManager.AskRemoveDetail
+
+文件会为你保留哒～
+
+# ContainerManager.AskClearDetail
+
+摧毁 {ID} 将同时摧毁其中的全部数据，包括存档、Mod 和其它任何内容！我可不能恢复哦！\n{ID} 将永远失去（真的很久）！
+
+# AccountManager.Failed
+
+验证失败 - 是不是哪里有点问题？
+
+# CrashReportDisplay.Complain
+
+什么？怎么会这样？
+
+# Welcome.Suggest.Part1
+
+['{Config:interactive.i-have-a-crush-on-al}'=='false']今天是 {Date}，欢迎您使用 Alicorn Launcher，{UserName}！
+
+[new Date().getHours()>=18]晚上好，想听首歌吗？哦不，你不是认真的吧？
+
+[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]哈……可恶！我在休息！
+
+[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]熬夜对身体不好……而且我要睡觉了哦～
+
+我在，需要什么帮助？
+
+「很萌很萌」……到底怎样才算是很萌呢……？（歪头）
+
+['{Config:updator.use-update}'=='false']喂！怎么把自动更新关掉了呢？
+
+[(()=>{const hours=new Date().getHours();return hours>=18&&hours<=21;})()]这酒味道不错……你要不要来一杯？
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']来吧，跳支舞，不会的话，我来教你！
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']我其实是按照一位早期用户的要求而构建的……
