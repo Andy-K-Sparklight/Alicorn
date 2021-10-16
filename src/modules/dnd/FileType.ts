@@ -36,7 +36,11 @@ export async function justifyFileType(file: string): Promise<FileType> {
         if (f.name.startsWith("shaders/")) {
           return FileType.SHADER_PACK;
         }
-        if (f.name === "mods.toml" || f.name === "fabric.mod.json") {
+        if (
+          f.name === "META-INF/mods.toml" ||
+          f.name === "fabric.mod.json" ||
+          f.name === "mcmod.info"
+        ) {
           return FileType.MOD;
         }
         if (f.name === "Renderer.js") {
