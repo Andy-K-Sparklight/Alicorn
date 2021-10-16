@@ -45,7 +45,7 @@ const GLOBAL_STYLES: React.CSSProperties = {
 };
 
 const WIN_FONT_FAMILY =
-  'Consolas, "Microsoft YaHei UI", "Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
+  '"UbuntuMono", "Microsoft YaHei UI", "Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
 const GNU_FONT_FAMILY =
   '"UbuntuMono", "Open Sans", "Roboto Medium", "Fira Code", Monaco, Consolas, "Courier New", Courier, monospace';
 const FONT_FAMILY =
@@ -337,19 +337,13 @@ void (async () => {
   }
   printScreen("Flushing theme colors...");
   flushColors();
-  let t: NodeJS.Timeout | undefined;
   setDefCursor();
   if (getBoolean("features.cursor")) {
     window.addEventListener("mousedown", () => {
-      if (t) {
-        clearTimeout(t);
-      }
       setActCursor();
     });
     window.addEventListener("mouseup", () => {
-      t = setTimeout(() => {
-        setDefCursor();
-      }, 10);
+      setDefCursor();
     });
   }
   printScreen("Initializing command listener...");

@@ -46,10 +46,19 @@ export function YggdrasilAccountManager(): JSX.Element {
   const mountedBit = useRef(true);
   const accountsLoaded = useRef(false);
   const [accounts, setAccounts] = useState<Set<Account>>(new Set<Account>());
-  let { adding, server } = useParams<{ adding: string; server: string }>();
-  server = decodeURIComponent(server);
-  adding = decodeURIComponent(adding);
+  let { adding, server } = useParams<{ adding?: string; server?: string }>();
+  server = server ? decodeURIComponent(server) : undefined;
+  adding = adding ? decodeURIComponent(adding) : undefined;
   const [isAdding, setAdding] = useState(String(adding) === "1");
+  useEffect(() => {
+    const fun = (e: Event) => {
+      setAdding(true);
+    };
+    window.addEventListener("YggdrasilAccountInfoDropped", fun);
+    return () => {
+      window.removeEventListener("YggdrasilAccountInfoDropped", fun);
+    };
+  }, []);
   useEffect(() => {
     mountedBit.current = true;
     if (!accountsLoaded.current) {
@@ -74,24 +83,7 @@ export function YggdrasilAccountManager(): JSX.Element {
   });
 
   return (
-    <Box
-      className={classes.para + " yggdrasil_droppable"}
-      onDrop={(e) => {
-        e.preventDefault();
-        const data = e.dataTransfer.getData("text/plain");
-        if (data.toString().includes("authlib-injector")) {
-          /* const server = data
-            .toString()
-            .split("authlib-injector:yggdrasil-server:")[1];
-          */
-          setAdding(true);
-        }
-      }}
-      onDragOver={(e) => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = "move";
-      }}
-    >
+    <Box className={classes.para + " yggdrasil_droppable"}>
       <Typography className={classes.smallText} color={"secondary"}>
         {tr("AccountManager.Note")}
       </Typography>
@@ -270,6 +262,7 @@ export function SingleAccountDisplay(props: {
           />
         </CardContent>
       </Card>
+      <br />
     </Box>
   );
 }
@@ -303,7 +296,15 @@ function YggdrasilForm(props: {
   const [hasError, setError] = useState(false);
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-      <Dialog open={props.open} onClose={props.onClose}>
+      <Dialog
+        open={props.open}
+        onClose={() => {
+          setError(false);
+          setPwd("");
+          isRunningUpdate(false);
+          props.onClose();
+        }}
+      >
         <DialogTitle>{tr("AccountManager.EnterPassword")}</DialogTitle>
         <DialogContent>
           <DialogContentText>

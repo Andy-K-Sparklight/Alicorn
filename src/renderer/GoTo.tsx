@@ -3,7 +3,6 @@ import { throttle } from "throttle-debounce";
 import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
 import { loadMirror } from "../modules/download/Mirror";
 import { setContainerListDirty } from "./ContainerManager";
-import { setDirty } from "./LaunchPad";
 
 const PAGES_HISTORY: string[] = [];
 const TITLE_HISTORY: string[] = [];
@@ -26,7 +25,6 @@ export const jumpTo = throttle(500, (target: string, keepHistory = true) => {
     fadeOut(e);
     setTimeout(() => {
       window.scrollTo({ top: 0 });
-      ifLeavingLaunchPadThenSetDirty();
       ifLeavingContainerManagerThenSetContainerListDirty();
       ifLeavingConfigThenReload();
       window.location.hash = target;
@@ -36,16 +34,11 @@ export const jumpTo = throttle(500, (target: string, keepHistory = true) => {
     }, ANIMATION_TIME);
   } else {
     window.scrollTo({ top: 0 });
-    ifLeavingLaunchPadThenSetDirty();
     ifLeavingContainerManagerThenSetContainerListDirty();
     ifLeavingConfigThenReload();
     window.location.hash = target;
   }
 });
-
-function ifLeavingLaunchPadThenSetDirty(): void {
-  setDirty();
-}
 
 function ifLeavingContainerManagerThenSetContainerListDirty(): void {
   setContainerListDirty();

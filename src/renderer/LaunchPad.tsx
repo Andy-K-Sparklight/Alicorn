@@ -27,8 +27,6 @@ import { YNDialog2 } from "./OperatingHint";
 import { useCardStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
 
-let cachedAllCores: SimplifiedCoreInfo[] = [];
-let coresCacheBit = false;
 interface SimplifiedCoreInfo {
   location: string;
   container: string;
@@ -53,7 +51,6 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
   const mountedBit = useRef<boolean>(false);
   const [cores, setCores] = useState<SimplifiedCoreInfo[]>([]);
   const [isLoading, setLoading] = useState(false);
-  const [refreshBit, setRefresh] = useState(true);
   useEffect(() => {
     mountedBit.current = true;
     return () => {
@@ -61,11 +58,12 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
     };
   });
   useEffect(() => {
-    if (!coresCacheBit && !isLoading) {
+    const fun = () => {
       if (mountedBit.current) {
         setLoading(true);
       }
-      cachedAllCores = [];
+      setCores([]);
+      const cachedAllCores = [];
 
       void (async () => {
         let counter = 0;
@@ -92,7 +90,8 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
                 container: c.id,
               });
             } finally {
-              if (++counter >= 5) {
+              counter++;
+              if (counter >= 5) {
                 counter = 0;
                 if (mountedBit.current) {
                   setCores(cachedAllCores);
@@ -112,10 +111,14 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
           setCores(cachedAllCores);
           setLoading(false);
         }
-        coresCacheBit = true;
       })();
-    }
-  });
+    };
+    fun();
+    window.addEventListener("ReloadCores", fun);
+    return () => {
+      window.removeEventListener("ReloadCores", fun);
+    };
+  }, []);
 
   return (
     <Box>
@@ -124,9 +127,8 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
           <IconButton
             color={"inherit"}
             onClick={() => {
-              setDirty();
               if (mountedBit.current) {
-                setRefresh(!refreshBit);
+                window.dispatchEvent(new CustomEvent("ReloadCores"));
               }
             }}
           >
@@ -154,9 +156,9 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
             key={c.location}
             server={props.server}
             refresh={() => {
-              setDirty();
-              setRefresh(!refreshBit);
+              window.dispatchEvent(new CustomEvent("ReloadCores"));
             }}
+            loading={isLoading}
             profile={c}
           />
         );
@@ -168,6 +170,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
 function SingleCoreDisplay(props: {
   profile: SimplifiedCoreInfo;
   server?: string;
+  loading: boolean;
   refresh: () => unknown;
 }): JSX.Element {
   const classes = useCardStyles();
@@ -180,13 +183,16 @@ function SingleCoreDisplay(props: {
       <Card
         className={classes.card}
         onClick={() => {
+          if (props.profile.corrupted) {
+            return;
+          }
           markUsed(hash);
           jumpTo(
             "/ReadyToLaunch/" +
-              props.profile.container +
+              encodeURIComponent(props.profile.container) +
               "/" +
-              props.profile.id +
-              (props.server ? "/" + props.server : "")
+              encodeURIComponent(props.profile.id) +
+              (props.server ? "/" + encodeURIComponent(props.server) : "")
           );
           triggerSetPage("ReadyToLaunch");
         }}
@@ -204,7 +210,11 @@ function SingleCoreDisplay(props: {
                     className={classes.operateButton}
                     onClick={(e) => {
                       jumpTo(
-                        `/PffFront/${props.profile.container}/${props.profile.baseVersion}/${props.profile.versionType}`
+                        `/PffFront/${encodeURIComponent(
+                          props.profile.container
+                        )}/${encodeURIComponent(
+                          props.profile.baseVersion
+                        )}/${encodeURIComponent(props.profile.versionType)}`
                       );
                       triggerSetPage("PffFront");
                       e.stopPropagation();
@@ -296,9 +306,11 @@ function SingleCoreDisplay(props: {
           open={warningOpen}
           onAccept={async () => {
             if (toDestroy) {
-              try{
+              try {
                 await remove(
-                    getContainer(props.profile.container).getVersionRoot(toDestroy)
+                  getContainer(props.profile.container).getVersionRoot(
+                    toDestroy
+                  )
                 );
               } finally {
                 markUsed(hash, 0);
@@ -367,8 +379,4 @@ function CorruptedCoreWarning(): JSX.Element {
       </Typography>
     </Box>
   );
-}
-
-export function setDirty(): void {
-  coresCacheBit = false;
 }

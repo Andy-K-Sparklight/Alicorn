@@ -117,6 +117,7 @@ async function whenAppReady() {
     },
     frame: false,
     show: false,
+    backgroundColor: "#fff",
   });
   mainWindow.setMenu(null);
   console.log("Loading resources...");

@@ -138,6 +138,7 @@ export function registerBackgroundListeners(): void {
           width: Math.floor(width * 0.6),
           height: Math.floor(height * 0.6),
           show: false,
+          backgroundColor: "#fff",
         });
       if (proxy.trim().length > 0) {
         await loginWindow.webContents.session.setProxy({
@@ -201,6 +202,7 @@ export function registerBackgroundListeners(): void {
       width: 960,
       height: 540,
       show: false,
+      backgroundColor: "#fff",
     });
     if (proxy.trim().length > 0) {
       await logoutWindow.webContents.session.setProxy({

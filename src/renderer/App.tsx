@@ -41,6 +41,7 @@ import {
 } from "../modules/config/ConfigSupport";
 import { saveGDT, saveGDTSync } from "../modules/container/ContainerUtil";
 import { saveVF, saveVFSync } from "../modules/container/ValidateRecord";
+import { handleDnD } from "../modules/dnd/DnDCenter";
 import {
   saveResolveLock,
   saveResolveLockSync,
@@ -222,22 +223,18 @@ export function App(): JSX.Element {
         }
         if (showCommand) {
           if (e.key === "Delete") {
-            if (showCommand) {
-              if (enteredCommand === "/") {
-                setShowCommand(false);
-                window.sessionStorage.removeItem("isCommand");
-              } else {
-                setEnteredCommand(enteredCommand.slice(0, -1));
-              }
+            if (enteredCommand === "/") {
+              setShowCommand(false);
+              window.sessionStorage.removeItem("isCommand");
+            } else {
+              setEnteredCommand(enteredCommand.slice(0, -1));
             }
             return;
           }
           if (e.key === "Enter") {
-            if (showCommand) {
-              window.dispatchEvent(
-                new CustomEvent("AlicornCommand", { detail: enteredCommand })
-              );
-            }
+            window.dispatchEvent(
+              new CustomEvent("AlicornCommand", { detail: enteredCommand })
+            );
             setEnteredCommand("/");
             setShowCommand(false);
             window.sessionStorage.removeItem("isCommand");
@@ -270,7 +267,7 @@ export function App(): JSX.Element {
             .toString()
             .split("authlib-injector:yggdrasil-server:")[1];
 
-          jumpTo("/YggdrasilAccountManager/1/" + server);
+          jumpTo("/YggdrasilAccountManager/1/" + encodeURIComponent(server));
           triggerSetPage("AccountManager");
 
           window.dispatchEvent(
@@ -278,11 +275,15 @@ export function App(): JSX.Element {
               detail: decodeURIComponent(server),
             })
           );
+          return;
         }
+        void handleDnD(e);
       }}
       onDragOver={(e) => {
         e.preventDefault();
-        e.dataTransfer.dropEffect = "move";
+      }}
+      onDragEnter={(e) => {
+        e.dataTransfer.dropEffect = "copy";
       }}
     >
       <AppBar>
@@ -317,7 +318,7 @@ export function App(): JSX.Element {
                 color={"inherit"}
                 className={classes.floatButton}
                 onClick={() => {
-                  jumpTo("/Tutor/" + getNextTutorName());
+                  jumpTo("/Tutor/" + encodeURIComponent(getNextTutorName()));
                   triggerSetPage("Tutor");
                 }}
               >
@@ -347,7 +348,7 @@ export function App(): JSX.Element {
               className={classes.floatMore}
               size={"medium"}
               onClick={() => {
-                void shell.openExternal("https://al.xuogroup.top/faq/");
+                void shell.openExternal("https://almc.pages.dev/");
               }}
             >
               <Help className={classes.buttonText} />
@@ -557,7 +558,10 @@ export function App(): JSX.Element {
           component={ReadyToLaunch}
         />
         <Route path={"/Version"} component={VersionView} />
-        <Route path={"/ContainerManager"} component={ContainerManager} />
+        <Route
+          path={"/ContainerManager/:modpack?"}
+          component={ContainerManager}
+        />
         <Route
           path={"/YggdrasilAccountManager/:adding?/:server?"}
           component={YggdrasilAccountManager}

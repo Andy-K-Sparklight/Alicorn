@@ -21,6 +21,7 @@ export async function openBrowser(
     height: Math.floor(height * 0.7),
     width: Math.floor(width * 0.7),
     title: "Talking to the princess...",
+    backgroundColor: "#fff",
   });
   if (proxy.trim().length > 0) {
     await USER_BROWSER.webContents.session.setProxy({

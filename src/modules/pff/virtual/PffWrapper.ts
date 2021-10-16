@@ -47,8 +47,8 @@ export async function fetchModByName(
         sx = c;
         break;
       }
-    } catch (e) {
-      console.log(e);
+    } catch /* (e) */ {
+      // console.log(e);
     }
   }
   if (!sx) {
@@ -67,8 +67,8 @@ export async function fetchModByName(
       }
       await c.resolveMod();
       trs.add(c);
-    } catch (e) {
-      console.log(e);
+    } catch /* (e) */ {
+      // console.log(e);
     }
   }
   // If the best doesn't support, we guess that we shouldn't make more compares, just find one asap!

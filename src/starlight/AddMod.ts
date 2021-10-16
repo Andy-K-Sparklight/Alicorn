@@ -97,9 +97,11 @@ function generateClicker(document: Document): void {
         showDialog("准备就绪，转到 Alicorn 按下安装按钮试试吧！", "right");
         await invokeAlicorn(
           "JumpTo",
-          `/PffFront/${ct}/${v}/${
+          `/PffFront/${encodeURIComponent(ct)}/${encodeURIComponent(
+            v
+          )}/${encodeURIComponent(
             window.sessionStorage.getItem("selectedLoader") || "Fabric"
-          }/${name}`,
+          )}/${encodeURIComponent(name)}`,
           "PffFront"
         );
       };

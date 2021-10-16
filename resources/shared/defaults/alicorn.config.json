@@ -21,7 +21,7 @@
   "user.name": "",
   "java.simple-search": false,
   "java.search-depth": 5,
-  "pff.page-size": 5,
+  "pff.page-size": 10,
   "pff.cache-root": "",
   "reset": false,
   "clean-storage": false,
