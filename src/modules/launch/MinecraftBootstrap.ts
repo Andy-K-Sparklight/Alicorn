@@ -1,6 +1,5 @@
 import { ChildProcess, exec, spawn } from "child_process";
 import EventEmitter from "events";
-import objectHash from "object-hash";
 import os from "os";
 import { PROCESS_END_GATE, PROCESS_LOG_GATE } from "../commons/Constants";
 import { MinecraftContainer } from "../container/MinecraftContainer";
@@ -66,7 +65,9 @@ export class RunningMinecraft {
       // this.logs.getSecondValue().push(strD);
       this.emitter?.emit(PROCESS_LOG_GATE, strD, true);
     });
-    const id = objectHash([this.executable, this.args, this.process]);
+    const id = (
+      this.process?.pid || Math.floor(Math.random() * 10000)
+    ).toString();
     POOL.set(id, this);
     REV_POOL.set(this, id);
     this.status = RunningStatus.RUNNING;
