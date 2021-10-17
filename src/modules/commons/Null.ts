@@ -1,13 +1,10 @@
-import objectHash from "object-hash";
-import { ArtifactMeta, AssetIndexArtifactMeta } from "../profile/Meta";
-
-// Be careful! Don't use any global variable here!
-export function registerNullObject(obj: unknown): void {
-  // @ts-ignore
-  global["NullObjects"] = global["NullObjects"] || new Set(); // This is the only way to assign a variable
-  // @ts-ignore
-  global["NullObjects"].add(objectHash({ o: obj }));
-}
+import {
+  ArtifactMeta,
+  AssetIndexArtifactMeta,
+  AssetMeta,
+  ClassifiersMeta,
+  LibraryMeta,
+} from "../profile/Meta";
 
 export function isNull(obj: unknown): boolean {
   try {
@@ -17,13 +14,23 @@ export function isNull(obj: unknown): boolean {
       obj === "" ||
       obj === "null" ||
       obj === "undefined" ||
-      (obj instanceof AssetIndexArtifactMeta && obj.id === "") ||
-      (obj instanceof ArtifactMeta && obj.path === "") ||
+      (obj instanceof AssetIndexArtifactMeta && !obj.id) ||
+      (obj instanceof ArtifactMeta && !obj.path) ||
+      (obj instanceof AssetMeta && !obj.hash) ||
+      (obj instanceof LibraryMeta &&
+        !obj.name &&
+        isNull(obj.artifact) &&
+        isNull(obj.classifiers)) ||
+      (obj instanceof ClassifiersMeta &&
+        isNull(obj.javadoc) &&
+        isNull(obj.nativesLinux) &&
+        isNull(obj.nativesMacOS) &&
+        isNull(obj.nativesWindows) &&
+        isNull(obj.sources)) ||
+      obj === ArtifactMeta.emptyArtifactMeta() ||
+      obj === ClassifiersMeta.emptyClassifiersMeta() ||
+      obj === AssetIndexArtifactMeta.emptyAssetIndexArtifactMeta() ||
       // @ts-ignore
-      (global["NullObjects"] === undefined
-        ? false
-        : // @ts-ignore
-          global["NullObjects"].has(objectHash({ o: obj }))) ||
       (typeof obj === "object" &&
         Object.getOwnPropertyNames(obj).length <= 0) ||
       // @ts-ignore
