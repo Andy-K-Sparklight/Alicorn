@@ -25,7 +25,6 @@ import { initDownloadWrapper } from "../modules/download/DownloadWrapper";
 import { loadAllMirrors, loadMirror } from "../modules/download/Mirror";
 import { initResolveLock } from "../modules/download/ResolveLock";
 import { loadJDT, preCacheJavaInfo } from "../modules/java/JInfo";
-import { initModInfo } from "../modules/modx/ModInfo";
 import { prefetchFabricManifest } from "../modules/pff/get/FabricGet";
 import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
 import { prefetchMojangVersions } from "../modules/pff/get/MojangCore";
@@ -381,7 +380,7 @@ void (async () => {
     activateHotKeyFeature();
   }
   // Essential works and light works
-  await Promise.allSettled([initEncrypt(), initModInfo()]);
+  await Promise.allSettled([initEncrypt()]);
   initDownloadWrapper();
   // Normal works
   await Promise.allSettled([

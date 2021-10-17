@@ -1,13 +1,13 @@
-import { MinecraftContainer } from "../container/MinecraftContainer";
-import { loadModInfo, ModInfo, ModLoader } from "./ModInfo";
 import fs from "fs-extra";
-import { canModVersionApply, gatherVersionInfo } from "./VersionUtil";
-import { ProfileType } from "../profile/WhatProfile";
-import { getBoolean } from "../config/ConfigSupport";
 import path from "path";
-import { GameProfile } from "../profile/GameProfile";
+import { getBoolean } from "../config/ConfigSupport";
+import { MinecraftContainer } from "../container/MinecraftContainer";
 import { JAR_SUFFIX } from "../launch/NativesLint";
 import { FileOperateReport, LaunchTracker } from "../launch/Tracker";
+import { GameProfile } from "../profile/GameProfile";
+import { ProfileType } from "../profile/WhatProfile";
+import { loadModInfo, ModInfo, ModLoader } from "./ModInfo";
+import { canModVersionApply, gatherVersionInfo } from "./VersionUtil";
 // How we manage mods:
 // Before launch:
 // 1. Info loading: load all metas in 'mods' folder
@@ -56,7 +56,7 @@ async function moveModsTo(
     for (const mi of mods) {
       if (
         getBoolean("modx.ignore-non-standard-mods") &&
-        (mi.loader === ModLoader.UNKNOWN || mi.mcversion === undefined)
+        mi.loader === ModLoader.UNKNOWN
       ) {
         tFile.operateRecord.push({
           file: `${mi.displayName} (${mi.fileName})` || "",
@@ -64,7 +64,7 @@ async function moveModsTo(
         });
         continue;
       }
-
+      mi.mcversion = mi.mcversion || "*"; // Fallback
       if (
         mi.loader?.toString() !== type.toString() ||
         !canModVersionApply(mi.mcversion || "", mcVersion)
