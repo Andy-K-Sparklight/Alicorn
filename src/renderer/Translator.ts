@@ -163,12 +163,18 @@ export function getCurrentLocale(): string {
 
 // {Config:key.key} returns the config
 function applyEnvironmentVars(strIn: string): string {
+  if (!strIn.includes("{") || !strIn.includes("}")) {
+    if (!strIn.startsWith("{}")) {
+      return strIn; // Then will not apply
+    }
+  }
   let primary = strIn
     .replaceAll("{Date}", new Date().toLocaleDateString())
     .replaceAll("{UserName}", getString("user.name") || os.userInfo().username)
     .replaceAll("{Home}", os.homedir())
     .replaceAll("{AlicornHome}", path.join(os.homedir(), "alicorn"))
-    .replaceAll("{Platform}", os.platform());
+    .replaceAll("{Platform}", os.platform())
+    .replaceAll("{}", "");
 
   const extractRegex = /(?<={Config:).*?(?=})/g;
   const allConfig = primary.match(extractRegex);
