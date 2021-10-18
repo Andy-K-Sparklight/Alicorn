@@ -186,6 +186,7 @@ export async function getForgeInstaller(
         isWebFileExist(pt2),
         isWebFileExist(pt3),
       ]);
+      console.log("Selected url: " + pt);
       if (pt) {
         return (
           (await wrappedDownloadFile(new DownloadMeta(pt, dest, ""))) === 1
@@ -193,6 +194,7 @@ export async function getForgeInstaller(
       }
       return false;
     } catch {
+      console.log("All urls have failed!");
       return false;
     }
   } catch {
