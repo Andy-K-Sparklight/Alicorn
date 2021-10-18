@@ -978,18 +978,6 @@ Minecraft 类型
 
 安装
 
-# InstallCore.Confirm.Ready
-
-准备开始安装
-
-# InstallCore.Confirm.Hint
-
-将安装以下核心到 {Container} 中：{Version}
-
-# InstallCore.Confirm.OK
-
-继续
-
 # InstallCore.MinecraftVersion
 
 Minecraft 版本号

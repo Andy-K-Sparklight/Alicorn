@@ -1,11 +1,6 @@
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   FormControl,
   InputLabel,
   MenuItem,
@@ -16,6 +11,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useEffect, useRef, useState } from "react";
+import { throttle } from "throttle-debounce";
 import { ALICORN_SEPARATOR, ReleaseType } from "../modules/commons/Constants";
 import { isNull } from "../modules/commons/Null";
 import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
@@ -51,7 +47,7 @@ import { performFabricInstall } from "../modules/pff/install/FabricInstall";
 import { performForgeInstall } from "../modules/pff/install/ForgeInstall";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
-import { jumpTo, triggerSetPage } from "./GoTo";
+import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { submitSucc, submitWarn } from "./Message";
 import { FailedHint, OperatingHintCustom } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
@@ -83,9 +79,6 @@ export function InstallCore(): JSX.Element {
   const [selectedMojangContainer, setMojangContainer] = useState("");
   const [selectedForgeContainer, setForgeContainer] = useState("");
   const [selectedFabricContainer, setFabricContainer] = useState("");
-  const [mojangConfirmOpenBit, setMojangConfirmOpen] = useState(false);
-  const [forgeConfirmOpenBit, setForgeConfirmOpen] = useState(false);
-  const [fabricConfirmOpenBit, setFabricConfirmOpen] = useState(false);
   const [operating, setOperating] = useState(false);
   const [failed, setFailed] = useState(false);
   const [progressMsg, _setProgressMsg] = useState("");
@@ -101,9 +94,12 @@ export function InstallCore(): JSX.Element {
     }
   }
   useEffect(() => {
-    subscribeDoing("InstallCore", (d) => {
-      setDoing(d);
-    });
+    subscribeDoing(
+      "InstallCore",
+      throttle(250, (d) => {
+        setDoing(d);
+      })
+    );
     return () => {
       unsubscribeDoing("InstallCore");
     };
@@ -177,170 +173,6 @@ export function InstallCore(): JSX.Element {
         <OperatingHintCustom
           open={operating}
           msg={progressMsg + "\n" + doing}
-        />
-        <ConfirmInstall
-          container={selectedForgeContainer}
-          version={`${baseMojangVersionForge}-forge-${detectedForgeVersion}`}
-          open={forgeConfirmOpenBit}
-          closeFunc={() => {
-            setForgeConfirmOpen(false);
-          }}
-          confirmFunc={async () => {
-            clearDoing();
-            const mcv = baseMojangVersionForge;
-            const fgv = detectedForgeVersion;
-            setForgeConfirmOpen(false);
-            setOperating(true);
-            setFailed(false);
-            const ct = getContainer(selectedForgeContainer);
-            setProgressMsg(
-              tr("InstallCore.Progress.Fetching", `Loader=Forge`, `MCV=${mcv}`)
-            );
-            const stat = await getForgeInstaller(ct, mcv, fgv);
-            if (!stat) {
-              if (mounted.current) {
-                setOperating(false);
-                setFailed(true);
-                setFailedMsg(
-                  tr("InstallCore.Progress.FailedToDownload", `Loader=Forge`)
-                );
-              }
-              return;
-            }
-            setProgressMsg(tr("InstallCore.Progress.ExecutingForge"));
-            const istat = await performForgeInstall(
-              await getJavaRunnable(getDefaultJavaHome()),
-              generateForgeInstallerName(mcv, fgv),
-              ct
-            );
-            await removeForgeInstaller(ct, mcv, fgv);
-            if (!istat) {
-              if (mounted.current) {
-                setOperating(false);
-                setFailed(true);
-                setFailedMsg(tr("InstallCore.Progress.CouldNotExecute"));
-              }
-              return;
-            } else {
-              if (mounted.current) {
-                setOperating(false);
-                setFailed(false);
-                submitSucc(tr("InstallCore.Success"));
-              }
-            }
-          }}
-        />
-        <ConfirmInstall
-          container={selectedFabricContainer}
-          version={`fabric-loader-${detectedFabricVersion}-${baseMojangVersionFabric}`}
-          open={fabricConfirmOpenBit}
-          closeFunc={() => {
-            setFabricConfirmOpen(false);
-          }}
-          confirmFunc={async () => {
-            clearDoing();
-            setFabricConfirmOpen(false);
-            setOperating(true);
-            setFailed(false);
-            setProgressMsg("Resloving Fabric installer and loader info...");
-            const u = (
-              await getLatestFabricInstallerAndLoader()
-            ).getFirstValue();
-            const fbv = detectedFabricVersion;
-            const mcv = baseMojangVersionFabric;
-            const ct = getContainer(selectedFabricContainer);
-            if (isNull(u)) {
-              if (mounted.current) {
-                setFailedMsg("Invalid Fabric info received.");
-                setOperating(false);
-                setFailed(true);
-              }
-              return;
-            }
-            setProgressMsg(
-              tr("InstallCore.Progress.Fetching", `Loader=Fabric`, `MCV=${mcv}`)
-            );
-            const stat = await getFabricInstaller(u, ct);
-            if (!stat) {
-              if (mounted.current) {
-                setOperating(false);
-                setFailed(true);
-                setFailedMsg(
-                  tr("InstallCore.Progress.FailedToDownload", `Loader=Fabric`)
-                );
-              }
-              return;
-            }
-            setProgressMsg(tr("InstallCore.Progress.ExecutingFabric"));
-
-            const stat2 = await performFabricInstall(
-              await getJavaRunnable(getDefaultJavaHome()),
-              u,
-              fbv,
-              mcv,
-              ct
-            );
-            await removeFabricInstaller(u, ct);
-            if (!stat2) {
-              if (mounted.current) {
-                setOperating(false);
-                setFailed(true);
-                setFailedMsg(tr("InstallCore.Progress.CouldNotExecute"));
-              }
-              return;
-            }
-            updateFabricCores(!updateFabricCoresBit);
-            setProgressMsg("Done! Cleaning up files...");
-            if (mounted.current) {
-              setOperating(false);
-              setFailed(false);
-              submitSucc(tr("InstallCore.Success"));
-            }
-          }}
-        />
-        <ConfirmInstall
-          container={selectedMojangContainer}
-          version={selectedMojangVersion}
-          open={mojangConfirmOpenBit}
-          closeFunc={() => {
-            setMojangConfirmOpen(false);
-          }}
-          confirmFunc={async () => {
-            clearDoing();
-            setMojangConfirmOpen(false);
-            setOperating(true);
-            setFailed(false);
-            setProgressMsg(tr("InstallCore.Progress.FetchingProfile"));
-            const u = await getProfileURLById(selectedMojangVersion);
-            if (u.length === 0) {
-              if (mounted.current) {
-                setOperating(false);
-                setFailed(true);
-                setFailedMsg(tr("InstallCore.Progress.FailedToFetchProfile"));
-              }
-            }
-            setProgressMsg(tr("InstallCore.Progress.DownloadingProfile"));
-
-            try {
-              await downloadProfile(
-                u,
-                getContainer(selectedMojangContainer),
-                selectedMojangVersion
-              );
-              updatePatchableCores(!updatePatchableCoresBit);
-              if (mounted.current) {
-                setOperating(false);
-                setFailed(false);
-                submitSucc(tr("InstallCore.Success"));
-              }
-            } catch {
-              if (mounted.current) {
-                setOperating(false);
-                setFailed(true);
-                setFailedMsg(tr("InstallCore.Progress.FailedToInstallProfile"));
-              }
-            }
-          }}
         />
         <Tabs
           value={tabValue}
@@ -478,8 +310,48 @@ export function InstallCore(): JSX.Element {
               disabled={
                 isNull(selectedMojangVersion) || isNull(selectedMojangContainer)
               }
-              onClick={() => {
-                setMojangConfirmOpen(true);
+              onClick={async () => {
+                clearDoing();
+                setChangePageWarn(true);
+                setOperating(true);
+                setFailed(false);
+                setProgressMsg(tr("InstallCore.Progress.FetchingProfile"));
+                const u = await getProfileURLById(selectedMojangVersion);
+                if (u.length === 0) {
+                  if (mounted.current) {
+                    setOperating(false);
+                    setChangePageWarn(false);
+                    setFailed(true);
+                    setFailedMsg(
+                      tr("InstallCore.Progress.FailedToFetchProfile")
+                    );
+                  }
+                }
+                setProgressMsg(tr("InstallCore.Progress.DownloadingProfile"));
+
+                try {
+                  await downloadProfile(
+                    u,
+                    getContainer(selectedMojangContainer),
+                    selectedMojangVersion
+                  );
+                  updatePatchableCores(!updatePatchableCoresBit);
+                  if (mounted.current) {
+                    setOperating(false);
+                    setChangePageWarn(false);
+                    setFailed(false);
+                    submitSucc(tr("InstallCore.Success"));
+                  }
+                } catch {
+                  if (mounted.current) {
+                    setOperating(false);
+                    setChangePageWarn(false);
+                    setFailed(true);
+                    setFailedMsg(
+                      tr("InstallCore.Progress.FailedToInstallProfile")
+                    );
+                  }
+                }
               }}
             >
               {tr("InstallCore.Start")}
@@ -542,8 +414,59 @@ export function InstallCore(): JSX.Element {
               disabled={
                 isNull(selectedForgeContainer) || isNull(detectedForgeVersion)
               }
-              onClick={() => {
-                setForgeConfirmOpen(true);
+              onClick={async () => {
+                clearDoing();
+                setChangePageWarn(true);
+                const mcv = baseMojangVersionForge;
+                const fgv = detectedForgeVersion;
+                setOperating(true);
+                setFailed(false);
+                const ct = getContainer(selectedForgeContainer);
+                setProgressMsg(
+                  tr(
+                    "InstallCore.Progress.Fetching",
+                    `Loader=Forge`,
+                    `MCV=${mcv}`
+                  )
+                );
+                const stat = await getForgeInstaller(ct, mcv, fgv);
+                if (!stat) {
+                  if (mounted.current) {
+                    setOperating(false);
+                    setChangePageWarn(false);
+                    setFailed(true);
+                    setFailedMsg(
+                      tr(
+                        "InstallCore.Progress.FailedToDownload",
+                        `Loader=Forge`
+                      )
+                    );
+                  }
+                  return;
+                }
+                setProgressMsg(tr("InstallCore.Progress.ExecutingForge"));
+                const istat = await performForgeInstall(
+                  await getJavaRunnable(getDefaultJavaHome()),
+                  generateForgeInstallerName(mcv, fgv),
+                  ct
+                );
+                await removeForgeInstaller(ct, mcv, fgv);
+                if (!istat) {
+                  if (mounted.current) {
+                    setOperating(false);
+                    setChangePageWarn(false);
+                    setFailed(true);
+                    setFailedMsg(tr("InstallCore.Progress.CouldNotExecute"));
+                  }
+                  return;
+                } else {
+                  if (mounted.current) {
+                    setOperating(false);
+                    setChangePageWarn(false);
+                    setFailed(false);
+                    submitSucc(tr("InstallCore.Success"));
+                  }
+                }
               }}
             >
               {tr("InstallCore.Start")}
@@ -607,8 +530,76 @@ export function InstallCore(): JSX.Element {
               disabled={
                 isNull(selectedFabricContainer) || isNull(detectedFabricVersion)
               }
-              onClick={() => {
-                setFabricConfirmOpen(true);
+              onClick={async () => {
+                clearDoing();
+                setChangePageWarn(true);
+                setOperating(true);
+                setFailed(false);
+                setProgressMsg("Resloving Fabric installer and loader info...");
+                const u = (
+                  await getLatestFabricInstallerAndLoader()
+                ).getFirstValue();
+                const fbv = detectedFabricVersion;
+                const mcv = baseMojangVersionFabric;
+                const ct = getContainer(selectedFabricContainer);
+                if (isNull(u)) {
+                  if (mounted.current) {
+                    setFailedMsg("Invalid Fabric info received.");
+                    setOperating(false);
+                    setChangePageWarn(false);
+                    setFailed(true);
+                  }
+                  return;
+                }
+                setProgressMsg(
+                  tr(
+                    "InstallCore.Progress.Fetching",
+                    `Loader=Fabric`,
+                    `MCV=${mcv}`
+                  )
+                );
+                const stat = await getFabricInstaller(u, ct);
+                if (!stat) {
+                  if (mounted.current) {
+                    setOperating(false);
+                    setChangePageWarn(false);
+                    setFailed(true);
+                    setFailedMsg(
+                      tr(
+                        "InstallCore.Progress.FailedToDownload",
+                        `Loader=Fabric`
+                      )
+                    );
+                  }
+                  return;
+                }
+                setProgressMsg(tr("InstallCore.Progress.ExecutingFabric"));
+
+                const stat2 = await performFabricInstall(
+                  await getJavaRunnable(getDefaultJavaHome()),
+                  u,
+                  fbv,
+                  mcv,
+                  ct
+                );
+                await removeFabricInstaller(u, ct);
+                if (!stat2) {
+                  if (mounted.current) {
+                    setOperating(false);
+                    setChangePageWarn(false);
+                    setFailed(true);
+                    setFailedMsg(tr("InstallCore.Progress.CouldNotExecute"));
+                  }
+                  return;
+                }
+                updateFabricCores(!updateFabricCoresBit);
+                setProgressMsg("Done! Cleaning up files...");
+                if (mounted.current) {
+                  setOperating(false);
+                  setChangePageWarn(false);
+                  setFailed(false);
+                  submitSucc(tr("InstallCore.Success"));
+                }
               }}
             >
               {tr("InstallCore.Start")}
@@ -694,33 +685,6 @@ export function InstallCore(): JSX.Element {
   );
 }
 
-function ConfirmInstall(props: {
-  version: string;
-  open: boolean;
-  container: string;
-  closeFunc: () => unknown;
-  confirmFunc: () => unknown;
-}): JSX.Element {
-  return (
-    <Dialog open={props.open} onClose={props.closeFunc}>
-      <DialogTitle>{tr("InstallCore.Confirm.Ready")}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          {tr(
-            "InstallCore.Confirm.Hint",
-            `Version=${props.version}`,
-            `Container=${props.container}`
-          )}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button variant={"outlined"} onClick={props.confirmFunc}>
-          {tr("InstallCore.Confirm.OK")}
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-}
 function TabPanel(props: {
   children?: React.ReactNode;
   index: string | number;

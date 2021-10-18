@@ -31,6 +31,7 @@ import fs from "fs-extra";
 import path from "path";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
+import { throttle } from "throttle-debounce";
 import { isFileExist } from "../modules/commons/FileUtil";
 import { scanCoresIn } from "../modules/container/ContainerScanner";
 import {
@@ -94,9 +95,12 @@ export function ContainerManager(): JSX.Element {
     };
   });
   useEffect(() => {
-    subscribeDoing("ContainerManager", (d) => {
-      setDoing(d);
-    });
+    subscribeDoing(
+      "ContainerManager",
+      throttle(250, (d) => {
+        setDoing(d);
+      })
+    );
     return () => {
       unsubscribeDoing("ContainerManager");
     };
