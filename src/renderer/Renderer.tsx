@@ -17,7 +17,7 @@ import {
   saveDefaultConfig,
 } from "../modules/config/ConfigSupport";
 import { getActualDataPath } from "../modules/config/DataSupport";
-import { loadGDT } from "../modules/container/ContainerUtil";
+import { getContainer, loadGDT } from "../modules/container/ContainerUtil";
 import { initVF } from "../modules/container/ValidateRecord";
 import { prepareEdgeExecutable } from "../modules/cutie/BootEdge";
 import { initConcurrentDownloader } from "../modules/download/Concurrent";
@@ -29,6 +29,7 @@ import { prefetchFabricManifest } from "../modules/pff/get/FabricGet";
 import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
 import { prefetchMojangVersions } from "../modules/pff/get/MojangCore";
 import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
+import { loadProfile } from "../modules/profile/ProfileLoader";
 import { initEncrypt } from "../modules/security/Encrypt";
 import { getMachineUniqueID } from "../modules/security/Unique";
 import { checkUpdate, initUpdator } from "../modules/selfupdate/Updator";
@@ -37,7 +38,7 @@ import { App } from "./App";
 import { registerHandlers } from "./Handlers";
 import { activateHotKeyFeature } from "./HotKeyHandler";
 import { submitInfo, submitWarn } from "./Message";
-import { initWorker } from "./Schedule";
+import { initWorker, invokeWorker } from "./Schedule";
 import { initTranslator, tr } from "./Translator";
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",

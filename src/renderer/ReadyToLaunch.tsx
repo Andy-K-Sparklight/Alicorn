@@ -48,7 +48,7 @@ import {
   MS_LAST_USED_UUID_KEY,
 } from "../modules/auth/MicrosoftAccount";
 import { Nide8Account } from "../modules/auth/Nide8Account";
-import { basicHash, uniqueHash } from "../modules/commons/BasicHash";
+import { uniqueHash } from "../modules/commons/BasicHash";
 import { Pair } from "../modules/commons/Collections";
 import {
   PROCESS_END_GATE,
@@ -215,6 +215,22 @@ export function ReadyToLaunch(): JSX.Element {
   );
 }
 
+const LAUNCH_STEPS = [
+  "Pending",
+  "PerformingAuth",
+  "CheckingFiles",
+  "PreparingMods",
+  "GeneratingArgs",
+  "Finished",
+];
+const REV_LAUNCH_STEPS = {
+  Pending: 0,
+  PerformingAuth: 1,
+  CheckingFiles: 2,
+  PreparingMods: 3,
+  GeneratingArgs: 4,
+  Finished: 5,
+};
 function Launching(props: {
   profile: GameProfile;
   container: MinecraftContainer;
@@ -231,7 +247,7 @@ function Launching(props: {
   const [lanPort, setLanPort] = useState(0);
   const [openLanWindow, setOpenLanWindow] = useState(false);
   const [openLanButtonEnabled, setOpenLanButtonEnabled] = useState(false);
-  const profileHash = useRef<string>(basicHash(JSON.stringify(props.profile)));
+  const profileHash = useRef<string>(props.container + "/" + props.profile.id);
   useEffect(() => {
     const subscribe = setInterval(() => {
       if (NEED_QUERY_STATUS) {
@@ -307,22 +323,7 @@ function Launching(props: {
       window.removeEventListener("mcFailure", fun);
     };
   }, []);
-  const LAUNCH_STEPS = [
-    "Pending",
-    "PerformingAuth",
-    "CheckingFiles",
-    "PreparingMods",
-    "GeneratingArgs",
-    "Finished",
-  ];
-  const REV_LAUNCH_STEPS = {
-    Pending: 0,
-    PerformingAuth: 1,
-    CheckingFiles: 2,
-    PreparingMods: 3,
-    GeneratingArgs: 4,
-    Finished: 5,
-  };
+
   return (
     <Box className={classes.root}>
       <AccountChoose
@@ -405,13 +406,6 @@ function Launching(props: {
           );
         })}
       </Stepper>
-      {status === LaunchingStatus.ACCOUNT_AUTHING ||
-      status === LaunchingStatus.ARGS_GENERATING ||
-      status === LaunchingStatus.MODS_PREPARING ? (
-        <LinearProgress color={"secondary"} />
-      ) : (
-        ""
-      )}
       {/* Insert Here */}
       {status === LaunchingStatus.PENDING ||
       status === LaunchingStatus.FINISHED ||
@@ -1378,7 +1372,6 @@ function OpenWorldDialog(props: {
 }
 
 function WaitingText(): JSX.Element {
-  const classes = useStyles();
   const [hint, setHint] = useState(randsl("ReadyToLaunch.WaitingText"));
   useEffect(() => {
     const timer = setInterval(() => {
@@ -1389,7 +1382,14 @@ function WaitingText(): JSX.Element {
     };
   }, []);
   return (
-    <Typography className={classes.text} gutterBottom>
+    <Typography
+      style={{
+        flexGrow: 1,
+        fontSize: "medium",
+        color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.main,
+      }}
+      gutterBottom
+    >
       {hint}
     </Typography>
   );

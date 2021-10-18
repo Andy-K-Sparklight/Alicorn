@@ -385,13 +385,13 @@ export class AssetIndexArtifactMeta {
   size: number;
   totalSize: number;
   url: string;
-  private static readonly EMPTY_INSTANCE = AssetIndexArtifactMeta.fromObject({
-    id: "",
-    sha1: "",
-    size: 0,
-    totalSize: 0,
-    url: "",
-  });
+  private static readonly EMPTY_INSTANCE = new AssetIndexArtifactMeta(
+    "",
+    "",
+    0,
+    0,
+    ""
+  );
 
   clone(): AssetIndexArtifactMeta {
     return new AssetIndexArtifactMeta(

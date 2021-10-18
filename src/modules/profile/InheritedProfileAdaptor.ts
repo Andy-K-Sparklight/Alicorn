@@ -8,6 +8,7 @@
 import { copy } from "fs-extra";
 import objectHash from "object-hash";
 import path from "path";
+import { schedulePromiseTask } from "../../renderer/Schedule";
 import { ReleaseType, SPACE } from "../commons/Constants";
 import { isFileExist } from "../commons/FileUtil";
 import { isNull } from "../commons/Null";
@@ -39,7 +40,7 @@ export async function makeInherit(
   if (!isNull(gfHead.jvmArgs)) {
     if (!legacyBit) {
       // For legacy profiles there will be same jvm args, ignore it
-      retGF.jvmArgs = noDuplicateConcat(retGF.jvmArgs, gfHead.jvmArgs);
+      retGF.jvmArgs = retGF.jvmArgs.concat(gfHead.jvmArgs);
     }
   }
   if (!isNull(gfHead.gameArgs)) {
@@ -47,7 +48,7 @@ export async function makeInherit(
       retGF.gameArgs = gfHead.gameArgs;
     } else {
       // Game arguments are all of string type and can be handled by noDuplicateConcat
-      retGF.gameArgs = noDuplicateConcat(retGF.gameArgs, gfHead.gameArgs);
+      retGF.gameArgs = retGF.gameArgs.concat(gfHead.gameArgs);
     }
   }
   if (!isNull(gfHead.id)) {
@@ -76,6 +77,34 @@ export async function makeInherit(
   }
   return retGF;
 }
+
+export async function abortableNoDuplicateConcat<T>(
+  a1: T[],
+  a2: T[]
+): Promise<T[]> {
+  const copy = a2.concat();
+  const hashList = await Promise.all(
+    copy.map((a) => {
+      return schedulePromiseTask(async () => {
+        return objectHash(a);
+      });
+    })
+  );
+  const buff: T[] = [];
+  for (const x of a1) {
+    const xh = await schedulePromiseTask(async () => {
+      return objectHash(x);
+    });
+    if (!hashList.includes(xh) && !a2.includes(x)) {
+      buff.push(x);
+    }
+  }
+  return buff.concat(copy);
+}
+
+/**
+ * @deprecated use abortable one instead
+ */
 // a1 <- a2, a2 overrides a1 if necessary
 export function noDuplicateConcat<T>(a1: T[], a2: T[]): T[] {
   const copy = a2.concat();

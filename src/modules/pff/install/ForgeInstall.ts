@@ -23,7 +23,6 @@ import { addDoing, wrappedDownloadFile } from "../../download/DownloadWrapper";
 import { ensureLibraries } from "../../launch/Ensurance";
 import { JAR_SUFFIX } from "../../launch/NativesLint";
 import { GameProfile } from "../../profile/GameProfile";
-import { noDuplicateConcat } from "../../profile/InheritedProfileAdaptor";
 import { makeLibrary } from "../../profile/LibrariesConvert";
 import { LibraryMeta } from "../../profile/Meta";
 import { rebuildForgeInstaller } from "./ForgeInstallerMixer";
@@ -291,7 +290,7 @@ function concatForgeProfiles(
 ): GameProfile {
   const bp = Object.assign({}, base);
   for (const p of profiles) {
-    bp.libraries = noDuplicateConcat(bp.libraries, p.libraries);
+    bp.libraries = bp.libraries.concat(p.libraries);
   }
   return bp;
 }
