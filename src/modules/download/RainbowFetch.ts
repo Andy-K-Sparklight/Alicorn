@@ -109,18 +109,14 @@ export function getTimeoutController(
   ];
 }
 
-export async function isWebFileExist(u: string): Promise<string | false> {
-  try {
-    const [controller, sti] = getTimeoutController(
-      getNumber("download.concurrent.timeout", 5000)
-    );
-    const r = await fetch(u, { signal: controller.signal });
-    sti();
-    if (r.ok) {
-      return u;
-    }
-    return false;
-  } catch {
-    return false;
+export async function isWebFileExist(u: string): Promise<string> {
+  const [controller, sti] = getTimeoutController(
+    getNumber("download.concurrent.timeout", 5000)
+  );
+  const r = await fetch(u, { signal: controller.signal });
+  sti();
+  if (r.ok) {
+    return u;
   }
+  throw "File not exist: " + u;
 }
