@@ -1,6 +1,7 @@
-import { loadData, saveData, saveDataSync } from "../config/DataSupport";
-import { buildMap, parseMap } from "../commons/MapUtil";
+import { schedulePromiseTask } from "../../renderer/Schedule";
 import { ALICORN_DATA_SUFFIX } from "../commons/Constants";
+import { buildMap, parseMap } from "../commons/MapUtil";
+import { loadData, saveData, saveDataSync } from "../config/DataSupport";
 import { MinecraftContainer } from "./MinecraftContainer";
 
 let GlobalContainerDescriptorTable: Map<string, string> = new Map();
@@ -22,13 +23,23 @@ export function rootOf(containerID: string): string {
   return GlobalContainerDescriptorTable.get(containerID) || "";
 }
 
+let ContainerCacheTable: Map<string, MinecraftContainer> = new Map();
+
 export function getContainer(containerID: string): MinecraftContainer {
-  return new MinecraftContainer(rootOf(containerID), containerID);
+  if (ContainerCacheTable.has(containerID)) {
+    return ContainerCacheTable.get(containerID) as MinecraftContainer;
+  }
+  let c = new MinecraftContainer(rootOf(containerID), containerID);
+  ContainerCacheTable.set(containerID, c);
+  return c;
 }
 
 export function registerContainer(container: MinecraftContainer): void {
   GlobalContainerDescriptorTable.set(container.id, container.rootDir);
   GlobalMountDescriptorTable.set(container.id, true);
+  void schedulePromiseTask(async () => {
+    getContainer(container.id);
+  });
 }
 
 export function getAllMounted(): string[] {
@@ -44,6 +55,7 @@ export function getAllMounted(): string[] {
 export function unregisterContainer(id: string): void {
   GlobalContainerDescriptorTable.delete(id);
   GlobalMountDescriptorTable.delete(id);
+  ContainerCacheTable.delete(id);
   syncGDTGMT();
 }
 
