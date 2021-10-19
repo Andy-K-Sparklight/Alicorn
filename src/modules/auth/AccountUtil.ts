@@ -8,7 +8,7 @@ import {
   saveData,
   saveDataSync,
 } from "../config/DataSupport";
-import { decryptByMachine, encryptByMachine } from "../security/Encrypt";
+import { decrypt2, decryptByMachine, encrypt2 } from "../security/Encrypt";
 import { Account } from "./Account";
 import { AuthlibAccount } from "./AuthlibAccount";
 import { LocalAccount } from "./LocalAccount";
@@ -40,7 +40,7 @@ export async function saveAccount(a: Account): Promise<boolean> {
     const fName = a.getAccountIdentifier() + ALICORN_ENCRYPTED_DATA_SUFFIX;
     await saveData(
       path.join(ACCOUNT_ROOT, fName),
-      encryptByMachine(decideWhichAccountByCls(a) + a.serialize())
+      encrypt2(decideWhichAccountByCls(a) + a.serialize())
     );
     await reloadAccounts();
     return true;
@@ -54,7 +54,7 @@ export function saveAccountSync(a: Account): boolean {
     const fName = a.getAccountIdentifier() + ALICORN_ENCRYPTED_DATA_SUFFIX;
     saveDataSync(
       path.join(ACCOUNT_ROOT, fName),
-      encryptByMachine(decideWhichAccountByCls(a) + a.serialize())
+      encrypt2(decideWhichAccountByCls(a) + a.serialize())
     );
     return true;
   } catch {
@@ -73,7 +73,9 @@ export async function getAllAccounts(): Promise<string[]> {
 export async function loadAccount(fName: string): Promise<Account | null> {
   try {
     const s = await loadData(path.join(ACCOUNT_ROOT, fName));
-    const deS = decryptByMachine(s);
+    const deSOld = decryptByMachine(s);
+    const deSNew = decrypt2(s);
+    const deS = deSNew.startsWith("$") ? deSNew : deSOld;
     const p = decideWhichAccountByHead(deS);
     switch (p.getFirstValue()) {
       case AccountType.NIDE8:
