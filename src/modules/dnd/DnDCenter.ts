@@ -6,6 +6,7 @@ import { submitInfo, submitSucc } from "../../renderer/Message";
 import { tr } from "../../renderer/Translator";
 import { getAllMounted, getContainer } from "../container/ContainerUtil";
 import { MinecraftContainer } from "../container/MinecraftContainer";
+import { updateFromSource } from "../selfupdate/Updator";
 import { FileType, justifyFileType } from "./FileType";
 
 export async function handleDnD(
@@ -70,5 +71,8 @@ async function genDeployTask(
   if (type === FileType.SHADER_PACK) {
     await ensureDir(c.getShaderPacksRoot());
     await copy(f, path.join(c.getShaderPacksRoot(), path.basename(f)));
+  }
+  if (type === FileType.ALICORN_UPDATE) {
+    await updateFromSource(f);
   }
 }

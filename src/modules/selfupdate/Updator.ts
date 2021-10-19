@@ -1,9 +1,10 @@
 import Ajv from "ajv";
+import { tgz, zip } from "compressing";
 import fs from "fs-extra";
 import os from "os";
 import path from "path";
 import pkg from "../../../package.json";
-import { submitInfo, submitSucc } from "../../renderer/Message";
+import { submitInfo, submitSucc, submitWarn } from "../../renderer/Message";
 import { tr } from "../../renderer/Translator";
 import { getString } from "../config/ConfigSupport";
 import { getActualDataPath } from "../config/DataSupport";
@@ -232,5 +233,33 @@ async function switchFile(bInfo: BuildInfo): Promise<boolean> {
     return true;
   } catch (e) {
     return false;
+  }
+}
+
+export async function updateFromSource(file: string): Promise<void> {
+  try {
+    submitInfo(tr("System.HasUpdate"));
+    const appPath = getBasePath();
+    const resources = path.dirname(appPath);
+    await fs.rename(appPath, path.join(resources, "app-local"));
+    const unZipTarget = path.join(resources, "app-temp");
+    await fs.emptyDir(unZipTarget);
+    await fs.emptyDir(appPath);
+    try {
+      await zip.uncompress(file, unZipTarget);
+    } catch {
+      await tgz.uncompress(file, unZipTarget);
+    }
+    const dirs = await fs.readdir(unZipTarget);
+    const tD = dirs[0];
+    if (tD) {
+      await fs.copy(path.join(unZipTarget, tD), appPath);
+      await fs.remove(path.join(resources, "app-local"));
+      await fs.remove(unZipTarget);
+    }
+    submitSucc(tr("System.UpdateOK"));
+  } catch (e) {
+    console.log(e);
+    submitWarn(tr("System.UpdateFailed"));
   }
 }

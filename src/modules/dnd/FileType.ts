@@ -43,7 +43,7 @@ export async function justifyFileType(file: string): Promise<FileType> {
         ) {
           return FileType.MOD;
         }
-        if (f.name === "Renderer.js") {
+        if (f.name.startsWith("Alicorn") && f.name.endsWith("Renderer.js")) {
           return FileType.ALICORN_UPDATE;
         }
       }
@@ -69,7 +69,7 @@ export async function justifyFileType(file: string): Promise<FileType> {
         if (f === "shaders") {
           return FileType.SHADER_PACK;
         }
-        if (f === "Renderer.js") {
+        if (f.startsWith("Alicorn")) {
           return FileType.ALICORN_UPDATE;
         }
       }
