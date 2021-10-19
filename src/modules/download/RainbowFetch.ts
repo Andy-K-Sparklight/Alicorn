@@ -111,7 +111,7 @@ export function getTimeoutController(
 }
 
 export async function isWebFileExist(u: string): Promise<string> {
-  let mrc = new MirrorChain(u);
+  const mrc = new MirrorChain(u);
   while (mrc.mirror() !== u) {
     try {
       const [controller, sti] = getTimeoutController(

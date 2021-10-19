@@ -23,13 +23,13 @@ export function rootOf(containerID: string): string {
   return GlobalContainerDescriptorTable.get(containerID) || "";
 }
 
-let ContainerCacheTable: Map<string, MinecraftContainer> = new Map();
+const ContainerCacheTable: Map<string, MinecraftContainer> = new Map();
 
 export function getContainer(containerID: string): MinecraftContainer {
   if (ContainerCacheTable.has(containerID)) {
     return ContainerCacheTable.get(containerID) as MinecraftContainer;
   }
-  let c = new MinecraftContainer(rootOf(containerID), containerID);
+  const c = new MinecraftContainer(rootOf(containerID), containerID);
   ContainerCacheTable.set(containerID, c);
   return c;
 }
@@ -37,8 +37,8 @@ export function getContainer(containerID: string): MinecraftContainer {
 export function registerContainer(container: MinecraftContainer): void {
   GlobalContainerDescriptorTable.set(container.id, container.rootDir);
   GlobalMountDescriptorTable.set(container.id, true);
-  void schedulePromiseTask(async () => {
-    getContainer(container.id);
+  void schedulePromiseTask(() => {
+    return Promise.resolve(getContainer(container.id));
   });
 }
 

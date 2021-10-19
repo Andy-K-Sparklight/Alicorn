@@ -200,7 +200,7 @@ function RendererBootstrap(): JSX.Element {
 }
 console.log("Enabling V8 Compile cache.");
 try {
-  let vm = eval("require")("vm");
+  const vm = eval("require")("vm");
   if (vm) {
     eval("require")("v8-compile-cache");
     console.log("V8 Compile Cache Enabled.");

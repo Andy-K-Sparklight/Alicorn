@@ -39,21 +39,21 @@ export async function loadModInfo(
     ret.fileName = container.getModJar(modJar);
     const zip = new StreamZip.async({ file: ret.fileName });
     try {
-      let d = await zip.entryData(FABRIC_MOD_JSON);
+      const d = await zip.entryData(FABRIC_MOD_JSON);
       ret.loader = ModLoader.FABRIC;
       loadFabricInfo(JSON.parse(escapeQuote(d.toString())), ret);
       return ret;
     } catch {}
 
     try {
-      let d = await zip.entryData(META_INF + "/" + MODS_TOML);
+      const d = await zip.entryData(META_INF + "/" + MODS_TOML);
       ret.loader = ModLoader.FORGE;
       loadTomlInfo(toml.parse(d.toString()), ret);
       return ret;
     } catch {}
 
     try {
-      let d = await zip.entryData(MCMOD_INFO);
+      const d = await zip.entryData(MCMOD_INFO);
       ret.loader = ModLoader.FORGE;
       loadMCMODInfo(JSON.parse(escapeQuote(d.toString())), ret);
       return ret;

@@ -85,15 +85,15 @@ export async function abortableNoDuplicateConcat<T>(
   const copy = a2.concat();
   const hashList = await Promise.all(
     copy.map((a) => {
-      return schedulePromiseTask(async () => {
-        return objectHash(a);
+      return schedulePromiseTask(() => {
+        return Promise.resolve(objectHash(a));
       });
     })
   );
   const buff: T[] = [];
   for (const x of a1) {
-    const xh = await schedulePromiseTask(async () => {
-      return objectHash(x);
+    const xh = await schedulePromiseTask(() => {
+      return Promise.resolve(objectHash(x));
     });
     if (!hashList.includes(xh) && !a2.includes(x)) {
       buff.push(x);

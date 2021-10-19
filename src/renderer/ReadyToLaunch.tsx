@@ -489,7 +489,7 @@ function Launching(props: {
                   setOpenLanWindow(true);
                   return;
                 }
-                let i = getProfileRelatedID(profileHash.current);
+                const i = getProfileRelatedID(profileHash.current);
                 if (i) {
                   console.log(`Forcefully stopping instance ${i}!`);
                   stopMinecraft(i);
@@ -821,7 +821,7 @@ function AccountChoose(props: {
   >("ReadyToLaunch.MSLogout");
   useEffect(() => {
     for (const a of props.allAccounts) {
-      let i = a.getAccountIdentifier();
+      const i = a.getAccountIdentifier();
       accountMap.current[i] = a;
       accountMapRev.current.set(a, i);
     }

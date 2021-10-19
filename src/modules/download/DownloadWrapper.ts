@@ -16,22 +16,22 @@ import { MirrorChain } from "./Mirror";
 import { Serial } from "./Serial";
 import { validate } from "./Validate";
 
-let DOINGX: string = "";
+let DOINGX = "";
 const DOING_X_SUBSCRIBES: Map<string, (d: string) => unknown> = new Map();
 export function addDoing(s: string): void {
   console.log(s);
   DOINGX = s;
   for (const [_n, f] of DOING_X_SUBSCRIBES) {
-    void schedulePromiseTask(async () => {
-      f(s);
+    void schedulePromiseTask(() => {
+      return Promise.resolve(f(s));
     });
   }
 }
 
 export function clearDoing(): void {
   for (const [_n, f] of DOING_X_SUBSCRIBES) {
-    void schedulePromiseTask(async () => {
-      f("");
+    void schedulePromiseTask(() => {
+      return Promise.resolve(f(""));
     });
   }
   DOINGX = "";
