@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   createStyles,
+  FormControl,
   List,
   ListItem,
   ListItemText,
@@ -556,23 +557,45 @@ function BBCodeDisplay(props: {
         {tr("CrashReportDisplay.Instruction")}
       </Typography>
       <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-        <Button
-          onClick={() => {
-            if (!copy(code, { format: "text/plain" })) {
-              submitError("Failed to copy!");
-            }
-          }}
-          style={{
-            display: "inline",
-            float: "right",
-            marginLeft: "auto",
-            width: "15%",
-          }}
-          variant={"contained"}
-          color={"primary"}
-        >
-          {tr("CrashReportDisplay.Copy")}
-        </Button>
+        <FormControl style={{ display: "inline", marginLeft: "auto" }}>
+          <Button
+            onClick={() => {
+              if (!copy(code, { format: "text/plain" })) {
+                submitError("Failed to copy!");
+              }
+            }}
+            variant={"contained"}
+            color={"primary"}
+          >
+            {tr("CrashReportDisplay.Copy")}
+          </Button>
+          <br />
+          <br />
+          <Button
+            onClick={() => {
+              if (
+                !copy(
+                  `Crash Report:\n[spoiler][code]${
+                    props.originCrashReport.join("\n") ||
+                    "Alicorn: Crash Report Not Found"
+                  }[/code][/spoiler]\n\nLogs:\n[spoiler][code]${
+                    props.logs
+                      .map(tab2Space)
+                      .slice(-10000) // Safe Limit
+                      .join("\n") || "Alicorn: Logs Not Found"
+                  }[/code][/spoiler]`,
+                  { format: "text/plain" }
+                )
+              ) {
+                submitError("Failed to copy!");
+              }
+            }}
+            variant={"contained"}
+            color={"primary"}
+          >
+            {tr("CrashReportDisplay.CopyLogs")}
+          </Button>
+        </FormControl>
       </MuiThemeProvider>
     </Box>
   );
