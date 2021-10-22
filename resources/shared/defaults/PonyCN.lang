@@ -1778,6 +1778,14 @@ Mojang 版本
 
 不确定
 
+# CrashReportDisplay.FailedToCopy
+
+复制失败……考虑手动上传日志文件和崩溃报告？
+
+# CrashReportDisplay.Copied
+
+复制成功！
+
 # CrashReportDisplay.LaunchTrackCount
 
 支援信息

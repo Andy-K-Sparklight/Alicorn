@@ -28,7 +28,7 @@ import {
 } from "../modules/crhelper/CrashLoader";
 import { LaunchTracker } from "../modules/launch/Tracker";
 import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
-import { submitError } from "./Message";
+import { submitSucc, submitWarn } from "./Message";
 import {
   LAST_CRASH_KEY,
   LAST_FAILURE_INFO_KEY,
@@ -561,7 +561,9 @@ function BBCodeDisplay(props: {
           <Button
             onClick={() => {
               if (!copy(code, { format: "text/plain" })) {
-                submitError("Failed to copy!");
+                submitWarn(tr("CrashReportDisplay.FailedToCopy"));
+              } else {
+                submitSucc(tr("CrashReportDisplay.Copied"));
               }
             }}
             variant={"contained"}
@@ -587,7 +589,9 @@ function BBCodeDisplay(props: {
                   { format: "text/plain" }
                 )
               ) {
-                submitError("Failed to copy!");
+                submitWarn(tr("CrashReportDisplay.FailedToCopy"));
+              } else {
+                submitSucc(tr("CrashReportDisplay.Copied"));
               }
             }}
             variant={"contained"}
