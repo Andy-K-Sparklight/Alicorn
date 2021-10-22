@@ -1090,6 +1090,10 @@ Minecraft 版本号
 
 @HTML如果您使用 Microsoft 帐户或本地帐户，则无需在此配置，请<b>直接启动游戏</b>，当启动时将（如果必要）询问您相关的信息。\n「将此按钮拖动至启动器」已受支持，将按钮拖向启动器的任意位置并松蹄就好。
 
+# JavaSelector.External
+
+我无法在此自动安装，请在打开的页面中自行下载安装～
+
 # JavaSelector.CustomAdd
 
 让我手动定位一个 Java 运行时
