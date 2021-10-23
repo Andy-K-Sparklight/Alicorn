@@ -34,14 +34,26 @@ export function decryptObject(objSrc: string): unknown {
   }
 }
 
+export function encryptByMachine(data: string): string {
+  if (data === "") {
+    return ""; // NULL safe
+  }
+  return CryptoJS.AES.encrypt(data, MACHINE_ID_32).toString();
+}
+
 export function encrypt2(src: string): string {
   if (src === "") {
     return "";
   }
   try {
-    return ipcRenderer.sendSync("encryptSync", src);
+    const r = ipcRenderer.sendSync("encryptSync", src);
+    if (r.length > 0) {
+      return r;
+    } else {
+      return encryptByMachine(src); // If not supported
+    }
   } catch {
-    return "";
+    return encryptByMachine(src);
   }
 }
 
@@ -50,8 +62,12 @@ export function decrypt2(src: string): string {
     return "";
   }
   try {
-    return ipcRenderer.sendSync("decryptSync", src);
+    const r = ipcRenderer.sendSync("decryptSync", src);
+    if (r.length > 0) {
+      return r;
+    }
+    return decryptByMachine(src);
   } catch {
-    return "";
+    return decryptByMachine(src);
   }
 }

@@ -288,14 +288,22 @@ export function registerBackgroundListeners(): void {
   });
   ipcMain.on("encryptSync", (e, s: string) => {
     try {
-      e.returnValue = safeStorage.encryptString(s).toString("base64");
+      if (safeStorage && safeStorage.isEncryptionAvailable()) {
+        e.returnValue = safeStorage.encryptString(s).toString("base64");
+      } else {
+        e.returnValue = "";
+      }
     } catch {
       e.returnValue = "";
     }
   });
   ipcMain.on("decryptSync", (e, b: string) => {
     try {
-      e.returnValue = safeStorage.decryptString(Buffer.from(b, "base64"));
+      if (safeStorage && safeStorage.isEncryptionAvailable()) {
+        e.returnValue = safeStorage.decryptString(Buffer.from(b, "base64"));
+      } else {
+        e.returnValue = "";
+      }
     } catch {
       e.returnValue = "";
     }
