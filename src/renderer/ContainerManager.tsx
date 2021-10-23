@@ -522,6 +522,9 @@ function AddNewContainer(props: {
               variant={"outlined"}
               onClick={async () => {
                 const d = await remoteSelectDir();
+                if (d.length === 0) {
+                  return;
+                }
                 setSelected(d);
                 void validateDir(d).then((b) => {
                   setDirError(!b);
