@@ -1,4 +1,5 @@
 import EventEmitter from "events";
+import { schedulePromiseTask } from "../../renderer/Schedule";
 import { tr } from "../../renderer/Translator";
 import { getModifiedDate, isFileExist } from "../commons/FileUtil";
 import { getNumber } from "../config/ConfigSupport";
@@ -15,30 +16,29 @@ import { MirrorChain } from "./Mirror";
 import { Serial } from "./Serial";
 import { validate } from "./Validate";
 
-const DOINGX: string[] = [];
+let DOINGX = "";
 const DOING_X_SUBSCRIBES: Map<string, (d: string) => unknown> = new Map();
 export function addDoing(s: string): void {
   console.log(s);
-  DOINGX.unshift(s);
+  DOINGX = s;
   for (const [_n, f] of DOING_X_SUBSCRIBES) {
-    f(s);
-  }
-  if (DOINGX.length > 3) {
-    DOINGX.pop();
+    void schedulePromiseTask(() => {
+      return Promise.resolve(f(s));
+    });
   }
 }
 
 export function clearDoing(): void {
   for (const [_n, f] of DOING_X_SUBSCRIBES) {
-    f("");
+    void schedulePromiseTask(() => {
+      return Promise.resolve(f(""));
+    });
   }
-  DOINGX.pop();
-  DOINGX.pop();
-  DOINGX.pop();
+  DOINGX = "";
 }
 
 export function getDoing(): string {
-  return DOINGX[0] || "";
+  return DOINGX || "";
 }
 
 export function subscribeDoing(

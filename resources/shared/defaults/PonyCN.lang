@@ -978,18 +978,6 @@ Minecraft 类型
 
 安装
 
-# InstallCore.Confirm.Ready
-
-准备开始安装
-
-# InstallCore.Confirm.Hint
-
-将安装以下核心到 {Container} 中：{Version}
-
-# InstallCore.Confirm.OK
-
-继续
-
 # InstallCore.MinecraftVersion
 
 Minecraft 版本号
@@ -1101,6 +1089,10 @@ Minecraft 版本号
 # AccountManager.Note
 
 @HTML如果您使用 Microsoft 帐户或本地帐户，则无需在此配置，请<b>直接启动游戏</b>，当启动时将（如果必要）询问您相关的信息。\n「将此按钮拖动至启动器」已受支持，将按钮拖向启动器的任意位置并松蹄就好。
+
+# JavaSelector.External
+
+我无法在此自动安装，请在打开的页面中自行下载安装～
 
 # JavaSelector.CustomAdd
 
@@ -1790,6 +1782,14 @@ Mojang 版本
 
 不确定
 
+# CrashReportDisplay.FailedToCopy
+
+复制失败……考虑手动上传日志文件和崩溃报告？
+
+# CrashReportDisplay.Copied
+
+复制成功！
+
 # CrashReportDisplay.LaunchTrackCount
 
 支援信息
@@ -1878,13 +1878,17 @@ Mojang 版本
 
 日志
 
+# CrashReportDisplay.CopyLogs
+
+仅复制日志
+
 # CrashReportDisplay.Instruction
 
-@HTML{UserName}，请看一下这里！（但如果你觉得你有能力自行解决问题，就请忽略我）\n你的游戏崩溃了！但是别慌，有我呢。我已经收集了必要信息，并为你准备了一个已经排版好的帖子\n你可以<b>单击右侧的按钮将相关代码复制到剪贴板</b>，随后便可在 MCBBS 发帖求助。\n（勾选发帖页面的「纯文本」，再将你复制的内容粘贴进去就好）。\n下面的内容是给专业人员准备的，如果你很勇，你可以试试看……
+你的游戏崩溃了！但是别慌，有我呢。我已经收集了必要信息，并为你准备了一个已经排版好的帖子。\n你可以<b>单击右侧的按钮将相关代码复制到剪贴板</b>，随后便可在 MCBBS 发帖求助。<br/>……或者也可以仅复制简短的日志，但会省略很多信息。
 
 # CrashReportDisplay.Copy
 
-复制代码
+生成发帖文本
 
 # Welcome.Suggest.Part1
 

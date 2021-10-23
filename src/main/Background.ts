@@ -4,6 +4,7 @@ import {
   dialog,
   globalShortcut,
   ipcMain,
+  safeStorage,
   screen,
 } from "electron";
 import fs from "fs";
@@ -284,5 +285,27 @@ export function registerBackgroundListeners(): void {
     void getMainWindow()?.loadFile(
       path.resolve(app.getAppPath(), "Renderer.html")
     );
+  });
+  ipcMain.on("encryptSync", (e, s: string) => {
+    try {
+      if (safeStorage && safeStorage.isEncryptionAvailable()) {
+        e.returnValue = safeStorage.encryptString(s).toString("base64");
+      } else {
+        e.returnValue = "";
+      }
+    } catch {
+      e.returnValue = "";
+    }
+  });
+  ipcMain.on("decryptSync", (e, b: string) => {
+    try {
+      if (safeStorage && safeStorage.isEncryptionAvailable()) {
+        e.returnValue = safeStorage.decryptString(Buffer.from(b, "base64"));
+      } else {
+        e.returnValue = "";
+      }
+    } catch {
+      e.returnValue = "";
+    }
   });
 }

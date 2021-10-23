@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Refresh } from "@material-ui/icons";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, shell } from "electron";
 import os from "os";
 import path from "path";
 import React, { useEffect, useRef, useState } from "react";
@@ -29,7 +29,7 @@ import {
 } from "../modules/java/JInfo";
 import { whereJava } from "../modules/java/WhereJava";
 import { setChangePageWarn } from "./GoTo";
-import { submitError } from "./Message";
+import { submitError, submitInfo } from "./Message";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { fullWidth, useFormStyles } from "./Stylex";
 import { tr } from "./Translator";
@@ -54,7 +54,6 @@ export function JavaSelector(): JSX.Element {
   const [currentJava, setCurrentJava] = useState<string>(getDefaultJavaHome());
   const [currentJavaInfo, setCurrentJavaInfo] =
     useState<JavaInfo>(CANNOT_LOAD_INFO);
-  const display = useRef<boolean>(os.platform() === "win32");
   const [refreshBit, setRefreshBit] = useState<boolean>(false);
   useEffect(() => {
     mounted.current = true;
@@ -198,7 +197,7 @@ export function JavaSelector(): JSX.Element {
         <JavaInfoDisplay
           jInfo={isJavaInfoLoaded ? javaInfo.get(currentJava) : currentJavaInfo}
         />
-        {display.current ? <JavaDownloader /> : ""}
+        <JavaDownloader />
       </Box>
     </MuiThemeProvider>
   );
@@ -309,14 +308,22 @@ function JavaDownloader(): JSX.Element {
         onClick={() => {
           setRunning(true);
           void (async () => {
-            try {
-              await installJRE(false);
-            } catch (e) {
-              submitError(String(e));
-            } finally {
-              if (mounted.current) {
-                setRunning(false);
+            if (os.platform() === "win32") {
+              try {
+                await installJRE(false);
+              } catch (e) {
+                submitError(String(e));
+              } finally {
+                if (mounted.current) {
+                  setRunning(false);
+                }
               }
+            } else {
+              void shell.openExternal(
+                "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/16/jre/x64/linux/"
+              );
+              submitInfo(tr("JavaSelector.External"));
+              setRunning(false);
             }
           })();
         }}
@@ -331,14 +338,22 @@ function JavaDownloader(): JSX.Element {
         onClick={() => {
           setRunning(true);
           void (async () => {
-            try {
-              await installJRE(true);
-            } catch (e) {
-              submitError(String(e));
-            } finally {
-              if (mounted.current) {
-                setRunning(false);
+            if (os.platform() === "win32") {
+              try {
+                await installJRE(true);
+              } catch (e) {
+                submitError(String(e));
+              } finally {
+                if (mounted.current) {
+                  setRunning(false);
+                }
               }
+            } else {
+              void shell.openExternal(
+                "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jre/x64/linux/"
+              );
+              submitInfo(tr("JavaSelector.External"));
+              setRunning(false);
             }
           })();
         }}

@@ -1,6 +1,7 @@
 import fs, { WriteStream } from "fs-extra";
 import { IntervalChecker, WatchDog } from "../commons/WatchDog";
 import { getNumber } from "../config/ConfigSupport";
+import { MirrorChain } from "./Mirror";
 export function guardPipeFile(
   origin: NodeJS.ReadableStream,
   target: WriteStream,
@@ -109,18 +110,32 @@ export function getTimeoutController(
   ];
 }
 
-export async function isWebFileExist(u: string): Promise<string | false> {
-  try {
-    const [controller, sti] = getTimeoutController(
-      getNumber("download.concurrent.timeout", 5000)
-    );
-    const r = await fetch(u, { signal: controller.signal });
-    sti();
-    if (r.ok) {
-      return u;
+export async function isWebFileExist(u: string): Promise<string> {
+  const mrc = new MirrorChain(u);
+  while (mrc.mirror() !== u) {
+    try {
+      const [controller, sti] = getTimeoutController(
+        getNumber("download.concurrent.timeout", 5000)
+      );
+      const r = await fetch(mrc.mirror(), { signal: controller.signal });
+      sti();
+      if (r.ok) {
+        return u;
+      }
+      mrc.markBad();
+    } catch {
+      mrc.markBad();
+    } finally {
+      mrc.next();
     }
-    return false;
-  } catch {
-    return false;
   }
+  const [controller, sti] = getTimeoutController(
+    getNumber("download.concurrent.timeout", 5000)
+  );
+  const r = await fetch(u, { signal: controller.signal });
+  sti();
+  if (r.ok) {
+    return u;
+  }
+  throw "File not exist: " + u;
 }

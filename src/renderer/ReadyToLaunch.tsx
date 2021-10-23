@@ -29,7 +29,6 @@ import {
 import { FlightLand, FlightTakeoff, RssFeed } from "@material-ui/icons";
 import { ipcRenderer } from "electron";
 import EventEmitter from "events";
-import objectHash from "object-hash";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { Account } from "../modules/auth/Account";
@@ -216,6 +215,22 @@ export function ReadyToLaunch(): JSX.Element {
   );
 }
 
+const LAUNCH_STEPS = [
+  "Pending",
+  "PerformingAuth",
+  "CheckingFiles",
+  "PreparingMods",
+  "GeneratingArgs",
+  "Finished",
+];
+const REV_LAUNCH_STEPS = {
+  Pending: 0,
+  PerformingAuth: 1,
+  CheckingFiles: 2,
+  PreparingMods: 3,
+  GeneratingArgs: 4,
+  Finished: 5,
+};
 function Launching(props: {
   profile: GameProfile;
   container: MinecraftContainer;
@@ -224,9 +239,7 @@ function Launching(props: {
   const classes = useStyles();
   const mountedBit = useRef<boolean>(true);
   const [warning, setWarning] = useState(false);
-  const runID = useRef("");
   const [status, setStatus] = useState(LaunchingStatus.PENDING);
-  const [hint, setHint] = useState(randsl("ReadyToLaunch.WaitingText"));
   const [activeStep, setActiveStep] = useState(0);
   const [selectedAccount, setSelectedAccount] = useState<Account>();
   const [selecting, setSelecting] = useState<boolean>(false);
@@ -234,18 +247,14 @@ function Launching(props: {
   const [lanPort, setLanPort] = useState(0);
   const [openLanWindow, setOpenLanWindow] = useState(false);
   const [openLanButtonEnabled, setOpenLanButtonEnabled] = useState(false);
-  const profileHash = useRef<string>(objectHash(props.profile));
+  const profileHash = useRef<string>(props.container + "/" + props.profile.id);
   useEffect(() => {
-    const timer = setInterval(() => {
-      setHint(randsl("ReadyToLaunch.WaitingText"));
-    }, 5000);
     const subscribe = setInterval(() => {
       if (NEED_QUERY_STATUS) {
         setWrapperStatus(getWrapperStatus());
       }
     }, 500);
     return () => {
-      clearInterval(timer);
       clearInterval(subscribe);
     };
   }, []);
@@ -314,22 +323,7 @@ function Launching(props: {
       window.removeEventListener("mcFailure", fun);
     };
   }, []);
-  const LAUNCH_STEPS = [
-    "Pending",
-    "PerformingAuth",
-    "CheckingFiles",
-    "PreparingMods",
-    "GeneratingArgs",
-    "Finished",
-  ];
-  const REV_LAUNCH_STEPS = {
-    Pending: 0,
-    PerformingAuth: 1,
-    CheckingFiles: 2,
-    PreparingMods: 3,
-    GeneratingArgs: 4,
-    Finished: 5,
-  };
+
   return (
     <Box className={classes.root}>
       <AccountChoose
@@ -340,7 +334,7 @@ function Launching(props: {
         onChose={(a) => {
           setSelectedAccount(a);
           void (async () => {
-            runID.current = "";
+            setProfileRelatedID(profileHash.current, "");
             // @ts-ignore
             window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
               (st) => {
@@ -356,7 +350,7 @@ function Launching(props: {
               a,
               props.server,
               (id) => {
-                runID.current = id;
+                setProfileRelatedID(profileHash.current, id);
               }
             );
           })();
@@ -412,13 +406,6 @@ function Launching(props: {
           );
         })}
       </Stepper>
-      {status === LaunchingStatus.ACCOUNT_AUTHING ||
-      status === LaunchingStatus.ARGS_GENERATING ||
-      status === LaunchingStatus.MODS_PREPARING ? (
-        <LinearProgress color={"secondary"} />
-      ) : (
-        ""
-      )}
       {/* Insert Here */}
       {status === LaunchingStatus.PENDING ||
       status === LaunchingStatus.FINISHED ||
@@ -451,9 +438,7 @@ function Launching(props: {
           {ws.doing}
         </Typography>
       ) : getBoolean("features.saying") ? (
-        <Typography className={classes.text} gutterBottom>
-          {hint}
-        </Typography>
+        <WaitingText />
       ) : (
         <br />
       )}
@@ -476,7 +461,7 @@ function Launching(props: {
             }
             onClick={async () => {
               if (status === LaunchingStatus.PENDING) {
-                runID.current = "";
+                setProfileRelatedID(profileHash.current, "");
                 if (selectedAccount !== undefined) {
                   // @ts-ignore
                   window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
@@ -493,7 +478,7 @@ function Launching(props: {
                     selectedAccount,
                     props.server,
                     (id) => {
-                      runID.current = id;
+                      setProfileRelatedID(profileHash.current, id);
                     }
                   );
                 } else {
@@ -504,9 +489,10 @@ function Launching(props: {
                   setOpenLanWindow(true);
                   return;
                 }
-                if (runID.current) {
-                  console.log(`Forcefully stopping instance ${runID.current}!`);
-                  stopMinecraft(runID.current);
+                const i = getProfileRelatedID(profileHash.current);
+                if (i) {
+                  console.log(`Forcefully stopping instance ${i}!`);
+                  stopMinecraft(i);
                 }
               }
             }}
@@ -826,19 +812,24 @@ function AccountChoose(props: {
   );
   const mounted = useRef<boolean>(false);
 
-  const accountMap: Record<string, Account> = {};
+  const accountMap = useRef<Record<string, Account>>({});
+  const accountMapRev = useRef<Map<Account, string>>(new Map());
   const [msLogout, setMSLogout] = useState<
     | "ReadyToLaunch.MSLogout"
     | "ReadyToLaunch.MSLogoutRunning"
     | "ReadyToLaunch.MSLogoutDone"
   >("ReadyToLaunch.MSLogout");
-  for (const a of props.allAccounts) {
-    accountMap[objectHash(a)] = a;
-  }
+  useEffect(() => {
+    for (const a of props.allAccounts) {
+      const i = a.getAccountIdentifier();
+      accountMap.current[i] = a;
+      accountMapRev.current.set(a, i);
+    }
+  }, [props.allAccounts]);
   const la =
     window.localStorage.getItem(LAST_YG_ACCOUNT_NAME + props.profileHash) || "";
   let ll = "";
-  if (la && accountMap[la] !== undefined) {
+  if (la && accountMap.current[la] !== undefined) {
     ll = la;
   } else {
     // ll = Object.keys(accountMap)[0] || "";
@@ -950,6 +941,7 @@ function AccountChoose(props: {
               <Select
                 label={tr("ReadyToLaunch.UseYGChoose")}
                 variant={"outlined"}
+                style={{ minWidth: "50%" }}
                 fullWidth
                 labelId={"Select-Account"}
                 onChange={(e) => {
@@ -962,7 +954,8 @@ function AccountChoose(props: {
                 value={sAccount}
               >
                 {Array.from(props.allAccounts.keys()).map((a) => {
-                  const hash = objectHash(a);
+                  const hash =
+                    accountMapRev.current.get(a) || a.getAccountIdentifier();
                   return (
                     <MenuItem key={hash} value={hash}>
                       {a.accountName + " - " + toReadableType(a.type)}
@@ -980,7 +973,8 @@ function AccountChoose(props: {
         <Button
           disabled={
             (choice === "YG" &&
-              (sAccount.length === 0 || isNull(accountMap[sAccount]))) ||
+              (sAccount.length === 0 ||
+                isNull(accountMap.current[sAccount]))) ||
             (choice === "AL" && pName.trim().length === 0)
           }
           onClick={() => {
@@ -990,7 +984,7 @@ function AccountChoose(props: {
                 props.onChose(new MicrosoftAccount(""));
                 return;
               case "YG":
-                props.onChose(accountMap[sAccount]);
+                props.onChose(accountMap.current[sAccount]);
                 return;
               case "AL":
               default:
@@ -1079,7 +1073,7 @@ function MiniJavaSelector(props: {
             {(() => {
               const t = getAllJava().map((j) => {
                 return (
-                  <MenuItem key={objectHash(j)} value={j}>
+                  <MenuItem key={j} value={j}>
                     {j}
                   </MenuItem>
                 );
@@ -1375,4 +1369,36 @@ function OpenWorldDialog(props: {
       </DialogActions>
     </Dialog>
   );
+}
+
+function WaitingText(): JSX.Element {
+  const [hint, setHint] = useState(randsl("ReadyToLaunch.WaitingText"));
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setHint(randsl("ReadyToLaunch.WaitingText"));
+    }, 5000);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+  return (
+    <Typography
+      style={{
+        flexGrow: 1,
+        fontSize: "medium",
+        color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.main,
+      }}
+      gutterBottom
+    >
+      {hint}
+    </Typography>
+  );
+}
+
+function setProfileRelatedID(hash: string, rid: string): void {
+  window.sessionStorage.setItem("MinecraftID" + hash, rid);
+}
+
+function getProfileRelatedID(hash: string): string {
+  return window.sessionStorage.getItem("MinecraftID" + hash) || "";
 }

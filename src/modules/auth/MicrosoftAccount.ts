@@ -2,7 +2,7 @@ import { ipcRenderer } from "electron";
 import { Trio } from "../commons/Collections";
 import { isNull, safeGet } from "../commons/Null";
 import { getString } from "../config/ConfigSupport";
-import { decryptByMachine, encryptByMachine } from "../security/Encrypt";
+import { decrypt2, encrypt2 } from "../security/Encrypt";
 import { Account } from "./Account";
 import { AccountType } from "./AccountUtil";
 
@@ -43,10 +43,10 @@ export class MicrosoftAccount extends Account {
     this.lastUsedUsername =
       localStorage.getItem(MS_LAST_USED_USERNAME_KEY) || "";
     this.lastUsedUUID = localStorage.getItem(MS_LAST_USED_UUID_KEY) || "";
-    this.lastUsedAccessToken = decryptByMachine(
+    this.lastUsedAccessToken = decrypt2(
       localStorage.getItem(MS_LAST_USED_ACTOKEN_KEY) || ""
     );
-    this.refreshToken = decryptByMachine(
+    this.refreshToken = decrypt2(
       localStorage.getItem(MS_LAST_USED_REFRESH_KEY) || ""
     );
   }
@@ -143,7 +143,7 @@ export class MicrosoftAccount extends Account {
 }
 
 function saveRefreshToken(v: string): void {
-  localStorage.setItem(MS_LAST_USED_REFRESH_KEY, encryptByMachine(v));
+  localStorage.setItem(MS_LAST_USED_REFRESH_KEY, encrypt2(v));
 }
 
 function saveUUID(v: string): void {
@@ -155,7 +155,7 @@ function saveUserName(v: string): void {
 }
 
 function saveAccessToken(v: string): void {
-  localStorage.setItem(MS_LAST_USED_ACTOKEN_KEY, encryptByMachine(v));
+  localStorage.setItem(MS_LAST_USED_ACTOKEN_KEY, encrypt2(v));
 }
 
 // User -> Code

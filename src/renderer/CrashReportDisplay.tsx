@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   createStyles,
+  FormControl,
   List,
   ListItem,
   ListItemText,
@@ -27,7 +28,7 @@ import {
 } from "../modules/crhelper/CrashLoader";
 import { LaunchTracker } from "../modules/launch/Tracker";
 import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
-import { submitError } from "./Message";
+import { submitSucc, submitWarn } from "./Message";
 import {
   LAST_CRASH_KEY,
   LAST_FAILURE_INFO_KEY,
@@ -556,23 +557,49 @@ function BBCodeDisplay(props: {
         {tr("CrashReportDisplay.Instruction")}
       </Typography>
       <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-        <Button
-          onClick={() => {
-            if (!copy(code, { format: "text/plain" })) {
-              submitError("Failed to copy!");
-            }
-          }}
-          style={{
-            display: "inline",
-            float: "right",
-            marginLeft: "auto",
-            width: "15%",
-          }}
-          variant={"contained"}
-          color={"primary"}
-        >
-          {tr("CrashReportDisplay.Copy")}
-        </Button>
+        <FormControl style={{ display: "inline", marginLeft: "auto" }}>
+          <Button
+            onClick={() => {
+              if (!copy(code, { format: "text/plain" })) {
+                submitWarn(tr("CrashReportDisplay.FailedToCopy"));
+              } else {
+                submitSucc(tr("CrashReportDisplay.Copied"));
+              }
+            }}
+            variant={"contained"}
+            color={"primary"}
+          >
+            {tr("CrashReportDisplay.Copy")}
+          </Button>
+          <br />
+          <br />
+          <Button
+            onClick={() => {
+              if (
+                !copy(
+                  `Crash Report:\n[spoiler][code]${
+                    props.originCrashReport.join("\n") ||
+                    "Alicorn: Crash Report Not Found"
+                  }[/code][/spoiler]\n\nLogs:\n[spoiler][code]${
+                    props.logs
+                      .map(tab2Space)
+                      .slice(-10000) // Safe Limit
+                      .join("\n") || "Alicorn: Logs Not Found"
+                  }[/code][/spoiler]`,
+                  { format: "text/plain" }
+                )
+              ) {
+                submitWarn(tr("CrashReportDisplay.FailedToCopy"));
+              } else {
+                submitSucc(tr("CrashReportDisplay.Copied"));
+              }
+            }}
+            variant={"contained"}
+            color={"primary"}
+          >
+            {tr("CrashReportDisplay.CopyLogs")}
+          </Button>
+        </FormControl>
       </MuiThemeProvider>
     </Box>
   );

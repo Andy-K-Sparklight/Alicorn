@@ -6,22 +6,15 @@ export class MinecraftContainer {
   id = "";
   rootDir = "";
   private readonly assetsRoot;
-  private readonly nativesBase;
   private readonly librariesBase;
   private readonly versionsBase;
   private readonly modsRoot;
   private readonly resourcePacksRoot;
   private readonly shaderPacksRoot;
-  private readonly logsRoot;
-  private readonly crashReportsRoot;
   private readonly savesRoot;
   private readonly log4j2Root;
   private readonly tempFileRoot;
   private readonly dynamicModsRoot;
-
-  getGlobalLog4j2Root(): string {
-    return this.log4j2Root;
-  }
 
   getModJar(modJar: string): string {
     return path.resolve(this.getModsRoot(), modJar);
@@ -34,26 +27,11 @@ export class MinecraftContainer {
   getAssetsRootLegacy(): string {
     return path.resolve(this.assetsRoot, "legacy");
   }
-
-  /**
-   * @deprecated
-   */
-  getPffLockFile(): string {
-    return path.resolve(this.rootDir, "pff.lock");
-  }
-
   getPff2LockFile(): string {
     return path.resolve(this.rootDir, "pff2.lock");
   }
   getTempFileStorePath(relativePath: string): string {
     return path.resolve(this.tempFileRoot, relativePath);
-  }
-
-  getCrashReport(name: string): string {
-    if (path.isAbsolute(name)) {
-      return name;
-    }
-    return path.resolve(this.getCrashReportsRoot(), name);
   }
 
   getNativeLibraryExtractedRoot(library: LibraryMeta): string {
@@ -72,10 +50,6 @@ export class MinecraftContainer {
     return path.resolve(this.log4j2Root, xmlName);
   }
 
-  getGlobalVersionsRoot(): string {
-    return this.versionsBase;
-  }
-
   getAssetsIndexPath(index: string): string {
     return path.resolve(this.assetsRoot, "indexes", index + ".json");
   }
@@ -91,14 +65,6 @@ export class MinecraftContainer {
 
   getSavesRoot(): string {
     return this.savesRoot;
-  }
-
-  getLogsRoot(): string {
-    return this.logsRoot;
-  }
-
-  getCrashReportsRoot(): string {
-    return this.crashReportsRoot;
   }
 
   getResourcePacksRoot(): string {
@@ -125,20 +91,12 @@ export class MinecraftContainer {
     return path.resolve(this.getVersionRoot(id), id + ".json");
   }
 
-  getClientJarPath(id: string): string {
-    return path.resolve(this.getVersionRoot(id), id + ".jar");
-  }
-
   getLibraryPath(libPath: string): string {
     return path.resolve(this.librariesBase, libPath);
   }
 
   getLibrariesRoot(): string {
     return this.librariesBase;
-  }
-
-  getGlobalNativesRoot(): string {
-    return this.nativesBase;
   }
 
   resolvePath(relativePath?: string): string {
@@ -157,14 +115,11 @@ export class MinecraftContainer {
     this.id = id;
     this.rootDir = rootDir;
     this.assetsRoot = this.resolvePath("assets");
-    this.nativesBase = this.resolvePath("$natives");
     this.librariesBase = this.resolvePath("libraries");
     this.versionsBase = this.resolvePath("versions");
     this.modsRoot = this.resolvePath("mods");
     this.resourcePacksRoot = this.resolvePath("resourcepacks");
     this.shaderPacksRoot = this.resolvePath("shaderpacks");
-    this.logsRoot = this.resolvePath("logs");
-    this.crashReportsRoot = this.resolvePath("crash-reports");
     this.savesRoot = this.resolvePath("saves");
     this.log4j2Root = this.resolvePath("log4j2-xml");
     this.tempFileRoot = this.resolvePath("alicorn-temp");

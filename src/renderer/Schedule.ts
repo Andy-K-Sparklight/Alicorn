@@ -7,7 +7,6 @@ export function schedulePromiseTask<T>(
   timeout?: number
 ): Promise<T> {
   return new Promise<T>((resolve, reject) => {
-    // @ts-ignore
     window.requestIdleCallback(
       () => {
         fn()

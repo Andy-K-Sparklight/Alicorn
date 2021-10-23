@@ -1,37 +1,12 @@
-import { zip } from "compressing";
-import fs from "fs-extra";
-import path from "path";
+import StreamZip from "node-stream-zip";
 import toml from "toml";
-import { ALICORN_DATA_SUFFIX } from "../commons/Constants";
-import { isFileExist } from "../commons/FileUtil";
 import { isNull, safeGet } from "../commons/Null";
-import { getActualDataPath } from "../config/DataSupport";
 import { MinecraftContainer } from "../container/MinecraftContainer";
-import { getHash } from "../download/Validate";
-import { JAR_SUFFIX } from "../launch/NativesLint";
 
 const MCMOD_INFO = "mcmod.info";
 const FABRIC_MOD_JSON = "fabric.mod.json";
 const MODS_TOML = "mods.toml";
 const META_INF = "META-INF";
-
-// It's VERY difficult to deal with mod names
-// The name of some mods are really confusing
-// We cache a mod's file as '<hash>.modx.jar' and its meta as '<hash>.modx.ald'
-// And create a map to cache generated info
-// Format: <modid>-<mcversion>-<version>
-// This might solve most problem
-
-const MOD_META_SUFFIX = ".modx" + ALICORN_DATA_SUFFIX;
-const MOD_INFO_ROOT_NAME = "modx";
-const DEFAULT_DIR = getActualDataPath(MOD_INFO_ROOT_NAME);
-let MOD_META_DIR: string;
-
-enum ModMetaHeaders {
-  FORGE_LEGACY = "$FL!",
-  FORGE_MODERN = "$FM!",
-  FABRIC = "$FB!",
-}
 
 export interface ModInfo {
   id?: string;
@@ -54,154 +29,42 @@ enum ModLoader {
 
 export { ModLoader };
 
-export async function initModInfo(): Promise<void> {
-  MOD_META_DIR = path.join(DEFAULT_DIR, "metas");
-  await fs.ensureDir(MOD_META_DIR);
-  // await fs.ensureDir(MOD_CACHE_DIR);
-}
-
-// Save that mod file
-// Disabled - not necessary
-/*
-async function saveModFileWithHash(
-  hash: string,
-  origin: string
-): Promise<void> {
-  try {
-    await copyFileStream(
-      origin,
-      path.join(MOD_CACHE_DIR, hash + MOD_CACHE_SUFFIX)
-    );
-  } catch {}
-}*/
-
-// Extract mod files
-async function extractModFiles(
-  modJar: string,
-  container: MinecraftContainer
-): Promise<boolean> {
-  try {
-    const jPath = container.getModJar(modJar);
-    const dest = container.getTempFileStorePath(
-      path.basename(modJar, JAR_SUFFIX)
-    );
-    await fs.emptydir(dest);
-    await zip.uncompress(jPath, dest);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-async function deleteModFiles(
-  modJar: string,
-  container: MinecraftContainer
-): Promise<void> {
-  try {
-    await fs.remove(
-      container.getTempFileStorePath(path.basename(modJar, JAR_SUFFIX))
-    );
-  } catch {}
-}
-
 // Load mod info
-// Large function!
 export async function loadModInfo(
   modJar: string,
   container: MinecraftContainer
 ): Promise<ModInfo> {
   try {
-    const hash = await getHash(container.getModJar(modJar));
-    if (await hasCachedMeta(hash)) {
-      const mt = await fs.readFile(
-        path.join(MOD_META_DIR, hash + MOD_META_SUFFIX)
-      );
-      return loadCachedMeta(mt.toString());
-    }
-    await extractModFiles(modJar, container);
-
-    const fBase = container.getTempFileStorePath(
-      path.basename(modJar, JAR_SUFFIX)
-    );
     const ret: ModInfo = {};
-    let tFile;
     ret.fileName = container.getModJar(modJar);
-    if (await isFileExist(path.join(fBase, FABRIC_MOD_JSON))) {
+    const zip = new StreamZip.async({ file: ret.fileName });
+    try {
+      const d = await zip.entryData(FABRIC_MOD_JSON);
       ret.loader = ModLoader.FABRIC;
-      tFile = path.join(fBase, FABRIC_MOD_JSON);
-      loadFabricInfo(await fs.readJSON(tFile), ret);
-      await cacheMeta(hash, ModMetaHeaders.FABRIC, tFile);
-      await deleteModFiles(modJar, container);
-      // await saveModFileWithHash(hash, ret.fileName);
+      loadFabricInfo(JSON.parse(escapeQuote(d.toString())), ret);
       return ret;
-    } else if (await isFileExist(path.join(fBase, META_INF, MODS_TOML))) {
+    } catch {}
+
+    try {
+      const d = await zip.entryData(META_INF + "/" + MODS_TOML);
       ret.loader = ModLoader.FORGE;
-      tFile = path.join(fBase, META_INF, MODS_TOML);
-      loadTomlInfo(toml.parse((await fs.readFile(tFile)).toString()), ret);
-      await cacheMeta(hash, ModMetaHeaders.FORGE_MODERN, tFile);
-      await deleteModFiles(modJar, container);
-      // await saveModFileWithHash(hash, ret.fileName);
+      loadTomlInfo(toml.parse(d.toString()), ret);
       return ret;
-    } else if (await isFileExist(path.join(fBase, MCMOD_INFO))) {
+    } catch {}
+
+    try {
+      const d = await zip.entryData(MCMOD_INFO);
       ret.loader = ModLoader.FORGE;
-      tFile = path.join(fBase, MCMOD_INFO);
-      loadMCMODInfo(await fs.readJSON(tFile), ret);
-      await cacheMeta(hash, ModMetaHeaders.FORGE_LEGACY, tFile);
-      await deleteModFiles(modJar, container);
-      // await saveModFileWithHash(hash, ret.fileName);
+      loadMCMODInfo(JSON.parse(escapeQuote(d.toString())), ret);
       return ret;
-    } else {
-      // Bad loader
-      await deleteModFiles(modJar, container);
-      return {
-        fileName: container.getModJar(modJar),
-        loader: ModLoader.UNKNOWN,
-      };
-    }
+    } catch {}
+    // Bad Loader
+    return {
+      fileName: container.getModJar(modJar),
+      loader: ModLoader.UNKNOWN,
+    };
   } catch {
-    await deleteModFiles(modJar, container);
     return { fileName: container.getModJar(modJar) };
-  }
-}
-
-async function hasCachedMeta(hash: string): Promise<boolean> {
-  return await isFileExist(path.join(MOD_META_DIR, hash + MOD_META_SUFFIX));
-}
-
-async function cacheMeta(
-  hash: string,
-  header: ModMetaHeaders,
-  origin: string
-): Promise<void> {
-  try {
-    const d = path.join(MOD_META_DIR, hash + MOD_META_SUFFIX);
-    await fs.copyFile(origin, d);
-    await fs.appendFile(d, header);
-  } catch {}
-}
-
-function loadCachedMeta(data: string): ModInfo {
-  const body = data.slice(0, -4);
-  const head = data.slice(-4);
-  const t: ModInfo = {};
-  switch (head) {
-    case ModMetaHeaders.FABRIC:
-      t.loader = ModLoader.FABRIC;
-      loadFabricInfo(JSON.parse(body), t);
-      return t;
-    case ModMetaHeaders.FORGE_LEGACY:
-      t.loader = ModLoader.FORGE;
-      loadMCMODInfo(JSON.parse(body), t);
-      return t;
-
-    case ModMetaHeaders.FORGE_MODERN:
-      t.loader = ModLoader.FORGE;
-      loadTomlInfo(toml.parse(body), t);
-      return t;
-    default:
-      // This should not happen
-      t.loader = ModLoader.UNKNOWN;
-      return t;
   }
 }
 
@@ -270,6 +133,8 @@ function loadTomlInfo(obj: Record<string, unknown>, rawInfo: ModInfo): void {
   rawInfo.displayName = String(safeGet(mod, ["displayName"], ""));
   rawInfo.description = String(safeGet(mod, ["description"], ""));
   rawInfo.logo = String(safeGet(mod, ["logoFile"], ""));
+  rawInfo.mcversion = "*"; // Firstly overwrite
+  // TODO: use forge version to infer minecraft version
   const deps = safeGet(obj, ["dependencies", rawInfo.id]);
   if (!(deps instanceof Array)) {
     rawInfo.mcversion = "*";
@@ -281,4 +146,8 @@ function loadTomlInfo(obj: Record<string, unknown>, rawInfo: ModInfo): void {
     }
   }
   return;
+}
+
+function escapeQuote(s: string): string {
+  return s.replaceAll('\\"', "'").replaceAll("\r", "").replaceAll("\n", "");
 }

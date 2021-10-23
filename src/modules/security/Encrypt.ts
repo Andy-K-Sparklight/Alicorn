@@ -1,6 +1,7 @@
 import CryptoJS from "crypto-js";
-import { getMachineUniqueID } from "./Unique";
+import { ipcRenderer } from "electron";
 import { CODE_32_SPECIAL } from "../commons/Constants";
+import { getMachineUniqueID } from "./Unique";
 
 let MACHINE_ID_32: string;
 
@@ -12,22 +13,17 @@ export function getUniqueID32(): string {
   return MACHINE_ID_32 || CODE_32_SPECIAL;
 }
 
-export function encryptByMachine(data: string): string {
-  if (data === "") {
-    return ""; // NULL safe
-  }
-  return CryptoJS.AES.encrypt(data, MACHINE_ID_32).toString();
-}
-
 export function decryptByMachine(data: string): string {
   if (data === "") {
     return "";
   }
-  return CryptoJS.AES.decrypt(data, MACHINE_ID_32).toString(CryptoJS.enc.Utf8);
-}
-
-export function encryptObject(obj: unknown): string {
-  return encryptByMachine(JSON.stringify(obj));
+  try {
+    return CryptoJS.AES.decrypt(data, MACHINE_ID_32).toString(
+      CryptoJS.enc.Utf8
+    );
+  } catch {
+    return "";
+  }
 }
 
 export function decryptObject(objSrc: string): unknown {
@@ -35,5 +31,43 @@ export function decryptObject(objSrc: string): unknown {
     return JSON.parse(decryptByMachine(objSrc));
   } catch {
     return {};
+  }
+}
+
+export function encryptByMachine(data: string): string {
+  if (data === "") {
+    return ""; // NULL safe
+  }
+  return CryptoJS.AES.encrypt(data, MACHINE_ID_32).toString();
+}
+
+export function encrypt2(src: string): string {
+  if (src === "") {
+    return "";
+  }
+  try {
+    const r = ipcRenderer.sendSync("encryptSync", src);
+    if (r.length > 0) {
+      return r;
+    } else {
+      return encryptByMachine(src); // If not supported
+    }
+  } catch {
+    return encryptByMachine(src);
+  }
+}
+
+export function decrypt2(src: string): string {
+  if (src === "") {
+    return "";
+  }
+  try {
+    const r = ipcRenderer.sendSync("decryptSync", src);
+    if (r.length > 0) {
+      return r;
+    }
+    return decryptByMachine(src);
+  } catch {
+    return decryptByMachine(src);
   }
 }

@@ -6,11 +6,18 @@ export async function isFileExist(pt: string): Promise<boolean> {
     return false; // Null safe
   }
   try {
+    await fs.access(pt);
+    return true;
+  } catch {
+    return false;
+  }
+  /*
+  try {
     const s = await fs.stat(pt);
     return s.isDirectory() || s.size > 0;
   } catch {
     return false;
-  }
+  }*/
 }
 
 export async function getModifiedDate(f: string): Promise<Date> {

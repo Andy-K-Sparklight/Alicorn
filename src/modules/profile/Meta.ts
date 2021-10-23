@@ -1,5 +1,5 @@
 import os from "os";
-import { isNull, registerNullObject, safeGet } from "../commons/Null";
+import { isNull, safeGet } from "../commons/Null";
 
 export class OptionalArgument {
   rules: RuleSet;
@@ -36,11 +36,7 @@ export class ArtifactMeta {
   sha1: string;
   path: string;
   size: number;
-  private static readonly EMPTY_INSTANCE = (() => {
-    const ept = new ArtifactMeta("", "", "", 0);
-    registerNullObject(ept);
-    return ept;
-  })();
+  private static readonly EMPTY_INSTANCE = new ArtifactMeta("", "", "", 0);
 
   static emptyArtifactMeta(): ArtifactMeta {
     return ArtifactMeta.EMPTY_INSTANCE;
@@ -312,17 +308,13 @@ export class ClassifiersMeta {
   nativesWindows: ArtifactMeta;
   sources: ArtifactMeta;
 
-  private static readonly EMPTY_INSTANCE = (() => {
-    const ept = new ClassifiersMeta(
-      ArtifactMeta.emptyArtifactMeta(),
-      ArtifactMeta.emptyArtifactMeta(),
-      ArtifactMeta.emptyArtifactMeta(),
-      ArtifactMeta.emptyArtifactMeta(),
-      ArtifactMeta.emptyArtifactMeta()
-    );
-    registerNullObject(ept);
-    return ept;
-  })();
+  private static readonly EMPTY_INSTANCE = new ClassifiersMeta(
+    ArtifactMeta.emptyArtifactMeta(),
+    ArtifactMeta.emptyArtifactMeta(),
+    ArtifactMeta.emptyArtifactMeta(),
+    ArtifactMeta.emptyArtifactMeta(),
+    ArtifactMeta.emptyArtifactMeta()
+  );
 
   clone(): ClassifiersMeta {
     return new ClassifiersMeta(
@@ -393,17 +385,13 @@ export class AssetIndexArtifactMeta {
   size: number;
   totalSize: number;
   url: string;
-  private static readonly EMPTY_INSTANCE = (() => {
-    const ept = AssetIndexArtifactMeta.fromObject({
-      id: "",
-      sha1: "",
-      size: 0,
-      totalSize: 0,
-      url: "",
-    });
-    registerNullObject(ept);
-    return ept;
-  })();
+  private static readonly EMPTY_INSTANCE = new AssetIndexArtifactMeta(
+    "",
+    "",
+    0,
+    0,
+    ""
+  );
 
   clone(): AssetIndexArtifactMeta {
     return new AssetIndexArtifactMeta(
@@ -443,7 +431,10 @@ export class AssetIndexArtifactMeta {
       let tszInt = parseInt(tsz);
       szInt = isNaN(szInt) ? 0 : szInt;
       tszInt = isNaN(tszInt) ? 0 : tszInt;
-
+      // @ts-ignore
+      if (!obj["id"]) {
+        return AssetIndexArtifactMeta.emptyAssetIndexArtifactMeta();
+      }
       return new AssetIndexArtifactMeta(
         // @ts-ignore
         String(obj["id"]),
@@ -455,7 +446,7 @@ export class AssetIndexArtifactMeta {
         String(obj["url"])
       );
     }
-    return new AssetIndexArtifactMeta("", "", 0, 0, "");
+    return AssetIndexArtifactMeta.emptyAssetIndexArtifactMeta();
   }
 }
 

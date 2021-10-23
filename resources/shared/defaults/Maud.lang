@@ -632,14 +632,6 @@ Alpha
 
 Beta
 
-# InstallCore.Confirm.Ready
-
-准备开始。
-
-# InstallCore.Confirm.OK
-
-嗯
-
 # InstallCore.MinecraftVersion
 
 版本号
@@ -687,6 +679,10 @@ Beta
 # AccountManager.Note
 
 @HTMLMicrosoft 帐户无需验证。可以将验证按钮拖向此处。
+
+# JavaSelector.External
+
+已在外部页面打开，请查看……
 
 # JavaSelector.CustomAdd
 
