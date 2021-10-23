@@ -28,10 +28,12 @@ import {
 } from "@material-ui/icons";
 import { ipcRenderer, shell } from "electron";
 import fs from "fs-extra";
+import os from "os";
 import path from "path";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { throttle } from "throttle-debounce";
+import { abortableBasicHash, basicHash } from "../modules/commons/BasicHash";
 import { isFileExist } from "../modules/commons/FileUtil";
 import { scanCoresIn } from "../modules/container/ContainerScanner";
 import {
@@ -49,13 +51,18 @@ import {
 } from "../modules/container/ContainerWrapper";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { isSharedContainer } from "../modules/container/SharedFiles";
+import { DownloadMeta } from "../modules/download/AbstractDownloader";
 import {
+  addDoing,
   getDoing,
   subscribeDoing,
   unsubscribeDoing,
+  wrappedDownloadFile,
 } from "../modules/download/DownloadWrapper";
+import { isWebFileExist } from "../modules/download/RainbowFetch";
 import { deployIJPack } from "../modules/pff/modpack/InstallIJModpack";
 import { wrappedInstallModpack } from "../modules/pff/modpack/InstallModpack";
+import { submitSucc } from "./Message";
 import {
   FailedHint,
   OperatingHint,
@@ -405,8 +412,16 @@ function genContainerName(s: string): string {
   const s2 = path.basename(s).split(".");
   s2.pop();
   const s3 = s2.join(".").replace(/^\S/, (s) => s.toUpperCase());
-  console.log(s3);
   return s3 || "Container" + Math.floor(Math.random() * 10000);
+}
+
+function isURL(u: string): boolean {
+  try {
+    new URL(u);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function AddNewContainer(props: {
@@ -418,7 +433,14 @@ function AddNewContainer(props: {
   modpack?: string;
 }): JSX.Element {
   const [selectedDir, setSelected] = useState(
-    props.modpack ? path.dirname(props.modpack) : ""
+    props.modpack
+      ? !isURL(props.modpack)
+        ? path.dirname(props.modpack)
+        : path.join(
+            os.homedir(),
+            "OnlineModpack-" + basicHash(props.modpack).slice(0, 6)
+          )
+      : ""
   );
   const [usedName, setName] = useState(
     props.modpack ? genContainerName(props.modpack) : ""
@@ -577,6 +599,15 @@ function AddNewContainer(props: {
               onChange={(e) => {
                 setModpackPath(e.target.value);
                 void isFileExist(e.target.value).then((b) => {
+                  if (b) {
+                    void isWebFileExist(e.target.value)
+                      .then((b) => {
+                        setModpackError(!b);
+                      })
+                      .catch(() => {
+                        setModpackError(true);
+                      });
+                  }
                   setModpackError(!b);
                 });
               }}
@@ -638,17 +669,26 @@ function AddNewContainer(props: {
             onClick={async () => {
               props.closeFunc();
               props.setOperate(true);
-
+              addDoing(tr("ContainerManager.FetchingModpack"));
+              let mp = await getTempStorePath(modpackPath);
+              if (!(await isFileExist(modpackPath))) {
+                if (
+                  (await wrappedDownloadFile(
+                    new DownloadMeta(modpackPath, mp)
+                  )) !== 1
+                ) {
+                  props.setFailed(tr("ContainerManager.FailedToFetch"));
+                }
+              } else {
+                mp = modpackPath;
+              }
               try {
                 await createContainer(usedName, selectedDir, createASC);
-                if (modpackPath.endsWith(".zip")) {
-                  await wrappedInstallModpack(
-                    getContainer(usedName),
-                    modpackPath
-                  );
+                if (mp.endsWith(".zip")) {
+                  await wrappedInstallModpack(getContainer(usedName), mp);
                 }
-                if (modpackPath.endsWith(".json")) {
-                  await deployIJPack(getContainer(usedName), modpackPath);
+                if (mp.endsWith(".json")) {
+                  await deployIJPack(getContainer(usedName), mp);
                 }
                 props.refresh();
               } catch (e) {
@@ -661,6 +701,7 @@ function AddNewContainer(props: {
               setCreateASC(hasEdited("cx.shared-root"));
               setModpackPath("");
               props.setOperate(false);
+              submitSucc(tr("ContainerManager.InstallOK"));
             }}
           >
             {tr("ContainerManager.Continue")}
@@ -685,4 +726,11 @@ async function createContainer(
   asc = false
 ): Promise<void> {
   await createNewContainer(dir, id, asc);
+}
+async function getTempStorePath(u: string): Promise<string> {
+  return path.join(
+    os.tmpdir(),
+    "alicorn-modpacks",
+    (await abortableBasicHash(u)) + (u.endsWith(".json") ? ".json" : ".zip")
+  );
 }

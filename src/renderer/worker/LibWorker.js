@@ -3,7 +3,6 @@ import leven from "js-levenshtein";
 import mdiff from "mdiff";
 import sha from "sha";
 import CryptoJS from "crypto-js";
-import { GameProfile } from "../../modules/profile/GameProfile";
 const HANDLERS = new Map();
 
 onmessage = (e) => {
@@ -31,11 +30,11 @@ addHandler("Close", () => {
 });
 
 addHandler("SHA1", async (o) => {
-  return CryptoJS.SHA1(o);
+  return CryptoJS.SHA1(o).toString();
 });
 
 addHandler("SHA256", async (o) => {
-  return CryptoJS.SHA256(o);
+  return CryptoJS.SHA256(o).toString();
 });
 
 addHandler("Sha256File", async (target) => {

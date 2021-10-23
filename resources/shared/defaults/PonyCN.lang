@@ -746,6 +746,18 @@ Minecraft 容器名
 
 目标文件夹
 
+# ContainerManager.InstallOK
+
+整合包安装完成～
+
+# ContainerManager.FetchingModpack
+
+正在获取整合包……
+
+# ContainerManager.FailedToFetch
+
+没能获取整合包，请检查网络环境……
+
 # ContainerManager.Select
 
 选择目标文件夹
@@ -2838,6 +2850,10 @@ Sparklight 作品\n查找 Mod 并获取编号，用于 Pff 软件安装器安装
 # Utilities.PffVisual.Search
 
 搜索
+
+# Utilities.PffVisual.Modpack
+
+搜索整合包
 
 # Utilities.PffVisual.MultiSelect
 
