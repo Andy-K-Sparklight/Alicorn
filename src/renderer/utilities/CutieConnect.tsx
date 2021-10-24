@@ -59,7 +59,7 @@ export function CutieConnet(): JSX.Element {
   const [hoofoffCode, setHoofoffCode] = useState("");
   const [gameMeta, setGameMeta] = useState<OnlineGameInfo>();
   return (
-    <Box>
+    <>
       <Tabs
         value={tabIndex}
         onChange={(_e, v) => {
@@ -176,152 +176,150 @@ export function CutieConnet(): JSX.Element {
         )}
       </TabPanel>
       <TabPanel index={1} value={tabIndex}>
-        <Box>
-          <Box>
-            <Typography className={text.secondText}>
-              {tr("Utilities.CutieConnect.QuickHint", `RandIP=${randip}`)}
-            </Typography>
-            <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-              <TextField
-                error={ipError}
-                color={"primary"}
-                variant={"outlined"}
-                style={{
-                  width: "49%",
-                  float: "left",
-                }}
-                onChange={(e) => {
-                  setHostIp(e.target.value.trim());
-                  setIPError(!validateIP(e.target.value.trim()));
-                  window.localStorage.setItem(IP_KEY, e.target.value.trim());
-                }}
-                spellCheck={false}
-                margin={"dense"}
-                value={hostIp}
-                label={
-                  ipError
-                    ? tr("Utilities.CutieConnect.InvalidIP")
-                    : tr("Utilities.CutieConnect.IP")
-                }
-              />
-              <TextField
-                color={"primary"}
-                variant={"outlined"}
-                disabled={communityName === INTERNET}
-                style={{
-                  width: "49%",
-                  float: "right",
-                }}
-                onChange={(e) => {
-                  setPassword(e.target.value.trim());
-                  window.localStorage.setItem(
-                    PASSWORD_KEY,
-                    e.target.value.trim()
-                  );
-                }}
-                spellCheck={false}
-                margin={"dense"}
-                value={password}
-                label={
-                  communityName === INTERNET
-                    ? tr("Utilities.CutieConnect.NoPassword")
-                    : tr("Utilities.CutieConnect.Password")
-                }
-              />
-              <br />
-              <TextField
-                error={superNodeError}
-                color={"primary"}
-                variant={"outlined"}
-                fullWidth
-                onChange={(e) => {
-                  setSuperNode(e.target.value.trim());
-                  setSuperNodeError(!checkHost(e.target.value.trim()));
-                  window.localStorage.setItem(
-                    SUPERNODE_KEY,
-                    e.target.value.trim()
-                  );
-                }}
-                style={{
-                  width: "49%",
-                  float: "left",
-                }}
-                spellCheck={false}
-                margin={"dense"}
-                value={superNode}
-                label={
-                  superNodeError
-                    ? tr("Utilities.CutieConnect.InvalidSupernode")
-                    : tr("Utilities.CutieConnect.Supernode")
-                }
-              />
-              <TextField
-                color={"primary"}
-                variant={"outlined"}
-                fullWidth
-                onChange={(e) => {
-                  setCommunityName(e.target.value.trim());
-                  window.localStorage.setItem(
-                    COMMUNITY_KEY,
-                    e.target.value.trim()
-                  );
-                }}
-                style={{
-                  width: "49%",
-                  float: "right",
-                }}
-                spellCheck={false}
-                margin={"dense"}
-                value={communityName}
-                label={
-                  communityName === INTERNET
-                    ? tr("Utilities.CutieConnect.CommunityIsInternet")
-                    : tr("Utilities.CutieConnect.Community")
-                }
-              />
-              <br />
-              <Button
-                disabled={
-                  ipError ||
-                  superNodeError ||
-                  hostIp.length === 0 ||
-                  superNode.length === 0
-                }
-                color={"primary"}
-                variant={"contained"}
-                onClick={async () => {
-                  window.localStorage.setItem(SUPERNODE_KEY, superNode);
-                  window.localStorage.setItem(PASSWORD_KEY, password);
-                  window.localStorage.setItem(COMMUNITY_KEY, communityName);
-                  window.localStorage.setItem(IP_KEY, hostIp); // Freeze Data
-                  await killEdge();
-                  await runEdge(
-                    communityName,
-                    communityName === INTERNET ? "" : password,
-                    hostIp,
-                    superNode
-                  );
-                  submitSucc(tr("Utilities.CutieConnect.Connected"));
-                }}
-              >
-                {tr("Utilities.CutieConnect.Connect")}
-              </Button>
-              <Button
-                style={{ marginLeft: "4px" }}
-                color={"primary"}
-                variant={"contained"}
-                onClick={async () => {
-                  await killEdge();
-                  submitInfo(tr("Utilities.CutieConnect.Disconnected"));
-                }}
-              >
-                {tr("Utilities.CutieConnect.Disconnect")}
-              </Button>
-            </MuiThemeProvider>
-          </Box>
-        </Box>
+        <>
+          <Typography className={text.secondText}>
+            {tr("Utilities.CutieConnect.QuickHint", `RandIP=${randip}`)}
+          </Typography>
+          <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+            <TextField
+              error={ipError}
+              color={"primary"}
+              variant={"outlined"}
+              style={{
+                width: "49%",
+                float: "left",
+              }}
+              onChange={(e) => {
+                setHostIp(e.target.value.trim());
+                setIPError(!validateIP(e.target.value.trim()));
+                window.localStorage.setItem(IP_KEY, e.target.value.trim());
+              }}
+              spellCheck={false}
+              margin={"dense"}
+              value={hostIp}
+              label={
+                ipError
+                  ? tr("Utilities.CutieConnect.InvalidIP")
+                  : tr("Utilities.CutieConnect.IP")
+              }
+            />
+            <TextField
+              color={"primary"}
+              variant={"outlined"}
+              disabled={communityName === INTERNET}
+              style={{
+                width: "49%",
+                float: "right",
+              }}
+              onChange={(e) => {
+                setPassword(e.target.value.trim());
+                window.localStorage.setItem(
+                  PASSWORD_KEY,
+                  e.target.value.trim()
+                );
+              }}
+              spellCheck={false}
+              margin={"dense"}
+              value={password}
+              label={
+                communityName === INTERNET
+                  ? tr("Utilities.CutieConnect.NoPassword")
+                  : tr("Utilities.CutieConnect.Password")
+              }
+            />
+            <br />
+            <TextField
+              error={superNodeError}
+              color={"primary"}
+              variant={"outlined"}
+              fullWidth
+              onChange={(e) => {
+                setSuperNode(e.target.value.trim());
+                setSuperNodeError(!checkHost(e.target.value.trim()));
+                window.localStorage.setItem(
+                  SUPERNODE_KEY,
+                  e.target.value.trim()
+                );
+              }}
+              style={{
+                width: "49%",
+                float: "left",
+              }}
+              spellCheck={false}
+              margin={"dense"}
+              value={superNode}
+              label={
+                superNodeError
+                  ? tr("Utilities.CutieConnect.InvalidSupernode")
+                  : tr("Utilities.CutieConnect.Supernode")
+              }
+            />
+            <TextField
+              color={"primary"}
+              variant={"outlined"}
+              fullWidth
+              onChange={(e) => {
+                setCommunityName(e.target.value.trim());
+                window.localStorage.setItem(
+                  COMMUNITY_KEY,
+                  e.target.value.trim()
+                );
+              }}
+              style={{
+                width: "49%",
+                float: "right",
+              }}
+              spellCheck={false}
+              margin={"dense"}
+              value={communityName}
+              label={
+                communityName === INTERNET
+                  ? tr("Utilities.CutieConnect.CommunityIsInternet")
+                  : tr("Utilities.CutieConnect.Community")
+              }
+            />
+            <br />
+            <Button
+              disabled={
+                ipError ||
+                superNodeError ||
+                hostIp.length === 0 ||
+                superNode.length === 0
+              }
+              color={"primary"}
+              variant={"contained"}
+              onClick={async () => {
+                window.localStorage.setItem(SUPERNODE_KEY, superNode);
+                window.localStorage.setItem(PASSWORD_KEY, password);
+                window.localStorage.setItem(COMMUNITY_KEY, communityName);
+                window.localStorage.setItem(IP_KEY, hostIp); // Freeze Data
+                await killEdge();
+                await runEdge(
+                  communityName,
+                  communityName === INTERNET ? "" : password,
+                  hostIp,
+                  superNode
+                );
+                submitSucc(tr("Utilities.CutieConnect.Connected"));
+              }}
+            >
+              {tr("Utilities.CutieConnect.Connect")}
+            </Button>
+            <Button
+              style={{ marginLeft: "4px" }}
+              color={"primary"}
+              variant={"contained"}
+              onClick={async () => {
+                await killEdge();
+                submitInfo(tr("Utilities.CutieConnect.Disconnected"));
+              }}
+            >
+              {tr("Utilities.CutieConnect.Disconnect")}
+            </Button>
+          </MuiThemeProvider>
+        </>
       </TabPanel>
-    </Box>
+    </>
   );
 }
 const VALID_IP_POST_REGEX =
@@ -464,8 +462,6 @@ function TabPanel(props: {
 }): JSX.Element {
   const { children, value, index } = props;
   return (
-    <Box hidden={value !== index}>
-      {value === index ? <Box>{children}</Box> : ""}
-    </Box>
+    <Box hidden={value !== index}>{value === index ? <>{children}</> : ""}</Box>
   );
 }

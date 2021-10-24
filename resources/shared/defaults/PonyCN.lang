@@ -50,6 +50,10 @@ ffe0f0
 
 Java 选择器
 
+# Statistics
+
+Alicorn 回忆录
+
 # Options
 
 选项
@@ -2970,3 +2974,43 @@ Sparklight 作品\n本地帐户服装和披风配送
 # QuickSetup.Default
 
 Minecraft 默认位置
+
+# Statistics.Click
+
+在不知不觉中，你已经戳了 Alicorn {Value} 次……
+
+# Statistics.Click.As
+
+[{Value}>10000]……你和她之间，是否已经有了真感情？
+……但我宁可再少一些……
+[{Value}<=10000]……还要点击多少次，才能了解可爱的她？
+
+# Statistics.Crash
+
+你可能不知道，游戏崩溃了 {Value} 次……
+
+# Statistics.Crash.As
+
+[{Value}>1000]……比 Alicorn 开发过程中的更多！
+……但不会是最后一次……
+[{Value}==0]……好希望永远这样……
+
+# Statistics.Launch
+
+她为你启动了 {Value} 次游戏……
+
+# Statistics.Launch.As
+
+[{Value}>100]……别怕 Alicorn 伤心，过两天她会就忘了的……
+[{Value}>1000]……Java 是否已经疯掉？
+[{Value}>100]……难道你还只把她当普通朋友？
+是的，我只是一个附属产品……
+
+# Statistics.Keyboard
+
+……敲击了 {Value} 次键盘
+
+# Statistics.Keyboard.As
+
+[{Value}>500000]在 Alicorn 里开发 Alicorn？！
+……或许我们能够让它更少一点。

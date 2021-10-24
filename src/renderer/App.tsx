@@ -2,8 +2,13 @@ import {
   AppBar,
   Box,
   createStyles,
+  Drawer,
   Fab,
   IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
   makeStyles,
   Snackbar,
   Toolbar,
@@ -21,10 +26,13 @@ import {
   FlightTakeoff,
   GetApp,
   Help,
+  Home,
   Info,
+  Menu,
   PowerSettingsNew,
   Refresh,
   Settings,
+  ShowChart,
   ViewModule,
   Web,
 } from "@material-ui/icons";
@@ -68,6 +76,7 @@ import { PffFront } from "./PffFront";
 import { QuickSetup } from "./QuickSetup";
 import { ReadyToLaunch } from "./ReadyToLaunch";
 import { ServerList } from "./ServerList";
+import { saveStatistics, Statistics } from "./Statistics";
 import { tr } from "./Translator";
 import { getNextTutorName, isShow, isTutor, Tutor } from "./Tutor";
 import { BuildUp } from "./utilities/BuildUp";
@@ -129,6 +138,7 @@ export function App(): JSX.Element {
   const [openSucc, setSuccOpen] = useState(false);
   const [succ, setSucc] = useState("");
   const [refreshBit, setRefreshBit] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
   const sessionID = useRef(0);
   const clearSnacks = () => {
     setInfoOpen(false);
@@ -267,7 +277,7 @@ export function App(): JSX.Element {
             .toString()
             .split("authlib-injector:yggdrasil-server:")[1];
 
-          jumpTo("/YggdrasilAccountManager/1/" + encodeURIComponent(server));
+          jumpTo("/AccountManager/1/" + encodeURIComponent(server));
           triggerSetPage("AccountManager");
 
           window.dispatchEvent(
@@ -287,9 +297,21 @@ export function App(): JSX.Element {
       }}
     >
       <AppBar>
-        <Toolbar>
-          <Box className={"window-drag" + " " + classes.title}>
-            {/* Drag our window with title */}
+        <Toolbar onMouseDown={onMouseDown}>
+          <IconButton
+            style={{
+              display: isTutor() || showCommand ? "none" : undefined,
+              marginRight: "6px",
+            }}
+            onClick={() => {
+              if (!showCommand) {
+                setOpenDrawer(true);
+              }
+            }}
+          >
+            <Menu />
+          </IconButton>
+          <Box className={classes.title}>
             <Typography
               variant={"h6"}
               style={
@@ -400,19 +422,6 @@ export function App(): JSX.Element {
                 <Build />
               </IconButton>
             </Tooltip>
-            <Tooltip title={tr("MainMenu.Version")}>
-              <IconButton
-                style={genHideStyles("Version")}
-                className={classes.floatButton}
-                onClick={() => {
-                  jumpTo("/Version");
-                  triggerSetPage("Version");
-                }}
-                color={"inherit"}
-              >
-                <Info />
-              </IconButton>
-            </Tooltip>
             <Tooltip title={tr("MainMenu.QuickOptions")}>
               <IconButton
                 style={genHideStyles("Options")}
@@ -439,23 +448,6 @@ export function App(): JSX.Element {
                 <ViewModule />
               </IconButton>
             </Tooltip>
-            {getBoolean("dev.experimental") ? (
-              <Tooltip title={tr("MainMenu.QuickServerList")}>
-                <IconButton
-                  style={genHideStyles("ServerList")}
-                  className={classes.floatButton}
-                  onClick={() => {
-                    jumpTo("/ServerList");
-                    triggerSetPage("ServerList");
-                  }}
-                  color={"inherit"}
-                >
-                  <Dns />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              ""
-            )}
             {getBoolean("dev") ? (
               <Tooltip title={tr("MainMenu.Browser")}>
                 <IconButton
@@ -484,7 +476,7 @@ export function App(): JSX.Element {
                 style={genHideStyles("AccountManager")}
                 className={classes.floatButton}
                 onClick={() => {
-                  jumpTo("/YggdrasilAccountManager");
+                  jumpTo("/AccountManager");
                   triggerSetPage("AccountManager");
                 }}
                 color={"inherit"}
@@ -563,7 +555,7 @@ export function App(): JSX.Element {
           component={ContainerManager}
         />
         <Route
-          path={"/YggdrasilAccountManager/:adding?/:server?"}
+          path={"/AccountManager/:adding?/:server?"}
           component={YggdrasilAccountManager}
         />
         <Route path={"/JavaSelector"} component={JavaSelector} />
@@ -586,8 +578,14 @@ export function App(): JSX.Element {
           path={"/Utilities/CarouselBoutique"}
           component={CarouselBoutique}
         />
+        <Route path={"/Statistics"} component={Statistics} />
       </Box>
-
+      <PagesDrawer
+        open={openDrawer}
+        onClose={() => {
+          setOpenDrawer(false);
+        }}
+      />
       <YNDialog2
         onClose={() => {
           setOpenChangePageWarn(false);
@@ -675,6 +673,49 @@ export function App(): JSX.Element {
     </Box>
   );
 }
+
+const PAGES_ICONS_MAP: Record<string, JSX.Element> = {
+  LaunchPad: <FlightTakeoff />,
+  Welcome: <Home />,
+  InstallCore: <GetApp />,
+  ContainerManager: <AllInbox />,
+  JavaSelector: <ViewModule />,
+  AccountManager: <AccountCircle />,
+  ServerList: <Dns />,
+  UtilitiesIndex: <Build />,
+  Statistics: <ShowChart />,
+  Options: <Settings />,
+  Version: <Info />,
+};
+
+function PagesDrawer(props: {
+  open: boolean;
+  onClose: () => unknown;
+}): JSX.Element {
+  return (
+    <Drawer anchor={"left"} open={props.open} onClose={props.onClose}>
+      <List>
+        {Object.entries(PAGES_ICONS_MAP).map(([p, i]) => {
+          return (
+            <ListItem
+              key={p}
+              onClick={() => {
+                props.onClose();
+                jumpTo("/" + p);
+                triggerSetPage(p);
+              }}
+              button
+            >
+              <ListItemIcon>{i}</ListItemIcon>
+              <ListItemText>{tr(p)}</ListItemText>
+            </ListItem>
+          );
+        })}
+      </List>
+    </Drawer>
+  );
+}
+
 export function remoteHideWindow(): void {
   console.log("Preparing to exit!");
   ipcRenderer.send("hideWindow");
@@ -684,6 +725,14 @@ export function remoteCloseWindow(): void {
   console.log("Closing!");
   prepareToQuit();
   ipcRenderer.send("closeWindow");
+}
+
+function handleDrag(name: string): (e: React.DragEvent) => void {
+  return (e) => {
+    console.log("Dragging " + name);
+    e.dataTransfer.setData("text/x-alicorn-remove-btn", name);
+    e.dataTransfer.dropEffect = "move";
+  };
 }
 
 function remoteOpenDevTools(): void {
@@ -698,6 +747,7 @@ function prepareToQuit(): void {
   saveVFSync();
   saveResolveLockSync();
   saveServersSync();
+  saveStatistics();
   console.log("All chunks are saved.");
 }
 
@@ -709,6 +759,7 @@ async function intervalSaveData(): Promise<void> {
   await saveVF();
   await saveResolveLock();
   await saveServers();
+  saveStatistics();
   console.log("All chunks are saved.");
 }
 
@@ -721,4 +772,27 @@ function genHideStyles(name: string): React.CSSProperties {
   } else {
     return { display: "none" };
   }
+}
+
+let animationId: number | null = null;
+let mouseX: number | null = null;
+let mouseY: number | null = null;
+
+function onMouseDown(e: React.MouseEvent) {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  document.addEventListener("mouseup", onMouseUp);
+  requestAnimationFrame(moveWindow);
+}
+
+function onMouseUp() {
+  document.removeEventListener("mouseup", onMouseUp);
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+  }
+}
+
+function moveWindow() {
+  ipcRenderer.send("windowMoving", { mouseX, mouseY });
+  animationId = requestAnimationFrame(moveWindow);
 }

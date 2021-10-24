@@ -52,6 +52,16 @@ export function getAllMounted(): string[] {
   return r;
 }
 
+export function getAllNotMounted(): string[] {
+  const r = [];
+  for (const c of GlobalContainerDescriptorTable.keys()) {
+    if (!isMounted(c)) {
+      r.push(c);
+    }
+  }
+  return r;
+}
+
 export function unregisterContainer(id: string): void {
   GlobalContainerDescriptorTable.delete(id);
   GlobalMountDescriptorTable.delete(id);

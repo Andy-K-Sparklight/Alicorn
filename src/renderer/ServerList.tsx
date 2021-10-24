@@ -61,7 +61,7 @@ export function ServerList(): JSX.Element {
     })();
   }, []);
   return (
-    <Box>
+    <>
       <Box style={{ textAlign: "right", marginRight: "5%" }}>
         <Tooltip title={tr("ServerList.Add")}>
           <IconButton
@@ -94,7 +94,7 @@ export function ServerList(): JSX.Element {
         }}
         servers={servers}
       />
-    </Box>
+    </>
   );
 }
 

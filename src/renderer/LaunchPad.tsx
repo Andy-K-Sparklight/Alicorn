@@ -24,6 +24,7 @@ import { loadProfile } from "../modules/profile/ProfileLoader";
 import { whatProfile } from "../modules/profile/WhatProfile";
 import { jumpTo, triggerSetPage } from "./GoTo";
 import { YNDialog2 } from "./OperatingHint";
+import { addStatistics } from "./Statistics";
 import { useCardStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
 
@@ -121,7 +122,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
   }, []);
 
   return (
-    <Box>
+    <>
       <Box style={{ textAlign: "right", marginRight: "18%" }}>
         <Tooltip title={tr("CoreInfo.Reload")}>
           <IconButton
@@ -137,7 +138,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
         </Tooltip>
       </Box>
       {isLoading ? (
-        <Box>
+        <>
           <LinearProgress color={"secondary"} style={{ width: "80%" }} />
           <Typography
             style={{ fontSize: "medium", color: "#ff8400" }}
@@ -145,7 +146,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
           >
             {tr("CoreInfo.StillLoading")}
           </Typography>
-        </Box>
+        </>
       ) : (
         ""
       )}
@@ -163,7 +164,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
           />
         );
       })}
-    </Box>
+    </>
   );
 }
 
@@ -179,7 +180,7 @@ function SingleCoreDisplay(props: {
   const [warningOpen, setWarningOpen] = useState(false);
   const [toDestroy, setDestroy] = useState<string>();
   return (
-    <Box>
+    <>
       <Card
         className={classes.card}
         onClick={() => {
@@ -201,7 +202,7 @@ function SingleCoreDisplay(props: {
           {props.profile.corrupted ? (
             ""
           ) : (
-            <Box>
+            <>
               {props.profile.versionType !== "Mojang" &&
               props.profile.versionType !== "Installer" ? (
                 <Tooltip title={tr("CoreInfo.Pff")}>
@@ -217,6 +218,7 @@ function SingleCoreDisplay(props: {
                         )}/${encodeURIComponent(props.profile.versionType)}`
                       );
                       triggerSetPage("PffFront");
+                      addStatistics("Click");
                       e.stopPropagation();
                     }}
                   >
@@ -239,6 +241,7 @@ function SingleCoreDisplay(props: {
                   onClick={(e) => {
                     setDestroy(props.profile.id);
                     setWarningOpen(true);
+                    addStatistics("Click");
                     e.stopPropagation();
                   }}
                 >
@@ -252,13 +255,14 @@ function SingleCoreDisplay(props: {
                   onClick={(e) => {
                     markUsed(hash, 0);
                     props.refresh();
+                    addStatistics("Click");
                     e.stopPropagation();
                   }}
                 >
                   <EventBusy />
                 </IconButton>
               </Tooltip>
-            </Box>
+            </>
           )}
 
           <Typography
@@ -329,7 +333,7 @@ function SingleCoreDisplay(props: {
         />
       </Card>
       <br />
-    </Box>
+    </>
   );
 }
 
@@ -367,7 +371,7 @@ function getDescriptionFor(type: string): string {
 
 function CorruptedCoreWarning(): JSX.Element {
   return (
-    <Box>
+    <>
       <Typography
         style={{
           fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
@@ -377,6 +381,6 @@ function CorruptedCoreWarning(): JSX.Element {
       >
         {tr("CoreInfo.CorruptedWarning")}
       </Typography>
-    </Box>
+    </>
   );
 }

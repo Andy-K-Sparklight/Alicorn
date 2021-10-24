@@ -17,7 +17,7 @@ import {
   saveDefaultConfig,
 } from "../modules/config/ConfigSupport";
 import { getActualDataPath } from "../modules/config/DataSupport";
-import { getContainer, loadGDT } from "../modules/container/ContainerUtil";
+import { loadGDT } from "../modules/container/ContainerUtil";
 import { initVF } from "../modules/container/ValidateRecord";
 import { prepareEdgeExecutable } from "../modules/cutie/BootEdge";
 import { initConcurrentDownloader } from "../modules/download/Concurrent";
@@ -29,7 +29,6 @@ import { prefetchFabricManifest } from "../modules/pff/get/FabricGet";
 import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
 import { prefetchMojangVersions } from "../modules/pff/get/MojangCore";
 import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
-import { loadProfile } from "../modules/profile/ProfileLoader";
 import { initEncrypt } from "../modules/security/Encrypt";
 import { getMachineUniqueID } from "../modules/security/Unique";
 import { checkUpdate, initUpdator } from "../modules/selfupdate/Updator";
@@ -38,7 +37,8 @@ import { App } from "./App";
 import { registerHandlers } from "./Handlers";
 import { activateHotKeyFeature } from "./HotKeyHandler";
 import { submitInfo, submitWarn } from "./Message";
-import { initWorker, invokeWorker } from "./Schedule";
+import { initWorker } from "./Schedule";
+import { initStatistics } from "./Statistics";
 import { initTranslator, tr } from "./Translator";
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
@@ -248,7 +248,7 @@ function flushColors(): void {
     getConfiguredFont() + tr("Font") + FONT_FAMILY,
     getBoolean("features.cursor")
   );
-  const e = document.createElement("style");
+  let e: HTMLStyleElement | null = document.createElement("style");
   e.innerText = `html {background-color:${
     getString("theme.secondary.light") || "#" + tr("Colors.Secondary.Light")
   }; font-family:${
@@ -256,6 +256,7 @@ function flushColors(): void {
   };} a {color:${getString("theme.primary.main", "#5d2391")};}`;
   // Set background
   document.head.insertAdjacentElement("beforeend", e);
+  e = null;
   window.dispatchEvent(new CustomEvent("ForceRefreshApp"));
 }
 
@@ -267,11 +268,13 @@ function setDefCursor(): void {
       pressCursorEle.parentNode?.removeChild(pressCursorEle);
       pressCursorEle = null;
     }
-    const x = normalCursorEle || document.createElement("style");
+    let x: HTMLStyleElement | null =
+      normalCursorEle || document.createElement("style");
     x.innerText =
       'html, .MuiButtonBase-root, .MuiBox-root, label, button, input, input[type="text"], input[type="url"], input[type="checkbox"], input[type="radio"] { cursor: url(Mouse.png), auto !important; }';
     document.head.insertAdjacentElement("afterbegin", x);
     normalCursorEle = x;
+    x = null;
   }
 }
 function setActCursor(): void {
@@ -280,11 +283,12 @@ function setActCursor(): void {
       normalCursorEle.parentNode?.removeChild(normalCursorEle);
       normalCursorEle = null;
     }
-    const x = document.createElement("style");
+    let x: HTMLStyleElement | null = document.createElement("style");
     x.innerText =
       'html, .MuiButtonBase-root, .MuiBox-root, label, button, input, input[type="text"], input[type="url"], input[type="checkbox"], input[type="radio"] { cursor: url(Mouse2.png), auto !important; }';
     document.head.insertAdjacentElement("afterbegin", x);
     pressCursorEle = x;
+    x = null;
   }
 }
 
@@ -383,6 +387,7 @@ void (async () => {
   // Essential works and light works
   await Promise.allSettled([initEncrypt()]);
   initDownloadWrapper();
+  initStatistics();
   // Normal works
   await Promise.allSettled([
     (async () => {

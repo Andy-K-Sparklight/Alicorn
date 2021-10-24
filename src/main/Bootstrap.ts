@@ -107,7 +107,7 @@ async function whenAppReady() {
   const appPath = app.getAppPath();
   console.log("App is ready, preparing window...");
   const { height } = screen.getPrimaryDisplay().workAreaSize;
-  const calH = Math.floor(height * 0.5);
+  const calH = Math.floor(height * 0.55);
   mainWindow = new BrowserWindow({
     width: Math.floor((calH * 48) / 25),
     height: calH,
@@ -117,6 +117,7 @@ async function whenAppReady() {
       nodeIntegrationInWorker: true, // Worker needs mdiff
       contextIsolation: false, // Node
       sandbox: false, // Node
+      spellcheck: false,
     },
     frame: false,
     show: false,

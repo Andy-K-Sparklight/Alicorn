@@ -106,6 +106,7 @@ import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
 } from "./Renderer";
+import { addStatistics } from "./Statistics";
 import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
 import {
@@ -413,7 +414,7 @@ function Launching(props: {
       status === LaunchingStatus.ARGS_GENERATING ? (
         <br />
       ) : (
-        <Box>
+        <>
           <Typography className={classes.text} gutterBottom>
             {tr(
               "ReadyToLaunch.Progress",
@@ -422,7 +423,7 @@ function Launching(props: {
               `Pending=${ws.pending}`
             )}
           </Typography>
-        </Box>
+        </>
       )}
       <MiniJavaSelector
         hash={profileHash.current}
@@ -452,7 +453,7 @@ function Launching(props: {
             : tr("ReadyToLaunch.Start")
         }
       >
-        <Box>
+        <>
           <Fab
             color={"primary"}
             disabled={
@@ -505,7 +506,7 @@ function Launching(props: {
               <FlightLand />
             )}
           </Fab>
-        </Box>
+        </>
       </Tooltip>
       <br />
       <br />
@@ -719,6 +720,7 @@ async function startBoot(
     setStatus(LaunchingStatus.PENDING);
     window.dispatchEvent(new CustomEvent("MinecraftExitCleanUp"));
     if (c !== "0" && c !== "SIGINT") {
+      addStatistics("Crash");
       let crashReports: string[] = [];
       console.log(
         `Attention! Minecraft(${runID}) might not have run properly!`
@@ -766,6 +768,7 @@ async function startBoot(
     gc1: getString("gc1", "pure"),
     gc2: getString("gc2", "pure"),
   });
+  addStatistics("Launch");
   setRunID(runID);
   window.localStorage.setItem(LAST_SUCCESSFUL_GAME_KEY, window.location.hash);
   setStatus(LaunchingStatus.FINISHED);
@@ -902,7 +905,7 @@ function AccountChoose(props: {
           ""
         )}
         {choice === "MZ" ? (
-          <Box>
+          <>
             <Button
               variant={"outlined"}
               className={btnClasses.btn}
@@ -928,12 +931,12 @@ function AccountChoose(props: {
             >
               {tr(msLogout)}
             </Button>
-          </Box>
+          </>
         ) : (
           ""
         )}
         {choice === "YG" ? (
-          <Box>
+          <>
             <FormControl variant={"outlined"}>
               <InputLabel variant={"outlined"} id={"Select-Account"}>
                 {tr("ReadyToLaunch.UseYGChoose")}
@@ -964,7 +967,7 @@ function AccountChoose(props: {
                 })}
               </Select>
             </FormControl>
-          </Box>
+          </>
         ) : (
           ""
         )}

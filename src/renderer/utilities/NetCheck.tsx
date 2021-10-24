@@ -6,7 +6,7 @@ import { useTextStyles } from "../Stylex";
 import { tr } from "../Translator";
 export function NetCheck(): JSX.Element {
   return (
-    <Box>
+    <>
       <TestReachable
         site={
           "https://cdn.jsdelivr.net/gh/Andy-K-Sparklight/Alicorn@main/package.json"
@@ -41,7 +41,7 @@ export function NetCheck(): JSX.Element {
         name={"MSAuth"}
       />
       <TestReachable site={"authserver.mojang.com"} name={"MojangAuth"} />
-    </Box>
+    </>
   );
 }
 const ICON_SIZE = "22px";

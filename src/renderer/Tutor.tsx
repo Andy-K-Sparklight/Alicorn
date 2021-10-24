@@ -121,14 +121,14 @@ export function Tutor(): JSX.Element {
             {setting[1]}
           </Button>
         ) : (
-          <Box>
+          <>
             <br />
             <InputItem
               type={getConfigType(setting[1])}
               bindConfig={setting[0]}
               choices={setting[2] ? setting[2].split("/") : undefined}
             />
-          </Box>
+          </>
         )}
       </MuiThemeProvider>
     </Box>

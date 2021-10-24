@@ -185,13 +185,13 @@ export function JavaSelector(): JSX.Element {
         {isJavaInfoLoaded ? (
           ""
         ) : (
-          <Box>
+          <>
             <LinearProgress color={"secondary"} />
             <br />
             <Typography className={classes.text} color={"primary"} gutterBottom>
               {tr("JavaSelector.Loading")}
             </Typography>
-          </Box>
+          </>
         )}
 
         <JavaInfoDisplay
@@ -207,7 +207,7 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
   const corruptBit =
     props.jInfo?.rootVersion === -1 || props.jInfo === undefined;
   return (
-    <Box>
+    <>
       <Typography variant={"h6"} color={"primary"} gutterBottom>
         {corruptBit
           ? tr("JavaSelector.CannotLoad")
@@ -216,14 +216,14 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
       {corruptBit ? (
         ""
       ) : (
-        <Box>
+        <>
           <Typography color={"secondary"} gutterBottom>
             {props.jInfo?.runtime || "Unknown"}
           </Typography>
           <Typography color={"secondary"} gutterBottom>
             {props.jInfo?.vm || "Unknown"}
           </Typography>
-        </Box>
+        </>
       )}
       {corruptBit ? (
         <Typography
@@ -241,7 +241,7 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
       {corruptBit ? (
         ""
       ) : (
-        <Box>
+        <>
           {props.jInfo?.isFree ? (
             ""
           ) : (
@@ -284,9 +284,9 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
               {tr("JavaSelector.Warn32")}
             </Typography>
           )}
-        </Box>
+        </>
       )}
-    </Box>
+    </>
   );
 }
 
@@ -300,7 +300,7 @@ function JavaDownloader(): JSX.Element {
     };
   }, []);
   return (
-    <Box>
+    <>
       <Button
         variant={"outlined"}
         color={"primary"}
@@ -363,7 +363,7 @@ function JavaDownloader(): JSX.Element {
       >
         {tr("JavaSelector.GetOld")}
       </Button>
-    </Box>
+    </>
   );
 }
 

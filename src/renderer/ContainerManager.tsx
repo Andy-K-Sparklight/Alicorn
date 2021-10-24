@@ -39,6 +39,8 @@ import { scanCoresIn } from "../modules/container/ContainerScanner";
 import {
   getAllContainerPaths,
   getAllContainers,
+  getAllMounted,
+  getAllNotMounted,
   getContainer,
   isMounted,
   mount,
@@ -112,7 +114,7 @@ export function ContainerManager(): JSX.Element {
       unsubscribeDoing("ContainerManager");
     };
   }, []);
-  const allContainers = getAllContainers();
+  const allContainers = getAllMounted().concat(getAllNotMounted());
   return (
     <Box className={classes2.para}>
       <OperatingHintCustom open={operating} msg={doing} />
@@ -205,12 +207,12 @@ function SingleContainerDisplay(props: {
     };
   }, [refresh]);
   return (
-    <Box>
+    <>
       <OperatingHint open={operating} />
 
       <Card className={props.isMounted ? classes.card : classes.uCard}>
         <CardContent>
-          <Box>
+          <>
             <Tooltip title={tr("ContainerManager.Remove")}>
               <IconButton
                 color={"inherit"}
@@ -348,7 +350,7 @@ function SingleContainerDisplay(props: {
                 <FolderOpen />
               </IconButton>
             </Tooltip>
-          </Box>
+          </>
           <Typography variant={"h6"} gutterBottom>
             {props.container.id}
           </Typography>
@@ -381,7 +383,7 @@ function SingleContainerDisplay(props: {
         </CardContent>
       </Card>
       <br />
-    </Box>
+    </>
   );
 }
 
@@ -489,7 +491,7 @@ function AddNewContainer(props: {
             value={usedName}
           />
           {/* Choose Dir */}
-          <Box>
+          <>
             <TextField
               error={dirError}
               className={classes.input}
@@ -533,7 +535,7 @@ function AddNewContainer(props: {
             >
               {tr("ContainerManager.Select")}
             </Button>
-          </Box>
+          </>
           <RadioGroup
             row
             onChange={(e) => {
@@ -582,7 +584,7 @@ function AddNewContainer(props: {
             label={tr("ContainerManager.CreateModpack")}
           />
           {/* Choose Modpack */}
-          <Box>
+          <>
             <DialogContentText
               style={{
                 display: allowModpack ? "inherit" : "none",
@@ -643,7 +645,7 @@ function AddNewContainer(props: {
             >
               {tr("ContainerManager.ChooseModpack")}
             </Button>
-          </Box>
+          </>
         </DialogContent>
         <DialogActions>
           <Button

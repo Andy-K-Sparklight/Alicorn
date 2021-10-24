@@ -49,7 +49,7 @@ export function PffVisual(): JSX.Element {
     };
   });
   return (
-    <Box>
+    <>
       <Typography
         color={"secondary"}
         style={{ marginLeft: 0 }}
@@ -59,7 +59,7 @@ export function PffVisual(): JSX.Element {
       </Typography>
       <Box className={classes.para}>
         <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-          <Box>
+          <>
             <FormControl>
               <TextField
                 spellCheck={false}
@@ -135,7 +135,7 @@ export function PffVisual(): JSX.Element {
                 }}
               />
             </FormControl>
-          </Box>
+          </>
           <FormControlLabel
             control={
               <Checkbox
@@ -226,7 +226,7 @@ export function PffVisual(): JSX.Element {
               );
             })}
       </Box>
-    </Box>
+    </>
   );
 }
 
@@ -271,7 +271,7 @@ function SingleAddonDisplay(props: {
             height={48}
             width={48}
           />
-          <Box>
+          <>
             <Typography className={classes.text} color={"textSecondary"}>
               {props.info?.id || props.modpack?.id}
             </Typography>
@@ -306,7 +306,7 @@ function SingleAddonDisplay(props: {
             ) : (
               ""
             )}
-          </Box>
+          </>
         </CardContent>
       </Card>
       <br />

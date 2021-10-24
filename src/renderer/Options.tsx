@@ -386,7 +386,7 @@ export function InputItem(props: {
     }
   }
   return (
-    <Box>
+    <>
       <Typography color={"primary"} className={classes.title} gutterBottom>
         {tr(`Options.${props.bindConfig}.title`)}
       </Typography>
@@ -449,7 +449,7 @@ export function InputItem(props: {
 
           case ConfigType.DIR:
             return (
-              <Box>
+              <>
                 <TextField
                   disabled={disabled}
                   fullWidth
@@ -484,7 +484,7 @@ export function InputItem(props: {
                 >
                   {tr("Options.Select")}
                 </Button>
-              </Box>
+              </>
             );
           case ConfigType.RADIO:
             return (
@@ -544,7 +544,7 @@ export function InputItem(props: {
             );
         }
       })()}
-    </Box>
+    </>
   );
 }
 function TabPanel(props: {

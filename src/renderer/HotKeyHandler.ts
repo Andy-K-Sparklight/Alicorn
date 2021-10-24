@@ -28,7 +28,7 @@ export function activateHotKeyFeature(): void {
     triggerSetPage("LaunchPad");
   });
   setupHotKey("Alt+a", () => {
-    jumpTo("/YggdrasilAccountManager");
+    jumpTo("/AccountManager");
     triggerSetPage("AccountManager");
   });
   setupHotKey("Alt+c", () => {

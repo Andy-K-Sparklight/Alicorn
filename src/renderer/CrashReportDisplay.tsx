@@ -124,7 +124,7 @@ export function CrashReportDisplay(): JSX.Element {
     }
   }, []);
   return (
-    <Box>
+    <>
       <BBCodeDisplay
         crashAnalytics={report}
         originCrashReport={oc}
@@ -147,41 +147,41 @@ export function CrashReportDisplay(): JSX.Element {
         window[LAST_LAUNCH_REPORT_KEY] === undefined ? (
           ""
         ) : (
-          <Box>
+          <>
             <ModList tracker={launchTracker} />
             <LaunchTrackCount tracker={launchTracker} />
-          </Box>
+          </>
         )
       }
 
       {report === undefined ? (
         ""
       ) : (
-        <Box>
+        <>
           <Analyze
             analyze={report}
             isFull
             title={tr("CrashReportDisplay.Analyze")}
           />
           <LogsDisplay title={tr("CrashReportDisplay.CrashReport")} logs={oc} />
-        </Box>
+        </>
       )}
       {
         // @ts-ignore
         window[LAST_LOGS_KEY]?.length === 0 ? (
           ""
         ) : (
-          <Box>
+          <>
             <Analyze
               isFull={showFullLogsReport}
               analyze={logsReport}
               title={tr("CrashReportDisplay.AnalyzeLogs")}
             />
             <LogsDisplay title={tr("CrashReportDisplay.Logs")} logs={logs} />
-          </Box>
+          </>
         )
       }
-    </Box>
+    </>
   );
 }
 
@@ -334,7 +334,7 @@ function Analyze(props: {
         {props.isFull ? (
           ""
         ) : (
-          <Box>
+          <>
             <Typography
               style={{
                 color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.light,
@@ -349,7 +349,7 @@ function Analyze(props: {
             </Typography>
             <br />
             <br />
-          </Box>
+          </>
         )}
         <List>
           {(() => {
