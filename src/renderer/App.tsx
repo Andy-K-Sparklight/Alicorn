@@ -297,7 +297,11 @@ export function App(): JSX.Element {
       }}
     >
       <AppBar>
-        <Toolbar onMouseDown={onMouseDown}>
+        <Toolbar
+          onMouseDown={
+            getString("frame.drag-impl") === "Delta" ? onMouseDown : undefined
+          }
+        >
           <IconButton
             style={{
               display: isTutor() || showCommand ? "none" : undefined,
@@ -311,7 +315,12 @@ export function App(): JSX.Element {
           >
             <Menu />
           </IconButton>
-          <Box className={classes.title}>
+          <Box
+            className={
+              classes.title +
+              (getString("frame.drag-impl") === "Webkit" ? " window-drag" : "")
+            }
+          >
             <Typography
               variant={"h6"}
               style={

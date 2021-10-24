@@ -117,12 +117,6 @@ export function OptionsPage(): JSX.Element {
             choices={ALL_ASSISTANTS}
           />
           <InputItem
-            type={ConfigType.RADIO}
-            reload
-            bindConfig={"font-type"}
-            choices={["SysDefault", "GNU", "Win"]}
-          />
-          <InputItem
             reload
             type={ConfigType.STR}
             bindConfig={"theme.primary.main"}
@@ -291,6 +285,11 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.STR}
             experimental
             bindConfig={"updator.url"}
+          />
+          <InputItem
+            type={ConfigType.RADIO}
+            bindConfig={"frame.drag-impl"}
+            choices={["Webkit", "Delta", "TitleBar"]}
           />
           <InputItem type={ConfigType.BOOL} bindConfig={"hardware-acc"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"dev"} />

@@ -119,7 +119,7 @@ async function whenAppReady() {
       sandbox: false, // Node
       spellcheck: false,
     },
-    frame: false,
+    frame: getString("frame.drag-impl") === "TitleBar",
     show: false,
     backgroundColor: "#fff",
   });

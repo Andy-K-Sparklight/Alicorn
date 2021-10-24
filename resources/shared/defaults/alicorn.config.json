@@ -49,5 +49,5 @@
   "features.cursor": true,
   "features.detect-lan": true,
   "hoofoff.central": "",
-  "font-type": "SysDefault"
+  "frame.drag-impl": "Webkit"
 }
