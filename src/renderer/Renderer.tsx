@@ -1,7 +1,6 @@
 import { Box, createTheme, MuiThemeProvider } from "@material-ui/core";
 import { ipcRenderer, shell } from "electron";
 import { emptyDir } from "fs-extra";
-import os from "os";
 import React from "react";
 import ReactDOM from "react-dom";
 import { HashRouter } from "react-router-dom";
@@ -44,12 +43,9 @@ const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
 
-const WIN_FONT_FAMILY =
-  '"UbuntuMono", "Microsoft YaHei UI", "Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
-const GNU_FONT_FAMILY =
-  '"UbuntuMono", "Open Sans", "Roboto Medium", "Fira Code", Monaco, Consolas, "Courier New", Courier, monospace';
 const FONT_FAMILY =
-  os.platform() === "win32" ? WIN_FONT_FAMILY : GNU_FONT_FAMILY;
+  '"Ubuntu Mono", Consolas, "Courier New", Courier, "Source Hans Sans", "Roboto Medium", "Microsoft YaHei", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
+
 export function setThemeParams(
   primaryMain: string,
   primaryLight: string,
@@ -245,15 +241,16 @@ function flushColors(): void {
     getString("theme.primary.light") || "#" + tr("Colors.Primary.Light"),
     getString("theme.secondary.main") || "#" + tr("Colors.Secondary.Main"),
     getString("theme.secondary.light") || "#" + tr("Colors.Secondary.Light"),
-    getConfiguredFont() + tr("Font") + FONT_FAMILY,
+    tr("Font") + FONT_FAMILY,
     getBoolean("features.cursor")
   );
   let e: HTMLStyleElement | null = document.createElement("style");
   e.innerText = `html {background-color:${
     getString("theme.secondary.light") || "#" + tr("Colors.Secondary.Light")
-  }; font-family:${
-    getConfiguredFont() + tr("Font") + FONT_FAMILY
-  };} a {color:${getString("theme.primary.main", "#5d2391")};}`;
+  }; font-family:${tr("Font") + FONT_FAMILY};} a {color:${getString(
+    "theme.primary.main",
+    "#5d2391"
+  )};}`;
   // Set background
   document.head.insertAdjacentElement("beforeend", e);
   e = null;
@@ -504,12 +501,4 @@ function clearScreen(): void {
 function showLogs(): void {
   // @ts-ignore
   window.showLogScreen();
-}
-
-function getConfiguredFont(): string {
-  const s = getString("font-type");
-  if (s.trim().length === 0 || s === "SysDefault") {
-    return "";
-  }
-  return (s === "GNU" ? GNU_FONT_FAMILY : WIN_FONT_FAMILY) + ", ";
 }

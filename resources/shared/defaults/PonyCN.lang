@@ -1258,6 +1258,26 @@ Alicorn 特色功能
 
 下一次 Alicorn 会从这里开始下载更新 - 这适合用于在不同的 Alicorn 发行版之间切换
 
+# Options.frame.drag-impl.title
+
+窗口拖拽模式 ^
+
+# Options.frame.drag-impl.desc
+
+设置拖拽窗口的模式 - 不同的模式在不同的操作系统上表现不同
+
+# Options.frame.drag-impl.Webkit
+
+Webkit 拖拽区域（仅页面标题）
+
+# Options.frame.drag-impl.Delta
+
+模拟拖拽（整个快捷栏）
+
+# Options.frame.drag-impl.TitleBar
+
+操作系统托管（使用标题栏）
+
 # Options.hardware-acc.title
 
 硬件加速 ^
@@ -1421,26 +1441,6 @@ ASC 允许在多个容器间共享相同的文件，那么这些文件应当存�
 # Options.startup-page.name.desc
 
 选择进入启动器时主页的名称 - 用于显示标题
-
-# Options.font-type.title
-
-字体
-
-# Options.font-type.desc
-
-字体渲染在不同的平台上清晰度不同，你可以选取一种看上去更舒适的字体
-
-# Options.font-type.GNU
-
-GNU/Linux 族（UbuntuMono 和 OpenSans）
-
-# Options.font-type.Win
-
-Windows 族（Consolas 和 Microsoft YaHei UI）
-
-# Options.font-type.SysDefault
-
-系统默认
 
 # Options.features.cursor.title
 
