@@ -3,10 +3,14 @@ import { throttle } from "throttle-debounce";
 import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
 import { loadMirror } from "../modules/download/Mirror";
 import { setContainerListDirty } from "./ContainerManager";
+import { isInstBusy } from "./Instruction";
 
 const PAGES_HISTORY: string[] = [];
 const TITLE_HISTORY: string[] = [];
 export const jumpTo = throttle(500, (target: string, keepHistory = true) => {
+  if (isInstBusy()) {
+    return;
+  }
   // @ts-ignore
   if (window[CHANGE_PAGE_WARN]) {
     window.dispatchEvent(
@@ -58,6 +62,9 @@ function ifLeavingConfigThenReload(): void {
 export const triggerSetPage = throttle(
   500,
   (page: string, _keepHistory = true) => {
+    if (isInstBusy()) {
+      return;
+    }
     // @ts-ignore
     if (window[CHANGE_PAGE_WARN]) {
       window.dispatchEvent(
@@ -68,7 +75,13 @@ export const triggerSetPage = throttle(
     //if (keepHistory) {
     TITLE_HISTORY.push(page);
     //}
-    document.dispatchEvent(new CustomEvent("setPage", { detail: page }));
+    if (getBoolean("goto.animate")) {
+      setTimeout(() => {
+        document.dispatchEvent(new CustomEvent("setPage", { detail: page }));
+      }, 230); // Smaller than 250 to avoid init set change page warn
+    } else {
+      document.dispatchEvent(new CustomEvent("setPage", { detail: page }));
+    }
   }
 );
 export function canGoBack(): boolean {

@@ -151,7 +151,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
         ""
       )}
       <br />
-      {cores.map((c) => {
+      {cores.map((c, i) => {
         return (
           <SingleCoreDisplay
             key={c.location}

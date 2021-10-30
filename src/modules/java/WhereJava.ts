@@ -2,6 +2,7 @@ import childProcess from "child_process";
 import fs from "fs-extra";
 import os from "os";
 import path from "path";
+import { invokeWorker } from "../../renderer/Schedule";
 import { isFileExist } from "../commons/FileUtil";
 import { getBoolean, getNumber } from "../config/ConfigSupport";
 import { resetJavaList } from "./JInfo";
@@ -9,19 +10,37 @@ import { resetJavaList } from "./JInfo";
 // This function is VERY SLOW!
 // It searches the whole os directory to find 'java.exe'(or 'java' on unix-liked)
 
-export async function whereJava(useCache = false): Promise<string[]> {
+export async function whereJava(
+  useCache = false,
+  justExist = false
+): Promise<string[]> {
   let all: string[] = [];
   all = all.concat(await findJavaViaCommand());
   all.push(findJavaInPATH());
-  if (!getBoolean("java.simple-search")) {
-    if (os.platform() === "win32") {
-      all = all.concat(await findJavaInProgramFilesWin32());
-    } else {
-      all = all.concat(await findJavaUNIX());
+  if (justExist && all.length > 0) {
+    const p = await chkJava(all);
+    if (justExist && p.length > 0) {
+      return p;
     }
   }
-  const res: string[] = [];
+  if (!getBoolean("java.simple-search")) {
+    if (os.platform() === "win32") {
+      all = all.concat(await findJavaInProgramFilesWin32(justExist));
+    } else {
+      all = all.concat(await findJavaUNIX(justExist));
+    }
+  }
 
+  const res = await chkJava(all);
+
+  if (useCache) {
+    resetJavaList(res);
+  }
+  return res;
+}
+
+async function chkJava(all: string[]): Promise<string[]> {
+  const res: string[] = [];
   for (const a of all) {
     if (await isFileExist(a)) {
       const trimA = path.resolve(path.dirname(path.dirname(a.trim())));
@@ -31,19 +50,23 @@ export async function whereJava(useCache = false): Promise<string[]> {
       }
     }
   }
-  if (useCache) {
-    resetJavaList(res);
-  }
   return res;
 }
 
-async function findJavaUNIX(): Promise<string[]> {
+async function findJavaUNIX(any = false): Promise<string[]> {
   if (os.platform() === "win32") {
     return [];
   }
   const programBase = "/usr/";
   const all: string[] = [];
-  await diveSearch("java", programBase, all, getNumber("java.search-depth", 8));
+  await diveSearch(
+    "java",
+    programBase,
+    all,
+    getNumber("java.search-depth", 8),
+    0,
+    any
+  );
   return all;
 }
 
@@ -63,7 +86,7 @@ function findJavaInPATH(): string {
   return "";
 }
 
-async function findJavaInProgramFilesWin32(): Promise<string[]> {
+async function findJavaInProgramFilesWin32(any = false): Promise<string[]> {
   if (os.platform() !== "win32") {
     return [];
   }
@@ -75,36 +98,21 @@ async function findJavaInProgramFilesWin32(): Promise<string[]> {
     "java.exe",
     programBaseMain,
     all,
-    getNumber("java.search-depth", 5)
+    getNumber("java.search-depth", 5),
+    0,
+    any
   );
   await diveSearch(
     "java.exe",
     programBase86,
     all,
-    getNumber("java.search-depth", 5)
+    getNumber("java.search-depth", 5),
+    0,
+    any
   );
   // Find 32 bit, diveSearch can 'afford' error
   return all;
 }
-
-const DIR_BLACKLIST = [
-  "proc",
-  "etc",
-  "node_modules",
-  "tmp",
-  "dev",
-  "sys",
-  "drivers",
-  "var",
-  "src",
-  "config",
-  "icons",
-  "themes",
-  ".npm",
-  "cache",
-];
-
-const DIR_BLACKLIST_INCLUDE = /windows|microsoft|common files/i;
 
 // Use command to locate
 async function findJavaViaCommand(): Promise<string[]> {
@@ -137,46 +145,25 @@ async function findJavaViaCommand(): Promise<string[]> {
   });
 }
 
-// SLOW reclusive function
 async function diveSearch(
   fileName: string,
   rootDir: string,
   concatArray: string[],
   depth = 5,
-  counter = 0
+  counter = 0,
+  any = false
 ): Promise<void> {
-  if (depth !== 0 && counter > depth) {
-    return;
-  }
-  try {
-    const all = await fs.readdir(rootDir);
-    if (all.includes(fileName)) {
-      const aPath = path.resolve(rootDir, fileName);
-      if (path.basename(path.dirname(aPath)).toLowerCase() === "bin") {
-        if ((await fs.stat(aPath)).isFile()) {
-          concatArray.push(aPath);
-        }
-      }
-    }
-    for (const f of all) {
-      if (
-        DIR_BLACKLIST.includes(f.toLowerCase()) ||
-        DIR_BLACKLIST_INCLUDE.test(f)
-      ) {
-        continue;
-      }
-      const currentBase = path.resolve(rootDir, f);
-      if ((await fs.stat(currentBase)).isDirectory()) {
-        await diveSearch(
-          fileName,
-          currentBase,
-          concatArray,
-          depth,
-          counter + 1
-        );
-      }
-    }
-  } catch {
-    return;
+  const res = await invokeWorker(
+    "DiveSearch",
+    fileName,
+    rootDir,
+    depth,
+    counter,
+    any
+  );
+  if (res instanceof Array) {
+    res.forEach((s) => {
+      concatArray.push(s);
+    });
   }
 }

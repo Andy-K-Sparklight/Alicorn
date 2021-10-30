@@ -5,6 +5,7 @@ import { getBoolean } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { jumpTo, triggerSetPage } from "./GoTo";
+import { ShiftEle } from "./Instruction";
 import { LAST_SUCCESSFUL_GAME_KEY } from "./ReadyToLaunch";
 import { ALICORN_DEFAULT_THEME_DARK } from "./Renderer";
 import { useTextStyles } from "./Stylex";
@@ -92,37 +93,45 @@ export function Welcome(): JSX.Element {
           justifyContent: "center",
         }}
       >
-        <RoundBtn
-          disabled={false}
-          onClick={() => {
-            jumpTo("/InstallCore");
-            triggerSetPage("InstallCore");
-          }}
-          icon={<GetApp />}
-          short={tr("Welcome.Short.Install")}
-        />
-        <RoundBtn
-          disabled={!lastGameAvailable}
-          onClick={() => {
-            jumpTo(
-              window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ||
-                "/ReadyToLaunch/undefined/undefined"
-            );
-            triggerSetPage("ReadyToLaunch");
-          }}
-          highlight
-          icon={<History />}
-          short={tr("Welcome.Short.LastLaunch")}
-        />
-        <RoundBtn
-          disabled={false}
-          onClick={() => {
-            jumpTo("/LaunchPad");
-            triggerSetPage("LaunchPad");
-          }}
-          icon={<FlightTakeoff />}
-          short={tr("Welcome.Short.LaunchPad")}
-        />
+        <ShiftEle name={"MainMenuQuickAccess"}>
+          <>
+            <ShiftEle name={"MainMenuInstallCore"}>
+              <RoundBtn
+                disabled={false}
+                onClick={() => {
+                  jumpTo("/InstallCore");
+                  triggerSetPage("InstallCore");
+                }}
+                icon={<GetApp />}
+                short={tr("Welcome.Short.Install")}
+              />
+            </ShiftEle>
+            <RoundBtn
+              disabled={!lastGameAvailable}
+              onClick={() => {
+                jumpTo(
+                  window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ||
+                    "/ReadyToLaunch/undefined/undefined"
+                );
+                triggerSetPage("ReadyToLaunch");
+              }}
+              highlight
+              icon={<History />}
+              short={tr("Welcome.Short.LastLaunch")}
+            />
+            <ShiftEle name={"MainMenuLaunchPad"}>
+              <RoundBtn
+                disabled={false}
+                onClick={() => {
+                  jumpTo("/LaunchPad");
+                  triggerSetPage("LaunchPad");
+                }}
+                icon={<FlightTakeoff />}
+                short={tr("Welcome.Short.LaunchPad")}
+              />
+            </ShiftEle>
+          </>
+        </ShiftEle>
       </Box>
       <Box style={{ marginTop: "10%" }}>
         <SpecialKnowledge />

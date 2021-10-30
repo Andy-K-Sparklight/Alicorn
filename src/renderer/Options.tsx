@@ -117,6 +117,11 @@ export function OptionsPage(): JSX.Element {
             choices={ALL_ASSISTANTS}
           />
           <InputItem
+            type={ConfigType.BOOL}
+            bindConfig={"interactive.assistant?"}
+            reload
+          />
+          <InputItem
             reload
             type={ConfigType.STR}
             bindConfig={"theme.primary.main"}
@@ -298,6 +303,7 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.BOOL}
             bindConfig={"dev.explicit-error-throw"}
           />
+          <InputItem type={ConfigType.BOOL} bindConfig={"first-run?"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"reset"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"clean-storage"} />
         </TabPanel>

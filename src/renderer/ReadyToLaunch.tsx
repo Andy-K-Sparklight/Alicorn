@@ -100,6 +100,7 @@ import { GameProfile } from "../modules/profile/GameProfile";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { getMachineUniqueID } from "../modules/security/Unique";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
+import { ShiftEle } from "./Instruction";
 import { submitError, submitSucc, submitWarn } from "./Message";
 import { YNDialog } from "./OperatingHint";
 import {
@@ -454,58 +455,60 @@ function Launching(props: {
         }
       >
         <>
-          <Fab
-            color={"primary"}
-            disabled={
-              status !== LaunchingStatus.PENDING &&
-              status !== LaunchingStatus.FINISHED
-            }
-            onClick={async () => {
-              if (status === LaunchingStatus.PENDING) {
-                setProfileRelatedID(profileHash.current, "");
-                if (selectedAccount !== undefined) {
-                  // @ts-ignore
-                  window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
-                    (st) => {
-                      if (mountedBit.current) {
-                        setStatus(st);
-                        setActiveStep(REV_LAUNCH_STEPS[st]);
-                        setChangePageWarn(st !== LaunchingStatus.PENDING);
-                      }
-                    },
-                    props.profile,
-                    profileHash.current,
-                    props.container,
-                    selectedAccount,
-                    props.server,
-                    (id) => {
-                      setProfileRelatedID(profileHash.current, id);
-                    }
-                  );
-                } else {
-                  setSelecting(true);
-                }
-              } else if (status === LaunchingStatus.FINISHED) {
-                if (openLanButtonEnabled) {
-                  setOpenLanWindow(true);
-                  return;
-                }
-                const i = getProfileRelatedID(profileHash.current);
-                if (i) {
-                  console.log(`Forcefully stopping instance ${i}!`);
-                  stopMinecraft(i);
-                }
+          <ShiftEle name={"Launch"}>
+            <Fab
+              color={"primary"}
+              disabled={
+                status !== LaunchingStatus.PENDING &&
+                status !== LaunchingStatus.FINISHED
               }
-            }}
-          >
-            {status !== LaunchingStatus.FINISHED ? (
-              <FlightTakeoff />
-            ) : openLanButtonEnabled ? (
-              <RssFeed />
-            ) : (
-              <FlightLand />
-            )}
-          </Fab>
+              onClick={async () => {
+                if (status === LaunchingStatus.PENDING) {
+                  setProfileRelatedID(profileHash.current, "");
+                  if (selectedAccount !== undefined) {
+                    // @ts-ignore
+                    window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
+                      (st) => {
+                        if (mountedBit.current) {
+                          setStatus(st);
+                          setActiveStep(REV_LAUNCH_STEPS[st]);
+                          setChangePageWarn(st !== LaunchingStatus.PENDING);
+                        }
+                      },
+                      props.profile,
+                      profileHash.current,
+                      props.container,
+                      selectedAccount,
+                      props.server,
+                      (id) => {
+                        setProfileRelatedID(profileHash.current, id);
+                      }
+                    );
+                  } else {
+                    setSelecting(true);
+                  }
+                } else if (status === LaunchingStatus.FINISHED) {
+                  if (openLanButtonEnabled) {
+                    setOpenLanWindow(true);
+                    return;
+                  }
+                  const i = getProfileRelatedID(profileHash.current);
+                  if (i) {
+                    console.log(`Forcefully stopping instance ${i}!`);
+                    stopMinecraft(i);
+                  }
+                }
+              }}
+            >
+              {status !== LaunchingStatus.FINISHED ? (
+                <FlightTakeoff />
+              ) : openLanButtonEnabled ? (
+                <RssFeed />
+              ) : (
+                <FlightLand />
+              )}
+            </Fab>
+          </ShiftEle>
         </>
       </Tooltip>
       <br />

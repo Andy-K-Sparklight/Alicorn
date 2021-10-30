@@ -35,6 +35,9 @@ body {
     "Source Hans Sans", "Roboto Medium", "Microsoft YaHei", "Segoe UI", SimHei,
     Tahoma, Geneva, Verdana, sans-serif !important;
 }
+* {
+  z-index: inherit;
+}
 
 .app_fade_in {
   transition: opacity 200ms;

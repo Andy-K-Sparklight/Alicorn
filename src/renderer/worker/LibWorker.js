@@ -1,5 +1,7 @@
 import { readFile } from "fs-extra";
 import leven from "js-levenshtein";
+import fs from "fs-extra";
+import path from "path";
 import mdiff from "mdiff";
 import sha from "sha";
 import CryptoJS from "crypto-js";
@@ -72,3 +74,99 @@ function addHandler(n, f) {
     HANDLERS.set(n, f);
   }
 }
+
+const DIR_BLACKLIST = [
+  "proc",
+  "etc",
+  "node_modules",
+  "tmp",
+  "dev",
+  "sys",
+  "drivers",
+  "var",
+  "src",
+  "config",
+  "icons",
+  "themes",
+  ".npm",
+  "cache",
+  "font",
+  "fonts",
+  "doc",
+];
+
+const DIR_BLACKLIST_INCLUDE =
+  /windows|microsoft|common files|\/usr\/share|\/usr\/local\/share|\/usr\/local\/include|\/usr\/lib\/firmware|\/usr\/lib\/python|\/usr\/lib\/[^/]+?-linux-gnu|\/usr\/include/i;
+
+// SLOW reclusive function
+function diveSearch(
+  fileName,
+  rootDir,
+  concatArray,
+  depth = 5,
+  counter = 0,
+  any = false,
+  superres
+) {
+  return new Promise((res) => {
+    void (async () => {
+      if (depth !== 0 && counter > depth) {
+        res();
+        return;
+      }
+      try {
+        const all = await fs.readdir(rootDir);
+
+        if (all.includes(fileName)) {
+          const aPath = path.resolve(rootDir, fileName);
+          if (path.basename(path.dirname(aPath)).toLowerCase() === "bin") {
+            if ((await fs.stat(aPath)).isFile()) {
+              concatArray.push(aPath);
+              res(); // File found, no deeper
+              if (any) {
+                if (superres) {
+                  superres();
+                }
+              }
+              return;
+            }
+          }
+        }
+        await Promise.allSettled(
+          all.map(async (s) => {
+            const currentBase = path.resolve(rootDir, s);
+            if ((await fs.stat(currentBase)).isDirectory()) {
+              if (
+                DIR_BLACKLIST.includes(s.toLowerCase()) ||
+                DIR_BLACKLIST_INCLUDE.test(currentBase)
+              ) {
+                return;
+              }
+              await diveSearch(
+                fileName,
+                currentBase,
+                concatArray,
+                depth,
+                counter + 1,
+                any,
+                superres ? superres : any ? res : undefined
+              );
+            }
+          })
+        );
+        res();
+        return;
+      } catch {
+        res();
+        return;
+      }
+    })();
+  });
+}
+
+// Return an array
+addHandler("DiveSearch", async (filename, rootDir, depth, counter, any) => {
+  const arr = [];
+  await diveSearch(filename, rootDir, arr, depth, counter, any);
+  return arr;
+});

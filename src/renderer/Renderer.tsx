@@ -33,8 +33,10 @@ import { getMachineUniqueID } from "../modules/security/Unique";
 import { checkUpdate, initUpdator } from "../modules/selfupdate/Updator";
 import { loadServers } from "../modules/server/ServerFiles";
 import { App } from "./App";
+import { completeFirstRun } from "./FirstRunSetup";
 import { registerHandlers } from "./Handlers";
 import { activateHotKeyFeature } from "./HotKeyHandler";
+import { InstructionProvider } from "./Instruction";
 import { submitInfo, submitWarn } from "./Message";
 import { initWorker } from "./Schedule";
 import { initStatistics } from "./Statistics";
@@ -186,11 +188,13 @@ function RendererBootstrap(): JSX.Element {
         backgroundColor: getString("theme.secondary.light", "#ffe0f0"),
       })}
     >
-      <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
-        <HashRouter>
-          <App />
-        </HashRouter>
-      </MuiThemeProvider>
+      <InstructionProvider>
+        <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
+          <HashRouter>
+            <App />
+          </HashRouter>
+        </MuiThemeProvider>
+      </InstructionProvider>
     </Box>
   );
 }
@@ -400,6 +404,7 @@ void (async () => {
     loadServers(),
     getMachineUniqueID(), // Cache
   ]);
+  void completeFirstRun(); // Not blocking
   // Heavy works and minor works
   await Promise.allSettled([initResolveLock(), initVF(), preCacheJavaInfo()]);
   const t2 = new Date();
@@ -408,7 +413,10 @@ void (async () => {
       (t2.getTime() - t1.getTime()) / 1000 +
       "s."
   );
-
+  // Deferred Check
+  if (!navigator.onLine) {
+    submitWarn(tr("System.Offline"));
+  }
   // Optional services
   const t3 = new Date();
   console.log("Running optional services...");

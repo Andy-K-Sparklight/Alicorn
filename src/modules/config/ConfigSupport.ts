@@ -28,7 +28,7 @@ export function set(key: string, value: unknown): void {
 export function get(key: string, def: unknown): unknown {
   // @ts-ignore
   let v = cachedConfig[key];
-  if (v === undefined) {
+  if (v === undefined && !key.endsWith("?")) {
     // @ts-ignore
     v = cachedConfig[key] = defaultConfig[key]; // Repair
   }

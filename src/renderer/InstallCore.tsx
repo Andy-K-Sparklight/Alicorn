@@ -48,6 +48,7 @@ import { performForgeInstall } from "../modules/pff/install/ForgeInstall";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
+import { ShiftEle } from "./Instruction";
 import { submitSucc, submitWarn } from "./Message";
 import { FailedHint, OperatingHintCustom } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
@@ -180,34 +181,42 @@ export function InstallCore(): JSX.Element {
             setTabValue(v);
           }}
         >
-          <Tab
-            label={
-              <Typography color={"primary"}>
-                {tr("InstallCore.InstallMinecraft")}
-              </Typography>
-            }
-          />
-          <Tab
-            label={
-              <Typography color={"primary"}>
-                {tr("InstallCore.InstallForge")}
-              </Typography>
-            }
-          />
-          <Tab
-            label={
-              <Typography color={"primary"}>
-                {tr("InstallCore.InstallFabric")}
-              </Typography>
-            }
-          />
-          <Tab
-            label={
-              <Typography color={"primary"}>
-                {tr("InstallCore.InstallIris")}
-              </Typography>
-            }
-          />
+          <ShiftEle name={"InstallCoreTabMinecraft"} bgfill>
+            <Tab
+              label={
+                <Typography color={"primary"}>
+                  {tr("InstallCore.InstallMinecraft")}
+                </Typography>
+              }
+            />
+          </ShiftEle>
+          <ShiftEle name={"InstallCoreTabModLoader"} bgfill>
+            <Tab
+              label={
+                <Typography color={"primary"}>
+                  {tr("InstallCore.InstallForge")}
+                </Typography>
+              }
+            />
+          </ShiftEle>
+          <ShiftEle name={"InstallCoreTabModLoader"} bgfill>
+            <Tab
+              label={
+                <Typography color={"primary"}>
+                  {tr("InstallCore.InstallFabric")}
+                </Typography>
+              }
+            />
+          </ShiftEle>
+          <ShiftEle name={"InstallCoreIris"} bgfill>
+            <Tab
+              label={
+                <Typography color={"primary"}>
+                  {tr("InstallCore.InstallIris")}
+                </Typography>
+              }
+            />
+          </ShiftEle>
         </Tabs>
         {/* Mojang */}
         <TabPanel value={tabValue} index={0}>
@@ -221,32 +230,34 @@ export function InstallCore(): JSX.Element {
             >
               {tr("InstallCore.MinecraftArch")}
             </InputLabel>
-            <Select
-              variant={"outlined"}
-              labelId={"CoreInstall-Mojang-SelectArch"}
-              color={"primary"}
-              className={classes.selector + " " + fullWidthClasses.form}
-              onChange={(e) => {
-                isLoaded.current = false;
-                setSelectedMojangVersion("");
-                setMojangFilter(e.target.value as ReleaseType);
-              }}
-              value={mojangFilter || ReleaseType.RELEASE}
-              label={tr("InstallCore.MinecraftArch")}
-            >
-              <MenuItem value={ReleaseType.RELEASE}>
-                {tr("InstallCore.Release")}
-              </MenuItem>
-              <MenuItem value={ReleaseType.SNAPSHOT}>
-                {tr("InstallCore.Snapshot")}
-              </MenuItem>
-              <MenuItem value={ReleaseType.OLD_ALPHA}>
-                {tr("InstallCore.OldAlpha")}
-              </MenuItem>
-              <MenuItem value={ReleaseType.OLD_BETA}>
-                {tr("InstallCore.OldBeta")}
-              </MenuItem>
-            </Select>
+            <ShiftEle name={"InstallCoreMinecraft"} bgfill>
+              <Select
+                variant={"outlined"}
+                labelId={"CoreInstall-Mojang-SelectArch"}
+                color={"primary"}
+                className={classes.selector + " " + fullWidthClasses.form}
+                onChange={(e) => {
+                  isLoaded.current = false;
+                  setSelectedMojangVersion("");
+                  setMojangFilter(e.target.value as ReleaseType);
+                }}
+                value={mojangFilter || ReleaseType.RELEASE}
+                label={tr("InstallCore.MinecraftArch")}
+              >
+                <MenuItem value={ReleaseType.RELEASE}>
+                  {tr("InstallCore.Release")}
+                </MenuItem>
+                <MenuItem value={ReleaseType.SNAPSHOT}>
+                  {tr("InstallCore.Snapshot")}
+                </MenuItem>
+                <MenuItem value={ReleaseType.OLD_ALPHA}>
+                  {tr("InstallCore.OldAlpha")}
+                </MenuItem>
+                <MenuItem value={ReleaseType.OLD_BETA}>
+                  {tr("InstallCore.OldBeta")}
+                </MenuItem>
+              </Select>
+            </ShiftEle>
           </FormControl>
           <br />
           <FormControl variant={"outlined"} className={classes.formControl}>
@@ -256,25 +267,27 @@ export function InstallCore(): JSX.Element {
             >
               {tr("InstallCore.MinecraftVersion")}
             </InputLabel>
-            <Select
-              variant={"outlined"}
-              labelId={"CoreInstall-Mojang-SelectVersion"}
-              color={"primary"}
-              label={tr("InstallCore.MinecraftVersion")}
-              className={classes.selector + " " + fullWidthClasses.form}
-              onChange={(e) => {
-                setSelectedMojangVersion(String(e.target.value || ""));
-              }}
-              value={selectedMojangVersion || ""}
-            >
-              {foundCores.map((c) => {
-                return (
-                  <MenuItem key={c} value={c}>
-                    {c}
-                  </MenuItem>
-                );
-              })}
-            </Select>
+            <ShiftEle name={"InstallCoreMinecraft"} bgfill>
+              <Select
+                variant={"outlined"}
+                labelId={"CoreInstall-Mojang-SelectVersion"}
+                color={"primary"}
+                label={tr("InstallCore.MinecraftVersion")}
+                className={classes.selector + " " + fullWidthClasses.form}
+                onChange={(e) => {
+                  setSelectedMojangVersion(String(e.target.value || ""));
+                }}
+                value={selectedMojangVersion || ""}
+              >
+                {foundCores.map((c) => {
+                  return (
+                    <MenuItem key={c} value={c}>
+                      {c}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </ShiftEle>
           </FormControl>
           <br />
           <FormControl variant={"outlined"} className={classes.formControl}>
@@ -284,25 +297,28 @@ export function InstallCore(): JSX.Element {
             >
               {tr("InstallCore.TargetContainer")}
             </InputLabel>
-            <Select
-              label={tr("InstallCore.TargetContainer")}
-              variant={"outlined"}
-              labelId={"CoreInstall-Mojang-TargetContainer"}
-              color={"primary"}
-              className={classes.selector + " " + fullWidthClasses.form}
-              onChange={(e) => {
-                setMojangContainer(String(e.target.value || ""));
-              }}
-              value={selectedMojangContainer || ""}
-            >
-              {getAllMounted().map((c) => {
-                return (
-                  <MenuItem key={c} value={c}>
-                    {c}
-                  </MenuItem>
-                );
-              })}
-            </Select>
+            <ShiftEle name={"InstallCoreMinecraft"} bgfill>
+              <Select
+                label={tr("InstallCore.TargetContainer")}
+                variant={"outlined"}
+                labelId={"CoreInstall-Mojang-TargetContainer"}
+                color={"primary"}
+                className={classes.selector + " " + fullWidthClasses.form}
+                onChange={(e) => {
+                  setMojangContainer(String(e.target.value || ""));
+                }}
+                value={selectedMojangContainer || ""}
+              >
+                {getAllMounted().map((c) => {
+                  return (
+                    <MenuItem key={c} value={c}>
+                      {c}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </ShiftEle>
+
             <Button
               className={classes.btn}
               variant={"contained"}
