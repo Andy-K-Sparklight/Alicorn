@@ -1,3 +1,7 @@
+# Avatar
+
+https://attachment.mcbbs.net/uc_server/data/avatar/003/28/10/25_avatar_big.jpg
+
 # Colors.Primary.Main
 
 5d2391
@@ -50,6 +54,10 @@ ffe0f0
 
 Java 选择器
 
+# Statistics
+
+Alicorn 回忆录
+
 # Options
 
 选项
@@ -66,10 +74,6 @@ Pff 软件安装器
 
 欢迎回来
 
-# Tutor
-
-快速上手
-
 # ServerList
 
 服务器列表
@@ -77,6 +81,10 @@ Pff 软件安装器
 # UtilitiesIndex
 
 实用工具
+
+# System.Offline
+
+似乎已断开与互联网的连接……
 
 # System.DnDProcessing
 
@@ -133,10 +141,6 @@ Pff 软件安装器
 # MainMenu.Reload
 
 重新加载
-
-# MainMenu.NextTutorPage
-
-前往下一页
 
 # MainMenu.QuickManageAccount
 
@@ -746,6 +750,18 @@ Minecraft 容器名
 
 目标文件夹
 
+# ContainerManager.InstallOK
+
+整合包安装完成～
+
+# ContainerManager.FetchingModpack
+
+正在获取整合包……
+
+# ContainerManager.FailedToFetch
+
+没能获取整合包，请检查网络环境……
+
 # ContainerManager.Select
 
 选择目标文件夹
@@ -1218,6 +1234,22 @@ Alicorn 特色功能
 
 位于主页和启动游戏界面底部的小型条目
 
+# Options.interactive.assistant?.title
+
+助理交互 ^
+
+# Options.interactive.assistant?.desc
+
+使用交互式的助理来告诉你一些重要信息 - 你会需要的！
+
+# Options.first-run?.title
+
+标记为首次运行 ^
+
+# Options.first-run?.desc
+
+下一次启动时，清除 Alicorn 的运行记录标志，重新运行初始化程序。
+
 # Options.download.proxy-bypass.title
 
 以下站点不使用代理 ^
@@ -1241,6 +1273,26 @@ Alicorn 特色功能
 # Options.updator.url.desc
 
 下一次 Alicorn 会从这里开始下载更新 - 这适合用于在不同的 Alicorn 发行版之间切换
+
+# Options.frame.drag-impl.title
+
+窗口拖拽模式 ^
+
+# Options.frame.drag-impl.desc
+
+设置拖拽窗口的模式 - 不同的模式在不同的操作系统上表现不同
+
+# Options.frame.drag-impl.Webkit
+
+Webkit 拖拽区域（仅页面标题）
+
+# Options.frame.drag-impl.Delta
+
+模拟拖拽（整个快捷栏）
+
+# Options.frame.drag-impl.TitleBar
+
+操作系统托管（使用标题栏）
 
 # Options.hardware-acc.title
 
@@ -1284,7 +1336,7 @@ Alicorn Functions
 
 # Options.assistant.PonyCN
 
-ThatRarityEG（小马语/中国）
+Alicorn 默认（小马语/中国）
 
 # Options.assistant.Maud
 
@@ -1405,26 +1457,6 @@ ASC 允许在多个容器间共享相同的文件，那么这些文件应当存�
 # Options.startup-page.name.desc
 
 选择进入启动器时主页的名称 - 用于显示标题
-
-# Options.font-type.title
-
-字体
-
-# Options.font-type.desc
-
-字体渲染在不同的平台上清晰度不同，你可以选取一种看上去更舒适的字体
-
-# Options.font-type.GNU
-
-GNU/Linux 族（UbuntuMono 和 OpenSans）
-
-# Options.font-type.Win
-
-Windows 族（Consolas 和 Microsoft YaHei UI）
-
-# Options.font-type.SysDefault
-
-系统默认
 
 # Options.features.cursor.title
 
@@ -2064,258 +2096,6 @@ Pff|也就是「Package File Finder」，Alicorn 用来搜索和安装 Mod 的�
 
 @HTML这里只显示由 Pff 安装的软件包，单击软件包名称可以在文件资源管理器中查看它。\n<span style="color: #ff8400;">安装 Mod 前请当心！不兼容的 Mod 可以<b style="color: red;">摧毁你的游戏</b>！请确保你<b style="color: red;">知道</b>而不是<b style="color: red;">猜测</b>它的作用！</span>
 
-# Tutor.Quick.Title
-
-快速设置
-
-# Tutor.Quick.Content
-
-@HTML<b style="color: red">这是给新手的说明！</b>\n如果你什么都不了解，你可以使用<b>Alicorn 自动配置</b>，可以在只需少量交互的情况下完成基本配置。\n\n<b><span style="font-size: large;">点按下方的按钮以开始。</span></b>\n\n如果你很勇或者很有经验，你可以尝试使用手动配置，可使用右上角的箭头。
-
-# Tutor.Quick.Setting
-
-!!;使用自动设置;/QuickSetup;QuickSetup
-
-# Tutor.Quick.Controller
-
-@empty
-
-# Tutor.0.Title
-
-你好！Hello!
-
-# Tutor.0.Content
-
-@HTML欢迎使用 Alicorn Launcher！\nWelcome to Alicorn Launcher!\n\n若要开始，请点按右上角的箭头。\nTo get started, click the arrow.
-
-# Tutor.0.Controller
-
-@empty
-
-# Tutor.0.Setting
-
-@empty
-
-# Tutor.1.Title
-
-本地化 Localization
-
-# Tutor.1.Content
-
-您喜欢什么样的我？（或者说，您说什么语言？）\nWhich kind of me do you like? (Or, which language do you speak?)
-
-# Tutor.1.Controller
-
-@empty
-
-# Tutor.1.Setting
-
-assistant;RADIO;PonyCN/Maud
-
-# Tutor.2.Title
-
-您是谁？
-
-# Tutor.2.Content
-
-@HTML唔……我想知道我该如何称呼你。\n\n（你不需要急着进入下一页，请在配置时熟悉 Alicorn 的操作，例如，<b>按住标题「快速上手」可以拖动窗口</b>。）
-
-# Tutor.2.Controller
-
-@empty
-
-# Tutor.2.Setting
-
-user.name;STR
-
-# Tutor.3.Title
-
-来自 Alicorn 的更新
-
-# Tutor.3.Content
-
-确保 Alicorn 是最新版本，获取安全更新和功能改进。\n\n自动更新服务是一项服务，你可以参考帮助文档了解它。\n\n对于大多数用户，保留此项开启就好。
-
-# Tutor.3.Controller
-
-@empty
-
-# Tutor.3.Setting
-
-updator.use-update;BOOL
-
-# Tutor.4.Title
-
-接下来我们要进行一些重要设置
-
-# Tutor.4.Content
-
-@HTML{UserName}，现在你应该逐渐对操作有一点感觉了吧？\n\n接下来我们需要进行一连串的设定，<b>点按右上角的按钮</b>进入下一页。\n\n我们将设置 Java 运行时。
-
-# Tutor.4.Controller
-
-@empty
-
-# Tutor.4.Setting
-
-@empty
-
-# Tutor.7.Title
-
-Java 平台相关设置
-
-# Tutor.7.Content
-
-@HTML<b>注意：请在阅读完本说明后再操作！</b>\n\nJava 运行时（JRE）是运行 Minecraft 的重要基础，通常配置并不简单，但我让它简单了一些……\n\n现在右上角应该出现了一个新的按钮，在那里你可以配置 JRE 环境。<b>单击该按钮</b>，并在那里选择一个 JRE——无论是自动搜索还是手动定位，亦或是干脆安装一个新的。\n\n如果你想玩 Minecraft 17 及以后的版本，需要安装 Java 16，对于 Minecraft 12 及以前的版本，还有 Forge，则需要 Java 8，因此建议将两者都设置好。\n\n在那个页面<b>完成设置后</b>，单击右上角的按钮进入下一页。
-
-# Tutor.7.Controller
-
-+JavaSelector
-
-# Tutor.7.Setting
-
-@empty
-
-# Tutor.8.Title
-
-很快就要完成了
-
-# Tutor.8.Content
-
-我迫不及待地想让你开始游戏，现在终于来到了最后几步……赶紧进入下一页吧！\n\n我们将创建容器、安装游戏和启动游戏。
-
-# Tutor.8.Controller
-
--JavaSelector
-
-# Tutor.8.Setting
-
-@empty
-
-# Tutor.9.Title
-
-创建一个容器
-
-# Tutor.9.Content
-
-@HTML<b>注意：请在阅读完本说明后再操作！</b>\n\n「容器」是我管理游戏的基本单位，也是你的游戏存放的位置。\n\n<b>单击右上角的按钮</b>前往容器管理页面，你可以创建成百上千个容器，但这次让我们先只创建一个。\n\n在那里，单击「+」来添加一个容器，给它命名（随意就好），并且单击「选择挂载点」按钮选择一个挂载点（文件夹，最好是空的），这个文件夹将存放你的游戏文件。如果你之前使用过其它启动器，可以<b>选择 .minecraft 文件夹</b>，我应该就能认识它。\n\n创建好容器后，单击右上角的按钮即可进入最后两步。
-
-# Tutor.9.Controller
-
-+ContainerManager
-
-# Tutor.9.Setting
-
-@empty
-
-# Tutor.10.Title
-
-安装游戏
-
-# Tutor.10.Content
-
-@HTML<b>注意：请在阅读完本说明后再操作！</b>\n\n我的游戏下载器可以为你完成安装游戏这项烦人的工作，<b>单击右上角的按钮</b>转到那里。\n\n你需要至少安装<b>一个 Minecraft 核心</b>，如果你想使用 Fabric（或 Forge），请在安装好 Minecraft 核心后，单击「改装已有核心」。\n\n同样，安装好游戏后，点按右上角的按钮以进入最后一步。
-
-# Tutor.10.Controller
-
--ContainerManager;+InstallCore
-
-# Tutor.10.Setting
-
-@empty
-
-# Tutor.11.Title
-
-准备出发！
-
-# Tutor.11.Content
-
-@HTML<b>注意：请在阅读完本说明后再操作！</b>\n\n现在是最后一步了，启动你的游戏吧！\n\n<b>单击右上角的按钮</b>来进入启动台，你能看到你刚刚安装的核心，<b>单击它右上角的按钮</b>转到启动预备页面，在那里，你可以<b>使用 Microsoft 帐户或本地帐户启动游戏</b> —— 如果你还在使用旧版 Mojang 帐户（未迁移），这次请先用本地帐户启动一下。\n\n等你的游戏启动了，再单击右上角的按钮回到教程。如果启动出问题了，你会得到进一步提示。\n\n（首次启动可能需要等一小会，我们要补全游戏资源。）
-
-# Tutor.11.Controller
-
--InstallCore;+LaunchPad
-
-# Tutor.11.Setting
-
-@empty
-
-# Tutor.12.Title
-
-恭喜！
-
-# Tutor.12.Content
-
-@HTML本教程的内容到此就结束了，这只是对我的一个非常简略的介绍。你可以在使用过程中逐渐了解我～\n\n接下来你可以选择<b>设置一个帐户来进行第三方验证</b>，或者<b>设置 ASC 缓存位置</b>来启用 ASC 容器这一超酷的功能，亦或是<b>登录 Mojang 帐户、第三方验证</b>，当然还可以马上<b>开始一次游戏</b>！\n\n（题外话：Alicorn 的作者 —— Sparklight 是只可爱的坎特拉女孩哦～）\n\n快捷栏按钮将在你<b>单击右上角的按钮</b>后全部解锁。\n\n欢迎访问 <a href="javascript:ashow('https://alc.pages.dev')">Alicorn Launcher 官方网站</a>～
-
-# Tutor.12.Setting
-
-@empty
-
-# Tutor.12.Controller
-
--LaunchPad
-
-# Tutor.13.Controller
-
-End
-
-# Tutor.13.Title
-
-@empty
-
-# Tutor.13.Content
-
-@empty
-
-# Tutor.13.Setting
-
-@empty
-
-# Tutor.EG1.Controller
-
-@empty
-
-# Tutor.EG1.Setting
-
-@empty
-
-# Tutor.EG1.Title
-
-您收到一封信……
-
-# Tutor.EG1.Content
-
-@HTML{UserName}：\n\n\
-首先，请允许我致以最诚挚的谢意。如果您能够到达这里 —— 无论是通过 DevTools，还是 /jmp 命令 —— 那么您已经对 Alicorn 有了很深的了解了。\n\n\
-其次，请允许我解答一个问题。您或许一直在想，Alicorn 的作者，在现实中，到底是谁，是和您一样的玩家，还是在世界的某个地方，过着您想过的生活。\n\
-我先给出答案吧：我的生物学属性，不是奇蹄目。我只是被 MLP 深深感染的一个普通的女孩，染色体为 XX，和世界上近一半的人一样。但是这并不妨碍我活在一个和谐的桃源里 —— 小马利亚其实就在那里，在我的、您的、每个人的心中。这不是什么鸡汤，这是事实。\n「一个美好的世界不是没有黑暗，而是有足以战胜黑暗的力量」，正如作为一只小马并不一定要属于奇蹄目，只要心中相信友谊的魔法。\n\n\
-Minecraft 也是一样，长梦何必苏醒，虚幻何必虚无。如果您正在走着自己的道路，知道您要做什么，那就继续。如果他们嘲笑您，讽刺您，挖苦您……只需忽略他们，并坚定不移地走下去。\n\n\
-这个页面没有长度限制，因此我想再多写一点。\n\n\
-我制造 Alicorn，其实是为了制造另一个自己，我希望她是一个完全为您着想的，有些缺点但又十分可爱的形象。我希望我所不能做的事，让她来为我完成。（当然，现在我正在做着我喜欢的事情）\n\
-在这个地球上的我，其实完全不是您想象的样子，我甚至没有一张能够让其他人看的脸 —— 我所能告诉您的就只有这么多，但这不重要，我不希望您醒来看到那个真实的我，即使这是一个谎言，但它也已经足够真实。\n\n\
-很多人说我制造 Alicorn 是为了超越已有的启动器，但其实我最初没有这么想，正如登上山顶就必然要超越那些半山腰的人一样。我「只做了一点微小的工作」。\n\n\
-他们说我太过理想……\n\n他们说我沉迷游戏……\n\n他们说我做不到这一切……\n\n……\n\n我分明看见了月亮和太阳一同升起。\n\n我分明看见一头雄狮亲吻一只鹿。\n\n我分明看见了光明背后的黑暗，以及黑暗背后的光明。\n\n我看见了您。\n\n我看见了希望。\n\n我看见我在输入这些愚蠢的文字。\n\n我看见我在诉说着我的思想。\n\n\
-「网络社区也是基于现实成立的，它也将会忠实还原现实世界的原貌。」\n我不希望有这一天。\n\n\n\
-<b>……您看见了什么呢？</b>\n\
-<span style="float: right">您忠实的<br/>Andy K Rarity Sparklight<br/>（这次，是用手指敲击的）</span>
-
-# Tutor.End1.Controller
-
-End
-
-# Tutor.End1.Title
-
-@empty
-
-# Tutor.End1.Content
-
-@empty
-
-# Tutor.End1.Setting
-
-@empty
-
 # ServerList.Add
 
 添加服务器
@@ -2839,6 +2619,10 @@ Sparklight 作品\n查找 Mod 并获取编号，用于 Pff 软件安装器安装
 
 搜索
 
+# Utilities.PffVisual.Modpack
+
+搜索整合包
+
 # Utilities.PffVisual.MultiSelect
 
 多选（取消勾选时复制）
@@ -2923,34 +2707,234 @@ Sparklight 作品\n本地帐户服装和披风配送
 
 爱丽克丝（Slim）
 
-# QuickSetup.Start
+# FirstRun.Default
 
-欢迎使用全自动配置程序！单击这行文字以开始……
+Minecraft 默认位置
 
-# QuickSetup.Error
+# Statistics.Click
 
-产生错误……你可能需要手动完成配置。
+在不知不觉中，你已经戳了 Alicorn {Value} 次……
 
-# QuickSetup.CreatingContainer
+# Statistics.Click.As
 
-正在创建容器……
+[{Value}>10000]……你和她之间，是否已经有了真感情？
+……但我宁可再少一些……
+[{Value}<=10000]……还要点击多少次，才能了解可爱的她？
 
-# QuickSetup.ConfiguringJava
+# Statistics.Crash
+
+你可能不知道，游戏崩溃了 {Value} 次……
+
+# Statistics.Crash.As
+
+[{Value}>1000]……比 Alicorn 开发过程中的更多！
+……但不会是最后一次……
+[{Value}==0]……好希望永远这样……
+
+# Statistics.Launch
+
+她为你启动了 {Value} 次游戏……
+
+# Statistics.Launch.As
+
+[{Value}>100]……别怕 Alicorn 伤心，过两天她会就忘了的……
+[{Value}>1000]……Java 是否已经疯掉？
+[{Value}>100]……难道你还只把她当普通朋友？
+是的，我只是一个附属产品……
+
+# Statistics.Keyboard
+
+……敲击了 {Value} 次键盘
+
+# Statistics.Keyboard.As
+
+[{Value}>500000]在 Alicorn 里开发 Alicorn？！
+……或许我们能够让它更少一点。
+
+# FirstRun.JavaConfigured
+
+Java 配置成功！
+
+# FirstRun.Preparing
+
+这是您第一次使用 Alicorn，我们正在进行一些准备工作……
+
+# FirstRun.FetchingJava
+
+正在获取 Java 安装包……
+
+# FirstRun.ConfiguringJava
 
 正在配置 Java……
 
-# QuickSetup.InstallingJava
+# FirstRun.InstallingJava
 
-@HTML这里是 Java 8 和 Java 16 的安装程序。\n如果你想要进行安装，或者不知道该做什么，请<b>跟随安装程序的指示完成安装</b>（通常一直「下一步」就好）。\n如果你知道你已经安装了 Java，请关闭弹出的安装程序，稍后我会自动查找你的 Java。
+您现在可以使用此安装程序安装 Java……
 
-# QuickSetup.InstallingCore
+# Instruction.Welcome.0
 
-正在安装核心……
+欢迎使用 Alicorn！我是 Alicorn 开发者 <ThatRarityEG> 的 AI。在你使用 Alicorn 期间，我可以提供各种帮助。
 
-# QuickSetup.Done
+# Instruction.Welcome.1
 
-完成！马上你就会前往主菜单。\n……祝你好运，玩得开心！
+现在我将向你介绍 Alicorn 的 <几个基本操作>。动动你的鼠标，我们快速完成这个过程。
 
-# QuickSetup.Default
+# Instruction.Welcome.2
 
-Minecraft 默认位置
+我上面是 Alicorn 的 <快捷栏>，单击这些按钮就可以立即使用对应的功能。@37.15
+
+# Instruction.Welcome.3
+
+标题的左边是 <导航按钮>，单击它能够查看全部可用的功能。另外，<按住标题并拖动> 可以移动窗口。
+
+# Instruction.Welcome.4
+
+这是 <快速访问> 按钮，可以帮助你快速前往一些经常使用的地方。@20.60@@MainMenuQuickAccess
+
+# Instruction.Welcome.5
+
+Alicorn 默认安装了 Minecraft 1.17.1，可以在 <核心列表> 中直接启动。@@@MainMenuLaunchPad
+
+# Instruction.Welcome.6
+
+如果需要其它版本的核心，你需要 <安装核心>，然后再去启动。@@@MainMenuInstallCore
+
+# Instruction.Welcome.7
+
+END
+
+# Instruction.JavaSelector.0
+
+这里是 <Java 选择器>，你可以在这里选择默认 Java 或者安装新的 Java。
+
+# Instruction.JavaSelector.1
+
+可以在这里选择 <默认 Java>，如果你安装的 Java 没有出现在这里，可以使用右侧的 <重新查找> 功能。@5.35@@JavaSelectorSelect
+
+# Instruction.JavaSelector.2
+
+如果你确定已经安装了 Java，但 Alicorn 找不到它，那么你可以 <手动定位>。@5.45@@JavaSelectorManual
+
+# Instruction.JavaSelector.3
+
+注意！Minecraft 1.17 及之后的版本都需要 <Java 16> 才能运行，早期的某些版本却只能使用 <Java 8>……
+
+# Instruction.JavaSelector.4
+
+……所以如果你需要，可以使用下面的按钮 <安装合适的 Java>。Alicorn 将自动识别多个 Java，<不会冲突>。@@@JavaSelectorInstall
+
+# Instruction.JavaSelector.5
+
+好啦，祝你好运！
+
+# Instruction.JavaSelector.6
+
+END
+
+# Instruction.NoJava.0
+
+让我看看……嗯，就快好了，不过还有一件重要的事情需要你处理……
+
+# Instruction.NoJava.1
+
+这台计算机似乎 <没有安装 Java>，这将导致 Minecraft 无法运行……
+
+# Instruction.NoJava.2
+
+……当然，我早就想到会有这种问题……所以这里有两份 <Java 安装程序>，是为你准备的。
+
+# Instruction.NoJava.3
+
+如果你 <不能 100% 确定> 你已经安装了合适的 Java，请使用它们完成安装。
+
+# Instruction.NoJava.4
+
+好啦，祝你好运！安装完 Java 后就可以去 <安装核心> 那里安装新的 Minecraft 咯！@@@MainMenuInstallCore
+
+# Instruction.NoJava.5
+
+我们会在那里再见面的，再会！@@@MainMenuInstallCore
+
+# Instruction.NoJava.6
+
+END
+
+# Instruction.JavaOK.0
+
+好啦，我要说的也就这么多啦，你现在可以去 <安装核心> 那里安装新的 Minecraft～@@@MainMenuInstallCore
+
+# Instruction.JavaOK.1
+
+我们会在那里再见面的，再会！@@@MainMenuInstallCore
+
+# Instruction.JavaOK.2
+
+END
+
+# Instruction.InstallCore.0
+
+欢迎来到 <核心安装器>！在这里，你可以安装众多不同的 Minecraft 版本，哦，还有 Fabric 等 Mod 加载器！
+
+# Instruction.InstallCore.1
+
+使用 <添加新的核心> 来安装新的 Minecraft 原版核心。@5.40@@InstallCoreTabMinecraft
+
+# Instruction.InstallCore.2
+
+选择恰当的 <版本> 和 <目标容器>，然后点击 <安装> 就可以开始啦！@@@InstallCoreMinecraft
+
+# Instruction.InstallCore.3
+
+当你想尝试 Mod 的时候，你需要 <改装核心>。需要先安装 <相应的原版核心> 才能改装。@5.30@@InstallCoreTabModLoader
+
+# Instruction.InstallCore.4
+
+Fabric 和 Forge <不兼容>！使用 Fabric 的 Mod 只能通过 Fabric 加载，Forge 也是一样。@5.30@@InstallCoreTabModLoader
+
+# Instruction.InstallCore.5
+
+这里还有 <高清修复>（Iris），不过需要 <先安装 Fabric> 来安装它。@5.30@@InstallCoreIris
+
+# Instruction.InstallCore.6
+
+如果安装失败，<请多试几次>，包括切换镜像之类的尝试都可能可以解决问题。
+
+# Instruction.InstallCore.7
+
+好啦好啦，别催啦。我说完了，现在你继续吧～
+
+# Instruction.InstallCore.8
+
+END
+
+# Instruction.LaunchPad.0
+
+欢迎来到 <启动台>！在这里你可以选择一个核心来启动……或者别的操作。
+
+# Instruction.LaunchPad.1
+
+单击 <核心卡片> 的任意位置就可以启动它。
+
+# Instruction.LaunchPad.2
+
+就这么简单！……如果需要更多信息，请访问 <帮助文档>，单击上面的 <寻求帮助> 就好。
+
+# Instruction.LaunchPad.3
+
+END
+
+# Instruction.ReadyToLaunch.0
+
+……这大概是最简单的一个操作了。只需要按下 <启动按钮> 就好。@@@Launch
+
+# Instruction.ReadyToLaunch.1
+
+在启动过程中 Alicorn 会根据需要 <下载一些游戏文件>，稍等等就好。
+
+# Instruction.ReadyToLaunch.2
+
+开始游戏吧，我就不干扰你咯……
+
+# Instruction.ReadyToLaunch.3
+
+END

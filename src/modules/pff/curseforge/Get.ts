@@ -1,12 +1,6 @@
-import { copyFile, ensureDir } from "fs-extra";
-import path from "path";
 import { invokeWorker } from "../../../renderer/Schedule";
 import { safeGet } from "../../commons/Null";
-import { MinecraftContainer } from "../../container/MinecraftContainer";
-import { DownloadMeta } from "../../download/AbstractDownloader";
-import { wrappedDownloadFile } from "../../download/DownloadWrapper";
 import { pgot } from "../../download/GotWrapper";
-import { findCachedFile, writeCachedFile } from "./Cache";
 import { GAME_ID } from "./Values";
 
 // With modpack
@@ -250,34 +244,6 @@ export function getLatestFileByVersion(
     }
   }
   return 0;
-}
-
-export async function requireFile(
-  file: File,
-  addon: AddonInfo,
-  cacheRoot: string,
-  container: MinecraftContainer
-): Promise<boolean> {
-  const cache = await findCachedFile(file, addon, cacheRoot);
-  const modJar = container.getModJar(file.fileName);
-  if (cache) {
-    try {
-      await ensureDir(path.dirname(modJar));
-      await copyFile(cache, modJar);
-      return true;
-    } catch (e) {
-      console.log(e);
-    }
-  }
-  const st = await wrappedDownloadFile(
-    new DownloadMeta(file.downloadUrl, modJar)
-  );
-  if (cacheRoot.trim().length > 0) {
-    try {
-      await writeCachedFile(file, addon, cacheRoot, modJar);
-    } catch {} // It won't hurt
-  }
-  return st === 1; // All's well that download's well
 }
 
 export async function lookupFileInfo(

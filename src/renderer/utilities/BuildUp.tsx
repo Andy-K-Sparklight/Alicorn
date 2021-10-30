@@ -44,7 +44,7 @@ export function BuildUp(): JSX.Element {
   });
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-      <Box>
+      <>
         <Tabs
           value={currentTab}
           onChange={(_e, v) => {
@@ -88,7 +88,7 @@ export function BuildUp(): JSX.Element {
           <br />
           <SelectAssets assets={assets} meta={meta} container={rootContainer} />
         </TabPanel>
-      </Box>
+      </>
     </MuiThemeProvider>
   );
 }
@@ -164,9 +164,7 @@ function TabPanel(props: {
 }): JSX.Element {
   const { children, value, index } = props;
   return (
-    <Box hidden={value !== index}>
-      {value === index ? <Box>{children}</Box> : ""}
-    </Box>
+    <Box hidden={value !== index}>{value === index ? <>{children}</> : ""}</Box>
   );
 }
 
@@ -189,7 +187,7 @@ function FillInfo(props: {
   const classes = useInputStyles();
   const fullWidthClasses = fullWidth();
   return (
-    <Box>
+    <>
       <FormControl>
         <TextField
           variant={"outlined"}
@@ -259,7 +257,7 @@ function FillInfo(props: {
           value={meta2.version}
         />
       </FormControl>
-    </Box>
+    </>
   );
 }
 
@@ -285,7 +283,7 @@ function SelectAssets(props: {
     }
   });
   return (
-    <Box>
+    <>
       <Button
         type={"button"}
         color={"primary"}
@@ -402,7 +400,7 @@ function SelectAssets(props: {
           })}
         </List>
       </Box>
-    </Box>
+    </>
   );
 }
 

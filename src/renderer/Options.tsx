@@ -117,10 +117,9 @@ export function OptionsPage(): JSX.Element {
             choices={ALL_ASSISTANTS}
           />
           <InputItem
-            type={ConfigType.RADIO}
+            type={ConfigType.BOOL}
+            bindConfig={"interactive.assistant?"}
             reload
-            bindConfig={"font-type"}
-            choices={["SysDefault", "GNU", "Win"]}
           />
           <InputItem
             reload
@@ -292,6 +291,11 @@ export function OptionsPage(): JSX.Element {
             experimental
             bindConfig={"updator.url"}
           />
+          <InputItem
+            type={ConfigType.RADIO}
+            bindConfig={"frame.drag-impl"}
+            choices={["Webkit", "Delta", "TitleBar"]}
+          />
           <InputItem type={ConfigType.BOOL} bindConfig={"hardware-acc"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"dev"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"dev.f12"} />
@@ -299,6 +303,7 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.BOOL}
             bindConfig={"dev.explicit-error-throw"}
           />
+          <InputItem type={ConfigType.BOOL} bindConfig={"first-run?"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"reset"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"clean-storage"} />
         </TabPanel>
@@ -386,7 +391,7 @@ export function InputItem(props: {
     }
   }
   return (
-    <Box>
+    <>
       <Typography color={"primary"} className={classes.title} gutterBottom>
         {tr(`Options.${props.bindConfig}.title`)}
       </Typography>
@@ -449,7 +454,7 @@ export function InputItem(props: {
 
           case ConfigType.DIR:
             return (
-              <Box>
+              <>
                 <TextField
                   disabled={disabled}
                   fullWidth
@@ -484,7 +489,7 @@ export function InputItem(props: {
                 >
                   {tr("Options.Select")}
                 </Button>
-              </Box>
+              </>
             );
           case ConfigType.RADIO:
             return (
@@ -544,7 +549,7 @@ export function InputItem(props: {
             );
         }
       })()}
-    </Box>
+    </>
   );
 }
 function TabPanel(props: {

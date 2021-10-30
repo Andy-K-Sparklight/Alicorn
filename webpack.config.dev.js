@@ -11,13 +11,20 @@ const MainDev = {
   output: {
     filename: "Bootstrap.js",
     path: path.resolve(__dirname, "dist"),
+    pathinfo: false,
   },
   module: {
     unknownContextCritical: false,
     rules: [
       {
         test: /\.tsx?$/,
-        use: "ts-loader",
+        use: {
+          loader: "ts-loader",
+          options: {
+            transpileOnly: true,
+            experimentalWatchApi: true,
+          },
+        },
         exclude: /node_modules/,
       },
     ],
@@ -61,13 +68,20 @@ const RendererDev = {
   output: {
     filename: "[name].js",
     path: path.resolve(__dirname, "dist"),
+    pathinfo: false,
   },
   module: {
     unknownContextCritical: false,
     rules: [
       {
         test: /\.[tj]sx?$/,
-        use: "ts-loader",
+        use: {
+          loader: "ts-loader",
+          options: {
+            transpileOnly: true,
+            experimentalWatchApi: true,
+          },
+        },
         exclude: /node_modules/,
       },
     ],
@@ -97,7 +111,13 @@ const StarlightWebDev = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: "ts-loader",
+        use: {
+          loader: "ts-loader",
+          options: {
+            transpileOnly: true,
+            experimentalWatchApi: true,
+          },
+        },
         exclude: /node_modules/,
       },
     ],

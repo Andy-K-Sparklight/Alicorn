@@ -29,6 +29,7 @@ import {
 } from "../modules/java/JInfo";
 import { whereJava } from "../modules/java/WhereJava";
 import { setChangePageWarn } from "./GoTo";
+import { ShiftEle } from "./Instruction";
 import { submitError, submitInfo } from "./Message";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { fullWidth, useFormStyles } from "./Stylex";
@@ -117,32 +118,39 @@ export function JavaSelector(): JSX.Element {
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box className={classes.root}>
+        <br />
+        <br />
+
         <FormControl variant={"outlined"}>
           <InputLabel id={"Select-JRE"} className={classes.label}>
             {tr("JavaSelector.SelectJava")}
           </InputLabel>
-          <Select
-            label={tr("JavaSelector.SelectJava")}
-            variant={"outlined"}
-            labelId={"Select-JRE"}
-            color={"primary"}
-            className={classes.selector + " " + fullWidthClasses.form}
-            onChange={(e) => {
-              const sj = String(e.target.value);
-              setCurrentJava(sj);
-              setDefaultJavaHome(sj);
-            }}
-            value={currentJava}
-          >
-            {javaList.map((j) => {
-              return (
-                <MenuItem key={j} value={j}>
-                  {j}
-                </MenuItem>
-              );
-            })}
-          </Select>
+
+          <ShiftEle name={"JavaSelectorSelect"} bgfill>
+            <Select
+              label={tr("JavaSelector.SelectJava")}
+              variant={"outlined"}
+              labelId={"Select-JRE"}
+              color={"primary"}
+              className={classes.selector + " " + fullWidthClasses.form}
+              onChange={(e) => {
+                const sj = String(e.target.value);
+                setCurrentJava(sj);
+                setDefaultJavaHome(sj);
+              }}
+              value={currentJava}
+            >
+              {javaList.map((j) => {
+                return (
+                  <MenuItem key={j} value={j}>
+                    {j}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </ShiftEle>
         </FormControl>
+
         <Tooltip title={tr("JavaSelector.Reload")}>
           <IconButton
             color={"primary"}
@@ -151,47 +159,51 @@ export function JavaSelector(): JSX.Element {
               setLoaded(false);
             }}
           >
-            <Refresh />
+            <ShiftEle name={"JavaSelectorSelect"} bgfill>
+              <Refresh />
+            </ShiftEle>
           </IconButton>
         </Tooltip>
         <br />
         <br />
-        <Button
-          variant={"contained"}
-          color={"primary"}
-          onClick={() => {
-            void (async () => {
-              const d = path.dirname(path.dirname(await remoteSelectJava()));
-              if (d === "." || d.length === 0) {
-                return;
-              }
-              if (mounted.current) {
-                const jlCopy = javaList.concat();
-                if (!jlCopy.includes(d)) {
-                  jlCopy.push(d);
-                  setJavaList(jlCopy);
-                  resetJavaList(jlCopy);
-                  setRefreshBit(!refreshBit);
+        <ShiftEle name={"JavaSelectorManual"}>
+          <Button
+            variant={"contained"}
+            color={"primary"}
+            onClick={() => {
+              void (async () => {
+                const d = path.dirname(path.dirname(await remoteSelectJava()));
+                if (d === "." || d.length === 0) {
+                  return;
                 }
-                setCurrentJava(d);
-              }
-            })();
-          }}
-        >
-          {tr("JavaSelector.CustomAdd")}
-        </Button>
+                if (mounted.current) {
+                  const jlCopy = javaList.concat();
+                  if (!jlCopy.includes(d)) {
+                    jlCopy.push(d);
+                    setJavaList(jlCopy);
+                    resetJavaList(jlCopy);
+                    setRefreshBit(!refreshBit);
+                  }
+                  setCurrentJava(d);
+                }
+              })();
+            }}
+          >
+            {tr("JavaSelector.CustomAdd")}
+          </Button>
+        </ShiftEle>
         <br />
         <br />
         {isJavaInfoLoaded ? (
           ""
         ) : (
-          <Box>
+          <>
             <LinearProgress color={"secondary"} />
             <br />
             <Typography className={classes.text} color={"primary"} gutterBottom>
               {tr("JavaSelector.Loading")}
             </Typography>
-          </Box>
+          </>
         )}
 
         <JavaInfoDisplay
@@ -207,7 +219,7 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
   const corruptBit =
     props.jInfo?.rootVersion === -1 || props.jInfo === undefined;
   return (
-    <Box>
+    <>
       <Typography variant={"h6"} color={"primary"} gutterBottom>
         {corruptBit
           ? tr("JavaSelector.CannotLoad")
@@ -216,14 +228,14 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
       {corruptBit ? (
         ""
       ) : (
-        <Box>
+        <>
           <Typography color={"secondary"} gutterBottom>
             {props.jInfo?.runtime || "Unknown"}
           </Typography>
           <Typography color={"secondary"} gutterBottom>
             {props.jInfo?.vm || "Unknown"}
           </Typography>
-        </Box>
+        </>
       )}
       {corruptBit ? (
         <Typography
@@ -241,7 +253,7 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
       {corruptBit ? (
         ""
       ) : (
-        <Box>
+        <>
           {props.jInfo?.isFree ? (
             ""
           ) : (
@@ -284,9 +296,9 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
               {tr("JavaSelector.Warn32")}
             </Typography>
           )}
-        </Box>
+        </>
       )}
-    </Box>
+    </>
   );
 }
 
@@ -300,70 +312,74 @@ function JavaDownloader(): JSX.Element {
     };
   }, []);
   return (
-    <Box>
-      <Button
-        variant={"outlined"}
-        color={"primary"}
-        disabled={isRunning}
-        onClick={() => {
-          setRunning(true);
-          void (async () => {
-            if (os.platform() === "win32") {
-              try {
-                await installJRE(false);
-              } catch (e) {
-                submitError(String(e));
-              } finally {
-                if (mounted.current) {
-                  setRunning(false);
+    <>
+      <ShiftEle name={"JavaSelectorInstall"} bgfill>
+        <Button
+          variant={"contained"}
+          color={"primary"}
+          disabled={isRunning}
+          onClick={() => {
+            setRunning(true);
+            void (async () => {
+              if (os.platform() === "win32") {
+                try {
+                  await installJRE(false);
+                } catch (e) {
+                  submitError(String(e));
+                } finally {
+                  if (mounted.current) {
+                    setRunning(false);
+                  }
                 }
+              } else {
+                void shell.openExternal(
+                  "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/16/jre/x64/linux/"
+                );
+                submitInfo(tr("JavaSelector.External"));
+                setRunning(false);
               }
-            } else {
-              void shell.openExternal(
-                "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/16/jre/x64/linux/"
-              );
-              submitInfo(tr("JavaSelector.External"));
-              setRunning(false);
-            }
-          })();
-        }}
-      >
-        {tr("JavaSelector.GetNew")}
-      </Button>
+            })();
+          }}
+        >
+          {tr("JavaSelector.GetNew")}
+        </Button>
+      </ShiftEle>
       <br />
-      <Button
-        disabled={isRunning}
-        variant={"outlined"}
-        color={"primary"}
-        onClick={() => {
-          setRunning(true);
-          void (async () => {
-            if (os.platform() === "win32") {
-              try {
-                await installJRE(true);
-              } catch (e) {
-                submitError(String(e));
-              } finally {
-                if (mounted.current) {
-                  setRunning(false);
+      <ShiftEle name={"JavaSelectorInstall"} bgfill>
+        <Button
+          disabled={isRunning}
+          variant={"contained"}
+          color={"primary"}
+          onClick={() => {
+            setRunning(true);
+            void (async () => {
+              if (os.platform() === "win32") {
+                try {
+                  await installJRE(true);
+                } catch (e) {
+                  submitError(String(e));
+                } finally {
+                  if (mounted.current) {
+                    setRunning(false);
+                  }
                 }
+              } else {
+                void shell.openExternal(
+                  "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jre/x64/linux/"
+                );
+                submitInfo(tr("JavaSelector.External"));
+                setRunning(false);
               }
-            } else {
-              void shell.openExternal(
-                "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jre/x64/linux/"
-              );
-              submitInfo(tr("JavaSelector.External"));
-              setRunning(false);
-            }
-          })();
-        }}
-        style={{
-          marginTop: "1%",
-        }}
-      >
-        {tr("JavaSelector.GetOld")}
-      </Button>
-    </Box>
+            })();
+          }}
+          style={{
+            marginTop: "1%",
+          }}
+        >
+          {tr("JavaSelector.GetOld")}
+        </Button>
+      </ShiftEle>
+    </>
   );
 }
 

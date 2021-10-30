@@ -27,8 +27,8 @@
   "clean-storage": false,
   "download.mirror": "alicorn-mcbbs-nonfree",
   "interactive.i-have-a-crush-on-al": false,
-  "startup-page.name": "Tutor",
-  "startup-page.url": "/Tutor/0",
+  "startup-page.name": "Welcome",
+  "startup-page.url": "/Welcome",
   "starlight.join-server.timeout": 2000,
   "gw-size": "960x540",
   "memory": 0,
@@ -49,5 +49,7 @@
   "features.cursor": true,
   "features.detect-lan": true,
   "hoofoff.central": "",
-  "font-type": "SysDefault"
+  "frame.drag-impl": "Webkit",
+  "interactive.assistant?": true,
+  "first-run?": true
 }

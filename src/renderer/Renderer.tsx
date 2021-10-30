@@ -1,7 +1,6 @@
 import { Box, createTheme, MuiThemeProvider } from "@material-ui/core";
 import { ipcRenderer, shell } from "electron";
 import { emptyDir } from "fs-extra";
-import os from "os";
 import React from "react";
 import ReactDOM from "react-dom";
 import { HashRouter } from "react-router-dom";
@@ -17,7 +16,7 @@ import {
   saveDefaultConfig,
 } from "../modules/config/ConfigSupport";
 import { getActualDataPath } from "../modules/config/DataSupport";
-import { getContainer, loadGDT } from "../modules/container/ContainerUtil";
+import { loadGDT } from "../modules/container/ContainerUtil";
 import { initVF } from "../modules/container/ValidateRecord";
 import { prepareEdgeExecutable } from "../modules/cutie/BootEdge";
 import { initConcurrentDownloader } from "../modules/download/Concurrent";
@@ -29,27 +28,26 @@ import { prefetchFabricManifest } from "../modules/pff/get/FabricGet";
 import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
 import { prefetchMojangVersions } from "../modules/pff/get/MojangCore";
 import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
-import { loadProfile } from "../modules/profile/ProfileLoader";
 import { initEncrypt } from "../modules/security/Encrypt";
 import { getMachineUniqueID } from "../modules/security/Unique";
 import { checkUpdate, initUpdator } from "../modules/selfupdate/Updator";
 import { loadServers } from "../modules/server/ServerFiles";
 import { App } from "./App";
+import { completeFirstRun } from "./FirstRunSetup";
 import { registerHandlers } from "./Handlers";
 import { activateHotKeyFeature } from "./HotKeyHandler";
+import { InstructionProvider } from "./Instruction";
 import { submitInfo, submitWarn } from "./Message";
-import { initWorker, invokeWorker } from "./Schedule";
+import { initWorker } from "./Schedule";
+import { initStatistics } from "./Statistics";
 import { initTranslator, tr } from "./Translator";
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
 
-const WIN_FONT_FAMILY =
-  '"UbuntuMono", "Microsoft YaHei UI", "Roboto Medium", "Trebuchet MS", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
-const GNU_FONT_FAMILY =
-  '"UbuntuMono", "Open Sans", "Roboto Medium", "Fira Code", Monaco, Consolas, "Courier New", Courier, monospace';
 const FONT_FAMILY =
-  os.platform() === "win32" ? WIN_FONT_FAMILY : GNU_FONT_FAMILY;
+  '"Ubuntu Mono", Consolas, "Courier New", Courier, "Source Hans Sans", "Roboto Medium", "Microsoft YaHei", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
+
 export function setThemeParams(
   primaryMain: string,
   primaryLight: string,
@@ -190,11 +188,13 @@ function RendererBootstrap(): JSX.Element {
         backgroundColor: getString("theme.secondary.light", "#ffe0f0"),
       })}
     >
-      <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
-        <HashRouter>
-          <App />
-        </HashRouter>
-      </MuiThemeProvider>
+      <InstructionProvider>
+        <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
+          <HashRouter>
+            <App />
+          </HashRouter>
+        </MuiThemeProvider>
+      </InstructionProvider>
     </Box>
   );
 }
@@ -245,17 +245,19 @@ function flushColors(): void {
     getString("theme.primary.light") || "#" + tr("Colors.Primary.Light"),
     getString("theme.secondary.main") || "#" + tr("Colors.Secondary.Main"),
     getString("theme.secondary.light") || "#" + tr("Colors.Secondary.Light"),
-    getConfiguredFont() + tr("Font") + FONT_FAMILY,
+    tr("Font") + FONT_FAMILY,
     getBoolean("features.cursor")
   );
-  const e = document.createElement("style");
+  let e: HTMLStyleElement | null = document.createElement("style");
   e.innerText = `html {background-color:${
     getString("theme.secondary.light") || "#" + tr("Colors.Secondary.Light")
-  }; font-family:${
-    getConfiguredFont() + tr("Font") + FONT_FAMILY
-  };} a {color:${getString("theme.primary.main", "#5d2391")};}`;
+  }; font-family:${tr("Font") + FONT_FAMILY};} a {color:${getString(
+    "theme.primary.main",
+    "#5d2391"
+  )};}`;
   // Set background
   document.head.insertAdjacentElement("beforeend", e);
+  e = null;
   window.dispatchEvent(new CustomEvent("ForceRefreshApp"));
 }
 
@@ -267,11 +269,13 @@ function setDefCursor(): void {
       pressCursorEle.parentNode?.removeChild(pressCursorEle);
       pressCursorEle = null;
     }
-    const x = normalCursorEle || document.createElement("style");
+    let x: HTMLStyleElement | null =
+      normalCursorEle || document.createElement("style");
     x.innerText =
       'html, .MuiButtonBase-root, .MuiBox-root, label, button, input, input[type="text"], input[type="url"], input[type="checkbox"], input[type="radio"] { cursor: url(Mouse.png), auto !important; }';
     document.head.insertAdjacentElement("afterbegin", x);
     normalCursorEle = x;
+    x = null;
   }
 }
 function setActCursor(): void {
@@ -280,11 +284,12 @@ function setActCursor(): void {
       normalCursorEle.parentNode?.removeChild(normalCursorEle);
       normalCursorEle = null;
     }
-    const x = document.createElement("style");
+    let x: HTMLStyleElement | null = document.createElement("style");
     x.innerText =
       'html, .MuiButtonBase-root, .MuiBox-root, label, button, input, input[type="text"], input[type="url"], input[type="checkbox"], input[type="radio"] { cursor: url(Mouse2.png), auto !important; }';
     document.head.insertAdjacentElement("afterbegin", x);
     pressCursorEle = x;
+    x = null;
   }
 }
 
@@ -383,6 +388,7 @@ void (async () => {
   // Essential works and light works
   await Promise.allSettled([initEncrypt()]);
   initDownloadWrapper();
+  initStatistics();
   // Normal works
   await Promise.allSettled([
     (async () => {
@@ -398,6 +404,7 @@ void (async () => {
     loadServers(),
     getMachineUniqueID(), // Cache
   ]);
+  void completeFirstRun(); // Not blocking
   // Heavy works and minor works
   await Promise.allSettled([initResolveLock(), initVF(), preCacheJavaInfo()]);
   const t2 = new Date();
@@ -406,7 +413,10 @@ void (async () => {
       (t2.getTime() - t1.getTime()) / 1000 +
       "s."
   );
-
+  // Deferred Check
+  if (!navigator.onLine) {
+    submitWarn(tr("System.Offline"));
+  }
   // Optional services
   const t3 = new Date();
   console.log("Running optional services...");
@@ -499,12 +509,4 @@ function clearScreen(): void {
 function showLogs(): void {
   // @ts-ignore
   window.showLogScreen();
-}
-
-function getConfiguredFont(): string {
-  const s = getString("font-type");
-  if (s.trim().length === 0 || s === "SysDefault") {
-    return "";
-  }
-  return (s === "GNU" ? GNU_FONT_FAMILY : WIN_FONT_FAMILY) + ", ";
 }

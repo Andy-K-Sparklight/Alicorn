@@ -35,7 +35,7 @@ const useAccStyles = makeStyles((theme) =>
 export function UtilitiesIndex(): JSX.Element {
   const classes = useTextStyles();
   return (
-    <Box>
+    <>
       <Typography className={classes.secondText} gutterBottom>
         {tr("UtilitiesIndex.Description")}
       </Typography>
@@ -44,7 +44,7 @@ export function UtilitiesIndex(): JSX.Element {
       <SimpleUtil name={"CutieConnect"} />
       <SimpleUtil name={"NetCheck"} />
       <SimpleUtil name={"BuildUp"} />
-    </Box>
+    </>
   );
 }
 

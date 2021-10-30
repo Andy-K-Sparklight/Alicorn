@@ -281,6 +281,11 @@ export function registerBackgroundListeners(): void {
     }
     mw?.setPosition(w, h);
   });
+  ipcMain.on("windowMoving", (_e, { mouseX, mouseY }) => {
+    const { x, y } = screen.getCursorScreenPoint();
+    getMainWindow()?.setPosition(x - mouseX, y - mouseY);
+  });
+
   ipcMain.on("ReloadWindow", () => {
     void getMainWindow()?.loadFile(
       path.resolve(app.getAppPath(), "Renderer.html")

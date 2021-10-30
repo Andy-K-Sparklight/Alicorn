@@ -100,12 +100,14 @@ import { GameProfile } from "../modules/profile/GameProfile";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { getMachineUniqueID } from "../modules/security/Unique";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
+import { ShiftEle } from "./Instruction";
 import { submitError, submitSucc, submitWarn } from "./Message";
 import { YNDialog } from "./OperatingHint";
 import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
 } from "./Renderer";
+import { addStatistics } from "./Statistics";
 import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
 import {
@@ -413,7 +415,7 @@ function Launching(props: {
       status === LaunchingStatus.ARGS_GENERATING ? (
         <br />
       ) : (
-        <Box>
+        <>
           <Typography className={classes.text} gutterBottom>
             {tr(
               "ReadyToLaunch.Progress",
@@ -422,7 +424,7 @@ function Launching(props: {
               `Pending=${ws.pending}`
             )}
           </Typography>
-        </Box>
+        </>
       )}
       <MiniJavaSelector
         hash={profileHash.current}
@@ -452,60 +454,62 @@ function Launching(props: {
             : tr("ReadyToLaunch.Start")
         }
       >
-        <Box>
-          <Fab
-            color={"primary"}
-            disabled={
-              status !== LaunchingStatus.PENDING &&
-              status !== LaunchingStatus.FINISHED
-            }
-            onClick={async () => {
-              if (status === LaunchingStatus.PENDING) {
-                setProfileRelatedID(profileHash.current, "");
-                if (selectedAccount !== undefined) {
-                  // @ts-ignore
-                  window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
-                    (st) => {
-                      if (mountedBit.current) {
-                        setStatus(st);
-                        setActiveStep(REV_LAUNCH_STEPS[st]);
-                        setChangePageWarn(st !== LaunchingStatus.PENDING);
-                      }
-                    },
-                    props.profile,
-                    profileHash.current,
-                    props.container,
-                    selectedAccount,
-                    props.server,
-                    (id) => {
-                      setProfileRelatedID(profileHash.current, id);
-                    }
-                  );
-                } else {
-                  setSelecting(true);
-                }
-              } else if (status === LaunchingStatus.FINISHED) {
-                if (openLanButtonEnabled) {
-                  setOpenLanWindow(true);
-                  return;
-                }
-                const i = getProfileRelatedID(profileHash.current);
-                if (i) {
-                  console.log(`Forcefully stopping instance ${i}!`);
-                  stopMinecraft(i);
-                }
+        <>
+          <ShiftEle name={"Launch"}>
+            <Fab
+              color={"primary"}
+              disabled={
+                status !== LaunchingStatus.PENDING &&
+                status !== LaunchingStatus.FINISHED
               }
-            }}
-          >
-            {status !== LaunchingStatus.FINISHED ? (
-              <FlightTakeoff />
-            ) : openLanButtonEnabled ? (
-              <RssFeed />
-            ) : (
-              <FlightLand />
-            )}
-          </Fab>
-        </Box>
+              onClick={async () => {
+                if (status === LaunchingStatus.PENDING) {
+                  setProfileRelatedID(profileHash.current, "");
+                  if (selectedAccount !== undefined) {
+                    // @ts-ignore
+                    window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
+                      (st) => {
+                        if (mountedBit.current) {
+                          setStatus(st);
+                          setActiveStep(REV_LAUNCH_STEPS[st]);
+                          setChangePageWarn(st !== LaunchingStatus.PENDING);
+                        }
+                      },
+                      props.profile,
+                      profileHash.current,
+                      props.container,
+                      selectedAccount,
+                      props.server,
+                      (id) => {
+                        setProfileRelatedID(profileHash.current, id);
+                      }
+                    );
+                  } else {
+                    setSelecting(true);
+                  }
+                } else if (status === LaunchingStatus.FINISHED) {
+                  if (openLanButtonEnabled) {
+                    setOpenLanWindow(true);
+                    return;
+                  }
+                  const i = getProfileRelatedID(profileHash.current);
+                  if (i) {
+                    console.log(`Forcefully stopping instance ${i}!`);
+                    stopMinecraft(i);
+                  }
+                }
+              }}
+            >
+              {status !== LaunchingStatus.FINISHED ? (
+                <FlightTakeoff />
+              ) : openLanButtonEnabled ? (
+                <RssFeed />
+              ) : (
+                <FlightLand />
+              )}
+            </Fab>
+          </ShiftEle>
+        </>
       </Tooltip>
       <br />
       <br />
@@ -719,6 +723,7 @@ async function startBoot(
     setStatus(LaunchingStatus.PENDING);
     window.dispatchEvent(new CustomEvent("MinecraftExitCleanUp"));
     if (c !== "0" && c !== "SIGINT") {
+      addStatistics("Crash");
       let crashReports: string[] = [];
       console.log(
         `Attention! Minecraft(${runID}) might not have run properly!`
@@ -766,6 +771,7 @@ async function startBoot(
     gc1: getString("gc1", "pure"),
     gc2: getString("gc2", "pure"),
   });
+  addStatistics("Launch");
   setRunID(runID);
   window.localStorage.setItem(LAST_SUCCESSFUL_GAME_KEY, window.location.hash);
   setStatus(LaunchingStatus.FINISHED);
@@ -902,7 +908,7 @@ function AccountChoose(props: {
           ""
         )}
         {choice === "MZ" ? (
-          <Box>
+          <>
             <Button
               variant={"outlined"}
               className={btnClasses.btn}
@@ -928,12 +934,12 @@ function AccountChoose(props: {
             >
               {tr(msLogout)}
             </Button>
-          </Box>
+          </>
         ) : (
           ""
         )}
         {choice === "YG" ? (
-          <Box>
+          <>
             <FormControl variant={"outlined"}>
               <InputLabel variant={"outlined"} id={"Select-Account"}>
                 {tr("ReadyToLaunch.UseYGChoose")}
@@ -964,7 +970,7 @@ function AccountChoose(props: {
                 })}
               </Select>
             </FormControl>
-          </Box>
+          </>
         ) : (
           ""
         )}

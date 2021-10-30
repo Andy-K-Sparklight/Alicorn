@@ -76,7 +76,7 @@ export function FailedHint(props: {
   const reason = tr("Operating.FailedInfo", `Reason=${props.reason}`);
   return (
     <Dialog open={props.open} onClose={props.closeFunc}>
-      <Box>
+      <>
         <DialogTitle>{tr("Operating.Failed")}</DialogTitle>
         <DialogContent
           onClick={() => {
@@ -90,7 +90,7 @@ export function FailedHint(props: {
             <i>{randsl("Operating.FailedSayings")}</i>
           </DialogContentText>
         </DialogContent>
-      </Box>
+      </>
 
       <DialogActions>
         <Button onClick={props.closeFunc}>

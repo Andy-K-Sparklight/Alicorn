@@ -26,9 +26,6 @@ export function transformManifest5(
   src: Record<string, unknown>,
   contextDir: string
 ): ModpackModel | null {
-  if (src.manifestVersion !== 5) {
-    return null;
-  }
   const bv = String(safeGet(src, ["minecraft", "version"], ""));
   if (bv.length === 0) {
     return null;

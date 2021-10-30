@@ -162,7 +162,7 @@ export function SingleAccountDisplay(props: {
   const usingAccount = useRef<Account>(accountCopy);
   const [isAsking, setIsAsking] = useState(false);
   return (
-    <Box>
+    <>
       {/* Confirm delete */}
       {isAsking ? (
         <YNDialog
@@ -203,7 +203,7 @@ export function SingleAccountDisplay(props: {
       />
       <Card className={classes.card}>
         <CardContent>
-          <Box>
+          <>
             <Tooltip title={tr("AccountManager.Remove")}>
               <IconButton
                 disabled={isOperating}
@@ -238,7 +238,7 @@ export function SingleAccountDisplay(props: {
                 <Refresh />
               </IconButton>
             </Tooltip>
-          </Box>
+          </>
           <Typography
             className={classes.text}
             color={"textSecondary"}
@@ -263,7 +263,7 @@ export function SingleAccountDisplay(props: {
         </CardContent>
       </Card>
       <br />
-    </Box>
+    </>
   );
 }
 
@@ -533,7 +533,7 @@ function AddAccountWrapper(props: {
   const [isEmailOpen, isEmailOpenUpdate] = useState(true);
   const [tmpAccount, tmpAccountUpdate] = useState<Account>();
   return (
-    <Box>
+    <>
       <YggdrasilForm
         onClose={() => {
           isPwdOpenUpdate(false);
@@ -564,6 +564,6 @@ function AddAccountWrapper(props: {
           tmpAccountUpdate(a);
         }}
       />
-    </Box>
+    </>
   );
 }

@@ -49,7 +49,7 @@ export function CarouselBoutique(): JSX.Element {
   const classes = useTextStyles();
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-      <Box>
+      <>
         <Typography className={classes.secondText} gutterBottom>
           {tr("Utilities.CarouselBoutique.Hint")}
         </Typography>
@@ -231,7 +231,7 @@ export function CarouselBoutique(): JSX.Element {
         >
           {tr("Utilities.CarouselBoutique.SetAsDefaultCape")}
         </Button>
-      </Box>
+      </>
     </MuiThemeProvider>
   );
 }

@@ -212,7 +212,7 @@ export function PffFront(): JSX.Element {
           </Typography>
         )}
       </Box>
-      <Box>
+      <>
         <Typography className={fullWidthClasses.text} color={"primary"}>
           {tr("PffFront.QuickWatch")}
         </Typography>
@@ -287,7 +287,7 @@ export function PffFront(): JSX.Element {
               })
             : []}
         </List>
-      </Box>
+      </>
     </MuiThemeProvider>
   );
 }
