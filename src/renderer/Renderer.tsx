@@ -215,20 +215,16 @@ function RendererBootstrap(): JSX.Element {
             ""
           )}
 
-          {getBoolean("dev.experimental") ? (
-            <Typography
-              style={{
-                position: "fixed",
-                right: "5px",
-                bottom: "5px",
-              }}
-              color={"primary"}
-            >
-              EXPERIMENTAL
-            </Typography>
-          ) : (
-            ""
-          )}
+          <Typography
+            style={{
+              position: "fixed",
+              right: "5px",
+              bottom: "5px",
+            }}
+            color={"primary"}
+          >
+            {"Alicorn " + pkg.appVersion + " #" + pkg.updatorVersion}
+          </Typography>
         </MuiThemeProvider>
       </InstructionProvider>
     </Box>
