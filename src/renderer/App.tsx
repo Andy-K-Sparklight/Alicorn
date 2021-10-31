@@ -322,6 +322,7 @@ export function App(): JSX.Element {
               display: showCommand ? "none" : undefined,
               marginRight: "6px",
             }}
+            color={"inherit"}
             onClick={() => {
               if (!showCommand) {
                 setOpenDrawer(true);

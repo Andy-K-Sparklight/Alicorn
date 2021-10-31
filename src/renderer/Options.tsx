@@ -29,6 +29,7 @@ import { loadMirror } from "../modules/download/Mirror";
 import { remoteSelectDir } from "./ContainerManager";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { useInputStyles } from "./Stylex";
+import { AL_THEMES } from "./ThemeColors";
 import { ALL_ASSISTANTS, tr } from "./Translator";
 
 export enum ConfigType {
@@ -120,6 +121,12 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.BOOL}
             bindConfig={"interactive.assistant?"}
             reload
+          />
+          <InputItem
+            reload
+            type={ConfigType.RADIO}
+            bindConfig={"theme"}
+            choices={["Default"].concat(Object.keys(AL_THEMES))}
           />
           <InputItem
             reload
