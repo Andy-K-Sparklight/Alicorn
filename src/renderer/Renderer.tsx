@@ -1,4 +1,9 @@
-import { Box, createTheme, MuiThemeProvider } from "@material-ui/core";
+import {
+  Box,
+  createTheme,
+  MuiThemeProvider,
+  Typography,
+} from "@material-ui/core";
 import { ipcRenderer, shell } from "electron";
 import { emptyDir } from "fs-extra";
 import React from "react";
@@ -40,6 +45,7 @@ import { InstructionProvider } from "./Instruction";
 import { submitInfo, submitWarn } from "./Message";
 import { initWorker } from "./Schedule";
 import { initStatistics } from "./Statistics";
+import { AL_THEMES } from "./ThemeColors";
 import { initTranslator, tr } from "./Translator";
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
@@ -185,7 +191,8 @@ function RendererBootstrap(): JSX.Element {
   return (
     <Box
       style={Object.assign(GLOBAL_STYLES, {
-        backgroundColor: getString("theme.secondary.light", "#ffe0f0"),
+        backgroundColor:
+          getString("theme.secondary.light") || "#" + getTheme()[3],
       })}
     >
       <InstructionProvider>
@@ -193,6 +200,35 @@ function RendererBootstrap(): JSX.Element {
           <HashRouter>
             <App />
           </HashRouter>
+          {getString("theme") === "Random" ? (
+            <Typography
+              style={{
+                position: "fixed",
+                left: "5px",
+                bottom: "5px",
+              }}
+              color={"textPrimary"}
+            >
+              {AL_THEMES["Random"].join(",")}
+            </Typography>
+          ) : (
+            ""
+          )}
+
+          {getBoolean("dev.experimental") ? (
+            <Typography
+              style={{
+                position: "fixed",
+                right: "5px",
+                bottom: "5px",
+              }}
+              color={"primary"}
+            >
+              EXPERIMENTAL
+            </Typography>
+          ) : (
+            ""
+          )}
         </MuiThemeProvider>
       </InstructionProvider>
     </Box>
@@ -239,22 +275,52 @@ window.addEventListener("error", (e) => {
   window.dispatchEvent(new CustomEvent("sysError", { detail: e.message }));
 });
 
+function getTheme() {
+  const selected = getString("theme");
+  let t;
+  if (AL_THEMES[selected] !== undefined) {
+    t = AL_THEMES[selected];
+  } else {
+    t = AL_THEMES[tr("PrefTheme")];
+  }
+  return t;
+}
+
+export function isBgDark(): boolean {
+  const selected = getString("theme");
+  let t;
+  if (AL_THEMES[selected] !== undefined) {
+    t = selected;
+  } else {
+    t = tr("PrefTheme");
+  }
+  return t.includes("Dark");
+}
+
 function flushColors(): void {
+  const t = getTheme();
   setThemeParams(
-    getString("theme.primary.main") || "#" + tr("Colors.Primary.Main"),
-    getString("theme.primary.light") || "#" + tr("Colors.Primary.Light"),
-    getString("theme.secondary.main") || "#" + tr("Colors.Secondary.Main"),
-    getString("theme.secondary.light") || "#" + tr("Colors.Secondary.Light"),
-    tr("Font") + FONT_FAMILY,
+    getString("theme.primary.main") || "#" + t[0],
+    getString("theme.primary.light") || "#" + t[1],
+    getString("theme.secondary.main") || "#" + t[2],
+    getString("theme.secondary.light") || "#" + t[3],
+    FONT_FAMILY,
     getBoolean("features.cursor")
   );
   let e: HTMLStyleElement | null = document.createElement("style");
-  e.innerText = `html {background-color:${
-    getString("theme.secondary.light") || "#" + tr("Colors.Secondary.Light")
-  }; font-family:${tr("Font") + FONT_FAMILY};} a {color:${getString(
-    "theme.primary.main",
-    "#5d2391"
-  )};}`;
+  e.innerText =
+    `html {background-color:${
+      getString("theme.secondary.light") || "#" + getTheme()[3]
+    }; font-family:${tr("Font") + FONT_FAMILY};} a {color:${
+      getString("theme.primary.main") || "#" + getTheme()[0]
+    } !important;} ` +
+    (isBgDark()
+      ? `input, label {color:${
+          getString("theme.primary.main") || "#" + getTheme()[0]
+        } !important;} fieldset {border-color:${
+          getString("theme.primary.main") || "#" + getTheme()[0]
+        } !important;}`
+      : "");
   // Set background
   document.head.insertAdjacentElement("beforeend", e);
   e = null;

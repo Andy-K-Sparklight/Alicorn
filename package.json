@@ -2,7 +2,7 @@
   "private": true,
   "appVersion": "Sonic Rainboom",
   "version": "1.0.0",
-  "updatorVersion": 28,
+  "updatorVersion": 29,
   "sideEffects": false,
   "scripts": {
     "lc": "yarn lcd",
@@ -22,8 +22,8 @@
     "clean": "node clean.js",
     "launch-dev": "cd dist&&npx electron .",
     "launch-release": "cd dist&&cd release&&npx electron .",
-    "make": "yarn clean&&yarn release-full&&yarn windows&&yarn macos&&yarn linux&&yarn compress",
-    "github-unix": "yarn clean&&yarn release-full&&yarn macos&&yarn linux&&yarn compress",
+    "make": "yarn clean&&yarn release-full&&yarn windows&&yarn linux&&yarn compress",
+    "github-unix": "yarn clean&&yarn release-full&&yarn linux&&yarn compress",
     "github-windows": "yarn clean&&yarn release-full&&yarn windows&&yarn compress",
     "rmx": "rm -rf node_modules/@types/react-router/node_modules node_modules/@types/react-transition-group/node_modules node_modules/@types/react-dom/node_modules node_modules/@types/react-router-dom/node_modules"
   },

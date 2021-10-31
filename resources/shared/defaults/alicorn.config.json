@@ -51,5 +51,6 @@
   "hoofoff.central": "",
   "frame.drag-impl": "Webkit",
   "interactive.assistant?": true,
-  "first-run?": true
+  "first-run?": true,
+  "theme": "Default"
 }

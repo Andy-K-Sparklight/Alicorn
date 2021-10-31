@@ -71,7 +71,11 @@ import {
   OperatingHintCustom,
 } from "./OperatingHint";
 import { hasEdited } from "./Options";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import {
+  ALICORN_DEFAULT_THEME_DARK,
+  ALICORN_DEFAULT_THEME_LIGHT,
+  isBgDark,
+} from "./Renderer";
 import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
 
@@ -455,7 +459,11 @@ function AddNewContainer(props: {
   const [modpackPath, setModpackPath] = useState(props.modpack || "");
   const classes = useInputStyles();
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <MuiThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
+    >
       <Dialog
         open={props.open}
         onClose={() => {

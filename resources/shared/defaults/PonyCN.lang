@@ -2,25 +2,9 @@
 
 https://attachment.mcbbs.net/uc_server/data/avatar/003/28/10/25_avatar_big.jpg
 
-# Colors.Primary.Main
+# PrefTheme
 
-5d2391
-
-# Colors.Primary.Light
-
-d796f0
-
-# Colors.Secondary.Main
-
-df307f
-
-# Colors.Secondary.Light
-
-ffe0f0
-
-# Font
-
-@empty
+Twikie
 
 # LaunchPad
 
@@ -1201,6 +1185,66 @@ Alicorn 特色功能
 # Options.Page.Advanced
 
 高级和重置
+
+# Options.theme.title
+
+主题
+
+# Options.theme.desc
+
+修改主题配色，带 * 的是深色背景主题，可能存在显示问题
+
+# Options.theme.Default
+
+助理默认
+
+# Options.theme.Twikie
+
+暮光紫/萍琪粉
+
+# Options.theme.Maud
+
+石灰紫
+
+# Options.theme.66CCFF
+
+天依蓝
+
+# Options.theme.Apple
+
+苹果橙
+
+# Options.theme.Mint
+
+薄荷绿
+
+# Options.theme.Grass
+
+青草绿
+
+# Options.theme.FadeGray
+
+褪色灰
+
+# Options.theme.NightLightDark
+
+黑夜光 *
+
+# Options.theme.Classic
+
+经典蓝
+
+# Options.theme.OldPink
+
+灰色粉
+
+# Options.theme.Random
+
+随机（是不是疯了？）
+
+# Options.theme.Rarity
+
+珍奇紫
 
 # Options.hoofoff.central.title
 
@@ -2877,23 +2921,23 @@ END
 
 # Instruction.InstallCore.1
 
-使用 <添加新的核心> 来安装新的 Minecraft 原版核心。@5.40@@InstallCoreTabMinecraft
+使用 <添加新的核心> 来安装新的 Minecraft 原版核心。@5.40
 
 # Instruction.InstallCore.2
 
-选择恰当的 <版本> 和 <目标容器>，然后点击 <安装> 就可以开始啦！@@@InstallCoreMinecraft
+选择恰当的 <版本> 和 <目标容器>，然后点击 <安装> 就可以开始啦！
 
 # Instruction.InstallCore.3
 
-当你想尝试 Mod 的时候，你需要 <改装核心>。需要先安装 <相应的原版核心> 才能改装。@5.30@@InstallCoreTabModLoader
+当你想尝试 Mod 的时候，你需要 <改装核心>。需要先安装 <相应的原版核心> 才能改装。@5.30
 
 # Instruction.InstallCore.4
 
-Fabric 和 Forge <不兼容>！使用 Fabric 的 Mod 只能通过 Fabric 加载，Forge 也是一样。@5.30@@InstallCoreTabModLoader
+Fabric 和 Forge <不兼容>！使用 Fabric 的 Mod 只能通过 Fabric 加载，Forge 也是一样。@5.30
 
 # Instruction.InstallCore.5
 
-这里还有 <高清修复>（Iris），不过需要 <先安装 Fabric> 来安装它。@5.30@@InstallCoreIris
+这里还有 <高清修复>（Iris），不过需要 <先安装 Fabric> 来安装它。@5.30
 
 # Instruction.InstallCore.6
 
