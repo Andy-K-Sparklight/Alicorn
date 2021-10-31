@@ -1192,7 +1192,7 @@ Alicorn 特色功能
 
 # Options.theme.desc
 
-修改主题配色
+修改主题配色，带 * 的是深色背景主题，可能存在显示问题
 
 # Options.theme.Default
 
@@ -1213,6 +1213,30 @@ Alicorn 特色功能
 # Options.theme.Apple
 
 苹果橙
+
+# Options.theme.Mint
+
+薄荷绿
+
+# Options.theme.Grass
+
+青草绿
+
+# Options.theme.FadeGray
+
+褪色灰
+
+# Options.theme.NightLightDark
+
+黑夜光 *
+
+# Options.theme.Classic
+
+经典蓝
+
+# Options.theme.OldPink
+
+灰色粉
 
 # Options.theme.Random
 

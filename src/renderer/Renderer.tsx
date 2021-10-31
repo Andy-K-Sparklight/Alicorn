@@ -286,6 +286,17 @@ function getTheme() {
   return t;
 }
 
+export function isBgDark(): boolean {
+  const selected = getString("theme");
+  let t;
+  if (AL_THEMES[selected] !== undefined) {
+    t = selected;
+  } else {
+    t = tr("PrefTheme");
+  }
+  return t.includes("Dark");
+}
+
 function flushColors(): void {
   const t = getTheme();
   setThemeParams(
@@ -297,11 +308,19 @@ function flushColors(): void {
     getBoolean("features.cursor")
   );
   let e: HTMLStyleElement | null = document.createElement("style");
-  e.innerText = `html {background-color:${
-    getString("theme.secondary.light") || "#" + getTheme()[3]
-  }; font-family:${tr("Font") + FONT_FAMILY};} a {color:${
-    getString("theme.primary.main") || "#" + getTheme()[3]
-  };}`;
+  e.innerText =
+    `html {background-color:${
+      getString("theme.secondary.light") || "#" + getTheme()[3]
+    }; font-family:${tr("Font") + FONT_FAMILY};} a {color:${
+      getString("theme.primary.main") || "#" + getTheme()[0]
+    } !important;} ` +
+    (isBgDark()
+      ? `input, label {color:${
+          getString("theme.primary.main") || "#" + getTheme()[0]
+        } !important;} fieldset {border-color:${
+          getString("theme.primary.main") || "#" + getTheme()[0]
+        } !important;}`
+      : "");
   // Set background
   document.head.insertAdjacentElement("beforeend", e);
   e = null;

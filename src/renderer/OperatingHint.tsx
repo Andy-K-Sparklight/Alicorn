@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
@@ -10,7 +9,11 @@ import {
 } from "@material-ui/core";
 import { ipcRenderer } from "electron";
 import React, { useEffect, useState } from "react";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import {
+  ALICORN_DEFAULT_THEME_DARK,
+  ALICORN_DEFAULT_THEME_LIGHT,
+  isBgDark,
+} from "./Renderer";
 import { randsl, tr } from "./Translator";
 
 export function OperatingHint(props: { open: boolean }): JSX.Element {
@@ -156,7 +159,11 @@ export function YNDialog2(props: {
   noProp?: boolean;
 }): JSX.Element {
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <MuiThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
+    >
       <Dialog
         open={props.open}
         onClose={(e) => {
