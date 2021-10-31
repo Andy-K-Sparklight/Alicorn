@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { getBoolean } from "../../modules/config/ConfigSupport";
 import { jumpTo, triggerSetPage } from "../GoTo";
-import { useTextStyles, useTextStylesLight } from "../Stylex";
+import { useCardStyles, useTextStyles } from "../Stylex";
 import { tr } from "../Translator";
 
 const useAccStyles = makeStyles((theme) =>
@@ -52,7 +52,7 @@ function SimpleUtil(props: {
   name: string;
   experimental?: boolean;
 }): JSX.Element {
-  const classes = useTextStylesLight();
+  const classes = useCardStyles();
   const accClasses = useAccStyles();
   if (props.experimental) {
     if (!getBoolean("dev.experimental")) {
@@ -68,10 +68,10 @@ function SimpleUtil(props: {
     >
       <Card className={accClasses.acc1}>
         <CardContent>
-          <Typography className={classes.firstText}>
+          <Typography variant={"h6"}>
             {tr(`Utilities.${props.name}.Title`)}
           </Typography>
-          <Typography className={classes.secondText}>
+          <Typography className={classes.text}>
             {tr(`Utilities.${props.name}.Description`)}
           </Typography>
         </CardContent>
