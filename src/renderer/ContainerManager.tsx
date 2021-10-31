@@ -682,32 +682,37 @@ function AddNewContainer(props: {
             onClick={async () => {
               props.closeFunc();
               props.setOperate(true);
-              addDoing(tr("ContainerManager.FetchingModpack"));
-              let mp = await getTempStorePath(modpackPath);
-              if (!(await isFileExist(modpackPath))) {
-                if (
-                  (await wrappedDownloadFile(
-                    new DownloadMeta(modpackPath, mp)
-                  )) !== 1
-                ) {
-                  props.setFailed(tr("ContainerManager.FailedToFetch"));
-                }
-              } else {
-                mp = modpackPath;
-              }
               try {
                 await createContainer(usedName, selectedDir, createASC);
-                if (mp.endsWith(".zip")) {
-                  await wrappedInstallModpack(getContainer(usedName), mp);
-                }
-                if (mp.endsWith(".json")) {
-                  await deployIJPack(getContainer(usedName), mp);
-                }
-                props.refresh();
               } catch (e) {
                 props.setFailed(String(e));
               }
-
+              if (allowModpack) {
+                addDoing(tr("ContainerManager.FetchingModpack"));
+                let mp = await getTempStorePath(modpackPath);
+                if (!(await isFileExist(modpackPath))) {
+                  if (
+                    (await wrappedDownloadFile(
+                      new DownloadMeta(modpackPath, mp)
+                    )) !== 1
+                  ) {
+                    props.setFailed(tr("ContainerManager.FailedToFetch"));
+                  }
+                } else {
+                  mp = modpackPath;
+                }
+                try {
+                  if (mp.endsWith(".zip")) {
+                    await wrappedInstallModpack(getContainer(usedName), mp);
+                  }
+                  if (mp.endsWith(".json")) {
+                    await deployIJPack(getContainer(usedName), mp);
+                  }
+                  props.refresh();
+                } catch (e) {
+                  props.setFailed(String(e));
+                }
+              }
               setName("");
               setSelected("");
               setAllowModpack(false);
