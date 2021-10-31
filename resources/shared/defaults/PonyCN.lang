@@ -2921,23 +2921,23 @@ END
 
 # Instruction.InstallCore.1
 
-使用 <添加新的核心> 来安装新的 Minecraft 原版核心。@5.40@@InstallCoreTabMinecraft
+使用 <添加新的核心> 来安装新的 Minecraft 原版核心。@5.40
 
 # Instruction.InstallCore.2
 
-选择恰当的 <版本> 和 <目标容器>，然后点击 <安装> 就可以开始啦！@@@InstallCoreMinecraft
+选择恰当的 <版本> 和 <目标容器>，然后点击 <安装> 就可以开始啦！
 
 # Instruction.InstallCore.3
 
-当你想尝试 Mod 的时候，你需要 <改装核心>。需要先安装 <相应的原版核心> 才能改装。@5.30@@InstallCoreTabModLoader
+当你想尝试 Mod 的时候，你需要 <改装核心>。需要先安装 <相应的原版核心> 才能改装。@5.30
 
 # Instruction.InstallCore.4
 
-Fabric 和 Forge <不兼容>！使用 Fabric 的 Mod 只能通过 Fabric 加载，Forge 也是一样。@5.30@@InstallCoreTabModLoader
+Fabric 和 Forge <不兼容>！使用 Fabric 的 Mod 只能通过 Fabric 加载，Forge 也是一样。@5.30
 
 # Instruction.InstallCore.5
 
-这里还有 <高清修复>（Iris），不过需要 <先安装 Fabric> 来安装它。@5.30@@InstallCoreIris
+这里还有 <高清修复>（Iris），不过需要 <先安装 Fabric> 来安装它。@5.30
 
 # Instruction.InstallCore.6
 

@@ -51,7 +51,11 @@ import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { ShiftEle } from "./Instruction";
 import { submitSucc, submitWarn } from "./Message";
 import { FailedHint, OperatingHintCustom } from "./OperatingHint";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import {
+  ALICORN_DEFAULT_THEME_DARK,
+  ALICORN_DEFAULT_THEME_LIGHT,
+  isBgDark,
+} from "./Renderer";
 import { fullWidth, useFormStyles } from "./Stylex";
 import { tr } from "./Translator";
 
@@ -162,7 +166,11 @@ export function InstallCore(): JSX.Element {
     })();
   }, [updatePatchableCoresBit]);
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <MuiThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
+    >
       <Box className={classes.root}>
         <FailedHint
           open={failed}
@@ -181,42 +189,36 @@ export function InstallCore(): JSX.Element {
             setTabValue(v);
           }}
         >
-          <ShiftEle name={"InstallCoreTabMinecraft"} bgfill>
-            <Tab
-              label={
-                <Typography color={"primary"}>
-                  {tr("InstallCore.InstallMinecraft")}
-                </Typography>
-              }
-            />
-          </ShiftEle>
-          <ShiftEle name={"InstallCoreTabModLoader"} bgfill>
-            <Tab
-              label={
-                <Typography color={"primary"}>
-                  {tr("InstallCore.InstallForge")}
-                </Typography>
-              }
-            />
-          </ShiftEle>
-          <ShiftEle name={"InstallCoreTabModLoader"} bgfill>
-            <Tab
-              label={
-                <Typography color={"primary"}>
-                  {tr("InstallCore.InstallFabric")}
-                </Typography>
-              }
-            />
-          </ShiftEle>
-          <ShiftEle name={"InstallCoreIris"} bgfill>
-            <Tab
-              label={
-                <Typography color={"primary"}>
-                  {tr("InstallCore.InstallIris")}
-                </Typography>
-              }
-            />
-          </ShiftEle>
+          <Tab
+            label={
+              <Typography color={"primary"}>
+                {tr("InstallCore.InstallMinecraft")}
+              </Typography>
+            }
+          />
+
+          <Tab
+            label={
+              <Typography color={"primary"}>
+                {tr("InstallCore.InstallForge")}
+              </Typography>
+            }
+          />
+
+          <Tab
+            label={
+              <Typography color={"primary"}>
+                {tr("InstallCore.InstallFabric")}
+              </Typography>
+            }
+          />
+          <Tab
+            label={
+              <Typography color={"primary"}>
+                {tr("InstallCore.InstallIris")}
+              </Typography>
+            }
+          />
         </Tabs>
         {/* Mojang */}
         <TabPanel value={tabValue} index={0}>
