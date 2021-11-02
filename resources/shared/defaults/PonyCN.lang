@@ -1192,7 +1192,7 @@ Alicorn 特色功能
 
 # Options.theme.desc
 
-修改主题配色，带 * 的是深色背景主题，可能存在显示问题
+修改主题配色 - 带 * 的不利于视觉健康，请谨慎使用，当感觉眼睛不舒服的时候请切换到「褪色灰」以避免视力损伤。另请注意部分深色主题可能不利于操作。
 
 # Options.theme.Default
 
@@ -1208,11 +1208,15 @@ Alicorn 特色功能
 
 # Options.theme.66CCFF
 
-天依蓝
+天依蓝 *
+
+# Options.theme.UNIXDark
+
+终端绿 *
 
 # Options.theme.Apple
 
-苹果橙
+苹果橙 *
 
 # Options.theme.Mint
 
@@ -1224,11 +1228,11 @@ Alicorn 特色功能
 
 # Options.theme.FadeGray
 
-褪色灰
+褪色灰（安全颜色）
 
 # Options.theme.NightLightDark
 
-黑夜光 *
+黑夜光
 
 # Options.theme.Classic
 
@@ -1238,9 +1242,17 @@ Alicorn 特色功能
 
 灰色粉
 
+# Options.theme.WhatGreenDark
+
+概念绿
+
+# Options.theme.GoldDark
+
+黄金矿 *
+
 # Options.theme.Random
 
-随机（是不是疯了？）
+随机生成配色 *（是不是疯了？）
 
 # Options.theme.Rarity
 

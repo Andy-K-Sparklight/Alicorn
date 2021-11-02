@@ -543,6 +543,14 @@ export function App(): JSX.Element {
         </Toolbar>
       </AppBar>
       <Box className={classes.content + " yggdrasil_droppable"} id={"app_main"}>
+        {(() => {
+          const bs = document.getElementById("boot_stages");
+          if (bs) {
+            bs.style.display = "none";
+          }
+          // @ts-ignore
+          window.clearLogScreen();
+        })()}
         <Instruction />
         <Route path={"/LaunchPad/:server?"} component={LaunchPad} />
         <Route path={"/InstallCore"} component={InstallCore} />
@@ -727,14 +735,6 @@ export function remoteCloseWindow(): void {
   console.log("Closing!");
   prepareToQuit();
   ipcRenderer.send("closeWindow");
-}
-
-function handleDrag(name: string): (e: React.DragEvent) => void {
-  return (e) => {
-    console.log("Dragging " + name);
-    e.dataTransfer.setData("text/x-alicorn-remove-btn", name);
-    e.dataTransfer.dropEffect = "move";
-  };
 }
 
 function remoteOpenDevTools(): void {

@@ -246,7 +246,7 @@ export function SingleAccountDisplay(props: {
           >
             {toReadableType(props.account.type)}
           </Typography>
-          <Typography variant={"h6"} gutterBottom>
+          <Typography variant={"h6"} className={classes.color} gutterBottom>
             {props.account.accountName}
           </Typography>
           <Typography

@@ -1,12 +1,15 @@
 import { createStyles, makeStyles } from "@material-ui/core";
+import { isBgDark } from "./Renderer";
 
 export const useCardStyles = makeStyles((theme) =>
   createStyles({
     text: {
       fontSize: "medium",
+      color: isBgDark() ? theme.palette.secondary.light : undefined,
     },
     desc: {
       fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      color: isBgDark() ? theme.palette.secondary.light : undefined,
     },
     card: {
       backgroundColor: theme.palette.primary.main,
@@ -22,6 +25,10 @@ export const useCardStyles = makeStyles((theme) =>
     },
     operateButton: {
       float: "right",
+      color: isBgDark() ? theme.palette.secondary.light : undefined,
+    },
+    color: {
+      color: isBgDark() ? theme.palette.secondary.light : undefined,
     },
   })
 );

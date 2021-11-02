@@ -61,6 +61,13 @@ export function registerBackgroundListeners(): void {
     } catch {}
     app.exit();
   });
+  ipcMain.on("SOS", (_i, e) => {
+    dialog.showErrorBox(
+      "Alicorn has crashed!",
+      "An error has occurred, consider REPORT or REINSTALL.\nError message is:\n\n" +
+        String(e)
+    );
+  });
   ipcMain.on("getAppPath", (e) => {
     e.returnValue = app.getAppPath();
   });

@@ -272,7 +272,7 @@ function SingleCoreDisplay(props: {
           >
             {props.profile.versionType}
           </Typography>
-          <Typography variant={"h6"} gutterBottom>
+          <Typography variant={"h6"} className={classes.color} gutterBottom>
             {props.profile.baseVersion}
           </Typography>
           <Typography

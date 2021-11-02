@@ -355,7 +355,7 @@ function SingleContainerDisplay(props: {
               </IconButton>
             </Tooltip>
           </>
-          <Typography variant={"h6"} gutterBottom>
+          <Typography variant={"h6"} className={classes.color} gutterBottom>
             {props.container.id}
           </Typography>
           <Typography
