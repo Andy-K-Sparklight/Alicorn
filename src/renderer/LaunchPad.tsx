@@ -7,13 +7,7 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import {
-  Archive,
-  DeleteForever,
-  EventBusy,
-  FlightTakeoff,
-  Sync,
-} from "@material-ui/icons";
+import { Archive, DeleteForever, EventBusy, Sync } from "@material-ui/icons";
 import { remove } from "fs-extra";
 import objectHash from "object-hash";
 import React, { useEffect, useRef, useState } from "react";
@@ -23,6 +17,7 @@ import { getContainer } from "../modules/container/ContainerUtil";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { whatProfile } from "../modules/profile/WhatProfile";
 import { jumpTo, triggerSetPage } from "./GoTo";
+import { Icons } from "./Icons";
 import { YNDialog2 } from "./OperatingHint";
 import { addStatistics } from "./Statistics";
 import { useCardStyles, usePadStyles } from "./Stylex";
@@ -123,7 +118,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
 
   return (
     <>
-      <Box style={{ textAlign: "right", marginRight: "18%" }}>
+      <Box style={{ textAlign: "right" }}>
         <Tooltip title={tr("CoreInfo.Reload")}>
           <IconButton
             color={"inherit"}
@@ -139,7 +134,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
       </Box>
       {isLoading ? (
         <>
-          <LinearProgress color={"secondary"} style={{ width: "80%" }} />
+          <LinearProgress color={"secondary"} />
           <Typography
             style={{ fontSize: "medium", color: "#ff8400" }}
             gutterBottom
@@ -151,7 +146,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
         ""
       )}
       <br />
-      {cores.map((c, i) => {
+      {cores.map((c) => {
         return (
           <SingleCoreDisplay
             key={c.location}
@@ -198,11 +193,19 @@ function SingleCoreDisplay(props: {
           triggerSetPage("ReadyToLaunch");
         }}
       >
-        <CardContent>
+        <CardContent style={{ position: "relative" }}>
           {props.profile.corrupted ? (
             ""
           ) : (
-            <>
+            <Box style={{ float: "right" }}>
+              <img
+                src={getIconForProfile(props.profile)}
+                width={64}
+                height={64}
+                style={{ float: "right" }}
+              />
+              <br />
+              <br />
               {props.profile.versionType !== "Mojang" &&
               props.profile.versionType !== "Installer" ? (
                 <Tooltip title={tr("CoreInfo.Pff")}>
@@ -228,12 +231,6 @@ function SingleCoreDisplay(props: {
               ) : (
                 ""
               )}
-              <Tooltip title={tr("CoreInfo.Launch")}>
-                <IconButton color={"inherit"} className={classes.operateButton}>
-                  {/* We don't need a handler since we can click the card */}
-                  <FlightTakeoff />
-                </IconButton>
-              </Tooltip>
               <Tooltip title={tr("CoreInfo.Destroy")}>
                 <IconButton
                   color={"inherit"}
@@ -262,9 +259,8 @@ function SingleCoreDisplay(props: {
                   <EventBusy />
                 </IconButton>
               </Tooltip>
-            </>
+            </Box>
           )}
-
           <Typography
             className={classes.text}
             color={"textSecondary"}
@@ -383,4 +379,20 @@ function CorruptedCoreWarning(): JSX.Element {
       </Typography>
     </>
   );
+}
+
+function getIconForProfile(p: SimplifiedCoreInfo): string {
+  switch (p.versionType) {
+    case "Mojang":
+      return Icons.PROFILE_MOJANG;
+    case "Forge":
+      return Icons.PROFILE_FORGE;
+    case "Fabric":
+      return Icons.PROFILE_FABRIC;
+    case "Installer":
+      return Icons.PROFILE_INSTALLER;
+    case "Universal":
+    default:
+      return Icons.PROFILE_UNKNOWN;
+  }
 }

@@ -10,6 +10,7 @@ import { LAST_SUCCESSFUL_GAME_KEY } from "./ReadyToLaunch";
 import { ALICORN_DEFAULT_THEME_DARK } from "./Renderer";
 import { useTextStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
+
 export function Welcome(): JSX.Element {
   const classes = useTextStyles();
   const [refreshBit, setRefresh] = useState(false);
@@ -46,7 +47,7 @@ export function Welcome(): JSX.Element {
     <Box
       style={{
         textAlign: "center",
-        marginTop: "10%",
+        marginTop: "8%",
       }}
       className={classes.root}
     >

@@ -34,6 +34,11 @@ export function registerBackgroundListeners(): void {
     app.relaunch();
     app.exit(); // Immediately
   });
+  ipcMain.handle("markLoginItem", (_e, i: boolean) => {
+    app.setLoginItemSettings({
+      openAtLogin: i,
+    });
+  });
   ipcMain.on("closeWindow", () => {
     console.log("Closing window!");
     // My poor hooves!!!

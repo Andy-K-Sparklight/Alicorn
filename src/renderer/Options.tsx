@@ -111,6 +111,7 @@ export function OptionsPage(): JSX.Element {
         </Tabs>
         <TabPanel index={0} value={tabValue}>
           <InputItem type={ConfigType.STR} bindConfig={"user.name"} />
+          <InputItem type={ConfigType.BOOL} bindConfig={"auto-launch"} />
           <InputItem
             type={ConfigType.RADIO}
             bindConfig={"assistant"}

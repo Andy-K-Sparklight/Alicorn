@@ -1,6 +1,7 @@
 import {
   AppBar,
   Box,
+  Container,
   createStyles,
   Drawer,
   Fab,
@@ -96,9 +97,9 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.secondary.light,
     },
     content: {
-      marginLeft: theme.spacing(4),
-      marginRight: theme.spacing(4),
-      marginTop: theme.spacing(4),
+      // marginLeft: theme.spacing(4),
+      // marginRight: theme.spacing(4),
+      marginTop: theme.spacing(2.2),
     },
     buttonText: {
       marginRight: theme.spacing(1),
@@ -429,30 +430,6 @@ export function App(): JSX.Element {
                 <Build />
               </IconButton>
             </Tooltip>
-            <Tooltip title={tr("MainMenu.QuickOptions")}>
-              <IconButton
-                className={classes.floatButton}
-                onClick={() => {
-                  jumpTo("/Options");
-                  triggerSetPage("Options");
-                }}
-                color={"inherit"}
-              >
-                <Settings />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title={tr("MainMenu.QuickJavaSelector")}>
-              <IconButton
-                className={classes.floatButton}
-                onClick={() => {
-                  jumpTo("/JavaSelector");
-                  triggerSetPage("JavaSelector");
-                }}
-                color={"inherit"}
-              >
-                <ViewModule />
-              </IconButton>
-            </Tooltip>
             {getBoolean("dev") ? (
               <Tooltip title={tr("MainMenu.Browser")}>
                 <IconButton
@@ -527,8 +504,12 @@ export function App(): JSX.Element {
             <Tooltip title={tr("MainMenu.Exit")}>
               <IconButton
                 className={classes.exitButton}
-                onClick={() => {
+                onClick={async () => {
                   remoteHideWindow();
+                  await ipcRenderer.invoke(
+                    "markLoginItem",
+                    getBoolean("auto-launch")
+                  );
                   waitUpdateFinished(() => {
                     remoteCloseWindow();
                   });
@@ -551,40 +532,42 @@ export function App(): JSX.Element {
           window.clearLogScreen();
         })()}
         <Instruction />
-        <Route path={"/LaunchPad/:server?"} component={LaunchPad} />
-        <Route path={"/InstallCore"} component={InstallCore} />
-        <Route
-          path={"/ReadyToLaunch/:container/:id/:server?"}
-          component={ReadyToLaunch}
-        />
-        <Route path={"/Version"} component={VersionView} />
-        <Route
-          path={"/ContainerManager/:modpack?"}
-          component={ContainerManager}
-        />
-        <Route
-          path={"/AccountManager/:adding?/:server?"}
-          component={YggdrasilAccountManager}
-        />
-        <Route path={"/JavaSelector"} component={JavaSelector} />
-        <Route path={"/Options"} component={OptionsPage} />
-        <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
-        <Route
-          path={"/PffFront/:container/:version/:loader/:name?/:autostart?"}
-          component={PffFront}
-        />
-        <Route path={"/Welcome"} component={Welcome} />
-        <Route path={"/ServerList"} component={ServerList} />
-        <Route path={"/UtilitiesIndex"} component={UtilitiesIndex} />
-        <Route path={"/Utilities/NetCheck"} component={NetCheck} />
-        <Route path={"/Utilities/CutieConnect"} component={CutieConnet} />
-        <Route path={"/Utilities/BuildUp"} component={BuildUp} />
-        <Route path={"/Utilities/PffVisual"} component={PffVisual} />
-        <Route
-          path={"/Utilities/CarouselBoutique"}
-          component={CarouselBoutique}
-        />
-        <Route path={"/Statistics"} component={Statistics} />
+        <Container>
+          <Route path={"/LaunchPad/:server?"} component={LaunchPad} />
+          <Route path={"/InstallCore"} component={InstallCore} />
+          <Route
+            path={"/ReadyToLaunch/:container/:id/:server?"}
+            component={ReadyToLaunch}
+          />
+          <Route path={"/Version"} component={VersionView} />
+          <Route
+            path={"/ContainerManager/:modpack?"}
+            component={ContainerManager}
+          />
+          <Route
+            path={"/AccountManager/:adding?/:server?"}
+            component={YggdrasilAccountManager}
+          />
+          <Route path={"/JavaSelector"} component={JavaSelector} />
+          <Route path={"/Options"} component={OptionsPage} />
+          <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
+          <Route
+            path={"/PffFront/:container/:version/:loader/:name?/:autostart?"}
+            component={PffFront}
+          />
+          <Route path={"/Welcome"} component={Welcome} />
+          <Route path={"/ServerList"} component={ServerList} />
+          <Route path={"/UtilitiesIndex"} component={UtilitiesIndex} />
+          <Route path={"/Utilities/NetCheck"} component={NetCheck} />
+          <Route path={"/Utilities/CutieConnect"} component={CutieConnet} />
+          <Route path={"/Utilities/BuildUp"} component={BuildUp} />
+          <Route path={"/Utilities/PffVisual"} component={PffVisual} />
+          <Route
+            path={"/Utilities/CarouselBoutique"}
+            component={CarouselBoutique}
+          />
+          <Route path={"/Statistics"} component={Statistics} />
+        </Container>
       </Box>
       <PagesDrawer
         open={openDrawer}

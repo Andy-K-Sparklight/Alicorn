@@ -64,6 +64,7 @@ import {
 import { isWebFileExist } from "../modules/download/RainbowFetch";
 import { deployIJPack } from "../modules/pff/modpack/InstallIJModpack";
 import { wrappedInstallModpack } from "../modules/pff/modpack/InstallModpack";
+import { Icons } from "./Icons";
 import { submitSucc } from "./Message";
 import {
   FailedHint,
@@ -150,7 +151,7 @@ export function ContainerManager(): JSX.Element {
           }
         }}
       />
-      <Box style={{ textAlign: "right", marginRight: "18%" }}>
+      <Box style={{ textAlign: "right" }}>
         <Tooltip title={tr("ContainerManager.Add")}>
           <IconButton
             color={"inherit"}
@@ -188,7 +189,7 @@ function SingleContainerDisplay(props: {
   const [clearAskOpen, setClearOpen] = useState(false);
   const [operating, setOperating] = useState(false);
   const [coreCount, setCount] = useState(-1);
-  const [isASC, setASCBit] = useState(false);
+  const [isASC, setASCBit] = useState<boolean | null>(null);
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
@@ -199,12 +200,18 @@ function SingleContainerDisplay(props: {
           if (mounted.current) {
             setASCBit(true);
           }
+        } else {
+          if (mounted.current) {
+            setASCBit(false);
+          }
         }
         const cores = (await scanCoresIn(props.container)).length;
         if (mounted.current) {
           setCount(cores);
         }
       })();
+    } else {
+      setASCBit(null);
     }
     return () => {
       mounted.current = false;
@@ -216,7 +223,16 @@ function SingleContainerDisplay(props: {
 
       <Card className={props.isMounted ? classes.card : classes.uCard}>
         <CardContent>
-          <>
+          <Box style={{ float: "right" }}>
+            {!props.isMounted || isASC === null ? (
+              ""
+            ) : (
+              <img
+                src={isASC ? Icons.CONTAINER_ASC : Icons.CONTAINER_MCX}
+                width={80}
+                style={{ float: "right" }}
+              />
+            )}
             <Tooltip title={tr("ContainerManager.Remove")}>
               <IconButton
                 color={"inherit"}
@@ -239,80 +255,6 @@ function SingleContainerDisplay(props: {
                 <LayersClear />
               </IconButton>
             </Tooltip>
-
-            <Dialog
-              open={deleteAskOpen}
-              onClose={() => {
-                setOpen(false);
-              }}
-            >
-              <DialogTitle>{tr("ContainerManager.AskRemove")}</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  {tr(
-                    "ContainerManager.AskRemoveDetail",
-                    `ID=${props.container}`
-                  )}
-                </DialogContentText>
-                <DialogActions>
-                  <Button
-                    onClick={() => {
-                      setOpen(false);
-                      unlinkContainer(props.container.id);
-                      setContainerListDirty();
-                    }}
-                  >
-                    {tr("ContainerManager.Yes")}
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setOpen(false);
-                    }}
-                  >
-                    {tr("ContainerManager.No")}
-                  </Button>
-                </DialogActions>
-              </DialogContent>
-            </Dialog>
-            <Dialog
-              open={clearAskOpen}
-              onClose={() => {
-                setClearOpen(false);
-              }}
-            >
-              <DialogTitle>{tr("ContainerManager.AskClear")}</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  {tr(
-                    "ContainerManager.AskClearDetail",
-                    `ID=${props.container.id}`
-                  )}
-                </DialogContentText>
-                <DialogActions>
-                  <Button
-                    onClick={async () => {
-                      setClearOpen(false);
-                      setOperating(true);
-                      await clearContainer(props.container.id);
-                      unlinkContainer(props.container.id);
-                      setContainerListDirty();
-                      if (mounted.current) {
-                        setOperating(false);
-                      }
-                    }}
-                  >
-                    {tr("ContainerManager.Yes")}
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setClearOpen(false);
-                    }}
-                  >
-                    {tr("ContainerManager.No")}
-                  </Button>
-                </DialogActions>
-              </DialogContent>
-            </Dialog>
             {props.isMounted ? (
               <Tooltip title={tr("ContainerManager.Unmount")}>
                 <IconButton
@@ -354,7 +296,81 @@ function SingleContainerDisplay(props: {
                 <FolderOpen />
               </IconButton>
             </Tooltip>
-          </>
+          </Box>
+
+          <Dialog
+            open={deleteAskOpen}
+            onClose={() => {
+              setOpen(false);
+            }}
+          >
+            <DialogTitle>{tr("ContainerManager.AskRemove")}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                {tr(
+                  "ContainerManager.AskRemoveDetail",
+                  `ID=${props.container}`
+                )}
+              </DialogContentText>
+              <DialogActions>
+                <Button
+                  onClick={() => {
+                    setOpen(false);
+                    unlinkContainer(props.container.id);
+                    setContainerListDirty();
+                  }}
+                >
+                  {tr("ContainerManager.Yes")}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                >
+                  {tr("ContainerManager.No")}
+                </Button>
+              </DialogActions>
+            </DialogContent>
+          </Dialog>
+          <Dialog
+            open={clearAskOpen}
+            onClose={() => {
+              setClearOpen(false);
+            }}
+          >
+            <DialogTitle>{tr("ContainerManager.AskClear")}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                {tr(
+                  "ContainerManager.AskClearDetail",
+                  `ID=${props.container.id}`
+                )}
+              </DialogContentText>
+              <DialogActions>
+                <Button
+                  onClick={async () => {
+                    setClearOpen(false);
+                    setOperating(true);
+                    await clearContainer(props.container.id);
+                    unlinkContainer(props.container.id);
+                    setContainerListDirty();
+                    if (mounted.current) {
+                      setOperating(false);
+                    }
+                  }}
+                >
+                  {tr("ContainerManager.Yes")}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setClearOpen(false);
+                  }}
+                >
+                  {tr("ContainerManager.No")}
+                </Button>
+              </DialogActions>
+            </DialogContent>
+          </Dialog>
           <Typography variant={"h6"} className={classes.color} gutterBottom>
             {props.container.id}
           </Typography>

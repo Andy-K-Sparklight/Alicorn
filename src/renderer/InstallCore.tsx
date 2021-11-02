@@ -1,7 +1,9 @@
 import {
+  Avatar,
   Box,
   Button,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   MuiThemeProvider,
@@ -48,6 +50,7 @@ import { performForgeInstall } from "../modules/pff/install/ForgeInstall";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
+import { Icons } from "./Icons";
 import { ShiftEle } from "./Instruction";
 import { submitSucc, submitWarn } from "./Message";
 import { FailedHint, OperatingHintCustom } from "./OperatingHint";
@@ -191,32 +194,75 @@ export function InstallCore(): JSX.Element {
         >
           <Tab
             label={
-              <Typography color={"primary"}>
-                {tr("InstallCore.InstallMinecraft")}
-              </Typography>
+              <Grid container direction="row" alignItems="center">
+                <Grid item>
+                  <Avatar
+                    variant={"square"}
+                    style={{ width: "2rem", height: "2rem" }}
+                    src={Icons.PROFILE_MOJANG}
+                  />
+                </Grid>
+                <Grid item>
+                  <Typography color={"primary"} style={{ marginLeft: "4px" }}>
+                    {tr("InstallCore.InstallMinecraft")}
+                  </Typography>
+                </Grid>
+              </Grid>
+            }
+          />
+          <Tab
+            label={
+              <Grid container direction="row" alignItems="center">
+                <Grid item>
+                  <Avatar
+                    variant={"square"}
+                    style={{ width: "2rem", height: "2rem" }}
+                    src={Icons.PROFILE_FORGE}
+                  />
+                </Grid>
+                <Grid item>
+                  <Typography color={"primary"} style={{ marginLeft: "4px" }}>
+                    {tr("InstallCore.InstallForge")}
+                  </Typography>
+                </Grid>
+              </Grid>
             }
           />
 
           <Tab
             label={
-              <Typography color={"primary"}>
-                {tr("InstallCore.InstallForge")}
-              </Typography>
+              <Grid container direction="row" alignItems="center">
+                <Grid item>
+                  <Avatar
+                    variant={"square"}
+                    style={{ width: "2rem", height: "2rem" }}
+                    src={Icons.PROFILE_FABRIC}
+                  />
+                </Grid>
+                <Grid item>
+                  <Typography color={"primary"} style={{ marginLeft: "4px" }}>
+                    {tr("InstallCore.InstallFabric")}
+                  </Typography>
+                </Grid>
+              </Grid>
             }
           />
-
           <Tab
             label={
-              <Typography color={"primary"}>
-                {tr("InstallCore.InstallFabric")}
-              </Typography>
-            }
-          />
-          <Tab
-            label={
-              <Typography color={"primary"}>
-                {tr("InstallCore.InstallIris")}
-              </Typography>
+              <Grid container direction="row" alignItems="center">
+                <Grid item>
+                  <Avatar
+                    variant={"square"}
+                    style={{ width: "2rem", height: "2rem" }}
+                    src={Icons.PROFILE_IRIS}
+                  />
+                </Grid>
+                <Grid item>
+                  <Typography color={"primary"} style={{ marginLeft: "4px" }}>
+                    {tr("InstallCore.InstallIris")}
+                  </Typography>
+                </Grid>
+              </Grid>
             }
           />
         </Tabs>
