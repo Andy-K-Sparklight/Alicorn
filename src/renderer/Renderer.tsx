@@ -40,7 +40,6 @@ import { loadServers } from "../modules/server/ServerFiles";
 import { App } from "./App";
 import { completeFirstRun } from "./FirstRunSetup";
 import { registerHandlers } from "./Handlers";
-import { activateHotKeyFeature } from "./HotKeyHandler";
 import { InstructionProvider } from "./Instruction";
 import { submitInfo, submitWarn } from "./Message";
 import { initWorker } from "./Schedule";
@@ -66,18 +65,6 @@ try {
     showLogs();
     window.dispatchEvent(new CustomEvent("sysError", { detail: e.message }));
   });
-  console.log("Enabling V8 Compile cache.");
-  try {
-    const vm = eval("require")("vm");
-    if (vm) {
-      eval("require")("v8-compile-cache");
-      console.log("V8 Compile Cache Enabled.");
-    } else {
-      console.log("V8 Compile Cache Not Supported.");
-    }
-  } catch {
-    console.log("V8 Compile Cache Failed!");
-  }
   const e1 = document.getElementById("boot_1");
   if (e1) {
     e1.innerHTML = e1.innerHTML + "Done.";
@@ -149,7 +136,7 @@ try {
       ipcRenderer.send("reloadConfig");
       console.log("Reset complete.");
       console.log("Reloading window...");
-      window.location.reload();
+      ipcRenderer.send("reload");
     }
     if (getBoolean("reset")) {
       console.log("Resetting and reloading config...");
@@ -158,7 +145,7 @@ try {
       ipcRenderer.send("reloadConfig");
       console.log("Reset complete.");
       console.log("Reloading window...");
-      window.location.reload();
+      ipcRenderer.send("reload");
     }
     printScreen("Flushing theme colors...");
     flushColors();
@@ -193,9 +180,6 @@ try {
     ipcRenderer.on("CallFromSleep", () => {
       submitInfo(tr("System.WakeUp"));
     });
-    if (getBoolean("hot-key")) {
-      activateHotKeyFeature();
-    }
     // Essential works and light works
     await Promise.allSettled([initEncrypt()]);
     initDownloadWrapper();

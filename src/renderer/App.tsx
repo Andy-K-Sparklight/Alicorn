@@ -392,8 +392,7 @@ export function App(): JSX.Element {
                   color={"inherit"}
                   className={classes.floatButton}
                   onClick={() => {
-                    window.location.hash = "";
-                    window.location.reload();
+                    ipcRenderer.send("reload");
                   }}
                 >
                   <Refresh />

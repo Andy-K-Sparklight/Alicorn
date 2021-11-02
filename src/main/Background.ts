@@ -30,6 +30,10 @@ const LOGOUT_URL =
   "https://login.live.com/oauth20_logout.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf";
 
 export function registerBackgroundListeners(): void {
+  ipcMain.on("reload", () => {
+    app.relaunch();
+    app.exit(); // Immediately
+  });
   ipcMain.on("closeWindow", () => {
     console.log("Closing window!");
     // My poor hooves!!!
