@@ -251,7 +251,9 @@ function Launching(props: {
   const [lanPort, setLanPort] = useState(0);
   const [openLanWindow, setOpenLanWindow] = useState(false);
   const [openLanButtonEnabled, setOpenLanButtonEnabled] = useState(false);
-  const profileHash = useRef<string>(props.container + "/" + props.profile.id);
+  const profileHash = useRef<string>(
+    props.container.id + "/" + props.profile.id
+  );
   useEffect(() => {
     const subscribe = setInterval(() => {
       if (NEED_QUERY_STATUS) {
