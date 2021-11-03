@@ -259,7 +259,6 @@ export async function skinTypeFor(
   const defaultF = getActualDataPath(
     path.join("skins", "D-" + basicHash(account.lastUsedUUID))
   );
-  console.log(slimF);
   const slimD = getActualDataPath(path.join("skins", "S-DEF"));
   const defaultD = getActualDataPath(path.join("skins", "D-DEF"));
   if (await isFileExist(slimF)) {

@@ -53,5 +53,6 @@
   "interactive.assistant?": true,
   "first-run?": true,
   "theme": "Default",
-  "auto-launch": false
+  "auto-launch": false,
+  "features.skin-view-3d": true
 }

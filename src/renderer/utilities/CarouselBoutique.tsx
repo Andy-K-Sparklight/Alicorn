@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   FormControl,
   FormControlLabel,
@@ -89,7 +88,9 @@ export function CarouselBoutique(): JSX.Element {
             variant={"contained"}
             onClick={async () => {
               const d = await remoteSelectPng();
-              setSelectedFile(d);
+              if (d) {
+                setSelectedFile(d);
+              }
             }}
           >
             {tr("Utilities.CarouselBoutique.FileName")}

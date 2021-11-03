@@ -1,4 +1,5 @@
 import { Trio } from "../commons/Collections";
+import { safeGet } from "../commons/Null";
 import {
   Account,
   authenticate,
@@ -68,5 +69,42 @@ export class MojangAccount extends Account {
 
   constructor(accountName: string) {
     super(accountName, AccountType.MOJANG);
+  }
+}
+export async function getMojangSkinByUUID(a: Account): Promise<string> {
+  try {
+    const o = `https://sessionserver.mojang.com/session/minecraft/profile/${a.lastUsedUUID}`;
+
+    const response = await (
+      await fetch(o, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-cache",
+      })
+    ).json();
+    const props = safeGet(response, ["properties"]);
+    if (!(props instanceof Array)) {
+      return "";
+    }
+    if (props.length === 0) {
+      return "";
+    }
+    let op = "";
+    for (const c of props) {
+      if (c.value && String(c.name).toLowerCase() === "textures") {
+        op = String(c.value);
+        break;
+      }
+    }
+    if (op === "") {
+      return "";
+    }
+    const bdecode = JSON.parse(atob(op));
+    const target = safeGet(bdecode, ["textures", "SKIN", "url"], "");
+    return String(target);
+  } catch {
+    return "";
   }
 }

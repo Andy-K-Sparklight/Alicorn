@@ -159,6 +159,10 @@ export function OptionsPage(): JSX.Element {
         </TabPanel>
         <TabPanel index={1} value={tabValue}>
           <InputItem type={ConfigType.BOOL} bindConfig={"features.saying"} />
+          <InputItem
+            type={ConfigType.BOOL}
+            bindConfig={"features.skin-view-3d"}
+          />
           <InputItem type={ConfigType.BOOL} bindConfig={"features.cursor"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"features.miniwiki"} />
           <InputItem

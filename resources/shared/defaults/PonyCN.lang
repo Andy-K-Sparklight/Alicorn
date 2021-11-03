@@ -1018,6 +1018,22 @@ Minecraft 版本号
 
 验证
 
+# AccountManager.SkinView3D
+
+正在使用 3D 皮肤渲染（按住左键拖动以旋转）
+
+# AccountManager.SkinView3DShort
+
+3D 预览
+
+# AccountManager.SkinView2D
+
+正在使用 2D 皮肤渲染
+
+# AccountManager.SkinView2DShort
+
+2D 预览
+
 # AccountManager.DeleteTitle
 
 移除帐户？
@@ -1173,6 +1189,14 @@ Alicorn 特色功能
 # Options.Page.Advanced
 
 高级和重置
+
+# Options.features.skin-view-3d.title
+
+Skin View 3D 皮肤显示
+
+# Options.features.skin-view-3d.desc
+
+使用 3D 皮肤渲染（基于 WebGL）- 若关闭此功能，将使用 2D 皮肤渲染（基于 CSS）。\n3D 皮肤渲染功能由来自 Blessing Skin 社区的 Skin View 3D 为你呈现。\n若开启此设置，将覆盖硬件加速设置并强制开启它。
 
 # Options.auto-launch.title
 

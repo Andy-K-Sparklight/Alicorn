@@ -36,6 +36,7 @@ import {
   AccountType,
   fillAccessData,
   getPresentAccounts,
+  querySkinFor,
 } from "../modules/auth/AccountUtil";
 import { prefetchData } from "../modules/auth/AJHelper";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
@@ -107,6 +108,7 @@ import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
 } from "./Renderer";
+import { SkinDisplay2D, SkinDisplay3D } from "./SkinDisplay";
 import { addStatistics } from "./Statistics";
 import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
@@ -816,6 +818,7 @@ function AccountChoose(props: {
     window.localStorage.getItem(LAST_USED_USER_NAME_KEY + props.profileHash) ||
       "Player"
   );
+  const [bufPName, setBufPName] = useState(pName);
   const mounted = useRef<boolean>(false);
 
   const accountMap = useRef<Record<string, Account>>({});
@@ -841,12 +844,51 @@ function AccountChoose(props: {
     // ll = Object.keys(accountMap)[0] || "";
   }
   const [sAccount, setAccount] = useState<string>(ll);
+  const [skinUrl, setSkinUrl] = useState("");
+  const lastRequireSkinDate = useRef(new Date().getTime());
   useEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;
     };
   }, []);
+  useEffect(() => {
+    void (async () => {
+      const d = new Date().getTime();
+      lastRequireSkinDate.current = d;
+      if (choice === "MZ") {
+        const u = await querySkinFor(new MicrosoftAccount(""));
+        if (mounted.current && lastRequireSkinDate.current === d) {
+          setSkinUrl(u);
+        }
+        return;
+      }
+      if (choice === "YG") {
+        const a =
+          accountMap.current[
+            sAccount || Object.keys(accountMap.current).shift() || ""
+          ];
+        if (a) {
+          const u = await querySkinFor(a);
+          if (mounted.current && lastRequireSkinDate.current === d) {
+            setSkinUrl(u);
+          }
+        } else {
+          setSkinUrl("");
+        }
+        return;
+      }
+      if (choice === "AL") {
+        const a = new LocalAccount(pName);
+        const u = await querySkinFor(a);
+        if (mounted.current && lastRequireSkinDate.current === d) {
+          setSkinUrl(u);
+          return;
+        }
+      }
+      setSkinUrl("");
+    })();
+  }, [sAccount, choice, msLogout, bufPName]);
   return (
     <Dialog
       open={props.open}
@@ -854,11 +896,49 @@ function AccountChoose(props: {
         props.closeFunc();
       }}
     >
-      <DialogContent>
+      <DialogContent style={{ overflow: "visible" }}>
         <DialogTitle>{tr("ReadyToLaunch.StartAuthTitle")}</DialogTitle>
         <DialogContentText>
           {tr("ReadyToLaunch.StartAuthMsg")}
         </DialogContentText>
+
+        {skinUrl ? (
+          getBoolean("features.skin-view-3d") ? (
+            <Box
+              style={{
+                position: "absolute",
+                right: 20,
+                top: -50,
+                overflow: "visible",
+                textAlign: "center",
+              }}
+            >
+              <SkinDisplay3D skin={skinUrl} width={100} height={150} />
+              <Typography style={{ color: "gray", marginTop: "-4px" }}>
+                {tr("AccountManager.SkinView3DShort")}
+              </Typography>
+            </Box>
+          ) : (
+            <Box
+              style={{
+                position: "absolute",
+                right: 15,
+                top: 10,
+                overflow: "visible",
+                textAlign: "center",
+              }}
+            >
+              <SkinDisplay2D skin={skinUrl} />
+              <br />
+              <br />
+              <Typography style={{ color: "gray", marginTop: "42px" }}>
+                {tr("AccountManager.SkinView2DShort")}
+              </Typography>
+            </Box>
+          )
+        ) : (
+          ""
+        )}
         <RadioGroup
           row
           onChange={(e) => {
@@ -895,6 +975,9 @@ function AccountChoose(props: {
             margin={"dense"}
             onChange={(e) => {
               setName(e.target.value);
+            }}
+            onBlur={(e) => {
+              setBufPName(e.target.value); // Trigger reset
             }}
             label={tr("ReadyToLaunch.UseALName")}
             type={"text"}
@@ -957,7 +1040,7 @@ function AccountChoose(props: {
                     String(e.target.value)
                   );
                 }}
-                value={sAccount}
+                value={sAccount || Object.keys(accountMap.current).shift()}
               >
                 {Array.from(props.allAccounts.keys()).map((a) => {
                   const hash =

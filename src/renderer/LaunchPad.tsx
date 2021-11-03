@@ -204,61 +204,64 @@ function SingleCoreDisplay(props: {
                 height={64}
                 style={{ float: "right" }}
               />
+
               <br />
               <br />
-              {props.profile.versionType !== "Mojang" &&
-              props.profile.versionType !== "Installer" ? (
-                <Tooltip title={tr("CoreInfo.Pff")}>
+              <Box style={{ display: "flex", marginTop: "2.2rem" }}>
+                {props.profile.versionType !== "Mojang" &&
+                props.profile.versionType !== "Installer" ? (
+                  <Tooltip title={tr("CoreInfo.Pff")}>
+                    <IconButton
+                      color={"inherit"}
+                      className={classes.operateButton}
+                      onClick={(e) => {
+                        jumpTo(
+                          `/PffFront/${encodeURIComponent(
+                            props.profile.container
+                          )}/${encodeURIComponent(
+                            props.profile.baseVersion
+                          )}/${encodeURIComponent(props.profile.versionType)}`
+                        );
+                        triggerSetPage("PffFront");
+                        addStatistics("Click");
+                        e.stopPropagation();
+                      }}
+                    >
+                      <Archive />
+                    </IconButton>
+                  </Tooltip>
+                ) : (
+                  ""
+                )}
+                <Tooltip title={tr("CoreInfo.Destroy")}>
                   <IconButton
                     color={"inherit"}
                     className={classes.operateButton}
                     onClick={(e) => {
-                      jumpTo(
-                        `/PffFront/${encodeURIComponent(
-                          props.profile.container
-                        )}/${encodeURIComponent(
-                          props.profile.baseVersion
-                        )}/${encodeURIComponent(props.profile.versionType)}`
-                      );
-                      triggerSetPage("PffFront");
+                      setDestroy(props.profile.id);
+                      setWarningOpen(true);
                       addStatistics("Click");
                       e.stopPropagation();
                     }}
                   >
-                    <Archive />
+                    <DeleteForever />
                   </IconButton>
                 </Tooltip>
-              ) : (
-                ""
-              )}
-              <Tooltip title={tr("CoreInfo.Destroy")}>
-                <IconButton
-                  color={"inherit"}
-                  className={classes.operateButton}
-                  onClick={(e) => {
-                    setDestroy(props.profile.id);
-                    setWarningOpen(true);
-                    addStatistics("Click");
-                    e.stopPropagation();
-                  }}
-                >
-                  <DeleteForever />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title={tr("CoreInfo.ClearUse")}>
-                <IconButton
-                  color={"inherit"}
-                  className={classes.operateButton}
-                  onClick={(e) => {
-                    markUsed(hash, 0);
-                    props.refresh();
-                    addStatistics("Click");
-                    e.stopPropagation();
-                  }}
-                >
-                  <EventBusy />
-                </IconButton>
-              </Tooltip>
+                <Tooltip title={tr("CoreInfo.ClearUse")}>
+                  <IconButton
+                    color={"inherit"}
+                    className={classes.operateButton}
+                    onClick={(e) => {
+                      markUsed(hash, 0);
+                      props.refresh();
+                      addStatistics("Click");
+                      e.stopPropagation();
+                    }}
+                  >
+                    <EventBusy />
+                  </IconButton>
+                </Tooltip>
+              </Box>
             </Box>
           )}
           <Typography
