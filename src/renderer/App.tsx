@@ -27,6 +27,7 @@ import {
   GetApp,
   Help,
   Home,
+  ImportContacts,
   Info,
   Menu,
   PowerSettingsNew,
@@ -78,6 +79,7 @@ import { PffFront } from "./PffFront";
 import { ReadyToLaunch } from "./ReadyToLaunch";
 import { ServerList } from "./ServerList";
 import { saveStatistics, Statistics } from "./Statistics";
+import { TheEndingOfTheEnd } from "./TheEndingOfTheEnd";
 import { tr } from "./Translator";
 import { BuildUp } from "./utilities/BuildUp";
 import { CarouselBoutique } from "./utilities/CarouselBoutique";
@@ -567,6 +569,7 @@ export function App(): JSX.Element {
             component={CarouselBoutique}
           />
           <Route path={"/Statistics"} component={Statistics} />
+          <Route path={"/TheEndingOfTheEnd"} component={TheEndingOfTheEnd} />
         </Container>
       </Box>
       <PagesDrawer
@@ -678,6 +681,7 @@ const PAGES_ICONS_MAP: Record<string, JSX.Element> = {
   Statistics: <ShowChart />,
   Options: <Settings />,
   Version: <Info />,
+  TheEndingOfTheEnd: <ImportContacts />,
 };
 
 function PagesDrawer(props: {

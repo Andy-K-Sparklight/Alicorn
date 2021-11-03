@@ -66,6 +66,10 @@ Pff 软件安装器
 
 实用工具
 
+# TheEndingOfTheEnd
+
+终末之末
+
 # System.Offline
 
 似乎已断开与互联网的连接……
@@ -2986,3 +2990,31 @@ END
 # Instruction.ReadyToLaunch.3
 
 END
+
+# EOE.Thanks
+
+鸣谢
+
+# EOE.ThanksDesc
+
+Alicorn 的开发道路上，收到过不少来自个人、组织和企业的帮助，我们想感谢他们。\n（我们并没有其它的评判标准，所以我们按照随机顺序列举。）
+
+# EOE.Packages
+
+……这些 NPM 软件包：
+
+# EOE.And
+
+……和这些网站或项目：
+
+# EOE.Orgs
+
+MCBBS（Minecraft 中文论坛）……这里是热爱 MC 群体的天堂。\nFree Software Foundation……我们一同为自由软件而奋斗。\nGitHub……软件在这里诞生。\nStack Overflow……它解决了我们很多的问题。\nNode.js……JS 因你而不同。\nTypeScript……从混乱到有序的快速通道。\nMinecraft Wiki……玩家所认可的最强 Minecraft Wiki。\nMaterial UI……只做组件，而且做得很好。\nWiki.vg……快速解码帐户验证的奥秘。\nElectron……不止于浏览器！\nWebpack……打包，优化，压缩。\nBMCLAPI……下载速度提升 80% 的最强镜像！\nFabricMC……未来是你的天下！\nIris Shaders……更高更妙的光影和高清修复！\nGaz492 Curseforge API……它打开了一扇充满光明的大门。\nJsDelivr……走遍天涯海角，Web 始终在你身边。\nAdobe Source Hans Sans 和 Ubuntu Mono……渲染不够，字体来凑！\nAuthlib Injector……Yggdrasil 始终为你让一条路。\nMLPVector……颜色，但也不是颜色。\nVSCodium……纯净、自由的高效前端 IDE。\nMDN Web Docs……Mozilla 的 Web 开发参考。\n\n……还有许多许多值得我们感谢，只是限于篇幅未能列举……
+
+# EOE.EndPoem
+
+Bolwin' in the Wind —— Bob Dylan
+
+# EOE.EndPoemContent
+
+How many roads must a man walk down\nBefore they call him a man?\nHow many seas must a white dove sail\nBefore she sleeps in the sand?\nHow many times must the cannon-balls fly\nBefore they're forever banned?\nThe answer, my friend, is blowin' in the wind\nThe answer is blowin' in the wind.\n\nHow many years must a mountain exist\nBefore it is washed to the sea?\nHow many years can some people exist\nBefore they're allowed to be free?\nHow many times can a man turn his head\nPretend that he just doesn't see?\nThe answer my friend is blowin' in the wind\nThe answer is blowin' in the wind.\n\nHow many times must a man look up\nBefore he can see the sky?\nHow many ears must one man have\nBefore he can hear people cry?\nHow many deaths will it take\nTill he knows that too many people have died?\nThe answer, my friend, is blowin' in the wind\nThe answer is blowin'in the wind.
