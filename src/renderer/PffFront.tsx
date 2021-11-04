@@ -1,11 +1,11 @@
 import {
   Avatar,
   Box,
+  CircularProgress,
   Container,
   FormControl,
   IconButton,
   InputAdornment,
-  LinearProgress,
   List,
   ListItem,
   ListItemAvatar,
@@ -167,49 +167,44 @@ export function PffFront(): JSX.Element {
             InputProps={{
               endAdornment: (
                 <InputAdornment position={"end"}>
-                  <IconButton
-                    disabled={isRunning || packageName.trim().length === 0}
-                    color={"primary"}
-                    onClick={() => {
-                      setRunning(true);
-                      void (async () => {
-                        const packages = packageName.split(" ");
-                        await Promise.allSettled(
-                          packages.map(async (p, i) => {
-                            if (p.trim().length) {
-                              await pffInstall(
-                                p.trim(),
-                                getContainer(container),
-                                version,
-                                emitter.current,
-                                loader === "Forge" ? 1 : 4,
-                                `${i + 1}`
-                              );
-                            }
-                          })
-                        );
-                        if (mounted.current) {
-                          setRunning(false);
-                        }
-                      })();
-                    }}
-                  >
-                    <ArrowForward />
-                  </IconButton>
+                  {isRunning ? (
+                    <CircularProgress size={"1.5rem"} />
+                  ) : (
+                    <IconButton
+                      disabled={isRunning || packageName.trim().length === 0}
+                      color={"primary"}
+                      onClick={() => {
+                        setRunning(true);
+                        void (async () => {
+                          const packages = packageName.split(" ");
+                          await Promise.allSettled(
+                            packages.map(async (p, i) => {
+                              if (p.trim().length) {
+                                await pffInstall(
+                                  p.trim(),
+                                  getContainer(container),
+                                  version,
+                                  emitter.current,
+                                  loader === "Forge" ? 1 : 4,
+                                  `${i + 1}`
+                                );
+                              }
+                            })
+                          );
+                          if (mounted.current) {
+                            setRunning(false);
+                          }
+                        })();
+                      }}
+                    >
+                      <ArrowForward />
+                    </IconButton>
+                  )}
                 </InputAdornment>
               ),
             }}
           />
         </FormControl>
-        {isRunning ? (
-          <LinearProgress
-            color={"secondary"}
-            style={{ width: "80%" }}
-            className={fullWidthClasses.progress}
-          />
-        ) : (
-          ""
-        )}
         <Typography
           style={{
             userSelect: "all",
