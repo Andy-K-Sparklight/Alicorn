@@ -149,5 +149,5 @@ function loadTomlInfo(obj: Record<string, unknown>, rawInfo: ModInfo): void {
 }
 
 function escapeQuote(s: string): string {
-  return s.replaceAll('\\"', "'").replaceAll("\r", "").replaceAll("\n", "");
+  return s.replaceAll('\\"', "'").replaceAll("\r", "").replaceAll("\n", " ");
 }

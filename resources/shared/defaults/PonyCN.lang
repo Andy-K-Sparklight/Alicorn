@@ -268,7 +268,7 @@ Alicorn 内置浏览器
 
 # CoreInfo.Pff
 
-在此核心上运行 Pff
+查看或安装 Mod
 
 # ReadyToLaunch.NoJava
 
@@ -2171,6 +2171,14 @@ Pff|也就是「Package File Finder」，Alicorn 用来搜索和安装 Mod 的�
 # PffFront.Hint
 
 @HTML这里只显示由 Pff 安装的软件包，单击软件包名称可以在文件资源管理器中查看它。\n<span style="color: #ff8400;">安装 Mod 前请当心！不兼容的 Mod 可以<b style="color: red;">摧毁你的游戏</b>！请确保你<b style="color: red;">知道</b>而不是<b style="color: red;">猜测</b>它的作用！</span>
+
+# PffFront.Mods
+
+所有 Mod 列表
+
+# PffFront.ModsHint
+
+此处显示所有识别的 Mod，无论它们是否由 Pff 安装。不支持的加载器不考虑在内。\n鼠标悬浮将可以查看介绍。
 
 # ServerList.Add
 
