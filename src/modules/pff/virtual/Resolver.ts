@@ -76,6 +76,8 @@ export class CurseforgeModResolver extends AbstractModResolver {
   protected static CF_API_BASE = "https://addons-ecs.forgesvc.net";
   protected insideCachedAddonInfo: AddonInfo | undefined;
   async resolveMod(): Promise<ModMeta> {
+    console.log(this.mainId);
+    console.log(this.artifactId);
     if (this.cachedMeta) {
       return this.cachedMeta;
     }
@@ -97,6 +99,7 @@ export class CurseforgeModResolver extends AbstractModResolver {
       );
     }
     if (b) {
+      console.log("Info got!");
       this.insideCachedAddonInfo = b;
       const m = transformAddonInfoToMeta(b);
       this.cachedMeta = m;
@@ -314,12 +317,10 @@ function transformAddonInfoToMeta(aInfo: AddonInfo): ModMeta {
 }
 
 export function modLoaderOf(type: number): "Forge" | "Fabric" | undefined {
-  if (type === 1) {
-    return "Forge";
-  }
   if (type === 4) {
     return "Fabric";
   }
+  return "Forge";
 }
 
 function transformFileInfoToArtifact(
