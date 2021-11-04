@@ -455,9 +455,11 @@ export function InstallCore(): JSX.Element {
                 }
               }}
               value={
-                selectedForgeContainer +
-                ALICORN_SEPARATOR +
-                baseMojangVersionForge
+                selectedForgeContainer && baseMojangVersionForge
+                  ? selectedForgeContainer +
+                    ALICORN_SEPARATOR +
+                    baseMojangVersionForge
+                  : undefined
               }
             >
               {patchableCores.map((r) => {
@@ -570,9 +572,11 @@ export function InstallCore(): JSX.Element {
                 }
               }}
               value={
-                selectedFabricContainer +
-                ALICORN_SEPARATOR +
-                baseMojangVersionFabric
+                selectedFabricContainer && baseMojangVersionFabric
+                  ? selectedFabricContainer +
+                    ALICORN_SEPARATOR +
+                    baseMojangVersionFabric
+                  : ""
               }
             >
               {patchableCores.map((r) => {
@@ -698,7 +702,9 @@ export function InstallCore(): JSX.Element {
                 }
               }}
               value={
-                selectedIrisContainer + ALICORN_SEPARATOR + selectedIrisBase
+                selectedIrisContainer && selectedIrisBase
+                  ? selectedIrisContainer + ALICORN_SEPARATOR + selectedIrisBase
+                  : undefined
               }
             >
               {fabricCores.map((r) => {
