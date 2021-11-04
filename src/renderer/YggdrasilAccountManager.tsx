@@ -91,7 +91,13 @@ export function YggdrasilAccountManager(): JSX.Element {
         {tr("AccountManager.Note")}
       </Typography>
       <Box style={{ textAlign: "right" }}>
-        <Tooltip title={tr("AccountManager.Reload")}>
+        <Tooltip
+          title={
+            <Typography className={"smtxt"}>
+              {tr("AccountManager.Reload")}
+            </Typography>
+          }
+        >
           <IconButton
             color={"inherit"}
             onClick={() => {
@@ -102,7 +108,13 @@ export function YggdrasilAccountManager(): JSX.Element {
             <Refresh />
           </IconButton>
         </Tooltip>
-        <Tooltip title={tr("AccountManager.AddYggdrasil")}>
+        <Tooltip
+          title={
+            <Typography className={"smtxt"}>
+              {tr("AccountManager.AddYggdrasil")}
+            </Typography>
+          }
+        >
           <IconButton
             color={"inherit"}
             onClick={() => {
@@ -223,7 +235,13 @@ export function SingleAccountDisplay(props: {
             ) : (
               ""
             )}
-            <Tooltip title={tr("AccountManager.Remove")}>
+            <Tooltip
+              title={
+                <Typography className={"smtxt"}>
+                  {tr("AccountManager.Remove")}
+                </Typography>
+              }
+            >
               <IconButton
                 disabled={isOperating}
                 color={"inherit"}
@@ -235,7 +253,13 @@ export function SingleAccountDisplay(props: {
                 <DeleteForever />
               </IconButton>
             </Tooltip>
-            <Tooltip title={tr("AccountManager.Refresh")}>
+            <Tooltip
+              title={
+                <Typography className={"smtxt"}>
+                  {tr("AccountManager.Refresh")}
+                </Typography>
+              }
+            >
               <IconButton
                 disabled={isOperating}
                 color={"inherit"}

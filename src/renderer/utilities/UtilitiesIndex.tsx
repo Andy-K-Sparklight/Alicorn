@@ -80,7 +80,7 @@ function SimpleUtil(props: {
           <Grid container direction="row" alignItems="center">
             <Grid item>{props.icon}</Grid>
             <Grid item>
-              <Typography variant={"h6"} style={{ marginLeft: "4px" }}>
+              <Typography variant={"h6"} style={{ marginLeft: "0.25em" }}>
                 {tr(`Utilities.${props.name}.Title`)}
               </Typography>
             </Grid>

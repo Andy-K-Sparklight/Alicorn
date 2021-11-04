@@ -135,6 +135,7 @@ export function PffVisual(): JSX.Element {
                 }}
               />
             </FormControl>
+            <br />
           </>
           <FormControlLabel
             control={

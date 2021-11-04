@@ -129,7 +129,7 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.secondary.light,
     },
     textSP: {
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
       color: theme.palette.secondary.main,
     },
     text: {
@@ -451,11 +451,13 @@ function Launching(props: {
 
       <Tooltip
         title={
-          status === LaunchingStatus.FINISHED
-            ? openLanButtonEnabled
-              ? tr("ReadyToLaunch.OpenGameToLan")
-              : tr("ReadyToLaunch.Kill")
-            : tr("ReadyToLaunch.Start")
+          <Typography className={"smtxt"}>
+            {status === LaunchingStatus.FINISHED
+              ? openLanButtonEnabled
+                ? tr("ReadyToLaunch.OpenGameToLan")
+                : tr("ReadyToLaunch.Kill")
+              : tr("ReadyToLaunch.Start")}
+          </Typography>
         }
       >
         <>
@@ -916,7 +918,7 @@ function AccountChoose(props: {
               }}
             >
               <SkinDisplay3D skin={skinUrl} width={100} height={150} />
-              <Typography style={{ color: "gray", marginTop: "-4px" }}>
+              <Typography style={{ color: "gray", marginTop: "-0.25em" }}>
                 {tr("AccountManager.SkinView3DShort")}
               </Typography>
             </Box>
@@ -933,7 +935,7 @@ function AccountChoose(props: {
               <SkinDisplay2D skin={skinUrl} />
               <br />
               <br />
-              <Typography style={{ color: "gray", marginTop: "42px" }}>
+              <Typography style={{ color: "gray", marginTop: "2.625em" }}>
                 {tr("AccountManager.SkinView2DShort")}
               </Typography>
             </Box>
@@ -1140,7 +1142,7 @@ function MiniJavaSelector(props: {
       <Box
         className={classes.root}
         style={{
-          marginTop: "5px",
+          marginTop: "0.3125em",
         }}
       >
         <FormControl variant={"outlined"}>
@@ -1360,7 +1362,13 @@ function OpenWorldDialog(props: {
           </Select>
         </FormControl>
         <br />
-        <Tooltip title={tr("ReadyToLaunch.RequirePremiumDesc")}>
+        <Tooltip
+          title={
+            <Typography className={"smtxt"}>
+              {tr("ReadyToLaunch.RequirePremiumDesc")}
+            </Typography>
+          }
+        >
           <FormControlLabel
             control={
               <Checkbox

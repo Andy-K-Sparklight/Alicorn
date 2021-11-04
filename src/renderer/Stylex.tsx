@@ -9,7 +9,7 @@ export const useCardStyles = makeStyles((theme) =>
     },
     text2: { fontSize: "medium", color: theme.palette.secondary.light },
     desc: {
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
       color: isBgDark() ? theme.palette.secondary.light : undefined,
     },
     card: {
@@ -39,7 +39,7 @@ export const usePadStyles = makeStyles((theme) =>
       color: theme.palette.primary.main,
     },
     smallText: {
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
     },
   })
 );
@@ -95,7 +95,7 @@ export const useFormStyles = makeStyles((theme) =>
       marginTop: theme.spacing(1),
     },
     instr: {
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
       color: theme.palette.secondary.main,
     },
   })
@@ -140,7 +140,7 @@ export const useTextStyles = makeStyles((theme) =>
     },
     secondText: {
       color: theme.palette.secondary.main,
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
     },
     mediumText: {
       color: theme.palette.secondary.main,
@@ -148,7 +148,7 @@ export const useTextStyles = makeStyles((theme) =>
     },
     link: {
       color: theme.palette.primary.main,
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
     },
     thirdTextRaw: {
       color: theme.palette.primary.main,
@@ -174,7 +174,7 @@ export const useTextStylesLight = makeStyles((theme) =>
     },
     secondText: {
       color: theme.palette.secondary.light,
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
     },
     mediumText: {
       color: theme.palette.secondary.light,
@@ -182,7 +182,7 @@ export const useTextStylesLight = makeStyles((theme) =>
     },
     link: {
       color: theme.palette.primary.light,
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
     },
     thirdText: {
       color: theme.palette.primary.light,

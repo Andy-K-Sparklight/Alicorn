@@ -55,11 +55,11 @@ export function SkinDisplay2D(props: { skin: string }): JSX.Element {
   return (
     <span
       style={{
-        background: `url('${props.skin}') -64px -64px`,
+        background: `url('${props.skin}') -4em -4em`,
         backgroundSize: "800%",
         imageRendering: "pixelated",
-        width: "64px",
-        height: "64px",
+        width: "4em",
+        height: "4em",
         float: "left",
       }}
     ></span>

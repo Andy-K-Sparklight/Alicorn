@@ -2,12 +2,13 @@ import {
   Box,
   Card,
   CardContent,
+  Fade,
   IconButton,
   LinearProgress,
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import { Archive, DeleteForever, EventBusy, Sync } from "@material-ui/icons";
+import { DeleteForever, EventBusy, Sync } from "@material-ui/icons";
 import { remove } from "fs-extra";
 import objectHash from "object-hash";
 import React, { useEffect, useRef, useState } from "react";
@@ -119,7 +120,11 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
   return (
     <>
       <Box style={{ textAlign: "right" }}>
-        <Tooltip title={tr("CoreInfo.Reload")}>
+        <Tooltip
+          title={
+            <Typography className={"smtxt"}>{tr("CoreInfo.Reload")}</Typography>
+          }
+        >
           <IconButton
             color={"inherit"}
             onClick={() => {
@@ -174,9 +179,16 @@ function SingleCoreDisplay(props: {
   const used = getUsed(hash);
   const [warningOpen, setWarningOpen] = useState(false);
   const [toDestroy, setDestroy] = useState<string>();
+  const [showBtn, setShowBtn] = useState(false);
   return (
     <>
       <Card
+        onMouseOver={() => {
+          setShowBtn(true);
+        }}
+        onMouseLeave={() => {
+          setShowBtn(false);
+        }}
         className={classes.card}
         onClick={() => {
           if (props.profile.corrupted) {
@@ -193,75 +205,100 @@ function SingleCoreDisplay(props: {
           triggerSetPage("ReadyToLaunch");
         }}
       >
-        <CardContent style={{ position: "relative" }}>
+        <CardContent>
           {props.profile.corrupted ? (
             ""
           ) : (
-            <Box style={{ float: "right" }}>
-              <img
-                src={getIconForProfile(props.profile)}
-                width={64}
-                height={64}
-                style={{ float: "right" }}
-              />
-
-              <br />
-              <br />
-              <Box style={{ display: "flex", marginTop: "2.2rem" }}>
-                {props.profile.versionType !== "Mojang" &&
-                props.profile.versionType !== "Installer" ? (
-                  <Tooltip title={tr("CoreInfo.Pff")}>
+            <Box
+              style={{ float: "right", display: "flex", flexDirection: "row" }}
+            >
+              <Fade in={showBtn}>
+                <Box>
+                  <Tooltip
+                    title={
+                      <Typography className={"smtxt"}>
+                        {tr("CoreInfo.Destroy")}
+                      </Typography>
+                    }
+                  >
                     <IconButton
                       color={"inherit"}
                       className={classes.operateButton}
                       onClick={(e) => {
-                        jumpTo(
-                          `/PffFront/${encodeURIComponent(
-                            props.profile.container
-                          )}/${encodeURIComponent(
-                            props.profile.baseVersion
-                          )}/${encodeURIComponent(props.profile.versionType)}`
-                        );
-                        triggerSetPage("PffFront");
+                        setDestroy(props.profile.id);
+                        setWarningOpen(true);
                         addStatistics("Click");
                         e.stopPropagation();
                       }}
                     >
-                      <Archive />
+                      <DeleteForever />
                     </IconButton>
                   </Tooltip>
-                ) : (
-                  ""
-                )}
-                <Tooltip title={tr("CoreInfo.Destroy")}>
-                  <IconButton
-                    color={"inherit"}
-                    className={classes.operateButton}
-                    onClick={(e) => {
-                      setDestroy(props.profile.id);
-                      setWarningOpen(true);
-                      addStatistics("Click");
-                      e.stopPropagation();
-                    }}
+                  <Tooltip
+                    title={
+                      <Typography className={"smtxt"}>
+                        {tr("CoreInfo.ClearUse")}
+                      </Typography>
+                    }
                   >
-                    <DeleteForever />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title={tr("CoreInfo.ClearUse")}>
-                  <IconButton
-                    color={"inherit"}
-                    className={classes.operateButton}
-                    onClick={(e) => {
-                      markUsed(hash, 0);
-                      props.refresh();
-                      addStatistics("Click");
-                      e.stopPropagation();
-                    }}
-                  >
-                    <EventBusy />
-                  </IconButton>
-                </Tooltip>
-              </Box>
+                    <IconButton
+                      color={"inherit"}
+                      className={classes.operateButton}
+                      onClick={(e) => {
+                        markUsed(hash, 0);
+                        props.refresh();
+                        addStatistics("Click");
+                        e.stopPropagation();
+                      }}
+                    >
+                      <EventBusy />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </Fade>
+              <Tooltip
+                title={
+                  props.profile.versionType !== "Mojang" &&
+                  props.profile.versionType !== "Installer" ? (
+                    <Typography className={"smtxt"}>
+                      {tr("CoreInfo.Pff")}
+                    </Typography>
+                  ) : (
+                    ""
+                  )
+                }
+              >
+                <img
+                  src={getIconForProfile(props.profile)}
+                  width={64}
+                  height={64}
+                  style={{
+                    float: "right",
+                    cursor:
+                      props.profile.versionType !== "Mojang" &&
+                      props.profile.versionType !== "Installer"
+                        ? "pointer"
+                        : undefined,
+                  }}
+                  onClick={
+                    props.profile.versionType !== "Mojang" &&
+                    props.profile.versionType !== "Installer"
+                      ? (e) => {
+                          jumpTo(
+                            `/PffFront/${encodeURIComponent(
+                              props.profile.container
+                            )}/${encodeURIComponent(
+                              props.profile.baseVersion
+                            )}/${encodeURIComponent(props.profile.versionType)}`
+                          );
+                          triggerSetPage("PffFront");
+                          addStatistics("Click");
+                          e.stopPropagation();
+                        }
+                      : undefined
+                  }
+                />
+              </Tooltip>
             </Box>
           )}
           <Typography
@@ -373,9 +410,9 @@ function CorruptedCoreWarning(): JSX.Element {
     <>
       <Typography
         style={{
-          fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
           color: "#ff8400",
         }}
+        className={"smtxt"}
         gutterBottom
       >
         {tr("CoreInfo.CorruptedWarning")}

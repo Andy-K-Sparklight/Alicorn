@@ -152,7 +152,7 @@ function RoundBtn(props: {
     <Box
       style={{
         display: "inline",
-        marginLeft: "8px",
+        marginLeft: "0.5em",
       }}
     >
       <Fab
@@ -163,7 +163,7 @@ function RoundBtn(props: {
         onClick={props.onClick}
       >
         {props.icon}
-        {<span style={{ marginLeft: "5px" }}>{props.short}</span>}
+        {<span style={{ marginLeft: "0.3125em" }}>{props.short}</span>}
       </Fab>
     </Box>
   );
@@ -211,7 +211,7 @@ export function SpecialKnowledge(): JSX.Element {
       }}
     >
       <span
-        style={{ fontSize: "x-large", marginRight: "12px" }}
+        style={{ fontSize: "x-large", marginRight: "0.75em" }}
         dangerouslySetInnerHTML={{ __html: a }}
       />
       <span style={{ fontSize: "xxx-large" }}>|</span>
@@ -219,7 +219,7 @@ export function SpecialKnowledge(): JSX.Element {
         style={{
           fontSize: "small",
           maxWidth: "80%",
-          marginLeft: "12px",
+          marginLeft: "0.75em",
           textAlign: "left",
         }}
         dangerouslySetInnerHTML={{ __html: b }}

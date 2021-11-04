@@ -63,7 +63,11 @@ export function ServerList(): JSX.Element {
   return (
     <>
       <Box style={{ textAlign: "right", marginRight: "5%" }}>
-        <Tooltip title={tr("ServerList.Add")}>
+        <Tooltip
+          title={
+            <Typography className={"smtxt"}>{tr("ServerList.Add")}</Typography>
+          }
+        >
           <IconButton
             color={"primary"}
             onClick={() => {
@@ -232,7 +236,13 @@ export function SingleServerDisplay(props: {
             marginLeft: "auto",
           }}
         >
-          <Tooltip title={tr("ServerList.Remove")}>
+          <Tooltip
+            title={
+              <Typography className={"smtxt"}>
+                {tr("ServerList.Remove")}
+              </Typography>
+            }
+          >
             <IconButton
               style={{
                 marginRight: 0,
@@ -245,7 +255,13 @@ export function SingleServerDisplay(props: {
               <Delete />
             </IconButton>
           </Tooltip>
-          <Tooltip title={tr("ServerList.Launch")}>
+          <Tooltip
+            title={
+              <Typography className={"smtxt"}>
+                {tr("ServerList.Launch")}
+              </Typography>
+            }
+          >
             <IconButton
               style={{
                 marginRight: 0,
@@ -263,17 +279,21 @@ export function SingleServerDisplay(props: {
             </IconButton>
           </Tooltip>
           <Tooltip
-            title={(() => {
-              switch (connective) {
-                case false:
-                  return tr("ServerList.NoConnection");
-                case true:
-                  return tr("ServerList.Connectable");
-                case undefined:
-                default:
-                  return tr("ServerList.Testing");
-              }
-            })()}
+            title={
+              <Typography>
+                {(() => {
+                  switch (connective) {
+                    case false:
+                      return tr("ServerList.NoConnection");
+                    case true:
+                      return tr("ServerList.Connectable");
+                    case undefined:
+                    default:
+                      return tr("ServerList.Testing");
+                  }
+                })()}
+              </Typography>
+            }
           >
             <IconButton
               style={{

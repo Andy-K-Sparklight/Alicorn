@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Fade,
   FormControlLabel,
   IconButton,
   MuiThemeProvider,
@@ -152,7 +153,13 @@ export function ContainerManager(): JSX.Element {
         }}
       />
       <Box style={{ textAlign: "right" }}>
-        <Tooltip title={tr("ContainerManager.Add")}>
+        <Tooltip
+          title={
+            <Typography className={"smtxt"}>
+              {tr("ContainerManager.Add")}
+            </Typography>
+          }
+        >
           <IconButton
             color={"inherit"}
             onClick={() => {
@@ -192,6 +199,7 @@ function SingleContainerDisplay(props: {
   const [isASC, setASCBit] = useState<boolean | null>(null);
   const [refresh, setRefresh] = useState(false);
 
+  const [showBtn, setShowBtn] = useState(false);
   useEffect(() => {
     mounted.current = true;
     if (props.isMounted) {
@@ -221,7 +229,15 @@ function SingleContainerDisplay(props: {
     <>
       <OperatingHint open={operating} />
 
-      <Card className={props.isMounted ? classes.card : classes.uCard}>
+      <Card
+        className={props.isMounted ? classes.card : classes.uCard}
+        onMouseOver={() => {
+          setShowBtn(true);
+        }}
+        onMouseLeave={() => {
+          setShowBtn(false);
+        }}
+      >
         <CardContent>
           <Box style={{ float: "right" }}>
             {!props.isMounted || isASC === null ? (
@@ -233,69 +249,103 @@ function SingleContainerDisplay(props: {
                 style={{ float: "right" }}
               />
             )}
-            <Tooltip title={tr("ContainerManager.Remove")}>
-              <IconButton
-                color={"inherit"}
-                className={classes.operateButton}
-                onClick={() => {
-                  setOpen(true);
-                }}
-              >
-                <LinkOff />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title={tr("ContainerManager.Clear")}>
-              <IconButton
-                color={"inherit"}
-                className={classes.operateButton}
-                onClick={() => {
-                  setClearOpen(true);
-                }}
-              >
-                <LayersClear />
-              </IconButton>
-            </Tooltip>
-            {props.isMounted ? (
-              <Tooltip title={tr("ContainerManager.Unmount")}>
-                <IconButton
-                  color={"inherit"}
-                  className={classes.operateButton}
-                  onClick={() => {
-                    unmount(props.container.id);
-                    setContainerListDirty();
-                  }}
+            <Fade in={showBtn}>
+              <Box>
+                <Tooltip
+                  title={
+                    <Typography className={"smtxt"}>
+                      {tr("ContainerManager.Remove")}
+                    </Typography>
+                  }
                 >
-                  <Eject />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              <Tooltip title={tr("ContainerManager.Mount")}>
-                <IconButton
-                  color={"inherit"}
-                  className={classes.operateButton}
-                  onClick={() => {
-                    mount(props.container.id);
-                    setContainerListDirty();
-                    setRefresh(!refresh);
-                  }}
+                  <IconButton
+                    color={"inherit"}
+                    className={classes.operateButton}
+                    onClick={() => {
+                      setOpen(true);
+                    }}
+                  >
+                    <LinkOff />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip
+                  title={
+                    <Typography className={"smtxt"}>
+                      {tr("ContainerManager.Clear")}
+                    </Typography>
+                  }
                 >
-                  <Input />
-                </IconButton>
-              </Tooltip>
-            )}
-            <Tooltip title={tr("ContainerManager.OpenInDir")}>
-              <IconButton
-                color={"inherit"}
-                className={classes.operateButton}
-                onClick={() => {
-                  try {
-                    shell.showItemInFolder(props.container.rootDir);
-                  } catch {}
-                }}
-              >
-                <FolderOpen />
-              </IconButton>
-            </Tooltip>
+                  <IconButton
+                    color={"inherit"}
+                    className={classes.operateButton}
+                    onClick={() => {
+                      setClearOpen(true);
+                    }}
+                  >
+                    <LayersClear />
+                  </IconButton>
+                </Tooltip>
+                {props.isMounted ? (
+                  <Tooltip
+                    title={
+                      <Typography className={"smtxt"}>
+                        {tr("ContainerManager.Unmount")}
+                      </Typography>
+                    }
+                  >
+                    <IconButton
+                      color={"inherit"}
+                      className={classes.operateButton}
+                      onClick={() => {
+                        unmount(props.container.id);
+                        setContainerListDirty();
+                      }}
+                    >
+                      <Eject />
+                    </IconButton>
+                  </Tooltip>
+                ) : (
+                  <Tooltip
+                    title={
+                      <Typography className={"smtxt"}>
+                        {tr("ContainerManager.Mount")}
+                      </Typography>
+                    }
+                  >
+                    <IconButton
+                      color={"inherit"}
+                      className={classes.operateButton}
+                      onClick={() => {
+                        mount(props.container.id);
+                        setContainerListDirty();
+                        setRefresh(!refresh);
+                      }}
+                    >
+                      <Input />
+                    </IconButton>
+                  </Tooltip>
+                )}
+                <Tooltip
+                  title={
+                    <Typography className={"smtxt"}>
+                      {tr("ContainerManager.OpenInDir")}
+                    </Typography>
+                  }
+                >
+                  <IconButton
+                    color={"inherit"}
+                    className={classes.operateButton}
+                    onClick={() => {
+                      try {
+                        shell.showItemInFolder(props.container.rootDir);
+                      } catch {}
+                    }}
+                  >
+                    <FolderOpen />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Fade>
           </Box>
 
           <Dialog
@@ -578,7 +628,11 @@ function AddNewContainer(props: {
               label={tr("ContainerManager.Type.Physical")}
             />
             <Tooltip
-              title={tr("ContainerManager.ASCCacheNotSet")}
+              title={
+                <Typography className={"smtxt"}>
+                  {tr("ContainerManager.ASCCacheNotSet")}
+                </Typography>
+              }
               disableHoverListener={hasEdited("cx.shared-root")}
               disableFocusListener={hasEdited("cx.shared-root")}
               disableTouchListener={hasEdited("cx.shared-root")}

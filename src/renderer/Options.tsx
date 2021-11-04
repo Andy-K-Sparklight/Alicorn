@@ -11,7 +11,7 @@ import {
   Tab,
   Tabs,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import os from "os";
 import React, { useEffect, useRef, useState } from "react";
@@ -23,7 +23,7 @@ import {
   getString,
   parseNum,
   saveConfig,
-  set
+  set,
 } from "../modules/config/ConfigSupport";
 import { loadMirror } from "../modules/download/Mirror";
 import { remoteSelectDir } from "./ContainerManager";
@@ -46,7 +46,7 @@ export function OptionsPage(): JSX.Element {
     createStyles({
       root: {},
       head: {
-        fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+        fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
         color: theme.palette.secondary.main,
       },
     })
@@ -378,7 +378,7 @@ export function InputItem(props: {
   const classes = makeStyles((theme) =>
     createStyles({
       desc: {
-        fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+        fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
         color: theme.palette.secondary.main,
       },
       switch: {
@@ -486,7 +486,7 @@ export function InputItem(props: {
                   type={"button"}
                   variant={"outlined"}
                   style={{
-                    marginTop: "4px",
+                    marginTop: "0.25em",
                   }}
                   onClick={async () => {
                     const d = await remoteSelectDir();

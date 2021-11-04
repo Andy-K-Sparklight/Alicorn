@@ -151,7 +151,13 @@ export function JavaSelector(): JSX.Element {
           </ShiftEle>
         </FormControl>
 
-        <Tooltip title={tr("JavaSelector.Reload")}>
+        <Tooltip
+          title={
+            <Typography className={"smtxt"}>
+              {tr("JavaSelector.Reload")}
+            </Typography>
+          }
+        >
           <IconButton
             color={"primary"}
             className={fullWidthClasses.right}
