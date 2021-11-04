@@ -342,15 +342,7 @@ export function App(): JSX.Element {
           >
             <Typography
               variant={"h6"}
-              style={
-                showCommand
-                  ? {
-                      fontSize:
-                        window.sessionStorage.getItem("smallFontSize") ||
-                        "16px",
-                    }
-                  : {}
-              }
+              className={showCommand ? "smtxt" : undefined}
             >
               {showCommand ? enteredCommand : tr(page)}
             </Typography>

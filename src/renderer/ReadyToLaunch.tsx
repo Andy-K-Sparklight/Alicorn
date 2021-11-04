@@ -1189,10 +1189,9 @@ function MiniJavaSelector(props: {
           return (
             <Typography
               style={{
-                fontSize:
-                  window.sessionStorage.getItem("smallFontSize") || "16px",
                 color: "#ff8400",
               }}
+              className={"smtxt"}
               gutterBottom
             >
               {tr("ReadyToLaunch.JCheck.Too" + c)}

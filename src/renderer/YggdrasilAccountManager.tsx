@@ -364,10 +364,9 @@ function YggdrasilForm(props: {
           {hasError ? (
             <DialogContentText
               style={{
-                fontSize:
-                  window.sessionStorage.getItem("smallFontSize") || "16px",
                 color: "#ff8400",
               }}
+              className={"smtxt"}
             >
               {tr("AccountManager.Failed")}
             </DialogContentText>
@@ -514,10 +513,9 @@ function AddAccount(props: {
             {isCustom ? (
               <DialogContentText
                 style={{
-                  fontSize:
-                    window.sessionStorage.getItem("smallFontSize") || "16px",
                   color: "#ff8400",
                 }}
+                className={"smtxt"}
               >
                 {tr("AccountManager.Warn")}
               </DialogContentText>

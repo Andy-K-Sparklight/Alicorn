@@ -240,9 +240,9 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
       {corruptBit ? (
         <Typography
           style={{
-            fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
             color: "#ff8400",
           }}
+          className={"smtxt"}
           gutterBottom
         >
           {tr("JavaSelector.CannotLoadDetail")}
@@ -259,11 +259,10 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
           ) : (
             <Typography
               style={{
-                fontSize:
-                  window.sessionStorage.getItem("smallFontSize") || "16px",
                 color: "#ff8400",
               }}
               gutterBottom
+              className={"smtxt"}
             >
               {tr("JavaSelector.WarnNonFree")}
             </Typography>
@@ -273,10 +272,9 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
           ) : (
             <Typography
               style={{
-                fontSize:
-                  window.sessionStorage.getItem("smallFontSize") || "16px",
                 color: "#ff8400",
               }}
+              className={"smtxt"}
               gutterBottom
             >
               {tr("JavaSelector.WarnClient")}
@@ -287,10 +285,9 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
           ) : (
             <Typography
               style={{
-                fontSize:
-                  window.sessionStorage.getItem("smallFontSize") || "16px",
                 color: "#ff8400",
               }}
+              className={"smtxt"}
               gutterBottom
             >
               {tr("JavaSelector.Warn32")}

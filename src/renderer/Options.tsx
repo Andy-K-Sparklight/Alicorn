@@ -11,7 +11,7 @@ import {
   Tab,
   Tabs,
   TextField,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import os from "os";
 import React, { useEffect, useRef, useState } from "react";
@@ -23,7 +23,7 @@ import {
   getString,
   parseNum,
   saveConfig,
-  set,
+  set
 } from "../modules/config/ConfigSupport";
 import { loadMirror } from "../modules/download/Mirror";
 import { remoteSelectDir } from "./ContainerManager";
@@ -525,13 +525,11 @@ export function InputItem(props: {
                       label={
                         <Typography
                           style={{
-                            fontSize:
-                              window.sessionStorage.getItem("smallFontSize") ||
-                              "16px",
                             color:
                               ALICORN_DEFAULT_THEME_LIGHT.palette.secondary
                                 .main,
                           }}
+                          className={"smtxt"}
                         >
                           {tr(`Options.${props.bindConfig}.${c}`)}
                         </Typography>

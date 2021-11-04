@@ -137,10 +137,9 @@ function AddNewServer(props: {
           <DialogContentText>
             <span
               style={{
-                fontSize:
-                  window.sessionStorage.getItem("smallFontSize") || "16px",
                 color: "red",
               }}
+              className={"smtxt"}
             >
               {tr("ServerList.AddNewServer.SincereWarn")}
             </span>

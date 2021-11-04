@@ -292,6 +292,10 @@ function configureFontSize(): void {
   const f = "14px";
   console.log("Set small font size as " + f);
   window.sessionStorage.setItem("smallFontSize", f);
+  let e: HTMLStyleElement | null = document.createElement("style");
+  e.innerText = `.smtxt{font-size:${f} !important;}`;
+  document.head.insertAdjacentElement("beforeend", e);
+  e = null;
 }
 
 function printScreen(msg: string): void {
@@ -544,6 +548,7 @@ function RendererBootstrap(): JSX.Element {
           {getString("theme") === "Random" ? (
             <Typography
               style={{
+                pointerEvents: "none",
                 position: "fixed",
                 left: "5px",
                 bottom: "5px",
@@ -558,6 +563,7 @@ function RendererBootstrap(): JSX.Element {
 
           <Typography
             style={{
+              pointerEvents: "none",
               position: "fixed",
               right: "5px",
               bottom: "5px",
