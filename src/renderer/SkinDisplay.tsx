@@ -32,6 +32,10 @@ export function SkinDisplay3D(props: {
     const orbitControl = skinview3d.createOrbitControls(skinViewer);
     // @ts-ignore
     const walk = skinViewer.animations.add(skinview3d.WalkingAnimation);
+    walk.speed = 0.8;
+    // @ts-ignore
+    const rotate = skinViewer.animations.add(skinview3d.RotatingAnimation);
+    rotate.speed = 1.2;
     return () => {
       walk.remove();
       skinViewer = null;
