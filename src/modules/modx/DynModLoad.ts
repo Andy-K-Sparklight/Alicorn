@@ -69,7 +69,11 @@ async function moveModsTo(
       mi.mcversion = mi.mcversion || "*"; // Fallback
       if (
         mi.loader?.toString() !== type.toString() ||
-        !canModVersionApply(mi.mcversion || "", mcVersion)
+        !canModVersionApply(
+          mi.mcversion || "",
+          mcVersion,
+          mi.loader === ModLoader.FABRIC
+        )
       ) {
         toProcess.push(mi);
       } else {

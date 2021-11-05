@@ -42,6 +42,7 @@ export async function loadModInfo(
       const d = await zip.entryData(FABRIC_MOD_JSON);
       ret.loader = ModLoader.FABRIC;
       loadFabricInfo(JSON.parse(escapeQuote(d.toString())), ret);
+      void zip.close();
       return ret;
     } catch {}
 
@@ -49,6 +50,7 @@ export async function loadModInfo(
       const d = await zip.entryData(META_INF + "/" + MODS_TOML);
       ret.loader = ModLoader.FORGE;
       loadTomlInfo(toml.parse(d.toString()), ret);
+      void zip.close();
       return ret;
     } catch {}
 
@@ -56,20 +58,24 @@ export async function loadModInfo(
       const d = await zip.entryData(MCMOD_INFO);
       ret.loader = ModLoader.FORGE;
       loadMCMODInfo(JSON.parse(escapeQuote(d.toString())), ret);
+      void zip.close();
       return ret;
     } catch {}
     // Bad Loader
+    void zip.close();
     return {
       fileName: container.getModJar(modJar),
       loader: ModLoader.UNKNOWN,
     };
   } catch {
-    return { fileName: container.getModJar(modJar) };
+    return { fileName: container.getModJar(modJar), loader: ModLoader.UNKNOWN };
   }
 }
 
 function loadFabricInfo(obj: Record<string, unknown>, rawInfo: ModInfo): void {
-  rawInfo.mcversion = "*";
+  rawInfo.mcversion = String(
+    safeGet(obj, ["depends", "minecraft"], "*") || "*"
+  );
   // Fabric does not contain a version key, we just ignore it
   rawInfo.id = String(safeGet(obj, ["id"]));
   rawInfo.version = String(safeGet(obj, ["version"]));
@@ -148,6 +154,6 @@ function loadTomlInfo(obj: Record<string, unknown>, rawInfo: ModInfo): void {
   return;
 }
 
-function escapeQuote(s: string): string {
+export function escapeQuote(s: string): string {
   return s.replaceAll('\\"', "'").replaceAll("\r", "").replaceAll("\n", " ");
 }

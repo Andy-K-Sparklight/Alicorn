@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Badge,
   Box,
   CircularProgress,
   Container,
@@ -17,6 +18,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { ArrowForward } from "@material-ui/icons";
+import { Alert } from "@material-ui/lab";
 import { shell } from "electron";
 import EventEmitter from "events";
 import path from "path";
@@ -28,6 +30,7 @@ import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { setProxy } from "../modules/download/DownloadWrapper";
 import { loadMetas } from "../modules/modx/DynModLoad";
+import { configureModDepChain, UnmetDepUnit } from "../modules/modx/ModDeps";
 import { ModInfo, ModLoader } from "../modules/modx/ModInfo";
 import { canModVersionApply } from "../modules/modx/VersionUtil";
 import { PFF_MSG_GATE } from "../modules/pff/curseforge/Values";
@@ -64,6 +67,7 @@ export function PffFront(): JSX.Element {
   const [allMods, setAllMods] = useState<ModInfo[]>([]);
   const mounted = useRef(false);
   const logs = useRef<string[]>([]);
+  const [unmetWarns, setUnmetWarns] = useState<UnmetDepUnit[]>([]);
   const fullWidthClasses = fullWidth();
   const f = async () => {
     const m = await loadMetas(getContainer(container));
@@ -77,7 +81,17 @@ export function PffFront(): JSX.Element {
       setAllMods(m);
     }
   };
+  const f1 = async () => {
+    const a = await configureModDepChain(
+      getContainer(container),
+      loader as ModLoader
+    );
+    if (mounted.current) {
+      setUnmetWarns(a);
+    }
+  };
   const f0 = throttle(5000, f);
+  const f2 = throttle(5000, f1);
   useEffect(() => {
     const fun = () => {
       void (async () => {
@@ -87,6 +101,7 @@ export function PffFront(): JSX.Element {
         }
       })();
       void f0();
+      void f2();
     };
     window.addEventListener("blur", fun);
     window.addEventListener("focus", fun);
@@ -103,6 +118,7 @@ export function PffFront(): JSX.Element {
       }
     })();
     void f0();
+    void f2();
   }, [isRunning]);
   useEffect(() => {
     mounted.current = true;
@@ -131,15 +147,14 @@ export function PffFront(): JSX.Element {
       void (async () => {
         const packages = packageName.split(" ");
         await Promise.allSettled(
-          packages.map(async (p, i) => {
+          packages.map(async (p) => {
             if (p.trim().length) {
               await pffInstall(
                 p.trim(),
                 getContainer(container),
                 version,
                 emitter.current,
-                loader === "Forge" ? 1 : 4,
-                `${i + 1}`
+                loader === "Forge" ? 1 : 4
               );
             }
           })
@@ -150,6 +165,28 @@ export function PffFront(): JSX.Element {
       })();
     }
   }, []);
+  const start = (packageName: string) => {
+    setRunning(true);
+    void (async () => {
+      const packages = packageName.split(" ");
+      await Promise.allSettled(
+        packages.map(async (p) => {
+          if (p.trim().length) {
+            await pffInstall(
+              p.trim(),
+              getContainer(container),
+              version,
+              emitter.current,
+              loader === "Forge" ? 1 : 4
+            );
+          }
+        })
+      );
+      if (mounted.current) {
+        setRunning(false);
+      }
+    })();
+  };
   return (
     <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box className={fullWidthClasses.root}>
@@ -174,27 +211,7 @@ export function PffFront(): JSX.Element {
                       disabled={isRunning || packageName.trim().length === 0}
                       color={"primary"}
                       onClick={() => {
-                        setRunning(true);
-                        void (async () => {
-                          const packages = packageName.split(" ");
-                          await Promise.allSettled(
-                            packages.map(async (p, i) => {
-                              if (p.trim().length) {
-                                await pffInstall(
-                                  p.trim(),
-                                  getContainer(container),
-                                  version,
-                                  emitter.current,
-                                  loader === "Forge" ? 1 : 4,
-                                  `${i + 1}`
-                                );
-                              }
-                            })
-                          );
-                          if (mounted.current) {
-                            setRunning(false);
-                          }
-                        })();
+                        start(packageName);
                       }}
                     >
                       <ArrowForward />
@@ -238,14 +255,30 @@ export function PffFront(): JSX.Element {
         >
           <Tab
             label={
-              <Typography color={"primary"}>
-                {tr("PffFront.QuickWatch")}
-              </Typography>
+              <Badge
+                badgeContent={Object.keys(lockfile || {}).length}
+                color={"primary"}
+              >
+                <Typography color={"primary"}>
+                  {tr("PffFront.QuickWatch")}
+                </Typography>
+              </Badge>
             }
           />
           <Tab
             label={
-              <Typography color={"primary"}>{tr("PffFront.Mods")}</Typography>
+              <Badge badgeContent={allMods.length} color={"primary"}>
+                <Typography color={"primary"}>{tr("PffFront.Mods")}</Typography>
+              </Badge>
+            }
+          />
+          <Tab
+            label={
+              <Badge badgeContent={unmetWarns.length} color={"primary"}>
+                <Typography color={"primary"}>
+                  {tr("PffFront.UnmetDeps")}
+                </Typography>
+              </Badge>
             }
           />
         </Tabs>
@@ -345,6 +378,35 @@ export function PffFront(): JSX.Element {
             </List>
           </Container>
         </TabPanel>
+        <TabPanel value={val} index={2}>
+          <br />
+          {unmetWarns.map((u) => {
+            return (
+              <Alert
+                key={u.origin + u.name + u.missing}
+                severity={"warning"}
+                onClick={() => {
+                  if (!isRunning) {
+                    setPackageName(u.missing);
+                    start(u.missing);
+                  }
+                }}
+              >
+                {tr(
+                  "PffFront.MissingDep",
+                  `Origin=${path.basename(u.origin)}`,
+                  `Name=${u.name}`,
+                  `Missing=${u.missing}`
+                )}
+              </Alert>
+            );
+          })}
+          {unmetWarns.length === 0 ? (
+            <Alert severity={"info"}>{tr("PffFront.DepOK")}</Alert>
+          ) : (
+            ""
+          )}
+        </TabPanel>
       </>
     </MuiThemeProvider>
   );
@@ -359,7 +421,11 @@ export function SingleModDisplay(props: {
     (props.m.loader === props.loader ||
       (props.m.loader === ModLoader.UNKNOWN &&
         getBoolean("modx.ignore-non-standard-mods"))) &&
-    canModVersionApply(modmcv, props.mcversion);
+    canModVersionApply(
+      modmcv,
+      props.mcversion,
+      props.m.loader === ModLoader.FABRIC
+    );
   const [showDesc, setShowDesc] = useState(false);
   return (
     <ListItem
@@ -372,6 +438,11 @@ export function SingleModDisplay(props: {
       onMouseLeave={() => {
         if (props.m.description) {
           setShowDesc(false);
+        }
+      }}
+      onClick={() => {
+        if (props.m.fileName) {
+          void shell.showItemInFolder(props.m.fileName);
         }
       }}
     >
@@ -426,17 +497,13 @@ async function pffInstall(
   container: MinecraftContainer,
   version: string,
   emitter: EventEmitter,
-  modLoader: number,
-  tskIndex: string
+  modLoader: number
 ): Promise<void> {
   setChangePageWarn(true);
   const ml = modLoaderOf(modLoader);
-  const idx = `[${tskIndex}/${name}] `;
+  const idx = `[${name}] `;
   if (!ml) {
-    emitter.emit(
-      PFF_MSG_GATE,
-      `[${tskIndex}/${name}] ` + tr("PffFront.UnsupportedLoader")
-    );
+    emitter.emit(PFF_MSG_GATE, `[${name}] ` + tr("PffFront.UnsupportedLoader"));
     return;
   }
   setPffFlag("1");

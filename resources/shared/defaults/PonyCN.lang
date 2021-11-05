@@ -2180,6 +2180,18 @@ Pff|也就是「Package File Finder」，Alicorn 用来搜索和安装 Mod 的�
 
 此处显示所有识别的 Mod，无论它们是否由 Pff 安装。不支持的加载器不考虑在内。\n鼠标悬浮将可以查看介绍。
 
+# PffFront.UnmetDeps
+
+依赖关系错误
+
+# PffFront.MissingDep
+
+@HTML软件包 {Name} 需要 {Missing}，然而 {Missing} 未安装 - {Origin} 将不会被加载<br/><b>单击尝试使用 Pff 安装 {Missing}</b>
+
+# PffFront.DepOK
+
+Alicorn 没有发现有问题的依赖……（至少依赖 Mod 的 ID 都齐全了）
+
 # ServerList.Add
 
 添加服务器

@@ -39,25 +39,32 @@ function trimVersionRange(vstr: string): TrimmedVersion {
   return tv;
 }
 
-function cmpVersion(modVersion: TrimmedVersion, mcVersion: string): boolean {
+function cmpVersion(
+  modVersion: TrimmedVersion | string,
+  mcVersion: string
+): boolean {
   let pMax = "";
   const rules: string[] = [];
-  if (modVersion.max !== "" && modVersion.max !== "*") {
-    pMax = `<${modVersion.includeMax ? "=" : ""} ${modVersion.max}`;
-  }
-  let pMin = "";
-  if (modVersion.min !== "" && modVersion.min !== "*") {
-    pMin = `>${modVersion.includeMin ? "=" : ""} ${modVersion.min}`;
-  }
-  if (pMax === "") {
-    if (pMin !== "") {
-      rules.push(pMin);
-    }
+  if (typeof modVersion === "string") {
+    rules.push(modVersion);
   } else {
-    if (pMin === "") {
-      rules.push(pMax);
+    if (modVersion.max !== "" && modVersion.max !== "*") {
+      pMax = `<${modVersion.includeMax ? "=" : ""} ${modVersion.max}`;
+    }
+    let pMin = "";
+    if (modVersion.min !== "" && modVersion.min !== "*") {
+      pMin = `>${modVersion.includeMin ? "=" : ""} ${modVersion.min}`;
+    }
+    if (pMax === "") {
+      if (pMin !== "") {
+        rules.push(pMin);
+      }
     } else {
-      rules.push(pMax, pMin);
+      if (pMin === "") {
+        rules.push(pMax);
+      } else {
+        rules.push(pMax, pMin);
+      }
     }
   }
   const cmc = semver.valid(semver.coerce(mcVersion));
@@ -67,8 +74,12 @@ function cmpVersion(modVersion: TrimmedVersion, mcVersion: string): boolean {
   return !s.includes(false);
 }
 
-export function canModVersionApply(mod: string, mc: string): boolean {
-  return cmpVersion(trimVersionRange(mod), mc);
+export function canModVersionApply(
+  mod: string,
+  mc: string,
+  notrans = false
+): boolean {
+  return cmpVersion(notrans ? mod : trimVersionRange(mod), mc);
 }
 
 export function gatherVersionInfo(profile: GameProfile): {
