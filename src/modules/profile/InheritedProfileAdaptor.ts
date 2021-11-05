@@ -5,12 +5,12 @@
 // Why not automate? We need it!
 // You builds FREE software rather than SPONSOR ones, thank you very much!
 // Anyway, we'll keep on supporting Forge since there are tremendous requirements.
-import { copy } from "fs-extra";
+import { copy, remove } from "fs-extra";
 import objectHash from "object-hash";
 import path from "path";
 import { schedulePromiseTask } from "../../renderer/Schedule";
 import { ReleaseType, SPACE } from "../commons/Constants";
-import { isFileExist } from "../commons/FileUtil";
+import { isFileExistAndNonEmpty } from "../commons/FileUtil";
 import { isNull } from "../commons/Null";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { JAR_SUFFIX } from "../launch/NativesLint";
@@ -144,38 +144,31 @@ export class InheritedProfile extends GameProfile {
       const pf = await loadProfile(this.inheritsFrom, container);
       await prepareClient(this.id, this.inheritsFrom, container);
       return await makeInherit(pf, this, legacyBit);
-    } catch {
-      throw (
-        "Failed to load dependency profile or prepare client! Loading: " +
-        this.inheritsFrom
-      );
+    } catch (e) {
+      console.log(e);
+      throw "Failed to load dependency profile: " + this.inheritsFrom;
     }
   }
 }
-async function prepareClient(
+export async function prepareClient(
   modifiedId: string,
   sourceId: string,
   container: MinecraftContainer
 ): Promise<void> {
-  const t = path.join(
-    container.getVersionRoot(modifiedId),
-    modifiedId + JAR_SUFFIX
-  );
-  if (
-    window.sessionStorage.getItem(
-      "ClientOK." + container.id + "/" + modifiedId
-    ) === "1"
-  ) {
-    return;
-  }
-  if (!(await isFileExist(t))) {
-    await copy(
-      path.join(container.getVersionRoot(sourceId), sourceId + JAR_SUFFIX),
-      t
+  try {
+    const t = path.join(
+      container.getVersionRoot(modifiedId),
+      modifiedId + JAR_SUFFIX
     );
-    window.sessionStorage.setItem(
-      "ClientOK." + container.id + "/" + modifiedId,
-      "1"
-    );
+    if (!(await isFileExistAndNonEmpty(t))) {
+      await remove(t);
+      await copy(
+        path.join(container.getVersionRoot(sourceId), sourceId + JAR_SUFFIX),
+        t,
+        { dereference: true }
+      );
+    }
+  } catch (e) {
+    console.log(e);
   }
 }

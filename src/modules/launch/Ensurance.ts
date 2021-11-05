@@ -54,7 +54,8 @@ export async function ensureNatives(
 export async function ensureClient(profile: GameProfile): Promise<void> {
   const ca = profile.clientArtifact;
   await wrappedDownloadFile(
-    new DownloadMeta(ca.url, ca.path, ca.sha1, ca.size)
+    new DownloadMeta(ca.url, ca.path, ca.sha1, ca.size),
+    true
   );
 }
 

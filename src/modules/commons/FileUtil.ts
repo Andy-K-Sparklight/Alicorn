@@ -11,13 +11,18 @@ export async function isFileExist(pt: string): Promise<boolean> {
   } catch {
     return false;
   }
-  /*
+}
+
+export async function isFileExistAndNonEmpty(pt: string): Promise<boolean> {
   try {
-    const s = await fs.stat(pt);
+    const s = await fs.lstat(pt);
+    if (s.isSymbolicLink()) {
+      return false;
+    }
     return s.isDirectory() || s.size > 0;
   } catch {
     return false;
-  }*/
+  }
 }
 
 export async function getModifiedDate(f: string): Promise<Date> {
