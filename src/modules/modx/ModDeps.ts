@@ -129,52 +129,35 @@ export function unfoldFabricJar(
   source: Buffer | string
 ): Promise<ShortModDepUnit[]> {
   return new Promise<ShortModDepUnit[]>((res) => {
-    const fun = (e: unknown, zip?: ZipFile) => {
+    const fun = async (e: unknown, zip?: ZipFile) => {
       if (e || !zip) {
+        console.log(e);
         res([]);
         return;
       }
-      zip.on("error", () => {
+      zip.on("error", (e) => {
+        console.log(e);
         res([]);
         return;
       });
 
       const ret0: ShortModDepUnit[] = [];
-      const cachedEnts: Map<string, Entry> = new Map();
+      const waitingProms: Promise<void>[] = [];
+      const waitingStreamProms: Promise<void>[] = [];
+      const cachedBufs: Record<string, Buffer> = {};
       const targetJars: string[] = [];
-      let name: string;
-      let depends: Record<string, string>;
-      zip.on("end", async () => {
-        depends = depends || {};
-        if (name) {
-          ret0.push({ name: name, depends: Object.keys(depends) });
-        }
-        // Solve deps
-        await Promise.allSettled(
-          targetJars.map((j) => {
-            return new Promise<void>((res) => {
-              const p = cachedEnts.get(j);
-              if (p) {
-                zip.openReadStream(p, async (e, s) => {
-                  if (e || !s) {
-                    res();
-                    return;
-                  }
-                  ret0.push(...(await unfoldFabricJar(await bufferRead(s))));
-                  res();
-                });
-              } else {
-                res();
-              }
-            });
-          })
-        );
-        res(ret0);
+      let name = "";
+      let depends: Record<string, string> = {};
+      const endPromise = new Promise<void>((res) => {
+        zip.on("end", () => {
+          res();
+        });
       });
       zip.on("entry", (ent: Entry) => {
         if (ent.fileName === "fabric.mod.json") {
           zip.openReadStream(ent, async (e, s) => {
             if (e || !s) {
+              console.log(e);
               res([]);
               return;
             }
@@ -192,10 +175,48 @@ export function unfoldFabricJar(
               });
             }
           });
-        } else {
-          cachedEnts.set(ent.fileName, ent);
+        } else if (ent.fileName.endsWith(".jar")) {
+          waitingStreamProms.push(
+            new Promise<void>((res) => {
+              zip.openReadStream(ent, (e, s) => {
+                if (e || !s) {
+                  console.log(e);
+                  res(); // But not rej!
+                  return;
+                }
+                waitingProms.push(
+                  (async (r) => {
+                    cachedBufs[r] = await bufferRead(s);
+                  })(ent.fileName)
+                );
+                res();
+              });
+            })
+          );
         }
       });
+      try {
+        await endPromise; // Make sure all stream open promises has been registered
+        await Promise.allSettled(waitingStreamProms); // Make sure all streams has been opened and buffer promises has been registered
+        await Promise.allSettled(waitingProms); // Make sure all buffers has been read
+        depends = depends || {};
+        if (name) {
+          ret0.push({ name: name, depends: Object.keys(depends) });
+        }
+
+        // Solve deps
+        await Promise.allSettled(
+          targetJars.map(async (j) => {
+            const p = cachedBufs[j];
+            if (p !== undefined) {
+              ret0.push(...(await unfoldFabricJar(p)));
+            }
+          })
+        );
+        res(ret0);
+      } catch {
+        res([]);
+      }
     };
     if (typeof source === "string") {
       yauzl.open(source, {}, fun); // Read from file

@@ -73,10 +73,12 @@ export async function loadModInfo(
 }
 
 function loadFabricInfo(obj: Record<string, unknown>, rawInfo: ModInfo): void {
-  rawInfo.mcversion = String(
-    safeGet(obj, ["depends", "minecraft"], "*") || "*"
-  );
-  // Fabric does not contain a version key, we just ignore it
+  const j0 = safeGet(obj, ["depends", "minecraft"], "*") || "*";
+  let j1 = String(j0);
+  if (j0 instanceof Array) {
+    j1 = j0.join(" || ");
+  }
+  rawInfo.mcversion = escapeVersion(j1);
   rawInfo.id = String(safeGet(obj, ["id"]));
   rawInfo.version = String(safeGet(obj, ["version"]));
   rawInfo.description = String(safeGet(obj, ["description"]));
@@ -156,4 +158,13 @@ function loadTomlInfo(obj: Record<string, unknown>, rawInfo: ModInfo): void {
 
 export function escapeQuote(s: string): string {
   return s.replaceAll('\\"', "'").replaceAll("\r", "").replaceAll("\n", " ");
+}
+
+const COERCE_REGEX = /(?<=[0-9])-[A-Za-z][0-9A-Za-z.]*/gi;
+const END_REGEX = /-([A-Za-z][0-9A-Za-z.]*)?$/;
+export function escapeVersion(s: string): string {
+  return String(eval('"' + s + '"'))
+    .replaceAll(COERCE_REGEX, "")
+    .replace(END_REGEX, "")
+    .replaceAll("~", ""); // Total ignore
 }

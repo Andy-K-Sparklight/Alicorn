@@ -2166,11 +2166,11 @@ Pff|也就是「Package File Finder」，Alicorn 用来搜索和安装 Mod 的�
 
 # PffFront.QuickWatch
 
-软件包速览
+Mod 速览
 
 # PffFront.Hint
 
-@HTML这里只显示由 Pff 安装的软件包，单击软件包名称可以在文件资源管理器中查看它。\n<span style="color: #ff8400;">安装 Mod 前请当心！不兼容的 Mod 可以<b style="color: red;">摧毁你的游戏</b>！请确保你<b style="color: red;">知道</b>而不是<b style="color: red;">猜测</b>它的作用！</span>
+这里只显示由 Pff 安装的 Mod，单击名称可以在文件资源管理器中查看它。
 
 # PffFront.Mods
 
@@ -2190,7 +2190,15 @@ Pff|也就是「Package File Finder」，Alicorn 用来搜索和安装 Mod 的�
 
 # PffFront.DepOK
 
-Alicorn 没有发现有问题的依赖……（至少依赖 Mod 的 ID 都齐全了）
+Alicorn 没有发现有问题的依赖～
+
+# PffFront.NoneDetected
+
+@HTMLAlicorn 没有在此处发现 Mod，<b>使用 Pff 安装一个？</b>
+
+# PffFront.InstallAll
+
+尝试修复全部依赖
 
 # ServerList.Add
 
