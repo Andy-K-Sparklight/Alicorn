@@ -471,7 +471,7 @@ export function InstallCore(): JSX.Element {
                   ? selectedForgeContainer +
                     ALICORN_SEPARATOR +
                     baseMojangVersionForge
-                  : undefined
+                  : ""
               }
             >
               {patchableCores.map((r) => {
@@ -716,7 +716,7 @@ export function InstallCore(): JSX.Element {
               value={
                 selectedIrisContainer && selectedIrisBase
                   ? selectedIrisContainer + ALICORN_SEPARATOR + selectedIrisBase
-                  : undefined
+                  : ""
               }
             >
               {fabricCores.map((r) => {
