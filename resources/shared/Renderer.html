@@ -37,6 +37,17 @@
       style="font-family: 'Ubuntu Mono', 'Courier New', Courier, monospace"
     ></p>
     <script>
+      if (process.env.ALICORN_REACT_DEVTOOLS) {
+        let { ipcRenderer } = require("electron");
+        if (ipcRenderer.sendSync("askInject")) {
+          let dev = document.createElement("script");
+          dev.src = "http://localhost:8097";
+          document.head.appendChild(dev);
+          dev = null;
+        }
+      }
+    </script>
+    <script>
       window.logToScreen = (msg) => {
         let e = document.getElementById("preboot_log");
         if (e) {
