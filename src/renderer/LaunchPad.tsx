@@ -1,3 +1,4 @@
+import { DeleteForever, EventBusy, Sync } from "@mui/icons-material";
 import {
   Box,
   Card,
@@ -7,8 +8,7 @@ import {
   LinearProgress,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import { DeleteForever, EventBusy, Sync } from "@material-ui/icons";
+} from "@mui/material";
 import { remove } from "fs-extra";
 import objectHash from "object-hash";
 import React, { useEffect, useRef, useState } from "react";

@@ -2,12 +2,12 @@ import {
   Box,
   Button,
   FormControl,
-  MuiThemeProvider,
   Tab,
   Tabs,
   TextField,
+  ThemeProvider,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import { ipcRenderer } from "electron";
 import React, { useEffect, useRef, useState } from "react";
 import { getBoolean, getString } from "../../modules/config/ConfigSupport";
@@ -85,7 +85,7 @@ export function CutieConnet(): JSX.Element {
         />
       </Tabs>
       <TabPanel index={0} value={tabIndex}>
-        <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+        <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
           <br />
           <br />
           <FormControl>
@@ -153,7 +153,7 @@ export function CutieConnet(): JSX.Element {
               {tr("Utilities.CutieConnect.Disconnect")}
             </Button>
           </FormControl>
-        </MuiThemeProvider>
+        </ThemeProvider>
         <br />
         <br />
         {gameMeta ? (
@@ -180,7 +180,7 @@ export function CutieConnet(): JSX.Element {
           <Typography className={text.secondText}>
             {tr("Utilities.CutieConnect.QuickHint", `RandIP=${randip}`)}
           </Typography>
-          <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+          <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
             <TextField
               error={ipError}
               color={"primary"}
@@ -316,7 +316,7 @@ export function CutieConnet(): JSX.Element {
             >
               {tr("Utilities.CutieConnect.Disconnect")}
             </Button>
-          </MuiThemeProvider>
+          </ThemeProvider>
         </>
       </TabPanel>
     </>

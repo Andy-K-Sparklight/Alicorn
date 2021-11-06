@@ -1,3 +1,4 @@
+import { Add, DeleteForever, Refresh } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -11,13 +12,12 @@ import {
   FormControlLabel,
   IconButton,
   LinearProgress,
-  MuiThemeProvider,
   Switch,
   TextField,
+  ThemeProvider,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import { Add, DeleteForever, Refresh } from "@material-ui/icons";
+} from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Account } from "../modules/auth/Account";
@@ -354,7 +354,7 @@ function YggdrasilForm(props: {
   const [isRunning, isRunningUpdate] = useState(false);
   const [hasError, setError] = useState(false);
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Dialog
         open={props.open}
         onClose={() => {
@@ -420,7 +420,7 @@ function YggdrasilForm(props: {
           </Button>
         </DialogActions>
       </Dialog>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 
@@ -469,7 +469,7 @@ function AddAccount(props: {
         e.dataTransfer.dropEffect = "move";
       }}
     >
-      <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+      <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
         <Dialog
           open={props.open}
           onClose={() => {
@@ -575,7 +575,7 @@ function AddAccount(props: {
             </Button>
           </DialogActions>
         </Dialog>
-      </MuiThemeProvider>
+      </ThemeProvider>
     </Box>
   );
 }

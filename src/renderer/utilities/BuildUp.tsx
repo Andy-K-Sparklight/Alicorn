@@ -6,13 +6,13 @@ import {
   List,
   ListItem,
   MenuItem,
-  MuiThemeProvider,
   Select,
   Tab,
   Tabs,
   TextField,
+  ThemeProvider,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import objectHash from "object-hash";
 import os from "os";
 import path from "path";
@@ -43,7 +43,7 @@ export function BuildUp(): JSX.Element {
     version: "1.0",
   });
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <>
         <Tabs
           value={currentTab}
@@ -89,7 +89,7 @@ export function BuildUp(): JSX.Element {
           <SelectAssets assets={assets} meta={meta} container={rootContainer} />
         </TabPanel>
       </>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 

@@ -1,3 +1,4 @@
+import { Search } from "@mui/icons-material";
 import {
   Box,
   Card,
@@ -8,11 +9,10 @@ import {
   FormControlLabel,
   IconButton,
   InputAdornment,
-  MuiThemeProvider,
   TextField,
+  ThemeProvider,
   Typography,
-} from "@material-ui/core";
-import { Search } from "@material-ui/icons";
+} from "@mui/material";
 import copy from "copy-to-clipboard";
 import React, { useEffect, useRef, useState } from "react";
 import { getNumber } from "../../modules/config/ConfigSupport";
@@ -58,7 +58,7 @@ export function PffVisual(): JSX.Element {
         {tr("Utilities.PffVisual.Hint")}
       </Typography>
       <Box className={classes.para}>
-        <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+        <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
           <>
             <FormControl>
               <TextField
@@ -178,7 +178,7 @@ export function PffVisual(): JSX.Element {
             }
             label={tr("Utilities.PffVisual.Modpack")}
           />
-        </MuiThemeProvider>
+        </ThemeProvider>
 
         <br />
         {mode === "Normal"

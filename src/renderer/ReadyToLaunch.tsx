@@ -1,8 +1,8 @@
+import { FlightLand, FlightTakeoff, RssFeed } from "@mui/icons-material";
 import {
   Box,
   Button,
   Checkbox,
-  createStyles,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,9 +13,7 @@ import {
   FormControlLabel,
   InputLabel,
   LinearProgress,
-  makeStyles,
   MenuItem,
-  MuiThemeProvider,
   Radio,
   RadioGroup,
   Select,
@@ -23,10 +21,11 @@ import {
   StepLabel,
   Stepper,
   TextField,
+  ThemeProvider,
   Tooltip,
-  Typography,
-} from "@material-ui/core";
-import { FlightLand, FlightTakeoff, RssFeed } from "@material-ui/icons";
+  Typography
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { ipcRenderer } from "electron";
 import EventEmitter from "events";
 import React, { useEffect, useRef, useState } from "react";
@@ -36,7 +35,7 @@ import {
   AccountType,
   fillAccessData,
   getPresentAccounts,
-  querySkinFor,
+  querySkinFor
 } from "../modules/auth/AccountUtil";
 import { prefetchData } from "../modules/auth/AJHelper";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
@@ -46,7 +45,7 @@ import {
   MS_LAST_USED_ACTOKEN_KEY,
   MS_LAST_USED_REFRESH_KEY,
   MS_LAST_USED_USERNAME_KEY,
-  MS_LAST_USED_UUID_KEY,
+  MS_LAST_USED_UUID_KEY
 } from "../modules/auth/MicrosoftAccount";
 import { Nide8Account } from "../modules/auth/Nide8Account";
 import { uniqueHash } from "../modules/commons/BasicHash";
@@ -54,13 +53,13 @@ import { Pair } from "../modules/commons/Collections";
 import {
   PROCESS_END_GATE,
   PROCESS_LOG_GATE,
-  ReleaseType,
+  ReleaseType
 } from "../modules/commons/Constants";
 import { isNull } from "../modules/commons/Null";
 import {
   getBoolean,
   getNumber,
-  getString,
+  getString
 } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
@@ -68,7 +67,7 @@ import { killEdge, runEdge } from "../modules/cutie/BootEdge";
 import { acquireCode, deactiveCode } from "../modules/cutie/Hoofoff";
 import {
   getWrapperStatus,
-  WrapperStatus,
+  WrapperStatus
 } from "../modules/download/DownloadWrapper";
 import {
   getAllJava,
@@ -78,7 +77,7 @@ import {
   getLegacyJDK,
   getNewJDK,
   parseJavaInfo,
-  parseJavaInfoRaw,
+  parseJavaInfoRaw
 } from "../modules/java/JInfo";
 import {
   ensureAllAssets,
@@ -86,7 +85,7 @@ import {
   ensureClient,
   ensureLibraries,
   ensureLog4jFile,
-  ensureNatives,
+  ensureNatives
 } from "../modules/launch/Ensurance";
 import { launchProfile } from "../modules/launch/LaunchPad";
 import { stopMinecraft } from "../modules/launch/MinecraftBootstrap";
@@ -94,7 +93,7 @@ import { LaunchTracker } from "../modules/launch/Tracker";
 import {
   initLocalYggdrasilServer,
   ROOT_YG_URL,
-  skinTypeFor,
+  skinTypeFor
 } from "../modules/localskin/LocalYggdrasilServer";
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
@@ -106,16 +105,21 @@ import { submitError, submitSucc, submitWarn } from "./Message";
 import { YNDialog } from "./OperatingHint";
 import {
   ALICORN_DEFAULT_THEME_DARK,
-  ALICORN_DEFAULT_THEME_LIGHT,
+  ALICORN_DEFAULT_THEME_LIGHT
 } from "./Renderer";
 import { SkinDisplay2D, SkinDisplay3D } from "./SkinDisplay";
 import { addStatistics } from "./Statistics";
-import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
+import {
+  AlicornTheme,
+  fullWidth,
+  useFormStyles,
+  useInputStyles
+} from "./Stylex";
 import { randsl, tr } from "./Translator";
 import {
   HOOFOFF_CENTRAL,
   NETWORK_PORT,
-  QUERY_PORT,
+  QUERY_PORT
 } from "./utilities/CutieConnect";
 import { SpecialKnowledge } from "./Welcome";
 import { toReadableType } from "./YggdrasilAccountManager";
@@ -123,29 +127,27 @@ import { toReadableType } from "./YggdrasilAccountManager";
 const SESSION_ACCESSDATA_CACHED_KEY = "ReadyToLaunch.SessionAccessData"; // Microsoft account only
 export const LAST_SUCCESSFUL_GAME_KEY = "ReadyToLaunch.LastSuccessfulGame";
 export const REBOOT_KEY_BASE = "ReadyToLaunch.Reboot.";
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    stepper: {
-      backgroundColor: theme.palette.secondary.light,
-    },
-    textSP: {
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
-      color: theme.palette.secondary.main,
-    },
-    text: {
-      fontSize: "medium",
-      flexGrow: 1,
-      color: theme.palette.secondary.main,
-    },
-    root: {
-      textAlign: "center",
-    },
-    primaryText: {
-      flexGrow: 1,
-      color: theme.palette.primary.main,
-    },
-  })
-);
+const useStyles = makeStyles((theme: AlicornTheme) => ({
+  stepper: {
+    backgroundColor: theme.palette.secondary.light,
+  },
+  textSP: {
+    fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
+    color: theme.palette.secondary.main,
+  },
+  text: {
+    fontSize: "medium",
+    flexGrow: 1,
+    color: theme.palette.secondary.main,
+  },
+  root: {
+    textAlign: "center",
+  },
+  primaryText: {
+    flexGrow: 1,
+    color: theme.palette.primary.main,
+  },
+}));
 const LAST_USED_USER_NAME_KEY = "ReadyToLaunch.LastUsedUsername";
 const GKEY = "Profile.PrefJava";
 const DEF = "Default";
@@ -193,7 +195,7 @@ export function ReadyToLaunch(): JSX.Element {
         textAlign: "center",
       }}
     >
-      <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+      <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
         {profileLoadedBit === 1 ? (
           <Launching
             profile={coreProfile}
@@ -214,7 +216,7 @@ export function ReadyToLaunch(): JSX.Element {
             className={fullWidthProgress.progress}
           />
         )}
-      </MuiThemeProvider>
+      </ThemeProvider>
     </Box>
   );
 }
@@ -804,14 +806,12 @@ function AccountChoose(props: {
   profileHash: string;
 }): JSX.Element {
   const classes = useInputStyles();
-  const btnClasses = makeStyles((theme) =>
-    createStyles({
-      btn: {
-        color: theme.palette.primary.main,
-        borderColor: theme.palette.primary.main,
-      },
-    })
-  )();
+  const btnClasses = makeStyles((theme:AlicornTheme) => ({
+    btn: {
+      color: theme.palette.primary.main,
+      borderColor: theme.palette.primary.main,
+    },
+  }))();
   const [choice, setChoice] = useState<"MZ" | "AL" | "YG">(
     (window.localStorage.getItem(LAST_ACCOUNT_TAB_KEY + props.profileHash) as
       | "MZ"
@@ -1138,7 +1138,7 @@ function MiniJavaSelector(props: {
     })();
   }, [currentJava]);
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box
         className={classes.root}
         style={{
@@ -1201,7 +1201,7 @@ function MiniJavaSelector(props: {
           );
         })()}
       </Box>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 

@@ -1,4 +1,12 @@
 import {
+  Add,
+  Eject,
+  FolderOpen,
+  Input,
+  LayersClear,
+  LinkOff,
+} from "@mui/icons-material";
+import {
   Box,
   Button,
   Card,
@@ -11,22 +19,14 @@ import {
   Fade,
   FormControlLabel,
   IconButton,
-  MuiThemeProvider,
   Radio,
   RadioGroup,
   Switch,
   TextField,
+  ThemeProvider,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import {
-  Add,
-  Eject,
-  FolderOpen,
-  Input,
-  LayersClear,
-  LinkOff,
-} from "@material-ui/icons";
+} from "@mui/material";
 import { ipcRenderer, shell } from "electron";
 import fs from "fs-extra";
 import os from "os";
@@ -525,7 +525,7 @@ function AddNewContainer(props: {
   const [modpackPath, setModpackPath] = useState(props.modpack || "");
   const classes = useInputStyles();
   return (
-    <MuiThemeProvider
+    <ThemeProvider
       theme={
         isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
       }
@@ -796,7 +796,7 @@ function AddNewContainer(props: {
           </Button>
         </DialogActions>
       </Dialog>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 

@@ -1,4 +1,4 @@
-import { Box, Typography } from "@material-ui/core";
+import { Box, Typography } from "@mui/material";
 import React from "react";
 import { buildMap, parseMap } from "../modules/commons/MapUtil";
 import { useTextStyles } from "./Stylex";

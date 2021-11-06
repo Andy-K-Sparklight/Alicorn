@@ -1,5 +1,5 @@
-import { Box, Fab, Typography } from "@material-ui/core";
-import { FlightTakeoff, GetApp, History } from "@material-ui/icons";
+import { FlightTakeoff, GetApp, History } from "@mui/icons-material";
+import { Box, Fab, Typography } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { getBoolean } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";

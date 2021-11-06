@@ -1,4 +1,6 @@
+import { ArrowForward } from "@mui/icons-material";
 import {
+  Alert,
   Avatar,
   Badge,
   Box,
@@ -12,14 +14,12 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  MuiThemeProvider,
   Tab,
   Tabs,
   TextField,
+  ThemeProvider,
   Typography,
-} from "@material-ui/core";
-import { ArrowForward } from "@material-ui/icons";
-import { Alert } from "@material-ui/lab";
+} from "@mui/material";
 import { shell } from "electron";
 import EventEmitter from "events";
 import path from "path";
@@ -194,7 +194,7 @@ export function PffFront(): JSX.Element {
     })();
   };
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box className={fullWidthClasses.root}>
         <FormControl>
           <TextField
@@ -407,7 +407,7 @@ export function PffFront(): JSX.Element {
           </Container>
         </TabPanel>
       </>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 
