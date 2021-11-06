@@ -1,5 +1,5 @@
-import { Box, CircularProgress, Typography } from "@material-ui/core";
-import { Check, CloudOff } from "@material-ui/icons";
+import { Check, CloudOff } from "@mui/icons-material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { ipcRenderer } from "electron";
 import React, { useEffect, useRef, useState } from "react";
 import { useTextStyles } from "../Stylex";

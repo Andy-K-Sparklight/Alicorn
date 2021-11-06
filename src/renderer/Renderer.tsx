@@ -1,9 +1,4 @@
-import {
-  Box,
-  createTheme,
-  MuiThemeProvider,
-  Typography,
-} from "@material-ui/core";
+import { Box, createTheme, ThemeProvider, Typography } from "@mui/material";
 import { ipcRenderer, shell } from "electron";
 import { emptyDir } from "fs-extra";
 import React from "react";
@@ -377,7 +372,7 @@ export function setThemeParams(
 ): void {
   ALICORN_DEFAULT_THEME_LIGHT = createTheme({
     palette: {
-      type: "light",
+      mode: "light",
       primary: {
         main: primaryMain,
         light: primaryLight,
@@ -390,39 +385,49 @@ export function setThemeParams(
     typography: {
       fontFamily: fontFamily,
     },
-    overrides: overrideCursor
+    components: overrideCursor
       ? {
           MuiButtonBase: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
           MuiInputBase: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
           MuiCheckbox: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
           MuiSelect: {
-            select: {
-              cursor: undefined,
+            styleOverrides: {
+              select: {
+                cursor: undefined,
+              },
             },
           },
           MuiFormControlLabel: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
         }
-      : undefined,
+      : {},
   });
   ALICORN_DEFAULT_THEME_DARK = createTheme({
     palette: {
-      type: "dark",
+      mode: "dark",
       primary: {
         main: primaryMain,
         light: primaryLight,
@@ -435,41 +440,51 @@ export function setThemeParams(
     typography: {
       fontFamily: fontFamily,
     },
-    overrides: overrideCursor
+    components: overrideCursor
       ? {
           MuiButtonBase: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
           MuiInputBase: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
           MuiCheckbox: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
           MuiSelect: {
-            select: {
-              cursor: undefined,
+            styleOverrides: {
+              select: {
+                cursor: undefined,
+              },
             },
           },
           MuiFormControlLabel: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
         }
-      : undefined,
+      : {},
   });
 }
 
 export let ALICORN_DEFAULT_THEME_DARK = createTheme({
   palette: {
-    type: "dark",
+    mode: "dark",
     primary: {
       main: "#5d2391",
       light: "#d796f0",
@@ -485,7 +500,7 @@ export let ALICORN_DEFAULT_THEME_DARK = createTheme({
 });
 export let ALICORN_DEFAULT_THEME_LIGHT = createTheme({
   palette: {
-    type: "light",
+    mode: "light",
     primary: {
       main: "#5d2391",
       light: "#d796f0",
@@ -540,7 +555,7 @@ function RendererBootstrap(): JSX.Element {
       })}
     >
       <InstructionProvider>
-        <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
+        <ThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
           <HashRouter>
             <App />
           </HashRouter>
@@ -571,7 +586,7 @@ function RendererBootstrap(): JSX.Element {
           >
             {"Alicorn " + pkg.appVersion + " #" + pkg.updatorVersion}
           </Typography>
-        </MuiThemeProvider>
+        </ThemeProvider>
       </InstructionProvider>
     </Box>
   );

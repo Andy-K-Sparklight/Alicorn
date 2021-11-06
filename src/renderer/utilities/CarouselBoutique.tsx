@@ -2,12 +2,12 @@ import {
   Button,
   FormControl,
   FormControlLabel,
-  MuiThemeProvider,
   Radio,
   RadioGroup,
   TextField,
+  ThemeProvider,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import { ipcRenderer } from "electron";
 import React, { useEffect, useState } from "react";
 import { LocalAccount } from "../../modules/auth/LocalAccount";
@@ -47,7 +47,7 @@ export function CarouselBoutique(): JSX.Element {
   }, []);
   const classes = useTextStyles();
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <>
         <Typography className={classes.secondText} gutterBottom>
           {tr("Utilities.CarouselBoutique.Hint")}
@@ -233,7 +233,7 @@ export function CarouselBoutique(): JSX.Element {
           {tr("Utilities.CarouselBoutique.SetAsDefaultCape")}
         </Button>
       </>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 

@@ -1,4 +1,5 @@
-.window-drag {
+.window-drag,
+.window-drag > * {
   -webkit-app-region: drag;
 }
 
@@ -37,6 +38,7 @@ body {
 }
 * {
   z-index: inherit;
+  -webkit-app-region: no-drag;
 }
 
 .app_fade_in {

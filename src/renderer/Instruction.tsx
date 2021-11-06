@@ -1,4 +1,4 @@
-import { Box } from "@material-ui/core";
+import { Box } from "@mui/material";
 import React, { createContext, useEffect, useState } from "react";
 import { ALICORN_DEFAULT_THEME_DARK } from "./Renderer";
 import { tr } from "./Translator";

@@ -1,18 +1,17 @@
 import {
   Box,
   Button,
-  createStyles,
   FormControlLabel,
-  makeStyles,
-  MuiThemeProvider,
   Radio,
   RadioGroup,
   Switch,
   Tab,
   Tabs,
   TextField,
+  ThemeProvider,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import os from "os";
 import React, { useEffect, useRef, useState } from "react";
 import { DOH_CONFIGURE } from "../modules/commons/Constants";
@@ -28,7 +27,7 @@ import {
 import { loadMirror } from "../modules/download/Mirror";
 import { remoteSelectDir } from "./ContainerManager";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
-import { useInputStyles } from "./Stylex";
+import { AlicornTheme, useInputStyles } from "./Stylex";
 import { AL_THEMES } from "./ThemeColors";
 import { ALL_ASSISTANTS, tr } from "./Translator";
 
@@ -42,19 +41,17 @@ export enum ConfigType {
 
 export function OptionsPage(): JSX.Element {
   const [tabValue, setTabValue] = useState(0);
-  const classes = makeStyles((theme) =>
-    createStyles({
-      root: {},
-      head: {
-        fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
-        color: theme.palette.secondary.main,
-      },
-    })
-  )();
+  const classes = makeStyles((theme: AlicornTheme) => ({
+    root: {},
+    head: {
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
+      color: theme.palette.secondary.main,
+    },
+  }))();
 
   return (
     <Box className={classes.root}>
-      <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+      <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
         <Typography className={classes.head}>
           {tr("Options.AutoSave")}
         </Typography>
@@ -319,7 +316,7 @@ export function OptionsPage(): JSX.Element {
           <InputItem type={ConfigType.BOOL} bindConfig={"reset"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"clean-storage"} />
         </TabPanel>
-      </MuiThemeProvider>
+      </ThemeProvider>
     </Box>
   );
 }
@@ -375,28 +372,26 @@ export function InputItem(props: {
       disabled = true;
     }
   }
-  const classes = makeStyles((theme) =>
-    createStyles({
-      desc: {
-        fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
-        color: theme.palette.secondary.main,
-      },
-      switch: {
-        color: theme.palette.primary.main,
-        marginLeft: theme.spacing(0.5),
-      },
+  const classes = makeStyles((theme: AlicornTheme) => ({
+    desc: {
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
+      color: theme.palette.secondary.main,
+    },
+    switch: {
+      color: theme.palette.primary.main,
+      marginLeft: theme.spacing(0.5),
+    },
 
-      textField: {
-        borderColor: theme.palette.primary.main,
-        color: theme.palette.primary.main,
-      },
-      title: {
-        marginTop: theme.spacing(1),
-        color: theme.palette.primary.main,
-        fontSize: "large",
-      },
-    })
-  )();
+    textField: {
+      borderColor: theme.palette.primary.main,
+      color: theme.palette.primary.main,
+    },
+    title: {
+      marginTop: theme.spacing(1),
+      color: theme.palette.primary.main,
+      fontSize: "large",
+    },
+  }))();
   if (props.experimental) {
     if (!getBoolean("dev.experimental")) {
       return <></>;

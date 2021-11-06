@@ -6,12 +6,12 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  MuiThemeProvider,
   Select,
   Tab,
   Tabs,
+  ThemeProvider,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { throttle } from "throttle-debounce";
 import { ALICORN_SEPARATOR, ReleaseType } from "../modules/commons/Constants";
@@ -169,7 +169,7 @@ export function InstallCore(): JSX.Element {
     })();
   }, [updatePatchableCoresBit]);
   return (
-    <MuiThemeProvider
+    <ThemeProvider
       theme={
         isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
       }
@@ -763,7 +763,7 @@ export function InstallCore(): JSX.Element {
           </FormControl>
         </TabPanel>
       </Box>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 

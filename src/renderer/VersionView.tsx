@@ -1,7 +1,9 @@
-import { Box, createStyles, makeStyles, Typography } from "@material-ui/core";
+import { Box, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { ipcRenderer } from "electron";
 import React, { useEffect, useState } from "react";
 import pkg from "../../package.json";
+import { AlicornTheme } from "./Stylex";
 import { tr } from "./Translator";
 const modeList = ["Copyright", "Privacy", "Credit"];
 export function VersionView(): JSX.Element {
@@ -14,18 +16,16 @@ export function VersionView(): JSX.Element {
       setEcVersion(await ipcRenderer.invoke("getElectronVersion"));
     })();
   }, []);
-  const classes = makeStyles((theme) =>
-    createStyles({
-      root: {},
-      title: {
-        fontSize: "larger",
-        color: theme.palette.primary.main,
-      },
-      text: {
-        fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
-      },
-    })
-  )();
+  const classes = makeStyles((theme: AlicornTheme) => ({
+    root: {},
+    title: {
+      fontSize: "larger",
+      color: theme.palette.primary.main,
+    },
+    text: {
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
+    },
+  }))();
   return (
     <Box className={classes.root}>
       <Typography className={classes.title} gutterBottom>

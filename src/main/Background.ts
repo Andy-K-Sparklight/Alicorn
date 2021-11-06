@@ -93,7 +93,6 @@ export function registerBackgroundListeners(): void {
           message:
             "ALICORN_REACT_DEVTOOLS has been set and external scripts will be injected, which should only happen during the development.\nIf you are NOT DEVELOPNING Alicorn, this might be an XSS attack.\n\nContinue and accept external scripts to inject?",
         });
-        console.log(allow);
         e.returnValue = allow === 1;
       }
     }

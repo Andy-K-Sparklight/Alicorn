@@ -1,44 +1,35 @@
 import {
-  Box,
-  Card,
-  CardContent,
-  createStyles,
-  Grid,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
-import {
   Archive,
   NetworkCell,
   NextWeek,
   SettingsEthernet,
   ShoppingCart,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
+import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import React from "react";
 import { getBoolean } from "../../modules/config/ConfigSupport";
 import { jumpTo, triggerSetPage } from "../GoTo";
-import { useCardStyles, useTextStyles } from "../Stylex";
+import { AlicornTheme, useCardStyles, useTextStyles } from "../Stylex";
 import { tr } from "../Translator";
 
-const useAccStyles = makeStyles((theme) =>
-  createStyles({
-    root: {},
-    acc1: {
-      backgroundColor: theme.palette.primary.main,
-    },
-    acc2: {
-      backgroundColor: theme.palette.primary.dark,
-    },
-    table: {
-      backgroundColor: theme.palette.primary.light,
-      color: theme.palette.primary.main,
-    },
-    btn: {
-      color: theme.palette.primary.light,
-      borderColor: theme.palette.primary.light,
-    },
-  })
-);
+const useAccStyles = makeStyles((theme: AlicornTheme) => ({
+  root: {},
+  acc1: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  acc2: {
+    backgroundColor: theme.palette.primary.dark,
+  },
+  table: {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.primary.main,
+  },
+  btn: {
+    color: theme.palette.primary.light,
+    borderColor: theme.palette.primary.light,
+  },
+}));
 
 export function UtilitiesIndex(): JSX.Element {
   const classes = useTextStyles();

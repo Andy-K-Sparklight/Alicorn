@@ -5,8 +5,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  MuiThemeProvider,
-} from "@material-ui/core";
+  ThemeProvider,
+} from "@mui/material";
 import { ipcRenderer } from "electron";
 import React, { useEffect, useState } from "react";
 import {
@@ -159,7 +159,7 @@ export function YNDialog2(props: {
   noProp?: boolean;
 }): JSX.Element {
   return (
-    <MuiThemeProvider
+    <ThemeProvider
       theme={
         isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
       }
@@ -203,6 +203,6 @@ export function YNDialog2(props: {
           </DialogActions>
         </DialogContent>
       </Dialog>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
