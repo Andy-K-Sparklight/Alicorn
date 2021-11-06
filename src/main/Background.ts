@@ -89,11 +89,12 @@ export function registerBackgroundListeners(): void {
       if (mw) {
         const allow = dialog.showMessageBoxSync(mw, {
           type: "warning",
-          buttons: ["It's fine, just continue", "No, reject it"],
+          buttons: ["No, reject it", "It's fine, just continue"],
           message:
             "ALICORN_REACT_DEVTOOLS has been set and external scripts will be injected, which should only happen during the development.\nIf you are NOT DEVELOPNING Alicorn, this might be an XSS attack.\n\nContinue and accept external scripts to inject?",
         });
-        e.returnValue = allow === 0;
+        console.log(allow);
+        e.returnValue = allow === 1;
       }
     }
   });
