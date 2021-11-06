@@ -3,6 +3,11 @@
   -webkit-app-region: drag;
 }
 
+.window-no-drag,
+.window-no-drag > * {
+  -webkit-app-region: no-drag;
+}
+
 @font-face {
   font-family: "Source Hans Sans";
   src: url(SourceHanSansCN-Regular.otf);
@@ -38,7 +43,6 @@ body {
 }
 * {
   z-index: inherit;
-  -webkit-app-region: no-drag;
 }
 
 .app_fade_in {
