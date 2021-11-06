@@ -30,6 +30,15 @@ const LOGOUT_URL =
   "https://login.live.com/oauth20_logout.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf";
 
 export function registerBackgroundListeners(): void {
+  ipcMain.on("reload", () => {
+    app.relaunch();
+    app.exit(); // Immediately
+  });
+  ipcMain.handle("markLoginItem", (_e, i: boolean) => {
+    app.setLoginItemSettings({
+      openAtLogin: i,
+    });
+  });
   ipcMain.on("closeWindow", () => {
     console.log("Closing window!");
     // My poor hooves!!!
@@ -61,11 +70,33 @@ export function registerBackgroundListeners(): void {
     } catch {}
     app.exit();
   });
+  ipcMain.on("SOS", (_i, e) => {
+    dialog.showErrorBox(
+      "Alicorn has crashed!",
+      "An error has occurred, consider REPORT or REINSTALL.\nError message is:\n\n" +
+        String(e)
+    );
+  });
   ipcMain.on("getAppPath", (e) => {
     e.returnValue = app.getAppPath();
   });
   ipcMain.on("openDevTools", () => {
     getMainWindow()?.webContents.openDevTools();
+  });
+  ipcMain.on("askInject", (e) => {
+    if (process.env.ALICORN_REACT_DEVTOOLS) {
+      const mw = getMainWindow();
+      if (mw) {
+        const allow = dialog.showMessageBoxSync(mw, {
+          type: "warning",
+          buttons: ["No, reject it", "It's fine, just continue"],
+          message:
+            "ALICORN_REACT_DEVTOOLS has been set and external scripts will be injected, which should only happen during the development.\nIf you are NOT DEVELOPNING Alicorn, this might be an XSS attack.\n\nContinue and accept external scripts to inject?",
+        });
+        console.log(allow);
+        e.returnValue = allow === 1;
+      }
+    }
   });
   ipcMain.handle("selectDir", async () => {
     const r = await dialog.showOpenDialog({

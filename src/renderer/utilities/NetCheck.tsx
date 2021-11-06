@@ -44,7 +44,7 @@ export function NetCheck(): JSX.Element {
     </>
   );
 }
-const ICON_SIZE = "22px";
+const ICON_SIZE = "1.375em";
 export function TestReachable(props: {
   site: string;
   name: string;
@@ -88,7 +88,7 @@ export function TestReachable(props: {
           />
         )}
       </Box>
-      <Box style={{ display: "inline", marginLeft: "4px" }}>
+      <Box style={{ display: "inline", marginLeft: "0.25em" }}>
         <Typography className={classes.thirdTextRaw}>
           {tr(`Utilities.NetCheck.SiteName.${props.name}`)}
         </Typography>

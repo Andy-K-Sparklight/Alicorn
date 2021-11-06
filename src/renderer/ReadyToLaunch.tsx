@@ -36,6 +36,7 @@ import {
   AccountType,
   fillAccessData,
   getPresentAccounts,
+  querySkinFor,
 } from "../modules/auth/AccountUtil";
 import { prefetchData } from "../modules/auth/AJHelper";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
@@ -107,6 +108,7 @@ import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
 } from "./Renderer";
+import { SkinDisplay2D, SkinDisplay3D } from "./SkinDisplay";
 import { addStatistics } from "./Statistics";
 import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
@@ -127,7 +129,7 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.secondary.light,
     },
     textSP: {
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
       color: theme.palette.secondary.main,
     },
     text: {
@@ -249,7 +251,9 @@ function Launching(props: {
   const [lanPort, setLanPort] = useState(0);
   const [openLanWindow, setOpenLanWindow] = useState(false);
   const [openLanButtonEnabled, setOpenLanButtonEnabled] = useState(false);
-  const profileHash = useRef<string>(props.container + "/" + props.profile.id);
+  const profileHash = useRef<string>(
+    props.container.id + "/" + props.profile.id
+  );
   useEffect(() => {
     const subscribe = setInterval(() => {
       if (NEED_QUERY_STATUS) {
@@ -447,11 +451,13 @@ function Launching(props: {
 
       <Tooltip
         title={
-          status === LaunchingStatus.FINISHED
-            ? openLanButtonEnabled
-              ? tr("ReadyToLaunch.OpenGameToLan")
-              : tr("ReadyToLaunch.Kill")
-            : tr("ReadyToLaunch.Start")
+          <Typography className={"smtxt"}>
+            {status === LaunchingStatus.FINISHED
+              ? openLanButtonEnabled
+                ? tr("ReadyToLaunch.OpenGameToLan")
+                : tr("ReadyToLaunch.Kill")
+              : tr("ReadyToLaunch.Start")}
+          </Typography>
         }
       >
         <>
@@ -816,6 +822,7 @@ function AccountChoose(props: {
     window.localStorage.getItem(LAST_USED_USER_NAME_KEY + props.profileHash) ||
       "Player"
   );
+  const [bufPName, setBufPName] = useState(pName);
   const mounted = useRef<boolean>(false);
 
   const accountMap = useRef<Record<string, Account>>({});
@@ -841,12 +848,51 @@ function AccountChoose(props: {
     // ll = Object.keys(accountMap)[0] || "";
   }
   const [sAccount, setAccount] = useState<string>(ll);
+  const [skinUrl, setSkinUrl] = useState("");
+  const lastRequireSkinDate = useRef(new Date().getTime());
   useEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;
     };
   }, []);
+  useEffect(() => {
+    void (async () => {
+      const d = new Date().getTime();
+      lastRequireSkinDate.current = d;
+      if (choice === "MZ") {
+        const u = await querySkinFor(new MicrosoftAccount(""));
+        if (mounted.current && lastRequireSkinDate.current === d) {
+          setSkinUrl(u);
+        }
+        return;
+      }
+      if (choice === "YG") {
+        const a =
+          accountMap.current[
+            sAccount || Object.keys(accountMap.current).shift() || ""
+          ];
+        if (a) {
+          const u = await querySkinFor(a);
+          if (mounted.current && lastRequireSkinDate.current === d) {
+            setSkinUrl(u);
+          }
+        } else {
+          setSkinUrl("");
+        }
+        return;
+      }
+      if (choice === "AL") {
+        const a = new LocalAccount(pName);
+        const u = await querySkinFor(a);
+        if (mounted.current && lastRequireSkinDate.current === d) {
+          setSkinUrl(u);
+          return;
+        }
+      }
+      setSkinUrl("");
+    })();
+  }, [sAccount, choice, msLogout, bufPName]);
   return (
     <Dialog
       open={props.open}
@@ -854,11 +900,49 @@ function AccountChoose(props: {
         props.closeFunc();
       }}
     >
-      <DialogContent>
+      <DialogContent style={{ overflow: "visible" }}>
         <DialogTitle>{tr("ReadyToLaunch.StartAuthTitle")}</DialogTitle>
         <DialogContentText>
           {tr("ReadyToLaunch.StartAuthMsg")}
         </DialogContentText>
+
+        {skinUrl ? (
+          getBoolean("features.skin-view-3d") ? (
+            <Box
+              style={{
+                position: "absolute",
+                right: 20,
+                top: -50,
+                overflow: "visible",
+                textAlign: "center",
+              }}
+            >
+              <SkinDisplay3D skin={skinUrl} width={100} height={150} />
+              <Typography style={{ color: "gray", marginTop: "-0.25em" }}>
+                {tr("AccountManager.SkinView3DShort")}
+              </Typography>
+            </Box>
+          ) : (
+            <Box
+              style={{
+                position: "absolute",
+                right: 15,
+                top: 10,
+                overflow: "visible",
+                textAlign: "center",
+              }}
+            >
+              <SkinDisplay2D skin={skinUrl} />
+              <br />
+              <br />
+              <Typography style={{ color: "gray", marginTop: "2.625em" }}>
+                {tr("AccountManager.SkinView2DShort")}
+              </Typography>
+            </Box>
+          )
+        ) : (
+          ""
+        )}
         <RadioGroup
           row
           onChange={(e) => {
@@ -895,6 +979,9 @@ function AccountChoose(props: {
             margin={"dense"}
             onChange={(e) => {
               setName(e.target.value);
+            }}
+            onBlur={(e) => {
+              setBufPName(e.target.value); // Trigger reset
             }}
             label={tr("ReadyToLaunch.UseALName")}
             type={"text"}
@@ -957,7 +1044,7 @@ function AccountChoose(props: {
                     String(e.target.value)
                   );
                 }}
-                value={sAccount}
+                value={sAccount || Object.keys(accountMap.current).shift()}
               >
                 {Array.from(props.allAccounts.keys()).map((a) => {
                   const hash =
@@ -1055,7 +1142,7 @@ function MiniJavaSelector(props: {
       <Box
         className={classes.root}
         style={{
-          marginTop: "5px",
+          marginTop: "0.3125em",
         }}
       >
         <FormControl variant={"outlined"}>
@@ -1104,10 +1191,9 @@ function MiniJavaSelector(props: {
           return (
             <Typography
               style={{
-                fontSize:
-                  window.sessionStorage.getItem("smallFontSize") || "16px",
                 color: "#ff8400",
               }}
+              className={"smtxt"}
               gutterBottom
             >
               {tr("ReadyToLaunch.JCheck.Too" + c)}
@@ -1276,7 +1362,13 @@ function OpenWorldDialog(props: {
           </Select>
         </FormControl>
         <br />
-        <Tooltip title={tr("ReadyToLaunch.RequirePremiumDesc")}>
+        <Tooltip
+          title={
+            <Typography className={"smtxt"}>
+              {tr("ReadyToLaunch.RequirePremiumDesc")}
+            </Typography>
+          }
+        >
           <FormControlLabel
             control={
               <Checkbox

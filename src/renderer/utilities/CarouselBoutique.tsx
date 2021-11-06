@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   FormControl,
   FormControlLabel,
@@ -89,7 +88,9 @@ export function CarouselBoutique(): JSX.Element {
             variant={"contained"}
             onClick={async () => {
               const d = await remoteSelectPng();
-              setSelectedFile(d);
+              if (d) {
+                setSelectedFile(d);
+              }
             }}
           >
             {tr("Utilities.CarouselBoutique.FileName")}
@@ -152,7 +153,7 @@ export function CarouselBoutique(): JSX.Element {
           disabled={
             playerName.trim().length === 0 || selectedFile.trim().length === 0
           }
-          style={{ marginLeft: "4px" }}
+          style={{ marginLeft: "0.25em" }}
           color={"primary"}
           variant={"contained"}
           onClick={async () => {
@@ -169,7 +170,7 @@ export function CarouselBoutique(): JSX.Element {
         </Button>
         <Button
           disabled={playerName.trim().length === 0}
-          style={{ marginLeft: "4px" }}
+          style={{ marginLeft: "0.25em" }}
           color={"primary"}
           variant={"contained"}
           onClick={async () => {
@@ -190,7 +191,7 @@ export function CarouselBoutique(): JSX.Element {
         </Button>
         <Button
           disabled={playerName.trim().length === 0}
-          style={{ marginLeft: "4px" }}
+          style={{ marginLeft: "0.25em" }}
           color={"primary"}
           variant={"contained"}
           onClick={async () => {
@@ -201,7 +202,7 @@ export function CarouselBoutique(): JSX.Element {
         </Button>
         <Button
           disabled={selectedFile.trim().length === 0}
-          style={{ marginLeft: "4px" }}
+          style={{ marginLeft: "0.25em" }}
           color={"primary"}
           variant={"contained"}
           onClick={async () => {
@@ -217,7 +218,7 @@ export function CarouselBoutique(): JSX.Element {
         </Button>
         <Button
           disabled={selectedFile.trim().length === 0}
-          style={{ marginLeft: "4px" }}
+          style={{ marginLeft: "0.25em" }}
           color={"primary"}
           variant={"contained"}
           onClick={async () => {

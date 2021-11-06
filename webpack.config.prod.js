@@ -36,6 +36,15 @@ const Main = {
           from: path.resolve(__dirname, "resources", "shared"),
           to: path.resolve(__dirname, "dist", "release"),
         },
+        {
+          from: path.resolve(
+            __dirname,
+            "node_modules",
+            "v8-compile-cache",
+            "v8-compile-cache.js"
+          ),
+          to: path.resolve(__dirname, "dist", "release"),
+        },
       ],
     }),
     new ContextReplacementPlugin(/keyv/),
@@ -74,6 +83,12 @@ const Renderer = {
   plugins: [
     new BuildInfoPlugin("RendererBuild.json", Version),
     new ContextReplacementPlugin(/keyv/),
+    new BannerPlugin({
+      banner:
+        "try{require('./v8-compile-cache.js');console.log('V8 Compile Cache Enabled.');}catch{console.log('V8 Compile Cache Disabled.');};",
+      raw: true,
+      include: ["Renderer", "LibWorker"],
+    }),
   ],
   mode: "production",
   target: "electron-renderer",

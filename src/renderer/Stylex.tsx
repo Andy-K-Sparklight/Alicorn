@@ -1,27 +1,33 @@
 import { createStyles, makeStyles } from "@material-ui/core";
+import { isBgDark } from "./Renderer";
 
 export const useCardStyles = makeStyles((theme) =>
   createStyles({
     text: {
       fontSize: "medium",
+      color: isBgDark() ? theme.palette.secondary.light : undefined,
     },
+    text2: { fontSize: "medium", color: theme.palette.secondary.light },
     desc: {
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
+      color: isBgDark() ? theme.palette.secondary.light : undefined,
     },
     card: {
       backgroundColor: theme.palette.primary.main,
-      width: "80%",
+      // width: "80%",
     },
     card2: {
       backgroundColor: theme.palette.primary.dark,
-      width: "80%",
     },
     uCard: {
       backgroundColor: theme.palette.primary.light,
-      width: "80%",
     },
     operateButton: {
       float: "right",
+      color: isBgDark() ? theme.palette.secondary.light : undefined,
+    },
+    color: {
+      color: isBgDark() ? theme.palette.secondary.light : undefined,
     },
   })
 );
@@ -29,13 +35,11 @@ export const usePadStyles = makeStyles((theme) =>
   createStyles({
     para: {
       flexGrow: 1,
-      marginTop: theme.spacing(4),
+      /// marginTop: theme.spacing(4),
       color: theme.palette.primary.main,
-      marginLeft: "10%",
     },
     smallText: {
-      marginLeft: "-10%",
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
     },
   })
 );
@@ -91,7 +95,7 @@ export const useFormStyles = makeStyles((theme) =>
       marginTop: theme.spacing(1),
     },
     instr: {
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
       color: theme.palette.secondary.main,
     },
   })
@@ -136,7 +140,7 @@ export const useTextStyles = makeStyles((theme) =>
     },
     secondText: {
       color: theme.palette.secondary.main,
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
     },
     mediumText: {
       color: theme.palette.secondary.main,
@@ -144,7 +148,7 @@ export const useTextStyles = makeStyles((theme) =>
     },
     link: {
       color: theme.palette.primary.main,
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
     },
     thirdTextRaw: {
       color: theme.palette.primary.main,
@@ -170,7 +174,7 @@ export const useTextStylesLight = makeStyles((theme) =>
     },
     secondText: {
       color: theme.palette.secondary.light,
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
     },
     mediumText: {
       color: theme.palette.secondary.light,
@@ -178,7 +182,7 @@ export const useTextStylesLight = makeStyles((theme) =>
     },
     link: {
       color: theme.palette.primary.light,
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
     },
     thirdText: {
       color: theme.palette.primary.light,

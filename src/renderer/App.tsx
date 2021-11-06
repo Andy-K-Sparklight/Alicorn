@@ -1,6 +1,7 @@
 import {
   AppBar,
   Box,
+  Container,
   createStyles,
   Drawer,
   Fab,
@@ -26,6 +27,7 @@ import {
   GetApp,
   Help,
   Home,
+  ImportContacts,
   Info,
   Menu,
   PowerSettingsNew,
@@ -77,6 +79,7 @@ import { PffFront } from "./PffFront";
 import { ReadyToLaunch } from "./ReadyToLaunch";
 import { ServerList } from "./ServerList";
 import { saveStatistics, Statistics } from "./Statistics";
+import { TheEndingOfTheEnd } from "./TheEndingOfTheEnd";
 import { tr } from "./Translator";
 import { BuildUp } from "./utilities/BuildUp";
 import { CarouselBoutique } from "./utilities/CarouselBoutique";
@@ -96,9 +99,9 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.secondary.light,
     },
     content: {
-      marginLeft: theme.spacing(4),
-      marginRight: theme.spacing(4),
-      marginTop: theme.spacing(4),
+      // marginLeft: theme.spacing(4),
+      // marginRight: theme.spacing(4),
+      marginTop: theme.spacing(2.2),
     },
     buttonText: {
       marginRight: theme.spacing(1),
@@ -320,7 +323,7 @@ export function App(): JSX.Element {
           <IconButton
             style={{
               display: showCommand ? "none" : undefined,
-              marginRight: "6px",
+              marginRight: "0.375em",
             }}
             color={"inherit"}
             onClick={() => {
@@ -339,15 +342,7 @@ export function App(): JSX.Element {
           >
             <Typography
               variant={"h6"}
-              style={
-                showCommand
-                  ? {
-                      fontSize:
-                        window.sessionStorage.getItem("smallFontSize") ||
-                        "16px",
-                    }
-                  : {}
-              }
+              className={showCommand ? "smtxt" : undefined}
             >
               {showCommand ? enteredCommand : tr(page)}
             </Typography>
@@ -360,7 +355,13 @@ export function App(): JSX.Element {
             }
           >
             {canGoBack() ? (
-              <Tooltip title={tr("MainMenu.GoBack")}>
+              <Tooltip
+                title={
+                  <Typography className={"smtxt"}>
+                    {tr("MainMenu.GoBack")}
+                  </Typography>
+                }
+              >
                 <IconButton
                   color={"inherit"}
                   className={classes.floatButton}
@@ -387,13 +388,18 @@ export function App(): JSX.Element {
               {tr("MainMenu.Help")}
             </Fab>
             {getBoolean("dev") ? (
-              <Tooltip title={tr("MainMenu.Reload")}>
+              <Tooltip
+                title={
+                  <Typography className={"smtxt"}>
+                    {tr("MainMenu.Reload")}
+                  </Typography>
+                }
+              >
                 <IconButton
                   color={"inherit"}
                   className={classes.floatButton}
                   onClick={() => {
-                    window.location.hash = "";
-                    window.location.reload();
+                    ipcRenderer.send("reload");
                   }}
                 >
                   <Refresh />
@@ -403,7 +409,13 @@ export function App(): JSX.Element {
               ""
             )}
             {getBoolean("dev") ? (
-              <Tooltip title={tr("MainMenu.OpenDevToolsFormal")}>
+              <Tooltip
+                title={
+                  <Typography className={"smtxt"}>
+                    {tr("MainMenu.OpenDevToolsFormal")}
+                  </Typography>
+                }
+              >
                 <IconButton
                   color={"inherit"}
                   className={classes.floatButton}
@@ -418,7 +430,13 @@ export function App(): JSX.Element {
               ""
             )}
 
-            <Tooltip title={tr("MainMenu.UtilitiesIndex")}>
+            <Tooltip
+              title={
+                <Typography className={"smtxt"}>
+                  {tr("MainMenu.UtilitiesIndex")}
+                </Typography>
+              }
+            >
               <IconButton
                 color={"inherit"}
                 className={classes.floatButton}
@@ -430,32 +448,14 @@ export function App(): JSX.Element {
                 <Build />
               </IconButton>
             </Tooltip>
-            <Tooltip title={tr("MainMenu.QuickOptions")}>
-              <IconButton
-                className={classes.floatButton}
-                onClick={() => {
-                  jumpTo("/Options");
-                  triggerSetPage("Options");
-                }}
-                color={"inherit"}
-              >
-                <Settings />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title={tr("MainMenu.QuickJavaSelector")}>
-              <IconButton
-                className={classes.floatButton}
-                onClick={() => {
-                  jumpTo("/JavaSelector");
-                  triggerSetPage("JavaSelector");
-                }}
-                color={"inherit"}
-              >
-                <ViewModule />
-              </IconButton>
-            </Tooltip>
             {getBoolean("dev") ? (
-              <Tooltip title={tr("MainMenu.Browser")}>
+              <Tooltip
+                title={
+                  <Typography className={"smtxt"}>
+                    {tr("MainMenu.Browser")}
+                  </Typography>
+                }
+              >
                 <IconButton
                   className={classes.floatButton}
                   onClick={() => {
@@ -476,7 +476,13 @@ export function App(): JSX.Element {
               ""
             )}
 
-            <Tooltip title={tr("MainMenu.QuickManageAccount")}>
+            <Tooltip
+              title={
+                <Typography className={"smtxt"}>
+                  {tr("MainMenu.QuickManageAccount")}
+                </Typography>
+              }
+            >
               <IconButton
                 className={classes.floatButton}
                 onClick={() => {
@@ -488,7 +494,13 @@ export function App(): JSX.Element {
                 <AccountCircle />
               </IconButton>
             </Tooltip>
-            <Tooltip title={tr("MainMenu.QuickManageContainer")}>
+            <Tooltip
+              title={
+                <Typography className={"smtxt"}>
+                  {tr("MainMenu.QuickManageContainer")}
+                </Typography>
+              }
+            >
               <IconButton
                 className={classes.floatButton}
                 onClick={() => {
@@ -500,7 +512,13 @@ export function App(): JSX.Element {
                 <AllInbox />
               </IconButton>
             </Tooltip>
-            <Tooltip title={tr("MainMenu.QuickInstallCore")}>
+            <Tooltip
+              title={
+                <Typography className={"smtxt"}>
+                  {tr("MainMenu.QuickInstallCore")}
+                </Typography>
+              }
+            >
               <IconButton
                 className={classes.floatButton}
                 onClick={() => {
@@ -525,11 +543,21 @@ export function App(): JSX.Element {
               <FlightTakeoff className={classes.buttonText} />
               {tr("LaunchPad")}
             </Fab>
-            <Tooltip title={tr("MainMenu.Exit")}>
+            <Tooltip
+              title={
+                <Typography className={"smtxt"}>
+                  {tr("MainMenu.Exit")}
+                </Typography>
+              }
+            >
               <IconButton
                 className={classes.exitButton}
-                onClick={() => {
+                onClick={async () => {
                   remoteHideWindow();
+                  await ipcRenderer.invoke(
+                    "markLoginItem",
+                    getBoolean("auto-launch")
+                  );
                   waitUpdateFinished(() => {
                     remoteCloseWindow();
                   });
@@ -543,41 +571,52 @@ export function App(): JSX.Element {
         </Toolbar>
       </AppBar>
       <Box className={classes.content + " yggdrasil_droppable"} id={"app_main"}>
+        {(() => {
+          const bs = document.getElementById("boot_stages");
+          if (bs) {
+            bs.style.display = "none";
+          }
+          // @ts-ignore
+          window.clearLogScreen();
+        })()}
         <Instruction />
-        <Route path={"/LaunchPad/:server?"} component={LaunchPad} />
-        <Route path={"/InstallCore"} component={InstallCore} />
-        <Route
-          path={"/ReadyToLaunch/:container/:id/:server?"}
-          component={ReadyToLaunch}
-        />
-        <Route path={"/Version"} component={VersionView} />
-        <Route
-          path={"/ContainerManager/:modpack?"}
-          component={ContainerManager}
-        />
-        <Route
-          path={"/AccountManager/:adding?/:server?"}
-          component={YggdrasilAccountManager}
-        />
-        <Route path={"/JavaSelector"} component={JavaSelector} />
-        <Route path={"/Options"} component={OptionsPage} />
-        <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
-        <Route
-          path={"/PffFront/:container/:version/:loader/:name?/:autostart?"}
-          component={PffFront}
-        />
-        <Route path={"/Welcome"} component={Welcome} />
-        <Route path={"/ServerList"} component={ServerList} />
-        <Route path={"/UtilitiesIndex"} component={UtilitiesIndex} />
-        <Route path={"/Utilities/NetCheck"} component={NetCheck} />
-        <Route path={"/Utilities/CutieConnect"} component={CutieConnet} />
-        <Route path={"/Utilities/BuildUp"} component={BuildUp} />
-        <Route path={"/Utilities/PffVisual"} component={PffVisual} />
-        <Route
-          path={"/Utilities/CarouselBoutique"}
-          component={CarouselBoutique}
-        />
-        <Route path={"/Statistics"} component={Statistics} />
+        <Container>
+          <Route path={"/LaunchPad/:server?"} component={LaunchPad} />
+          <Route path={"/InstallCore"} component={InstallCore} />
+          <Route
+            path={"/ReadyToLaunch/:container/:id/:server?"}
+            component={ReadyToLaunch}
+          />
+          <Route path={"/Version"} component={VersionView} />
+          <Route
+            path={"/ContainerManager/:modpack?"}
+            component={ContainerManager}
+          />
+          <Route
+            path={"/AccountManager/:adding?/:server?"}
+            component={YggdrasilAccountManager}
+          />
+          <Route path={"/JavaSelector"} component={JavaSelector} />
+          <Route path={"/Options"} component={OptionsPage} />
+          <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
+          <Route
+            path={"/PffFront/:container/:version/:loader/:name?/:autostart?"}
+            component={PffFront}
+          />
+          <Route path={"/Welcome"} component={Welcome} />
+          <Route path={"/ServerList"} component={ServerList} />
+          <Route path={"/UtilitiesIndex"} component={UtilitiesIndex} />
+          <Route path={"/Utilities/NetCheck"} component={NetCheck} />
+          <Route path={"/Utilities/CutieConnect"} component={CutieConnet} />
+          <Route path={"/Utilities/BuildUp"} component={BuildUp} />
+          <Route path={"/Utilities/PffVisual"} component={PffVisual} />
+          <Route
+            path={"/Utilities/CarouselBoutique"}
+            component={CarouselBoutique}
+          />
+          <Route path={"/Statistics"} component={Statistics} />
+          <Route path={"/TheEndingOfTheEnd"} component={TheEndingOfTheEnd} />
+        </Container>
       </Box>
       <PagesDrawer
         open={openDrawer}
@@ -688,6 +727,7 @@ const PAGES_ICONS_MAP: Record<string, JSX.Element> = {
   Statistics: <ShowChart />,
   Options: <Settings />,
   Version: <Info />,
+  TheEndingOfTheEnd: <ImportContacts />,
 };
 
 function PagesDrawer(props: {
@@ -727,14 +767,6 @@ export function remoteCloseWindow(): void {
   console.log("Closing!");
   prepareToQuit();
   ipcRenderer.send("closeWindow");
-}
-
-function handleDrag(name: string): (e: React.DragEvent) => void {
-  return (e) => {
-    console.log("Dragging " + name);
-    e.dataTransfer.setData("text/x-alicorn-remove-btn", name);
-    e.dataTransfer.dropEffect = "move";
-  };
 }
 
 function remoteOpenDevTools(): void {

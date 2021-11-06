@@ -66,6 +66,10 @@ Pff 软件安装器
 
 实用工具
 
+# TheEndingOfTheEnd
+
+终末之末
+
 # System.Offline
 
 似乎已断开与互联网的连接……
@@ -130,10 +134,6 @@ Pff 软件安装器
 
 管理帐户
 
-# MainMenu.QuickJavaSelector
-
-选择 Java 运行时
-
 # MainMenu.QuickServerList
 
 显示服务器列表
@@ -145,14 +145,6 @@ Pff 软件安装器
 # MainMenu.Browser
 
 Alicorn 内置浏览器
-
-# MainMenu.Version
-
-版本信息
-
-# MainMenu.QuickOptions
-
-调整启动器的设置
 
 # MainMenu.OpenDevToolsFormal
 
@@ -246,10 +238,6 @@ Alicorn 内置浏览器
 
 重新加载
 
-# CoreInfo.Launch
-
-启动
-
 # CoreInfo.Destroy
 
 摧毁档案
@@ -280,7 +268,7 @@ Alicorn 内置浏览器
 
 # CoreInfo.Pff
 
-在此核心上运行 Pff
+查看或安装 Mod
 
 # ReadyToLaunch.NoJava
 
@@ -692,7 +680,7 @@ Andy K Rarity Sparklight
 
 # VersionView.Copyright
 
-Alicorn 启动器是自由软件，复制、修改和重新分发等行为应遵循 GNU GENERAL PUBLIC LICENSE Version 3.0 许可证（或以后的版本）。\n\nCopyright (C) 2021 Andy K Rarity Sparklight\n\n该程序是自由软件：您可以根据自由软件基金会发布的 GNU 通用公共许可证（第三版或以后）的条款重新分发和/或修改它。\n分发此程序是希望它有用，但不作任何保证；甚至没有对适销性或针对特定目的的适用性的暗示保证。有关更多详细信息，请参阅 GNU 通用公共许可证（第三版或以后）原文。
+以下内容为著作权声明的简体中文翻译，不可被视为原文本的替代。Alicorn 的开发人员拥有最终解释权。\n\nAlicorn 启动器是自由软件，复制、修改和重新分发等行为应遵循 GNU GENERAL PUBLIC LICENSE Version 3.0 许可证（或以后的版本）。\nCopyright (C) 2021 Andy K Rarity Sparklight\n\n该程序是自由软件：您可以根据自由软件基金会发布的 GNU 通用公共许可证（第三版或以后）的条款重新分发和/或修改它。\n分发此程序是希望它有用，但不作任何保证；甚至没有对适销性或针对特定目的的适用性的暗示保证。有关更多详细信息，请参阅 GNU 通用公共许可证（第三版或以后）原文。\nAlicorn 中所引用的 Minecraft 相关图片等内容不是 Alicorn 的一部分，它们来自 Minecraft Wiki 并以 知识共享 署名-非商业性使用-相同方式分享 3.0（CC BY-NC-SA 3.0）协议授权，不适用 Alicorn 的 GNU 通用公共许可证（第三版或以后）。
 
 # VersionView.Privacy
 
@@ -736,7 +724,7 @@ Minecraft 容器名
 
 # ContainerManager.InstallOK
 
-整合包安装完成～
+容器创建成功～
 
 # ContainerManager.FetchingModpack
 
@@ -1030,6 +1018,22 @@ Minecraft 版本号
 
 验证
 
+# AccountManager.SkinView3D
+
+正在使用 3D 皮肤渲染（按住左键拖动以旋转）
+
+# AccountManager.SkinView3DShort
+
+3D 预览
+
+# AccountManager.SkinView2D
+
+正在使用 2D 皮肤渲染
+
+# AccountManager.SkinView2DShort
+
+2D 预览
+
 # AccountManager.DeleteTitle
 
 移除帐户？
@@ -1186,13 +1190,29 @@ Alicorn 特色功能
 
 高级和重置
 
+# Options.features.skin-view-3d.title
+
+Skin View 3D 皮肤显示
+
+# Options.features.skin-view-3d.desc
+
+使用 3D 皮肤渲染（基于 WebGL）- 若关闭此功能，将使用 2D 皮肤渲染（基于 CSS）。\n3D 皮肤渲染功能由来自 Blessing Skin 社区的 Skin View 3D 为你呈现。\n若开启此设置，将覆盖硬件加速设置并强制开启它。
+
+# Options.auto-launch.title
+
+登录时启动 ^
+
+# Options.auto-launch.desc
+
+在电脑启动时，省下几次点击，让 Alicorn 主动和你打声招呼
+
 # Options.theme.title
 
-主题
+主题 ^
 
 # Options.theme.desc
 
-修改主题配色，带 * 的是深色背景主题，可能存在显示问题
+修改主题配色 - 带 * 的不利于视觉健康，请谨慎使用，当感觉眼睛不舒服的时候请切换到「褪色灰」以避免视力损伤。另请注意部分深色主题可能不利于操作。
 
 # Options.theme.Default
 
@@ -1208,11 +1228,15 @@ Alicorn 特色功能
 
 # Options.theme.66CCFF
 
-天依蓝
+天依蓝 *
+
+# Options.theme.UNIXDark
+
+终端绿 *
 
 # Options.theme.Apple
 
-苹果橙
+苹果橙 *
 
 # Options.theme.Mint
 
@@ -1224,11 +1248,11 @@ Alicorn 特色功能
 
 # Options.theme.FadeGray
 
-褪色灰
+褪色灰（安全颜色）
 
 # Options.theme.NightLightDark
 
-黑夜光 *
+黑夜光
 
 # Options.theme.Classic
 
@@ -1238,9 +1262,17 @@ Alicorn 特色功能
 
 灰色粉
 
+# Options.theme.WhatGreenDark
+
+概念绿
+
+# Options.theme.GoldDark
+
+黄金矿 *
+
 # Options.theme.Random
 
-随机（是不是疯了？）
+随机生成配色 *（是不是疯了？）
 
 # Options.theme.Rarity
 
@@ -2134,11 +2166,39 @@ Pff|也就是「Package File Finder」，Alicorn 用来搜索和安装 Mod 的�
 
 # PffFront.QuickWatch
 
-软件包速览
+Mod 速览
 
 # PffFront.Hint
 
-@HTML这里只显示由 Pff 安装的软件包，单击软件包名称可以在文件资源管理器中查看它。\n<span style="color: #ff8400;">安装 Mod 前请当心！不兼容的 Mod 可以<b style="color: red;">摧毁你的游戏</b>！请确保你<b style="color: red;">知道</b>而不是<b style="color: red;">猜测</b>它的作用！</span>
+这里只显示由 Pff 安装的 Mod，单击名称可以在文件资源管理器中查看它。
+
+# PffFront.Mods
+
+所有 Mod 列表
+
+# PffFront.ModsHint
+
+此处显示所有识别的 Mod，无论它们是否由 Pff 安装。不支持的加载器不考虑在内。\n鼠标悬浮将可以查看介绍。
+
+# PffFront.UnmetDeps
+
+依赖关系错误
+
+# PffFront.MissingDep
+
+@HTML软件包 {Name} 需要 {Missing}，然而 {Missing} 未安装 - {Origin} 将不会被加载<br/><b>单击尝试使用 Pff 安装 {Missing}</b>
+
+# PffFront.DepOK
+
+Alicorn 没有发现有问题的依赖～
+
+# PffFront.NoneDetected
+
+@HTMLAlicorn 没有在此处发现 Mod，<b>使用 Pff 安装一个？</b>
+
+# PffFront.InstallAll
+
+尝试修复全部依赖
 
 # ServerList.Add
 
@@ -2982,3 +3042,31 @@ END
 # Instruction.ReadyToLaunch.3
 
 END
+
+# EOE.Thanks
+
+鸣谢
+
+# EOE.ThanksDesc
+
+Alicorn 的开发道路上，收到过不少来自个人、组织和企业的帮助，我们想感谢他们。\n（我们并没有其它的评判标准，所以我们按照随机顺序列举。）
+
+# EOE.Packages
+
+……这些 NPM 软件包：
+
+# EOE.And
+
+……和这些网站或项目：
+
+# EOE.Orgs
+
+MCBBS（Minecraft 中文论坛）……这里是热爱 MC 群体的天堂。\nFree Software Foundation……我们一同为自由软件而奋斗。\nGitHub……软件在这里诞生。\nStack Overflow……它解决了我们很多的问题。\nNode.js……JS 因你而不同。\nTypeScript……从混乱到有序的快速通道。\nMinecraft Wiki……玩家所认可的最强 Minecraft Wiki。\nMaterial UI……只做组件，而且做得很好。\nWiki.vg……快速解码帐户验证的奥秘。\nElectron……不止于浏览器！\nWebpack……打包，优化，压缩。\nBMCLAPI……下载速度提升 80% 的最强镜像！\nFabricMC……未来是你的天下！\nIris Shaders……更高更妙的光影和高清修复！\nGaz492 Curseforge API……它打开了一扇充满光明的大门。\nJsDelivr……走遍天涯海角，Web 始终在你身边。\nAdobe Source Hans Sans 和 Ubuntu Mono……渲染不够，字体来凑！\nAuthlib Injector……Yggdrasil 始终为你让一条路。\nMLPVector……颜色，但也不是颜色。\nVSCodium……纯净、自由的高效前端 IDE。\nMDN Web Docs……Mozilla 的 Web 开发参考。\n\n……还有许多许多值得我们感谢，只是限于篇幅未能列举……
+
+# EOE.EndPoem
+
+Bolwin' in the Wind —— Bob Dylan
+
+# EOE.EndPoemContent
+
+How many roads must a man walk down\nBefore they call him a man?\nHow many seas must a white dove sail\nBefore she sleeps in the sand?\nHow many times must the cannon-balls fly\nBefore they're forever banned?\nThe answer, my friend, is blowin' in the wind\nThe answer is blowin' in the wind.\n\nHow many years must a mountain exist\nBefore it is washed to the sea?\nHow many years can some people exist\nBefore they're allowed to be free?\nHow many times can a man turn his head\nPretend that he just doesn't see?\nThe answer my friend is blowin' in the wind\nThe answer is blowin' in the wind.\n\nHow many times must a man look up\nBefore he can see the sky?\nHow many ears must one man have\nBefore he can hear people cry?\nHow many deaths will it take\nTill he knows that too many people have died?\nThe answer, my friend, is blowin' in the wind\nThe answer is blowin'in the wind.

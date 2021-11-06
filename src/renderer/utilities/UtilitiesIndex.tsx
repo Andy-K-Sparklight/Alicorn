@@ -3,13 +3,21 @@ import {
   Card,
   CardContent,
   createStyles,
+  Grid,
   makeStyles,
   Typography,
 } from "@material-ui/core";
+import {
+  Archive,
+  NetworkCell,
+  NextWeek,
+  SettingsEthernet,
+  ShoppingCart,
+} from "@material-ui/icons";
 import React from "react";
 import { getBoolean } from "../../modules/config/ConfigSupport";
 import { jumpTo, triggerSetPage } from "../GoTo";
-import { useTextStyles, useTextStylesLight } from "../Stylex";
+import { useCardStyles, useTextStyles } from "../Stylex";
 import { tr } from "../Translator";
 
 const useAccStyles = makeStyles((theme) =>
@@ -39,11 +47,11 @@ export function UtilitiesIndex(): JSX.Element {
       <Typography className={classes.secondText} gutterBottom>
         {tr("UtilitiesIndex.Description")}
       </Typography>
-      <SimpleUtil name={"PffVisual"} />
-      <SimpleUtil name={"CarouselBoutique"} />
-      <SimpleUtil name={"CutieConnect"} />
-      <SimpleUtil name={"NetCheck"} />
-      <SimpleUtil name={"BuildUp"} />
+      <SimpleUtil icon={<Archive />} name={"PffVisual"} />
+      <SimpleUtil icon={<ShoppingCart />} name={"CarouselBoutique"} />
+      <SimpleUtil icon={<SettingsEthernet />} name={"CutieConnect"} />
+      <SimpleUtil icon={<NetworkCell />} name={"NetCheck"} />
+      <SimpleUtil icon={<NextWeek />} name={"BuildUp"} />
     </>
   );
 }
@@ -51,8 +59,9 @@ export function UtilitiesIndex(): JSX.Element {
 function SimpleUtil(props: {
   name: string;
   experimental?: boolean;
+  icon: JSX.Element;
 }): JSX.Element {
-  const classes = useTextStylesLight();
+  const classes = useCardStyles();
   const accClasses = useAccStyles();
   if (props.experimental) {
     if (!getBoolean("dev.experimental")) {
@@ -68,10 +77,15 @@ function SimpleUtil(props: {
     >
       <Card className={accClasses.acc1}>
         <CardContent>
-          <Typography className={classes.firstText}>
-            {tr(`Utilities.${props.name}.Title`)}
-          </Typography>
-          <Typography className={classes.secondText}>
+          <Grid container direction="row" alignItems="center">
+            <Grid item>{props.icon}</Grid>
+            <Grid item>
+              <Typography variant={"h6"} style={{ marginLeft: "0.25em" }}>
+                {tr(`Utilities.${props.name}.Title`)}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Typography className={classes.text2}>
             {tr(`Utilities.${props.name}.Description`)}
           </Typography>
         </CardContent>

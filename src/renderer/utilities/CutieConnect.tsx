@@ -306,7 +306,7 @@ export function CutieConnet(): JSX.Element {
               {tr("Utilities.CutieConnect.Connect")}
             </Button>
             <Button
-              style={{ marginLeft: "4px" }}
+              style={{ marginLeft: "0.25em" }}
               color={"primary"}
               variant={"contained"}
               onClick={async () => {

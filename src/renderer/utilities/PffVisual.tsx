@@ -135,6 +135,7 @@ export function PffVisual(): JSX.Element {
                 }}
               />
             </FormControl>
+            <br />
           </>
           <FormControlLabel
             control={
@@ -280,11 +281,7 @@ function SingleAddonDisplay(props: {
             </Typography>
             <br />
             <Typography
-              className={classes.text}
-              style={{
-                fontSize:
-                  window.sessionStorage.getItem("smallFontSize") || "16px",
-              }}
+              className={classes.text + " smtxt"}
               color={"textSecondary"}
             >
               {tr(
@@ -294,11 +291,7 @@ function SingleAddonDisplay(props: {
             </Typography>
             {props.info ? (
               <Typography
-                className={classes.text}
-                style={{
-                  fontSize:
-                    window.sessionStorage.getItem("smallFontSize") || "16px",
-                }}
+                className={classes.text + " smtxt"}
                 color={"textSecondary"}
               >
                 {tr("Utilities.PffVisual.VersionRange") + a.join(" ")}

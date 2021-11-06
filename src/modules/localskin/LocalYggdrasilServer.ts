@@ -1,4 +1,4 @@
-import { copyFile, createReadStream, remove } from "fs-extra";
+import { copyFile, createReadStream, ensureDir, remove } from "fs-extra";
 import { createServer, Server } from "http";
 import { toBase64 } from "js-base64";
 import path from "path";
@@ -259,7 +259,6 @@ export async function skinTypeFor(
   const defaultF = getActualDataPath(
     path.join("skins", "D-" + basicHash(account.lastUsedUUID))
   );
-  console.log(slimF);
   const slimD = getActualDataPath(path.join("skins", "S-DEF"));
   const defaultD = getActualDataPath(path.join("skins", "D-DEF"));
   if (await isFileExist(slimF)) {
@@ -296,6 +295,7 @@ export async function configureSkin(
       (model === "DEFAULT" ? "S" : "D") + type + basicHash(uid)
     )
   );
+  await ensureDir(path.dirname(target));
   await copyFile(origin, target);
   await remove(rmTarget);
 }
@@ -310,6 +310,7 @@ export async function configureDefaultSkin(
   const rmTarget = getActualDataPath(
     path.join("skins", (model === "DEFAULT" ? "S" : "D") + type + "DEF")
   );
+  await ensureDir(path.dirname(target));
   await copyFile(origin, target);
   await remove(rmTarget);
 }

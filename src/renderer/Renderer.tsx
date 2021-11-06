@@ -40,13 +40,326 @@ import { loadServers } from "../modules/server/ServerFiles";
 import { App } from "./App";
 import { completeFirstRun } from "./FirstRunSetup";
 import { registerHandlers } from "./Handlers";
-import { activateHotKeyFeature } from "./HotKeyHandler";
 import { InstructionProvider } from "./Instruction";
 import { submitInfo, submitWarn } from "./Message";
 import { initWorker } from "./Schedule";
 import { initStatistics } from "./Statistics";
 import { AL_THEMES } from "./ThemeColors";
 import { initTranslator, tr } from "./Translator";
+
+try {
+  console.log("Renderer first log.");
+  printScreen("Setting up error pop system...");
+  window.addEventListener("unhandledrejection", (e) => {
+    ipcRenderer.send("SOS", e.reason);
+    console.log(e);
+    printScreen(e.reason);
+    showLogs();
+    window.dispatchEvent(new CustomEvent("sysError", { detail: e.reason }));
+  });
+
+  window.addEventListener("error", (e) => {
+    ipcRenderer.send("SOS", e.message);
+    console.log(e);
+    printScreen(e.message);
+    showLogs();
+    window.dispatchEvent(new CustomEvent("sysError", { detail: e.message }));
+  });
+  const e1 = document.getElementById("boot_1");
+  if (e1) {
+    e1.innerHTML = e1.innerHTML + "Done.";
+  }
+  printScreen("Log system enabled.");
+  console.log(`Alicorn ${pkg.appVersion} Renderer Process`);
+  console.log("❤ From Andy K Rarity Sparklight");
+  console.log("Sparklight is a girl - a filly, to be accurate.");
+  console.log("Alicorn Launcher Copyright (C) 2021 Andy K Rarity Sparklight");
+  console.log(
+    "This program comes with ABSOLUTELY NO WARRANTY; for details, please see 'resources/app/LICENSE'."
+  );
+  console.log(
+    "This is free software, and you are welcome to redistribute it under certain conditions; see the license file for details."
+  );
+  printScreen("Setting up health trigger...");
+  printScreen("Configuring font size...");
+  configureFontSize();
+
+  printScreen("Pre init works done, running main tasks.");
+  const e2 = document.getElementById("boot_2");
+  if (e2) {
+    e2.innerHTML = e2.innerHTML + "Done.";
+  }
+  if (gc) {
+    console.log("GC Enabled.");
+  } else {
+    console.log("GC Disabled.");
+  }
+  const windowPos = window.localStorage.getItem("System.WindowPos");
+  const windowSize = window.localStorage.getItem("System.WindowSize");
+  if (windowSize) {
+    const s = windowSize.split(",").map((r) => {
+      return parseInt(r);
+    });
+    ipcRenderer.send("configureWindowSize", ...s);
+  }
+  if (windowPos) {
+    const s = windowPos.split(",").map((r) => {
+      return parseInt(r);
+    });
+    ipcRenderer.send("configureWindowPos", ...s);
+  }
+  ipcRenderer.on("mainWindowMoved", (_e, pos: number[]) => {
+    window.localStorage.setItem("System.WindowPos", pos.join(","));
+  });
+  ipcRenderer.on("mainWindowResized", (_e, sz: number[]) => {
+    window.localStorage.setItem("System.WindowSize", sz.join(","));
+  });
+  void (async () => {
+    printScreen("Initializing translator...");
+    await initTranslator();
+    printScreen("Setting up link trigger...");
+    // @ts-ignore
+    window["ashow"] = (a: string) => {
+      void shell.openExternal(a);
+    }; // Binding
+    printScreen("Loading config, gdt, jdt...");
+    await Promise.allSettled([loadConfig(), loadGDT(), loadJDT()]);
+    // GDT & JDT is required by LaunchPad & JavaSelector
+    if (getBoolean("clean-storage")) {
+      console.log("Cleaning storage data!");
+      window.localStorage.clear();
+      await emptyDir(getActualDataPath("."));
+      console.log("Stoarge data cleaned.");
+      console.log("Resetting and reloading config...");
+      await saveDefaultConfig();
+      await loadConfig();
+      ipcRenderer.send("reloadConfig");
+      console.log("Reset complete.");
+      console.log("Reloading window...");
+      ipcRenderer.send("reload");
+    }
+    if (getBoolean("reset")) {
+      console.log("Resetting and reloading config...");
+      await saveDefaultConfig();
+      await loadConfig();
+      ipcRenderer.send("reloadConfig");
+      console.log("Reset complete.");
+      console.log("Reloading window...");
+      ipcRenderer.send("reload");
+    }
+    printScreen("Flushing theme colors...");
+    flushColors();
+    setDefCursor();
+    if (getBoolean("features.cursor")) {
+      window.addEventListener("mousedown", () => {
+        setActCursor();
+      });
+      window.addEventListener("mouseup", () => {
+        setDefCursor();
+      });
+    }
+    printScreen("Initializing command listener...");
+    initCommandListener();
+    printScreen("Rendering main application...");
+    const e3 = document.getElementById("boot_3");
+    if (e3) {
+      e3.innerHTML = e3.innerHTML + "Done.";
+    }
+    try {
+      ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
+    } catch (e) {
+      printScreen("ERR! " + String(e));
+      throw e;
+    }
+    console.log("This Alicorn has super cow powers.");
+    bindSuperCowPower();
+    console.log("Initializing modules...");
+    const t1 = new Date();
+    await initWorker();
+    registerHandlers();
+    ipcRenderer.on("CallFromSleep", () => {
+      submitInfo(tr("System.WakeUp"));
+    });
+    // Essential works and light works
+    await Promise.allSettled([initEncrypt()]);
+    initDownloadWrapper();
+    initStatistics();
+    // Normal works
+    await Promise.allSettled([
+      (async () => {
+        await loadMirror();
+        await loadAllMirrors();
+      })(),
+      reloadAccounts(),
+      initForgeInstallModule(),
+      initConcurrentDownloader(),
+      prepareAJ(),
+      prepareND(),
+      prepareEdgeExecutable(),
+      loadServers(),
+      getMachineUniqueID(), // Cache
+    ]);
+    void completeFirstRun(); // Not blocking
+    // Heavy works and minor works
+    await Promise.allSettled([initResolveLock(), initVF(), preCacheJavaInfo()]);
+    const t2 = new Date();
+    console.log(
+      "Delayed init tasks finished. Time elapsed: " +
+        (t2.getTime() - t1.getTime()) / 1000 +
+        "s."
+    );
+    // Deferred Check
+    if (!navigator.onLine) {
+      submitWarn(tr("System.Offline"));
+    }
+    // Optional services
+    const t3 = new Date();
+    console.log("Running optional services...");
+    const updPm = (async () => {
+      // Conc
+      if (getBoolean("updator.use-update")) {
+        console.log("Checking updates...");
+        try {
+          initUpdator();
+          await checkUpdate();
+        } catch (e) {
+          console.log(e);
+          console.log(
+            "A critical error happened during updating. Try again next time!"
+          );
+          submitWarn(tr("System.UpdateFailed"));
+        }
+      } else {
+        console.log("Skipped update checking due to user settings.");
+      }
+    })();
+
+    await Promise.allSettled([
+      updPm,
+      prefetchForgeManifest(),
+      prefetchFabricManifest(),
+      prefetchMojangVersions(),
+    ]);
+    const t4 = new Date();
+    console.log(
+      "Optional services finished. Time elapsed: " +
+        (t4.getTime() - t3.getTime()) / 1000 +
+        "s."
+    );
+  })();
+} catch (e) {
+  ipcRenderer.send("SOS", e);
+}
+function bindSuperCowPower(): void {
+  // @ts-ignore
+  window["moo"] = () => {
+    console.log(
+      "                 (__) \n" +
+        "                 (oo) \n" +
+        "           /------\\/ \n" +
+        "          / |    ||   \n" +
+        "         *  /\\---/\\ \n" +
+        "            ~~   ~~   \n" +
+        '..."Have you mooed today?"...'
+    );
+  };
+  // @ts-ignore
+  window["moomoo"] = () => {
+    console.log(
+      "                 (__)  \n" +
+        "         _______~(..)~ \n" +
+        "           ,----\\(oo) \n" +
+        "          /|____|,'    \n" +
+        '         * /"\\ /\\   \n' +
+        "           ~ ~ ~ ~     \n" +
+        '..."Have you mooed today?"...'
+    );
+  }; // @ts-ignore
+  window["moomoomoo"] = () => {
+    console.log(
+      "                     \\_/ \n" +
+        "   m00h  (__)       -(_)- \n" +
+        "      \\  ~Oo~___     / \\\n" +
+        "         (..)  |\\        \n" +
+        "___________|_|_|_____________\n" +
+        '..."Have you mooed today?"...'
+    );
+  };
+}
+
+function configureFontSize(): void {
+  const f = "0.875em";
+  console.log("Set small font size as " + f);
+  window.sessionStorage.setItem("smallFontSize", f);
+  let e: HTMLStyleElement | null = document.createElement("style");
+  e.innerText = `.smtxt{font-size:${f} !important;} .MuiTooltip-tooltip > .smtxt{font-size: 1.2em !important;}`;
+  document.head.insertAdjacentElement("beforeend", e);
+  e = null;
+}
+
+function printScreen(msg: string): void {
+  // @ts-ignore
+  window.logToScreen("<br/>" + msg);
+}
+
+function showLogs(): void {
+  // @ts-ignore
+  window.showLogScreen();
+}
+function getTheme() {
+  const selected = getString("theme");
+  let t;
+  if (AL_THEMES[selected] !== undefined) {
+    t = AL_THEMES[selected];
+  } else {
+    t = AL_THEMES[tr("PrefTheme")];
+  }
+  return t;
+}
+
+export function isBgDark(): boolean {
+  const selected = getString("theme");
+  let t;
+  if (AL_THEMES[selected] !== undefined) {
+    t = selected;
+  } else {
+    t = tr("PrefTheme");
+  }
+  return t.includes("Dark");
+}
+
+function flushColors(): void {
+  const t = getTheme();
+  setThemeParams(
+    getString("theme.primary.main") || "#" + t[0],
+    getString("theme.primary.light") || "#" + t[1],
+    getString("theme.secondary.main") || "#" + t[2],
+    getString("theme.secondary.light") || "#" + t[3],
+    FONT_FAMILY,
+    getBoolean("features.cursor")
+  );
+  let e: HTMLStyleElement | null = document.createElement("style");
+  e.innerText =
+    `html {background-color:${
+      getString("theme.secondary.light") || "#" + getTheme()[3]
+    }; font-family:${tr("Font") + FONT_FAMILY};} a {color:${
+      getString("theme.primary.main") || "#" + getTheme()[0]
+    } !important;} ` +
+    (isBgDark()
+      ? `input, label {color:${
+          getString("theme.primary.main") || "#" + getTheme()[0]
+        } !important;} fieldset {border-color:${
+          getString("theme.primary.main") || "#" + getTheme()[0]
+        } !important;} div[role="radiogroup"] > label > span > span > div > svg {color: ${
+          getString("theme.primary.main") || "#" + getTheme()[0]
+        } !important;}`
+      : "");
+  // Set background
+  document.head.insertAdjacentElement("beforeend", e);
+  e = null;
+  window.dispatchEvent(new CustomEvent("ForceRefreshApp"));
+}
+
 const GLOBAL_STYLES: React.CSSProperties = {
   userSelect: "none",
 };
@@ -186,147 +499,6 @@ export let ALICORN_DEFAULT_THEME_LIGHT = createTheme({
     fontFamily: FONT_FAMILY,
   },
 });
-
-function RendererBootstrap(): JSX.Element {
-  return (
-    <Box
-      style={Object.assign(GLOBAL_STYLES, {
-        backgroundColor:
-          getString("theme.secondary.light") || "#" + getTheme()[3],
-      })}
-    >
-      <InstructionProvider>
-        <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
-          <HashRouter>
-            <App />
-          </HashRouter>
-          {getString("theme") === "Random" ? (
-            <Typography
-              style={{
-                position: "fixed",
-                left: "5px",
-                bottom: "5px",
-              }}
-              color={"textPrimary"}
-            >
-              {AL_THEMES["Random"].join(",")}
-            </Typography>
-          ) : (
-            ""
-          )}
-
-          {getBoolean("dev.experimental") ? (
-            <Typography
-              style={{
-                position: "fixed",
-                right: "5px",
-                bottom: "5px",
-              }}
-              color={"primary"}
-            >
-              EXPERIMENTAL
-            </Typography>
-          ) : (
-            ""
-          )}
-        </MuiThemeProvider>
-      </InstructionProvider>
-    </Box>
-  );
-}
-console.log("Enabling V8 Compile cache.");
-try {
-  const vm = eval("require")("vm");
-  if (vm) {
-    eval("require")("v8-compile-cache");
-    console.log("V8 Compile Cache Enabled.");
-  } else {
-    console.log("V8 Compile Cache Not Supported.");
-  }
-} catch {
-  console.log("V8 Compile Cache Failed!");
-}
-printScreen("Log system enabled.");
-console.log(`Alicorn ${pkg.appVersion} Renderer Process`);
-console.log("❤ From Andy K Rarity Sparklight");
-console.log("Sparklight is a girl - a filly, to be accurate.");
-console.log("Alicorn Launcher Copyright (C) 2021 Andy K Rarity Sparklight");
-console.log(
-  "This program comes with ABSOLUTELY NO WARRANTY; for details, please see 'resources/app/LICENSE'."
-);
-console.log(
-  "This is free software, and you are welcome to redistribute it under certain conditions; see the license file for details."
-);
-printScreen("Setting up health trigger...");
-printScreen("Configuring font size...");
-configureFontSize();
-printScreen("Setting up error pop system...");
-window.addEventListener("unhandledrejection", (e) => {
-  console.log(e.reason);
-  printScreen(e.reason);
-  showLogs();
-  window.dispatchEvent(new CustomEvent("sysError", { detail: e.reason }));
-});
-
-window.addEventListener("error", (e) => {
-  console.log(e.message);
-  printScreen(e.message);
-  showLogs();
-  window.dispatchEvent(new CustomEvent("sysError", { detail: e.message }));
-});
-
-function getTheme() {
-  const selected = getString("theme");
-  let t;
-  if (AL_THEMES[selected] !== undefined) {
-    t = AL_THEMES[selected];
-  } else {
-    t = AL_THEMES[tr("PrefTheme")];
-  }
-  return t;
-}
-
-export function isBgDark(): boolean {
-  const selected = getString("theme");
-  let t;
-  if (AL_THEMES[selected] !== undefined) {
-    t = selected;
-  } else {
-    t = tr("PrefTheme");
-  }
-  return t.includes("Dark");
-}
-
-function flushColors(): void {
-  const t = getTheme();
-  setThemeParams(
-    getString("theme.primary.main") || "#" + t[0],
-    getString("theme.primary.light") || "#" + t[1],
-    getString("theme.secondary.main") || "#" + t[2],
-    getString("theme.secondary.light") || "#" + t[3],
-    FONT_FAMILY,
-    getBoolean("features.cursor")
-  );
-  let e: HTMLStyleElement | null = document.createElement("style");
-  e.innerText =
-    `html {background-color:${
-      getString("theme.secondary.light") || "#" + getTheme()[3]
-    }; font-family:${tr("Font") + FONT_FAMILY};} a {color:${
-      getString("theme.primary.main") || "#" + getTheme()[0]
-    } !important;} ` +
-    (isBgDark()
-      ? `input, label {color:${
-          getString("theme.primary.main") || "#" + getTheme()[0]
-        } !important;} fieldset {border-color:${
-          getString("theme.primary.main") || "#" + getTheme()[0]
-        } !important;}`
-      : "");
-  // Set background
-  document.head.insertAdjacentElement("beforeend", e);
-  e = null;
-  window.dispatchEvent(new CustomEvent("ForceRefreshApp"));
-}
-
 let normalCursorEle: HTMLStyleElement | null = null;
 let pressCursorEle: HTMLStyleElement | null = null;
 function setDefCursor(): void {
@@ -344,6 +516,7 @@ function setDefCursor(): void {
     x = null;
   }
 }
+
 function setActCursor(): void {
   if (getBoolean("features.cursor")) {
     if (normalCursorEle) {
@@ -358,221 +531,48 @@ function setActCursor(): void {
     x = null;
   }
 }
+function RendererBootstrap(): JSX.Element {
+  return (
+    <Box
+      style={Object.assign(GLOBAL_STYLES, {
+        backgroundColor:
+          getString("theme.secondary.light") || "#" + getTheme()[3],
+      })}
+    >
+      <InstructionProvider>
+        <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
+          <HashRouter>
+            <App />
+          </HashRouter>
+          {getString("theme") === "Random" ? (
+            <Typography
+              style={{
+                pointerEvents: "none",
+                position: "fixed",
+                left: "0.3125em",
+                bottom: "0.3125em",
+              }}
+              color={"textPrimary"}
+            >
+              {AL_THEMES["Random"].join(",")}
+            </Typography>
+          ) : (
+            ""
+          )}
 
-printScreen("Pre init works done, running main tasks.");
-if (gc) {
-  console.log("GC Enabled.");
-} else {
-  console.log("GC Disabled.");
-}
-const windowPos = window.localStorage.getItem("System.WindowPos");
-const windowSize = window.localStorage.getItem("System.WindowSize");
-if (windowSize) {
-  const s = windowSize.split(",").map((r) => {
-    return parseInt(r);
-  });
-  ipcRenderer.send("configureWindowSize", ...s);
-}
-if (windowPos) {
-  const s = windowPos.split(",").map((r) => {
-    return parseInt(r);
-  });
-  ipcRenderer.send("configureWindowPos", ...s);
-}
-ipcRenderer.on("mainWindowMoved", (_e, pos: number[]) => {
-  window.localStorage.setItem("System.WindowPos", pos.join(","));
-});
-ipcRenderer.on("mainWindowResized", (_e, sz: number[]) => {
-  window.localStorage.setItem("System.WindowSize", sz.join(","));
-});
-void (async () => {
-  printScreen("Initializing translator...");
-  await initTranslator();
-  printScreen("Setting up link trigger...");
-  // @ts-ignore
-  window["ashow"] = (a: string) => {
-    void shell.openExternal(a);
-  }; // Binding
-  printScreen("Loading config, gdt, jdt...");
-  await Promise.allSettled([loadConfig(), loadGDT(), loadJDT()]);
-  // GDT & JDT is required by LaunchPad & JavaSelector
-  if (getBoolean("clean-storage")) {
-    console.log("Cleaning storage data!");
-    window.localStorage.clear();
-    await emptyDir(getActualDataPath("."));
-    console.log("Stoarge data cleaned.");
-    console.log("Resetting and reloading config...");
-    await saveDefaultConfig();
-    await loadConfig();
-    ipcRenderer.send("reloadConfig");
-    console.log("Reset complete.");
-    console.log("Reloading window...");
-    window.location.reload();
-  }
-  if (getBoolean("reset")) {
-    console.log("Resetting and reloading config...");
-    await saveDefaultConfig();
-    await loadConfig();
-    ipcRenderer.send("reloadConfig");
-    console.log("Reset complete.");
-    console.log("Reloading window...");
-    window.location.reload();
-  }
-  printScreen("Flushing theme colors...");
-  flushColors();
-  setDefCursor();
-  if (getBoolean("features.cursor")) {
-    window.addEventListener("mousedown", () => {
-      setActCursor();
-    });
-    window.addEventListener("mouseup", () => {
-      setDefCursor();
-    });
-  }
-  printScreen("Initializing command listener...");
-  initCommandListener();
-  printScreen("Rendering main application...");
-  try {
-    ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
-    clearScreen();
-  } catch (e) {
-    printScreen("ERR! " + String(e));
-    throw e;
-  }
-  console.log("This Alicorn has super cow powers.");
-  bindSuperCowPower();
-  console.log("Initializing modules...");
-  const t1 = new Date();
-  await initWorker();
-  registerHandlers();
-  ipcRenderer.on("CallFromSleep", () => {
-    submitInfo(tr("System.WakeUp"));
-  });
-  if (getBoolean("hot-key")) {
-    activateHotKeyFeature();
-  }
-  // Essential works and light works
-  await Promise.allSettled([initEncrypt()]);
-  initDownloadWrapper();
-  initStatistics();
-  // Normal works
-  await Promise.allSettled([
-    (async () => {
-      await loadMirror();
-      await loadAllMirrors();
-    })(),
-    reloadAccounts(),
-    initForgeInstallModule(),
-    initConcurrentDownloader(),
-    prepareAJ(),
-    prepareND(),
-    prepareEdgeExecutable(),
-    loadServers(),
-    getMachineUniqueID(), // Cache
-  ]);
-  void completeFirstRun(); // Not blocking
-  // Heavy works and minor works
-  await Promise.allSettled([initResolveLock(), initVF(), preCacheJavaInfo()]);
-  const t2 = new Date();
-  console.log(
-    "Delayed init tasks finished. Time elapsed: " +
-      (t2.getTime() - t1.getTime()) / 1000 +
-      "s."
+          <Typography
+            style={{
+              pointerEvents: "none",
+              position: "fixed",
+              right: "0.3125em",
+              bottom: "0.3125em",
+            }}
+            color={"primary"}
+          >
+            {"Alicorn " + pkg.appVersion + " #" + pkg.updatorVersion}
+          </Typography>
+        </MuiThemeProvider>
+      </InstructionProvider>
+    </Box>
   );
-  // Deferred Check
-  if (!navigator.onLine) {
-    submitWarn(tr("System.Offline"));
-  }
-  // Optional services
-  const t3 = new Date();
-  console.log("Running optional services...");
-  const updPm = (async () => {
-    // Conc
-    if (getBoolean("updator.use-update")) {
-      console.log("Checking updates...");
-      try {
-        initUpdator();
-        await checkUpdate();
-      } catch (e) {
-        console.log(e);
-        console.log(
-          "A critical error happened during updating. Try again next time!"
-        );
-        submitWarn(tr("System.UpdateFailed"));
-      }
-    } else {
-      console.log("Skipped update checking due to user settings.");
-    }
-  })();
-
-  await Promise.allSettled([
-    updPm,
-    prefetchForgeManifest(),
-    prefetchFabricManifest(),
-    prefetchMojangVersions(),
-  ]);
-  const t4 = new Date();
-  console.log(
-    "Optional services finished. Time elapsed: " +
-      (t4.getTime() - t3.getTime()) / 1000 +
-      "s."
-  );
-})();
-
-function bindSuperCowPower(): void {
-  // @ts-ignore
-  window["moo"] = () => {
-    console.log(
-      "                 (__) \n" +
-        "                 (oo) \n" +
-        "           /------\\/ \n" +
-        "          / |    ||   \n" +
-        "         *  /\\---/\\ \n" +
-        "            ~~   ~~   \n" +
-        '..."Have you mooed today?"...'
-    );
-  };
-  // @ts-ignore
-  window["moomoo"] = () => {
-    console.log(
-      "                 (__)  \n" +
-        "         _______~(..)~ \n" +
-        "           ,----\\(oo) \n" +
-        "          /|____|,'    \n" +
-        '         * /"\\ /\\   \n' +
-        "           ~ ~ ~ ~     \n" +
-        '..."Have you mooed today?"...'
-    );
-  }; // @ts-ignore
-  window["moomoomoo"] = () => {
-    console.log(
-      "                     \\_/ \n" +
-        "   m00h  (__)       -(_)- \n" +
-        "      \\  ~Oo~___     / \\\n" +
-        "         (..)  |\\        \n" +
-        "___________|_|_|_____________\n" +
-        '..."Have you mooed today?"...'
-    );
-  };
-}
-
-function configureFontSize(): void {
-  // const f = (document.body.clientWidth / 60).toString() + "px";
-  const f = "14px";
-  console.log("Set small font size as " + f);
-  window.sessionStorage.setItem("smallFontSize", f);
-}
-
-function printScreen(msg: string): void {
-  // @ts-ignore
-  window.logToScreen("<br/>" + msg);
-}
-
-function clearScreen(): void {
-  // @ts-ignore
-  window.clearLogScreen();
-}
-function showLogs(): void {
-  // @ts-ignore
-  window.showLogScreen();
 }

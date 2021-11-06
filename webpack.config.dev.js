@@ -44,6 +44,15 @@ const MainDev = {
           from: path.resolve(__dirname, "resources", "shared"),
           to: path.resolve(__dirname, "dist"),
         },
+        {
+          from: path.resolve(
+            __dirname,
+            "node_modules",
+            "v8-compile-cache",
+            "v8-compile-cache.js"
+          ),
+          to: path.resolve(__dirname, "dist"),
+        },
       ],
     }),
   ],
@@ -92,6 +101,12 @@ const RendererDev = {
   plugins: [
     new BuildInfoPlugin("RendererBuild.json", Version),
     new ContextReplacementPlugin(/keyv/),
+    new BannerPlugin({
+      banner:
+        "try{require('./v8-compile-cache.js');console.log('V8 Compile Cache Enabled.');}catch{console.log('V8 Compile Cache Disabled.');};",
+      raw: true,
+      include: ["Renderer", "LibWorker"],
+    }),
   ],
   devtool: "source-map",
   mode: "development",

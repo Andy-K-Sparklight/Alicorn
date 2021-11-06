@@ -6,6 +6,21 @@
     <link rel="stylesheet" href="HardCodedStyles.css" type="text/css" />
   </head>
   <body>
+    <div
+      id="boot_stages"
+      style="position: fixed; left: auto; top: auto"
+      onclick="this.style.display='none'"
+    >
+      <p>
+        Alicorn Renderer has been loaded, and it's initializing.<br />
+        If this text won't disappear in a few seconds, considering fix or
+        reinstall Alicorn. <br />
+        Or click to hide me if Alicorn runs well.
+      </p>
+      <h3 id="boot_1">Boot Stage 1: Renderer First Show...</h3>
+      <h3 id="boot_2">Boot Stage 2: Renderer Script Load...</h3>
+      <h3 id="boot_3">Boot Stage 3: Pre Render...</h3>
+    </div>
     <div id="root"></div>
     <script>
       document.body.onkeydown = (e) => {
@@ -22,6 +37,17 @@
       style="font-family: 'Ubuntu Mono', 'Courier New', Courier, monospace"
     ></p>
     <script>
+      if (process.env.ALICORN_REACT_DEVTOOLS) {
+        let { ipcRenderer } = require("electron");
+        if (ipcRenderer.sendSync("askInject")) {
+          let dev = document.createElement("script");
+          dev.src = "http://localhost:8097";
+          document.head.appendChild(dev);
+          dev = null;
+        }
+      }
+    </script>
+    <script>
       window.logToScreen = (msg) => {
         let e = document.getElementById("preboot_log");
         if (e) {
@@ -35,6 +61,7 @@
         document.getElementById("preboot_log").style.display = "none";
       };
     </script>
+    <script src="SkinView3D.js"></script>
     <script src="Renderer.js"></script>
   </body>
 </html>

@@ -3,19 +3,28 @@ import { submitError } from "./Message";
 let WORKER: Worker;
 
 export function schedulePromiseTask<T>(
-  fn: () => Promise<T>,
+  fn: () => Promise<T> | T,
   timeout?: number
 ): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     window.requestIdleCallback(
       () => {
-        fn()
-          .then((r) => {
+        let t;
+        try {
+          t = fn();
+        } catch (e) {
+          reject(e);
+          return;
+        }
+        if (t instanceof Promise) {
+          t.then((r) => {
             resolve(r);
-          })
-          .catch((e) => {
+          }).catch((e) => {
             reject(e);
           });
+        } else {
+          resolve(t);
+        }
       },
       timeout ? { timeout: timeout } : undefined
     );

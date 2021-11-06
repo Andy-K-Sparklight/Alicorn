@@ -46,7 +46,7 @@ export function OptionsPage(): JSX.Element {
     createStyles({
       root: {},
       head: {
-        fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+        fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
         color: theme.palette.secondary.main,
       },
     })
@@ -111,6 +111,7 @@ export function OptionsPage(): JSX.Element {
         </Tabs>
         <TabPanel index={0} value={tabValue}>
           <InputItem type={ConfigType.STR} bindConfig={"user.name"} />
+          <InputItem type={ConfigType.BOOL} bindConfig={"auto-launch"} />
           <InputItem
             type={ConfigType.RADIO}
             bindConfig={"assistant"}
@@ -158,6 +159,10 @@ export function OptionsPage(): JSX.Element {
         </TabPanel>
         <TabPanel index={1} value={tabValue}>
           <InputItem type={ConfigType.BOOL} bindConfig={"features.saying"} />
+          <InputItem
+            type={ConfigType.BOOL}
+            bindConfig={"features.skin-view-3d"}
+          />
           <InputItem type={ConfigType.BOOL} bindConfig={"features.cursor"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"features.miniwiki"} />
           <InputItem
@@ -373,7 +378,7 @@ export function InputItem(props: {
   const classes = makeStyles((theme) =>
     createStyles({
       desc: {
-        fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+        fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
         color: theme.palette.secondary.main,
       },
       switch: {
@@ -481,7 +486,7 @@ export function InputItem(props: {
                   type={"button"}
                   variant={"outlined"}
                   style={{
-                    marginTop: "4px",
+                    marginTop: "0.25em",
                   }}
                   onClick={async () => {
                     const d = await remoteSelectDir();
@@ -520,13 +525,11 @@ export function InputItem(props: {
                       label={
                         <Typography
                           style={{
-                            fontSize:
-                              window.sessionStorage.getItem("smallFontSize") ||
-                              "16px",
                             color:
                               ALICORN_DEFAULT_THEME_LIGHT.palette.secondary
                                 .main,
                           }}
+                          className={"smtxt"}
                         >
                           {tr(`Options.${props.bindConfig}.${c}`)}
                         </Typography>

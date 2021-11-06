@@ -201,20 +201,22 @@ async function rmTempForgeFiles(
   }
 }
 
-// Create a empty 'launcher_profile.json' for the silly installer
+// Create an empty 'launcher_profile.json' for the silly installer
 export async function makeTempLP(container: MinecraftContainer): Promise<void> {
-  const originLP = container.resolvePath(LAUNCHER_PROFILES);
-  if (!(await isFileExist(originLP))) {
-    await fs.writeJSON(originLP, { profiles: {} });
-  }
-  /* try {
-    await copyFileStream(
-      container.resolvePath(LAUNCHER_PROFILES),
-      container.resolvePath(LP_BACKUP)
-    );
-  } catch {
-    return;
-  } */
+  try {
+    const originLP = container.resolvePath(LAUNCHER_PROFILES);
+    if (!(await isFileExist(originLP))) {
+      await fs.writeJSON(originLP, { profiles: {} });
+      return;
+    }
+    try {
+      const f = await readJSON(originLP);
+      if (typeof f.profiles !== "object") {
+        // Bad LP!
+        await fs.writeJSON(originLP, { profiles: {} });
+      }
+    } catch {}
+  } catch {}
 }
 
 // For legacy profiles

@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Fade,
   FormControlLabel,
   IconButton,
   MuiThemeProvider,
@@ -64,6 +65,7 @@ import {
 import { isWebFileExist } from "../modules/download/RainbowFetch";
 import { deployIJPack } from "../modules/pff/modpack/InstallIJModpack";
 import { wrappedInstallModpack } from "../modules/pff/modpack/InstallModpack";
+import { Icons } from "./Icons";
 import { submitSucc } from "./Message";
 import {
   FailedHint,
@@ -150,8 +152,14 @@ export function ContainerManager(): JSX.Element {
           }
         }}
       />
-      <Box style={{ textAlign: "right", marginRight: "18%" }}>
-        <Tooltip title={tr("ContainerManager.Add")}>
+      <Box style={{ textAlign: "right" }}>
+        <Tooltip
+          title={
+            <Typography className={"smtxt"}>
+              {tr("ContainerManager.Add")}
+            </Typography>
+          }
+        >
           <IconButton
             color={"inherit"}
             onClick={() => {
@@ -188,9 +196,10 @@ function SingleContainerDisplay(props: {
   const [clearAskOpen, setClearOpen] = useState(false);
   const [operating, setOperating] = useState(false);
   const [coreCount, setCount] = useState(-1);
-  const [isASC, setASCBit] = useState(false);
+  const [isASC, setASCBit] = useState<boolean | null>(null);
   const [refresh, setRefresh] = useState(false);
 
+  const [showBtn, setShowBtn] = useState(false);
   useEffect(() => {
     mounted.current = true;
     if (props.isMounted) {
@@ -199,12 +208,18 @@ function SingleContainerDisplay(props: {
           if (mounted.current) {
             setASCBit(true);
           }
+        } else {
+          if (mounted.current) {
+            setASCBit(false);
+          }
         }
         const cores = (await scanCoresIn(props.container)).length;
         if (mounted.current) {
           setCount(cores);
         }
       })();
+    } else {
+      setASCBit(null);
     }
     return () => {
       mounted.current = false;
@@ -214,148 +229,199 @@ function SingleContainerDisplay(props: {
     <>
       <OperatingHint open={operating} />
 
-      <Card className={props.isMounted ? classes.card : classes.uCard}>
+      <Card
+        className={props.isMounted ? classes.card : classes.uCard}
+        onMouseOver={() => {
+          setShowBtn(true);
+        }}
+        onMouseLeave={() => {
+          setShowBtn(false);
+        }}
+      >
         <CardContent>
-          <>
-            <Tooltip title={tr("ContainerManager.Remove")}>
-              <IconButton
-                color={"inherit"}
-                className={classes.operateButton}
-                onClick={() => {
-                  setOpen(true);
-                }}
-              >
-                <LinkOff />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title={tr("ContainerManager.Clear")}>
-              <IconButton
-                color={"inherit"}
-                className={classes.operateButton}
-                onClick={() => {
-                  setClearOpen(true);
-                }}
-              >
-                <LayersClear />
-              </IconButton>
-            </Tooltip>
-
-            <Dialog
-              open={deleteAskOpen}
-              onClose={() => {
-                setOpen(false);
-              }}
-            >
-              <DialogTitle>{tr("ContainerManager.AskRemove")}</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  {tr(
-                    "ContainerManager.AskRemoveDetail",
-                    `ID=${props.container}`
-                  )}
-                </DialogContentText>
-                <DialogActions>
-                  <Button
-                    onClick={() => {
-                      setOpen(false);
-                      unlinkContainer(props.container.id);
-                      setContainerListDirty();
-                    }}
-                  >
-                    {tr("ContainerManager.Yes")}
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setOpen(false);
-                    }}
-                  >
-                    {tr("ContainerManager.No")}
-                  </Button>
-                </DialogActions>
-              </DialogContent>
-            </Dialog>
-            <Dialog
-              open={clearAskOpen}
-              onClose={() => {
-                setClearOpen(false);
-              }}
-            >
-              <DialogTitle>{tr("ContainerManager.AskClear")}</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  {tr(
-                    "ContainerManager.AskClearDetail",
-                    `ID=${props.container.id}`
-                  )}
-                </DialogContentText>
-                <DialogActions>
-                  <Button
-                    onClick={async () => {
-                      setClearOpen(false);
-                      setOperating(true);
-                      await clearContainer(props.container.id);
-                      unlinkContainer(props.container.id);
-                      setContainerListDirty();
-                      if (mounted.current) {
-                        setOperating(false);
-                      }
-                    }}
-                  >
-                    {tr("ContainerManager.Yes")}
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setClearOpen(false);
-                    }}
-                  >
-                    {tr("ContainerManager.No")}
-                  </Button>
-                </DialogActions>
-              </DialogContent>
-            </Dialog>
-            {props.isMounted ? (
-              <Tooltip title={tr("ContainerManager.Unmount")}>
-                <IconButton
-                  color={"inherit"}
-                  className={classes.operateButton}
-                  onClick={() => {
-                    unmount(props.container.id);
-                    setContainerListDirty();
-                  }}
-                >
-                  <Eject />
-                </IconButton>
-              </Tooltip>
+          <Box style={{ float: "right" }}>
+            {!props.isMounted || isASC === null ? (
+              ""
             ) : (
-              <Tooltip title={tr("ContainerManager.Mount")}>
-                <IconButton
-                  color={"inherit"}
-                  className={classes.operateButton}
+              <img
+                src={isASC ? Icons.CONTAINER_ASC : Icons.CONTAINER_MCX}
+                width={80}
+                style={{ float: "right" }}
+              />
+            )}
+            <Fade in={showBtn}>
+              <Box>
+                <Tooltip
+                  title={
+                    <Typography className={"smtxt"}>
+                      {tr("ContainerManager.Remove")}
+                    </Typography>
+                  }
+                >
+                  <IconButton
+                    color={"inherit"}
+                    className={classes.operateButton}
+                    onClick={() => {
+                      setOpen(true);
+                    }}
+                  >
+                    <LinkOff />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip
+                  title={
+                    <Typography className={"smtxt"}>
+                      {tr("ContainerManager.Clear")}
+                    </Typography>
+                  }
+                >
+                  <IconButton
+                    color={"inherit"}
+                    className={classes.operateButton}
+                    onClick={() => {
+                      setClearOpen(true);
+                    }}
+                  >
+                    <LayersClear />
+                  </IconButton>
+                </Tooltip>
+                {props.isMounted ? (
+                  <Tooltip
+                    title={
+                      <Typography className={"smtxt"}>
+                        {tr("ContainerManager.Unmount")}
+                      </Typography>
+                    }
+                  >
+                    <IconButton
+                      color={"inherit"}
+                      className={classes.operateButton}
+                      onClick={() => {
+                        unmount(props.container.id);
+                        setContainerListDirty();
+                      }}
+                    >
+                      <Eject />
+                    </IconButton>
+                  </Tooltip>
+                ) : (
+                  <Tooltip
+                    title={
+                      <Typography className={"smtxt"}>
+                        {tr("ContainerManager.Mount")}
+                      </Typography>
+                    }
+                  >
+                    <IconButton
+                      color={"inherit"}
+                      className={classes.operateButton}
+                      onClick={() => {
+                        mount(props.container.id);
+                        setContainerListDirty();
+                        setRefresh(!refresh);
+                      }}
+                    >
+                      <Input />
+                    </IconButton>
+                  </Tooltip>
+                )}
+                <Tooltip
+                  title={
+                    <Typography className={"smtxt"}>
+                      {tr("ContainerManager.OpenInDir")}
+                    </Typography>
+                  }
+                >
+                  <IconButton
+                    color={"inherit"}
+                    className={classes.operateButton}
+                    onClick={() => {
+                      try {
+                        shell.showItemInFolder(props.container.rootDir);
+                      } catch {}
+                    }}
+                  >
+                    <FolderOpen />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Fade>
+          </Box>
+
+          <Dialog
+            open={deleteAskOpen}
+            onClose={() => {
+              setOpen(false);
+            }}
+          >
+            <DialogTitle>{tr("ContainerManager.AskRemove")}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                {tr(
+                  "ContainerManager.AskRemoveDetail",
+                  `ID=${props.container}`
+                )}
+              </DialogContentText>
+              <DialogActions>
+                <Button
                   onClick={() => {
-                    mount(props.container.id);
+                    setOpen(false);
+                    unlinkContainer(props.container.id);
                     setContainerListDirty();
-                    setRefresh(!refresh);
                   }}
                 >
-                  <Input />
-                </IconButton>
-              </Tooltip>
-            )}
-            <Tooltip title={tr("ContainerManager.OpenInDir")}>
-              <IconButton
-                color={"inherit"}
-                className={classes.operateButton}
-                onClick={() => {
-                  try {
-                    shell.showItemInFolder(props.container.rootDir);
-                  } catch {}
-                }}
-              >
-                <FolderOpen />
-              </IconButton>
-            </Tooltip>
-          </>
-          <Typography variant={"h6"} gutterBottom>
+                  {tr("ContainerManager.Yes")}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                >
+                  {tr("ContainerManager.No")}
+                </Button>
+              </DialogActions>
+            </DialogContent>
+          </Dialog>
+          <Dialog
+            open={clearAskOpen}
+            onClose={() => {
+              setClearOpen(false);
+            }}
+          >
+            <DialogTitle>{tr("ContainerManager.AskClear")}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                {tr(
+                  "ContainerManager.AskClearDetail",
+                  `ID=${props.container.id}`
+                )}
+              </DialogContentText>
+              <DialogActions>
+                <Button
+                  onClick={async () => {
+                    setClearOpen(false);
+                    setOperating(true);
+                    await clearContainer(props.container.id);
+                    unlinkContainer(props.container.id);
+                    setContainerListDirty();
+                    if (mounted.current) {
+                      setOperating(false);
+                    }
+                  }}
+                >
+                  {tr("ContainerManager.Yes")}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setClearOpen(false);
+                  }}
+                >
+                  {tr("ContainerManager.No")}
+                </Button>
+              </DialogActions>
+            </DialogContent>
+          </Dialog>
+          <Typography variant={"h6"} className={classes.color} gutterBottom>
             {props.container.id}
           </Typography>
           <Typography
@@ -562,7 +628,11 @@ function AddNewContainer(props: {
               label={tr("ContainerManager.Type.Physical")}
             />
             <Tooltip
-              title={tr("ContainerManager.ASCCacheNotSet")}
+              title={
+                <Typography className={"smtxt"}>
+                  {tr("ContainerManager.ASCCacheNotSet")}
+                </Typography>
+              }
               disableHoverListener={hasEdited("cx.shared-root")}
               disableFocusListener={hasEdited("cx.shared-root")}
               disableTouchListener={hasEdited("cx.shared-root")}
@@ -682,32 +752,37 @@ function AddNewContainer(props: {
             onClick={async () => {
               props.closeFunc();
               props.setOperate(true);
-              addDoing(tr("ContainerManager.FetchingModpack"));
-              let mp = await getTempStorePath(modpackPath);
-              if (!(await isFileExist(modpackPath))) {
-                if (
-                  (await wrappedDownloadFile(
-                    new DownloadMeta(modpackPath, mp)
-                  )) !== 1
-                ) {
-                  props.setFailed(tr("ContainerManager.FailedToFetch"));
-                }
-              } else {
-                mp = modpackPath;
-              }
               try {
                 await createContainer(usedName, selectedDir, createASC);
-                if (mp.endsWith(".zip")) {
-                  await wrappedInstallModpack(getContainer(usedName), mp);
-                }
-                if (mp.endsWith(".json")) {
-                  await deployIJPack(getContainer(usedName), mp);
-                }
-                props.refresh();
               } catch (e) {
                 props.setFailed(String(e));
               }
-
+              if (allowModpack) {
+                addDoing(tr("ContainerManager.FetchingModpack"));
+                let mp = await getTempStorePath(modpackPath);
+                if (!(await isFileExist(modpackPath))) {
+                  if (
+                    (await wrappedDownloadFile(
+                      new DownloadMeta(modpackPath, mp)
+                    )) !== 1
+                  ) {
+                    props.setFailed(tr("ContainerManager.FailedToFetch"));
+                  }
+                } else {
+                  mp = modpackPath;
+                }
+                try {
+                  if (mp.endsWith(".zip")) {
+                    await wrappedInstallModpack(getContainer(usedName), mp);
+                  }
+                  if (mp.endsWith(".json")) {
+                    await deployIJPack(getContainer(usedName), mp);
+                  }
+                  props.refresh();
+                } catch (e) {
+                  props.setFailed(String(e));
+                }
+              }
               setName("");
               setSelected("");
               setAllowModpack(false);

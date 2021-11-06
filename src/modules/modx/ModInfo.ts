@@ -42,6 +42,7 @@ export async function loadModInfo(
       const d = await zip.entryData(FABRIC_MOD_JSON);
       ret.loader = ModLoader.FABRIC;
       loadFabricInfo(JSON.parse(escapeQuote(d.toString())), ret);
+      void zip.close();
       return ret;
     } catch {}
 
@@ -49,6 +50,7 @@ export async function loadModInfo(
       const d = await zip.entryData(META_INF + "/" + MODS_TOML);
       ret.loader = ModLoader.FORGE;
       loadTomlInfo(toml.parse(d.toString()), ret);
+      void zip.close();
       return ret;
     } catch {}
 
@@ -56,21 +58,27 @@ export async function loadModInfo(
       const d = await zip.entryData(MCMOD_INFO);
       ret.loader = ModLoader.FORGE;
       loadMCMODInfo(JSON.parse(escapeQuote(d.toString())), ret);
+      void zip.close();
       return ret;
     } catch {}
     // Bad Loader
+    void zip.close();
     return {
       fileName: container.getModJar(modJar),
       loader: ModLoader.UNKNOWN,
     };
   } catch {
-    return { fileName: container.getModJar(modJar) };
+    return { fileName: container.getModJar(modJar), loader: ModLoader.UNKNOWN };
   }
 }
 
 function loadFabricInfo(obj: Record<string, unknown>, rawInfo: ModInfo): void {
-  rawInfo.mcversion = "*";
-  // Fabric does not contain a version key, we just ignore it
+  const j0 = safeGet(obj, ["depends", "minecraft"], "*") || "*";
+  let j1 = String(j0);
+  if (j0 instanceof Array) {
+    j1 = j0.join(" || ");
+  }
+  rawInfo.mcversion = escapeVersion(j1);
   rawInfo.id = String(safeGet(obj, ["id"]));
   rawInfo.version = String(safeGet(obj, ["version"]));
   rawInfo.description = String(safeGet(obj, ["description"]));
@@ -148,6 +156,15 @@ function loadTomlInfo(obj: Record<string, unknown>, rawInfo: ModInfo): void {
   return;
 }
 
-function escapeQuote(s: string): string {
-  return s.replaceAll('\\"', "'").replaceAll("\r", "").replaceAll("\n", "");
+export function escapeQuote(s: string): string {
+  return s.replaceAll('\\"', "'").replaceAll("\r", "").replaceAll("\n", " ");
+}
+
+const COERCE_REGEX = /(?<=[0-9])-[A-Za-z][0-9A-Za-z.]*/gi;
+const END_REGEX = /-([A-Za-z][0-9A-Za-z.]*)?$/;
+export function escapeVersion(s: string): string {
+  return String(eval('"' + s + '"'))
+    .replaceAll(COERCE_REGEX, "")
+    .replace(END_REGEX, "")
+    .replaceAll("~", ""); // Total ignore
 }

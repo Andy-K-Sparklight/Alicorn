@@ -18,7 +18,9 @@ import { canModVersionApply, gatherVersionInfo } from "./VersionUtil";
 // 2. Moving: move mods back to 'mods' folder
 // 3. Cleaning: delete 'alicorn-mods-dyn'
 
-async function loadMetas(container: MinecraftContainer): Promise<ModInfo[]> {
+export async function loadMetas(
+  container: MinecraftContainer
+): Promise<ModInfo[]> {
   try {
     const allFiles = await fs.readdir(container.getModsRoot());
     const allMods: string[] = [];
@@ -67,7 +69,11 @@ async function moveModsTo(
       mi.mcversion = mi.mcversion || "*"; // Fallback
       if (
         mi.loader?.toString() !== type.toString() ||
-        !canModVersionApply(mi.mcversion || "", mcVersion)
+        !canModVersionApply(
+          mi.mcversion || "",
+          mcVersion,
+          mi.loader === ModLoader.FABRIC
+        )
       ) {
         toProcess.push(mi);
       } else {

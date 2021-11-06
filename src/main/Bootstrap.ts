@@ -177,7 +177,8 @@ async function whenAppReady() {
 function main() {
   console.log("Loading config...");
   loadConfigSync();
-  if (!getBoolean("hardware-acc")) {
+  if (!getBoolean("hardware-acc") && !getBoolean("features.skin-view-3d")) {
+    // If 3D enabled then we should use hardware acc
     try {
       app.disableHardwareAcceleration();
     } catch {}

@@ -26,6 +26,7 @@ import {
   copyAccount,
   getAllAccounts,
   loadAccount,
+  querySkinFor,
   removeAccount,
   saveAccount,
 } from "../modules/auth/AccountUtil";
@@ -33,8 +34,10 @@ import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
 import { MojangAccount } from "../modules/auth/MojangAccount";
 import { Nide8Account } from "../modules/auth/Nide8Account";
 import { ALICORN_ENCRYPTED_DATA_SUFFIX } from "../modules/commons/Constants";
+import { getBoolean } from "../modules/config/ConfigSupport";
 import { YNDialog } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import { SkinDisplay2D, SkinDisplay3D } from "./SkinDisplay";
 import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
 
@@ -51,7 +54,7 @@ export function YggdrasilAccountManager(): JSX.Element {
   adding = adding ? decodeURIComponent(adding) : undefined;
   const [isAdding, setAdding] = useState(String(adding) === "1");
   useEffect(() => {
-    const fun = (e: Event) => {
+    const fun = () => {
       setAdding(true);
     };
     window.addEventListener("YggdrasilAccountInfoDropped", fun);
@@ -87,8 +90,14 @@ export function YggdrasilAccountManager(): JSX.Element {
       <Typography className={classes.smallText} color={"secondary"}>
         {tr("AccountManager.Note")}
       </Typography>
-      <Box style={{ textAlign: "right", marginRight: "18%" }}>
-        <Tooltip title={tr("AccountManager.Reload")}>
+      <Box style={{ textAlign: "right" }}>
+        <Tooltip
+          title={
+            <Typography className={"smtxt"}>
+              {tr("AccountManager.Reload")}
+            </Typography>
+          }
+        >
           <IconButton
             color={"inherit"}
             onClick={() => {
@@ -99,7 +108,13 @@ export function YggdrasilAccountManager(): JSX.Element {
             <Refresh />
           </IconButton>
         </Tooltip>
-        <Tooltip title={tr("AccountManager.AddYggdrasil")}>
+        <Tooltip
+          title={
+            <Typography className={"smtxt"}>
+              {tr("AccountManager.AddYggdrasil")}
+            </Typography>
+          }
+        >
           <IconButton
             color={"inherit"}
             onClick={() => {
@@ -161,6 +176,13 @@ export function SingleAccountDisplay(props: {
   const [mjLWOpening, setMjLWOpen] = useState(false);
   const usingAccount = useRef<Account>(accountCopy);
   const [isAsking, setIsAsking] = useState(false);
+  const [skinUrl, setSkinUrl] = useState("");
+  useEffect(() => {
+    void (async () => {
+      const u = await querySkinFor(props.account);
+      setSkinUrl(u);
+    })();
+  }, [props.account.lastUsedUUID, props.account.lastUsedAccessToken]);
   return (
     <>
       {/* Confirm delete */}
@@ -203,8 +225,23 @@ export function SingleAccountDisplay(props: {
       />
       <Card className={classes.card}>
         <CardContent>
-          <>
-            <Tooltip title={tr("AccountManager.Remove")}>
+          <Box style={{ float: "right" }}>
+            {skinUrl ? (
+              getBoolean("features.skin-view-3d") ? (
+                <SkinDisplay3D skin={skinUrl} width={100} height={150} />
+              ) : (
+                <SkinDisplay2D skin={skinUrl} />
+              )
+            ) : (
+              ""
+            )}
+            <Tooltip
+              title={
+                <Typography className={"smtxt"}>
+                  {tr("AccountManager.Remove")}
+                </Typography>
+              }
+            >
               <IconButton
                 disabled={isOperating}
                 color={"inherit"}
@@ -216,7 +253,13 @@ export function SingleAccountDisplay(props: {
                 <DeleteForever />
               </IconButton>
             </Tooltip>
-            <Tooltip title={tr("AccountManager.Refresh")}>
+            <Tooltip
+              title={
+                <Typography className={"smtxt"}>
+                  {tr("AccountManager.Refresh")}
+                </Typography>
+              }
+            >
               <IconButton
                 disabled={isOperating}
                 color={"inherit"}
@@ -238,7 +281,8 @@ export function SingleAccountDisplay(props: {
                 <Refresh />
               </IconButton>
             </Tooltip>
-          </>
+            <br />
+          </Box>
           <Typography
             className={classes.text}
             color={"textSecondary"}
@@ -246,7 +290,7 @@ export function SingleAccountDisplay(props: {
           >
             {toReadableType(props.account.type)}
           </Typography>
-          <Typography variant={"h6"} gutterBottom>
+          <Typography variant={"h6"} className={classes.color} gutterBottom>
             {props.account.accountName}
           </Typography>
           <Typography
@@ -256,6 +300,21 @@ export function SingleAccountDisplay(props: {
           >
             {props.account.lastUsedUUID}
           </Typography>
+          {skinUrl ? (
+            <Typography
+              className={classes.text}
+              color={"textSecondary"}
+              gutterBottom
+            >
+              {tr(
+                getBoolean("features.skin-view-3d")
+                  ? "AccountManager.SkinView3D"
+                  : "AccountManager.SkinView2D"
+              )}
+            </Typography>
+          ) : (
+            ""
+          )}
           <LinearProgress
             color={"secondary"}
             style={isOperating ? {} : { display: "none" }}
@@ -329,10 +388,9 @@ function YggdrasilForm(props: {
           {hasError ? (
             <DialogContentText
               style={{
-                fontSize:
-                  window.sessionStorage.getItem("smallFontSize") || "16px",
                 color: "#ff8400",
               }}
+              className={"smtxt"}
             >
               {tr("AccountManager.Failed")}
             </DialogContentText>
@@ -479,10 +537,9 @@ function AddAccount(props: {
             {isCustom ? (
               <DialogContentText
                 style={{
-                  fontSize:
-                    window.sessionStorage.getItem("smallFontSize") || "16px",
                   color: "#ff8400",
                 }}
+                className={"smtxt"}
               >
                 {tr("AccountManager.Warn")}
               </DialogContentText>

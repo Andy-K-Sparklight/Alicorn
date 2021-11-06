@@ -22,7 +22,7 @@ export function VersionView(): JSX.Element {
         color: theme.palette.primary.main,
       },
       text: {
-        fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
+        fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
       },
     })
   )();

@@ -50,3 +50,7 @@ body {
 .yggdrasil_droppable {
   min-height: 100vh; /* Easy to drop */
 }
+
+div[role="dialog"] {
+  overflow: visible;
+}

@@ -548,10 +548,10 @@ function BBCodeDisplay(props: {
       <Typography
         style={{
           display: "inline",
-          fontSize: window.sessionStorage.getItem("smallFontSize") || "16px",
           overflow: "auto",
           lineBreak: "auto",
         }}
+        className={"smtxt"}
         color={"secondary"}
       >
         {tr("CrashReportDisplay.Instruction")}

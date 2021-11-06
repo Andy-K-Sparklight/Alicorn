@@ -52,5 +52,7 @@
   "frame.drag-impl": "Webkit",
   "interactive.assistant?": true,
   "first-run?": true,
-  "theme": "Default"
+  "theme": "Default",
+  "auto-launch": false,
+  "features.skin-view-3d": true
 }
