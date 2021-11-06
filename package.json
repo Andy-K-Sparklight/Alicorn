@@ -2,7 +2,7 @@
   "private": true,
   "appVersion": "Sonic Rainboom",
   "version": "1.0.0",
-  "updatorVersion": 29,
+  "updatorVersion": 30,
   "sideEffects": false,
   "scripts": {
     "lc": "yarn lcd",
