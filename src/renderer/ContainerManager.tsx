@@ -4,7 +4,7 @@ import {
   FolderOpen,
   Input,
   LayersClear,
-  LinkOff,
+  LinkOff
 } from "@mui/icons-material";
 import {
   Box,
@@ -25,7 +25,7 @@ import {
   TextField,
   ThemeProvider,
   Tooltip,
-  Typography,
+  Typography
 } from "@mui/material";
 import { ipcRenderer, shell } from "electron";
 import fs from "fs-extra";
@@ -45,12 +45,12 @@ import {
   getContainer,
   isMounted,
   mount,
-  unmount,
+  unmount
 } from "../modules/container/ContainerUtil";
 import {
   clearContainer,
   createNewContainer,
-  unlinkContainer,
+  unlinkContainer
 } from "../modules/container/ContainerWrapper";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { isSharedContainer } from "../modules/container/SharedFiles";
@@ -60,7 +60,7 @@ import {
   getDoing,
   subscribeDoing,
   unsubscribeDoing,
-  wrappedDownloadFile,
+  wrappedDownloadFile
 } from "../modules/download/DownloadWrapper";
 import { isWebFileExist } from "../modules/download/RainbowFetch";
 import { deployIJPack } from "../modules/pff/modpack/InstallIJModpack";
@@ -70,13 +70,13 @@ import { submitSucc } from "./Message";
 import {
   FailedHint,
   OperatingHint,
-  OperatingHintCustom,
+  OperatingHintCustom
 } from "./OperatingHint";
 import { hasEdited } from "./Options";
 import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
-  isBgDark,
+  isBgDark
 } from "./Renderer";
 import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
@@ -230,6 +230,7 @@ function SingleContainerDisplay(props: {
       <OperatingHint open={operating} />
 
       <Card
+      raised={true}
         className={props.isMounted ? classes.card : classes.uCard}
         onMouseOver={() => {
           setShowBtn(true);

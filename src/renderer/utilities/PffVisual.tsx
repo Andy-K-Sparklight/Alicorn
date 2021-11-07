@@ -243,6 +243,7 @@ function SingleAddonDisplay(props: {
   return (
     <Box style={{ textAlign: "left" }}>
       <Card
+        raised={true}
         className={props.isSelected ? classes.card2 : classes.card}
         onClick={() => {
           if (props.info) {

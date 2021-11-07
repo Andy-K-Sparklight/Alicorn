@@ -66,7 +66,7 @@ function SimpleUtil(props: {
         triggerSetPage(tr(`Utilities.${props.name}.Title`));
       }}
     >
-      <Card className={accClasses.acc1}>
+      <Card className={accClasses.acc1} raised={true}>
         <CardContent>
           <Grid container direction="row" alignItems="center">
             <Grid item>{props.icon}</Grid>

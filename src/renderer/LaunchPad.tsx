@@ -183,6 +183,7 @@ function SingleCoreDisplay(props: {
   return (
     <>
       <Card
+        raised={true}
         onMouseOver={() => {
           setShowBtn(true);
         }}
