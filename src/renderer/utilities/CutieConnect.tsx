@@ -8,18 +8,14 @@ import {
   ThemeProvider,
   Typography,
 } from "@mui/material";
-import { ipcRenderer } from "electron";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { getBoolean, getString } from "../../modules/config/ConfigSupport";
 import { killEdge, runEdge } from "../../modules/cutie/BootEdge";
 import { applyCode, OnlineGameInfo } from "../../modules/cutie/Hoofoff";
 import { generateWorldAnyUniqueId } from "../../modules/security/Unique";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "../GoTo";
 import { submitInfo, submitSucc, submitWarn } from "../Message";
-import {
-  ALICORN_DEFAULT_THEME_DARK,
-  ALICORN_DEFAULT_THEME_LIGHT,
-} from "../Renderer";
+import { ALICORN_DEFAULT_THEME_LIGHT } from "../Renderer";
 import { useTextStyles } from "../Stylex";
 import { randsl, tr } from "../Translator";
 
@@ -61,6 +57,7 @@ export function CutieConnet(): JSX.Element {
   return (
     <>
       <Tabs
+        variant={"fullWidth"}
         value={tabIndex}
         onChange={(_e, v) => {
           setTabIndex(v);
@@ -74,7 +71,7 @@ export function CutieConnet(): JSX.Element {
           }
         />
         <Tab
-          style={{
+          sx={{
             display: getBoolean("dev.experimental") ? "inherit" : "none",
           }}
           label={
@@ -88,7 +85,7 @@ export function CutieConnet(): JSX.Element {
         <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
           <br />
           <br />
-          <FormControl>
+          <FormControl sx={{ width: "100%" }}>
             <TextField
               autoFocus
               color={"primary"}
@@ -185,7 +182,7 @@ export function CutieConnet(): JSX.Element {
               error={ipError}
               color={"primary"}
               variant={"outlined"}
-              style={{
+              sx={{
                 width: "49%",
                 float: "left",
               }}
@@ -207,7 +204,7 @@ export function CutieConnet(): JSX.Element {
               color={"primary"}
               variant={"outlined"}
               disabled={communityName === INTERNET}
-              style={{
+              sx={{
                 width: "49%",
                 float: "right",
               }}
@@ -241,7 +238,7 @@ export function CutieConnet(): JSX.Element {
                   e.target.value.trim()
                 );
               }}
-              style={{
+              sx={{
                 width: "49%",
                 float: "left",
               }}
@@ -265,7 +262,7 @@ export function CutieConnet(): JSX.Element {
                   e.target.value.trim()
                 );
               }}
-              style={{
+              sx={{
                 width: "49%",
                 float: "right",
               }}
@@ -306,7 +303,7 @@ export function CutieConnet(): JSX.Element {
               {tr("Utilities.CutieConnect.Connect")}
             </Button>
             <Button
-              style={{ marginLeft: "0.25em" }}
+              sx={{ marginLeft: "0.25em" }}
               color={"primary"}
               variant={"contained"}
               onClick={async () => {
@@ -343,14 +340,6 @@ function generateRandIP(): string {
 
     o.push("172", get16to31Num(), get255Num(), get255Num());
   }
-  return o.join(".");
-}
-
-function generateRandIP10(): string {
-  const o = [];
-  o.push("10", "16", "32");
-  const ds = new Date().getTime();
-  o.push((ds - Math.floor(ds / 256) * 256).toString()); // FIXME: This duplicates fast!
   return o.join(".");
 }
 
@@ -393,68 +382,6 @@ function checkHost(h: string): boolean {
   return false;
 }
 
-function GameDisplay(props: {
-  name: string;
-  desc: string;
-  host: string;
-}): JSX.Element {
-  const text = useTextStyles();
-  const [reachable, setReachable] = useState();
-  const mounted = useRef(false);
-  useEffect(() => {
-    mounted.current = true;
-    return () => {
-      mounted.current = false;
-    };
-  });
-  useEffect(() => {
-    void (async () => {
-      const st = await ipcRenderer.invoke("isReachable", props.host);
-      if (mounted.current) {
-        setReachable(st);
-      }
-    })();
-  }, []);
-  return (
-    <Box
-      style={{
-        marginLeft: "4%",
-      }}
-      onClick={() => {
-        jumpTo("/LaunchPad/" + encodeURIComponent(props.host));
-        triggerSetPage("LaunchPad");
-      }}
-    >
-      <Typography
-        className={text.thirdTextRaw}
-        style={{
-          color:
-            reachable === undefined
-              ? ALICORN_DEFAULT_THEME_DARK.palette.primary.light
-              : reachable
-              ? ALICORN_DEFAULT_THEME_DARK.palette.primary.main
-              : "gray",
-        }}
-      >
-        {props.name}
-      </Typography>
-      <Typography className={text.secondText} gutterBottom>
-        {props.host + " - " + props.desc}
-      </Typography>
-    </Box>
-  );
-}
-
-function getMapHostBySupernode(h: string): string {
-  const ps = h.split(":");
-  ps[1] = (parseInt(ps[1]) - 1).toString();
-  return "ws://" + ps.join(":");
-}
-
-function validatePort(p: string): boolean {
-  const s = parseInt(p);
-  return s >= 0 && s <= 65535;
-}
 function TabPanel(props: {
   children?: React.ReactNode;
   index: string | number;

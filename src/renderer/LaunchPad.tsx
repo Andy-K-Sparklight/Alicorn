@@ -119,7 +119,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
 
   return (
     <>
-      <Box style={{ textAlign: "right" }}>
+      <Box sx={{ textAlign: "right" }}>
         <Tooltip
           title={
             <Typography className={"smtxt"}>{tr("CoreInfo.Reload")}</Typography>
@@ -141,7 +141,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
         <>
           <LinearProgress color={"secondary"} />
           <Typography
-            style={{ fontSize: "medium", color: "#ff8400" }}
+            sx={{ fontSize: "medium", color: "#ff8400" }}
             gutterBottom
           >
             {tr("CoreInfo.StillLoading")}
@@ -210,9 +210,7 @@ function SingleCoreDisplay(props: {
           {props.profile.corrupted ? (
             ""
           ) : (
-            <Box
-              style={{ float: "right", display: "flex", flexDirection: "row" }}
-            >
+            <Box sx={{ float: "right", display: "flex", flexDirection: "row" }}>
               <Fade in={showBtn}>
                 <Box>
                   <Tooltip
@@ -410,7 +408,7 @@ function CorruptedCoreWarning(): JSX.Element {
   return (
     <>
       <Typography
-        style={{
+        sx={{
           color: "#ff8400",
         }}
         className={"smtxt"}

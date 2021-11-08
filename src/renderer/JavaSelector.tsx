@@ -245,7 +245,7 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
       )}
       {corruptBit ? (
         <Typography
-          style={{
+          sx={{
             color: "#ff8400",
           }}
           className={"smtxt"}
@@ -264,7 +264,7 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
             ""
           ) : (
             <Typography
-              style={{
+              sx={{
                 color: "#ff8400",
               }}
               gutterBottom
@@ -277,7 +277,7 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
             ""
           ) : (
             <Typography
-              style={{
+              sx={{
                 color: "#ff8400",
               }}
               className={"smtxt"}
@@ -290,7 +290,7 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
             ""
           ) : (
             <Typography
-              style={{
+              sx={{
                 color: "#ff8400",
               }}
               className={"smtxt"}
@@ -375,7 +375,7 @@ function JavaDownloader(): JSX.Element {
               }
             })();
           }}
-          style={{
+          sx={{
             marginTop: "1%",
           }}
         >

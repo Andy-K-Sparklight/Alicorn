@@ -7,7 +7,6 @@ import { loadProfile } from "../modules/profile/ProfileLoader";
 import { jumpTo, triggerSetPage } from "./GoTo";
 import { ShiftEle } from "./Instruction";
 import { LAST_SUCCESSFUL_GAME_KEY } from "./ReadyToLaunch";
-import { ALICORN_DEFAULT_THEME_DARK } from "./Renderer";
 import { useTextStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
 
@@ -45,7 +44,7 @@ export function Welcome(): JSX.Element {
 
   return (
     <Box
-      style={{
+      sx={{
         textAlign: "center",
         marginTop: "8%",
       }}
@@ -68,7 +67,7 @@ export function Welcome(): JSX.Element {
         >
           <b
             style={{
-              color: ALICORN_DEFAULT_THEME_DARK.palette.primary.main,
+              color: "primary.main",
               fontSize: "larger",
             }}
           >
@@ -78,7 +77,7 @@ export function Welcome(): JSX.Element {
           {randsl("Welcome.Tips")}
           <b
             style={{
-              color: ALICORN_DEFAULT_THEME_DARK.palette.primary.main,
+              color: "primary.main",
               fontSize: "larger",
             }}
           >
@@ -88,7 +87,7 @@ export function Welcome(): JSX.Element {
       </Box>
       <br />
       <Box
-        style={{
+        sx={{
           textAlign: "center",
           display: "flex",
           justifyContent: "center",
@@ -134,7 +133,7 @@ export function Welcome(): JSX.Element {
           </>
         </ShiftEle>
       </Box>
-      <Box style={{ marginTop: "10%" }}>
+      <Box sx={{ marginTop: "10%" }}>
         <SpecialKnowledge />
       </Box>
     </Box>
@@ -150,7 +149,7 @@ function RoundBtn(props: {
 }): JSX.Element {
   return (
     <Box
-      style={{
+      sx={{
         display: "inline",
         marginLeft: "0.5em",
       }}
@@ -190,8 +189,8 @@ export function SpecialKnowledge(): JSX.Element {
   const [a, b] = currentItem.split("|");
   return (
     <Box
-      style={{
-        color: ALICORN_DEFAULT_THEME_DARK.palette.primary.main,
+      sx={{
+        color: "primary.main",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

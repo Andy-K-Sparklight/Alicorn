@@ -310,19 +310,14 @@ export function App(): JSX.Element {
         e.dataTransfer.dropEffect = "copy";
       }}
     >
-      <AppBar
-        enableColorOnDark
-        style={{
-          backgroundImage: "none",
-        }}
-      >
+      <AppBar enableColorOnDark>
         <Toolbar
           onMouseDown={
             getString("frame.drag-impl") === "Delta" ? onMouseDown : undefined
           }
         >
           <IconButton
-            style={{
+            sx={{
               display: showCommand ? "none" : undefined,
               marginRight: "0.375em",
             }}
@@ -643,7 +638,7 @@ export function App(): JSX.Element {
 
       <Snackbar
         open={openNotice}
-        style={{
+        sx={{
           width: "90%",
         }}
         autoHideDuration={5000}
@@ -660,7 +655,7 @@ export function App(): JSX.Element {
       </Snackbar>
       <Snackbar
         open={openSucc}
-        style={{
+        sx={{
           width: "90%",
           zIndex: 999,
         }}
@@ -678,7 +673,7 @@ export function App(): JSX.Element {
       </Snackbar>
       <Snackbar
         open={openWarn}
-        style={{
+        sx={{
           width: "90%",
           zIndex: 999,
         }}
@@ -696,7 +691,7 @@ export function App(): JSX.Element {
       </Snackbar>
       <Snackbar
         open={openInfo}
-        style={{
+        sx={{
           width: "90%",
           zIndex: 999,
         }}

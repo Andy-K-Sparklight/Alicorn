@@ -54,7 +54,7 @@ function InstructionInside(props: {
   const mgb = 85 - mgt;
   return (
     <Box
-      style={{
+      sx={{
         position: "fixed",
         top: 0,
         left: 0,
@@ -68,7 +68,7 @@ function InstructionInside(props: {
       }}
     >
       <Box
-        style={{
+        sx={{
           position: "fixed",
           left: mgl + "%",
           top: mgt + "%",
@@ -78,7 +78,7 @@ function InstructionInside(props: {
         }}
       >
         <Box
-          style={{
+          sx={{
             borderColor: "white",
             borderWidth: "0.125em",
             borderStyle: "solid",
@@ -87,7 +87,7 @@ function InstructionInside(props: {
           <img src={tr("Avatar")} width={"auto"} height={"100%"} />
         </Box>
         <Box
-          style={{
+          sx={{
             backgroundColor: "#00000095",
             borderColor: "white",
             borderWidth: "0.125em",
@@ -97,7 +97,7 @@ function InstructionInside(props: {
           }}
         >
           <Box
-            style={{
+            sx={{
               marginTop: "0.625em",
               marginLeft: "0.5em",
               marginRight: "0.5em",

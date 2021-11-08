@@ -229,7 +229,7 @@ export function PffFront(): JSX.Element {
           />
         </FormControl>
         <Typography
-          style={{
+          sx={{
             userSelect: "all",
             textAlign: "center",
           }}
@@ -242,7 +242,7 @@ export function PffFront(): JSX.Element {
           ""
         ) : (
           <Typography
-            style={{
+            sx={{
               textAlign: "center",
               color: "#ff8400",
             }}
@@ -254,6 +254,7 @@ export function PffFront(): JSX.Element {
       </Box>
       <>
         <Tabs
+          variant={"fullWidth"}
           value={val}
           onChange={(_e, v) => {
             setVal(v);
@@ -448,7 +449,7 @@ export function SinglePffModDisplay(props: {
         }}
         primary={
           <Typography
-            style={{
+            sx={{
               color: isCompatible ? undefined : "gray",
               textDecoration: isCompatible ? undefined : "line-through",
               fontWeight: showDesc ? "bold" : undefined,
@@ -461,7 +462,7 @@ export function SinglePffModDisplay(props: {
         secondary={
           <Typography
             className={"smtxt"}
-            style={{
+            sx={{
               color: isCompatible ? undefined : "gray",
               textDecoration: isCompatible ? undefined : "line-through",
               fontWeight: showDesc ? "bold" : undefined,
@@ -527,7 +528,7 @@ export function SingleModDisplay(props: {
       <ListItemText
         primary={
           <Typography
-            style={{
+            sx={{
               textDecoration: !compatible ? "line-through" : undefined,
               fontWeight: showDesc ? "bold" : undefined,
               color: compatible ? undefined : "gray",
@@ -540,7 +541,7 @@ export function SingleModDisplay(props: {
         secondary={
           <Typography
             color={"secondary"}
-            style={{
+            sx={{
               textDecoration:
                 !compatible && !showDesc ? "line-through" : undefined,
               fontWeight: showDesc ? "bold" : undefined,

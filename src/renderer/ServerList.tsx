@@ -66,7 +66,7 @@ export function ServerList(): JSX.Element {
   }, []);
   return (
     <>
-      <Box style={{ textAlign: "right", marginRight: "5%" }}>
+      <Box sx={{ textAlign: "right", marginRight: "5%" }}>
         <Tooltip
           title={
             <Typography className={"smtxt"}>{tr("ServerList.Add")}</Typography>
@@ -219,13 +219,13 @@ export function SingleServerDisplay(props: {
       <AccordionSummary
         className={classes.acc1}
         expandIcon={<ExpandMore />}
-        style={{
+        sx={{
           display: "flex",
           alignItems: "center",
         }}
       >
         <Typography
-          style={{
+          sx={{
             display: "inline",
             lineHeight: "3",
           }}
@@ -233,7 +233,7 @@ export function SingleServerDisplay(props: {
           {props.address}
         </Typography>
         <Box
-          style={{
+          sx={{
             display: "inline",
             marginLeft: "auto",
           }}
@@ -246,7 +246,7 @@ export function SingleServerDisplay(props: {
             }
           >
             <IconButton
-              style={{
+              sx={{
                 marginRight: 0,
               }}
               onClick={() => {
@@ -265,7 +265,7 @@ export function SingleServerDisplay(props: {
             }
           >
             <IconButton
-              style={{
+              sx={{
                 marginRight: 0,
               }}
               onClick={() => {
@@ -298,7 +298,7 @@ export function SingleServerDisplay(props: {
             }
           >
             <IconButton
-              style={{
+              sx={{
                 marginRight: 0,
               }}
             >

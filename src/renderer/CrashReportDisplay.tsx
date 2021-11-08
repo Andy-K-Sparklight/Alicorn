@@ -35,10 +35,7 @@ import {
   LAST_LOGS_KEY,
   MCFailureInfo,
 } from "./ReadyToLaunch";
-import {
-  ALICORN_DEFAULT_THEME_DARK,
-  ALICORN_DEFAULT_THEME_LIGHT,
-} from "./Renderer";
+import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { AlicornTheme } from "./Stylex";
 import { tr } from "./Translator";
 
@@ -334,8 +331,8 @@ function Analyze(props: {
         ) : (
           <>
             <Typography
-              style={{
-                color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.light,
+              sx={{
+                color: "secondary.light",
               }}
               onClick={() => {
                 window.dispatchEvent(
@@ -463,8 +460,8 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
               }}
             >
               <ListItemText
-                style={{
-                  color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.light,
+                sx={{
+                  color: "secondary.light",
                 }}
               >
                 <b>{tr("CrashReportDisplay.AnalyzeLogs.Up")}</b>
@@ -481,7 +478,7 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
             return (
               <Typography
                 key={i}
-                style={{
+                sx={{
                   wordBreak: "break-all",
                   color: isException(l)
                     ? "#ff0000"
@@ -506,8 +503,8 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
             >
               <hr />
               <ListItemText
-                style={{
-                  color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.light,
+                sx={{
+                  color: "secondary.light",
                 }}
               >
                 <b>{tr("CrashReportDisplay.AnalyzeLogs.Down")}</b>
@@ -539,12 +536,12 @@ function BBCodeDisplay(props: {
   );
   return (
     <Box
-      style={{
+      sx={{
         display: "flex",
       }}
     >
       <Typography
-        style={{
+        sx={{
           display: "inline",
           overflow: "auto",
           lineBreak: "auto",
@@ -555,7 +552,7 @@ function BBCodeDisplay(props: {
         {tr("CrashReportDisplay.Instruction")}
       </Typography>
       <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-        <FormControl style={{ display: "inline", marginLeft: "auto" }}>
+        <FormControl sx={{ display: "inline", marginLeft: "auto" }}>
           <Button
             onClick={() => {
               if (!copy(code, { format: "text/plain" })) {

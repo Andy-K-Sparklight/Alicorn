@@ -52,7 +52,7 @@ export function PffVisual(): JSX.Element {
     <>
       <Typography
         color={"secondary"}
-        style={{ marginLeft: 0 }}
+        sx={{ marginLeft: 0 }}
         className={classes.smallText}
       >
         {tr("Utilities.PffVisual.Hint")}
@@ -140,6 +140,7 @@ export function PffVisual(): JSX.Element {
           <FormControlLabel
             control={
               <Checkbox
+                color={"primary"}
                 checked={multiSelect}
                 disabled={mode !== "Normal"}
                 onChange={(e) => {
@@ -164,6 +165,7 @@ export function PffVisual(): JSX.Element {
           <FormControlLabel
             control={
               <Checkbox
+                color={"primary"}
                 disabled={searching}
                 checked={mode === "Modpack"}
                 onChange={(e) => {
@@ -241,7 +243,7 @@ function SingleAddonDisplay(props: {
   const classes = useCardStyles();
   const a = props.info?.supportVersions || [];
   return (
-    <Box style={{ textAlign: "left" }}>
+    <Box sx={{ textAlign: "left" }}>
       <Card
         raised={true}
         className={props.isSelected ? classes.card2 : classes.card}

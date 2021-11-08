@@ -79,7 +79,7 @@ export function VersionView(): JSX.Element {
       <Typography
         className={classes.text}
         color={"primary"}
-        style={{
+        sx={{
           float: "right",
           marginRight: "2%",
         }}

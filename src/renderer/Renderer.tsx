@@ -345,7 +345,7 @@ function flushColors(): void {
           getString("theme.primary.main") || "#" + getTheme()[0]
         } !important;} fieldset {border-color:${
           getString("theme.primary.main") || "#" + getTheme()[0]
-        } !important;} div[role="radiogroup"] > label > span > span > div > svg {color: ${
+        } !important;} div[role="radiogroup"] > label > span > span > div > svg, input[type="checkbox"] + svg, .MuiFormControlLabel-label {color: ${
           getString("theme.primary.main") || "#" + getTheme()[0]
         } !important;}`
       : "");
@@ -561,7 +561,7 @@ function RendererBootstrap(): JSX.Element {
           </HashRouter>
           {getString("theme") === "Random" ? (
             <Typography
-              style={{
+              sx={{
                 pointerEvents: "none",
                 position: "fixed",
                 left: "0.3125em",
@@ -576,7 +576,7 @@ function RendererBootstrap(): JSX.Element {
           )}
 
           <Typography
-            style={{
+            sx={{
               pointerEvents: "none",
               position: "fixed",
               right: "0.3125em",

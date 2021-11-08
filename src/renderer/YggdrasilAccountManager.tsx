@@ -90,7 +90,7 @@ export function YggdrasilAccountManager(): JSX.Element {
       <Typography className={classes.smallText} color={"secondary"}>
         {tr("AccountManager.Note")}
       </Typography>
-      <Box style={{ textAlign: "right" }}>
+      <Box sx={{ textAlign: "right" }}>
         <Tooltip
           title={
             <Typography className={"smtxt"}>
@@ -225,7 +225,7 @@ export function SingleAccountDisplay(props: {
       />
       <Card className={classes.card} raised={true}>
         <CardContent>
-          <Box style={{ float: "right" }}>
+          <Box sx={{ float: "right" }}>
             {skinUrl ? (
               getBoolean("features.skin-view-3d") ? (
                 <SkinDisplay3D skin={skinUrl} width={100} height={150} />
@@ -387,7 +387,7 @@ function YggdrasilForm(props: {
           />
           {hasError ? (
             <DialogContentText
-              style={{
+              sx={{
                 color: "#ff8400",
               }}
               className={"smtxt"}
@@ -536,7 +536,7 @@ function AddAccount(props: {
             />
             {isCustom ? (
               <DialogContentText
-                style={{
+                sx={{
                   color: "#ff8400",
                 }}
                 className={"smtxt"}

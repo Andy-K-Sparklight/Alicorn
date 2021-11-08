@@ -13,7 +13,7 @@ export function Statistics(): JSX.Element {
         const s = getStatistics(v);
         return (
           <>
-            <Box key={v} style={{ display: "flex" }}>
+            <Box key={v} sx={{ display: "flex" }}>
               <Typography className={classes.mediumText}>
                 {
                   tr(
@@ -24,7 +24,7 @@ export function Statistics(): JSX.Element {
               </Typography>
               <Typography
                 className={classes.secondText}
-                style={{ marginLeft: "auto" }}
+                sx={{ marginLeft: "auto" }}
               >
                 {randsl("Statistics." + v + ".As", `Value=${s}`)}
               </Typography>

@@ -23,7 +23,7 @@ import {
   TextField,
   ThemeProvider,
   Tooltip,
-  Typography
+  Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { ipcRenderer } from "electron";
@@ -35,7 +35,7 @@ import {
   AccountType,
   fillAccessData,
   getPresentAccounts,
-  querySkinFor
+  querySkinFor,
 } from "../modules/auth/AccountUtil";
 import { prefetchData } from "../modules/auth/AJHelper";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
@@ -45,7 +45,7 @@ import {
   MS_LAST_USED_ACTOKEN_KEY,
   MS_LAST_USED_REFRESH_KEY,
   MS_LAST_USED_USERNAME_KEY,
-  MS_LAST_USED_UUID_KEY
+  MS_LAST_USED_UUID_KEY,
 } from "../modules/auth/MicrosoftAccount";
 import { Nide8Account } from "../modules/auth/Nide8Account";
 import { uniqueHash } from "../modules/commons/BasicHash";
@@ -53,13 +53,13 @@ import { Pair } from "../modules/commons/Collections";
 import {
   PROCESS_END_GATE,
   PROCESS_LOG_GATE,
-  ReleaseType
+  ReleaseType,
 } from "../modules/commons/Constants";
 import { isNull } from "../modules/commons/Null";
 import {
   getBoolean,
   getNumber,
-  getString
+  getString,
 } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
@@ -67,7 +67,7 @@ import { killEdge, runEdge } from "../modules/cutie/BootEdge";
 import { acquireCode, deactiveCode } from "../modules/cutie/Hoofoff";
 import {
   getWrapperStatus,
-  WrapperStatus
+  WrapperStatus,
 } from "../modules/download/DownloadWrapper";
 import {
   getAllJava,
@@ -77,7 +77,7 @@ import {
   getLegacyJDK,
   getNewJDK,
   parseJavaInfo,
-  parseJavaInfoRaw
+  parseJavaInfoRaw,
 } from "../modules/java/JInfo";
 import {
   ensureAllAssets,
@@ -85,7 +85,7 @@ import {
   ensureClient,
   ensureLibraries,
   ensureLog4jFile,
-  ensureNatives
+  ensureNatives,
 } from "../modules/launch/Ensurance";
 import { launchProfile } from "../modules/launch/LaunchPad";
 import { stopMinecraft } from "../modules/launch/MinecraftBootstrap";
@@ -93,7 +93,7 @@ import { LaunchTracker } from "../modules/launch/Tracker";
 import {
   initLocalYggdrasilServer,
   ROOT_YG_URL,
-  skinTypeFor
+  skinTypeFor,
 } from "../modules/localskin/LocalYggdrasilServer";
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
@@ -103,23 +103,20 @@ import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { ShiftEle } from "./Instruction";
 import { submitError, submitSucc, submitWarn } from "./Message";
 import { YNDialog } from "./OperatingHint";
-import {
-  ALICORN_DEFAULT_THEME_DARK,
-  ALICORN_DEFAULT_THEME_LIGHT
-} from "./Renderer";
+import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { SkinDisplay2D, SkinDisplay3D } from "./SkinDisplay";
 import { addStatistics } from "./Statistics";
 import {
   AlicornTheme,
   fullWidth,
   useFormStyles,
-  useInputStyles
+  useInputStyles,
 } from "./Stylex";
 import { randsl, tr } from "./Translator";
 import {
   HOOFOFF_CENTRAL,
   NETWORK_PORT,
-  QUERY_PORT
+  QUERY_PORT,
 } from "./utilities/CutieConnect";
 import { SpecialKnowledge } from "./Welcome";
 import { toReadableType } from "./YggdrasilAccountManager";
@@ -191,7 +188,7 @@ export function ReadyToLaunch(): JSX.Element {
   const fullWidthProgress = fullWidth();
   return (
     <Box
-      style={{
+      sx={{
         textAlign: "center",
       }}
     >
@@ -204,7 +201,7 @@ export function ReadyToLaunch(): JSX.Element {
           />
         ) : profileLoadedBit === 2 ? (
           <Typography
-            style={{ fontSize: "medium", color: "#ff8400" }}
+            sx={{ fontSize: "medium", color: "#ff8400" }}
             gutterBottom
           >
             {tr("ReadyToLaunch.CouldNotLoad")}
@@ -212,7 +209,7 @@ export function ReadyToLaunch(): JSX.Element {
         ) : (
           <LinearProgress
             color={"secondary"}
-            style={{ width: "80%" }}
+            sx={{ width: "80%" }}
             className={fullWidthProgress.progress}
           />
         )}
@@ -806,7 +803,7 @@ function AccountChoose(props: {
   profileHash: string;
 }): JSX.Element {
   const classes = useInputStyles();
-  const btnClasses = makeStyles((theme:AlicornTheme) => ({
+  const btnClasses = makeStyles((theme: AlicornTheme) => ({
     btn: {
       color: theme.palette.primary.main,
       borderColor: theme.palette.primary.main,
@@ -900,7 +897,7 @@ function AccountChoose(props: {
         props.closeFunc();
       }}
     >
-      <DialogContent style={{ overflow: "visible" }}>
+      <DialogContent sx={{ overflow: "visible" }}>
         <DialogTitle>{tr("ReadyToLaunch.StartAuthTitle")}</DialogTitle>
         <DialogContentText>
           {tr("ReadyToLaunch.StartAuthMsg")}
@@ -909,7 +906,7 @@ function AccountChoose(props: {
         {skinUrl ? (
           getBoolean("features.skin-view-3d") ? (
             <Box
-              style={{
+              sx={{
                 position: "absolute",
                 right: 20,
                 top: -50,
@@ -918,13 +915,13 @@ function AccountChoose(props: {
               }}
             >
               <SkinDisplay3D skin={skinUrl} width={100} height={150} />
-              <Typography style={{ color: "gray", marginTop: "-0.25em" }}>
+              <Typography sx={{ color: "gray", marginTop: "-0.25em" }}>
                 {tr("AccountManager.SkinView3DShort")}
               </Typography>
             </Box>
           ) : (
             <Box
-              style={{
+              sx={{
                 position: "absolute",
                 right: 15,
                 top: 10,
@@ -935,7 +932,7 @@ function AccountChoose(props: {
               <SkinDisplay2D skin={skinUrl} />
               <br />
               <br />
-              <Typography style={{ color: "gray", marginTop: "2.625em" }}>
+              <Typography sx={{ color: "gray", marginTop: "2.625em" }}>
                 {tr("AccountManager.SkinView2DShort")}
               </Typography>
             </Box>
@@ -1034,7 +1031,7 @@ function AccountChoose(props: {
               <Select
                 label={tr("ReadyToLaunch.UseYGChoose")}
                 variant={"outlined"}
-                style={{ minWidth: "50%" }}
+                sx={{ minWidth: "50%" }}
                 fullWidth
                 labelId={"Select-Account"}
                 onChange={(e) => {
@@ -1141,7 +1138,7 @@ function MiniJavaSelector(props: {
     <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box
         className={classes.root}
-        style={{
+        sx={{
           marginTop: "0.3125em",
         }}
       >
@@ -1190,7 +1187,7 @@ function MiniJavaSelector(props: {
           }
           return (
             <Typography
-              style={{
+              sx={{
                 color: "#ff8400",
               }}
               className={"smtxt"}
@@ -1305,9 +1302,7 @@ function OpenWorldDialog(props: {
           {tr("ReadyToLaunch.GenerateLinkDesc")}
         </DialogContentText>
         {code ? (
-          <DialogContentText
-            style={{ color: ALICORN_DEFAULT_THEME_DARK.palette.primary.main }}
-          >
+          <DialogContentText sx={{ color: "primary.main" }}>
             {tr("ReadyToLaunch.HoofoffCode", `Code=${code}`)}
           </DialogContentText>
         ) : (
@@ -1372,6 +1367,7 @@ function OpenWorldDialog(props: {
           <FormControlLabel
             control={
               <Checkbox
+                color={"primary"}
                 checked={premium}
                 onChange={(e) => {
                   setPremium(e.target.checked);
@@ -1397,7 +1393,7 @@ function OpenWorldDialog(props: {
           value={message}
         />
         {err ? (
-          <DialogContentText style={{ color: "#ff8400" }}>
+          <DialogContentText sx={{ color: "#ff8400" }}>
             {tr("ReadyToLaunch.Errors." + err)}
           </DialogContentText>
         ) : (
@@ -1481,10 +1477,10 @@ function WaitingText(): JSX.Element {
   }, []);
   return (
     <Typography
-      style={{
+      sx={{
         flexGrow: 1,
         fontSize: "medium",
-        color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.main,
+        color: "secondary.main",
       }}
       gutterBottom
     >

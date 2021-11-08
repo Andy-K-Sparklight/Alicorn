@@ -58,6 +58,7 @@ export function OptionsPage(): JSX.Element {
         <Typography className={classes.head}>{tr("Options.Hint")}</Typography>
         {/* Tabs */}
         <Tabs
+          variant={"fullWidth"}
           value={tabValue}
           onChange={(_e, v) => {
             setTabValue(v);
@@ -480,7 +481,7 @@ export function InputItem(props: {
                   className={classex.inputDark}
                   type={"button"}
                   variant={"outlined"}
-                  style={{
+                  sx={{
                     marginTop: "0.25em",
                   }}
                   onClick={async () => {
@@ -518,14 +519,7 @@ export function InputItem(props: {
                         <Radio disabled={disabled} checked={cSelect === c} />
                       }
                       label={
-                        <Typography
-                          style={{
-                            color:
-                              ALICORN_DEFAULT_THEME_LIGHT.palette.secondary
-                                .main,
-                          }}
-                          className={"smtxt"}
-                        >
+                        <Typography color={"secondary"} className={"smtxt"}>
                           {tr(`Options.${props.bindConfig}.${c}`)}
                         </Typography>
                       }

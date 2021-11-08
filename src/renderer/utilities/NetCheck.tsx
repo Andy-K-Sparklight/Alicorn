@@ -72,23 +72,23 @@ export function TestReachable(props: {
       });
   }, [mounted.current]);
   return (
-    <Box style={{ display: "flex" }}>
-      <Box style={{ display: "inline" }}>
+    <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "inline" }}>
         {reachable === undefined ? (
           <CircularProgress size={ICON_SIZE} color={"primary"} />
         ) : reachable ? (
           <Check
-            style={{ width: ICON_SIZE, height: ICON_SIZE }}
+            sx={{ width: ICON_SIZE, height: ICON_SIZE }}
             color={"primary"}
           />
         ) : (
           <CloudOff
-            style={{ width: ICON_SIZE, height: ICON_SIZE }}
+            sx={{ width: ICON_SIZE, height: ICON_SIZE }}
             color={"primary"}
           />
         )}
       </Box>
-      <Box style={{ display: "inline", marginLeft: "0.25em" }}>
+      <Box sx={{ display: "inline", marginLeft: "0.25em" }}>
         <Typography className={classes.thirdTextRaw}>
           {tr(`Utilities.NetCheck.SiteName.${props.name}`)}
         </Typography>
