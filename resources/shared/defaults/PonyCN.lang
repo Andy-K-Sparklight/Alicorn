@@ -454,6 +454,14 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 完毕
 
+# ReadyToLaunch.DryLaunch
+
+模拟启动
+
+# ReadyToLaunch.DryLaunchDesc
+
+运行所有启动操作，但不执行 Java，也不生成游戏进程
+
 # ReadyToLaunch.GenerateLink
 
 想要联机游戏？我能帮你吗？

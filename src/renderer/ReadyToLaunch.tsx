@@ -1,8 +1,14 @@
-import { FlightLand, FlightTakeoff, RssFeed } from "@mui/icons-material";
+import {
+  FlashOn,
+  FlightLand,
+  FlightTakeoff,
+  RssFeed,
+} from "@mui/icons-material";
 import {
   Box,
   Button,
   Checkbox,
+  Container,
   Dialog,
   DialogActions,
   DialogContent,
@@ -250,6 +256,7 @@ function Launching(props: {
   const [lanPort, setLanPort] = useState(0);
   const [openLanWindow, setOpenLanWindow] = useState(false);
   const [openLanButtonEnabled, setOpenLanButtonEnabled] = useState(false);
+  const [dry, setDry] = useState(false);
   const profileHash = useRef<string>(
     props.container.id + "/" + props.profile.id
   );
@@ -330,7 +337,7 @@ function Launching(props: {
   }, []);
 
   return (
-    <Box className={classes.root}>
+    <Container className={classes.root}>
       <AccountChoose
         open={selecting}
         closeFunc={() => {
@@ -356,7 +363,8 @@ function Launching(props: {
               props.server,
               (id) => {
                 setProfileRelatedID(profileHash.current, id);
-              }
+              },
+              dry
             );
           })();
         }}
@@ -398,6 +406,8 @@ function Launching(props: {
       <Typography variant={"h6"} className={classes.primaryText} gutterBottom>
         {tr("ReadyToLaunch.Status." + status)}
       </Typography>
+      <br />
+
       <Stepper className={classes.stepper} activeStep={activeStep}>
         {LAUNCH_STEPS.map((s) => {
           return (
@@ -411,6 +421,7 @@ function Launching(props: {
           );
         })}
       </Stepper>
+      <br />
       {/* Insert Here */}
       {status === LaunchingStatus.PENDING ||
       status === LaunchingStatus.FINISHED ||
@@ -487,7 +498,8 @@ function Launching(props: {
                       props.server,
                       (id) => {
                         setProfileRelatedID(profileHash.current, id);
-                      }
+                      },
+                      dry
                     );
                   } else {
                     setSelecting(true);
@@ -506,7 +518,11 @@ function Launching(props: {
               }}
             >
               {status !== LaunchingStatus.FINISHED ? (
-                <FlightTakeoff />
+                dry ? (
+                  <FlashOn />
+                ) : (
+                  <FlightTakeoff />
+                )
               ) : openLanButtonEnabled ? (
                 <RssFeed />
               ) : (
@@ -515,6 +531,26 @@ function Launching(props: {
             </Fab>
           </ShiftEle>
         </>
+      </Tooltip>
+      <br />
+      <Tooltip title={tr("ReadyToLaunch.DryLaunchDesc")}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              color={"primary"}
+              disabled={status !== "Pending"}
+              checked={dry}
+              onChange={(e) => {
+                setDry(e.target.checked);
+              }}
+            />
+          }
+          label={
+            <Typography color={"primary"}>
+              {tr("ReadyToLaunch.DryLaunch")}
+            </Typography>
+          }
+        />
       </Tooltip>
       <br />
       <br />
@@ -527,7 +563,7 @@ function Launching(props: {
           setOpenLanWindow(false);
         }}
       />
-    </Box>
+    </Container>
   );
 }
 
@@ -546,7 +582,8 @@ async function startBoot(
   container: MinecraftContainer,
   account: Account,
   server?: string,
-  setRunID: (id: string) => unknown = () => {}
+  setRunID: (id: string) => unknown = () => {},
+  dry = false
 ): Promise<LaunchTracker> {
   // @ts-ignore
   window[LAST_FAILURE_INFO_KEY] = undefined;
@@ -676,15 +713,17 @@ async function startBoot(
   }
   const jRunnable = await getJavaRunnable(jHome);
   let jInfo;
-  try {
-    jInfo = parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(jHome)));
-    GLOBAL_LAUNCH_TRACKER.java({
-      runtime: jInfo.runtime,
-      version: jInfo.rootVersion,
-    });
-  } catch {
-    submitError(tr("ReadyToLaunch.InvalidJava"));
-    return GLOBAL_LAUNCH_TRACKER;
+  if (!dry) {
+    try {
+      jInfo = parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(jHome)));
+      GLOBAL_LAUNCH_TRACKER.java({
+        runtime: jInfo.runtime,
+        version: jInfo.rootVersion,
+      });
+    } catch {
+      submitError(tr("ReadyToLaunch.InvalidJava"));
+      return GLOBAL_LAUNCH_TRACKER;
+    }
   }
   const em = new EventEmitter();
   em.on(PROCESS_LOG_GATE, (d: string) => {
@@ -762,25 +801,35 @@ async function startBoot(
     await restoreMods(container);
     console.log("Done!");
   });
-  const runID = launchProfile(profile, container, jRunnable, acData, em, {
-    useAj: useAj,
-    ajHost: ajHost,
-    ajPrefetch: prefetch,
-    useServer: useServer,
-    server: serverHost,
-    useNd: useNd,
-    ndServerId: ndServerId,
-    resolution: resolutionPolicy ? new Pair(w, h) : undefined,
-    javaVersion: jInfo.rootVersion,
-    maxMem: getNumber("memory", 0),
-    gc1: getString("gc1", "pure"),
-    gc2: getString("gc2", "pure"),
-  });
+  let runID = "0";
+  if (!dry) {
+    runID = launchProfile(profile, container, jRunnable, acData, em, {
+      useAj: useAj,
+      ajHost: ajHost,
+      ajPrefetch: prefetch,
+      useServer: useServer,
+      server: serverHost,
+      useNd: useNd,
+      ndServerId: ndServerId,
+      resolution: resolutionPolicy ? new Pair(w, h) : undefined,
+      javaVersion: jInfo ? jInfo.rootVersion : 0,
+      maxMem: getNumber("memory", 0),
+      gc1: getString("gc1", "pure"),
+      gc2: getString("gc2", "pure"),
+    });
+  }
   addStatistics("Launch");
   setRunID(runID);
   window.localStorage.setItem(LAST_SUCCESSFUL_GAME_KEY, window.location.hash);
   setStatus(LaunchingStatus.FINISHED);
   console.log(`A new Minecraft instance (${runID}) has been launched.`);
+  if (dry) {
+    em.emit(PROCESS_LOG_GATE, "Dry launch successful!");
+    setTimeout(() => {
+      em.emit(PROCESS_LOG_GATE, "Stopping!");
+      em.emit(PROCESS_END_GATE, "0");
+    }, 5000);
+  }
   return GLOBAL_LAUNCH_TRACKER;
 }
 
