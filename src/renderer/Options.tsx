@@ -127,6 +127,7 @@ export function OptionsPage(): JSX.Element {
             bindConfig={"theme"}
             choices={["Default"].concat(Object.keys(AL_THEMES))}
           />
+          <InputItem type={ConfigType.BOOL} bindConfig={"alicorn-ping"} />
           <InputItem
             reload
             type={ConfigType.STR}

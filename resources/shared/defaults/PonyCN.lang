@@ -1198,6 +1198,14 @@ Alicorn 特色功能
 
 高级和重置
 
+# Options.alicorn-ping.title
+
+Alicorn Ping ^
+
+# Options.alicorn-ping.desc
+
+这种几乎不带任何信息的 Ping 可以让 ThatRarityEG 估计活跃用户数\nAlicorn Ping 仅收集一条不可逆的、单向加密过的哈希用于区分不同客户端。
+
 # Options.features.skin-view-3d.title
 
 Skin View 3D 皮肤显示

@@ -30,6 +30,7 @@ import { prefetchMojangVersions } from "../modules/pff/get/MojangCore";
 import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
 import { initEncrypt } from "../modules/security/Encrypt";
 import { getMachineUniqueID } from "../modules/security/Unique";
+import { todayPing } from "../modules/selfupdate/Ping";
 import { checkUpdate, initUpdator } from "../modules/selfupdate/Updator";
 import { loadServers } from "../modules/server/ServerFiles";
 import { App } from "./App";
@@ -195,6 +196,7 @@ try {
       getMachineUniqueID(), // Cache
     ]);
     void completeFirstRun(); // Not blocking
+    void todayPing();
     // Heavy works and minor works
     await Promise.allSettled([initResolveLock(), initVF(), preCacheJavaInfo()]);
     const t2 = new Date();
