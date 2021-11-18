@@ -17,6 +17,7 @@ import { scanCoresInAllMountedContainers } from "../modules/container/ContainerS
 import { getContainer } from "../modules/container/ContainerUtil";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { whatProfile } from "../modules/profile/WhatProfile";
+import { setDirtyProfile } from "../modules/readyboom/PrepareProfile";
 import { jumpTo, triggerSetPage } from "./GoTo";
 import { Icons } from "./Icons";
 import { YNDialog2 } from "./OperatingHint";
@@ -346,6 +347,7 @@ function SingleCoreDisplay(props: {
           onAccept={async () => {
             if (toDestroy) {
               try {
+                setDirtyProfile(props.profile.container, props.profile.id);
                 await remove(
                   getContainer(props.profile.container).getVersionRoot(
                     toDestroy
@@ -375,20 +377,18 @@ function SingleCoreDisplay(props: {
 const PIN_NUMBER_KEY = "PinIndex.";
 
 function getUsed(hash: string): number {
-  return (
-    parseInt(window.localStorage.getItem(PIN_NUMBER_KEY + hash) || "0") || 0
-  );
+  return parseInt(localStorage.getItem(PIN_NUMBER_KEY + hash) || "0") || 0;
 }
 
 function markUsed(hash: string, set?: number): void {
   if (set !== undefined) {
-    window.localStorage.setItem(PIN_NUMBER_KEY + hash, set.toString());
+    localStorage.setItem(PIN_NUMBER_KEY + hash, set.toString());
     return;
   }
   let origin =
-    parseInt(window.localStorage.getItem(PIN_NUMBER_KEY + hash) || "0") || 0;
+    parseInt(localStorage.getItem(PIN_NUMBER_KEY + hash) || "0") || 0;
   origin++;
-  window.localStorage.setItem(PIN_NUMBER_KEY + hash, origin.toString());
+  localStorage.setItem(PIN_NUMBER_KEY + hash, origin.toString());
 }
 
 function getDescriptionFor(type: string): string {

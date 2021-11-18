@@ -28,6 +28,8 @@ import { prefetchFabricManifest } from "../modules/pff/get/FabricGet";
 import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
 import { prefetchMojangVersions } from "../modules/pff/get/MojangCore";
 import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
+import { setupMSAccountRefreshService } from "../modules/readyboom/AccountMaster";
+import { setupHotProfilesService } from "../modules/readyboom/PrepareProfile";
 import { initEncrypt } from "../modules/security/Encrypt";
 import { getMachineUniqueID } from "../modules/security/Unique";
 import { todayPing } from "../modules/selfupdate/Ping";
@@ -90,8 +92,8 @@ try {
   } else {
     console.log("GC Disabled.");
   }
-  const windowPos = window.localStorage.getItem("System.WindowPos");
-  const windowSize = window.localStorage.getItem("System.WindowSize");
+  const windowPos = localStorage.getItem("System.WindowPos");
+  const windowSize = localStorage.getItem("System.WindowSize");
   if (windowSize) {
     const s = windowSize.split(",").map((r) => {
       return parseInt(r);
@@ -105,10 +107,10 @@ try {
     ipcRenderer.send("configureWindowPos", ...s);
   }
   ipcRenderer.on("mainWindowMoved", (_e, pos: number[]) => {
-    window.localStorage.setItem("System.WindowPos", pos.join(","));
+    localStorage.setItem("System.WindowPos", pos.join(","));
   });
   ipcRenderer.on("mainWindowResized", (_e, sz: number[]) => {
-    window.localStorage.setItem("System.WindowSize", sz.join(","));
+    localStorage.setItem("System.WindowSize", sz.join(","));
   });
   void (async () => {
     printScreen("Initializing translator...");
@@ -123,7 +125,7 @@ try {
     // GDT & JDT is required by LaunchPad & JavaSelector
     if (getBoolean("clean-storage")) {
       console.log("Cleaning storage data!");
-      window.localStorage.clear();
+      localStorage.clear();
       await emptyDir(getActualDataPath("."));
       console.log("Stoarge data cleaned.");
       console.log("Resetting and reloading config...");
@@ -212,6 +214,12 @@ try {
     // Optional services
     const t3 = new Date();
     console.log("Running optional services...");
+
+    // Sync services
+    setupMSAccountRefreshService();
+    setupHotProfilesService();
+
+    // Async services
     const updPm = (async () => {
       // Conc
       if (getBoolean("updator.use-update")) {
@@ -287,7 +295,7 @@ function bindSuperCowPower(): void {
 function configureFontSize(): void {
   const f = "0.875em";
   console.log("Set small font size as " + f);
-  window.sessionStorage.setItem("smallFontSize", f);
+  sessionStorage.setItem("smallFontSize", f);
   let e: HTMLStyleElement | null = document.createElement("style");
   e.innerText = `.smtxt{font-size:${f} !important;} .MuiTooltip-tooltip > .smtxt{font-size: 1.2em !important;}`;
   document.head.insertAdjacentElement("beforeend", e);

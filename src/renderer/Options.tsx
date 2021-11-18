@@ -44,7 +44,7 @@ export function OptionsPage(): JSX.Element {
   const classes = makeStyles((theme: AlicornTheme) => ({
     root: {},
     head: {
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
+      fontSize: sessionStorage.getItem("smallFontSize") || "1em",
       color: theme.palette.secondary.main,
     },
   }))();
@@ -171,6 +171,8 @@ export function OptionsPage(): JSX.Element {
         </TabPanel>
         <TabPanel index={2} value={tabValue}>
           {/* AL Features */}
+          <InputItem type={ConfigType.BOOL} bindConfig={"readyboom"} />
+          <InputItem type={ConfigType.NUM} bindConfig={"readyboom.cores"} />
           <InputItem type={ConfigType.STR} bindConfig={"hoofoff.central"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"command"} />
           <InputItem type={ConfigType.DIR} bindConfig={"cx.shared-root"} />
@@ -324,11 +326,11 @@ export function OptionsPage(): JSX.Element {
 }
 
 export function hasEdited(conf: string): boolean {
-  return window.localStorage.getItem("Edited." + conf) === "1";
+  return localStorage.getItem("Edited." + conf) === "1";
 }
 
 export function markEdited(conf: string): void {
-  window.localStorage.setItem("Edited." + conf, "1");
+  localStorage.setItem("Edited." + conf, "1");
 }
 
 export function InputItem(props: {
@@ -347,7 +349,7 @@ export function InputItem(props: {
       get(props.bindConfig, undefined) !== originVal.current &&
       props.reload
     ) {
-      window.sessionStorage.setItem("Options.Reload", "1");
+      sessionStorage.setItem("Options.Reload", "1");
     }
     if (props.onChange) {
       props.onChange();
@@ -376,7 +378,7 @@ export function InputItem(props: {
   }
   const classes = makeStyles((theme: AlicornTheme) => ({
     desc: {
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
+      fontSize: sessionStorage.getItem("smallFontSize") || "1em",
       color: theme.palette.secondary.main,
     },
     switch: {

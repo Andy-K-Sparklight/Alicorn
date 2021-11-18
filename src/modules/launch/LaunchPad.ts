@@ -6,6 +6,7 @@ import { Pair, Trio } from "../commons/Collections";
 import { isNull } from "../commons/Null";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { GameProfile } from "../profile/GameProfile";
+import { setDirtyProfile } from "../readyboom/PrepareProfile";
 import {
   applyAJ,
   applyMemory,
@@ -84,4 +85,23 @@ export function launchProfile(
   console.log(totalArgs);
   ipcRenderer.send("changeDir", container.rootDir);
   return runMinecraft(totalArgs, jExecutable, container, emitter);
+}
+
+const SAFE_LAUNCH_SET: Set<string> = new Set();
+
+export function shouldSafeLaunch(container: string, id: string): boolean {
+  return SAFE_LAUNCH_SET.has(container + "/" + id);
+}
+
+export function markSafeLaunch(
+  container: string,
+  id: string,
+  add = true
+): void {
+  if (add) {
+    SAFE_LAUNCH_SET.add(container + "/" + id);
+    setDirtyProfile(container, id);
+  } else {
+    SAFE_LAUNCH_SET.delete(container + "/" + id);
+  }
 }

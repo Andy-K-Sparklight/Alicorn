@@ -47,6 +47,8 @@ import { prefetchData } from "../modules/auth/AJHelper";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
 import { LocalAccount } from "../modules/auth/LocalAccount";
 import {
+  ACCOUNT_EXPIRES_KEY,
+  ACCOUNT_LAST_REFRESHED_KEY,
   MicrosoftAccount,
   MS_LAST_USED_ACTOKEN_KEY,
   MS_LAST_USED_REFRESH_KEY,
@@ -93,7 +95,7 @@ import {
   ensureLog4jFile,
   ensureNatives,
 } from "../modules/launch/Ensurance";
-import { launchProfile } from "../modules/launch/LaunchPad";
+import { launchProfile, markSafeLaunch } from "../modules/launch/LaunchPad";
 import { stopMinecraft } from "../modules/launch/MinecraftBootstrap";
 import { LaunchTracker } from "../modules/launch/Tracker";
 import {
@@ -104,6 +106,11 @@ import {
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
 import { loadProfile } from "../modules/profile/ProfileLoader";
+import {
+  dropAccountPromise,
+  waitMSAccountReady,
+} from "../modules/readyboom/AccountMaster";
+import { waitProfileReady } from "../modules/readyboom/PrepareProfile";
 import { getMachineUniqueID } from "../modules/security/Unique";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { ShiftEle } from "./Instruction";
@@ -135,7 +142,7 @@ const useStyles = makeStyles((theme: AlicornTheme) => ({
     backgroundColor: theme.palette.secondary.light,
   },
   textSP: {
-    fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
+    fontSize: sessionStorage.getItem("smallFontSize") || "1em",
     color: theme.palette.secondary.main,
   },
   text: {
@@ -290,13 +297,13 @@ function Launching(props: {
       setLanPort(0);
       setOpenLanButtonEnabled(false);
       setOpenLanWindow(false);
-      const m = window.sessionStorage.getItem(CODE_KEY + lanPort);
+      const m = sessionStorage.getItem(CODE_KEY + lanPort);
       if (m) {
         await deactiveCode(
           m,
           getString("hoofoff.central", HOOFOFF_CENTRAL, true) + ":" + QUERY_PORT
         );
-        window.sessionStorage.removeItem(CODE_KEY + lanPort);
+        sessionStorage.removeItem(CODE_KEY + lanPort);
         submitSucc(tr("ReadyToLaunch.CodeDeactivated"));
       }
     };
@@ -604,20 +611,24 @@ async function startBoot(
     // @ts-ignore
     // if (!window[SESSION_ACCESSDATA_CACHED_KEY]) {
     if (!isReboot(profileHash)) {
-      // If not reboot then validate
-      if (!(await account.isAccessTokenValid())) {
-        // Check if the access token is valid
-        console.log("Token has expired! Refreshing.");
-        if (!(await account.flushToken())) {
-          console.log("Flush failed! Reauthing.");
-          if (!(await account.performAuth(""))) {
-            submitWarn(tr("ReadyToLaunch.FailedToAuth"));
+      if (!(await waitMSAccountReady())) {
+        // If not reboot then validate
+        if (!(await account.isAccessTokenValid())) {
+          // Check if the access token is valid
+          console.log("Token has expired! Refreshing.");
+          if (!(await account.flushToken())) {
+            console.log("Flush failed! Reauthing.");
+            if (!(await account.performAuth(""))) {
+              submitWarn(tr("ReadyToLaunch.FailedToAuth"));
+            }
+          } else {
+            console.log("Token flushed successfully, continue.");
           }
         } else {
-          console.log("Token flushed successfully, continue.");
+          console.log("Token valid, skipped auth.");
         }
       } else {
-        console.log("Token valid, skipped auth.");
+        console.log("MS account auth job has been done by ReadyBoom. Skipped.");
       }
     }
     // @ts-ignore
@@ -685,22 +696,38 @@ async function startBoot(
   if (!isReboot(profileHash)) {
     NEED_QUERY_STATUS = true;
     setStatus(LaunchingStatus.FILES_FILLING);
-    await ensureAssetsIndex(profile, container);
-    await Promise.all([
-      ensureClient(profile),
-      ensureLog4jFile(profile, container),
-      (async () => {
-        await ensureLibraries(profile, container, GLOBAL_LAUNCH_TRACKER);
-        await ensureNatives(profile, container);
-      })(),
-      (async () => {
-        await ensureAllAssets(profile, container, GLOBAL_LAUNCH_TRACKER);
-      })(),
-    ]); // Parallel
+    const st = await waitProfileReady(container.id, profile.id);
+    if (!st) {
+      // I shall do this
+      await ensureAssetsIndex(profile, container);
+      await Promise.all([
+        ensureClient(profile),
+        ensureLog4jFile(profile, container),
+        (async () => {
+          await ensureLibraries(profile, container, GLOBAL_LAUNCH_TRACKER);
+          await ensureNatives(profile, container);
+        })(),
+        (async () => {
+          await ensureAllAssets(profile, container, GLOBAL_LAUNCH_TRACKER);
+        })(),
+      ]); // Parallel
+    } else {
+      GLOBAL_LAUNCH_TRACKER.library({
+        total: 1,
+        resolved: 1,
+        operateRecord: [{ file: "ReadyBoom Proxied", operation: "OPERATED" }],
+      });
+    }
     if (getBoolean("launch.fast-reboot")) {
       markReboot(profileHash);
     }
     NEED_QUERY_STATUS = false;
+  } else {
+    GLOBAL_LAUNCH_TRACKER.library({
+      total: 1,
+      resolved: 1,
+      operateRecord: [{ file: "Quick Restart Proxied", operation: "OPERATED" }],
+    });
   }
   setStatus(LaunchingStatus.MODS_PREPARING);
   if (profile.type === ReleaseType.MODIFIED) {
@@ -764,6 +791,7 @@ async function startBoot(
   });
   em.on(PROCESS_END_GATE, async (c) => {
     console.log(`Minecraft(${runID}) exited with exit code ${c}.`);
+    window.dispatchEvent(new CustomEvent("GameQuit"));
     setStatus(LaunchingStatus.PENDING);
     window.dispatchEvent(new CustomEvent("MinecraftExitCleanUp"));
     if (c !== "0" && c !== "SIGINT") {
@@ -772,6 +800,8 @@ async function startBoot(
       console.log(
         `Attention! Minecraft(${runID}) might not have run properly!`
       );
+      markSafeLaunch(container.id, profile.id);
+      console.log(`Set ${container.id}/${profile.id} as safe mode.`);
       // @ts-ignore
       const e = window[LAST_LOGS_KEY] as string[];
       const ei = e.lastIndexOf("---- Minecraft Crash Report ----");
@@ -791,6 +821,8 @@ async function startBoot(
       clearReboot(profileHash);
       console.log("Cleared reboot flag.");
     } else {
+      markSafeLaunch(container.id, profile.id, false);
+      console.log(`Remove ${container.id}/${profile.id} from safe mode.`);
       // @ts-ignore
       window[LAST_LOGS_KEY] = [];
       if (gc) {
@@ -820,7 +852,7 @@ async function startBoot(
   }
   addStatistics("Launch");
   setRunID(runID);
-  window.localStorage.setItem(LAST_SUCCESSFUL_GAME_KEY, window.location.hash);
+  localStorage.setItem(LAST_SUCCESSFUL_GAME_KEY, window.location.hash);
   setStatus(LaunchingStatus.FINISHED);
   console.log(`A new Minecraft instance (${runID}) has been launched.`);
   if (dry) {
@@ -859,13 +891,13 @@ function AccountChoose(props: {
     },
   }))();
   const [choice, setChoice] = useState<"MZ" | "AL" | "YG">(
-    (window.localStorage.getItem(LAST_ACCOUNT_TAB_KEY + props.profileHash) as
+    (localStorage.getItem(LAST_ACCOUNT_TAB_KEY + props.profileHash) as
       | "MZ"
       | "AL"
       | "YG") || "MZ"
   );
   const [pName, setName] = useState<string>(
-    window.localStorage.getItem(LAST_USED_USER_NAME_KEY + props.profileHash) ||
+    localStorage.getItem(LAST_USED_USER_NAME_KEY + props.profileHash) ||
       "Player"
   );
   const [bufPName, setBufPName] = useState(pName);
@@ -886,7 +918,7 @@ function AccountChoose(props: {
     }
   }, [props.allAccounts]);
   const la =
-    window.localStorage.getItem(LAST_YG_ACCOUNT_NAME + props.profileHash) || "";
+    localStorage.getItem(LAST_YG_ACCOUNT_NAME + props.profileHash) || "";
   let ll = "";
   if (la && accountMap.current[la] !== undefined) {
     ll = la;
@@ -995,7 +1027,7 @@ function AccountChoose(props: {
             if (["MZ", "AL", "YG"].includes(e.target.value)) {
               // @ts-ignore
               setChoice(e.target.value);
-              window.localStorage.setItem(
+              localStorage.setItem(
                 LAST_ACCOUNT_TAB_KEY + props.profileHash,
                 e.target.value
               );
@@ -1055,10 +1087,13 @@ function AccountChoose(props: {
                     "msLogout",
                     getString("web.global-proxy")
                   );
+                  dropAccountPromise();
                   localStorage.setItem(MS_LAST_USED_REFRESH_KEY, "");
                   localStorage.setItem(MS_LAST_USED_ACTOKEN_KEY, "");
                   localStorage.setItem(MS_LAST_USED_UUID_KEY, "");
                   localStorage.setItem(MS_LAST_USED_USERNAME_KEY, "");
+                  localStorage.removeItem(ACCOUNT_EXPIRES_KEY); // Reset time
+                  localStorage.removeItem(ACCOUNT_LAST_REFRESHED_KEY);
                   if (mounted.current) {
                     setMSLogout("ReadyToLaunch.MSLogoutDone");
                   }
@@ -1085,7 +1120,7 @@ function AccountChoose(props: {
                 labelId={"Select-Account"}
                 onChange={(e) => {
                   setAccount(String(e.target.value));
-                  window.localStorage.setItem(
+                  localStorage.setItem(
                     LAST_YG_ACCOUNT_NAME + props.profileHash,
                     String(e.target.value)
                   );
@@ -1127,7 +1162,7 @@ function AccountChoose(props: {
                 return;
               case "AL":
               default:
-                window.localStorage.setItem(
+                localStorage.setItem(
                   LAST_USED_USER_NAME_KEY + props.profileHash,
                   pName
                 );
@@ -1252,11 +1287,11 @@ function MiniJavaSelector(props: {
 }
 
 function setJavaForProfile(hash: string, jHome: string): void {
-  window.localStorage[GKEY + hash] = jHome;
+  localStorage[GKEY + hash] = jHome;
 }
 
 function getJavaAndCheckAvailable(hash: string, allowDefault = false): string {
-  const t = window.localStorage[GKEY + hash];
+  const t = localStorage[GKEY + hash];
   if (typeof t === "string" && t.length > 0) {
     if (t === DEF) {
       if (allowDefault) {
@@ -1300,15 +1335,15 @@ function checkJMCompatibility(mv: string, jv: number): "OLD" | "NEW" | "OK" {
 }
 
 function markReboot(hash: string): void {
-  window.sessionStorage.setItem(REBOOT_KEY_BASE + hash, "1");
+  sessionStorage.setItem(REBOOT_KEY_BASE + hash, "1");
 }
 
 function clearReboot(hash: string): void {
-  window.sessionStorage.removeItem(REBOOT_KEY_BASE + hash);
+  sessionStorage.removeItem(REBOOT_KEY_BASE + hash);
 }
 
 function isReboot(hash: string): boolean {
-  return window.sessionStorage.getItem(REBOOT_KEY_BASE + hash) === "1";
+  return sessionStorage.getItem(REBOOT_KEY_BASE + hash) === "1";
 }
 
 const CODE_KEY = "Hoofoff.Code";
@@ -1493,7 +1528,7 @@ function OpenWorldDialog(props: {
               );
               if (c.length === 6) {
                 setCode(c);
-                window.sessionStorage.setItem(CODE_KEY + props.port, c);
+                sessionStorage.setItem(CODE_KEY + props.port, c);
                 submitSucc(tr("ReadyToLaunch.HoofoffCode", `Code=${c}`));
                 setErr("");
                 setShouldClose(true);
@@ -1539,9 +1574,9 @@ function WaitingText(): JSX.Element {
 }
 
 function setProfileRelatedID(hash: string, rid: string): void {
-  window.sessionStorage.setItem("MinecraftID" + hash, rid);
+  sessionStorage.setItem("MinecraftID" + hash, rid);
 }
 
 function getProfileRelatedID(hash: string): string {
-  return window.sessionStorage.getItem("MinecraftID" + hash) || "";
+  return sessionStorage.getItem("MinecraftID" + hash) || "";
 }

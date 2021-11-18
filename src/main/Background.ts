@@ -158,7 +158,7 @@ export function registerBackgroundListeners(): void {
     }
     return r.filePaths[0] || "";
   });
-  ipcMain.handle("msBrowserCode", async (_e, proxy: string) => {
+  ipcMain.handle("msBrowserCode", async (_e, proxy: string, quiet = false) => {
     try {
       let sCode = "";
       const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -219,6 +219,13 @@ export function registerBackgroundListeners(): void {
             loginWindow = null;
             resolve("");
           } else {
+            if (quiet) {
+              console.log("Not a callback URL, but quiet required, resolving.");
+              resolve("");
+              loginWindow?.close();
+              loginWindow = null;
+              return;
+            }
             console.log("Not a callback URL, showing window...");
             loginWindow?.show();
           }

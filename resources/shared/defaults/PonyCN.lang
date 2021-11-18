@@ -1198,6 +1198,22 @@ Alicorn 特色功能
 
 高级和重置
 
+# Options.readyboom.cores.title
+
+ReadyBoom 预热核心数 ^
+
+# Options.readyboom.cores.desc
+
+ReadyBoom 要预热多少个核心？
+
+# Options.readyboom.title
+
+ReadyBoom 预热 ^
+
+# Options.readyboom.desc
+
+自动准备你经常游玩的核心所需要的资源，大幅提升启动速度
+
 # Options.alicorn-ping.title
 
 Alicorn Ping ^
