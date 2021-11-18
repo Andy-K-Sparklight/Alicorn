@@ -58,8 +58,8 @@ const RUNNING_TASKS = new Set<DownloadMeta>();
 
 const MIRROR_CHAIN = new Map<DownloadMeta, MirrorChain>();
 const WAITING_RESOLVES_MAP = new Map<
-  DownloadMeta,
-  (value: DownloadStatus | PromiseLike<DownloadStatus>) => void
+  string,
+  ((value: DownloadStatus | PromiseLike<DownloadStatus>) => void)[]
 >();
 const FAILED_COUNT_MAP: Map<DownloadMeta, number> = new Map();
 const END_GATE = "END";
@@ -70,12 +70,15 @@ export function initDownloadWrapper(): void {
   EMITTER.on(END_GATE, (m: DownloadMeta, s: DownloadStatus) => {
     RUNNING_TASKS.delete(m);
     FAILED_COUNT_MAP.delete(m);
-    (
-      WAITING_RESOLVES_MAP.get(m) ||
-      (() => {
-        return;
-      })
-    )(s);
+    const funcs = WAITING_RESOLVES_MAP.get(m.savePath);
+    if (funcs) {
+      for (const x of funcs) {
+        try {
+          x(s);
+        } catch {}
+      }
+      WAITING_RESOLVES_MAP.delete(m.savePath);
+    }
     scheduleNextTask();
   });
 }
@@ -172,7 +175,13 @@ function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
         resolve(DownloadStatus.RESOLVED);
       } else {
         FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
-        WAITING_RESOLVES_MAP.set(meta, resolve);
+        const pl = WAITING_RESOLVES_MAP.get(meta.savePath);
+        if (pl) {
+          pl.push(resolve); // Another meta has already hooked on this file, wait till finish
+          scheduleNextTask();
+          return;
+        }
+        WAITING_RESOLVES_MAP.set(meta.savePath, [resolve]); // Start it
         PENDING_TASKS.push(meta);
         const chain = new MirrorChain(meta.url);
         MIRROR_CHAIN.set(meta, chain);
