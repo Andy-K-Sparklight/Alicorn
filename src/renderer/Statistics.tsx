@@ -56,9 +56,9 @@ export function getStatistics(i: string): number {
 }
 
 export function saveStatistics(): void {
-  window.localStorage.setItem("Statistics", buildMap(STATISTICS_MAP));
+  localStorage.setItem("Statistics", buildMap(STATISTICS_MAP));
 }
 
 export function loadStatistics(): void {
-  STATISTICS_MAP = parseMap(window.localStorage.getItem("Statistics") || "");
+  STATISTICS_MAP = parseMap(localStorage.getItem("Statistics") || "");
 }

@@ -170,5 +170,5 @@ const PFF_FLAG = "Downloader.IsPff";
 // 1 - Use pff config
 // Any other value - Use common config
 export function setPffFlag(value: string): void {
-  window.sessionStorage.setItem(PFF_FLAG, value);
+  sessionStorage.setItem(PFF_FLAG, value);
 }

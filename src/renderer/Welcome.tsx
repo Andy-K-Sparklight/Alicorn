@@ -24,7 +24,7 @@ export function Welcome(): JSX.Element {
   });
   useEffect(() => {
     void (async () => {
-      const l = window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY);
+      const l = localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY);
       if (l) {
         const h = l.split("/");
         while (h.length > 0 && h.shift()?.toLowerCase() !== "readytolaunch") {}
@@ -110,7 +110,7 @@ export function Welcome(): JSX.Element {
               disabled={!lastGameAvailable}
               onClick={() => {
                 jumpTo(
-                  window.localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ||
+                  localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ||
                     "/ReadyToLaunch/undefined/undefined"
                 );
                 triggerSetPage("ReadyToLaunch");

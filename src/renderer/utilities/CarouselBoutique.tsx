@@ -30,9 +30,9 @@ export function CarouselBoutique(): JSX.Element {
   const [playerName, setPlayerName] = useState("");
   const [isSlim, setIsSlim] = useState(false);
   useEffect(() => {
-    const allAc = (
-      window.localStorage.getItem(ALL_SET_ACCOUNTS_KEY) || ""
-    ).split(ALICORN_SEPARATOR);
+    const allAc = (localStorage.getItem(ALL_SET_ACCOUNTS_KEY) || "").split(
+      ALICORN_SEPARATOR
+    );
     const oc: string[] = [];
     void Promise.all(
       allAc.map(async (a) => {
@@ -140,7 +140,7 @@ export function CarouselBoutique(): JSX.Element {
             if (!n.includes(playerName)) {
               n.push(playerName);
               setNames(n);
-              window.localStorage.setItem(
+              localStorage.setItem(
                 ALL_SET_ACCOUNTS_KEY,
                 n.join(ALICORN_SEPARATOR)
               );
@@ -181,7 +181,7 @@ export function CarouselBoutique(): JSX.Element {
               n.splice(i, 1);
             }
             setNames(n);
-            window.localStorage.setItem(
+            localStorage.setItem(
               ALL_SET_ACCOUNTS_KEY,
               n.join(ALICORN_SEPARATOR)
             );

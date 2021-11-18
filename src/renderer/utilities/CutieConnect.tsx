@@ -32,20 +32,18 @@ const INTERNET = "internet";
 export function CutieConnet(): JSX.Element {
   const randip = generateRandIP();
   const [superNode, setSuperNode] = useState(
-    window.localStorage.getItem(SUPERNODE_KEY) || ""
+    localStorage.getItem(SUPERNODE_KEY) || ""
   );
-  const [hostIp, setHostIp] = useState(
-    window.localStorage.getItem(IP_KEY) || randip
-  );
+  const [hostIp, setHostIp] = useState(localStorage.getItem(IP_KEY) || randip);
   const [communityName, setCommunityName] = useState(
-    window.localStorage.getItem(COMMUNITY_KEY) ||
+    localStorage.getItem(COMMUNITY_KEY) ||
       randsl("Utilities.CutieConnect.AvailablePrefix") +
         generateWorldAnyUniqueId().slice(-10) // Random name
   );
 
   const [superNodeError, setSuperNodeError] = useState(!checkHost(superNode));
   const [password, setPassword] = useState(
-    window.localStorage.getItem(PASSWORD_KEY) ||
+    localStorage.getItem(PASSWORD_KEY) ||
       randsl("Utilities.CutieConnect.AvailablePassword") +
         generateWorldAnyUniqueId().slice(-20)
   );
@@ -189,7 +187,7 @@ export function CutieConnet(): JSX.Element {
               onChange={(e) => {
                 setHostIp(e.target.value.trim());
                 setIPError(!validateIP(e.target.value.trim()));
-                window.localStorage.setItem(IP_KEY, e.target.value.trim());
+                localStorage.setItem(IP_KEY, e.target.value.trim());
               }}
               spellCheck={false}
               margin={"dense"}
@@ -210,10 +208,7 @@ export function CutieConnet(): JSX.Element {
               }}
               onChange={(e) => {
                 setPassword(e.target.value.trim());
-                window.localStorage.setItem(
-                  PASSWORD_KEY,
-                  e.target.value.trim()
-                );
+                localStorage.setItem(PASSWORD_KEY, e.target.value.trim());
               }}
               spellCheck={false}
               margin={"dense"}
@@ -233,10 +228,7 @@ export function CutieConnet(): JSX.Element {
               onChange={(e) => {
                 setSuperNode(e.target.value.trim());
                 setSuperNodeError(!checkHost(e.target.value.trim()));
-                window.localStorage.setItem(
-                  SUPERNODE_KEY,
-                  e.target.value.trim()
-                );
+                localStorage.setItem(SUPERNODE_KEY, e.target.value.trim());
               }}
               sx={{
                 width: "49%",
@@ -257,10 +249,7 @@ export function CutieConnet(): JSX.Element {
               fullWidth
               onChange={(e) => {
                 setCommunityName(e.target.value.trim());
-                window.localStorage.setItem(
-                  COMMUNITY_KEY,
-                  e.target.value.trim()
-                );
+                localStorage.setItem(COMMUNITY_KEY, e.target.value.trim());
               }}
               sx={{
                 width: "49%",
@@ -286,10 +275,10 @@ export function CutieConnet(): JSX.Element {
               color={"primary"}
               variant={"contained"}
               onClick={async () => {
-                window.localStorage.setItem(SUPERNODE_KEY, superNode);
-                window.localStorage.setItem(PASSWORD_KEY, password);
-                window.localStorage.setItem(COMMUNITY_KEY, communityName);
-                window.localStorage.setItem(IP_KEY, hostIp); // Freeze Data
+                localStorage.setItem(SUPERNODE_KEY, superNode);
+                localStorage.setItem(PASSWORD_KEY, password);
+                localStorage.setItem(COMMUNITY_KEY, communityName);
+                localStorage.setItem(IP_KEY, hostIp); // Freeze Data
                 await killEdge();
                 await runEdge(
                   communityName,

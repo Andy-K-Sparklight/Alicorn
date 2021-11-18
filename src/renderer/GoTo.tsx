@@ -53,8 +53,8 @@ function ifLeavingConfigThenReload(): void {
     void saveAndReloadMain();
     void loadMirror();
   }
-  if (window.sessionStorage.getItem("Options.Reload") === "1") {
-    window.sessionStorage.removeItem("Options.Reload");
+  if (sessionStorage.getItem("Options.Reload") === "1") {
+    sessionStorage.removeItem("Options.Reload");
     ipcRenderer.send("ReloadWindow");
   }
 }

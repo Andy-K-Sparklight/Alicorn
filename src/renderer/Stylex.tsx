@@ -24,7 +24,7 @@ export const useCardStyles = makeStyles((theme: AlicornTheme) => ({
   },
   text2: { fontSize: "medium", color: theme.palette.secondary.light },
   desc: {
-    fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
+    fontSize: sessionStorage.getItem("smallFontSize") || "1em",
     color: isBgDark() ? theme.palette.secondary.light : undefined,
   },
   card: {
@@ -51,7 +51,7 @@ export const usePadStyles = makeStyles((theme: AlicornTheme) => ({
     color: theme.palette.primary.main,
   },
   smallText: {
-    fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
+    fontSize: sessionStorage.getItem("smallFontSize") || "1em",
   },
 }));
 export const useInputStyles = makeStyles((theme: AlicornTheme) => ({
@@ -99,7 +99,7 @@ export const useFormStyles = makeStyles((theme: AlicornTheme) => ({
     marginTop: theme.spacing(1),
   },
   instr: {
-    fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
+    fontSize: sessionStorage.getItem("smallFontSize") || "1em",
     color: theme.palette.secondary.main,
   },
 }));
@@ -140,7 +140,7 @@ export const useTextStyles = makeStyles((theme: AlicornTheme) => ({
   },
   secondText: {
     color: theme.palette.secondary.main,
-    fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
+    fontSize: sessionStorage.getItem("smallFontSize") || "1em",
   },
   mediumText: {
     color: theme.palette.secondary.main,
@@ -148,7 +148,7 @@ export const useTextStyles = makeStyles((theme: AlicornTheme) => ({
   },
   link: {
     color: theme.palette.primary.main,
-    fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
+    fontSize: sessionStorage.getItem("smallFontSize") || "1em",
   },
   thirdTextRaw: {
     color: theme.palette.primary.main,
@@ -172,7 +172,7 @@ export const useTextStylesLight = makeStyles((theme: AlicornTheme) => ({
   },
   secondText: {
     color: theme.palette.secondary.light,
-    fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
+    fontSize: sessionStorage.getItem("smallFontSize") || "1em",
   },
   mediumText: {
     color: theme.palette.secondary.light,
@@ -180,7 +180,7 @@ export const useTextStylesLight = makeStyles((theme: AlicornTheme) => ({
   },
   link: {
     color: theme.palette.primary.light,
-    fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
+    fontSize: sessionStorage.getItem("smallFontSize") || "1em",
   },
   thirdText: {
     color: theme.palette.primary.light,

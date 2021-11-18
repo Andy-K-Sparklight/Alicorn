@@ -279,7 +279,7 @@ export function getWrapperStatus(): WrapperStatus {
 const PFF_FLAG = "Downloader.IsPff";
 
 function getPffFlag(): string {
-  return window.sessionStorage.getItem(PFF_FLAG) || "0";
+  return sessionStorage.getItem(PFF_FLAG) || "0";
 }
 
 export function getConfigOptn(name: string, def: number): number {
@@ -294,8 +294,8 @@ export function getConfigOptn(name: string, def: number): number {
 }
 
 export function setProxy(_host: string, _port: number): void {
-  // window.sessionStorage.setItem(PROXY_HOST, host);
-  // window.sessionStorage.setItem(PROXY_PORT, port.toString());
+  // sessionStorage.setItem(PROXY_HOST, host);
+  // sessionStorage.setItem(PROXY_PORT, port.toString());
 }
 
 export function addState(s: string): void {

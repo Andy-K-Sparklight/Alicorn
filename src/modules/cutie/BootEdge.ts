@@ -112,7 +112,7 @@ export async function runEdge(
   supernode: string
 ): Promise<void> {
   if (
-    window.localStorage.getItem(TAP_INSTALLED_BIT) !== "1" &&
+    localStorage.getItem(TAP_INSTALLED_BIT) !== "1" &&
     os.platform() === "win32"
   ) {
     submitInfo(tr("Utilities.CutieConnect.InstallingTAP"));
@@ -122,7 +122,7 @@ export async function runEdge(
       }, 3000);
     });
     await installTAPDeviceWin();
-    window.localStorage.setItem(TAP_INSTALLED_BIT, "1");
+    localStorage.setItem(TAP_INSTALLED_BIT, "1");
   }
   const cmd = generateEdgeArgs(community, psw, ip, supernode);
   console.log("Starting edge with command line: " + cmd);

@@ -322,11 +322,11 @@ export function SingleServerDisplay(props: {
 const USED_CORE_HEAD = "ServerList.LastUsedCore.";
 
 function setLastUsedCore(address: string, core: string): void {
-  window.sessionStorage.setItem(USED_CORE_HEAD + address, core);
+  sessionStorage.setItem(USED_CORE_HEAD + address, core);
 }
 
 function getLastUsedCore(address: string): string {
-  return window.sessionStorage.getItem(USED_CORE_HEAD + address) || "";
+  return sessionStorage.getItem(USED_CORE_HEAD + address) || "";
 }
 
 function GameCoreSelector(props: {

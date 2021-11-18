@@ -12,7 +12,7 @@ export async function todayPing(): Promise<void> {
     return;
   }
   const d0 = getDay();
-  const o = window.localStorage.getItem(PING_KEY);
+  const o = localStorage.getItem(PING_KEY);
   if (d0 !== o) {
     try {
       const r = await fetch(PING_TARGET, {
@@ -24,7 +24,7 @@ export async function todayPing(): Promise<void> {
         },
       });
       if (r.ok) {
-        window.localStorage.setItem(PING_KEY, getDay());
+        localStorage.setItem(PING_KEY, getDay());
         console.log("Ping success!");
       } else {
         console.log("Ping failed, try again next time...");

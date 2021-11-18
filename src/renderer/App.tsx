@@ -154,13 +154,13 @@ export function App(): JSX.Element {
   useEffect(() => {
     if (getBoolean("interactive.assistant?")) {
       if (page.length > 0 && !isInstBusy()) {
-        if (window.localStorage.getItem("Instruction.Read." + page) !== "1") {
+        if (localStorage.getItem("Instruction.Read." + page) !== "1") {
           const k = `Instruction.${page}.0`;
           if (tr(k) !== k) {
             startInst(page);
             void (async (p) => {
               await waitInstDone();
-              window.localStorage.setItem("Instruction.Read." + p, "1");
+              localStorage.setItem("Instruction.Read." + p, "1");
             })(page);
           }
         }
@@ -242,14 +242,14 @@ export function App(): JSX.Element {
         if (e.key === "/") {
           setEnteredCommand("/"); // Clear on "/"
           setShowCommand(true);
-          window.sessionStorage.setItem("isCommand", "1");
+          sessionStorage.setItem("isCommand", "1");
           return;
         }
         if (showCommand) {
           if (e.key === "Delete") {
             if (enteredCommand === "/") {
               setShowCommand(false);
-              window.sessionStorage.removeItem("isCommand");
+              sessionStorage.removeItem("isCommand");
             } else {
               setEnteredCommand(enteredCommand.slice(0, -1));
             }
@@ -261,7 +261,7 @@ export function App(): JSX.Element {
             );
             setEnteredCommand("/");
             setShowCommand(false);
-            window.sessionStorage.removeItem("isCommand");
+            sessionStorage.removeItem("isCommand");
             return;
           }
           setEnteredCommand(enteredCommand + e.key);
