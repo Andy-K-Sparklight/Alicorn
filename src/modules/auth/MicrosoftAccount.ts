@@ -204,6 +204,7 @@ async function tokenRequest(
         },
         cache: "no-cache",
         body: `client_id=00000000402b5328&${grantTag}=${credit}&grant_type=${grantType}&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL`,
+        credentials: "include",
       })
     ).json();
     if (!isNull(safeGet(ret, ["error"]))) {
@@ -260,6 +261,7 @@ async function getXBLToken(
           "Content-Type": "application/json",
           Accept: "application/json",
         },
+        credentials: "include",
         cache: "no-cache",
         body: JSON.stringify({
           Properties: {
@@ -299,6 +301,7 @@ async function getXSTSToken(
           "Content-Type": "application/json",
           Accept: "application/json",
         },
+        credentials: "include",
         cache: "no-cache",
         body: JSON.stringify({
           Properties: {
@@ -333,6 +336,7 @@ async function getMojangToken(uhs: string, xstsToken: string): Promise<string> {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         cache: "no-cache",
         body: JSON.stringify({
           identityToken: `XBL3.0 x=${uhs};${xstsToken}`,
@@ -363,6 +367,7 @@ async function getUUIDAndUserName(
           "Content-Type": "application/json",
           Authorization: `Bearer ${acToken}`,
         },
+        credentials: "include",
         cache: "no-cache",
       })
     ).json();

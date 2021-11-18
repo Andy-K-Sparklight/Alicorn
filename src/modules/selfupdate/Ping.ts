@@ -22,6 +22,7 @@ export async function todayPing(): Promise<void> {
             await getMachineUniqueID()
           ),
         },
+        credentials: "omit",
       });
       if (r.ok) {
         localStorage.setItem(PING_KEY, getDay());

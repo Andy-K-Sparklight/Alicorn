@@ -128,6 +128,7 @@ async function getOnlineCrashLoader(
     const r = await (
       await fetch(url, {
         method: "GET",
+        credentials: "omit",
       })
     ).text();
     const obj = eval(r);

@@ -27,6 +27,7 @@ export async function getLatestJREURL(old = false): Promise<string> {
   const u = `${JDK_BASE_URL}${old ? OLD_JAVA : NEW_JAVA}/jre/${cv}/windows/`;
   const res = await fetch(u, {
     method: "GET",
+    credentials: "omit",
   });
   const X = load(await res.text());
   const ls = X("table#list > tbody > tr");

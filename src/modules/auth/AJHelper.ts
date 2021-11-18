@@ -28,6 +28,7 @@ export async function prefetchData(authServer: string): Promise<string> {
       await (
         await fetch(authServer, {
           method: "GET",
+          credentials: "omit",
         })
       ).text()
     );

@@ -85,6 +85,7 @@ export async function checkUpdate(): Promise<void> {
         await fetch(HEAD, {
           method: "GET",
           cache: "no-cache",
+          credentials: "omit",
         })
       ).json();
       console.log("Fetched a manifest.");
@@ -109,6 +110,7 @@ export async function checkUpdate(): Promise<void> {
       const res_rend = await (
         await fetch(RENDERER_BUILD_FILE_RELEASE, {
           method: "GET",
+          credentials: "omit",
           cache: "no-cache",
         })
       ).json();
@@ -174,6 +176,7 @@ export async function findLatestCanUpdateVersion(): Promise<number> {
           await fetch(bu, {
             method: "GET",
             cache: "no-cache",
+            credentials: "omit",
           })
         ).status === 200;
     } catch {
