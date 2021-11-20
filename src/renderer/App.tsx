@@ -395,7 +395,11 @@ export function App(): JSX.Element {
                   color={"inherit"}
                   className={classes.floatButton}
                   onClick={() => {
-                    ipcRenderer.send("reload");
+                    remoteHideWindow();
+                    waitUpdateFinished(() => {
+                      prepareToQuit();
+                      ipcRenderer.send("reload");
+                    });
                   }}
                 >
                   <Refresh />
@@ -774,7 +778,7 @@ function remoteOpenDevTools(): void {
   ipcRenderer.send("openDevTools");
 }
 
-function prepareToQuit(): void {
+export function prepareToQuit(): void {
   console.log("Preparing to quit...");
   saveConfigSync();
   saveGDTSync();

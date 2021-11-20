@@ -2,6 +2,8 @@ import { ipcRenderer } from "electron";
 import { throttle } from "throttle-debounce";
 import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
 import { loadMirror } from "../modules/download/Mirror";
+import { waitUpdateFinished } from "../modules/selfupdate/Updator";
+import { prepareToQuit, remoteHideWindow } from "./App";
 import { setContainerListDirty } from "./ContainerManager";
 import { isInstBusy } from "./Instruction";
 
@@ -55,7 +57,11 @@ function ifLeavingConfigThenReload(): void {
   }
   if (sessionStorage.getItem("Options.Reload") === "1") {
     sessionStorage.removeItem("Options.Reload");
-    ipcRenderer.send("ReloadWindow");
+    remoteHideWindow();
+    waitUpdateFinished(() => {
+      prepareToQuit();
+      ipcRenderer.send("reload");
+    });
   }
 }
 
