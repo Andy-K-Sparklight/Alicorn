@@ -355,7 +355,7 @@ function flushColors(): void {
           getString("theme.primary.main") || "#" + getTheme()[0]
         } !important;} fieldset {border-color:${
           getString("theme.primary.main") || "#" + getTheme()[0]
-        } !important;} div[role="radiogroup"] > label > span > span > div > svg, input[type="checkbox"] + svg, .MuiFormControlLabel-label {color: ${
+        } !important;} div[role="radiogroup"] > label > span > span > div > svg, input[type="checkbox"] + svg, .MuiFormControlLabel-label .MuiInputBase-input {color: ${
           getString("theme.primary.main") || "#" + getTheme()[0]
         } !important;}`
       : "");
