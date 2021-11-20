@@ -231,6 +231,7 @@ function SingleContainerDisplay(props: {
 
       <Card
         raised={true}
+        color={"primary"}
         className={props.isMounted ? classes.card : classes.uCard}
         onMouseOver={() => {
           setShowBtn(true);
