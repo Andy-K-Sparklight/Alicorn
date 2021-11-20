@@ -1,13 +1,13 @@
 import { ALICORN_SEPARATOR } from "./Constants";
 
 const PERM_FLAGS: Set<string> = new Set(
-  window.localStorage.getItem("Alicorn.Flags")?.split(ALICORN_SEPARATOR)
+  localStorage.getItem("Alicorn.Flags")?.split(ALICORN_SEPARATOR)
 );
 const TEMP_FLAGS: Set<string> = new Set();
 export function setFlag(name: string | Flags, temp = false): void {
   if (!temp) {
     PERM_FLAGS.add(name.toString());
-    window.localStorage.setItem(
+    localStorage.setItem(
       "Alicorn.Flags",
       Array.from(PERM_FLAGS).join(ALICORN_SEPARATOR)
     );
@@ -22,7 +22,7 @@ export function hasFlag(name: string | Flags): boolean {
 
 export function clearFlag(name: string | Flags): void {
   PERM_FLAGS.delete(name.toString());
-  window.localStorage.setItem(
+  localStorage.setItem(
     "Alicorn.Flags",
     Array.from(PERM_FLAGS).join(ALICORN_SEPARATOR)
   );

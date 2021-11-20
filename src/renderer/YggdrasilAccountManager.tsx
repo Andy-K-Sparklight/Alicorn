@@ -1,3 +1,4 @@
+import { Add, DeleteForever, Refresh } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -11,13 +12,12 @@ import {
   FormControlLabel,
   IconButton,
   LinearProgress,
-  MuiThemeProvider,
   Switch,
   TextField,
+  ThemeProvider,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import { Add, DeleteForever, Refresh } from "@material-ui/icons";
+} from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Account } from "../modules/auth/Account";
@@ -90,7 +90,7 @@ export function YggdrasilAccountManager(): JSX.Element {
       <Typography className={classes.smallText} color={"secondary"}>
         {tr("AccountManager.Note")}
       </Typography>
-      <Box style={{ textAlign: "right" }}>
+      <Box sx={{ textAlign: "right" }}>
         <Tooltip
           title={
             <Typography className={"smtxt"}>
@@ -223,9 +223,9 @@ export function SingleAccountDisplay(props: {
           setOperating(false);
         }}
       />
-      <Card className={classes.card}>
+      <Card className={classes.card} raised={true}>
         <CardContent>
-          <Box style={{ float: "right" }}>
+          <Box sx={{ float: "right" }}>
             {skinUrl ? (
               getBoolean("features.skin-view-3d") ? (
                 <SkinDisplay3D skin={skinUrl} width={100} height={150} />
@@ -354,7 +354,7 @@ function YggdrasilForm(props: {
   const [isRunning, isRunningUpdate] = useState(false);
   const [hasError, setError] = useState(false);
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Dialog
         open={props.open}
         onClose={() => {
@@ -387,7 +387,7 @@ function YggdrasilForm(props: {
           />
           {hasError ? (
             <DialogContentText
-              style={{
+              sx={{
                 color: "#ff8400",
               }}
               className={"smtxt"}
@@ -420,7 +420,7 @@ function YggdrasilForm(props: {
           </Button>
         </DialogActions>
       </Dialog>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 
@@ -469,7 +469,7 @@ function AddAccount(props: {
         e.dataTransfer.dropEffect = "move";
       }}
     >
-      <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+      <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
         <Dialog
           open={props.open}
           onClose={() => {
@@ -536,7 +536,7 @@ function AddAccount(props: {
             />
             {isCustom ? (
               <DialogContentText
-                style={{
+                sx={{
                   color: "#ff8400",
                 }}
                 className={"smtxt"}
@@ -575,7 +575,7 @@ function AddAccount(props: {
             </Button>
           </DialogActions>
         </Dialog>
-      </MuiThemeProvider>
+      </ThemeProvider>
     </Box>
   );
 }

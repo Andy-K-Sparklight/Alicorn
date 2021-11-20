@@ -16,7 +16,11 @@ import {
   getNumber,
   loadConfig,
 } from "../modules/config/ConfigSupport";
-import { getMainWindow, SESSION_LOCK } from "./Bootstrap";
+import {
+  getMainWindow,
+  getMainWindowUATrimmed,
+  SESSION_LOCK,
+} from "./Bootstrap";
 import { getUserBrowser, openBrowser } from "./Browser";
 
 const LOGIN_START =
@@ -93,7 +97,6 @@ export function registerBackgroundListeners(): void {
           message:
             "ALICORN_REACT_DEVTOOLS has been set and external scripts will be injected, which should only happen during the development.\nIf you are NOT DEVELOPNING Alicorn, this might be an XSS attack.\n\nContinue and accept external scripts to inject?",
         });
-        console.log(allow);
         e.returnValue = allow === 1;
       }
     }
@@ -159,7 +162,7 @@ export function registerBackgroundListeners(): void {
     }
     return r.filePaths[0] || "";
   });
-  ipcMain.handle("msBrowserCode", async (_e, proxy: string) => {
+  ipcMain.handle("msBrowserCode", async (_e, proxy: string, quiet = false) => {
     try {
       let sCode = "";
       const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -172,6 +175,7 @@ export function registerBackgroundListeners(): void {
           show: false,
           backgroundColor: "#fff",
         });
+      loginWindow.webContents.setUserAgent(getMainWindowUATrimmed());
       if (proxy.trim().length > 0) {
         await loginWindow.webContents.session.setProxy({
           proxyRules: proxy,
@@ -220,6 +224,13 @@ export function registerBackgroundListeners(): void {
             loginWindow = null;
             resolve("");
           } else {
+            if (quiet) {
+              console.log("Not a callback URL, but quiet required, resolving.");
+              resolve("");
+              loginWindow?.close();
+              loginWindow = null;
+              return;
+            }
             console.log("Not a callback URL, showing window...");
             loginWindow?.show();
           }
@@ -236,6 +247,7 @@ export function registerBackgroundListeners(): void {
       show: false,
       backgroundColor: "#fff",
     });
+    logoutWindow.webContents.setUserAgent(getMainWindowUATrimmed());
     if (proxy.trim().length > 0) {
       await logoutWindow.webContents.session.setProxy({
         proxyRules: proxy,

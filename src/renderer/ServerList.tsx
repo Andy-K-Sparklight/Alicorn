@@ -1,10 +1,18 @@
 import {
+  Add,
+  Delete,
+  ExpandMore,
+  FlightTakeoff,
+  SignalCellular4Bar,
+  SignalCellularAlt,
+  SignalCellularConnectedNoInternet0Bar,
+} from "@mui/icons-material";
+import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Box,
   Button,
-  createStyles,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,23 +21,14 @@ import {
   FormControl,
   IconButton,
   InputLabel,
-  makeStyles,
   MenuItem,
-  MuiThemeProvider,
   Select,
   TextField,
+  ThemeProvider,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import {
-  Add,
-  Delete,
-  ExpandMore,
-  FlightTakeoff,
-  SignalCellular4Bar,
-  SignalCellularAlt,
-  SignalCellularConnectedNoInternet0Bar,
-} from "@material-ui/icons";
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { ipcRenderer } from "electron";
 import React, { useEffect, useRef, useState } from "react";
 import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
@@ -41,7 +40,12 @@ import {
 } from "../modules/server/ServerFiles";
 import { jumpTo, triggerSetPage } from "./GoTo";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
-import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
+import {
+  AlicornTheme,
+  fullWidth,
+  useFormStyles,
+  useInputStyles,
+} from "./Stylex";
 import { tr } from "./Translator";
 export function ServerList(): JSX.Element {
   const [servers, setServers] = useState(getServerList());
@@ -62,7 +66,7 @@ export function ServerList(): JSX.Element {
   }, []);
   return (
     <>
-      <Box style={{ textAlign: "right", marginRight: "5%" }}>
+      <Box sx={{ textAlign: "right", marginRight: "5%" }}>
         <Tooltip
           title={
             <Typography className={"smtxt"}>{tr("ServerList.Add")}</Typography>
@@ -102,25 +106,23 @@ export function ServerList(): JSX.Element {
   );
 }
 
-const useAccStyles = makeStyles((theme) =>
-  createStyles({
-    root: {},
-    acc1: {
-      backgroundColor: theme.palette.primary.main,
-    },
-    acc2: {
-      backgroundColor: theme.palette.primary.dark,
-    },
-    table: {
-      backgroundColor: theme.palette.primary.light,
-      color: theme.palette.primary.main,
-    },
-    btn: {
-      color: theme.palette.primary.light,
-      borderColor: theme.palette.primary.light,
-    },
-  })
-);
+const useAccStyles = makeStyles((theme: AlicornTheme) => ({
+  root: {},
+  acc1: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  acc2: {
+    backgroundColor: theme.palette.primary.dark,
+  },
+  table: {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.primary.main,
+  },
+  btn: {
+    color: theme.palette.primary.light,
+    borderColor: theme.palette.primary.light,
+  },
+}));
 
 function AddNewServer(props: {
   open: boolean;
@@ -131,7 +133,7 @@ function AddNewServer(props: {
   const [enteredServer, setEnteredServer] = useState("");
   const classes = useInputStyles();
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Dialog open={props.open}>
         <DialogTitle>{tr("ServerList.AddNewServer.Title")}</DialogTitle>
         <DialogContent>
@@ -188,7 +190,7 @@ function AddNewServer(props: {
           </Button>
         </DialogActions>
       </Dialog>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 
@@ -217,13 +219,13 @@ export function SingleServerDisplay(props: {
       <AccordionSummary
         className={classes.acc1}
         expandIcon={<ExpandMore />}
-        style={{
+        sx={{
           display: "flex",
           alignItems: "center",
         }}
       >
         <Typography
-          style={{
+          sx={{
             display: "inline",
             lineHeight: "3",
           }}
@@ -231,7 +233,7 @@ export function SingleServerDisplay(props: {
           {props.address}
         </Typography>
         <Box
-          style={{
+          sx={{
             display: "inline",
             marginLeft: "auto",
           }}
@@ -244,7 +246,7 @@ export function SingleServerDisplay(props: {
             }
           >
             <IconButton
-              style={{
+              sx={{
                 marginRight: 0,
               }}
               onClick={() => {
@@ -263,7 +265,7 @@ export function SingleServerDisplay(props: {
             }
           >
             <IconButton
-              style={{
+              sx={{
                 marginRight: 0,
               }}
               onClick={() => {
@@ -296,7 +298,7 @@ export function SingleServerDisplay(props: {
             }
           >
             <IconButton
-              style={{
+              sx={{
                 marginRight: 0,
               }}
             >
@@ -320,11 +322,11 @@ export function SingleServerDisplay(props: {
 const USED_CORE_HEAD = "ServerList.LastUsedCore.";
 
 function setLastUsedCore(address: string, core: string): void {
-  window.sessionStorage.setItem(USED_CORE_HEAD + address, core);
+  sessionStorage.setItem(USED_CORE_HEAD + address, core);
 }
 
 function getLastUsedCore(address: string): string {
-  return window.sessionStorage.getItem(USED_CORE_HEAD + address) || "";
+  return sessionStorage.getItem(USED_CORE_HEAD + address) || "";
 }
 
 function GameCoreSelector(props: {

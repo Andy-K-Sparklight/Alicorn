@@ -4,6 +4,7 @@ export const AL_THEMES: Record<string, [string, string, string, string]> = {
   Rarity: ["503e8a", "76ade5", "794897", "eaeaf4"],
   Mint: ["009688", "80cbc4", "01bcd4", "e0f2f1"],
   Grass: ["689f38", "9ccc65", "ffa100", "f1f8e9"],
+  Azure: ["104ebb", "ffd700", "072150", "bfefff"],
   Classic: ["049ae5", "64b5f6", "ff80ab", "e1f5fe"],
   "66CCFF": ["3681c6", "5cd9ff", "007faf", "f0f0ff"],
   NightLightDark: ["808080", "202020", "888888", "000000"],

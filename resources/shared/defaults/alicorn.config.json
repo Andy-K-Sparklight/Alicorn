@@ -54,5 +54,9 @@
   "first-run?": true,
   "theme": "Default",
   "auto-launch": false,
-  "features.skin-view-3d": true
+  "features.skin-view-3d": true,
+  "alicorn-ping": true,
+  "readyboom": true,
+  "readyboom.cores": 3,
+  "system.ws-operation": false
 }

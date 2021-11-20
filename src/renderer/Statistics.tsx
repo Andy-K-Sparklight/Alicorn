@@ -1,4 +1,4 @@
-import { Box, Typography } from "@material-ui/core";
+import { Box, Typography } from "@mui/material";
 import React from "react";
 import { buildMap, parseMap } from "../modules/commons/MapUtil";
 import { useTextStyles } from "./Stylex";
@@ -13,7 +13,7 @@ export function Statistics(): JSX.Element {
         const s = getStatistics(v);
         return (
           <>
-            <Box key={v} style={{ display: "flex" }}>
+            <Box key={v} sx={{ display: "flex" }}>
               <Typography className={classes.mediumText}>
                 {
                   tr(
@@ -24,7 +24,7 @@ export function Statistics(): JSX.Element {
               </Typography>
               <Typography
                 className={classes.secondText}
-                style={{ marginLeft: "auto" }}
+                sx={{ marginLeft: "auto" }}
               >
                 {randsl("Statistics." + v + ".As", `Value=${s}`)}
               </Typography>
@@ -56,9 +56,9 @@ export function getStatistics(i: string): number {
 }
 
 export function saveStatistics(): void {
-  window.localStorage.setItem("Statistics", buildMap(STATISTICS_MAP));
+  localStorage.setItem("Statistics", buildMap(STATISTICS_MAP));
 }
 
 export function loadStatistics(): void {
-  STATISTICS_MAP = parseMap(window.localStorage.getItem("Statistics") || "");
+  STATISTICS_MAP = parseMap(localStorage.getItem("Statistics") || "");
 }

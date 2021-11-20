@@ -132,6 +132,7 @@ async function getSize(url: string): Promise<number> {
       headers: { Range: "bytes=0-1" },
       signal: ac.signal,
       keepalive: true,
+      credentials: "omit",
     });
     sti();
     const rangeString = response.headers.get("content-range");
@@ -193,6 +194,7 @@ function downloadSingleChunk(
         method: "GET",
         headers: { Range: `bytes=${chunk.start}-${chunk.end}` },
         keepalive: true,
+        credentials: "omit",
       });
       if (!r.ok) {
         throw "Failed to download! Code: " + r.status;

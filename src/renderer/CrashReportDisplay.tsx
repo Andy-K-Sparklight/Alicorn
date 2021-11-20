@@ -1,3 +1,4 @@
+import { ExpandMore } from "@mui/icons-material";
 import {
   Accordion,
   AccordionDetails,
@@ -5,20 +6,18 @@ import {
   Badge,
   Box,
   Button,
-  createStyles,
   FormControl,
   List,
   ListItem,
   ListItemText,
-  makeStyles,
-  MuiThemeProvider,
   Table,
   TableBody,
   TableCell,
   TableRow,
+  ThemeProvider,
   Typography,
-} from "@material-ui/core";
-import { ExpandMore } from "@material-ui/icons";
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import copy from "copy-to-clipboard";
 import React, { useEffect, useRef, useState } from "react";
 import { generateCrashAnalytics } from "../modules/crhelper/CrashAnalyticsGenerator";
@@ -36,31 +35,27 @@ import {
   LAST_LOGS_KEY,
   MCFailureInfo,
 } from "./ReadyToLaunch";
-import {
-  ALICORN_DEFAULT_THEME_DARK,
-  ALICORN_DEFAULT_THEME_LIGHT,
-} from "./Renderer";
+import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import { AlicornTheme } from "./Stylex";
 import { tr } from "./Translator";
 
-const useAccStyles = makeStyles((theme) =>
-  createStyles({
-    root: {},
-    acc1: {
-      backgroundColor: theme.palette.primary.main,
-    },
-    acc2: {
-      backgroundColor: theme.palette.primary.dark,
-    },
-    table: {
-      backgroundColor: theme.palette.primary.dark,
-      color: theme.palette.primary.main,
-    },
-    btn: {
-      color: theme.palette.primary.light,
-      borderColor: theme.palette.primary.light,
-    },
-  })
-);
+const useAccStyles = makeStyles((theme: AlicornTheme) => ({
+  root: {},
+  acc1: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  acc2: {
+    backgroundColor: theme.palette.primary.dark,
+  },
+  table: {
+    backgroundColor: theme.palette.primary.dark,
+    color: theme.palette.primary.main,
+  },
+  btn: {
+    color: theme.palette.primary.light,
+    borderColor: theme.palette.primary.light,
+  },
+}));
 
 export function CrashReportDisplay(): JSX.Element {
   // @ts-ignore
@@ -336,8 +331,8 @@ function Analyze(props: {
         ) : (
           <>
             <Typography
-              style={{
-                color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.light,
+              sx={{
+                color: "secondary.light",
               }}
               onClick={() => {
                 window.dispatchEvent(
@@ -465,8 +460,8 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
               }}
             >
               <ListItemText
-                style={{
-                  color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.light,
+                sx={{
+                  color: "secondary.light",
                 }}
               >
                 <b>{tr("CrashReportDisplay.AnalyzeLogs.Up")}</b>
@@ -483,7 +478,7 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
             return (
               <Typography
                 key={i}
-                style={{
+                sx={{
                   wordBreak: "break-all",
                   color: isException(l)
                     ? "#ff0000"
@@ -508,8 +503,8 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
             >
               <hr />
               <ListItemText
-                style={{
-                  color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.light,
+                sx={{
+                  color: "secondary.light",
                 }}
               >
                 <b>{tr("CrashReportDisplay.AnalyzeLogs.Down")}</b>
@@ -541,12 +536,12 @@ function BBCodeDisplay(props: {
   );
   return (
     <Box
-      style={{
+      sx={{
         display: "flex",
       }}
     >
       <Typography
-        style={{
+        sx={{
           display: "inline",
           overflow: "auto",
           lineBreak: "auto",
@@ -556,8 +551,8 @@ function BBCodeDisplay(props: {
       >
         {tr("CrashReportDisplay.Instruction")}
       </Typography>
-      <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-        <FormControl style={{ display: "inline", marginLeft: "auto" }}>
+      <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+        <FormControl sx={{ display: "inline", marginLeft: "auto" }}>
           <Button
             onClick={() => {
               if (!copy(code, { format: "text/plain" })) {
@@ -600,7 +595,7 @@ function BBCodeDisplay(props: {
             {tr("CrashReportDisplay.CopyLogs")}
           </Button>
         </FormControl>
-      </MuiThemeProvider>
+      </ThemeProvider>
     </Box>
   );
 }

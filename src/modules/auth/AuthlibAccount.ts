@@ -94,6 +94,7 @@ export async function getSkinByUUID(a: AuthlibAccount): Promise<string> {
           "Content-Type": "application/json",
         },
         cache: "no-cache",
+        credentials: "include",
       })
     ).json();
     const props = safeGet(response, ["properties"]);

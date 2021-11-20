@@ -75,7 +75,7 @@ function generateClicker(document: Document): void {
       if (l.trim().length > 0) {
         const ele = document.createElement("span");
         ele.onclick = () => {
-          window.sessionStorage.setItem("selectedLoader", l.trim());
+          sessionStorage.setItem("selectedLoader", l.trim());
         };
         ele.innerHTML = l;
         return ele;
@@ -100,7 +100,7 @@ function generateClicker(document: Document): void {
           `/PffFront/${encodeURIComponent(ct)}/${encodeURIComponent(
             v
           )}/${encodeURIComponent(
-            window.sessionStorage.getItem("selectedLoader") || "Fabric"
+            sessionStorage.getItem("selectedLoader") || "Fabric"
           )}/${encodeURIComponent(name)}`,
           "PffFront"
         );

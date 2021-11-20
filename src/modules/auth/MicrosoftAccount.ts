@@ -26,6 +26,8 @@ export const MS_LAST_USED_USERNAME_KEY = "MS.LastUsedUserName";
 export const MS_LAST_USED_ACTOKEN_KEY = "MS.LastUsedACToken"; // Encrypt
 export const MS_LAST_USED_UUID_KEY = "MS.LastUsedUUID";
 export const MS_LAST_USED_REFRESH_KEY = "MS.LastUsedRefresh"; // Encrypt
+export const ACCOUNT_LAST_REFRESHED_KEY = "MS.AccountRefreshDate";
+export const ACCOUNT_EXPIRES_KEY = "MS.Expires";
 
 export class MicrosoftAccount extends Account {
   buildAccessData(): Promise<Trio<string, string, string>> {
@@ -105,9 +107,9 @@ export class MicrosoftAccount extends Account {
     }
   }
 
-  async performAuth(password: string): Promise<boolean> {
+  async performAuth(password: string, quiet = false): Promise<boolean> {
     try {
-      const code = await browserGetCode();
+      const code = await browserGetCode(quiet);
       if (code.trim().length === 0) {
         return false;
       }
@@ -160,11 +162,12 @@ function saveAccessToken(v: string): void {
 
 // User -> Code
 // Only in remote!
-export async function browserGetCode(): Promise<string> {
+export async function browserGetCode(quiet = false): Promise<string> {
   console.log("Building login window...");
   return await ipcRenderer.invoke(
     "msBrowserCode",
-    getString("web.global-proxy")
+    getString("web.global-proxy"),
+    quiet
   );
 }
 
@@ -201,6 +204,7 @@ async function tokenRequest(
         },
         cache: "no-cache",
         body: `client_id=00000000402b5328&${grantTag}=${credit}&grant_type=${grantType}&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL`,
+        credentials: "include",
       })
     ).json();
     if (!isNull(safeGet(ret, ["error"]))) {
@@ -210,6 +214,20 @@ async function tokenRequest(
     }
     const accessToken = String(safeGet(ret, ["access_token"], ""));
     const refreshToken = String(safeGet(ret, ["refresh_token"], ""));
+    // @ts-ignore
+    const expires = parseInt(safeGet(ret, ["expires_in"], null));
+    if (typeof expires === "number") {
+      if (!isNaN(expires)) {
+        localStorage.setItem(
+          ACCOUNT_LAST_REFRESHED_KEY,
+          new Date().toISOString()
+        );
+        localStorage.setItem(
+          ACCOUNT_EXPIRES_KEY,
+          (expires - 3600).toString() // SAFE
+        );
+      }
+    }
     if (isNull(accessToken) || isNull(refreshToken)) {
       return { success: false };
     }
@@ -243,6 +261,7 @@ async function getXBLToken(
           "Content-Type": "application/json",
           Accept: "application/json",
         },
+        credentials: "include",
         cache: "no-cache",
         body: JSON.stringify({
           Properties: {
@@ -282,6 +301,7 @@ async function getXSTSToken(
           "Content-Type": "application/json",
           Accept: "application/json",
         },
+        credentials: "include",
         cache: "no-cache",
         body: JSON.stringify({
           Properties: {
@@ -316,6 +336,7 @@ async function getMojangToken(uhs: string, xstsToken: string): Promise<string> {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         cache: "no-cache",
         body: JSON.stringify({
           identityToken: `XBL3.0 x=${uhs};${xstsToken}`,
@@ -346,6 +367,7 @@ async function getUUIDAndUserName(
           "Content-Type": "application/json",
           Authorization: `Bearer ${acToken}`,
         },
+        credentials: "include",
         cache: "no-cache",
       })
     ).json();

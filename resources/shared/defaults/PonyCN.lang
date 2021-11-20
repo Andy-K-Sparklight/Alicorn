@@ -454,6 +454,14 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 完毕
 
+# ReadyToLaunch.DryLaunch
+
+模拟启动
+
+# ReadyToLaunch.DryLaunchDesc
+
+运行所有启动操作，但不执行 Java，也不生成游戏进程
+
 # ReadyToLaunch.GenerateLink
 
 想要联机游戏？我能帮你吗？
@@ -1190,6 +1198,38 @@ Alicorn 特色功能
 
 高级和重置
 
+# Options.system.ws-operation.title
+
+Alicorn 网络调用 ^
+
+# Options.system.ws-operation.desc
+
+允许 Web 脚本等通过一系列操作和 Alicorn 建立连接并直接调用 Alicorn 功能 - 请当心，恶意程序可能会滥用此功能！
+
+# Options.readyboom.cores.title
+
+ReadyBoom 预热核心数 ^
+
+# Options.readyboom.cores.desc
+
+ReadyBoom 要预热多少个核心？
+
+# Options.readyboom.title
+
+ReadyBoom 预热 ^
+
+# Options.readyboom.desc
+
+自动准备你经常游玩的核心所需要的资源，大幅提升启动速度
+
+# Options.alicorn-ping.title
+
+Alicorn Ping ^
+
+# Options.alicorn-ping.desc
+
+这种几乎不带任何信息的 Ping 可以让 ThatRarityEG 估计活跃用户数\nAlicorn Ping 仅收集一条不可逆的、单向加密过的哈希用于区分不同客户端。
+
 # Options.features.skin-view-3d.title
 
 Skin View 3D 皮肤显示
@@ -1217,6 +1257,10 @@ Skin View 3D 皮肤显示
 # Options.theme.Default
 
 助理默认
+
+# Options.theme.Azure
+
+碧海蓝
 
 # Options.theme.Twikie
 

@@ -25,7 +25,7 @@
     <script>
       document.body.onkeydown = (e) => {
         if (e.key === " ") {
-          if (window.sessionStorage.getItem("isCommand") === "1") {
+          if (sessionStorage.getItem("isCommand") === "1") {
             e.preventDefault();
             window.dispatchEvent(new CustomEvent("HelpSpace"));
           }

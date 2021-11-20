@@ -1,4 +1,6 @@
+import { ArrowForward } from "@mui/icons-material";
 import {
+  Alert,
   Avatar,
   Badge,
   Box,
@@ -12,14 +14,12 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  MuiThemeProvider,
   Tab,
   Tabs,
   TextField,
+  ThemeProvider,
   Typography,
-} from "@material-ui/core";
-import { ArrowForward } from "@material-ui/icons";
-import { Alert } from "@material-ui/lab";
+} from "@mui/material";
 import { shell } from "electron";
 import EventEmitter from "events";
 import path from "path";
@@ -194,7 +194,7 @@ export function PffFront(): JSX.Element {
     })();
   };
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box className={fullWidthClasses.root}>
         <FormControl>
           <TextField
@@ -229,7 +229,7 @@ export function PffFront(): JSX.Element {
           />
         </FormControl>
         <Typography
-          style={{
+          sx={{
             userSelect: "all",
             textAlign: "center",
           }}
@@ -242,7 +242,7 @@ export function PffFront(): JSX.Element {
           ""
         ) : (
           <Typography
-            style={{
+            sx={{
               textAlign: "center",
               color: "#ff8400",
             }}
@@ -254,6 +254,7 @@ export function PffFront(): JSX.Element {
       </Box>
       <>
         <Tabs
+          variant={"fullWidth"}
           value={val}
           onChange={(_e, v) => {
             setVal(v);
@@ -407,7 +408,7 @@ export function PffFront(): JSX.Element {
           </Container>
         </TabPanel>
       </>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 
@@ -448,7 +449,7 @@ export function SinglePffModDisplay(props: {
         }}
         primary={
           <Typography
-            style={{
+            sx={{
               color: isCompatible ? undefined : "gray",
               textDecoration: isCompatible ? undefined : "line-through",
               fontWeight: showDesc ? "bold" : undefined,
@@ -461,7 +462,7 @@ export function SinglePffModDisplay(props: {
         secondary={
           <Typography
             className={"smtxt"}
-            style={{
+            sx={{
               color: isCompatible ? undefined : "gray",
               textDecoration: isCompatible ? undefined : "line-through",
               fontWeight: showDesc ? "bold" : undefined,
@@ -527,7 +528,7 @@ export function SingleModDisplay(props: {
       <ListItemText
         primary={
           <Typography
-            style={{
+            sx={{
               textDecoration: !compatible ? "line-through" : undefined,
               fontWeight: showDesc ? "bold" : undefined,
               color: compatible ? undefined : "gray",
@@ -540,7 +541,7 @@ export function SingleModDisplay(props: {
         secondary={
           <Typography
             color={"secondary"}
-            style={{
+            sx={{
               textDecoration:
                 !compatible && !showDesc ? "line-through" : undefined,
               fontWeight: showDesc ? "bold" : undefined,

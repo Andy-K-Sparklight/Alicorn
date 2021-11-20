@@ -1,9 +1,4 @@
-import {
-  Box,
-  createTheme,
-  MuiThemeProvider,
-  Typography,
-} from "@material-ui/core";
+import { Box, createTheme, ThemeProvider, Typography } from "@mui/material";
 import { ipcRenderer, shell } from "electron";
 import { emptyDir } from "fs-extra";
 import React from "react";
@@ -33,8 +28,11 @@ import { prefetchFabricManifest } from "../modules/pff/get/FabricGet";
 import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
 import { prefetchMojangVersions } from "../modules/pff/get/MojangCore";
 import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
+import { setupMSAccountRefreshService } from "../modules/readyboom/AccountMaster";
+import { setupHotProfilesService } from "../modules/readyboom/PrepareProfile";
 import { initEncrypt } from "../modules/security/Encrypt";
 import { getMachineUniqueID } from "../modules/security/Unique";
+import { todayPing } from "../modules/selfupdate/Ping";
 import { checkUpdate, initUpdator } from "../modules/selfupdate/Updator";
 import { loadServers } from "../modules/server/ServerFiles";
 import { App } from "./App";
@@ -94,8 +92,8 @@ try {
   } else {
     console.log("GC Disabled.");
   }
-  const windowPos = window.localStorage.getItem("System.WindowPos");
-  const windowSize = window.localStorage.getItem("System.WindowSize");
+  const windowPos = localStorage.getItem("System.WindowPos");
+  const windowSize = localStorage.getItem("System.WindowSize");
   if (windowSize) {
     const s = windowSize.split(",").map((r) => {
       return parseInt(r);
@@ -109,10 +107,10 @@ try {
     ipcRenderer.send("configureWindowPos", ...s);
   }
   ipcRenderer.on("mainWindowMoved", (_e, pos: number[]) => {
-    window.localStorage.setItem("System.WindowPos", pos.join(","));
+    localStorage.setItem("System.WindowPos", pos.join(","));
   });
   ipcRenderer.on("mainWindowResized", (_e, sz: number[]) => {
-    window.localStorage.setItem("System.WindowSize", sz.join(","));
+    localStorage.setItem("System.WindowSize", sz.join(","));
   });
   void (async () => {
     printScreen("Initializing translator...");
@@ -127,7 +125,7 @@ try {
     // GDT & JDT is required by LaunchPad & JavaSelector
     if (getBoolean("clean-storage")) {
       console.log("Cleaning storage data!");
-      window.localStorage.clear();
+      localStorage.clear();
       await emptyDir(getActualDataPath("."));
       console.log("Stoarge data cleaned.");
       console.log("Resetting and reloading config...");
@@ -200,6 +198,7 @@ try {
       getMachineUniqueID(), // Cache
     ]);
     void completeFirstRun(); // Not blocking
+    void todayPing();
     // Heavy works and minor works
     await Promise.allSettled([initResolveLock(), initVF(), preCacheJavaInfo()]);
     const t2 = new Date();
@@ -215,6 +214,12 @@ try {
     // Optional services
     const t3 = new Date();
     console.log("Running optional services...");
+
+    // Sync services
+    setupMSAccountRefreshService();
+    setupHotProfilesService();
+
+    // Async services
     const updPm = (async () => {
       // Conc
       if (getBoolean("updator.use-update")) {
@@ -290,7 +295,7 @@ function bindSuperCowPower(): void {
 function configureFontSize(): void {
   const f = "0.875em";
   console.log("Set small font size as " + f);
-  window.sessionStorage.setItem("smallFontSize", f);
+  sessionStorage.setItem("smallFontSize", f);
   let e: HTMLStyleElement | null = document.createElement("style");
   e.innerText = `.smtxt{font-size:${f} !important;} .MuiTooltip-tooltip > .smtxt{font-size: 1.2em !important;}`;
   document.head.insertAdjacentElement("beforeend", e);
@@ -350,7 +355,7 @@ function flushColors(): void {
           getString("theme.primary.main") || "#" + getTheme()[0]
         } !important;} fieldset {border-color:${
           getString("theme.primary.main") || "#" + getTheme()[0]
-        } !important;} div[role="radiogroup"] > label > span > span > div > svg {color: ${
+        } !important;} div[role="radiogroup"] > label > span > span > div > svg, input[type="checkbox"] + svg, .MuiFormControlLabel-label {color: ${
           getString("theme.primary.main") || "#" + getTheme()[0]
         } !important;}`
       : "");
@@ -377,7 +382,7 @@ export function setThemeParams(
 ): void {
   ALICORN_DEFAULT_THEME_LIGHT = createTheme({
     palette: {
-      type: "light",
+      mode: "light",
       primary: {
         main: primaryMain,
         light: primaryLight,
@@ -390,39 +395,49 @@ export function setThemeParams(
     typography: {
       fontFamily: fontFamily,
     },
-    overrides: overrideCursor
+    components: overrideCursor
       ? {
           MuiButtonBase: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
           MuiInputBase: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
           MuiCheckbox: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
           MuiSelect: {
-            select: {
-              cursor: undefined,
+            styleOverrides: {
+              select: {
+                cursor: undefined,
+              },
             },
           },
           MuiFormControlLabel: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
         }
-      : undefined,
+      : {},
   });
   ALICORN_DEFAULT_THEME_DARK = createTheme({
     palette: {
-      type: "dark",
+      mode: "dark",
       primary: {
         main: primaryMain,
         light: primaryLight,
@@ -435,41 +450,51 @@ export function setThemeParams(
     typography: {
       fontFamily: fontFamily,
     },
-    overrides: overrideCursor
+    components: overrideCursor
       ? {
           MuiButtonBase: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
           MuiInputBase: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
           MuiCheckbox: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
           MuiSelect: {
-            select: {
-              cursor: undefined,
+            styleOverrides: {
+              select: {
+                cursor: undefined,
+              },
             },
           },
           MuiFormControlLabel: {
-            root: {
-              cursor: undefined,
+            styleOverrides: {
+              root: {
+                cursor: undefined,
+              },
             },
           },
         }
-      : undefined,
+      : {},
   });
 }
 
 export let ALICORN_DEFAULT_THEME_DARK = createTheme({
   palette: {
-    type: "dark",
+    mode: "dark",
     primary: {
       main: "#5d2391",
       light: "#d796f0",
@@ -485,7 +510,7 @@ export let ALICORN_DEFAULT_THEME_DARK = createTheme({
 });
 export let ALICORN_DEFAULT_THEME_LIGHT = createTheme({
   palette: {
-    type: "light",
+    mode: "light",
     primary: {
       main: "#5d2391",
       light: "#d796f0",
@@ -540,13 +565,13 @@ function RendererBootstrap(): JSX.Element {
       })}
     >
       <InstructionProvider>
-        <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
+        <ThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
           <HashRouter>
             <App />
           </HashRouter>
           {getString("theme") === "Random" ? (
             <Typography
-              style={{
+              sx={{
                 pointerEvents: "none",
                 position: "fixed",
                 left: "0.3125em",
@@ -561,7 +586,7 @@ function RendererBootstrap(): JSX.Element {
           )}
 
           <Typography
-            style={{
+            sx={{
               pointerEvents: "none",
               position: "fixed",
               right: "0.3125em",
@@ -571,7 +596,7 @@ function RendererBootstrap(): JSX.Element {
           >
             {"Alicorn " + pkg.appVersion + " #" + pkg.updatorVersion}
           </Typography>
-        </MuiThemeProvider>
+        </ThemeProvider>
       </InstructionProvider>
     </Box>
   );

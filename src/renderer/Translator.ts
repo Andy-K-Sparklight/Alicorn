@@ -35,7 +35,7 @@ const TEMP_CHANGE_TR_ACTION_KEY = "Translator.UseLocale";
 // ATTENETION! This function actually CAN return a JSX Element
 // We use string here to 'cheat' TSC
 export function tr(key: string, ...values: string[]): string {
-  const lc = window.sessionStorage.getItem(TEMP_CHANGE_TR_ACTION_KEY);
+  const lc = sessionStorage.getItem(TEMP_CHANGE_TR_ACTION_KEY);
   let lang;
   if (typeof lc === "string") {
     lang = localesMap.get(lc);
@@ -46,9 +46,9 @@ export function tr(key: string, ...values: string[]): string {
   if (res === undefined) {
     const t = (lang || {})["_BaseOn"];
     if (typeof t === "string") {
-      window.sessionStorage.setItem(TEMP_CHANGE_TR_ACTION_KEY, t);
+      sessionStorage.setItem(TEMP_CHANGE_TR_ACTION_KEY, t);
       const b = tr(key, ...values);
-      window.sessionStorage.removeItem(TEMP_CHANGE_TR_ACTION_KEY);
+      sessionStorage.removeItem(TEMP_CHANGE_TR_ACTION_KEY);
       return b;
     }
     res = key;
@@ -67,7 +67,7 @@ export function tr(key: string, ...values: string[]): string {
 }
 
 export function randsl(key: string, ...values: string[]): string {
-  const lc = window.sessionStorage.getItem(TEMP_CHANGE_TR_ACTION_KEY);
+  const lc = sessionStorage.getItem(TEMP_CHANGE_TR_ACTION_KEY);
   let lang;
   if (typeof lc === "string") {
     lang = localesMap.get(lc);
@@ -81,9 +81,9 @@ export function randsl(key: string, ...values: string[]): string {
   if (typeof res === "undefined") {
     const t = (lang || {})["_BaseOn"];
     if (typeof t === "string") {
-      window.sessionStorage.setItem(TEMP_CHANGE_TR_ACTION_KEY, t);
+      sessionStorage.setItem(TEMP_CHANGE_TR_ACTION_KEY, t);
       const b = randsl(key, ...values);
-      window.sessionStorage.removeItem(TEMP_CHANGE_TR_ACTION_KEY);
+      sessionStorage.removeItem(TEMP_CHANGE_TR_ACTION_KEY);
       return b;
     }
     return key;

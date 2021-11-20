@@ -1,4 +1,12 @@
 import {
+  Add,
+  Eject,
+  FolderOpen,
+  Input,
+  LayersClear,
+  LinkOff,
+} from "@mui/icons-material";
+import {
   Box,
   Button,
   Card,
@@ -11,22 +19,14 @@ import {
   Fade,
   FormControlLabel,
   IconButton,
-  MuiThemeProvider,
   Radio,
   RadioGroup,
   Switch,
   TextField,
+  ThemeProvider,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import {
-  Add,
-  Eject,
-  FolderOpen,
-  Input,
-  LayersClear,
-  LinkOff,
-} from "@material-ui/icons";
+} from "@mui/material";
 import { ipcRenderer, shell } from "electron";
 import fs from "fs-extra";
 import os from "os";
@@ -152,7 +152,7 @@ export function ContainerManager(): JSX.Element {
           }
         }}
       />
-      <Box style={{ textAlign: "right" }}>
+      <Box sx={{ textAlign: "right" }}>
         <Tooltip
           title={
             <Typography className={"smtxt"}>
@@ -230,6 +230,7 @@ function SingleContainerDisplay(props: {
       <OperatingHint open={operating} />
 
       <Card
+        raised={true}
         className={props.isMounted ? classes.card : classes.uCard}
         onMouseOver={() => {
           setShowBtn(true);
@@ -239,7 +240,7 @@ function SingleContainerDisplay(props: {
         }}
       >
         <CardContent>
-          <Box style={{ float: "right" }}>
+          <Box sx={{ float: "right" }}>
             {!props.isMounted || isASC === null ? (
               ""
             ) : (
@@ -525,7 +526,7 @@ function AddNewContainer(props: {
   const [modpackPath, setModpackPath] = useState(props.modpack || "");
   const classes = useInputStyles();
   return (
-    <MuiThemeProvider
+    <ThemeProvider
       theme={
         isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
       }
@@ -592,7 +593,7 @@ function AddNewContainer(props: {
             <Button
               className={classes.inputDark}
               type={"button"}
-              style={{
+              sx={{
                 display: "inline",
               }}
               variant={"outlined"}
@@ -664,7 +665,7 @@ function AddNewContainer(props: {
           {/* Choose Modpack */}
           <>
             <DialogContentText
-              style={{
+              sx={{
                 display: allowModpack ? "inherit" : "none",
               }}
             >
@@ -675,7 +676,7 @@ function AddNewContainer(props: {
               className={classes.input}
               color={"secondary"}
               autoFocus
-              style={{
+              sx={{
                 display: allowModpack ? "inherit" : "none",
               }}
               margin={"dense"}
@@ -709,7 +710,7 @@ function AddNewContainer(props: {
             <Button
               className={classes.inputDark}
               type={"button"}
-              style={{
+              sx={{
                 display: allowModpack ? "inherit" : "none",
               }}
               variant={"outlined"}
@@ -796,7 +797,7 @@ function AddNewContainer(props: {
           </Button>
         </DialogActions>
       </Dialog>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 

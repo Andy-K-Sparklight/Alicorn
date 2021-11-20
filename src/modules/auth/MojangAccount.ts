@@ -81,6 +81,7 @@ export async function getMojangSkinByUUID(a: Account): Promise<string> {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         cache: "no-cache",
       })
     ).json();

@@ -117,7 +117,10 @@ export async function isWebFileExist(u: string): Promise<string> {
       const [controller, sti] = getTimeoutController(
         getNumber("download.concurrent.timeout", 5000)
       );
-      const r = await fetch(mrc.mirror(), { signal: controller.signal });
+      const r = await fetch(mrc.mirror(), {
+        signal: controller.signal,
+        credentials: "omit",
+      });
       sti();
       if (r.ok) {
         return u;
@@ -132,7 +135,7 @@ export async function isWebFileExist(u: string): Promise<string> {
   const [controller, sti] = getTimeoutController(
     getNumber("download.concurrent.timeout", 5000)
   );
-  const r = await fetch(u, { signal: controller.signal });
+  const r = await fetch(u, { signal: controller.signal, credentials: "omit" });
   sti();
   if (r.ok) {
     return u;

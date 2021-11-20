@@ -2,12 +2,12 @@ import {
   Button,
   FormControl,
   FormControlLabel,
-  MuiThemeProvider,
   Radio,
   RadioGroup,
   TextField,
+  ThemeProvider,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import { ipcRenderer } from "electron";
 import React, { useEffect, useState } from "react";
 import { LocalAccount } from "../../modules/auth/LocalAccount";
@@ -30,9 +30,9 @@ export function CarouselBoutique(): JSX.Element {
   const [playerName, setPlayerName] = useState("");
   const [isSlim, setIsSlim] = useState(false);
   useEffect(() => {
-    const allAc = (
-      window.localStorage.getItem(ALL_SET_ACCOUNTS_KEY) || ""
-    ).split(ALICORN_SEPARATOR);
+    const allAc = (localStorage.getItem(ALL_SET_ACCOUNTS_KEY) || "").split(
+      ALICORN_SEPARATOR
+    );
     const oc: string[] = [];
     void Promise.all(
       allAc.map(async (a) => {
@@ -47,7 +47,7 @@ export function CarouselBoutique(): JSX.Element {
   }, []);
   const classes = useTextStyles();
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <>
         <Typography className={classes.secondText} gutterBottom>
           {tr("Utilities.CarouselBoutique.Hint")}
@@ -70,7 +70,7 @@ export function CarouselBoutique(): JSX.Element {
           <TextField
             color={"primary"}
             variant={"outlined"}
-            style={{
+            sx={{
               float: "left",
             }}
             onChange={(e) => {
@@ -140,7 +140,7 @@ export function CarouselBoutique(): JSX.Element {
             if (!n.includes(playerName)) {
               n.push(playerName);
               setNames(n);
-              window.localStorage.setItem(
+              localStorage.setItem(
                 ALL_SET_ACCOUNTS_KEY,
                 n.join(ALICORN_SEPARATOR)
               );
@@ -153,7 +153,7 @@ export function CarouselBoutique(): JSX.Element {
           disabled={
             playerName.trim().length === 0 || selectedFile.trim().length === 0
           }
-          style={{ marginLeft: "0.25em" }}
+          sx={{ marginLeft: "0.25em" }}
           color={"primary"}
           variant={"contained"}
           onClick={async () => {
@@ -170,7 +170,7 @@ export function CarouselBoutique(): JSX.Element {
         </Button>
         <Button
           disabled={playerName.trim().length === 0}
-          style={{ marginLeft: "0.25em" }}
+          sx={{ marginLeft: "0.25em" }}
           color={"primary"}
           variant={"contained"}
           onClick={async () => {
@@ -181,7 +181,7 @@ export function CarouselBoutique(): JSX.Element {
               n.splice(i, 1);
             }
             setNames(n);
-            window.localStorage.setItem(
+            localStorage.setItem(
               ALL_SET_ACCOUNTS_KEY,
               n.join(ALICORN_SEPARATOR)
             );
@@ -191,7 +191,7 @@ export function CarouselBoutique(): JSX.Element {
         </Button>
         <Button
           disabled={playerName.trim().length === 0}
-          style={{ marginLeft: "0.25em" }}
+          sx={{ marginLeft: "0.25em" }}
           color={"primary"}
           variant={"contained"}
           onClick={async () => {
@@ -202,7 +202,7 @@ export function CarouselBoutique(): JSX.Element {
         </Button>
         <Button
           disabled={selectedFile.trim().length === 0}
-          style={{ marginLeft: "0.25em" }}
+          sx={{ marginLeft: "0.25em" }}
           color={"primary"}
           variant={"contained"}
           onClick={async () => {
@@ -218,7 +218,7 @@ export function CarouselBoutique(): JSX.Element {
         </Button>
         <Button
           disabled={selectedFile.trim().length === 0}
-          style={{ marginLeft: "0.25em" }}
+          sx={{ marginLeft: "0.25em" }}
           color={"primary"}
           variant={"contained"}
           onClick={async () => {
@@ -233,7 +233,7 @@ export function CarouselBoutique(): JSX.Element {
           {tr("Utilities.CarouselBoutique.SetAsDefaultCape")}
         </Button>
       </>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 

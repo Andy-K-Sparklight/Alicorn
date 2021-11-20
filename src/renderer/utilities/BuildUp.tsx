@@ -6,13 +6,13 @@ import {
   List,
   ListItem,
   MenuItem,
-  MuiThemeProvider,
   Select,
   Tab,
   Tabs,
   TextField,
+  ThemeProvider,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import objectHash from "object-hash";
 import os from "os";
 import path from "path";
@@ -43,9 +43,10 @@ export function BuildUp(): JSX.Element {
     version: "1.0",
   });
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <>
         <Tabs
+          variant={"fullWidth"}
           value={currentTab}
           onChange={(_e, v) => {
             setCurrentTab(v);
@@ -89,7 +90,7 @@ export function BuildUp(): JSX.Element {
           <SelectAssets assets={assets} meta={meta} container={rootContainer} />
         </TabPanel>
       </>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 
@@ -296,7 +297,7 @@ function SelectAssets(props: {
       </Button>
       <Button
         type={"button"}
-        style={{ marginLeft: "0.25em" }}
+        sx={{ marginLeft: "0.25em" }}
         color={"primary"}
         variant={"contained"}
         onClick={() => {
@@ -316,7 +317,7 @@ function SelectAssets(props: {
           buttonState !== "Utilities.BuildUp.Build" || selectedAssets.size === 0
         }
         type={"button"}
-        style={{ marginLeft: "0.25em" }}
+        sx={{ marginLeft: "0.25em" }}
         color={"primary"}
         variant={"contained"}
         onClick={() => {
@@ -344,8 +345,8 @@ function SelectAssets(props: {
       >
         {tr(buttonState)}
       </Button>
-      <Box style={{ display: "flex", flexDirection: "row" }}>
-        <List style={{ width: "50%", display: "inline" }}>
+      <Box sx={{ display: "flex", flexDirection: "row" }}>
+        <List sx={{ width: "50%", display: "inline" }}>
           <ListItem>
             <Typography color={"secondary"}>
               {tr("Utilities.BuildUp.SelectedAsset")}
@@ -372,7 +373,7 @@ function SelectAssets(props: {
             );
           })}
         </List>
-        <List style={{ width: "50%", display: "inline" }}>
+        <List sx={{ width: "50%", display: "inline" }}>
           <ListItem>
             <Typography color={"secondary"}>
               {tr("Utilities.BuildUp.Asset")}

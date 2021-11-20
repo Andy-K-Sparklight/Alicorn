@@ -350,6 +350,7 @@ async function cacheSkin(key: string, u: string): Promise<void> {
   try {
     const res = await fetch(u, {
       method: "GET",
+      credentials: "omit",
     });
     if (res.ok) {
       const d = await res.blob();

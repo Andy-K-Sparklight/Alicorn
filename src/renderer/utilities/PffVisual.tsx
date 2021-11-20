@@ -1,3 +1,4 @@
+import { Search } from "@mui/icons-material";
 import {
   Box,
   Card,
@@ -8,11 +9,10 @@ import {
   FormControlLabel,
   IconButton,
   InputAdornment,
-  MuiThemeProvider,
   TextField,
+  ThemeProvider,
   Typography,
-} from "@material-ui/core";
-import { Search } from "@material-ui/icons";
+} from "@mui/material";
 import copy from "copy-to-clipboard";
 import React, { useEffect, useRef, useState } from "react";
 import { getNumber } from "../../modules/config/ConfigSupport";
@@ -52,13 +52,13 @@ export function PffVisual(): JSX.Element {
     <>
       <Typography
         color={"secondary"}
-        style={{ marginLeft: 0 }}
+        sx={{ marginLeft: 0 }}
         className={classes.smallText}
       >
         {tr("Utilities.PffVisual.Hint")}
       </Typography>
       <Box className={classes.para}>
-        <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+        <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
           <>
             <FormControl>
               <TextField
@@ -140,6 +140,7 @@ export function PffVisual(): JSX.Element {
           <FormControlLabel
             control={
               <Checkbox
+                color={"primary"}
                 checked={multiSelect}
                 disabled={mode !== "Normal"}
                 onChange={(e) => {
@@ -164,6 +165,7 @@ export function PffVisual(): JSX.Element {
           <FormControlLabel
             control={
               <Checkbox
+                color={"primary"}
                 disabled={searching}
                 checked={mode === "Modpack"}
                 onChange={(e) => {
@@ -178,7 +180,7 @@ export function PffVisual(): JSX.Element {
             }
             label={tr("Utilities.PffVisual.Modpack")}
           />
-        </MuiThemeProvider>
+        </ThemeProvider>
 
         <br />
         {mode === "Normal"
@@ -241,8 +243,9 @@ function SingleAddonDisplay(props: {
   const classes = useCardStyles();
   const a = props.info?.supportVersions || [];
   return (
-    <Box style={{ textAlign: "left" }}>
+    <Box sx={{ textAlign: "left" }}>
       <Card
+        raised={true}
         className={props.isSelected ? classes.card2 : classes.card}
         onClick={() => {
           if (props.info) {

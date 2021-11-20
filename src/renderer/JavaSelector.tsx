@@ -1,3 +1,4 @@
+import { Refresh } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -6,12 +7,11 @@ import {
   InputLabel,
   LinearProgress,
   MenuItem,
-  MuiThemeProvider,
   Select,
+  ThemeProvider,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import { Refresh } from "@material-ui/icons";
+} from "@mui/material";
 import { ipcRenderer, shell } from "electron";
 import os from "os";
 import path from "path";
@@ -116,7 +116,7 @@ export function JavaSelector(): JSX.Element {
     })();
   }, [isJavaInfoLoaded, refreshBit]);
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box className={classes.root}>
         <br />
         <br />
@@ -217,7 +217,7 @@ export function JavaSelector(): JSX.Element {
         />
         <JavaDownloader />
       </Box>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 
@@ -245,7 +245,7 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
       )}
       {corruptBit ? (
         <Typography
-          style={{
+          sx={{
             color: "#ff8400",
           }}
           className={"smtxt"}
@@ -264,7 +264,7 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
             ""
           ) : (
             <Typography
-              style={{
+              sx={{
                 color: "#ff8400",
               }}
               gutterBottom
@@ -277,7 +277,7 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
             ""
           ) : (
             <Typography
-              style={{
+              sx={{
                 color: "#ff8400",
               }}
               className={"smtxt"}
@@ -290,7 +290,7 @@ function JavaInfoDisplay(props: { jInfo?: JavaInfo }): JSX.Element {
             ""
           ) : (
             <Typography
-              style={{
+              sx={{
                 color: "#ff8400",
               }}
               className={"smtxt"}
@@ -375,7 +375,7 @@ function JavaDownloader(): JSX.Element {
               }
             })();
           }}
-          style={{
+          sx={{
             marginTop: "1%",
           }}
         >

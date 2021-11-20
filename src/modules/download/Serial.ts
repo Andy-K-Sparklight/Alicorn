@@ -41,6 +41,7 @@ export class Serial extends AbstractDownloader {
             method: "GET",
             signal: ac.signal,
             keepalive: true,
+            credentials: "omit",
           });
 
           if (!r.ok) {

@@ -6,12 +6,12 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  MuiThemeProvider,
   Select,
   Tab,
   Tabs,
+  ThemeProvider,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { throttle } from "throttle-debounce";
 import { ALICORN_SEPARATOR, ReleaseType } from "../modules/commons/Constants";
@@ -169,7 +169,7 @@ export function InstallCore(): JSX.Element {
     })();
   }, [updatePatchableCoresBit]);
   return (
-    <MuiThemeProvider
+    <ThemeProvider
       theme={
         isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
       }
@@ -198,15 +198,12 @@ export function InstallCore(): JSX.Element {
                 <Grid item>
                   <Avatar
                     variant={"square"}
-                    style={{ width: "2rem", height: "2rem" }}
+                    sx={{ width: "2rem", height: "2rem" }}
                     src={Icons.PROFILE_MOJANG}
                   />
                 </Grid>
                 <Grid item>
-                  <Typography
-                    color={"primary"}
-                    style={{ marginLeft: "0.25em" }}
-                  >
+                  <Typography color={"primary"} sx={{ marginLeft: "0.25em" }}>
                     {tr("InstallCore.InstallMinecraft")}
                   </Typography>
                 </Grid>
@@ -219,15 +216,12 @@ export function InstallCore(): JSX.Element {
                 <Grid item>
                   <Avatar
                     variant={"square"}
-                    style={{ width: "2rem", height: "2rem" }}
+                    sx={{ width: "2rem", height: "2rem" }}
                     src={Icons.PROFILE_FORGE}
                   />
                 </Grid>
                 <Grid item>
-                  <Typography
-                    color={"primary"}
-                    style={{ marginLeft: "0.25em" }}
-                  >
+                  <Typography color={"primary"} sx={{ marginLeft: "0.25em" }}>
                     {tr("InstallCore.InstallForge")}
                   </Typography>
                 </Grid>
@@ -241,15 +235,12 @@ export function InstallCore(): JSX.Element {
                 <Grid item>
                   <Avatar
                     variant={"square"}
-                    style={{ width: "2rem", height: "2rem" }}
+                    sx={{ width: "2rem", height: "2rem" }}
                     src={Icons.PROFILE_FABRIC}
                   />
                 </Grid>
                 <Grid item>
-                  <Typography
-                    color={"primary"}
-                    style={{ marginLeft: "0.25em" }}
-                  >
+                  <Typography color={"primary"} sx={{ marginLeft: "0.25em" }}>
                     {tr("InstallCore.InstallFabric")}
                   </Typography>
                 </Grid>
@@ -262,15 +253,12 @@ export function InstallCore(): JSX.Element {
                 <Grid item>
                   <Avatar
                     variant={"square"}
-                    style={{ width: "2rem", height: "2rem" }}
+                    sx={{ width: "2rem", height: "2rem" }}
                     src={Icons.PROFILE_IRIS}
                   />
                 </Grid>
                 <Grid item>
-                  <Typography
-                    color={"primary"}
-                    style={{ marginLeft: "0.25em" }}
-                  >
+                  <Typography color={"primary"} sx={{ marginLeft: "0.25em" }}>
                     {tr("InstallCore.InstallIris")}
                   </Typography>
                 </Grid>
@@ -763,7 +751,7 @@ export function InstallCore(): JSX.Element {
           </FormControl>
         </TabPanel>
       </Box>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 

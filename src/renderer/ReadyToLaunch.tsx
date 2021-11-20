@@ -1,8 +1,14 @@
 import {
+  FlashOn,
+  FlightLand,
+  FlightTakeoff,
+  RssFeed,
+} from "@mui/icons-material";
+import {
   Box,
   Button,
   Checkbox,
-  createStyles,
+  Container,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,9 +19,7 @@ import {
   FormControlLabel,
   InputLabel,
   LinearProgress,
-  makeStyles,
   MenuItem,
-  MuiThemeProvider,
   Radio,
   RadioGroup,
   Select,
@@ -23,10 +27,11 @@ import {
   StepLabel,
   Stepper,
   TextField,
+  ThemeProvider,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import { FlightLand, FlightTakeoff, RssFeed } from "@material-ui/icons";
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { ipcRenderer } from "electron";
 import EventEmitter from "events";
 import React, { useEffect, useRef, useState } from "react";
@@ -42,6 +47,8 @@ import { prefetchData } from "../modules/auth/AJHelper";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
 import { LocalAccount } from "../modules/auth/LocalAccount";
 import {
+  ACCOUNT_EXPIRES_KEY,
+  ACCOUNT_LAST_REFRESHED_KEY,
   MicrosoftAccount,
   MS_LAST_USED_ACTOKEN_KEY,
   MS_LAST_USED_REFRESH_KEY,
@@ -88,7 +95,7 @@ import {
   ensureLog4jFile,
   ensureNatives,
 } from "../modules/launch/Ensurance";
-import { launchProfile } from "../modules/launch/LaunchPad";
+import { launchProfile, markSafeLaunch } from "../modules/launch/LaunchPad";
 import { stopMinecraft } from "../modules/launch/MinecraftBootstrap";
 import { LaunchTracker } from "../modules/launch/Tracker";
 import {
@@ -99,18 +106,25 @@ import {
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
 import { loadProfile } from "../modules/profile/ProfileLoader";
+import {
+  dropAccountPromise,
+  waitMSAccountReady,
+} from "../modules/readyboom/AccountMaster";
+import { waitProfileReady } from "../modules/readyboom/PrepareProfile";
 import { getMachineUniqueID } from "../modules/security/Unique";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { ShiftEle } from "./Instruction";
 import { submitError, submitSucc, submitWarn } from "./Message";
 import { YNDialog } from "./OperatingHint";
-import {
-  ALICORN_DEFAULT_THEME_DARK,
-  ALICORN_DEFAULT_THEME_LIGHT,
-} from "./Renderer";
+import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { SkinDisplay2D, SkinDisplay3D } from "./SkinDisplay";
 import { addStatistics } from "./Statistics";
-import { fullWidth, useFormStyles, useInputStyles } from "./Stylex";
+import {
+  AlicornTheme,
+  fullWidth,
+  useFormStyles,
+  useInputStyles,
+} from "./Stylex";
 import { randsl, tr } from "./Translator";
 import {
   HOOFOFF_CENTRAL,
@@ -123,29 +137,27 @@ import { toReadableType } from "./YggdrasilAccountManager";
 const SESSION_ACCESSDATA_CACHED_KEY = "ReadyToLaunch.SessionAccessData"; // Microsoft account only
 export const LAST_SUCCESSFUL_GAME_KEY = "ReadyToLaunch.LastSuccessfulGame";
 export const REBOOT_KEY_BASE = "ReadyToLaunch.Reboot.";
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    stepper: {
-      backgroundColor: theme.palette.secondary.light,
-    },
-    textSP: {
-      fontSize: window.sessionStorage.getItem("smallFontSize") || "1em",
-      color: theme.palette.secondary.main,
-    },
-    text: {
-      fontSize: "medium",
-      flexGrow: 1,
-      color: theme.palette.secondary.main,
-    },
-    root: {
-      textAlign: "center",
-    },
-    primaryText: {
-      flexGrow: 1,
-      color: theme.palette.primary.main,
-    },
-  })
-);
+const useStyles = makeStyles((theme: AlicornTheme) => ({
+  stepper: {
+    backgroundColor: theme.palette.secondary.light,
+  },
+  textSP: {
+    fontSize: sessionStorage.getItem("smallFontSize") || "1em",
+    color: theme.palette.secondary.main,
+  },
+  text: {
+    fontSize: "medium",
+    flexGrow: 1,
+    color: theme.palette.secondary.main,
+  },
+  root: {
+    textAlign: "center",
+  },
+  primaryText: {
+    flexGrow: 1,
+    color: theme.palette.primary.main,
+  },
+}));
 const LAST_USED_USER_NAME_KEY = "ReadyToLaunch.LastUsedUsername";
 const GKEY = "Profile.PrefJava";
 const DEF = "Default";
@@ -189,11 +201,11 @@ export function ReadyToLaunch(): JSX.Element {
   const fullWidthProgress = fullWidth();
   return (
     <Box
-      style={{
+      sx={{
         textAlign: "center",
       }}
     >
-      <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+      <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
         {profileLoadedBit === 1 ? (
           <Launching
             profile={coreProfile}
@@ -202,7 +214,7 @@ export function ReadyToLaunch(): JSX.Element {
           />
         ) : profileLoadedBit === 2 ? (
           <Typography
-            style={{ fontSize: "medium", color: "#ff8400" }}
+            sx={{ fontSize: "medium", color: "#ff8400" }}
             gutterBottom
           >
             {tr("ReadyToLaunch.CouldNotLoad")}
@@ -210,11 +222,11 @@ export function ReadyToLaunch(): JSX.Element {
         ) : (
           <LinearProgress
             color={"secondary"}
-            style={{ width: "80%" }}
+            sx={{ width: "80%" }}
             className={fullWidthProgress.progress}
           />
         )}
-      </MuiThemeProvider>
+      </ThemeProvider>
     </Box>
   );
 }
@@ -251,6 +263,7 @@ function Launching(props: {
   const [lanPort, setLanPort] = useState(0);
   const [openLanWindow, setOpenLanWindow] = useState(false);
   const [openLanButtonEnabled, setOpenLanButtonEnabled] = useState(false);
+  const [dry, setDry] = useState(false);
   const profileHash = useRef<string>(
     props.container.id + "/" + props.profile.id
   );
@@ -284,13 +297,13 @@ function Launching(props: {
       setLanPort(0);
       setOpenLanButtonEnabled(false);
       setOpenLanWindow(false);
-      const m = window.sessionStorage.getItem(CODE_KEY + lanPort);
+      const m = sessionStorage.getItem(CODE_KEY + lanPort);
       if (m) {
         await deactiveCode(
           m,
           getString("hoofoff.central", HOOFOFF_CENTRAL, true) + ":" + QUERY_PORT
         );
-        window.sessionStorage.removeItem(CODE_KEY + lanPort);
+        sessionStorage.removeItem(CODE_KEY + lanPort);
         submitSucc(tr("ReadyToLaunch.CodeDeactivated"));
       }
     };
@@ -331,7 +344,7 @@ function Launching(props: {
   }, []);
 
   return (
-    <Box className={classes.root}>
+    <Container className={classes.root}>
       <AccountChoose
         open={selecting}
         closeFunc={() => {
@@ -357,7 +370,8 @@ function Launching(props: {
               props.server,
               (id) => {
                 setProfileRelatedID(profileHash.current, id);
-              }
+              },
+              dry
             );
           })();
         }}
@@ -399,6 +413,8 @@ function Launching(props: {
       <Typography variant={"h6"} className={classes.primaryText} gutterBottom>
         {tr("ReadyToLaunch.Status." + status)}
       </Typography>
+      <br />
+
       <Stepper className={classes.stepper} activeStep={activeStep}>
         {LAUNCH_STEPS.map((s) => {
           return (
@@ -412,6 +428,7 @@ function Launching(props: {
           );
         })}
       </Stepper>
+      <br />
       {/* Insert Here */}
       {status === LaunchingStatus.PENDING ||
       status === LaunchingStatus.FINISHED ||
@@ -488,7 +505,8 @@ function Launching(props: {
                       props.server,
                       (id) => {
                         setProfileRelatedID(profileHash.current, id);
-                      }
+                      },
+                      dry
                     );
                   } else {
                     setSelecting(true);
@@ -507,7 +525,11 @@ function Launching(props: {
               }}
             >
               {status !== LaunchingStatus.FINISHED ? (
-                <FlightTakeoff />
+                dry ? (
+                  <FlashOn />
+                ) : (
+                  <FlightTakeoff />
+                )
               ) : openLanButtonEnabled ? (
                 <RssFeed />
               ) : (
@@ -516,6 +538,26 @@ function Launching(props: {
             </Fab>
           </ShiftEle>
         </>
+      </Tooltip>
+      <br />
+      <Tooltip title={tr("ReadyToLaunch.DryLaunchDesc")}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              color={"primary"}
+              disabled={status !== "Pending"}
+              checked={dry}
+              onChange={(e) => {
+                setDry(e.target.checked);
+              }}
+            />
+          }
+          label={
+            <Typography color={"primary"}>
+              {tr("ReadyToLaunch.DryLaunch")}
+            </Typography>
+          }
+        />
       </Tooltip>
       <br />
       <br />
@@ -528,7 +570,7 @@ function Launching(props: {
           setOpenLanWindow(false);
         }}
       />
-    </Box>
+    </Container>
   );
 }
 
@@ -547,7 +589,8 @@ async function startBoot(
   container: MinecraftContainer,
   account: Account,
   server?: string,
-  setRunID: (id: string) => unknown = () => {}
+  setRunID: (id: string) => unknown = () => {},
+  dry = false
 ): Promise<LaunchTracker> {
   // @ts-ignore
   window[LAST_FAILURE_INFO_KEY] = undefined;
@@ -568,20 +611,24 @@ async function startBoot(
     // @ts-ignore
     // if (!window[SESSION_ACCESSDATA_CACHED_KEY]) {
     if (!isReboot(profileHash)) {
-      // If not reboot then validate
-      if (!(await account.isAccessTokenValid())) {
-        // Check if the access token is valid
-        console.log("Token has expired! Refreshing.");
-        if (!(await account.flushToken())) {
-          console.log("Flush failed! Reauthing.");
-          if (!(await account.performAuth(""))) {
-            submitWarn(tr("ReadyToLaunch.FailedToAuth"));
+      if (!(await waitMSAccountReady())) {
+        // If not reboot then validate
+        if (!(await account.isAccessTokenValid())) {
+          // Check if the access token is valid
+          console.log("Token has expired! Refreshing.");
+          if (!(await account.flushToken())) {
+            console.log("Flush failed! Reauthing.");
+            if (!(await account.performAuth(""))) {
+              submitWarn(tr("ReadyToLaunch.FailedToAuth"));
+            }
+          } else {
+            console.log("Token flushed successfully, continue.");
           }
         } else {
-          console.log("Token flushed successfully, continue.");
+          console.log("Token valid, skipped auth.");
         }
       } else {
-        console.log("Token valid, skipped auth.");
+        console.log("MS account auth job has been done by ReadyBoom. Skipped.");
       }
     }
     // @ts-ignore
@@ -649,22 +696,38 @@ async function startBoot(
   if (!isReboot(profileHash)) {
     NEED_QUERY_STATUS = true;
     setStatus(LaunchingStatus.FILES_FILLING);
-    await ensureAssetsIndex(profile, container);
-    await Promise.all([
-      ensureClient(profile),
-      ensureLog4jFile(profile, container),
-      (async () => {
-        await ensureLibraries(profile, container, GLOBAL_LAUNCH_TRACKER);
-        await ensureNatives(profile, container);
-      })(),
-      (async () => {
-        await ensureAllAssets(profile, container, GLOBAL_LAUNCH_TRACKER);
-      })(),
-    ]); // Parallel
+    const st = await waitProfileReady(container.id, profile.id);
+    if (!st) {
+      // I shall do this
+      await ensureAssetsIndex(profile, container);
+      await Promise.all([
+        ensureClient(profile),
+        ensureLog4jFile(profile, container),
+        (async () => {
+          await ensureLibraries(profile, container, GLOBAL_LAUNCH_TRACKER);
+          await ensureNatives(profile, container);
+        })(),
+        (async () => {
+          await ensureAllAssets(profile, container, GLOBAL_LAUNCH_TRACKER);
+        })(),
+      ]); // Parallel
+    } else {
+      GLOBAL_LAUNCH_TRACKER.library({
+        total: 1,
+        resolved: 1,
+        operateRecord: [{ file: "ReadyBoom Proxied", operation: "OPERATED" }],
+      });
+    }
     if (getBoolean("launch.fast-reboot")) {
       markReboot(profileHash);
     }
     NEED_QUERY_STATUS = false;
+  } else {
+    GLOBAL_LAUNCH_TRACKER.library({
+      total: 1,
+      resolved: 1,
+      operateRecord: [{ file: "Quick Restart Proxied", operation: "OPERATED" }],
+    });
   }
   setStatus(LaunchingStatus.MODS_PREPARING);
   if (profile.type === ReleaseType.MODIFIED) {
@@ -677,15 +740,17 @@ async function startBoot(
   }
   const jRunnable = await getJavaRunnable(jHome);
   let jInfo;
-  try {
-    jInfo = parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(jHome)));
-    GLOBAL_LAUNCH_TRACKER.java({
-      runtime: jInfo.runtime,
-      version: jInfo.rootVersion,
-    });
-  } catch {
-    submitError(tr("ReadyToLaunch.InvalidJava"));
-    return GLOBAL_LAUNCH_TRACKER;
+  if (!dry) {
+    try {
+      jInfo = parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(jHome)));
+      GLOBAL_LAUNCH_TRACKER.java({
+        runtime: jInfo.runtime,
+        version: jInfo.rootVersion,
+      });
+    } catch {
+      submitError(tr("ReadyToLaunch.InvalidJava"));
+      return GLOBAL_LAUNCH_TRACKER;
+    }
   }
   const em = new EventEmitter();
   em.on(PROCESS_LOG_GATE, (d: string) => {
@@ -726,6 +791,7 @@ async function startBoot(
   });
   em.on(PROCESS_END_GATE, async (c) => {
     console.log(`Minecraft(${runID}) exited with exit code ${c}.`);
+    window.dispatchEvent(new CustomEvent("GameQuit"));
     setStatus(LaunchingStatus.PENDING);
     window.dispatchEvent(new CustomEvent("MinecraftExitCleanUp"));
     if (c !== "0" && c !== "SIGINT") {
@@ -734,6 +800,8 @@ async function startBoot(
       console.log(
         `Attention! Minecraft(${runID}) might not have run properly!`
       );
+      markSafeLaunch(container.id, profile.id);
+      console.log(`Set ${container.id}/${profile.id} as safe mode.`);
       // @ts-ignore
       const e = window[LAST_LOGS_KEY] as string[];
       const ei = e.lastIndexOf("---- Minecraft Crash Report ----");
@@ -753,6 +821,8 @@ async function startBoot(
       clearReboot(profileHash);
       console.log("Cleared reboot flag.");
     } else {
+      markSafeLaunch(container.id, profile.id, false);
+      console.log(`Remove ${container.id}/${profile.id} from safe mode.`);
       // @ts-ignore
       window[LAST_LOGS_KEY] = [];
       if (gc) {
@@ -763,25 +833,35 @@ async function startBoot(
     await restoreMods(container);
     console.log("Done!");
   });
-  const runID = launchProfile(profile, container, jRunnable, acData, em, {
-    useAj: useAj,
-    ajHost: ajHost,
-    ajPrefetch: prefetch,
-    useServer: useServer,
-    server: serverHost,
-    useNd: useNd,
-    ndServerId: ndServerId,
-    resolution: resolutionPolicy ? new Pair(w, h) : undefined,
-    javaVersion: jInfo.rootVersion,
-    maxMem: getNumber("memory", 0),
-    gc1: getString("gc1", "pure"),
-    gc2: getString("gc2", "pure"),
-  });
+  let runID = "0";
+  if (!dry) {
+    runID = launchProfile(profile, container, jRunnable, acData, em, {
+      useAj: useAj,
+      ajHost: ajHost,
+      ajPrefetch: prefetch,
+      useServer: useServer,
+      server: serverHost,
+      useNd: useNd,
+      ndServerId: ndServerId,
+      resolution: resolutionPolicy ? new Pair(w, h) : undefined,
+      javaVersion: jInfo ? jInfo.rootVersion : 0,
+      maxMem: getNumber("memory", 0),
+      gc1: getString("gc1", "pure"),
+      gc2: getString("gc2", "pure"),
+    });
+  }
   addStatistics("Launch");
   setRunID(runID);
-  window.localStorage.setItem(LAST_SUCCESSFUL_GAME_KEY, window.location.hash);
+  localStorage.setItem(LAST_SUCCESSFUL_GAME_KEY, window.location.hash);
   setStatus(LaunchingStatus.FINISHED);
   console.log(`A new Minecraft instance (${runID}) has been launched.`);
+  if (dry) {
+    em.emit(PROCESS_LOG_GATE, "Dry launch successful!");
+    setTimeout(() => {
+      em.emit(PROCESS_LOG_GATE, "Stopping!");
+      em.emit(PROCESS_END_GATE, "0");
+    }, 5000);
+  }
   return GLOBAL_LAUNCH_TRACKER;
 }
 
@@ -804,22 +884,20 @@ function AccountChoose(props: {
   profileHash: string;
 }): JSX.Element {
   const classes = useInputStyles();
-  const btnClasses = makeStyles((theme) =>
-    createStyles({
-      btn: {
-        color: theme.palette.primary.main,
-        borderColor: theme.palette.primary.main,
-      },
-    })
-  )();
+  const btnClasses = makeStyles((theme: AlicornTheme) => ({
+    btn: {
+      color: theme.palette.primary.main,
+      borderColor: theme.palette.primary.main,
+    },
+  }))();
   const [choice, setChoice] = useState<"MZ" | "AL" | "YG">(
-    (window.localStorage.getItem(LAST_ACCOUNT_TAB_KEY + props.profileHash) as
+    (localStorage.getItem(LAST_ACCOUNT_TAB_KEY + props.profileHash) as
       | "MZ"
       | "AL"
       | "YG") || "MZ"
   );
   const [pName, setName] = useState<string>(
-    window.localStorage.getItem(LAST_USED_USER_NAME_KEY + props.profileHash) ||
+    localStorage.getItem(LAST_USED_USER_NAME_KEY + props.profileHash) ||
       "Player"
   );
   const [bufPName, setBufPName] = useState(pName);
@@ -840,7 +918,7 @@ function AccountChoose(props: {
     }
   }, [props.allAccounts]);
   const la =
-    window.localStorage.getItem(LAST_YG_ACCOUNT_NAME + props.profileHash) || "";
+    localStorage.getItem(LAST_YG_ACCOUNT_NAME + props.profileHash) || "";
   let ll = "";
   if (la && accountMap.current[la] !== undefined) {
     ll = la;
@@ -900,7 +978,7 @@ function AccountChoose(props: {
         props.closeFunc();
       }}
     >
-      <DialogContent style={{ overflow: "visible" }}>
+      <DialogContent sx={{ overflow: "visible" }}>
         <DialogTitle>{tr("ReadyToLaunch.StartAuthTitle")}</DialogTitle>
         <DialogContentText>
           {tr("ReadyToLaunch.StartAuthMsg")}
@@ -909,7 +987,7 @@ function AccountChoose(props: {
         {skinUrl ? (
           getBoolean("features.skin-view-3d") ? (
             <Box
-              style={{
+              sx={{
                 position: "absolute",
                 right: 20,
                 top: -50,
@@ -918,13 +996,13 @@ function AccountChoose(props: {
               }}
             >
               <SkinDisplay3D skin={skinUrl} width={100} height={150} />
-              <Typography style={{ color: "gray", marginTop: "-0.25em" }}>
+              <Typography sx={{ color: "gray", marginTop: "-0.25em" }}>
                 {tr("AccountManager.SkinView3DShort")}
               </Typography>
             </Box>
           ) : (
             <Box
-              style={{
+              sx={{
                 position: "absolute",
                 right: 15,
                 top: 10,
@@ -935,7 +1013,7 @@ function AccountChoose(props: {
               <SkinDisplay2D skin={skinUrl} />
               <br />
               <br />
-              <Typography style={{ color: "gray", marginTop: "2.625em" }}>
+              <Typography sx={{ color: "gray", marginTop: "2.625em" }}>
                 {tr("AccountManager.SkinView2DShort")}
               </Typography>
             </Box>
@@ -949,7 +1027,7 @@ function AccountChoose(props: {
             if (["MZ", "AL", "YG"].includes(e.target.value)) {
               // @ts-ignore
               setChoice(e.target.value);
-              window.localStorage.setItem(
+              localStorage.setItem(
                 LAST_ACCOUNT_TAB_KEY + props.profileHash,
                 e.target.value
               );
@@ -1009,10 +1087,13 @@ function AccountChoose(props: {
                     "msLogout",
                     getString("web.global-proxy")
                   );
+                  dropAccountPromise();
                   localStorage.setItem(MS_LAST_USED_REFRESH_KEY, "");
                   localStorage.setItem(MS_LAST_USED_ACTOKEN_KEY, "");
                   localStorage.setItem(MS_LAST_USED_UUID_KEY, "");
                   localStorage.setItem(MS_LAST_USED_USERNAME_KEY, "");
+                  localStorage.removeItem(ACCOUNT_EXPIRES_KEY); // Reset time
+                  localStorage.removeItem(ACCOUNT_LAST_REFRESHED_KEY);
                   if (mounted.current) {
                     setMSLogout("ReadyToLaunch.MSLogoutDone");
                   }
@@ -1034,12 +1115,12 @@ function AccountChoose(props: {
               <Select
                 label={tr("ReadyToLaunch.UseYGChoose")}
                 variant={"outlined"}
-                style={{ minWidth: "50%" }}
+                sx={{ minWidth: "50%" }}
                 fullWidth
                 labelId={"Select-Account"}
                 onChange={(e) => {
                   setAccount(String(e.target.value));
-                  window.localStorage.setItem(
+                  localStorage.setItem(
                     LAST_YG_ACCOUNT_NAME + props.profileHash,
                     String(e.target.value)
                   );
@@ -1081,7 +1162,7 @@ function AccountChoose(props: {
                 return;
               case "AL":
               default:
-                window.localStorage.setItem(
+                localStorage.setItem(
                   LAST_USED_USER_NAME_KEY + props.profileHash,
                   pName
                 );
@@ -1138,10 +1219,10 @@ function MiniJavaSelector(props: {
     })();
   }, [currentJava]);
   return (
-    <MuiThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
       <Box
         className={classes.root}
-        style={{
+        sx={{
           marginTop: "0.3125em",
         }}
       >
@@ -1190,7 +1271,7 @@ function MiniJavaSelector(props: {
           }
           return (
             <Typography
-              style={{
+              sx={{
                 color: "#ff8400",
               }}
               className={"smtxt"}
@@ -1201,16 +1282,16 @@ function MiniJavaSelector(props: {
           );
         })()}
       </Box>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }
 
 function setJavaForProfile(hash: string, jHome: string): void {
-  window.localStorage[GKEY + hash] = jHome;
+  localStorage[GKEY + hash] = jHome;
 }
 
 function getJavaAndCheckAvailable(hash: string, allowDefault = false): string {
-  const t = window.localStorage[GKEY + hash];
+  const t = localStorage[GKEY + hash];
   if (typeof t === "string" && t.length > 0) {
     if (t === DEF) {
       if (allowDefault) {
@@ -1254,15 +1335,15 @@ function checkJMCompatibility(mv: string, jv: number): "OLD" | "NEW" | "OK" {
 }
 
 function markReboot(hash: string): void {
-  window.sessionStorage.setItem(REBOOT_KEY_BASE + hash, "1");
+  sessionStorage.setItem(REBOOT_KEY_BASE + hash, "1");
 }
 
 function clearReboot(hash: string): void {
-  window.sessionStorage.removeItem(REBOOT_KEY_BASE + hash);
+  sessionStorage.removeItem(REBOOT_KEY_BASE + hash);
 }
 
 function isReboot(hash: string): boolean {
-  return window.sessionStorage.getItem(REBOOT_KEY_BASE + hash) === "1";
+  return sessionStorage.getItem(REBOOT_KEY_BASE + hash) === "1";
 }
 
 const CODE_KEY = "Hoofoff.Code";
@@ -1305,9 +1386,7 @@ function OpenWorldDialog(props: {
           {tr("ReadyToLaunch.GenerateLinkDesc")}
         </DialogContentText>
         {code ? (
-          <DialogContentText
-            style={{ color: ALICORN_DEFAULT_THEME_DARK.palette.primary.main }}
-          >
+          <DialogContentText sx={{ color: "primary.main" }}>
             {tr("ReadyToLaunch.HoofoffCode", `Code=${code}`)}
           </DialogContentText>
         ) : (
@@ -1372,6 +1451,7 @@ function OpenWorldDialog(props: {
           <FormControlLabel
             control={
               <Checkbox
+                color={"primary"}
                 checked={premium}
                 onChange={(e) => {
                   setPremium(e.target.checked);
@@ -1397,7 +1477,7 @@ function OpenWorldDialog(props: {
           value={message}
         />
         {err ? (
-          <DialogContentText style={{ color: "#ff8400" }}>
+          <DialogContentText sx={{ color: "#ff8400" }}>
             {tr("ReadyToLaunch.Errors." + err)}
           </DialogContentText>
         ) : (
@@ -1448,7 +1528,7 @@ function OpenWorldDialog(props: {
               );
               if (c.length === 6) {
                 setCode(c);
-                window.sessionStorage.setItem(CODE_KEY + props.port, c);
+                sessionStorage.setItem(CODE_KEY + props.port, c);
                 submitSucc(tr("ReadyToLaunch.HoofoffCode", `Code=${c}`));
                 setErr("");
                 setShouldClose(true);
@@ -1481,10 +1561,10 @@ function WaitingText(): JSX.Element {
   }, []);
   return (
     <Typography
-      style={{
+      sx={{
         flexGrow: 1,
         fontSize: "medium",
-        color: ALICORN_DEFAULT_THEME_DARK.palette.secondary.main,
+        color: "secondary.main",
       }}
       gutterBottom
     >
@@ -1494,9 +1574,9 @@ function WaitingText(): JSX.Element {
 }
 
 function setProfileRelatedID(hash: string, rid: string): void {
-  window.sessionStorage.setItem("MinecraftID" + hash, rid);
+  sessionStorage.setItem("MinecraftID" + hash, rid);
 }
 
 function getProfileRelatedID(hash: string): string {
-  return window.sessionStorage.getItem("MinecraftID" + hash) || "";
+  return sessionStorage.getItem("MinecraftID" + hash) || "";
 }

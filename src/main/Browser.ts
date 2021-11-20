@@ -1,5 +1,6 @@
 import { app, BrowserWindow, screen } from "electron";
 import path from "path";
+import { getMainWindowUATrimmed } from "./Bootstrap";
 
 let USER_BROWSER: BrowserWindow | null;
 export const PRELOAD_FILE = "Starlight.js";
@@ -23,6 +24,7 @@ export async function openBrowser(
     title: "Talking to the princess...",
     backgroundColor: "#fff",
   });
+  USER_BROWSER.webContents.setUserAgent(getMainWindowUATrimmed());
   if (proxy.trim().length > 0) {
     await USER_BROWSER.webContents.session.setProxy({
       proxyRules: `${proxy}`,

@@ -5,18 +5,19 @@ import { getTimeoutController } from "./RainbowFetch";
 export async function xgot(
   url: string,
   noMirror = false,
-  noCache = false,
+  noCache = false, // Ignored
   noTimeout = false
 ): Promise<unknown> {
   if (noMirror) {
     try {
       const [ac, sti] = getTimeoutController(
-        getNumber("download.concurrent.timeout", 5000)
+        noTimeout ? -1 : getNumber("download.concurrent.timeout", 5000)
       );
       const res = await fetch(url, {
         method: "GET",
         signal: ac.signal,
         keepalive: true,
+        credentials: "omit",
       });
       sti();
       if (!res.ok) {
@@ -30,11 +31,12 @@ export async function xgot(
   }
   try {
     const [ac, sti] = getTimeoutController(
-      getNumber("download.concurrent.timeout", 5000)
+      noTimeout ? -1 : getNumber("download.concurrent.timeout", 5000)
     );
     const res = await fetch(applyMirror(url), {
       method: "GET",
       signal: ac.signal,
+      credentials: "omit",
       keepalive: true,
     });
     sti();
@@ -54,6 +56,7 @@ export async function pgot(url: string, timeout: number): Promise<unknown> {
   const [ac, sti] = getTimeoutController(timeout);
   const res = await fetch(url, {
     method: "GET",
+    credentials: "omit",
     signal: ac.signal,
     keepalive: true,
   });

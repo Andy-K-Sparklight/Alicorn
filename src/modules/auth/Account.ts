@@ -55,6 +55,7 @@ export async function refreshToken(
       body: JSON.stringify({
         accessToken: acToken,
       }),
+      credentials: "include",
     });
     if (!res.ok) {
       throw "Failed to auth! Code: " + res.status;
@@ -91,6 +92,7 @@ export async function authenticate(
   try {
     const tURL = trimURL(authServer) + "/authenticate";
     const ress = await fetch(tURL, {
+      credentials: "include",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -164,6 +166,7 @@ export async function validateToken(
       },
       method: "POST",
       cache: "no-cache",
+      credentials: "include",
       body: JSON.stringify({
         accessToken: acToken,
       }),

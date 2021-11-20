@@ -1,22 +1,4 @@
 import {
-  AppBar,
-  Box,
-  Container,
-  createStyles,
-  Drawer,
-  Fab,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  makeStyles,
-  Snackbar,
-  Toolbar,
-  Tooltip,
-  Typography,
-} from "@material-ui/core";
-import {
   AccountCircle,
   AllInbox,
   ArrowBack,
@@ -36,8 +18,25 @@ import {
   ShowChart,
   ViewModule,
   Web,
-} from "@material-ui/icons";
-import { Alert } from "@material-ui/lab";
+} from "@mui/icons-material";
+import {
+  Alert,
+  AppBar,
+  Box,
+  Container,
+  Drawer,
+  Fab,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Snackbar,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { ipcRenderer, shell } from "electron";
 import React, { useEffect, useRef, useState } from "react";
 import { Route } from "react-router-dom";
@@ -79,6 +78,7 @@ import { PffFront } from "./PffFront";
 import { ReadyToLaunch } from "./ReadyToLaunch";
 import { ServerList } from "./ServerList";
 import { saveStatistics, Statistics } from "./Statistics";
+import { AlicornTheme } from "./Stylex";
 import { TheEndingOfTheEnd } from "./TheEndingOfTheEnd";
 import { tr } from "./Translator";
 import { BuildUp } from "./utilities/BuildUp";
@@ -91,36 +91,32 @@ import { VersionView } from "./VersionView";
 import { Welcome } from "./Welcome";
 import { YggdrasilAccountManager } from "./YggdrasilAccountManager";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      width: "100%",
-      backgroundColor: theme.palette.secondary.light,
-    },
-    content: {
-      // marginLeft: theme.spacing(4),
-      // marginRight: theme.spacing(4),
-      marginTop: theme.spacing(2.2),
-    },
-    buttonText: {
-      marginRight: theme.spacing(1),
-    },
-    exitButton: {
-      marginRight: 0,
-    },
-    floatMore: {
-      marginRight: 0,
-      marginLeft: theme.spacing(0.8),
-    },
-    floatButton: {
-      marginRight: theme.spacing(-0.8),
-    },
-    title: {
-      flexGrow: 1,
-    },
-  })
-);
+const useStyles = makeStyles((theme: AlicornTheme) => ({
+  root: {
+    flexGrow: 1,
+    width: "100%",
+    backgroundColor: theme.palette.secondary.light,
+  },
+  content: {
+    marginTop: theme.spacing(3),
+  },
+  buttonText: {
+    marginRight: theme.spacing(1),
+  },
+  exitButton: {
+    marginRight: 0,
+  },
+  floatMore: {
+    marginRight: 0,
+    marginLeft: theme.spacing(0.8),
+  },
+  floatButton: {
+    marginRight: 0,
+  },
+  title: {
+    flexGrow: 1,
+  },
+}));
 
 export function App(): JSX.Element {
   const classes = useStyles();
@@ -158,13 +154,13 @@ export function App(): JSX.Element {
   useEffect(() => {
     if (getBoolean("interactive.assistant?")) {
       if (page.length > 0 && !isInstBusy()) {
-        if (window.localStorage.getItem("Instruction.Read." + page) !== "1") {
+        if (localStorage.getItem("Instruction.Read." + page) !== "1") {
           const k = `Instruction.${page}.0`;
           if (tr(k) !== k) {
             startInst(page);
             void (async (p) => {
               await waitInstDone();
-              window.localStorage.setItem("Instruction.Read." + p, "1");
+              localStorage.setItem("Instruction.Read." + p, "1");
             })(page);
           }
         }
@@ -246,14 +242,14 @@ export function App(): JSX.Element {
         if (e.key === "/") {
           setEnteredCommand("/"); // Clear on "/"
           setShowCommand(true);
-          window.sessionStorage.setItem("isCommand", "1");
+          sessionStorage.setItem("isCommand", "1");
           return;
         }
         if (showCommand) {
           if (e.key === "Delete") {
             if (enteredCommand === "/") {
               setShowCommand(false);
-              window.sessionStorage.removeItem("isCommand");
+              sessionStorage.removeItem("isCommand");
             } else {
               setEnteredCommand(enteredCommand.slice(0, -1));
             }
@@ -265,7 +261,7 @@ export function App(): JSX.Element {
             );
             setEnteredCommand("/");
             setShowCommand(false);
-            window.sessionStorage.removeItem("isCommand");
+            sessionStorage.removeItem("isCommand");
             return;
           }
           setEnteredCommand(enteredCommand + e.key);
@@ -314,14 +310,14 @@ export function App(): JSX.Element {
         e.dataTransfer.dropEffect = "copy";
       }}
     >
-      <AppBar>
+      <AppBar enableColorOnDark>
         <Toolbar
           onMouseDown={
             getString("frame.drag-impl") === "Delta" ? onMouseDown : undefined
           }
         >
           <IconButton
-            style={{
+            sx={{
               display: showCommand ? "none" : undefined,
               marginRight: "0.375em",
             }}
@@ -642,7 +638,7 @@ export function App(): JSX.Element {
 
       <Snackbar
         open={openNotice}
-        style={{
+        sx={{
           width: "90%",
         }}
         autoHideDuration={5000}
@@ -659,7 +655,7 @@ export function App(): JSX.Element {
       </Snackbar>
       <Snackbar
         open={openSucc}
-        style={{
+        sx={{
           width: "90%",
           zIndex: 999,
         }}
@@ -677,7 +673,7 @@ export function App(): JSX.Element {
       </Snackbar>
       <Snackbar
         open={openWarn}
-        style={{
+        sx={{
           width: "90%",
           zIndex: 999,
         }}
@@ -695,7 +691,7 @@ export function App(): JSX.Element {
       </Snackbar>
       <Snackbar
         open={openInfo}
-        style={{
+        sx={{
           width: "90%",
           zIndex: 999,
         }}
@@ -735,7 +731,12 @@ function PagesDrawer(props: {
   onClose: () => unknown;
 }): JSX.Element {
   return (
-    <Drawer anchor={"left"} open={props.open} onClose={props.onClose}>
+    <Drawer
+      anchor={"left"}
+      open={props.open}
+      className={"window-no-drag"}
+      onClose={props.onClose}
+    >
       <List>
         {Object.entries(PAGES_ICONS_MAP).map(([p, i]) => {
           return (
