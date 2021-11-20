@@ -16,7 +16,11 @@ import {
   getNumber,
   loadConfig,
 } from "../modules/config/ConfigSupport";
-import { getMainWindow, SESSION_LOCK } from "./Bootstrap";
+import {
+  getMainWindow,
+  getMainWindowUATrimmed,
+  SESSION_LOCK,
+} from "./Bootstrap";
 import { getUserBrowser, openBrowser } from "./Browser";
 
 const LOGIN_START =
@@ -171,6 +175,7 @@ export function registerBackgroundListeners(): void {
           show: false,
           backgroundColor: "#fff",
         });
+      loginWindow.webContents.setUserAgent(getMainWindowUATrimmed());
       if (proxy.trim().length > 0) {
         await loginWindow.webContents.session.setProxy({
           proxyRules: proxy,
@@ -242,6 +247,7 @@ export function registerBackgroundListeners(): void {
       show: false,
       backgroundColor: "#fff",
     });
+    logoutWindow.webContents.setUserAgent(getMainWindowUATrimmed());
     if (proxy.trim().length > 0) {
       await logoutWindow.webContents.session.setProxy({
         proxyRules: proxy,

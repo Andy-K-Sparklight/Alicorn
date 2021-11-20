@@ -174,6 +174,10 @@ export function OptionsPage(): JSX.Element {
           <InputItem type={ConfigType.BOOL} bindConfig={"readyboom"} />
           <InputItem type={ConfigType.NUM} bindConfig={"readyboom.cores"} />
           <InputItem type={ConfigType.STR} bindConfig={"hoofoff.central"} />
+          <InputItem
+            type={ConfigType.BOOL}
+            bindConfig={"system.ws-operation"}
+          />
           <InputItem type={ConfigType.BOOL} bindConfig={"command"} />
           <InputItem type={ConfigType.DIR} bindConfig={"cx.shared-root"} />
           <InputItem

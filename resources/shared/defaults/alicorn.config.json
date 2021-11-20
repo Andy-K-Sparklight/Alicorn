@@ -57,5 +57,6 @@
   "features.skin-view-3d": true,
   "alicorn-ping": true,
   "readyboom": true,
-  "readyboom.cores": 3
+  "readyboom.cores": 3,
+  "system.ws-operation": false
 }

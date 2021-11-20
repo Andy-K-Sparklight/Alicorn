@@ -1198,6 +1198,14 @@ Alicorn 特色功能
 
 高级和重置
 
+# Options.system.ws-operation.title
+
+Alicorn 网络调用 ^
+
+# Options.system.ws-operation.desc
+
+允许 Web 脚本等通过一系列操作和 Alicorn 建立连接并直接调用 Alicorn 功能 - 请当心，恶意程序可能会滥用此功能！
+
 # Options.readyboom.cores.title
 
 ReadyBoom 预热核心数 ^

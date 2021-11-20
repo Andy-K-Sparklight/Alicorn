@@ -168,9 +168,10 @@ async function whenAppReady() {
       }
     });
   }
-
-  console.log("Preparing WS!");
-  initWS();
+  if (getBoolean("system.ws-operation")) {
+    console.log("Preparing WS!");
+    initWS();
+  }
   await mainWindow.loadFile(path.resolve(appPath, "Renderer.html"));
 }
 
@@ -257,7 +258,7 @@ export function getMainWindow(): BrowserWindow | null {
 async function initProxy(): Promise<void> {
   const proc = getString("download.global-proxy");
   if (proc.trim().length === 0) {
-    getMainWindow()?.webContents.session.setProxy({
+    await getMainWindow()?.webContents.session.setProxy({
       mode: "system",
     });
     return;
@@ -292,4 +293,19 @@ export function applyDoHSettings(): void {
       "Current Electron binary doesn't support DoH settings, skipped."
     );
   }
+}
+
+export function getMainWindowUATrimmed(): string {
+  const ua = mainWindow?.webContents.getUserAgent();
+  if (ua) {
+    const uas = ua.split(" ");
+    const o: string[] = [];
+    uas.forEach((unit) => {
+      if (!unit.includes("Alicorn") && !unit.includes("Electron")) {
+        o.push(unit);
+      }
+    });
+    return o.join(" ");
+  }
+  return "";
 }
