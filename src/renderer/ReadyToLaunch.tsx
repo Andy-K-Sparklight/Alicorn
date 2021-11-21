@@ -110,7 +110,10 @@ import {
   dropAccountPromise,
   waitMSAccountReady,
 } from "../modules/readyboom/AccountMaster";
-import { waitProfileReady } from "../modules/readyboom/PrepareProfile";
+import {
+  setLastUsed,
+  waitProfileReady,
+} from "../modules/readyboom/PrepareProfile";
 import { getMachineUniqueID } from "../modules/security/Unique";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { ShiftEle } from "./Instruction";
@@ -853,6 +856,7 @@ async function startBoot(
   addStatistics("Launch");
   setRunID(runID);
   localStorage.setItem(LAST_SUCCESSFUL_GAME_KEY, window.location.hash);
+  setLastUsed(container.id, profile.id);
   setStatus(LaunchingStatus.FINISHED);
   console.log(`A new Minecraft instance (${runID}) has been launched.`);
   if (dry) {
