@@ -10,6 +10,7 @@ import { makeStyles } from "@mui/styles";
 import React from "react";
 import { getBoolean } from "../../modules/config/ConfigSupport";
 import { jumpTo, triggerSetPage } from "../GoTo";
+import { isBgDark } from "../Renderer";
 import { AlicornTheme, useCardStyles, useTextStyles } from "../Stylex";
 import { tr } from "../Translator";
 
@@ -33,16 +34,17 @@ const useAccStyles = makeStyles((theme: AlicornTheme) => ({
 
 export function UtilitiesIndex(): JSX.Element {
   const classes = useTextStyles();
+  const sx = { color: isBgDark() ? "secondary.light" : undefined };
   return (
     <>
       <Typography className={classes.secondText} gutterBottom>
         {tr("UtilitiesIndex.Description")}
       </Typography>
-      <SimpleUtil icon={<Archive />} name={"PffVisual"} />
-      <SimpleUtil icon={<ShoppingCart />} name={"CarouselBoutique"} />
-      <SimpleUtil icon={<SettingsEthernet />} name={"CutieConnect"} />
-      <SimpleUtil icon={<NetworkCell />} name={"NetCheck"} />
-      <SimpleUtil icon={<NextWeek />} name={"BuildUp"} />
+      <SimpleUtil icon={<Archive sx={sx} />} name={"PffVisual"} />
+      <SimpleUtil icon={<ShoppingCart sx={sx} />} name={"CarouselBoutique"} />
+      <SimpleUtil icon={<SettingsEthernet sx={sx} />} name={"CutieConnect"} />
+      <SimpleUtil icon={<NetworkCell sx={sx} />} name={"NetCheck"} />
+      <SimpleUtil icon={<NextWeek sx={sx} />} name={"BuildUp"} />
     </>
   );
 }
@@ -71,7 +73,13 @@ function SimpleUtil(props: {
           <Grid container direction="row" alignItems="center">
             <Grid item>{props.icon}</Grid>
             <Grid item>
-              <Typography variant={"h6"} sx={{ marginLeft: "0.25em" }}>
+              <Typography
+                variant={"h6"}
+                sx={{
+                  marginLeft: "0.25em",
+                  color: isBgDark() ? "secondary.light" : undefined,
+                }}
+              >
                 {tr(`Utilities.${props.name}.Title`)}
               </Typography>
             </Grid>

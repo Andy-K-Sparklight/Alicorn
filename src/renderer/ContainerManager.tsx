@@ -423,7 +423,11 @@ function SingleContainerDisplay(props: {
               </DialogActions>
             </DialogContent>
           </Dialog>
-          <Typography variant={"h6"} className={classes.color} gutterBottom>
+          <Typography
+            variant={"h6"}
+            sx={{ color: isBgDark() ? "secondary.light" : undefined }}
+            gutterBottom
+          >
             {props.container.id}
           </Typography>
           <Typography

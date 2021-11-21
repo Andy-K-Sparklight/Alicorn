@@ -24,7 +24,7 @@ import { ModMeta } from "../../modules/pff/virtual/ModDefine";
 import { getResolvers } from "../../modules/pff/virtual/PffWrapper";
 import { jumpTo, triggerSetPage } from "../GoTo";
 import { submitInfo, submitSucc, submitWarn } from "../Message";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "../Renderer";
+import { ALICORN_DEFAULT_THEME_LIGHT, isBgDark } from "../Renderer";
 import { fullWidth, useCardStyles, usePadStyles } from "../Stylex";
 import { tr } from "../Translator";
 
@@ -280,7 +280,10 @@ function SingleAddonDisplay(props: {
             <Typography className={classes.text} color={"textSecondary"}>
               {props.info?.id || props.modpack?.id}
             </Typography>
-            <Typography variant={"h6"}>
+            <Typography
+              variant={"h6"}
+              sx={{ color: isBgDark() ? "secondary.light" : undefined }}
+            >
               {props.info?.displayName || props.modpack?.name}
             </Typography>
             <br />
