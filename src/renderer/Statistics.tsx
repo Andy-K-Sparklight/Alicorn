@@ -12,8 +12,8 @@ export function Statistics(): JSX.Element {
       {ALL_STATS.map((v) => {
         const s = getStatistics(v);
         return (
-          <>
-            <Box key={v} sx={{ display: "flex" }}>
+          <Box key={v}>
+            <Box sx={{ display: "flex" }}>
               <Typography className={classes.mediumText}>
                 {
                   tr(
@@ -30,7 +30,7 @@ export function Statistics(): JSX.Element {
               </Typography>
             </Box>
             <br />
-          </>
+          </Box>
         );
       })}
     </>
