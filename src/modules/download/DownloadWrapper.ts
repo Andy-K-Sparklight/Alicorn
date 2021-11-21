@@ -4,7 +4,11 @@ import { tr } from "../../renderer/Translator";
 import { getModifiedDate, isFileExist } from "../commons/FileUtil";
 import { getNumber } from "../config/ConfigSupport";
 import { getAllContainers, getContainer } from "../container/ContainerUtil";
-import { fetchSharedFile, isSharedContainer } from "../container/SharedFiles";
+import {
+  fetchSharedFile,
+  isSharedContainer,
+  needsStandalone,
+} from "../container/SharedFiles";
 import {
   deleteRecord,
   getLastValidateModified,
@@ -96,7 +100,7 @@ export async function wrappedDownloadFile(
     addState(tr("ReadyToLaunch.Ignored", `Url=${ou}`));
     return DownloadStatus.RESOLVED;
   }
-  if (!noAutoLn) {
+  if (!noAutoLn && !needsStandalone(meta.savePath)) {
     const a = getAllContainers();
     let targetContainer = "";
     a.forEach((c) => {

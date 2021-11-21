@@ -20,6 +20,12 @@ export async function markASC(dir: string): Promise<void> {
   await writeFile(path.join(dir, ASC_NAME), PLACE_HOLDER);
 }
 
+const STANDALONE_FILE = /forge|client/i;
+const STANDALONE_PATH = /net[/\\]minecraft(forge)?/i;
+export function needsStandalone(pt: string): boolean {
+  return STANDALONE_FILE.test(path.basename(pt)) || STANDALONE_PATH.test(pt);
+}
+
 export async function fetchSharedFile(meta: DownloadMeta): Promise<boolean> {
   if (meta.url.trim() === "") {
     return true; // NULL safe
