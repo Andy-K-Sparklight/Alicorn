@@ -21,11 +21,19 @@ export async function fetchModByName(
   container: MinecraftContainer
 ): Promise<boolean> {
   // slug can be '@Provider:Slug'
+  // or even '@Provider:Main/Artifact'
   let scope;
   let sid;
+  let mainId;
+  let artifactId;
   if (SLUG_SCOPE_REGEX.test(slug)) {
     scope = (slug.match(SLUG_SCOPE_REGEX) || [])[0];
     sid = slug.split(":")[1] || "";
+    const p = sid.split("/");
+    if (p.length === 2) {
+      [mainId, artifactId] = p;
+      sid = null;
+    }
   }
   slug = slug.toLowerCase();
   const slx = getResolvers(slug, scope);
@@ -35,6 +43,11 @@ export async function fetchModByName(
   let sx: AbstractModResolver | null = null;
   for (const c of slx) {
     try {
+      if (mainId) {
+        if (artifactId) {
+          await c.setSelected(mainId, artifactId);
+        }
+      }
       if (sid) {
         await c.setSelected(sid, undefined); // Set id
       }

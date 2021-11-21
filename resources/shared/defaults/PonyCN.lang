@@ -2214,7 +2214,11 @@ Mod 速览
 
 # PffFront.Hint
 
-这里只显示由 Pff 安装的 Mod，单击名称可以在文件资源管理器中查看它。
+这里只显示由 Pff 安装的 Mod，单击名称可以在文件资源管理器中查看它。右击更新/重新安装此 Mod。
+
+# PffFront.UpgradeAll
+
+更新所有 Mod
 
 # PffFront.Mods
 
