@@ -39,7 +39,11 @@ import {
   trimServerAddress,
 } from "../modules/server/ServerFiles";
 import { jumpTo, triggerSetPage } from "./GoTo";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import {
+  ALICORN_DEFAULT_THEME_DARK,
+  ALICORN_DEFAULT_THEME_LIGHT,
+  isBgDark,
+} from "./Renderer";
 import {
   AlicornTheme,
   fullWidth,
@@ -133,7 +137,11 @@ function AddNewServer(props: {
   const [enteredServer, setEnteredServer] = useState("");
   const classes = useInputStyles();
   return (
-    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
+    >
       <Dialog open={props.open}>
         <DialogTitle>{tr("ServerList.AddNewServer.Title")}</DialogTitle>
         <DialogContent>
