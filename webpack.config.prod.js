@@ -48,6 +48,11 @@ const Main = {
       ],
     }),
     new ContextReplacementPlugin(/keyv/),
+    new BannerPlugin({
+      banner:
+        "@license\nCopyright (C) 2021 Andy K Rarity Sparklight\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\nYou should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.",
+      entryOnly: true,
+    }),
   ],
   mode: "production",
   target: "electron-main",
@@ -87,6 +92,12 @@ const Renderer = {
       banner:
         "try{require('./v8-compile-cache.js');console.log('V8 Compile Cache Enabled.');}catch{console.log('V8 Compile Cache Disabled.');};",
       raw: true,
+      include: ["Renderer", "LibWorker"],
+    }),
+    new BannerPlugin({
+      banner:
+        "@license\nCopyright (C) 2021 Andy K Rarity Sparklight\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\nYou should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.",
+      entryOnly: true,
       include: ["Renderer", "LibWorker"],
     }),
   ],
