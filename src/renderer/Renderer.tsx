@@ -394,6 +394,7 @@ export function setThemeParams(
     },
     typography: {
       fontFamily: fontFamily,
+      fontSize: 14,
     },
     components: overrideCursor
       ? {
@@ -449,6 +450,7 @@ export function setThemeParams(
     },
     typography: {
       fontFamily: fontFamily,
+      fontSize: 14,
     },
     components: overrideCursor
       ? {

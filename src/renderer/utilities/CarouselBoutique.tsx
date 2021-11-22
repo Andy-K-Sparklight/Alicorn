@@ -19,7 +19,11 @@ import {
   skinTypeFor,
 } from "../../modules/localskin/LocalYggdrasilServer";
 import { submitSucc } from "../Message";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "../Renderer";
+import {
+  ALICORN_DEFAULT_THEME_DARK,
+  ALICORN_DEFAULT_THEME_LIGHT,
+  isBgDark,
+} from "../Renderer";
 import { useTextStyles } from "../Stylex";
 import { tr } from "../Translator";
 
@@ -47,7 +51,11 @@ export function CarouselBoutique(): JSX.Element {
   }, []);
   const classes = useTextStyles();
   return (
-    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
+    >
       <>
         <Typography className={classes.secondText} gutterBottom>
           {tr("Utilities.CarouselBoutique.Hint")}

@@ -68,7 +68,12 @@ function SimpleUtil(props: {
         triggerSetPage(tr(`Utilities.${props.name}.Title`));
       }}
     >
-      <Card color={"primary"} className={accClasses.acc1} raised={true}>
+      <Card
+        color={"primary"}
+        className={accClasses.acc1}
+        raised={true}
+        sx={{ backgroundColor: "primary.main" }}
+      >
         <CardContent>
           <Grid container direction="row" alignItems="center">
             <Grid item>{props.icon}</Grid>

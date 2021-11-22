@@ -185,6 +185,7 @@ function SingleCoreDisplay(props: {
   return (
     <>
       <Card
+        sx={{ backgroundColor: "primary.main" }}
         color={"primary"}
         raised={true}
         onMouseOver={() => {
@@ -305,7 +306,7 @@ function SingleCoreDisplay(props: {
           )}
           <Typography
             className={classes.text}
-            color={"textSecondary"}
+            sx={{ color: isBgDark() ? "secondary.light" : undefined }}
             gutterBottom
           >
             {props.profile.versionType}
@@ -319,7 +320,7 @@ function SingleCoreDisplay(props: {
           </Typography>
           <Typography
             className={classes.text}
-            color={"textSecondary"}
+            sx={{ color: isBgDark() ? "secondary.light" : undefined }}
             gutterBottom
           >
             {tr(
@@ -331,7 +332,7 @@ function SingleCoreDisplay(props: {
           {used > 0 ? (
             <Typography
               className={classes.text}
-              color={"textSecondary"}
+              sx={{ color: isBgDark() ? "secondary.light" : undefined }}
               gutterBottom
             >
               {tr("CoreInfo.Used", `Count=${used}`)}
@@ -342,7 +343,10 @@ function SingleCoreDisplay(props: {
           {props.profile.corrupted ? (
             <CorruptedCoreWarning />
           ) : (
-            <Typography className={classes.desc} color={"textSecondary"}>
+            <Typography
+              className={classes.desc}
+              sx={{ color: isBgDark() ? "secondary.light" : undefined }}
+            >
               {getDescriptionFor(props.profile.versionType)}
             </Typography>
           )}

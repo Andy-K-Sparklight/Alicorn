@@ -196,12 +196,12 @@ export function PffFront(): JSX.Element {
   };
   return (
     <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-      <Box className={fullWidthClasses.root}>
-        <FormControl>
+      <Container className={fullWidthClasses.root}>
+        <FormControl fullWidth>
           <TextField
             spellCheck={false}
-            className={fullWidthClasses.form}
             color={"primary"}
+            fullWidth
             value={packageName}
             disabled={isRunning}
             placeholder={tr("PffFront.Slug")}
@@ -252,7 +252,7 @@ export function PffFront(): JSX.Element {
             {tr("PffFront.WarnNoCache")}
           </Typography>
         )}
-      </Box>
+      </Container>
       <>
         <Tabs
           variant={"fullWidth"}

@@ -275,6 +275,7 @@ export function InstallCore(): JSX.Element {
               <Typography className={classes.instr}>
                 {tr("InstallCore.InstallMinecraftInstr")}
               </Typography>
+              <br />
               <FormControl variant={"outlined"} className={classes.formControl}>
                 <InputLabel
                   id={"CoreInstall-Mojang-SelectArch"}
@@ -311,6 +312,7 @@ export function InstallCore(): JSX.Element {
                   </Select>
                 </ShiftEle>
               </FormControl>
+              <br />
               <FormControl variant={"outlined"} className={classes.formControl}>
                 <InputLabel
                   id={"CoreInstall-Mojang-SelectVersion"}
@@ -340,6 +342,7 @@ export function InstallCore(): JSX.Element {
                   </Select>
                 </ShiftEle>
               </FormControl>
+              <br />
               <FormControl variant={"outlined"} className={classes.formControl}>
                 <InputLabel
                   id={"CoreInstall-Mojang-TargetContainer"}
@@ -369,6 +372,7 @@ export function InstallCore(): JSX.Element {
                   </Select>
                 </ShiftEle>
               </FormControl>
+              <br />
               <Button
                 size={"large"}
                 className={classes.btn}
@@ -437,6 +441,7 @@ export function InstallCore(): JSX.Element {
                   " " +
                   (detectedForgeVersion || tr("InstallCore.Unknown"))}
               </Typography>
+              <br />
               <FormControl variant={"outlined"} className={classes.formControl}>
                 <InputLabel
                   id={"CoreInstall-Forge-SelectBase"}
@@ -478,6 +483,7 @@ export function InstallCore(): JSX.Element {
                   })}
                 </Select>
               </FormControl>
+              <br />
               <Button
                 size={"large"}
                 className={classes.btn}
@@ -556,6 +562,7 @@ export function InstallCore(): JSX.Element {
                   " " +
                   (detectedFabricVersion || tr("InstallCore.Unknown"))}
               </Typography>
+              <br />
               <FormControl variant={"outlined"} className={classes.formControl}>
                 <InputLabel
                   id={"CoreInstall-Fabric-SelectBase"}
@@ -597,6 +604,7 @@ export function InstallCore(): JSX.Element {
                   })}
                 </Select>
               </FormControl>
+              <br />
               <Button
                 size={"large"}
                 className={classes.btn}
@@ -690,6 +698,7 @@ export function InstallCore(): JSX.Element {
               <Typography className={classes.instr}>
                 {tr("InstallCore.InstallIrisInstr")}
               </Typography>
+              <br />
               <FormControl variant={"outlined"} className={classes.formControl}>
                 <InputLabel
                   id={"CoreInstall-Iris-SelectBase"}
@@ -731,6 +740,7 @@ export function InstallCore(): JSX.Element {
                   })}
                 </Select>
               </FormControl>
+              <br />
               <Button
                 size={"large"}
                 className={classes.btn}

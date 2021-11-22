@@ -227,7 +227,12 @@ export function SingleAccountDisplay(props: {
           setOperating(false);
         }}
       />
-      <Card color={"primary"} className={classes.card} raised={true}>
+      <Card
+        color={"primary"}
+        className={classes.card}
+        raised={true}
+        sx={{ backgroundColor: "primary.main" }}
+      >
         <CardContent>
           <Box sx={{ float: "right" }}>
             {skinUrl ? (

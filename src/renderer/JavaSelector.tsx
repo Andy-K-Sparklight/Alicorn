@@ -1,7 +1,7 @@
 import { Refresh } from "@mui/icons-material";
 import {
-  Box,
   Button,
+  Container,
   FormControl,
   IconButton,
   InputLabel,
@@ -31,7 +31,11 @@ import { whereJava } from "../modules/java/WhereJava";
 import { setChangePageWarn } from "./GoTo";
 import { ShiftEle } from "./Instruction";
 import { submitError, submitInfo } from "./Message";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import {
+  ALICORN_DEFAULT_THEME_DARK,
+  ALICORN_DEFAULT_THEME_LIGHT,
+  isBgDark,
+} from "./Renderer";
 import { fullWidth, useFormStyles } from "./Stylex";
 import { tr } from "./Translator";
 
@@ -116,12 +120,16 @@ export function JavaSelector(): JSX.Element {
     })();
   }, [isJavaInfoLoaded, refreshBit]);
   return (
-    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-      <Box className={classes.root}>
+    <ThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
+    >
+      <Container>
         <br />
         <br />
 
-        <FormControl variant={"outlined"}>
+        <FormControl variant={"outlined"} fullWidth>
           <InputLabel id={"Select-JRE"} className={classes.label}>
             {tr("JavaSelector.SelectJava")}
           </InputLabel>
@@ -132,7 +140,7 @@ export function JavaSelector(): JSX.Element {
               variant={"outlined"}
               labelId={"Select-JRE"}
               color={"primary"}
-              className={classes.selector + " " + fullWidthClasses.form}
+              fullWidth
               onChange={(e) => {
                 const sj = String(e.target.value);
                 setCurrentJava(sj);
@@ -151,25 +159,6 @@ export function JavaSelector(): JSX.Element {
           </ShiftEle>
         </FormControl>
 
-        <Tooltip
-          title={
-            <Typography className={"smtxt"}>
-              {tr("JavaSelector.Reload")}
-            </Typography>
-          }
-        >
-          <IconButton
-            color={"primary"}
-            className={fullWidthClasses.right}
-            onClick={() => {
-              setLoaded(false);
-            }}
-          >
-            <ShiftEle name={"JavaSelectorSelect"} bgfill>
-              <Refresh />
-            </ShiftEle>
-          </IconButton>
-        </Tooltip>
         <br />
         <br />
         <ShiftEle name={"JavaSelectorManual"}>
@@ -198,6 +187,25 @@ export function JavaSelector(): JSX.Element {
             {tr("JavaSelector.CustomAdd")}
           </Button>
         </ShiftEle>
+        <Tooltip
+          title={
+            <Typography className={"smtxt"}>
+              {tr("JavaSelector.Reload")}
+            </Typography>
+          }
+        >
+          <IconButton
+            color={"primary"}
+            sx={{ marginLeft: "1em" }}
+            onClick={() => {
+              setLoaded(false);
+            }}
+          >
+            <ShiftEle name={"JavaSelectorSelect"} bgfill>
+              <Refresh />
+            </ShiftEle>
+          </IconButton>
+        </Tooltip>
         <br />
         <br />
         {isJavaInfoLoaded ? (
@@ -216,7 +224,7 @@ export function JavaSelector(): JSX.Element {
           jInfo={isJavaInfoLoaded ? javaInfo.get(currentJava) : currentJavaInfo}
         />
         <JavaDownloader />
-      </Box>
+      </Container>
     </ThemeProvider>
   );
 }

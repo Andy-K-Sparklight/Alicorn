@@ -147,6 +147,7 @@ export const REBOOT_KEY_BASE = "ReadyToLaunch.Reboot.";
 const useStyles = makeStyles((theme: AlicornTheme) => ({
   stepper: {
     backgroundColor: theme.palette.secondary.light,
+    fontSize: "14px",
   },
   textSP: {
     fontSize: sessionStorage.getItem("smallFontSize") || "1em",
@@ -207,11 +208,7 @@ export function ReadyToLaunch(): JSX.Element {
   }, []);
   const fullWidthProgress = fullWidth();
   return (
-    <Box
-      sx={{
-        textAlign: "center",
-      }}
-    >
+    <Container>
       <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
         {profileLoadedBit === 1 ? (
           <Launching
@@ -221,7 +218,7 @@ export function ReadyToLaunch(): JSX.Element {
           />
         ) : profileLoadedBit === 2 ? (
           <Typography
-            sx={{ fontSize: "medium", color: "#ff8400" }}
+            style={{ fontSize: "medium", color: "#ff8400" }}
             gutterBottom
           >
             {tr("ReadyToLaunch.CouldNotLoad")}
@@ -234,7 +231,7 @@ export function ReadyToLaunch(): JSX.Element {
           />
         )}
       </ThemeProvider>
-    </Box>
+    </Container>
   );
 }
 
@@ -427,7 +424,7 @@ function Launching(props: {
           return (
             <Step key={s}>
               <StepLabel>
-                <Typography className={classes.textSP}>
+                <Typography className={classes.textSP + " smtxt"}>
                   {tr("ReadyToLaunch.Status.Short." + s)}
                 </Typography>
               </StepLabel>
@@ -991,7 +988,7 @@ function AccountChoose(props: {
           props.closeFunc();
         }}
       >
-        <DialogContent sx={{ overflow: "visible" }}>
+        <DialogContent style={{ overflow: "visible" }}>
           <DialogTitle>{tr("ReadyToLaunch.StartAuthTitle")}</DialogTitle>
           <DialogContentText>
             {tr("ReadyToLaunch.StartAuthMsg")}
@@ -1000,7 +997,7 @@ function AccountChoose(props: {
           {skinUrl ? (
             getBoolean("features.skin-view-3d") ? (
               <Box
-                sx={{
+                style={{
                   position: "absolute",
                   right: 20,
                   top: -50,
@@ -1009,13 +1006,13 @@ function AccountChoose(props: {
                 }}
               >
                 <SkinDisplay3D skin={skinUrl} width={100} height={150} />
-                <Typography sx={{ color: "gray", marginTop: "-0.25em" }}>
+                <Typography style={{ color: "gray", marginTop: "-0.25em" }}>
                   {tr("AccountManager.SkinView3DShort")}
                 </Typography>
               </Box>
             ) : (
               <Box
-                sx={{
+                style={{
                   position: "absolute",
                   right: 15,
                   top: 10,
@@ -1026,7 +1023,7 @@ function AccountChoose(props: {
                 <SkinDisplay2D skin={skinUrl} />
                 <br />
                 <br />
-                <Typography sx={{ color: "gray", marginTop: "2.625em" }}>
+                <Typography style={{ color: "gray", marginTop: "2.625em" }}>
                   {tr("AccountManager.SkinView2DShort")}
                 </Typography>
               </Box>
@@ -1128,7 +1125,7 @@ function AccountChoose(props: {
                 <Select
                   label={tr("ReadyToLaunch.UseYGChoose")}
                   variant={"outlined"}
-                  sx={{ minWidth: "50%" }}
+                  sx={{ minWidth: "50%", color: "primary.main" }}
                   fullWidth
                   labelId={"Select-Account"}
                   onChange={(e) => {
@@ -1198,7 +1195,6 @@ function MiniJavaSelector(props: {
   gameVersion: string;
 }): JSX.Element {
   const classes = useFormStyles();
-  const fullWidthClasses = fullWidth();
   const mounted = useRef<boolean>(false);
   const [currentJava, setCurrentJava] = useState<string>(
     getJavaAndCheckAvailable(props.hash, true)
@@ -1233,29 +1229,33 @@ function MiniJavaSelector(props: {
     })();
   }, [currentJava]);
   return (
-    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
+    >
       <Box
         className={classes.root}
-        sx={{
+        style={{
           marginTop: "0.3125em",
         }}
       >
-        <FormControl variant={"outlined"}>
+        <FormControl variant={"outlined"} fullWidth>
           <InputLabel id={"Select-JRE"} className={classes.label}>
             {tr("JavaSelector.SelectJava")}
           </InputLabel>
           <Select
-            margin={"dense"}
             label={tr("JavaSelector.SelectJava")}
             variant={"outlined"}
             labelId={"Select-JRE"}
+            sx={{ color: "primary.main" }}
             color={"primary"}
-            className={classes.selector + " " + fullWidthClasses.form}
             onChange={(e) => {
               const sj = String(e.target.value);
               setCurrentJava(sj);
               setJavaForProfile(props.hash, sj);
             }}
+            fullWidth
             value={currentJava}
           >
             {(() => {
@@ -1274,6 +1274,7 @@ function MiniJavaSelector(props: {
               return t;
             })()}
           </Select>
+          <br />
         </FormControl>
         {(() => {
           if (!loaded.current || !currentJavaVersion) {
@@ -1285,7 +1286,7 @@ function MiniJavaSelector(props: {
           }
           return (
             <Typography
-              sx={{
+              style={{
                 color: "#ff8400",
               }}
               className={"smtxt"}
@@ -1491,7 +1492,7 @@ function OpenWorldDialog(props: {
           value={message}
         />
         {err ? (
-          <DialogContentText sx={{ color: "#ff8400" }}>
+          <DialogContentText style={{ color: "#ff8400" }}>
             {tr("ReadyToLaunch.Errors." + err)}
           </DialogContentText>
         ) : (

@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Container,
   FormControl,
   InputLabel,
   List,
@@ -29,7 +30,7 @@ import {
 import { sealPackCommon } from "../../modules/pff/modpack/MakeModpack";
 import { createBaseCommonModel } from "../../modules/pff/modpack/ModpackBuilder";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "../Renderer";
-import { fullWidth, useFormStyles, useInputStyles } from "../Stylex";
+import { useFormStyles } from "../Stylex";
 import { tr } from "../Translator";
 
 export function BuildUp(): JSX.Element {
@@ -101,60 +102,61 @@ function SelectContainer(props: {
   const [slc, setSlc] = useState(getAllMounted()[0] || "");
   const [ast, setAST] = useState(0);
   const classes = useFormStyles();
-  const fullWidthClasses = fullWidth();
   return (
-    <FormControl variant={"outlined"}>
-      <InputLabel id={"Select-Pack-Container"} className={classes.label}>
-        {tr("Utilities.BuildUp.BaseContainer")}
-      </InputLabel>
-      <Select
-        label={tr("Utilities.BuildUp.BaseContainer")}
-        variant={"outlined"}
-        labelId={"Select-Pack-Container"}
-        color={"primary"}
-        className={fullWidthClasses.form}
-        value={slc}
-        onChange={(c) => {
-          setSlc(String(c.target.value));
-          props.setContainer(String(c.target.value));
-        }}
-      >
-        {getAllMounted().map((c) => {
-          return (
-            <MenuItem key={c} value={c}>
-              {c}
-            </MenuItem>
-          );
-        })}
-      </Select>
-      <br />
-      <Button
-        disabled={slc.length === 0}
-        type={"button"}
-        color={"primary"}
-        variant={"contained"}
-        onClick={async () => {
-          const a = await scanContainerAssets(getContainer(slc));
-          props.setAssets(a);
-          props.setContainer(slc);
-          setAST(a.length);
-        }}
-      >
-        {tr("Utilities.BuildUp.Scan")}
-      </Button>
-      <br />
-      {ast > 0 ? (
-        <Typography color={"primary"}>
-          {tr(
-            "Utilities.BuildUp.ScanResult",
-            `Container=${slc}`,
-            `Count=${ast}`
-          )}
-        </Typography>
-      ) : (
-        ""
-      )}
-    </FormControl>
+    <Container>
+      <FormControl variant={"outlined"} fullWidth>
+        <InputLabel id={"Select-Pack-Container"} className={classes.label}>
+          {tr("Utilities.BuildUp.BaseContainer")}
+        </InputLabel>
+        <Select
+          label={tr("Utilities.BuildUp.BaseContainer")}
+          variant={"outlined"}
+          labelId={"Select-Pack-Container"}
+          color={"primary"}
+          value={slc}
+          fullWidth
+          onChange={(c) => {
+            setSlc(String(c.target.value));
+            props.setContainer(String(c.target.value));
+          }}
+        >
+          {getAllMounted().map((c) => {
+            return (
+              <MenuItem key={c} value={c}>
+                {c}
+              </MenuItem>
+            );
+          })}
+        </Select>
+        <br />
+        <Button
+          disabled={slc.length === 0}
+          type={"button"}
+          color={"primary"}
+          variant={"contained"}
+          onClick={async () => {
+            const a = await scanContainerAssets(getContainer(slc));
+            props.setAssets(a);
+            props.setContainer(slc);
+            setAST(a.length);
+          }}
+        >
+          {tr("Utilities.BuildUp.Scan")}
+        </Button>
+        <br />
+        {ast > 0 ? (
+          <Typography color={"primary"}>
+            {tr(
+              "Utilities.BuildUp.ScanResult",
+              `Container=${slc}`,
+              `Count=${ast}`
+            )}
+          </Typography>
+        ) : (
+          ""
+        )}
+      </FormControl>
+    </Container>
   );
 }
 
@@ -185,19 +187,17 @@ function FillInfo(props: {
     author: getString("user.name") || os.userInfo().username,
     version: "1.0",
   });
-  const classes = useInputStyles();
-  const fullWidthClasses = fullWidth();
   return (
-    <>
-      <FormControl>
+    <Container>
+      <FormControl fullWidth>
         <TextField
           variant={"outlined"}
           label={tr("Utilities.BuildUp.Meta.Name")}
           spellCheck={false}
-          margin={"dense"}
           type={"text"}
+          color={"primary"}
+          fullWidth
           autoFocus
-          className={classes.input + " " + fullWidthClasses.largerForm}
           onChange={(e) => {
             const m = Object.assign({}, meta2);
             m.name = e.target.value;
@@ -212,9 +212,8 @@ function FillInfo(props: {
           label={tr("Utilities.BuildUp.Meta.Desc")}
           spellCheck={false}
           margin={"dense"}
+          fullWidth
           type={"text"}
-          autoFocus
-          className={classes.input + " " + fullWidthClasses.largerForm}
           onChange={(e) => {
             const m = Object.assign({}, meta2);
             m.desc = e.target.value;
@@ -228,10 +227,9 @@ function FillInfo(props: {
           variant={"outlined"}
           label={tr("Utilities.BuildUp.Meta.Author")}
           spellCheck={false}
-          margin={"dense"}
+          fullWidth
           type={"text"}
-          autoFocus
-          className={classes.input + " " + fullWidthClasses.largerForm}
+          color={"primary"}
           onChange={(e) => {
             const m = Object.assign({}, meta2);
             m.author = e.target.value;
@@ -245,10 +243,9 @@ function FillInfo(props: {
           variant={"outlined"}
           label={tr("Utilities.BuildUp.Meta.Version")}
           spellCheck={false}
-          margin={"dense"}
           type={"text"}
-          autoFocus
-          className={classes.input + " " + fullWidthClasses.largerForm}
+          color={"primary"}
+          fullWidth
           onChange={(e) => {
             const m = Object.assign({}, meta2);
             m.version = e.target.value;
@@ -258,7 +255,7 @@ function FillInfo(props: {
           value={meta2.version}
         />
       </FormControl>
-    </>
+    </Container>
   );
 }
 
