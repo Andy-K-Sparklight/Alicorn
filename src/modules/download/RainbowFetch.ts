@@ -1,4 +1,5 @@
 import fs, { WriteStream } from "fs-extra";
+import { PassThrough, Readable } from "stream";
 import { IntervalChecker, WatchDog } from "../commons/WatchDog";
 import { getNumber } from "../config/ConfigSupport";
 import { MirrorChain } from "./Mirror";
@@ -43,7 +44,28 @@ export function guardPipeFile(
     });
   });
 }
+export function getGuardStream(
+  i: Readable,
+  f: fs.WriteStream,
+  timeout = 0
+): PassThrough {
+  let dog: WatchDog | null = null;
+  const s = new PassThrough();
+  if (timeout > 0) {
+    dog = new WatchDog(timeout, () => {
+      f.close();
+      s.emit("error", "Time limit exceeded: " + timeout);
+    });
+    s.on("data", () => {
+      dog?.feed();
+    });
+    i.on("end", () => {
+      dog?.kill();
+    });
+  }
 
+  return s;
+}
 export function getFileWriteStream(
   pt: string,
   sti: () => unknown = () => {},
@@ -127,8 +149,7 @@ export async function isWebFileExist(u: string): Promise<string> {
       }
       mrc.markBad();
     } catch {
-      mrc.markBad();
-    } finally {
+      // If only timeout then just continue, but not mark bad
       mrc.next();
     }
   }

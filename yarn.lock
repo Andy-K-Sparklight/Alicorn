@@ -4714,6 +4714,11 @@ unbox-primitive@^1.0.1:
     has-symbols "^1.0.2"
     which-boxed-primitive "^1.0.2"
 
+undici@^4.10.2:
+  version "4.10.2"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-4.10.2.tgz#27e360f2d4202ef98dfc1c8e13dcd329660a6d7c"
+  integrity sha512-QoQH4PpV3dqJwr4h1HazggbB4f5CBknvYANjI9hxXCml+AAzLoh4HBkce0Jc0wW/pmVbrus8Gfeo8QounE+/9g==
+
 unique-string@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unique-string/-/unique-string-1.0.0.tgz#9e1057cca851abb93398f8b33ae187b99caec11a"

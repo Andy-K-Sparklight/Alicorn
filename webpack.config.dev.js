@@ -53,6 +53,10 @@ const MainDev = {
           ),
           to: path.resolve(__dirname, "dist"),
         },
+        {
+          from: path.resolve(__dirname, "node_modules", "undici"),
+          to: path.resolve(__dirname, "dist", "undici"),
+        },
       ],
     }),
   ],
@@ -113,6 +117,9 @@ const RendererDev = {
   target: "electron-renderer",
   watchOptions: {
     ignored: ["**/node_modules", "**/dist"],
+  },
+  externals: {
+    undici: "commonjs undici",
   },
 };
 const StarlightWebDev = {

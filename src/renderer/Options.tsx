@@ -253,6 +253,11 @@ export function OptionsPage(): JSX.Element {
             choices={["Concurrent", "Serial"]}
           />
           <InputItem
+            type={ConfigType.RADIO}
+            bindConfig={"download.lib"}
+            choices={["Undici", "Fetch"]}
+          />
+          <InputItem
             type={ConfigType.NUM}
             bindConfig={"download.concurrent.timeout"}
           />
@@ -260,7 +265,6 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.NUM}
             bindConfig={"download.pff.timeout"}
           />
-
           <InputItem
             type={ConfigType.NUM}
             bindConfig={"download.concurrent.tries-per-chunk"}
@@ -275,9 +279,16 @@ export function OptionsPage(): JSX.Element {
           />
           <InputItem
             type={ConfigType.NUM}
+            bindConfig={"download.tls.keep-alive"}
+          />
+          <InputItem
+            type={ConfigType.NUM}
+            bindConfig={"download.tls.pipeline"}
+          />
+          <InputItem
+            type={ConfigType.NUM}
             bindConfig={"download.pff.chunk-size"}
           />
-
           <InputItem
             type={ConfigType.RADIO}
             bindConfig={"pff.first-source"}

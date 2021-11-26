@@ -1198,6 +1198,38 @@ AL 特殊能力
 
 高级和重置
 
+# Options.download.tls.keep-alive.title
+
+TLS 连接保持时间
+
+# Options.download.tls.keep-alive.desc
+
+关闭一个 TLS 连接之前，等待多长时间，单位毫秒
+
+# Options.download.tls.pipeline.title
+
+TLS Pipeline
+
+# Options.download.tls.pipeline.desc
+
+TLS Pipeline 数量 - 仅在必要时使用，请勿胡乱修改！
+
+# Options.download.lib.title
+
+下载支援库
+
+# Options.download.lib.desc
+
+选择用于下载资源的支援库 - Undici 速度快，但对代理等的支持有限；Fetch 使用 Electron 的原生方法，但速度有所降低。仅对文件下载有效，帐户验证等不受影响。
+
+# Options.download.lib.Undici
+
+Undici（适合很少使用国外资源的玩家，且速度较快）
+
+# Options.download.lib.Fetch
+
+Fetch（适合大量下载国外资源的玩家，但速度较慢）
+
 # Options.system.ws-operation.title
 
 Alicorn 网络调用 ^

@@ -45,6 +45,10 @@ const Main = {
           ),
           to: path.resolve(__dirname, "dist", "release"),
         },
+        {
+          from: path.resolve(__dirname, "node_modules", "undici"),
+          to: path.resolve(__dirname, "dist", "release", "undici"),
+        },
       ],
     }),
     new ContextReplacementPlugin(/keyv/),
@@ -103,6 +107,9 @@ const Renderer = {
   ],
   mode: "production",
   target: "electron-renderer",
+  externals: {
+    undici: "commonjs undici",
+  },
 };
 
 const StarlightWeb = {
