@@ -44,7 +44,12 @@ export class Serial extends AbstractDownloader {
           const [ac, sti] = getTimeoutController(
             noTimeout ? 0 : getConfigOptn("timeout", 3000)
           );
-          if (getString("download.lib").toLowerCase() === "fetch") {
+          if (
+            getString("download.lib").toLowerCase() === "fetch" ||
+            !["direct://", ""].includes(
+              getString("download.global-proxy").trim()
+            )
+          ) {
             const r = await fetch(meta.url, {
               method: "GET",
               signal: ac.signal,
