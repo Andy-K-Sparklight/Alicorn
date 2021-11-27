@@ -52,9 +52,9 @@ export function getGuardStream(
   let dog: WatchDog | null = null;
   const s = new PassThrough();
   if (timeout > 0) {
-    dog = new WatchDog(timeout, () => {
+    dog = new WatchDog(timeout * 2, () => {
       f.close();
-      s.emit("error", "Time limit exceeded: " + timeout);
+      s.emit("error", "Time limit exceeded: " + timeout * 2);
     });
     s.on("data", () => {
       dog?.feed();
@@ -75,7 +75,7 @@ export function getFileWriteStream(
   let dog: WatchDog | null = null;
   const f = fs.createWriteStream(pt);
   if (timeout > 0) {
-    dog = new WatchDog(timeout, () => {
+    dog = new WatchDog(timeout * 2, () => {
       f.close();
       thrower();
     });
