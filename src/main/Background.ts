@@ -7,7 +7,6 @@ import {
   safeStorage,
   screen,
 } from "electron";
-import fs from "fs";
 import isReachable from "is-reachable";
 import os from "os";
 import path from "path";
@@ -16,11 +15,7 @@ import {
   getNumber,
   loadConfig,
 } from "../modules/config/ConfigSupport";
-import {
-  getMainWindow,
-  getMainWindowUATrimmed,
-  SESSION_LOCK,
-} from "./Bootstrap";
+import { getMainWindow, getMainWindowUATrimmed } from "./Bootstrap";
 import { getUserBrowser, openBrowser } from "./Browser";
 
 const LOGIN_START =
@@ -69,9 +64,7 @@ export function registerBackgroundListeners(): void {
       console.log("Too long! Forcefully stopping!");
       process.abort();
     }, 5000);
-    try {
-      fs.unlinkSync(SESSION_LOCK);
-    } catch {}
+    app.releaseSingleInstanceLock();
     app.exit();
   });
   ipcMain.on("SOS", (_i, e) => {

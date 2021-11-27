@@ -1,8 +1,6 @@
 import { app, BrowserWindow, globalShortcut, screen } from "electron";
-import fs from "fs";
 import http from "http";
 import { btoa } from "js-base64";
-import os from "os";
 import path from "path";
 import { DOH_CONFIGURE } from "../modules/commons/Constants";
 import {
@@ -16,36 +14,28 @@ import { closeWS, initWS } from "./WSServer";
 
 console.log("Starting Alicorn!");
 try {
-  eval("require")("v8-compile-cache");
-} catch {}
+  eval("require")("./v8-compile-cache");
+  console.log("V8 Compile Cache Enabled.");
+} catch {
+  console.log("V8 Compile Cache Disabled.");
+}
 let mainWindow: BrowserWindow | null = null;
 
 let READY_LOCK = false;
-export const SESSION_LOCK = path.join(os.homedir(), "alicorn", "session.lock");
-process.on("beforeExit", () => {
-  try {
-    fs.unlinkSync(SESSION_LOCK);
-  } catch {}
-});
-try {
-  fs.readFileSync(SESSION_LOCK);
+if (!app.requestSingleInstanceLock()) {
   console.log("Another Alicorn is running! Calling her...");
   const t = setTimeout(() => {
-    process.exit();
+    app.exit();
+    process.exit(); // Just in case
   }, 10000);
   http
-    .get("http://localhost:9170", (res) => {
+    .get("http://localhost:9170", () => {
       clearTimeout(t);
-      process.exit();
+      app.exit();
     })
     .on("error", () => {
-      console.log("Session lock invalid, continue!");
       clearTimeout(t);
       READY_LOCK = true;
-      try {
-        fs.unlinkSync(SESSION_LOCK);
-      } catch {}
-      fs.writeFileSync(SESSION_LOCK, "0");
       http
         .createServer((_req, res) => {
           res.writeHead(204, "No Content").end();
@@ -53,14 +43,10 @@ try {
           getMainWindow()?.webContents.send("CallFromSleep");
         })
         .listen(9170);
-      void whenAppReady();
+      main();
     });
-} catch {
+} else {
   READY_LOCK = true;
-  if (!fs.existsSync(path.join(os.homedir(), "alicorn"))) {
-    fs.mkdirSync(path.join(os.homedir(), "alicorn"));
-  }
-  fs.writeFileSync(SESSION_LOCK, "0");
   http
     .createServer((_req, res) => {
       res.writeHead(204, "No Content").end();
@@ -69,31 +55,25 @@ try {
     })
     .listen(9170);
 }
-
-main();
+process.on("beforeExit", () => {
+  if (READY_LOCK) {
+    app.releaseSingleInstanceLock();
+  }
+});
+if (READY_LOCK) {
+  main();
+}
 
 process.on("SIGINT", () => {
   if (READY_LOCK) {
-    try {
-      fs.unlinkSync(SESSION_LOCK);
-    } catch {}
+    app.releaseSingleInstanceLock();
   }
   process.exit();
 });
 
-process.on("beforeExit", () => {
-  if (READY_LOCK) {
-    try {
-      fs.unlinkSync(SESSION_LOCK);
-    } catch {}
-  }
-});
-
 process.on("exit", () => {
   if (READY_LOCK) {
-    try {
-      fs.unlinkSync(SESSION_LOCK);
-    } catch {}
+    app.releaseSingleInstanceLock();
   }
 });
 
@@ -215,9 +195,7 @@ function main() {
   // app.commandLine.appendSwitch("--force_high_performance_gpu"); // Enable High Performance GPU
   app.on("before-quit", () => {
     if (READY_LOCK) {
-      try {
-        fs.unlinkSync(SESSION_LOCK);
-      } catch {}
+      app.releaseSingleInstanceLock();
     }
   });
   app.on("ready", async () => {
@@ -229,6 +207,9 @@ function main() {
   // This function doesn't support async!
   // Use sync functions.
   app.on("will-quit", () => {
+    if (READY_LOCK) {
+      app.releaseSingleInstanceLock();
+    }
     console.log("Finalizing and exiting...");
   });
 
