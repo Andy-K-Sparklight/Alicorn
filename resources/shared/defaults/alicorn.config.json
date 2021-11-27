@@ -49,7 +49,6 @@
   "pff.first-source": "Curseforge",
   "features.saying": true,
   "features.miniwiki": true,
-  "features.cursor": true,
   "features.detect-lan": true,
   "hoofoff.central": "",
   "frame.drag-impl": "Webkit",
@@ -61,5 +60,6 @@
   "alicorn-ping": true,
   "readyboom": true,
   "readyboom.cores": 3,
-  "system.ws-operation": false
+  "system.ws-operation": false,
+  "features.notification": true
 }

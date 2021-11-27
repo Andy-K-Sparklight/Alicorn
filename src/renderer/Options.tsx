@@ -170,7 +170,6 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.BOOL}
             bindConfig={"features.skin-view-3d"}
           />
-          <InputItem type={ConfigType.BOOL} bindConfig={"features.cursor"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"features.miniwiki"} />
           <InputItem
             type={ConfigType.BOOL}

@@ -1622,14 +1622,6 @@ ASC 允许在多个容器间共享相同的文件，那么这些文件应当存�
 
 选择进入启动器时主页的名称 - 用于显示标题
 
-# Options.features.cursor.title
-
-粉红镐指针 ^
-
-# Options.features.cursor.desc
-
-使用 Alicorn 的标志作为鼠标指针 - 有挖矿的感觉呢
-
 # Options.theme.primary.main.title
 
 基本颜色（主要）^
