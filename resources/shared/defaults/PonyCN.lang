@@ -1208,11 +1208,11 @@ TLS 连接保持时间
 
 # Options.download.tls.pipeline.title
 
-TLS Pipeline
+HTTP/1.1 管线
 
 # Options.download.tls.pipeline.desc
 
-TLS Pipeline 数量 - 仅在必要时使用，请勿胡乱修改！
+在一个 TLS 连接上同时进行多少个 HTTP 请求 - 某些环境或许不支持此功能，如果是这样，请将此项设置为 1
 
 # Options.download.lib.title
 
