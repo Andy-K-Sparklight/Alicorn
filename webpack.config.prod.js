@@ -48,6 +48,11 @@ const Main = {
         {
           from: path.resolve(__dirname, "node_modules", "undici"),
           to: path.resolve(__dirname, "dist", "release", "undici"),
+          filter: (source) => {
+            return !/(undici[/\\]docs|undici[/\\]README)/i.test(
+              path.normalize(source)
+            );
+          },
         },
       ],
     }),
