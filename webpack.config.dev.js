@@ -105,12 +105,6 @@ const RendererDev = {
   plugins: [
     new BuildInfoPlugin("RendererBuild.json", Version),
     new ContextReplacementPlugin(/keyv/),
-    new BannerPlugin({
-      banner:
-        "try{require('./v8-compile-cache.js');console.log('V8 Compile Cache Enabled.');}catch{console.log('V8 Compile Cache Disabled.');};",
-      raw: true,
-      include: ["Renderer", "LibWorker"],
-    }),
   ],
   devtool: "source-map",
   mode: "development",
@@ -119,7 +113,7 @@ const RendererDev = {
     ignored: ["**/node_modules", "**/dist"],
   },
   externals: {
-    undici: "commonjs undici",
+    undici: "al_undici",
   },
 };
 const StarlightWebDev = {
