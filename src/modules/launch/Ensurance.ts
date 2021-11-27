@@ -238,7 +238,8 @@ export async function ensureLog4jFile(
     const dMeta = new DownloadMeta(
       profile.logFile.url,
       log4jPath,
-      profile.logFile.sha1
+      profile.logFile.sha1,
+      profile.logFile.size
     );
     await wrappedDownloadFile(dMeta);
     return true;

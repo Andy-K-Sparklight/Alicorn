@@ -64,7 +64,14 @@ export class Serial extends AbstractDownloader {
               noTimeout ? 0 : getConfigOptn("timeout", 3000)
             ); // Require first byte
             if (r.body) {
-              await r.body.pipeTo(f);
+              try {
+                await r.body.pipeTo(f);
+              } catch (e) {
+                try {
+                  await fs.remove(meta.savePath);
+                } catch {}
+                throw e;
+              }
             } else {
               sti();
               throw "Body is empty!";
@@ -92,7 +99,14 @@ export class Serial extends AbstractDownloader {
               noTimeout ? 0 : getConfigOptn("timeout", 3000)
             );
             const p1 = once(f, "close");
-            await Promise.all([pipeline(res.body, gs, f), p1]);
+            try {
+              await Promise.all([pipeline(res.body, gs, f), p1]);
+            } catch (e) {
+              try {
+                await fs.remove(meta.savePath);
+              } catch {}
+              throw e;
+            }
           }
           if (meta.sha1 === "" || getBoolean("download.skip-validate")) {
             void (async (meta) => {

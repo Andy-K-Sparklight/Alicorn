@@ -44,7 +44,7 @@ export async function fetchSharedFile(meta: DownloadMeta): Promise<boolean> {
   }
   let t = 1;
   if (!(await isFileExist(targetFile))) {
-    const metaX = new DownloadMeta(meta.url, targetFile, meta.sha1);
+    const metaX = new DownloadMeta(meta.url, targetFile, meta.sha1, meta.size);
     t = await wrappedDownloadFile(metaX, true);
   }
 

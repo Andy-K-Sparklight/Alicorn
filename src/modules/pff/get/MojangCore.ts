@@ -71,7 +71,6 @@ export async function downloadProfile(
   version: string
 ): Promise<void> {
   try {
-    console.log("Downloading profile!");
     const profilePath = path.join(
       container.getVersionRoot(version),
       version + ".json"

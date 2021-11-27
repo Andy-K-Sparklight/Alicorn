@@ -167,7 +167,7 @@ function getAllPromises(
 }
 
 function generatePath(hash: string, start: number, end: number) {
-  return `${hash}@${start}-${end}.tmp`;
+  return `${hash}.${start}-${end}.tmp`; // This name is quite safe?
 }
 
 function downloadSingleChunk(
@@ -200,7 +200,14 @@ function downloadSingleChunk(
         throw "Failed to download! Code: " + r.status;
       }
       if (r.body) {
-        await r.body.pipeTo(f);
+        try {
+          await r.body.pipeTo(f);
+        } catch (e) {
+          try {
+            await fs.remove(tmpSavePath);
+          } catch {}
+          throw e;
+        }
       } else {
         sti();
         throw "Body is empty!";
