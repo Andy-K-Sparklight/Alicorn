@@ -1,5 +1,4 @@
 import { app, BrowserWindow, globalShortcut, screen } from "electron";
-import http from "http";
 import { btoa } from "js-base64";
 import path from "path";
 import { DOH_CONFIGURE } from "../modules/commons/Constants";
@@ -13,47 +12,19 @@ import { getUserBrowser } from "./Browser";
 import { closeWS, initWS } from "./WSServer";
 
 console.log("Starting Alicorn!");
-try {
-  eval("require")("./v8-compile-cache");
-  console.log("V8 Compile Cache Enabled.");
-} catch {
-  console.log("V8 Compile Cache Disabled.");
-}
+
 let mainWindow: BrowserWindow | null = null;
 
 let READY_LOCK = false;
 if (!app.requestSingleInstanceLock()) {
-  console.log("Another Alicorn is running! Calling her...");
-  const t = setTimeout(() => {
-    app.exit();
-    process.exit(); // Just in case
-  }, 10000);
-  http
-    .get("http://localhost:9170", () => {
-      clearTimeout(t);
-      app.exit();
-    })
-    .on("error", () => {
-      clearTimeout(t);
-      READY_LOCK = true;
-      http
-        .createServer((_req, res) => {
-          res.writeHead(204, "No Content").end();
-          getMainWindow()?.restore();
-          getMainWindow()?.webContents.send("CallFromSleep");
-        })
-        .listen(9170);
-      main();
-    });
+  console.log("Another Alicorn is running! I'm leaving now...");
+  app.exit();
 } else {
   READY_LOCK = true;
-  http
-    .createServer((_req, res) => {
-      res.writeHead(204, "No Content").end();
-      getMainWindow()?.restore();
-      getMainWindow()?.webContents.send("CallFromSleep");
-    })
-    .listen(9170);
+  app.on("second-instance", () => {
+    getMainWindow()?.restore();
+    getMainWindow()?.webContents.send("CallFromSleep");
+  });
 }
 process.on("beforeExit", () => {
   if (READY_LOCK) {
