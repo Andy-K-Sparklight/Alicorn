@@ -137,6 +137,15 @@ export function OptionsPage(): JSX.Element {
           />
           <InputItem type={ConfigType.BOOL} bindConfig={"alicorn-ping"} />
           <InputItem
+            type={ConfigType.RADIO}
+            bindConfig={"theme.background"}
+            choices={["ACG", "Bing", "Disabled"]}
+          />
+          <InputItem
+            type={ConfigType.NUM}
+            bindConfig={"theme.background.opacity"}
+          />
+          <InputItem
             reload
             type={ConfigType.STR}
             bindConfig={"theme.primary.main"}

@@ -1274,6 +1274,34 @@ Skin View 3D 皮肤显示
 
 在电脑启动时，省下几次点击，让 Alicorn 主动和你打声招呼
 
+# Options.theme.background.title
+
+主题背景图片 ^
+
+# Options.theme.background.desc
+
+选取 Alicorn 背景图片，或禁用它。\n图片服务不是由 Alicorn 提供，因此 Alicorn 无法预知或检查不合适内容。
+
+# Options.theme.background.ACG
+
+ACG 二次元图片
+
+# Options.theme.background.Bing
+
+Bing 每日背景图
+
+# Options.theme.background.Disabled
+
+关闭（无）
+
+# Options.theme.background.opacity.title
+
+背景颜色透明度 ^
+
+# Options.theme.background.opacity.desc
+
+背景颜色的透明程度，0 为完全透明，100 为不透明 - 过高的值可能导致操作不便，可别说我没告诉过你哦！
+
 # Options.theme.title
 
 主题 ^

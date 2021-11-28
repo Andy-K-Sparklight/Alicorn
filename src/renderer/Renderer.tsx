@@ -11,6 +11,7 @@ import { prepareND } from "../modules/auth/NDHelper";
 import { initCommandListener } from "../modules/command/CommandListener";
 import {
   getBoolean,
+  getNumber,
   getString,
   loadConfig,
   saveDefaultConfig,
@@ -438,7 +439,16 @@ export let ALICORN_DEFAULT_THEME_LIGHT = createTheme({
   },
 });
 
+const BACKGROUND_URLS: Record<string, string> = {
+  ACG: "url(https://api.ixiaowai.cn/api/api.php)",
+  Bing: "url(https://api.oick.cn/bing/api.php)",
+  Disabled: "none",
+  "": "none",
+};
+
 function RendererBootstrap(): JSX.Element {
+  let url = getString("theme.background");
+  url = BACKGROUND_URLS[url] || url;
   return (
     <Box
       style={Object.assign(GLOBAL_STYLES, {
@@ -478,6 +488,22 @@ function RendererBootstrap(): JSX.Element {
           >
             {"Alicorn " + pkg.appVersion + " #" + pkg.updatorVersion}
           </Typography>
+          <div
+            style={{
+              position: "fixed",
+              left: 0,
+              right: 0,
+              pointerEvents: "none",
+              top: 0,
+              bottom: 0,
+              opacity: getNumber("theme.background.opacity") / 100,
+              backgroundImage: url || "none",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              backgroundColor: "transparent",
+              backgroundPosition: "center",
+            }}
+          ></div>
         </ThemeProvider>
       </InstructionProvider>
     </Box>
