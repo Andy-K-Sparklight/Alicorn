@@ -1,8 +1,8 @@
 {
   "private": true,
-  "appVersion": "Sonic Rainboom",
+  "appVersion": "Pony Pokey",
   "version": "1.0.0",
-  "updatorVersion": 33,
+  "updatorVersion": 34,
   "sideEffects": false,
   "scripts": {
     "lc": "yarn lcd",
