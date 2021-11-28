@@ -37,15 +37,6 @@ const Main = {
           to: path.resolve(__dirname, "dist", "release"),
         },
         {
-          from: path.resolve(
-            __dirname,
-            "node_modules",
-            "v8-compile-cache",
-            "v8-compile-cache.js"
-          ),
-          to: path.resolve(__dirname, "dist", "release"),
-        },
-        {
           from: path.resolve(__dirname, "node_modules", "undici"),
           to: path.resolve(__dirname, "dist", "release", "undici"),
           filter: (source) => {

@@ -105,6 +105,19 @@ async function whenAppReady() {
     }, 5000);
     app.quit();
   });
+  mainWindow.webContents.session.webRequest.onHeadersReceived(
+    (details, callback) => {
+      if (details.responseHeaders) {
+        if (details.responseHeaders["Set-Cookie"]) {
+          delete details.responseHeaders["Set-Cookie"];
+        }
+        if (details.responseHeaders["set-cookie"]) {
+          delete details.responseHeaders["set-cookie"];
+        }
+      }
+      callback({ responseHeaders: details.responseHeaders });
+    }
+  );
   console.log("Preparing window!");
   if (getBoolean("hot-key")) {
     globalShortcut.register("Ctrl+F12", () => {
