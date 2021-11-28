@@ -7,7 +7,7 @@ import { getString } from "../config/ConfigSupport";
 import { loadData, saveDefaultData } from "../config/DataSupport";
 
 const BLACKLIST_URL: Set<string> = new Set();
-
+const SKIPPED_URL_MAP: Map<string, number> = new Map();
 const MIRROR_FILES = [
   "alicorn-mcbbs-nonfree.ald",
   "alicorn-bmclapi-nonfree.ald",
@@ -98,13 +98,25 @@ export class MirrorChain {
     let m = applyMirror(this.url, mirrors[this.cIndex] || new Map());
     while (BLACKLIST_URL.has(m) && mirrors[this.cIndex] !== undefined) {
       // Skip bad url
-      this.next();
+      this.cIndex++;
       m = applyMirror(this.url, mirrors[this.cIndex] || new Map());
     }
     return m;
   }
   next(): void {
-    this.cIndex++;
+    const cu = applyMirror(this.url, mirrors[this.cIndex] || new Map());
+    if (BLACKLIST_URL.has(cu)) {
+      this.cIndex++;
+      return;
+    }
+    let c = SKIPPED_URL_MAP.get(cu) || 0;
+    c++;
+    if (c >= 3 && cu !== this.url) {
+      // Should not ban origin
+      BLACKLIST_URL.add(cu);
+      this.cIndex++;
+    }
+    SKIPPED_URL_MAP.set(cu, c);
   }
   markBad(): void {
     BLACKLIST_URL.add(applyMirror(this.url, mirrors[this.cIndex] || new Map()));

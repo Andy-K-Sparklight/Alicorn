@@ -11,6 +11,7 @@ import { prepareND } from "../modules/auth/NDHelper";
 import { initCommandListener } from "../modules/command/CommandListener";
 import {
   getBoolean,
+  getNumber,
   getString,
   loadConfig,
   saveDefaultConfig,
@@ -147,15 +148,6 @@ try {
     }
     printScreen("Flushing theme colors...");
     flushColors();
-    setDefCursor();
-    if (getBoolean("features.cursor")) {
-      window.addEventListener("mousedown", () => {
-        setActCursor();
-      });
-      window.addEventListener("mouseup", () => {
-        setDefCursor();
-      });
-    }
     printScreen("Initializing command listener...");
     initCommandListener();
     printScreen("Rendering main application...");
@@ -340,8 +332,7 @@ function flushColors(): void {
     getString("theme.primary.light") || "#" + t[1],
     getString("theme.secondary.main") || "#" + t[2],
     getString("theme.secondary.light") || "#" + t[3],
-    FONT_FAMILY,
-    getBoolean("features.cursor")
+    FONT_FAMILY
   );
   let e: HTMLStyleElement | null = document.createElement("style");
   e.innerText =
@@ -377,8 +368,7 @@ export function setThemeParams(
   primaryLight: string,
   secondaryMain: string,
   secondaryLight: string,
-  fontFamily: string,
-  overrideCursor?: boolean
+  fontFamily: string
 ): void {
   ALICORN_DEFAULT_THEME_LIGHT = createTheme({
     palette: {
@@ -394,46 +384,8 @@ export function setThemeParams(
     },
     typography: {
       fontFamily: fontFamily,
+      fontSize: 14,
     },
-    components: overrideCursor
-      ? {
-          MuiButtonBase: {
-            styleOverrides: {
-              root: {
-                cursor: undefined,
-              },
-            },
-          },
-          MuiInputBase: {
-            styleOverrides: {
-              root: {
-                cursor: undefined,
-              },
-            },
-          },
-          MuiCheckbox: {
-            styleOverrides: {
-              root: {
-                cursor: undefined,
-              },
-            },
-          },
-          MuiSelect: {
-            styleOverrides: {
-              select: {
-                cursor: undefined,
-              },
-            },
-          },
-          MuiFormControlLabel: {
-            styleOverrides: {
-              root: {
-                cursor: undefined,
-              },
-            },
-          },
-        }
-      : {},
   });
   ALICORN_DEFAULT_THEME_DARK = createTheme({
     palette: {
@@ -449,46 +401,8 @@ export function setThemeParams(
     },
     typography: {
       fontFamily: fontFamily,
+      fontSize: 14,
     },
-    components: overrideCursor
-      ? {
-          MuiButtonBase: {
-            styleOverrides: {
-              root: {
-                cursor: undefined,
-              },
-            },
-          },
-          MuiInputBase: {
-            styleOverrides: {
-              root: {
-                cursor: undefined,
-              },
-            },
-          },
-          MuiCheckbox: {
-            styleOverrides: {
-              root: {
-                cursor: undefined,
-              },
-            },
-          },
-          MuiSelect: {
-            styleOverrides: {
-              select: {
-                cursor: undefined,
-              },
-            },
-          },
-          MuiFormControlLabel: {
-            styleOverrides: {
-              root: {
-                cursor: undefined,
-              },
-            },
-          },
-        }
-      : {},
   });
 }
 
@@ -524,39 +438,17 @@ export let ALICORN_DEFAULT_THEME_LIGHT = createTheme({
     fontFamily: FONT_FAMILY,
   },
 });
-let normalCursorEle: HTMLStyleElement | null = null;
-let pressCursorEle: HTMLStyleElement | null = null;
-function setDefCursor(): void {
-  if (getBoolean("features.cursor")) {
-    if (pressCursorEle) {
-      pressCursorEle.parentNode?.removeChild(pressCursorEle);
-      pressCursorEle = null;
-    }
-    let x: HTMLStyleElement | null =
-      normalCursorEle || document.createElement("style");
-    x.innerText =
-      'html, .MuiButtonBase-root, .MuiBox-root, label, button, input, input[type="text"], input[type="url"], input[type="checkbox"], input[type="radio"] { cursor: url(Mouse.png), auto !important; }';
-    document.head.insertAdjacentElement("afterbegin", x);
-    normalCursorEle = x;
-    x = null;
-  }
-}
 
-function setActCursor(): void {
-  if (getBoolean("features.cursor")) {
-    if (normalCursorEle) {
-      normalCursorEle.parentNode?.removeChild(normalCursorEle);
-      normalCursorEle = null;
-    }
-    let x: HTMLStyleElement | null = document.createElement("style");
-    x.innerText =
-      'html, .MuiButtonBase-root, .MuiBox-root, label, button, input, input[type="text"], input[type="url"], input[type="checkbox"], input[type="radio"] { cursor: url(Mouse2.png), auto !important; }';
-    document.head.insertAdjacentElement("afterbegin", x);
-    pressCursorEle = x;
-    x = null;
-  }
-}
+const BACKGROUND_URLS: Record<string, string> = {
+  ACG: "url(https://api.ixiaowai.cn/api/api.php)",
+  Bing: "url(https://api.oick.cn/bing/api.php)",
+  Disabled: "none",
+  "": "none",
+};
+
 function RendererBootstrap(): JSX.Element {
+  let url = getString("theme.background");
+  url = BACKGROUND_URLS[url] || url;
   return (
     <Box
       style={Object.assign(GLOBAL_STYLES, {
@@ -596,6 +488,22 @@ function RendererBootstrap(): JSX.Element {
           >
             {"Alicorn " + pkg.appVersion + " #" + pkg.updatorVersion}
           </Typography>
+          <div
+            style={{
+              position: "fixed",
+              left: 0,
+              right: 0,
+              pointerEvents: "none",
+              top: 0,
+              bottom: 0,
+              opacity: getNumber("theme.background.opacity") / 100,
+              backgroundImage: url || "none",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              backgroundColor: "transparent",
+              backgroundPosition: "center",
+            }}
+          ></div>
         </ThemeProvider>
       </InstructionProvider>
     </Box>

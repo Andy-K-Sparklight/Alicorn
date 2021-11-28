@@ -70,15 +70,20 @@ export async function downloadProfile(
   container: MinecraftContainer,
   version: string
 ): Promise<void> {
-  const profilePath = path.join(
-    container.getVersionRoot(version),
-    version + ".json"
-  );
-  const m = new DownloadMeta(url, profilePath);
-  await wrappedDownloadFile(m, true);
-  // Ensure client
-  const p = await loadProfile(version, container);
-  await ensureClient(p);
+  try {
+    const profilePath = path.join(
+      container.getVersionRoot(version),
+      version + ".json"
+    );
+    const m = new DownloadMeta(url, profilePath);
+    await wrappedDownloadFile(m, true);
+    // Ensure client
+    const p = await loadProfile(version, container);
+    await ensureClient(p);
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
 }
 /**
  * @deprecated

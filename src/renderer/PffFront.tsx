@@ -172,6 +172,7 @@ export function PffFront(): JSX.Element {
   }, []);
   const start = (packageName: string) => {
     setInfo("");
+    logs.current = [];
     setRunning(true);
     void (async () => {
       const packages = packageName.split(" ");
@@ -195,12 +196,12 @@ export function PffFront(): JSX.Element {
   };
   return (
     <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-      <Box className={fullWidthClasses.root}>
-        <FormControl>
+      <Container className={fullWidthClasses.root}>
+        <FormControl fullWidth>
           <TextField
             spellCheck={false}
-            className={fullWidthClasses.form}
             color={"primary"}
+            fullWidth
             value={packageName}
             disabled={isRunning}
             placeholder={tr("PffFront.Slug")}
@@ -251,7 +252,7 @@ export function PffFront(): JSX.Element {
             {tr("PffFront.WarnNoCache")}
           </Typography>
         )}
-      </Box>
+      </Container>
       <>
         <Tabs
           variant={"fullWidth"}
@@ -300,7 +301,29 @@ export function PffFront(): JSX.Element {
             {!lockfile || Object.keys(lockfile).length === 0 ? (
               <Alert severity={"info"}>{tr("PffFront.NoneDetected")}</Alert>
             ) : (
-              ""
+              <Button
+                disabled={isRunning}
+                onClick={() => {
+                  const p = Object.values(lockfile)
+                    .map((v) => {
+                      return (
+                        "@" +
+                        v.provider +
+                        ":" +
+                        v.id +
+                        "/" +
+                        v.selectedArtifact.id
+                      );
+                    })
+                    .join(" ");
+                  setPackageName(p);
+                  start(p);
+                }}
+                variant={"contained"}
+                color={"primary"}
+              >
+                {tr("PffFront.UpgradeAll")}
+              </Button>
             )}
             <List>
               {lockfile
@@ -312,6 +335,19 @@ export function PffFront(): JSX.Element {
                         loader={loader}
                         container={container}
                         key={name}
+                        onUpdate={() => {
+                          if (!isRunning) {
+                            const pName =
+                              "@" +
+                              lockfile[name].provider +
+                              ":" +
+                              lockfile[name].id +
+                              "/" +
+                              lockfile[name].selectedArtifact.id;
+                            setPackageName(pName);
+                            start(pName);
+                          }
+                        }}
                       />
                     );
                   })
@@ -417,6 +453,7 @@ export function SinglePffModDisplay(props: {
   container: string;
   loader: string;
   version: string;
+  onUpdate: () => void;
 }): JSX.Element {
   const [showDesc, setShowDesc] = useState(false);
   const isCompatible =
@@ -440,7 +477,14 @@ export function SinglePffModDisplay(props: {
         />
       </ListItemAvatar>
       <ListItemText
-        onClick={() => {
+        onContextMenu={(e) => {
+          props.onUpdate();
+          e.preventDefault();
+        }}
+        onClick={(e) => {
+          if (e.button === 2) {
+            return;
+          }
           shell.showItemInFolder(
             getContainer(props.container).getModJar(
               props.meta.selectedArtifact.fileName
@@ -450,7 +494,7 @@ export function SinglePffModDisplay(props: {
         primary={
           <Typography
             sx={{
-              color: isCompatible ? undefined : "gray",
+              color: isCompatible ? "primary.main" : "gray",
               textDecoration: isCompatible ? undefined : "line-through",
               fontWeight: showDesc ? "bold" : undefined,
             }}
@@ -463,7 +507,7 @@ export function SinglePffModDisplay(props: {
           <Typography
             className={"smtxt"}
             sx={{
-              color: isCompatible ? undefined : "gray",
+              color: isCompatible ? "secondary.main" : "gray",
               textDecoration: isCompatible ? undefined : "line-through",
               fontWeight: showDesc ? "bold" : undefined,
             }}
@@ -531,7 +575,7 @@ export function SingleModDisplay(props: {
             sx={{
               textDecoration: !compatible ? "line-through" : undefined,
               fontWeight: showDesc ? "bold" : undefined,
-              color: compatible ? undefined : "gray",
+              color: compatible ? "primary.main" : "gray",
             }}
             color={"primary"}
           >
@@ -545,7 +589,7 @@ export function SingleModDisplay(props: {
               textDecoration:
                 !compatible && !showDesc ? "line-through" : undefined,
               fontWeight: showDesc ? "bold" : undefined,
-              color: compatible ? undefined : "gray",
+              color: compatible ? "secondary.main" : "gray",
             }}
           >
             {showDesc

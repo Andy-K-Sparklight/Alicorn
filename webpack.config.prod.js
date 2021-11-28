@@ -37,17 +37,22 @@ const Main = {
           to: path.resolve(__dirname, "dist", "release"),
         },
         {
-          from: path.resolve(
-            __dirname,
-            "node_modules",
-            "v8-compile-cache",
-            "v8-compile-cache.js"
-          ),
-          to: path.resolve(__dirname, "dist", "release"),
+          from: path.resolve(__dirname, "node_modules", "undici"),
+          to: path.resolve(__dirname, "dist", "release", "undici"),
+          filter: (source) => {
+            return !/(undici[/\\]docs|undici[/\\]README)/i.test(
+              path.normalize(source)
+            );
+          },
         },
       ],
     }),
     new ContextReplacementPlugin(/keyv/),
+    new BannerPlugin({
+      banner:
+        "@license\nCopyright (C) 2021 Andy K Rarity Sparklight\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\nYou should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.",
+      entryOnly: true,
+    }),
   ],
   mode: "production",
   target: "electron-main",
@@ -61,7 +66,6 @@ const Renderer = {
   entry: {
     Renderer: "./src/renderer/Renderer.tsx",
     LibWorker: "./src/renderer/worker/LibWorker.js",
-    Starlight: "./src/starlight/Starlight.ts",
   },
   output: {
     filename: "[name].js",
@@ -85,47 +89,16 @@ const Renderer = {
     new ContextReplacementPlugin(/keyv/),
     new BannerPlugin({
       banner:
-        "try{require('./v8-compile-cache.js');console.log('V8 Compile Cache Enabled.');}catch{console.log('V8 Compile Cache Disabled.');};",
-      raw: true,
+        "@license\nCopyright (C) 2021 Andy K Rarity Sparklight\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\nYou should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.",
+      entryOnly: true,
       include: ["Renderer", "LibWorker"],
     }),
   ],
   mode: "production",
   target: "electron-renderer",
+  externals: {
+    undici: "al_undici",
+  },
 };
 
-const StarlightWeb = {
-  entry: "./src/starlight/Starlight.ts",
-  output: {
-    filename: "Starlight.prod.user.js",
-    path: path.resolve(__dirname, "dist"), // This is intentional
-  },
-  module: {
-    unknownContextCritical: false,
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: "ts-loader",
-        exclude: /node_modules/,
-      },
-    ],
-  },
-  resolve: {
-    extensions: [".tsx", ".ts", ".js"],
-  },
-  devtool: false,
-  plugins: [
-    new BannerPlugin({
-      banner:
-        "// ==UserScript==\n// @name Starlight\n// @namespace https://starlight.xuogroup.top/\n" +
-        `// @version ${WebVersion}\n// @run-at document-start\n// @description Extend Alicorn features to web!\n` +
-        "// @author Andy K Rarity Sparklight\n// @match http*://**/*\n// @grant unsafeWindow\n// ==/UserScript==\n",
-      raw: true,
-      entryOnly: true,
-    }),
-  ],
-  mode: "development", // This is intentional
-  target: "web",
-};
-
-module.exports = [Main, Renderer, StarlightWeb];
+module.exports = [Main, Renderer];

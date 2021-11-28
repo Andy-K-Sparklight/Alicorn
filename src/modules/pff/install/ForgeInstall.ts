@@ -160,6 +160,9 @@ async function downloadMappings(
         `net/minecraft/client/${baseVersion}-${mcpVersion}/client-${baseVersion}-${mcpVersion}-mappings.txt`
       );
       console.log("Downloading mappings!");
+      try {
+        await fs.remove(target); // Sometimes this can be wrong, must clean first.
+      } catch {}
       if (
         (await wrappedDownloadFile(
           new DownloadMeta(mappingsURL, target, mappingsHash, mappingsSize)

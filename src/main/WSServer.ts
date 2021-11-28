@@ -33,5 +33,7 @@ export function initWS(): void {
   }
 }
 export function closeWS(): void {
-  WS_SERVER.close();
+  if (WS_SERVER) {
+    WS_SERVER.close();
+  }
 }

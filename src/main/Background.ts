@@ -7,7 +7,6 @@ import {
   safeStorage,
   screen,
 } from "electron";
-import fs from "fs";
 import isReachable from "is-reachable";
 import os from "os";
 import path from "path";
@@ -16,12 +15,7 @@ import {
   getNumber,
   loadConfig,
 } from "../modules/config/ConfigSupport";
-import {
-  getMainWindow,
-  getMainWindowUATrimmed,
-  SESSION_LOCK,
-} from "./Bootstrap";
-import { getUserBrowser, openBrowser } from "./Browser";
+import { getMainWindow, getMainWindowUATrimmed } from "./Bootstrap";
 
 const LOGIN_START =
   "https://login.live.com/oauth20_authorize.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf";
@@ -57,9 +51,6 @@ export function registerBackgroundListeners(): void {
       logoutWindow?.destroy();
     } catch {}
     try {
-      getUserBrowser()?.destroy();
-    } catch {}
-    try {
       getMainWindow()?.destroy();
     } catch {}
 
@@ -69,9 +60,7 @@ export function registerBackgroundListeners(): void {
       console.log("Too long! Forcefully stopping!");
       process.abort();
     }, 5000);
-    try {
-      fs.unlinkSync(SESSION_LOCK);
-    } catch {}
+    app.releaseSingleInstanceLock();
     app.exit();
   });
   ipcMain.on("SOS", (_i, e) => {
@@ -265,9 +254,6 @@ export function registerBackgroundListeners(): void {
         }
       });
     });
-  });
-  ipcMain.handle("openBrowser", async (_e, node: boolean, proxy: string) => {
-    await openBrowser(node, proxy);
   });
   ipcMain.handle("getMainWindow", () => {
     return getMainWindow()?.webContents.id || 0;

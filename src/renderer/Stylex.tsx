@@ -105,7 +105,8 @@ export const useFormStyles = makeStyles((theme: AlicornTheme) => ({
 }));
 export const fullWidth = makeStyles((theme: AlicornTheme) => ({
   form: {
-    width: theme.spacing(80),
+    // width: theme.spacing(80),
+    // width: "100%",
   },
   largerForm: {
     width: theme.spacing(90),

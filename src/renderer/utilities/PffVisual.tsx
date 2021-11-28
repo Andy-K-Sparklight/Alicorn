@@ -5,6 +5,7 @@ import {
   CardContent,
   Checkbox,
   CircularProgress,
+  Container,
   FormControl,
   FormControlLabel,
   IconButton,
@@ -24,8 +25,8 @@ import { ModMeta } from "../../modules/pff/virtual/ModDefine";
 import { getResolvers } from "../../modules/pff/virtual/PffWrapper";
 import { jumpTo, triggerSetPage } from "../GoTo";
 import { submitInfo, submitSucc, submitWarn } from "../Message";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "../Renderer";
-import { fullWidth, useCardStyles, usePadStyles } from "../Stylex";
+import { ALICORN_DEFAULT_THEME_LIGHT, isBgDark } from "../Renderer";
+import { useCardStyles, usePadStyles } from "../Stylex";
 import { tr } from "../Translator";
 
 export function PffVisual(): JSX.Element {
@@ -35,7 +36,6 @@ export function PffVisual(): JSX.Element {
     ExtraAddonInfo[]
   >([]);
   const [searching, setSearching] = useState(false);
-  const fullWidthClasses = fullWidth();
   const classes = usePadStyles();
   const mounted = useRef(false);
   const [multiSelect, setMultiSelect] = useState(false);
@@ -57,13 +57,14 @@ export function PffVisual(): JSX.Element {
       >
         {tr("Utilities.PffVisual.Hint")}
       </Typography>
+      <br />
       <Box className={classes.para}>
         <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-          <>
-            <FormControl>
+          <Container>
+            <FormControl fullWidth>
               <TextField
                 spellCheck={false}
-                className={fullWidthClasses.form}
+                fullWidth
                 color={"primary"}
                 value={slug}
                 disabled={searching}
@@ -136,50 +137,50 @@ export function PffVisual(): JSX.Element {
               />
             </FormControl>
             <br />
-          </>
-          <FormControlLabel
-            control={
-              <Checkbox
-                color={"primary"}
-                checked={multiSelect}
-                disabled={mode !== "Normal"}
-                onChange={(e) => {
-                  setMultiSelect(e.target.checked);
-                  if (!e.target.checked) {
-                    if (selections.size > 0) {
-                      const s = Array.from(selections).join(" ");
-                      if (copy(s, { format: "text/plain" })) {
-                        submitSucc(tr("Utilities.PffVisual.Copied"));
-                      } else {
-                        submitWarn("Utilities.PffVisual.CouldNotCopy");
+            <FormControlLabel
+              control={
+                <Checkbox
+                  color={"primary"}
+                  checked={multiSelect}
+                  disabled={mode !== "Normal"}
+                  onChange={(e) => {
+                    setMultiSelect(e.target.checked);
+                    if (!e.target.checked) {
+                      if (selections.size > 0) {
+                        const s = Array.from(selections).join(" ");
+                        if (copy(s, { format: "text/plain" })) {
+                          submitSucc(tr("Utilities.PffVisual.Copied"));
+                        } else {
+                          submitWarn("Utilities.PffVisual.CouldNotCopy");
+                        }
+                        setSelections(new Set());
+                        setSelectedIds(new Set());
                       }
-                      setSelections(new Set());
-                      setSelectedIds(new Set());
                     }
-                  }
-                }}
-              />
-            }
-            label={tr("Utilities.PffVisual.MultiSelect")}
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                color={"primary"}
-                disabled={searching}
-                checked={mode === "Modpack"}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    setMode("Modpack");
-                    setMultiSelect(false);
-                  } else {
-                    setMode("Normal");
-                  }
-                }}
-              />
-            }
-            label={tr("Utilities.PffVisual.Modpack")}
-          />
+                  }}
+                />
+              }
+              label={tr("Utilities.PffVisual.MultiSelect")}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  color={"primary"}
+                  disabled={searching}
+                  checked={mode === "Modpack"}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setMode("Modpack");
+                      setMultiSelect(false);
+                    } else {
+                      setMode("Normal");
+                    }
+                  }}
+                />
+              }
+              label={tr("Utilities.PffVisual.Modpack")}
+            />
+          </Container>
         </ThemeProvider>
 
         <br />
@@ -247,6 +248,7 @@ function SingleAddonDisplay(props: {
       <Card
         color={"primary"}
         raised={true}
+        sx={{ backgroundColor: "primary.main" }}
         className={props.isSelected ? classes.card2 : classes.card}
         onClick={() => {
           if (props.info) {
@@ -280,7 +282,10 @@ function SingleAddonDisplay(props: {
             <Typography className={classes.text} color={"textSecondary"}>
               {props.info?.id || props.modpack?.id}
             </Typography>
-            <Typography variant={"h6"}>
+            <Typography
+              variant={"h6"}
+              sx={{ color: isBgDark() ? "secondary.light" : undefined }}
+            >
               {props.info?.displayName || props.modpack?.name}
             </Typography>
             <br />

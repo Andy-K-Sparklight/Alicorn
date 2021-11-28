@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Container,
   FormControlLabel,
   Radio,
   RadioGroup,
@@ -26,7 +27,11 @@ import {
 } from "../modules/config/ConfigSupport";
 import { loadMirror } from "../modules/download/Mirror";
 import { remoteSelectDir } from "./ContainerManager";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import {
+  ALICORN_DEFAULT_THEME_DARK,
+  ALICORN_DEFAULT_THEME_LIGHT,
+  isBgDark,
+} from "./Renderer";
 import { AlicornTheme, useInputStyles } from "./Stylex";
 import { AL_THEMES } from "./ThemeColors";
 import { ALL_ASSISTANTS, tr } from "./Translator";
@@ -42,7 +47,6 @@ export enum ConfigType {
 export function OptionsPage(): JSX.Element {
   const [tabValue, setTabValue] = useState(0);
   const classes = makeStyles((theme: AlicornTheme) => ({
-    root: {},
     head: {
       fontSize: sessionStorage.getItem("smallFontSize") || "1em",
       color: theme.palette.secondary.main,
@@ -50,8 +54,12 @@ export function OptionsPage(): JSX.Element {
   }))();
 
   return (
-    <Box className={classes.root}>
-      <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <Container>
+      <ThemeProvider
+        theme={
+          isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+        }
+      >
         <Typography className={classes.head}>
           {tr("Options.AutoSave")}
         </Typography>
@@ -129,6 +137,15 @@ export function OptionsPage(): JSX.Element {
           />
           <InputItem type={ConfigType.BOOL} bindConfig={"alicorn-ping"} />
           <InputItem
+            type={ConfigType.RADIO}
+            bindConfig={"theme.background"}
+            choices={["ACG", "Bing", "Disabled"]}
+          />
+          <InputItem
+            type={ConfigType.NUM}
+            bindConfig={"theme.background.opacity"}
+          />
+          <InputItem
             reload
             type={ConfigType.STR}
             bindConfig={"theme.primary.main"}
@@ -162,7 +179,6 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.BOOL}
             bindConfig={"features.skin-view-3d"}
           />
-          <InputItem type={ConfigType.BOOL} bindConfig={"features.cursor"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"features.miniwiki"} />
           <InputItem
             type={ConfigType.BOOL}
@@ -245,6 +261,11 @@ export function OptionsPage(): JSX.Element {
             choices={["Concurrent", "Serial"]}
           />
           <InputItem
+            type={ConfigType.RADIO}
+            bindConfig={"download.lib"}
+            choices={["Undici", "Fetch"]}
+          />
+          <InputItem
             type={ConfigType.NUM}
             bindConfig={"download.concurrent.timeout"}
           />
@@ -252,7 +273,6 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.NUM}
             bindConfig={"download.pff.timeout"}
           />
-
           <InputItem
             type={ConfigType.NUM}
             bindConfig={"download.concurrent.tries-per-chunk"}
@@ -267,9 +287,16 @@ export function OptionsPage(): JSX.Element {
           />
           <InputItem
             type={ConfigType.NUM}
+            bindConfig={"download.tls.keep-alive"}
+          />
+          <InputItem
+            type={ConfigType.NUM}
+            bindConfig={"download.tls.pipeline"}
+          />
+          <InputItem
+            type={ConfigType.NUM}
             bindConfig={"download.pff.chunk-size"}
           />
-
           <InputItem
             type={ConfigType.RADIO}
             bindConfig={"pff.first-source"}
@@ -325,7 +352,7 @@ export function OptionsPage(): JSX.Element {
           <InputItem type={ConfigType.BOOL} bindConfig={"clean-storage"} />
         </TabPanel>
       </ThemeProvider>
-    </Box>
+    </Container>
   );
 }
 
@@ -382,7 +409,7 @@ export function InputItem(props: {
   }
   const classes = makeStyles((theme: AlicornTheme) => ({
     desc: {
-      fontSize: sessionStorage.getItem("smallFontSize") || "1em",
+      // fontSize: sessionStorage.getItem("smallFontSize") || "1em",
       color: theme.palette.secondary.main,
     },
     switch: {
@@ -395,7 +422,6 @@ export function InputItem(props: {
       color: theme.palette.primary.main,
     },
     title: {
-      marginTop: theme.spacing(1),
       color: theme.palette.primary.main,
       fontSize: "large",
     },
@@ -406,11 +432,16 @@ export function InputItem(props: {
     }
   }
   return (
-    <>
-      <Typography color={"primary"} className={classes.title} gutterBottom>
+    <Container>
+      <Typography
+        color={"primary"}
+        variant={"h6"}
+        className={classes.title}
+        gutterBottom
+      >
         {tr(`Options.${props.bindConfig}.title`)}
       </Typography>
-      <Typography color={"primary"} className={classes.desc} gutterBottom>
+      <Typography color={"secondary"} className={classes.desc} gutterBottom>
         {disabled
           ? tr("Options.NotOn")
           : tr(`Options.${props.bindConfig}.desc`)}
@@ -555,7 +586,9 @@ export function InputItem(props: {
             );
         }
       })()}
-    </>
+      <br />
+      <br />
+    </Container>
   );
 }
 function TabPanel(props: {

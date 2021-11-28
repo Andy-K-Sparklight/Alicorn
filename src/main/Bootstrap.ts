@@ -1,8 +1,5 @@
 import { app, BrowserWindow, globalShortcut, screen } from "electron";
-import fs from "fs";
-import http from "http";
 import { btoa } from "js-base64";
-import os from "os";
 import path from "path";
 import { DOH_CONFIGURE } from "../modules/commons/Constants";
 import {
@@ -11,89 +8,42 @@ import {
   loadConfigSync,
 } from "../modules/config/ConfigSupport";
 import { registerBackgroundListeners } from "./Background";
-import { getUserBrowser } from "./Browser";
 import { closeWS, initWS } from "./WSServer";
 
 console.log("Starting Alicorn!");
-try {
-  eval("require")("v8-compile-cache");
-} catch {}
+
 let mainWindow: BrowserWindow | null = null;
 
 let READY_LOCK = false;
-export const SESSION_LOCK = path.join(os.homedir(), "alicorn", "session.lock");
-process.on("beforeExit", () => {
-  try {
-    fs.unlinkSync(SESSION_LOCK);
-  } catch {}
-});
-try {
-  fs.readFileSync(SESSION_LOCK);
-  console.log("Another Alicorn is running! Calling her...");
-  const t = setTimeout(() => {
-    process.exit();
-  }, 10000);
-  http
-    .get("http://localhost:9170", (res) => {
-      clearTimeout(t);
-      process.exit();
-    })
-    .on("error", () => {
-      console.log("Session lock invalid, continue!");
-      clearTimeout(t);
-      READY_LOCK = true;
-      try {
-        fs.unlinkSync(SESSION_LOCK);
-      } catch {}
-      fs.writeFileSync(SESSION_LOCK, "0");
-      http
-        .createServer((_req, res) => {
-          res.writeHead(204, "No Content").end();
-          getMainWindow()?.restore();
-          getMainWindow()?.webContents.send("CallFromSleep");
-        })
-        .listen(9170);
-      void whenAppReady();
-    });
-} catch {
+if (!app.requestSingleInstanceLock()) {
+  console.log("Another Alicorn is running! I'm leaving now...");
+  app.exit();
+} else {
   READY_LOCK = true;
-  if (!fs.existsSync(path.join(os.homedir(), "alicorn"))) {
-    fs.mkdirSync(path.join(os.homedir(), "alicorn"));
-  }
-  fs.writeFileSync(SESSION_LOCK, "0");
-  http
-    .createServer((_req, res) => {
-      res.writeHead(204, "No Content").end();
-      getMainWindow()?.restore();
-      getMainWindow()?.webContents.send("CallFromSleep");
-    })
-    .listen(9170);
+  app.on("second-instance", () => {
+    getMainWindow()?.restore();
+    getMainWindow()?.webContents.send("CallFromSleep");
+  });
 }
-
-main();
+process.on("beforeExit", () => {
+  if (READY_LOCK) {
+    app.releaseSingleInstanceLock();
+  }
+});
+if (READY_LOCK) {
+  main();
+}
 
 process.on("SIGINT", () => {
   if (READY_LOCK) {
-    try {
-      fs.unlinkSync(SESSION_LOCK);
-    } catch {}
+    app.releaseSingleInstanceLock();
   }
   process.exit();
 });
 
-process.on("beforeExit", () => {
-  if (READY_LOCK) {
-    try {
-      fs.unlinkSync(SESSION_LOCK);
-    } catch {}
-  }
-});
-
 process.on("exit", () => {
   if (READY_LOCK) {
-    try {
-      fs.unlinkSync(SESSION_LOCK);
-    } catch {}
+    app.releaseSingleInstanceLock();
   }
 });
 
@@ -155,16 +105,24 @@ async function whenAppReady() {
     }, 5000);
     app.quit();
   });
+  mainWindow.webContents.session.webRequest.onHeadersReceived(
+    (details, callback) => {
+      if (details.responseHeaders) {
+        if (details.responseHeaders["Set-Cookie"]) {
+          delete details.responseHeaders["Set-Cookie"];
+        }
+        if (details.responseHeaders["set-cookie"]) {
+          delete details.responseHeaders["set-cookie"];
+        }
+      }
+      callback({ responseHeaders: details.responseHeaders });
+    }
+  );
   console.log("Preparing window!");
   if (getBoolean("hot-key")) {
     globalShortcut.register("Ctrl+F12", () => {
       if (getBoolean("dev.f12")) {
         mainWindow?.webContents.openDevTools();
-      }
-    });
-    globalShortcut.register("Shift+F12", () => {
-      if (getBoolean("dev.f12")) {
-        getUserBrowser()?.webContents.openDevTools();
       }
     });
   }
@@ -215,9 +173,7 @@ function main() {
   // app.commandLine.appendSwitch("--force_high_performance_gpu"); // Enable High Performance GPU
   app.on("before-quit", () => {
     if (READY_LOCK) {
-      try {
-        fs.unlinkSync(SESSION_LOCK);
-      } catch {}
+      app.releaseSingleInstanceLock();
     }
   });
   app.on("ready", async () => {
@@ -229,6 +185,9 @@ function main() {
   // This function doesn't support async!
   // Use sync functions.
   app.on("will-quit", () => {
+    if (READY_LOCK) {
+      app.releaseSingleInstanceLock();
+    }
     console.log("Finalizing and exiting...");
   });
 

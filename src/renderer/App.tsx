@@ -17,7 +17,6 @@ import {
   Settings,
   ShowChart,
   ViewModule,
-  Web,
 } from "@mui/icons-material";
 import {
   Alert,
@@ -395,7 +394,11 @@ export function App(): JSX.Element {
                   color={"inherit"}
                   className={classes.floatButton}
                   onClick={() => {
-                    ipcRenderer.send("reload");
+                    remoteHideWindow();
+                    waitUpdateFinished(() => {
+                      prepareToQuit();
+                      ipcRenderer.send("reload");
+                    });
                   }}
                 >
                   <Refresh />
@@ -444,34 +447,6 @@ export function App(): JSX.Element {
                 <Build />
               </IconButton>
             </Tooltip>
-            {getBoolean("dev") ? (
-              <Tooltip
-                title={
-                  <Typography className={"smtxt"}>
-                    {tr("MainMenu.Browser")}
-                  </Typography>
-                }
-              >
-                <IconButton
-                  className={classes.floatButton}
-                  onClick={() => {
-                    void (async () => {
-                      await ipcRenderer.invoke(
-                        "openBrowser",
-                        false,
-                        getString("web.global-proxy")
-                      );
-                    })();
-                  }}
-                  color={"inherit"}
-                >
-                  <Web />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              ""
-            )}
-
             <Tooltip
               title={
                 <Typography className={"smtxt"}>
@@ -774,7 +749,7 @@ function remoteOpenDevTools(): void {
   ipcRenderer.send("openDevTools");
 }
 
-function prepareToQuit(): void {
+export function prepareToQuit(): void {
   console.log("Preparing to quit...");
   saveConfigSync();
   saveGDTSync();

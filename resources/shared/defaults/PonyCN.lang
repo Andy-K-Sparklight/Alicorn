@@ -142,10 +142,6 @@ Pff 软件安装器
 
 退出
 
-# MainMenu.Browser
-
-Alicorn 内置浏览器
-
 # MainMenu.OpenDevToolsFormal
 
 调试页面
@@ -948,7 +944,7 @@ Pff 正安装 Mod……
 
 # InstallCore.Unknown
 
-未能确定
+等待选择或未能确定
 
 # InstallCore.Release
 
@@ -1176,7 +1172,7 @@ Minecraft 在 Client Java VM 上可能无法发挥出最好性能，建议安装
 
 # Options.Page.IAndAL
 
-你与 Alicorn
+你与 AL
 
 # Options.Page.FeaturesConfigure
 
@@ -1184,7 +1180,7 @@ Minecraft 在 Client Java VM 上可能无法发挥出最好性能，建议安装
 
 # Options.Page.Features
 
-Alicorn 特色功能
+AL 特殊能力
 
 # Options.Page.Game
 
@@ -1197,6 +1193,38 @@ Alicorn 特色功能
 # Options.Page.Advanced
 
 高级和重置
+
+# Options.download.tls.keep-alive.title
+
+TLS 连接保持时间
+
+# Options.download.tls.keep-alive.desc
+
+关闭一个 TLS 连接之前，等待多长时间，单位毫秒
+
+# Options.download.tls.pipeline.title
+
+HTTP/1.1 管线
+
+# Options.download.tls.pipeline.desc
+
+在一个 TLS 连接上同时进行多少个 HTTP 请求 - 某些环境或许不支持此功能，如果是这样，请将此项设置为 1
+
+# Options.download.lib.title
+
+下载支援库
+
+# Options.download.lib.desc
+
+选择用于下载资源的支援库 - Undici 速度快，但对代理等的支持有限；Fetch 使用 Electron 的原生方法，但速度有所降低。仅对文件下载有效，帐户验证等不受影响。
+
+# Options.download.lib.Undici
+
+Undici（适合很少使用国外资源的玩家，且速度较快）
+
+# Options.download.lib.Fetch
+
+Fetch（适合大量下载国外资源的玩家，但速度较慢）
 
 # Options.system.ws-operation.title
 
@@ -1246,6 +1274,34 @@ Skin View 3D 皮肤显示
 
 在电脑启动时，省下几次点击，让 Alicorn 主动和你打声招呼
 
+# Options.theme.background.title
+
+主题背景图片 ^
+
+# Options.theme.background.desc
+
+选取 Alicorn 背景图片，或禁用它。\n图片服务不是由 Alicorn 提供，因此 Alicorn 无法预知或检查不合适内容。
+
+# Options.theme.background.ACG
+
+ACG 二次元图片
+
+# Options.theme.background.Bing
+
+Bing 每日背景图
+
+# Options.theme.background.Disabled
+
+关闭（无）
+
+# Options.theme.background.opacity.title
+
+背景颜色透明度 ^
+
+# Options.theme.background.opacity.desc
+
+背景颜色的透明程度，0 为完全透明，100 为不透明 - 过高的值可能导致操作不便，可别说我没告诉过你哦！
+
 # Options.theme.title
 
 主题 ^
@@ -1257,6 +1313,18 @@ Skin View 3D 皮肤显示
 # Options.theme.Default
 
 助理默认
+
+# Options.theme.PurpleDark
+
+暗夜紫
+
+# Options.theme.Winter
+
+雪花蓝
+
+# Options.theme.Cherry
+
+樱花粉
 
 # Options.theme.Azure
 
@@ -1578,14 +1646,6 @@ ASC 允许在多个容器间共享相同的文件，那么这些文件应当存�
 
 选择进入启动器时主页的名称 - 用于显示标题
 
-# Options.features.cursor.title
-
-粉红镐指针 ^
-
-# Options.features.cursor.desc
-
-使用 Alicorn 的标志作为鼠标指针 - 有挖矿的感觉呢
-
 # Options.theme.primary.main.title
 
 基本颜色（主要）^
@@ -1640,7 +1700,7 @@ Alicorn 的小秘密
 
 # Options.dev.f12.desc
 
-按下 Ctrl + F12 以调试 Alicorn 渲染进程，Shift + F12 以调试内置浏览器和 Starlight - 请当心，胡乱使用 DevTools 可能导致启动器故障或您的数据丢失！
+按下 Ctrl + F12 以调试 Alicorn 渲染进程 - 请当心，胡乱使用 DevTools 可能导致启动器故障或您的数据丢失！
 
 # Options.hot-key.title
 
@@ -2214,7 +2274,11 @@ Mod 速览
 
 # PffFront.Hint
 
-这里只显示由 Pff 安装的 Mod，单击名称可以在文件资源管理器中查看它。
+这里只显示由 Pff 安装的 Mod，单击名称可以在文件资源管理器中查看它。右击更新/重新安装此 Mod。
+
+# PffFront.UpgradeAll
+
+更新所有 Mod
 
 # PffFront.Mods
 
@@ -3109,8 +3173,8 @@ MCBBS（Minecraft 中文论坛）……这里是热爱 MC 群体的天堂。\nFr
 
 # EOE.EndPoem
 
-Bolwin' in the Wind —— Bob Dylan
+Blowin' in the Wind —— Bob Dylan
 
 # EOE.EndPoemContent
 
-How many roads must a man walk down\nBefore they call him a man?\nHow many seas must a white dove sail\nBefore she sleeps in the sand?\nHow many times must the cannon-balls fly\nBefore they're forever banned?\nThe answer, my friend, is blowin' in the wind\nThe answer is blowin' in the wind.\n\nHow many years must a mountain exist\nBefore it is washed to the sea?\nHow many years can some people exist\nBefore they're allowed to be free?\nHow many times can a man turn his head\nPretend that he just doesn't see?\nThe answer my friend is blowin' in the wind\nThe answer is blowin' in the wind.\n\nHow many times must a man look up\nBefore he can see the sky?\nHow many ears must one man have\nBefore he can hear people cry?\nHow many deaths will it take\nTill he knows that too many people have died?\nThe answer, my friend, is blowin' in the wind\nThe answer is blowin'in the wind.
+How many roads must a man walk down\nBefore they call him a man?\nHow many seas must a white dove sail\nBefore she sleeps in the sand?\nHow many times must the cannon-balls fly\nBefore they're forever banned?\nThe answer, my friend, is blowin' in the wind\nThe answer is blowin' in the wind.\n\nHow many years must a mountain exist\nBefore it is washed to the sea?\nHow many years can some people exist\nBefore they're allowed to be free?\nHow many times can a man turn his head\nPretend that he just doesn't see?\nThe answer my friend is blowin' in the wind\nThe answer is blowin' in the wind.\n\nHow many times must a man look up\nBefore he can see the sky?\nHow many ears must one man have\nBefore he can hear people cry?\nHow many deaths will it take\nTill he knows that too many people have died?\nThe answer, my friend, is blowin' in the wind\nThe answer is blowin'in the wind.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n继续往下翻……\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nI missed you.

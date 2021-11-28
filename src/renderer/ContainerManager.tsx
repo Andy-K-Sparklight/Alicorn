@@ -230,6 +230,9 @@ function SingleContainerDisplay(props: {
       <OperatingHint open={operating} />
 
       <Card
+        sx={{
+          backgroundColor: props.isMounted ? "primary.main" : "primary.light",
+        }}
         raised={true}
         color={"primary"}
         className={props.isMounted ? classes.card : classes.uCard}
@@ -350,84 +353,96 @@ function SingleContainerDisplay(props: {
             </Fade>
           </Box>
 
-          <Dialog
-            open={deleteAskOpen}
-            onClose={() => {
-              setOpen(false);
-            }}
+          <ThemeProvider
+            theme={
+              isBgDark()
+                ? ALICORN_DEFAULT_THEME_DARK
+                : ALICORN_DEFAULT_THEME_LIGHT
+            }
           >
-            <DialogTitle>{tr("ContainerManager.AskRemove")}</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                {tr(
-                  "ContainerManager.AskRemoveDetail",
-                  `ID=${props.container}`
-                )}
-              </DialogContentText>
-              <DialogActions>
-                <Button
-                  onClick={() => {
-                    setOpen(false);
-                    unlinkContainer(props.container.id);
-                    setContainerListDirty();
-                  }}
-                >
-                  {tr("ContainerManager.Yes")}
-                </Button>
-                <Button
-                  onClick={() => {
-                    setOpen(false);
-                  }}
-                >
-                  {tr("ContainerManager.No")}
-                </Button>
-              </DialogActions>
-            </DialogContent>
-          </Dialog>
-          <Dialog
-            open={clearAskOpen}
-            onClose={() => {
-              setClearOpen(false);
-            }}
+            <Dialog
+              open={deleteAskOpen}
+              onClose={() => {
+                setOpen(false);
+              }}
+            >
+              <DialogTitle>{tr("ContainerManager.AskRemove")}</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  {tr(
+                    "ContainerManager.AskRemoveDetail",
+                    `ID=${props.container}`
+                  )}
+                </DialogContentText>
+                <DialogActions>
+                  <Button
+                    onClick={() => {
+                      setOpen(false);
+                      unlinkContainer(props.container.id);
+                      setContainerListDirty();
+                    }}
+                  >
+                    {tr("ContainerManager.Yes")}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setOpen(false);
+                    }}
+                  >
+                    {tr("ContainerManager.No")}
+                  </Button>
+                </DialogActions>
+              </DialogContent>
+            </Dialog>
+            <Dialog
+              open={clearAskOpen}
+              onClose={() => {
+                setClearOpen(false);
+              }}
+            >
+              <DialogTitle>{tr("ContainerManager.AskClear")}</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  {tr(
+                    "ContainerManager.AskClearDetail",
+                    `ID=${props.container.id}`
+                  )}
+                </DialogContentText>
+                <DialogActions>
+                  <Button
+                    onClick={async () => {
+                      setClearOpen(false);
+                      setOperating(true);
+                      await clearContainer(props.container.id);
+                      unlinkContainer(props.container.id);
+                      setContainerListDirty();
+                      if (mounted.current) {
+                        setOperating(false);
+                      }
+                    }}
+                  >
+                    {tr("ContainerManager.Yes")}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setClearOpen(false);
+                    }}
+                  >
+                    {tr("ContainerManager.No")}
+                  </Button>
+                </DialogActions>
+              </DialogContent>
+            </Dialog>
+          </ThemeProvider>
+          <Typography
+            variant={"h6"}
+            sx={{ color: isBgDark() ? "secondary.light" : undefined }}
+            gutterBottom
           >
-            <DialogTitle>{tr("ContainerManager.AskClear")}</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                {tr(
-                  "ContainerManager.AskClearDetail",
-                  `ID=${props.container.id}`
-                )}
-              </DialogContentText>
-              <DialogActions>
-                <Button
-                  onClick={async () => {
-                    setClearOpen(false);
-                    setOperating(true);
-                    await clearContainer(props.container.id);
-                    unlinkContainer(props.container.id);
-                    setContainerListDirty();
-                    if (mounted.current) {
-                      setOperating(false);
-                    }
-                  }}
-                >
-                  {tr("ContainerManager.Yes")}
-                </Button>
-                <Button
-                  onClick={() => {
-                    setClearOpen(false);
-                  }}
-                >
-                  {tr("ContainerManager.No")}
-                </Button>
-              </DialogActions>
-            </DialogContent>
-          </Dialog>
-          <Typography variant={"h6"} className={classes.color} gutterBottom>
             {props.container.id}
           </Typography>
           <Typography
-            color={"textSecondary"}
+            sx={{ color: isBgDark() ? "secondary.light" : undefined }}
             className={classes.text}
             gutterBottom
           >
@@ -435,7 +450,7 @@ function SingleContainerDisplay(props: {
           </Typography>
           {props.isMounted ? (
             <Typography
-              color={"textSecondary"}
+              sx={{ color: isBgDark() ? "secondary.light" : undefined }}
               className={classes.text}
               gutterBottom
             >

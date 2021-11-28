@@ -36,7 +36,11 @@ import { Nide8Account } from "../modules/auth/Nide8Account";
 import { ALICORN_ENCRYPTED_DATA_SUFFIX } from "../modules/commons/Constants";
 import { getBoolean } from "../modules/config/ConfigSupport";
 import { YNDialog } from "./OperatingHint";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import {
+  ALICORN_DEFAULT_THEME_DARK,
+  ALICORN_DEFAULT_THEME_LIGHT,
+  isBgDark,
+} from "./Renderer";
 import { SkinDisplay2D, SkinDisplay3D } from "./SkinDisplay";
 import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
@@ -223,7 +227,12 @@ export function SingleAccountDisplay(props: {
           setOperating(false);
         }}
       />
-      <Card color={"primary"} className={classes.card} raised={true}>
+      <Card
+        color={"primary"}
+        className={classes.card}
+        raised={true}
+        sx={{ backgroundColor: "primary.main" }}
+      >
         <CardContent>
           <Box sx={{ float: "right" }}>
             {skinUrl ? (
@@ -290,7 +299,11 @@ export function SingleAccountDisplay(props: {
           >
             {toReadableType(props.account.type)}
           </Typography>
-          <Typography variant={"h6"} className={classes.color} gutterBottom>
+          <Typography
+            variant={"h6"}
+            sx={{ color: isBgDark() ? "secondary.light" : undefined }}
+            gutterBottom
+          >
             {props.account.accountName}
           </Typography>
           <Typography
@@ -354,7 +367,11 @@ function YggdrasilForm(props: {
   const [isRunning, isRunningUpdate] = useState(false);
   const [hasError, setError] = useState(false);
   return (
-    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
+    >
       <Dialog
         open={props.open}
         onClose={() => {

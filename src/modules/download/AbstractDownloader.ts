@@ -21,8 +21,9 @@ export class DownloadMeta {
 
 enum DownloadStatus {
   RESOLVED = 1,
-  RETRY = 0,
+  RETRY = 0, // But not timeout
   FATAL = -1,
+  TIMEOUT = -3,
 }
 
 export { DownloadStatus };

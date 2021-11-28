@@ -4,7 +4,11 @@ import { tr } from "../../renderer/Translator";
 import { getModifiedDate, isFileExist } from "../commons/FileUtil";
 import { getNumber } from "../config/ConfigSupport";
 import { getAllContainers, getContainer } from "../container/ContainerUtil";
-import { fetchSharedFile, isSharedContainer } from "../container/SharedFiles";
+import {
+  fetchSharedFile,
+  isSharedContainer,
+  needsStandalone,
+} from "../container/SharedFiles";
 import {
   deleteRecord,
   getLastValidateModified,
@@ -96,7 +100,7 @@ export async function wrappedDownloadFile(
     addState(tr("ReadyToLaunch.Ignored", `Url=${ou}`));
     return DownloadStatus.RESOLVED;
   }
-  if (!noAutoLn) {
+  if (!noAutoLn && !needsStandalone(meta.savePath)) {
     const a = getAllContainers();
     let targetContainer = "";
     a.forEach((c) => {
@@ -229,7 +233,7 @@ function downloadSingleFile(
         FAILED_COUNT_MAP.delete(meta);
         emitter.emit(END_GATE, meta, DownloadStatus.RESOLVED);
         return;
-      } else if (s === 0) {
+      } else if (s === 0 || s === -3) {
         // Worth retry
         const failed = FAILED_COUNT_MAP.get(meta) || 0;
         if (failed <= 0) {
@@ -256,8 +260,11 @@ function downloadSingleFile(
         } else {
           FAILED_COUNT_MAP.set(meta, failed - 1); // Again
           const mChain = MIRROR_CHAIN.get(meta) || new MirrorChain(meta.url);
-          mChain.markBad();
-          mChain.next();
+          if (s === 0) {
+            // Not Timeout
+            mChain.markBad();
+            mChain.next();
+          }
           addState(tr("ReadyToLaunch.Retry", `Url=${mChain.mirror()}`));
           downloadSingleFile(meta, emitter, mChain);
         }

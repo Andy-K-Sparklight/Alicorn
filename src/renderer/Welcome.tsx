@@ -51,7 +51,12 @@ export function Welcome(): JSX.Element {
       className={classes.root}
     >
       <br />
-      <Typography color={"primary"} className={classes.firstText} gutterBottom>
+      <Typography
+        color={"primary"}
+        variant={"h6"}
+        className={classes.firstText}
+        gutterBottom
+      >
         {randsl("Welcome.Suggest.Part1")}
       </Typography>
       <br />

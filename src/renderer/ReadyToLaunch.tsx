@@ -110,13 +110,20 @@ import {
   dropAccountPromise,
   waitMSAccountReady,
 } from "../modules/readyboom/AccountMaster";
-import { waitProfileReady } from "../modules/readyboom/PrepareProfile";
+import {
+  setLastUsed,
+  waitProfileReady,
+} from "../modules/readyboom/PrepareProfile";
 import { getMachineUniqueID } from "../modules/security/Unique";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { ShiftEle } from "./Instruction";
 import { submitError, submitSucc, submitWarn } from "./Message";
 import { YNDialog } from "./OperatingHint";
-import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
+import {
+  ALICORN_DEFAULT_THEME_DARK,
+  ALICORN_DEFAULT_THEME_LIGHT,
+  isBgDark,
+} from "./Renderer";
 import { SkinDisplay2D, SkinDisplay3D } from "./SkinDisplay";
 import { addStatistics } from "./Statistics";
 import {
@@ -140,6 +147,7 @@ export const REBOOT_KEY_BASE = "ReadyToLaunch.Reboot.";
 const useStyles = makeStyles((theme: AlicornTheme) => ({
   stepper: {
     backgroundColor: theme.palette.secondary.light,
+    fontSize: "14px",
   },
   textSP: {
     fontSize: sessionStorage.getItem("smallFontSize") || "1em",
@@ -200,11 +208,7 @@ export function ReadyToLaunch(): JSX.Element {
   }, []);
   const fullWidthProgress = fullWidth();
   return (
-    <Box
-      sx={{
-        textAlign: "center",
-      }}
-    >
+    <Container>
       <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
         {profileLoadedBit === 1 ? (
           <Launching
@@ -214,7 +218,7 @@ export function ReadyToLaunch(): JSX.Element {
           />
         ) : profileLoadedBit === 2 ? (
           <Typography
-            sx={{ fontSize: "medium", color: "#ff8400" }}
+            style={{ fontSize: "medium", color: "#ff8400" }}
             gutterBottom
           >
             {tr("ReadyToLaunch.CouldNotLoad")}
@@ -227,7 +231,7 @@ export function ReadyToLaunch(): JSX.Element {
           />
         )}
       </ThemeProvider>
-    </Box>
+    </Container>
   );
 }
 
@@ -420,7 +424,7 @@ function Launching(props: {
           return (
             <Step key={s}>
               <StepLabel>
-                <Typography className={classes.textSP}>
+                <Typography className={classes.textSP + " smtxt"}>
                   {tr("ReadyToLaunch.Status.Short." + s)}
                 </Typography>
               </StepLabel>
@@ -853,6 +857,7 @@ async function startBoot(
   addStatistics("Launch");
   setRunID(runID);
   localStorage.setItem(LAST_SUCCESSFUL_GAME_KEY, window.location.hash);
+  setLastUsed(container.id, profile.id);
   setStatus(LaunchingStatus.FINISHED);
   console.log(`A new Minecraft instance (${runID}) has been launched.`);
   if (dry) {
@@ -972,208 +977,214 @@ function AccountChoose(props: {
     })();
   }, [sAccount, choice, msLogout, bufPName]);
   return (
-    <Dialog
-      open={props.open}
-      onClose={() => {
-        props.closeFunc();
-      }}
+    <ThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
     >
-      <DialogContent sx={{ overflow: "visible" }}>
-        <DialogTitle>{tr("ReadyToLaunch.StartAuthTitle")}</DialogTitle>
-        <DialogContentText>
-          {tr("ReadyToLaunch.StartAuthMsg")}
-        </DialogContentText>
+      <Dialog
+        open={props.open}
+        onClose={() => {
+          props.closeFunc();
+        }}
+      >
+        <DialogContent style={{ overflow: "visible" }}>
+          <DialogTitle>{tr("ReadyToLaunch.StartAuthTitle")}</DialogTitle>
+          <DialogContentText>
+            {tr("ReadyToLaunch.StartAuthMsg")}
+          </DialogContentText>
 
-        {skinUrl ? (
-          getBoolean("features.skin-view-3d") ? (
-            <Box
-              sx={{
-                position: "absolute",
-                right: 20,
-                top: -50,
-                overflow: "visible",
-                textAlign: "center",
-              }}
-            >
-              <SkinDisplay3D skin={skinUrl} width={100} height={150} />
-              <Typography sx={{ color: "gray", marginTop: "-0.25em" }}>
-                {tr("AccountManager.SkinView3DShort")}
-              </Typography>
-            </Box>
-          ) : (
-            <Box
-              sx={{
-                position: "absolute",
-                right: 15,
-                top: 10,
-                overflow: "visible",
-                textAlign: "center",
-              }}
-            >
-              <SkinDisplay2D skin={skinUrl} />
-              <br />
-              <br />
-              <Typography sx={{ color: "gray", marginTop: "2.625em" }}>
-                {tr("AccountManager.SkinView2DShort")}
-              </Typography>
-            </Box>
-          )
-        ) : (
-          ""
-        )}
-        <RadioGroup
-          row
-          onChange={(e) => {
-            if (["MZ", "AL", "YG"].includes(e.target.value)) {
-              // @ts-ignore
-              setChoice(e.target.value);
-              localStorage.setItem(
-                LAST_ACCOUNT_TAB_KEY + props.profileHash,
-                e.target.value
-              );
-            }
-          }}
-        >
-          <FormControlLabel
-            value={"MZ"}
-            control={<Radio checked={choice === "MZ"} />}
-            label={tr("ReadyToLaunch.UseMZ")}
-          />
-          <FormControlLabel
-            value={"YG"}
-            control={<Radio checked={choice === "YG"} />}
-            label={tr("ReadyToLaunch.UseYG")}
-          />
-          <FormControlLabel
-            value={"AL"}
-            control={<Radio checked={choice === "AL"} />}
-            label={tr("ReadyToLaunch.UseAL")}
-          />
-        </RadioGroup>
-        {choice === "AL" ? (
-          <TextField
-            className={classes.input}
-            autoFocus
-            margin={"dense"}
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-            onBlur={(e) => {
-              setBufPName(e.target.value); // Trigger reset
-            }}
-            label={tr("ReadyToLaunch.UseALName")}
-            type={"text"}
-            spellCheck={false}
-            fullWidth
-            color={"secondary"}
-            variant={"outlined"}
-            value={pName}
-          />
-        ) : (
-          ""
-        )}
-        {choice === "MZ" ? (
-          <>
-            <Button
-              variant={"outlined"}
-              className={btnClasses.btn}
-              disabled={msLogout === "ReadyToLaunch.MSLogoutRunning"}
-              onClick={() => {
-                void (async () => {
-                  // @ts-ignore
-                  window[SESSION_ACCESSDATA_CACHED_KEY] = false;
-                  setMSLogout("ReadyToLaunch.MSLogoutRunning");
-                  await ipcRenderer.invoke(
-                    "msLogout",
-                    getString("web.global-proxy")
-                  );
-                  dropAccountPromise();
-                  localStorage.setItem(MS_LAST_USED_REFRESH_KEY, "");
-                  localStorage.setItem(MS_LAST_USED_ACTOKEN_KEY, "");
-                  localStorage.setItem(MS_LAST_USED_UUID_KEY, "");
-                  localStorage.setItem(MS_LAST_USED_USERNAME_KEY, "");
-                  localStorage.removeItem(ACCOUNT_EXPIRES_KEY); // Reset time
-                  localStorage.removeItem(ACCOUNT_LAST_REFRESHED_KEY);
-                  if (mounted.current) {
-                    setMSLogout("ReadyToLaunch.MSLogoutDone");
-                  }
-                })();
-              }}
-            >
-              {tr(msLogout)}
-            </Button>
-          </>
-        ) : (
-          ""
-        )}
-        {choice === "YG" ? (
-          <>
-            <FormControl variant={"outlined"}>
-              <InputLabel variant={"outlined"} id={"Select-Account"}>
-                {tr("ReadyToLaunch.UseYGChoose")}
-              </InputLabel>
-              <Select
-                label={tr("ReadyToLaunch.UseYGChoose")}
-                variant={"outlined"}
-                sx={{ minWidth: "50%" }}
-                fullWidth
-                labelId={"Select-Account"}
-                onChange={(e) => {
-                  setAccount(String(e.target.value));
-                  localStorage.setItem(
-                    LAST_YG_ACCOUNT_NAME + props.profileHash,
-                    String(e.target.value)
-                  );
+          {skinUrl ? (
+            getBoolean("features.skin-view-3d") ? (
+              <Box
+                style={{
+                  position: "absolute",
+                  right: 20,
+                  top: -50,
+                  overflow: "visible",
+                  textAlign: "center",
                 }}
-                value={sAccount || Object.keys(accountMap.current).shift()}
               >
-                {Array.from(props.allAccounts.keys()).map((a) => {
-                  const hash =
-                    accountMapRev.current.get(a) || a.getAccountIdentifier();
-                  return (
-                    <MenuItem key={hash} value={hash}>
-                      {a.accountName + " - " + toReadableType(a.type)}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-          </>
-        ) : (
-          ""
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button
-          disabled={
-            (choice === "YG" &&
-              (sAccount.length === 0 ||
-                isNull(accountMap.current[sAccount]))) ||
-            (choice === "AL" && pName.trim().length === 0)
-          }
-          onClick={() => {
-            props.closeFunc();
-            switch (choice) {
-              case "MZ":
-                props.onChose(new MicrosoftAccount(""));
-                return;
-              case "YG":
-                props.onChose(accountMap.current[sAccount]);
-                return;
-              case "AL":
-              default:
+                <SkinDisplay3D skin={skinUrl} width={100} height={150} />
+                <Typography style={{ color: "gray", marginTop: "-0.25em" }}>
+                  {tr("AccountManager.SkinView3DShort")}
+                </Typography>
+              </Box>
+            ) : (
+              <Box
+                style={{
+                  position: "absolute",
+                  right: 15,
+                  top: 10,
+                  overflow: "visible",
+                  textAlign: "center",
+                }}
+              >
+                <SkinDisplay2D skin={skinUrl} />
+                <br />
+                <br />
+                <Typography style={{ color: "gray", marginTop: "2.625em" }}>
+                  {tr("AccountManager.SkinView2DShort")}
+                </Typography>
+              </Box>
+            )
+          ) : (
+            ""
+          )}
+          <RadioGroup
+            row
+            onChange={(e) => {
+              if (["MZ", "AL", "YG"].includes(e.target.value)) {
+                // @ts-ignore
+                setChoice(e.target.value);
                 localStorage.setItem(
-                  LAST_USED_USER_NAME_KEY + props.profileHash,
-                  pName
+                  LAST_ACCOUNT_TAB_KEY + props.profileHash,
+                  e.target.value
                 );
-                props.onChose(new LocalAccount(pName));
+              }
+            }}
+          >
+            <FormControlLabel
+              value={"MZ"}
+              control={<Radio checked={choice === "MZ"} />}
+              label={tr("ReadyToLaunch.UseMZ")}
+            />
+            <FormControlLabel
+              value={"YG"}
+              control={<Radio checked={choice === "YG"} />}
+              label={tr("ReadyToLaunch.UseYG")}
+            />
+            <FormControlLabel
+              value={"AL"}
+              control={<Radio checked={choice === "AL"} />}
+              label={tr("ReadyToLaunch.UseAL")}
+            />
+          </RadioGroup>
+          {choice === "AL" ? (
+            <TextField
+              className={classes.input}
+              autoFocus
+              margin={"dense"}
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+              onBlur={(e) => {
+                setBufPName(e.target.value); // Trigger reset
+              }}
+              label={tr("ReadyToLaunch.UseALName")}
+              type={"text"}
+              spellCheck={false}
+              fullWidth
+              color={"secondary"}
+              variant={"outlined"}
+              value={pName}
+            />
+          ) : (
+            ""
+          )}
+          {choice === "MZ" ? (
+            <>
+              <Button
+                variant={"outlined"}
+                className={btnClasses.btn}
+                disabled={msLogout === "ReadyToLaunch.MSLogoutRunning"}
+                onClick={() => {
+                  void (async () => {
+                    // @ts-ignore
+                    window[SESSION_ACCESSDATA_CACHED_KEY] = false;
+                    setMSLogout("ReadyToLaunch.MSLogoutRunning");
+                    await ipcRenderer.invoke(
+                      "msLogout",
+                      getString("web.global-proxy")
+                    );
+                    dropAccountPromise();
+                    localStorage.setItem(MS_LAST_USED_REFRESH_KEY, "");
+                    localStorage.setItem(MS_LAST_USED_ACTOKEN_KEY, "");
+                    localStorage.setItem(MS_LAST_USED_UUID_KEY, "");
+                    localStorage.setItem(MS_LAST_USED_USERNAME_KEY, "");
+                    localStorage.removeItem(ACCOUNT_EXPIRES_KEY); // Reset time
+                    localStorage.removeItem(ACCOUNT_LAST_REFRESHED_KEY);
+                    if (mounted.current) {
+                      setMSLogout("ReadyToLaunch.MSLogoutDone");
+                    }
+                  })();
+                }}
+              >
+                {tr(msLogout)}
+              </Button>
+            </>
+          ) : (
+            ""
+          )}
+          {choice === "YG" ? (
+            <>
+              <FormControl variant={"outlined"}>
+                <InputLabel variant={"outlined"} id={"Select-Account"}>
+                  {tr("ReadyToLaunch.UseYGChoose")}
+                </InputLabel>
+                <Select
+                  label={tr("ReadyToLaunch.UseYGChoose")}
+                  variant={"outlined"}
+                  sx={{ minWidth: "50%", color: "primary.main" }}
+                  fullWidth
+                  labelId={"Select-Account"}
+                  onChange={(e) => {
+                    setAccount(String(e.target.value));
+                    localStorage.setItem(
+                      LAST_YG_ACCOUNT_NAME + props.profileHash,
+                      String(e.target.value)
+                    );
+                  }}
+                  value={sAccount || Object.keys(accountMap.current).shift()}
+                >
+                  {Array.from(props.allAccounts.keys()).map((a) => {
+                    const hash =
+                      accountMapRev.current.get(a) || a.getAccountIdentifier();
+                    return (
+                      <MenuItem key={hash} value={hash}>
+                        {a.accountName + " - " + toReadableType(a.type)}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </>
+          ) : (
+            ""
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            disabled={
+              (choice === "YG" &&
+                (sAccount.length === 0 ||
+                  isNull(accountMap.current[sAccount]))) ||
+              (choice === "AL" && pName.trim().length === 0)
             }
-          }}
-        >
-          {tr("ReadyToLaunch.Next")}
-        </Button>
-      </DialogActions>
-    </Dialog>
+            onClick={() => {
+              props.closeFunc();
+              switch (choice) {
+                case "MZ":
+                  props.onChose(new MicrosoftAccount(""));
+                  return;
+                case "YG":
+                  props.onChose(accountMap.current[sAccount]);
+                  return;
+                case "AL":
+                default:
+                  localStorage.setItem(
+                    LAST_USED_USER_NAME_KEY + props.profileHash,
+                    pName
+                  );
+                  props.onChose(new LocalAccount(pName));
+              }
+            }}
+          >
+            {tr("ReadyToLaunch.Next")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </ThemeProvider>
   );
 }
 
@@ -1184,7 +1195,6 @@ function MiniJavaSelector(props: {
   gameVersion: string;
 }): JSX.Element {
   const classes = useFormStyles();
-  const fullWidthClasses = fullWidth();
   const mounted = useRef<boolean>(false);
   const [currentJava, setCurrentJava] = useState<string>(
     getJavaAndCheckAvailable(props.hash, true)
@@ -1219,29 +1229,33 @@ function MiniJavaSelector(props: {
     })();
   }, [currentJava]);
   return (
-    <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
+    <ThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
+    >
       <Box
         className={classes.root}
-        sx={{
+        style={{
           marginTop: "0.3125em",
         }}
       >
-        <FormControl variant={"outlined"}>
+        <FormControl variant={"outlined"} fullWidth>
           <InputLabel id={"Select-JRE"} className={classes.label}>
             {tr("JavaSelector.SelectJava")}
           </InputLabel>
           <Select
-            margin={"dense"}
             label={tr("JavaSelector.SelectJava")}
             variant={"outlined"}
             labelId={"Select-JRE"}
+            sx={{ color: "primary.main" }}
             color={"primary"}
-            className={classes.selector + " " + fullWidthClasses.form}
             onChange={(e) => {
               const sj = String(e.target.value);
               setCurrentJava(sj);
               setJavaForProfile(props.hash, sj);
             }}
+            fullWidth
             value={currentJava}
           >
             {(() => {
@@ -1260,6 +1274,7 @@ function MiniJavaSelector(props: {
               return t;
             })()}
           </Select>
+          <br />
         </FormControl>
         {(() => {
           if (!loaded.current || !currentJavaVersion) {
@@ -1271,7 +1286,7 @@ function MiniJavaSelector(props: {
           }
           return (
             <Typography
-              sx={{
+              style={{
                 color: "#ff8400",
               }}
               className={"smtxt"}
@@ -1477,7 +1492,7 @@ function OpenWorldDialog(props: {
           value={message}
         />
         {err ? (
-          <DialogContentText sx={{ color: "#ff8400" }}>
+          <DialogContentText style={{ color: "#ff8400" }}>
             {tr("ReadyToLaunch.Errors." + err)}
           </DialogContentText>
         ) : (

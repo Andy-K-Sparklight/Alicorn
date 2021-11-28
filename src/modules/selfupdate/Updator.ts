@@ -256,7 +256,7 @@ export async function updateFromSource(file: string): Promise<void> {
     const dirs = await fs.readdir(unZipTarget);
     const tD = dirs[0];
     if (tD) {
-      await fs.copy(path.join(unZipTarget, tD), appPath);
+      await fs.copy(path.join(unZipTarget, tD, "release"), appPath);
       await fs.remove(path.join(resources, "app-local"));
       await fs.remove(unZipTarget);
     }

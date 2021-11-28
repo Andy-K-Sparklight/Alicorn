@@ -1,7 +1,7 @@
 import objectHash from "object-hash";
 import { getBoolean, getNumber } from "../config/ConfigSupport";
 import { scanCoresInAllMountedContainers } from "../container/ContainerScanner";
-import { getContainer } from "../container/ContainerUtil";
+import { getAllMounted, getContainer } from "../container/ContainerUtil";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import {
   ensureAllAssets,
@@ -17,6 +17,7 @@ import { whatProfile } from "../profile/WhatProfile";
 const READY_MAP: Map<string, Promise<boolean>> = new Map(); // No two jobs run at the same time or there might be conflicts, just wait for the Promise finish
 
 const READY_SET: Set<string> = new Set();
+const LAST_USED_KEY = "ReadyToLaunch.LastUsed";
 
 export function setDirtyProfile(container: string, id: string): void {
   READY_MAP.delete(container + "/" + id);
@@ -45,6 +46,10 @@ export function waitProfileReady(
     return Promise.resolve(false);
   }
   return READY_MAP.get(k) as Promise<boolean>;
+}
+
+export function setLastUsed(container: string, id: string) {
+  localStorage.setItem(LAST_USED_KEY, container + "/" + id);
 }
 
 export async function prepareProfile(
@@ -105,6 +110,27 @@ export async function scanAndActivateHotProfiles(): Promise<void> {
   ) {
     os.push(b);
     c++;
+  }
+  const lastCoreUsed = localStorage.getItem(LAST_USED_KEY);
+  if (lastCoreUsed) {
+    const [ct, id] = lastCoreUsed.split("/");
+    const a = os.map((d) => {
+      return d.container + "/" + d.id;
+    });
+    if (!a.includes(lastCoreUsed)) {
+      if (getAllMounted().includes(ct)) {
+        try {
+          const p = await loadProfile(id, getContainer(ct), true);
+          os.unshift({
+            id: p.id,
+            container: ct,
+          });
+          if (os.length > getNumber("readyboom.cores")) {
+            os.pop();
+          }
+        } catch {}
+      }
+    }
   }
   await Promise.all(
     os.map((b) => {
