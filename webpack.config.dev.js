@@ -57,8 +57,8 @@ const MainDev = {
           from: path.resolve(__dirname, "node_modules", "undici"),
           to: path.resolve(__dirname, "dist", "undici"),
           filter: (source) => {
-            return !(/(undici[/\\]docs|undici[/\\]README)/i.test(
-              path.normalize(source))
+            return !/(undici[/\\]docs|undici[/\\]README)/i.test(
+              path.normalize(source)
             );
           },
         },
@@ -81,7 +81,6 @@ const RendererDev = {
   entry: {
     Renderer: "./src/renderer/Renderer.tsx",
     LibWorker: "./src/renderer/worker/LibWorker.js",
-    Starlight: "./src/starlight/Starlight.ts",
   },
   output: {
     filename: "[name].js",
@@ -121,47 +120,5 @@ const RendererDev = {
     undici: "al_undici",
   },
 };
-const StarlightWebDev = {
-  entry: "./src/starlight/Starlight.ts",
-  output: {
-    filename: "Starlight.dev.user.js",
-    path: path.resolve(__dirname, "dist"),
-  },
-  module: {
-    unknownContextCritical: false,
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: {
-          loader: "ts-loader",
-          options: {
-            transpileOnly: true,
-            experimentalWatchApi: true,
-          },
-        },
-        exclude: /node_modules/,
-      },
-    ],
-  },
-  resolve: {
-    extensions: [".tsx", ".ts", ".js"],
-  },
-  devtool: false,
-  plugins: [
-    new BannerPlugin({
-      banner:
-        "// ==UserScript==\n// @name Starlight\n// @namespace https://starlight.xuogroup.top/\n" +
-        `// @version ${WebVersion}\n// @run-at document-start\n// @description Extend Alicorn features to web!\n` +
-        "// @author Andy K Rarity Sparklight\n// @match http*://**/*\n// @grant unsafeWindow\n// ==/UserScript==\n",
-      raw: true,
-      entryOnly: true,
-    }),
-  ],
-  mode: "development",
-  target: "web",
-  watchOptions: {
-    ignored: ["**/node_modules", "**/dist"],
-  },
-};
 
-module.exports = [MainDev, RendererDev, StarlightWebDev];
+module.exports = [MainDev, RendererDev];

@@ -8,7 +8,6 @@ import {
   loadConfigSync,
 } from "../modules/config/ConfigSupport";
 import { registerBackgroundListeners } from "./Background";
-import { getUserBrowser } from "./Browser";
 import { closeWS, initWS } from "./WSServer";
 
 console.log("Starting Alicorn!");
@@ -111,11 +110,6 @@ async function whenAppReady() {
     globalShortcut.register("Ctrl+F12", () => {
       if (getBoolean("dev.f12")) {
         mainWindow?.webContents.openDevTools();
-      }
-    });
-    globalShortcut.register("Shift+F12", () => {
-      if (getBoolean("dev.f12")) {
-        getUserBrowser()?.webContents.openDevTools();
       }
     });
   }

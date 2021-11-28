@@ -142,10 +142,6 @@ Pff 软件安装器
 
 退出
 
-# MainMenu.Browser
-
-Alicorn 内置浏览器
-
 # MainMenu.OpenDevToolsFormal
 
 调试页面
@@ -1676,7 +1672,7 @@ Alicorn 的小秘密
 
 # Options.dev.f12.desc
 
-按下 Ctrl + F12 以调试 Alicorn 渲染进程，Shift + F12 以调试内置浏览器和 Starlight - 请当心，胡乱使用 DevTools 可能导致启动器故障或您的数据丢失！
+按下 Ctrl + F12 以调试 Alicorn 渲染进程 - 请当心，胡乱使用 DevTools 可能导致启动器故障或您的数据丢失！
 
 # Options.hot-key.title
 

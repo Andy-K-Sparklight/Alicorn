@@ -774,7 +774,7 @@ Maud 2 不支持此功能，但其他助理可能支持。
 
 # Options.dev.f12.desc
 
-按下 Ctrl + F12 以调试 Alicorn 渲染进程，Shift + F12 以调试内置浏览器和 Starlight
+按下 Ctrl + F12 以调试 Alicorn 渲染进程
 
 # Options.download.global-proxy.desc
 

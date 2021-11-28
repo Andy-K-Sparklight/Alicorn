@@ -16,6 +16,7 @@
     "watch-release": "npx webpack --config webpack.config.prod.js --progress --watch",
     "dev-full": "npx webpack --config webpack.config.dev.js --progress",
     "devtools": "npx react-devtools",
+    "user-script": "npx webpack --config webpack.config.star.js --progress",
     "watch-dev": "npx webpack --config webpack.config.dev.js --progress --watch",
     "compress": "node pack.js",
     "windows": "yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=ia32 --icon ./resources/build/icon --out out",

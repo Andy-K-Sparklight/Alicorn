@@ -17,7 +17,6 @@ import {
   Settings,
   ShowChart,
   ViewModule,
-  Web,
 } from "@mui/icons-material";
 import {
   Alert,
@@ -448,34 +447,6 @@ export function App(): JSX.Element {
                 <Build />
               </IconButton>
             </Tooltip>
-            {getBoolean("dev") ? (
-              <Tooltip
-                title={
-                  <Typography className={"smtxt"}>
-                    {tr("MainMenu.Browser")}
-                  </Typography>
-                }
-              >
-                <IconButton
-                  className={classes.floatButton}
-                  onClick={() => {
-                    void (async () => {
-                      await ipcRenderer.invoke(
-                        "openBrowser",
-                        false,
-                        getString("web.global-proxy")
-                      );
-                    })();
-                  }}
-                  color={"inherit"}
-                >
-                  <Web />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              ""
-            )}
-
             <Tooltip
               title={
                 <Typography className={"smtxt"}>
