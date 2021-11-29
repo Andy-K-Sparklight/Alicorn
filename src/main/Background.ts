@@ -97,6 +97,15 @@ export function registerBackgroundListeners(): void {
     }
     return r.filePaths[0] || "";
   });
+  ipcMain.handle("selectFile", async () => {
+    const r = await dialog.showOpenDialog({
+      properties: ["openFile"],
+    });
+    if (r.canceled) {
+      return "";
+    }
+    return r.filePaths[0] || "";
+  });
   ipcMain.handle("selectPng", async () => {
     const r = await dialog.showOpenDialog({
       properties: ["openFile"],

@@ -13,6 +13,8 @@ import {
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { ipcRenderer } from "electron";
+import { copy } from "fs-extra";
 import os from "os";
 import React, { useEffect, useRef, useState } from "react";
 import { DOH_CONFIGURE } from "../modules/commons/Constants";
@@ -25,6 +27,7 @@ import {
   saveConfig,
   set,
 } from "../modules/config/ConfigSupport";
+import { getActualDataPath } from "../modules/config/DataSupport";
 import { loadMirror } from "../modules/download/Mirror";
 import { remoteSelectDir } from "./ContainerManager";
 import {
@@ -42,6 +45,7 @@ export enum ConfigType {
   STR,
   DIR,
   RADIO,
+  FILE,
 }
 
 export function OptionsPage(): JSX.Element {
@@ -140,6 +144,11 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.RADIO}
             bindConfig={"theme.background"}
             choices={["ACG", "Bing", "Disabled"]}
+          />
+          <InputItem
+            type={ConfigType.FILE}
+            save
+            bindConfig={"theme.background.custom"}
           />
           <InputItem
             type={ConfigType.NUM}
@@ -373,6 +382,7 @@ export function InputItem(props: {
   onChange?: () => unknown;
   experimental?: boolean;
   reload?: boolean;
+  save?: boolean; // Path selector
 }): JSX.Element {
   const originVal = useRef(get(props.bindConfig, undefined));
   const callChange = () => {
@@ -499,6 +509,7 @@ export function InputItem(props: {
             );
 
           case ConfigType.DIR:
+          case ConfigType.FILE:
             return (
               <>
                 <TextField
@@ -523,10 +534,21 @@ export function InputItem(props: {
                     marginTop: "0.25em",
                   }}
                   onClick={async () => {
-                    const d = await remoteSelectDir();
+                    let d =
+                      props.type === ConfigType.DIR
+                        ? await remoteSelectDir()
+                        : await remoteSelectFile();
                     if (d.trim().length === 0) {
                       return;
                     }
+
+                    try {
+                      const target = getActualDataPath(
+                        props.bindConfig.replaceAll("?", "") + ".ald"
+                      );
+                      await copy(d, target);
+                      d = target;
+                    } catch {}
                     set(props.bindConfig, d);
                     markEdited(props.bindConfig);
                     forceRefresh(!refreshBit);
@@ -590,6 +612,9 @@ export function InputItem(props: {
       <br />
     </Container>
   );
+}
+export async function remoteSelectFile(): Promise<string> {
+  return String((await ipcRenderer.invoke("selectFile")) || "");
 }
 function TabPanel(props: {
   children?: React.ReactNode;

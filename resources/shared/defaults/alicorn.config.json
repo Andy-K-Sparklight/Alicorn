@@ -57,6 +57,7 @@
   "theme": "Default",
   "theme.background": "ACG",
   "theme.background.opacity": 20,
+  "theme.background.custom": "",
   "auto-launch": false,
   "features.skin-view-3d": true,
   "alicorn-ping": true,

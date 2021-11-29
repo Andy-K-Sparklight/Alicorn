@@ -1148,7 +1148,7 @@ Minecraft 在 Client Java VM 上可能无法发挥出最好性能，建议安装
 
 # Options.Select
 
-选择目录
+选择目录/文件
 
 # Options.AutoSave
 
@@ -1293,6 +1293,14 @@ Bing 每日背景图
 # Options.theme.background.Disabled
 
 关闭（无）
+
+# Options.theme.background.custom.title
+
+自定义背景图片 ^
+
+# Options.theme.background.custom.desc
+
+选择一张你喜欢的图片，或者输入一个 URL 来显示吧！
 
 # Options.theme.background.opacity.title
 

@@ -1,6 +1,7 @@
 import { Box, createTheme, ThemeProvider, Typography } from "@mui/material";
 import { ipcRenderer, shell } from "electron";
 import { emptyDir } from "fs-extra";
+import path from "path";
 import React from "react";
 import ReactDOM from "react-dom";
 import { HashRouter } from "react-router-dom";
@@ -440,15 +441,18 @@ export let ALICORN_DEFAULT_THEME_LIGHT = createTheme({
 });
 
 const BACKGROUND_URLS: Record<string, string> = {
-  ACG: "url(https://api.ixiaowai.cn/api/api.php)",
-  Bing: "url(https://api.oick.cn/bing/api.php)",
-  Disabled: "none",
-  "": "none",
+  ACG: "https://api.ixiaowai.cn/api/api.php",
+  Bing: "https://api.oick.cn/bing/api.php",
+  Disabled: "",
+  "": "",
 };
-
 function RendererBootstrap(): JSX.Element {
-  let url = getString("theme.background");
+  let url =
+    getString("theme.background.custom") || getString("theme.background");
   url = BACKGROUND_URLS[url] || url;
+  if (path.isAbsolute(url)) {
+    url = "file://" + url;
+  }
   return (
     <Box
       style={Object.assign(GLOBAL_STYLES, {
@@ -497,7 +501,7 @@ function RendererBootstrap(): JSX.Element {
               top: 0,
               bottom: 0,
               opacity: getNumber("theme.background.opacity") / 100,
-              backgroundImage: url || "none",
+              backgroundImage: `url(${url || ""})`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
               backgroundColor: "transparent",
