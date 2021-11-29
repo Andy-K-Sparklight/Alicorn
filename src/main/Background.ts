@@ -20,12 +20,10 @@ import { getMainWindow, getMainWindowUATrimmed } from "./Bootstrap";
 const LOGIN_START =
   "https://login.live.com/oauth20_authorize.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf";
 let loginWindow: BrowserWindow | null = null;
-let logoutWindow: BrowserWindow | null = null;
+const logoutWindow: BrowserWindow | null = null;
 const CODE_REGEX = /(?<=\?code=)[^&]+/gi;
 const ERROR_REGEX = /(?<=\?error=)[^&]+/gi;
 const ERROR_DESCRIPTION = /(?<=&error_description=)[^&]+/gi;
-const LOGOUT_URL =
-  "https://login.live.com/oauth20_logout.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf";
 
 export function registerBackgroundListeners(): void {
   ipcMain.on("reload", () => {
@@ -151,110 +149,95 @@ export function registerBackgroundListeners(): void {
     }
     return r.filePaths[0] || "";
   });
-  ipcMain.handle("msBrowserCode", async (_e, proxy: string, quiet = false) => {
-    try {
-      let sCode = "";
-      const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-      loginWindow =
-        loginWindow ||
-        new BrowserWindow({
-          frame: false,
-          width: Math.floor(width * 0.6),
-          height: Math.floor(height * 0.6),
-          show: false,
-          backgroundColor: "#fff",
-        });
-      loginWindow.webContents.setUserAgent(getMainWindowUATrimmed());
-      if (proxy.trim().length > 0) {
-        await loginWindow.webContents.session.setProxy({
-          proxyRules: proxy,
-        });
-      } else {
-        await loginWindow.webContents.session.setProxy({
-          mode: "system",
-        });
-      }
-      await loginWindow.loadURL(LOGIN_START);
-      return new Promise<string>((resolve) => {
-        loginWindow?.on("close", () => {
-          if (sCode === "") {
-            console.log("Unexpected window closing, what have you done?");
-            resolve("");
-          }
-        });
-        loginWindow?.webContents.on("did-stop-loading", () => {
-          const url = loginWindow?.webContents.getURL();
-          if (url?.startsWith("https://login.live.com/oauth20_desktop.srf")) {
-            if (CODE_REGEX.test(url)) {
-              console.log("Code found. Closing login window.");
-              sCode = decodeURIComponent(
-                (url.match(CODE_REGEX) || [])[0] || ""
-              );
-              loginWindow?.close();
-              loginWindow = null;
-              resolve(sCode);
-              return;
-            }
-            if (ERROR_REGEX.test(url)) {
-              sCode = "NOT FOUND";
-              console.log(
-                "Error during login: " +
-                  decodeURIComponent((url.match(ERROR_REGEX) || [])[0] || "")
-              );
-              console.log(
-                "Caused by: " +
-                  decodeURIComponent(
-                    (url.match(ERROR_DESCRIPTION) || [])[0] || ""
-                  )
-              );
-            }
-            console.log("Error occurred. Closing login window.");
-            loginWindow?.close();
-            loginWindow = null;
-            resolve("");
-          } else {
-            if (quiet) {
-              console.log("Not a callback URL, but quiet required, resolving.");
-              resolve("");
-              loginWindow?.close();
-              loginWindow = null;
-              return;
-            }
-            console.log("Not a callback URL, showing window...");
-            loginWindow?.show();
-          }
-        });
-      });
-    } catch {}
-  });
-  ipcMain.handle("msLogout", async (_e, proxy: string) => {
-    console.log("Creating logout window!");
-    logoutWindow = new BrowserWindow({
-      frame: false,
-      width: 960,
-      height: 540,
-      show: false,
-      backgroundColor: "#fff",
-    });
-    logoutWindow.webContents.setUserAgent(getMainWindowUATrimmed());
-    if (proxy.trim().length > 0) {
-      await logoutWindow.webContents.session.setProxy({
-        proxyRules: proxy,
-      });
-    } else {
-      await logoutWindow.webContents.session.setProxy({ mode: "system" });
-    }
-    await logoutWindow.loadURL(LOGOUT_URL);
-    return new Promise<void>((resolve) => {
-      logoutWindow?.webContents.on("did-stop-loading", () => {
-        const url = logoutWindow?.webContents.getURL();
-        if (url?.startsWith("https://login.live.com/oauth20_desktop.srf")) {
-          console.log("Logout successful.");
-          resolve();
+  ipcMain.handle(
+    "msBrowserCode",
+    async (
+      _e,
+      proxy: string,
+      quiet = false,
+      key = "alicorn_ms_login_initial"
+    ) => {
+      try {
+        let sCode = "";
+        const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+        loginWindow =
+          loginWindow ||
+          new BrowserWindow({
+            frame: false,
+            width: Math.floor(width * 0.6),
+            height: Math.floor(height * 0.6),
+            show: false,
+            backgroundColor: "#fff",
+            webPreferences: {
+              partition: "persist:" + key,
+            },
+          });
+        loginWindow.webContents.setUserAgent(getMainWindowUATrimmed());
+        if (proxy.trim().length > 0) {
+          await loginWindow.webContents.session.setProxy({
+            proxyRules: proxy,
+          });
+        } else {
+          await loginWindow.webContents.session.setProxy({
+            mode: "system",
+          });
         }
-      });
-    });
-  });
+        await loginWindow.loadURL(LOGIN_START);
+        return new Promise<string>((resolve) => {
+          loginWindow?.on("close", () => {
+            if (sCode === "") {
+              console.log("Unexpected window closing, what have you done?");
+              resolve("");
+            }
+          });
+          loginWindow?.webContents.on("did-stop-loading", () => {
+            const url = loginWindow?.webContents.getURL();
+            if (url?.startsWith("https://login.live.com/oauth20_desktop.srf")) {
+              if (CODE_REGEX.test(url)) {
+                console.log("Code found. Closing login window.");
+                sCode = decodeURIComponent(
+                  (url.match(CODE_REGEX) || [])[0] || ""
+                );
+                loginWindow?.close();
+                loginWindow = null;
+                resolve(sCode);
+                return;
+              }
+              if (ERROR_REGEX.test(url)) {
+                sCode = "NOT FOUND";
+                console.log(
+                  "Error during login: " +
+                    decodeURIComponent((url.match(ERROR_REGEX) || [])[0] || "")
+                );
+                console.log(
+                  "Caused by: " +
+                    decodeURIComponent(
+                      (url.match(ERROR_DESCRIPTION) || [])[0] || ""
+                    )
+                );
+              }
+              console.log("Error occurred. Closing login window.");
+              loginWindow?.close();
+              loginWindow = null;
+              resolve("");
+            } else {
+              if (quiet) {
+                console.log(
+                  "Not a callback URL, but quiet required, resolving."
+                );
+                resolve("");
+                loginWindow?.close();
+                loginWindow = null;
+                return;
+              }
+              console.log("Not a callback URL, showing window...");
+              loginWindow?.show();
+            }
+          });
+        });
+      } catch {}
+    }
+  );
   ipcMain.handle("getMainWindow", () => {
     return getMainWindow()?.webContents.id || 0;
   });

@@ -58,23 +58,27 @@ export class MicrosoftAccount extends Account {
       if (isNull(this.refreshToken)) {
         return false;
       }
+      console.log("Refresh Token -> New Token");
       const r1 = await refreshToken(this.refreshToken);
       if (!r1.success) {
         return false;
       }
       this.refreshToken = r1.refreshToken || this.refreshToken;
       const m1 = r1.accessToken;
+      console.log("Token -> XBL");
       const r2 = await getXBLToken(String(m1));
       if (!r2.success) {
         return false;
       }
       const m2 = r2.token;
       const u = r2.uhs;
+      console.log("XBL -> XSTS");
       const r3 = await getXSTSToken(String(m2));
       if (!r3.success) {
         return false;
       }
       const m3 = r3.token;
+      console.log("XSTS -> Mojang");
       const r4 = await getMojangToken(String(u), String(m3));
       if (isNull(r4)) {
         return false;
@@ -86,6 +90,11 @@ export class MicrosoftAccount extends Account {
       }
       this.lastUsedUsername = String(r5.name);
       this.lastUsedUUID = String(r5.uuid);
+      console.log("Flush OK!");
+      localStorage.setItem(
+        ACCOUNT_LAST_REFRESHED_KEY,
+        new Date().toISOString()
+      );
       saveUUID(this.lastUsedUUID);
       saveUserName(this.lastUsedUsername);
       saveRefreshToken(this.refreshToken);
@@ -109,10 +118,12 @@ export class MicrosoftAccount extends Account {
 
   async performAuth(password: string, quiet = false): Promise<boolean> {
     try {
+      console.log("Getting code...");
       const code = await browserGetCode(quiet);
       if (code.trim().length === 0) {
         return false;
       }
+      console.log("Code -> Token");
       const r = await getTokenByCode(code);
       if (!r.success) {
         return false;
@@ -163,11 +174,15 @@ function saveAccessToken(v: string): void {
 // User -> Code
 // Only in remote!
 export async function browserGetCode(quiet = false): Promise<string> {
+  const LOGIN_WINDOW_KEY =
+    window.localStorage.getItem("MS.LoginWindowKey") ||
+    "alicorn_ms_login_initial";
   console.log("Building login window...");
   return await ipcRenderer.invoke(
     "msBrowserCode",
     getString("web.global-proxy"),
-    quiet
+    quiet,
+    LOGIN_WINDOW_KEY
   );
 }
 
@@ -218,10 +233,6 @@ async function tokenRequest(
     const expires = parseInt(safeGet(ret, ["expires_in"], null));
     if (typeof expires === "number") {
       if (!isNaN(expires)) {
-        localStorage.setItem(
-          ACCOUNT_LAST_REFRESHED_KEY,
-          new Date().toISOString()
-        );
         localStorage.setItem(
           ACCOUNT_EXPIRES_KEY,
           (expires - 3600).toString() // SAFE

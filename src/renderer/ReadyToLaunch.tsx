@@ -32,7 +32,6 @@ import {
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { ipcRenderer } from "electron";
 import EventEmitter from "events";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
@@ -1089,13 +1088,13 @@ function AccountChoose(props: {
                 className={btnClasses.btn}
                 disabled={msLogout === "ReadyToLaunch.MSLogoutRunning"}
                 onClick={() => {
-                  void (async () => {
+                  void (() => {
                     // @ts-ignore
                     window[SESSION_ACCESSDATA_CACHED_KEY] = false;
                     setMSLogout("ReadyToLaunch.MSLogoutRunning");
-                    await ipcRenderer.invoke(
-                      "msLogout",
-                      getString("web.global-proxy")
+                    window.localStorage.setItem(
+                      "MS.LoginWindowKey",
+                      "alicorn_ms_login_" + new Date().getTime()
                     );
                     dropAccountPromise();
                     localStorage.setItem(MS_LAST_USED_REFRESH_KEY, "");
