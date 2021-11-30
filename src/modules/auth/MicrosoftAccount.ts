@@ -1,4 +1,5 @@
 import { ipcRenderer } from "electron";
+import { tr } from "../../renderer/Translator";
 import { Trio } from "../commons/Collections";
 import { isNull, safeGet } from "../commons/Null";
 import { getString } from "../config/ConfigSupport";
@@ -178,13 +179,40 @@ export async function browserGetCode(quiet = false): Promise<string> {
     window.localStorage.getItem("MS.LoginWindowKey") ||
     "alicorn_ms_login_initial";
   console.log("Building login window...");
-  return await ipcRenderer.invoke(
+  const r = await ipcRenderer.invoke(
     "msBrowserCode",
     getString("web.global-proxy"),
     quiet,
-    LOGIN_WINDOW_KEY
+    LOGIN_WINDOW_KEY,
+    [
+      tr("ReadyToLaunch.IsLoginOK"),
+      tr("ReadyToLaunch.LoginInstruction"),
+      tr("ReadyToLaunch.ContinueLogin"),
+      tr("ReadyToLaunch.HelpMeLogin"),
+    ]
   );
+  if (r === "USER PROVIDE") {
+    window.dispatchEvent(new CustomEvent("OpenAskUrlDialog"));
+    const s = await new Promise<string>((res) => {
+      const onCancel = () => {
+        res("");
+        window.removeEventListener("UrlAsked", onGot);
+        window.removeEventListener("UrlAskCancelled", onCancel);
+      };
+      const onGot = (e: Event) => {
+        res((e as CustomEvent).detail);
+        window.removeEventListener("UrlAsked", onGot);
+        window.removeEventListener("UrlAskCancelled", onCancel);
+      };
+      window.addEventListener("UrlAsked", onGot);
+      window.addEventListener("UrlAskCancelled", onCancel);
+    });
+    return decodeURIComponent((s.match(CODE_REGEX) || [])[0] || "");
+  } else {
+    return r;
+  }
 }
+const CODE_REGEX = /(?<=\?code=)[^&]+/gi;
 
 interface AcquireTokenCallback {
   success: boolean;

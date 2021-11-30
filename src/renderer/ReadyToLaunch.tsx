@@ -230,6 +230,7 @@ export function ReadyToLaunch(): JSX.Element {
           />
         )}
       </ThemeProvider>
+      <AskURLDialog />
     </Container>
   );
 }
@@ -1593,4 +1594,70 @@ function setProfileRelatedID(hash: string, rid: string): void {
 
 function getProfileRelatedID(hash: string): string {
   return sessionStorage.getItem("MinecraftID" + hash) || "";
+}
+
+const CODE_REGEX = /(?<=\?code=)[^&]+/gi;
+
+function AskURLDialog(): JSX.Element {
+  console.log(isBgDark());
+  const [url, setUrl] = useState("");
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const fun = () => {
+      setOpen(true);
+    };
+    window.addEventListener("OpenAskUrlDialog", fun);
+    return () => {
+      window.removeEventListener("OpenAskUrlDialog", fun);
+    };
+  }, []);
+  return (
+    <ThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
+    >
+      <Dialog
+        open={open}
+        onClose={() => {
+          window.dispatchEvent(new CustomEvent("UrlAskCancelled"));
+          setOpen(false);
+        }}
+      >
+        <DialogTitle>{tr("ReadyToLaunch.LoginStepTitle")}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{tr("ReadyToLaunch.LoginStep")}</DialogContentText>
+          <br />
+          <DialogContentText>{tr("ReadyToLaunch.URLEnter")}</DialogContentText>
+          <TextField
+            autoFocus
+            margin={"dense"}
+            onChange={(e) => {
+              setUrl(e.target.value);
+            }}
+            type={"url"}
+            spellCheck={false}
+            color={"primary"}
+            fullWidth
+            variant={"outlined"}
+            value={url}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            disabled={!CODE_REGEX.test(url)}
+            onClick={() => {
+              window.dispatchEvent(
+                new CustomEvent("UrlAsked", { detail: url })
+              );
+              setUrl("");
+              setOpen(false);
+            }}
+          >
+            {tr("ReadyToLaunch.AcceptLogin")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </ThemeProvider>
+  );
 }

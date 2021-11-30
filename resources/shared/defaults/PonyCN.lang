@@ -266,6 +266,38 @@ Pff 软件安装器
 
 查看或安装 Mod
 
+# ReadyToLaunch.IsLoginOK
+
+你是否遇到了问题？
+
+# ReadyToLaunch.LoginInstruction
+
+你的登录过程用时过长，你遇到什么问题了吗？\n\n如果没有，你可以单击「没有问题，让我继续」。\n\n如果你的帐户开启了二步验证或者一些特殊服务，则可能登录失败。\n你可以单击「帮助我登录！」来通过其它的方式登录 Microsoft 帐号。
+
+# ReadyToLaunch.ContinueLogin
+
+没有问题，让我继续
+
+# ReadyToLaunch.HelpMeLogin
+
+帮助我登录！
+
+# ReadyToLaunch.LoginStepTitle
+
+继续完成你的登录
+
+# ReadyToLaunch.LoginStep
+
+我们已经在你的浏览器中打开了登录链接，请：\n\n1. 在浏览器中完成登录，然后……\n2. 待登录完成，页面显示空白时，复制地址栏的 URL，并粘贴到这里。
+
+# ReadyToLaunch.AcceptLogin
+
+好
+
+# ReadyToLaunch.URLEnter
+
+输入登录完成后浏览器地址栏的 URL……
+
 # ReadyToLaunch.NoJava
 
 没有设置 Java 运行时（JRE）！游戏将无法启动！

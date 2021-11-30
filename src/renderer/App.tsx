@@ -22,7 +22,13 @@ import {
   Alert,
   AppBar,
   Box,
+  Button,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Drawer,
   Fab,
   IconButton,
@@ -31,11 +37,12 @@ import {
   ListItemIcon,
   ListItemText,
   Snackbar,
+  TextField,
   Toolbar,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { makeStyles, ThemeProvider } from "@mui/styles";
 import { ipcRenderer, shell } from "electron";
 import React, { useEffect, useRef, useState } from "react";
 import { Route } from "react-router-dom";
@@ -75,6 +82,11 @@ import { YNDialog2 } from "./OperatingHint";
 import { OptionsPage } from "./Options";
 import { PffFront } from "./PffFront";
 import { ReadyToLaunch } from "./ReadyToLaunch";
+import {
+  ALICORN_DEFAULT_THEME_DARK,
+  ALICORN_DEFAULT_THEME_LIGHT,
+  isBgDark,
+} from "./Renderer";
 import { ServerList } from "./ServerList";
 import { saveStatistics, Statistics } from "./Statistics";
 import { AlicornTheme } from "./Stylex";
