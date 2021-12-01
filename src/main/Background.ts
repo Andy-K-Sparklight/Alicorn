@@ -188,11 +188,11 @@ export function registerBackgroundListeners(): void {
           await loginWindow.webContents.session.setProxy({
             proxyRules: proxy,
           });
-        } else {
+        } /* else {
           await loginWindow.webContents.session.setProxy({
             mode: "system",
           });
-        }
+        } */
         await loginWindow.loadURL(LOGIN_START);
         return new Promise<string>((resolve) => {
           loginWindow?.on("close", () => {

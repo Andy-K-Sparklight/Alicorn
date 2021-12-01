@@ -14,6 +14,8 @@ console.log("Starting Alicorn!");
 
 let mainWindow: BrowserWindow | null = null;
 
+const COOKIES_BLACKLIST = /(mcbbs\.net|\.cn)/i;
+
 let READY_LOCK = false;
 if (!app.requestSingleInstanceLock()) {
   console.log("Another Alicorn is running! I'm leaving now...");
@@ -107,12 +109,14 @@ async function whenAppReady() {
   });
   mainWindow.webContents.session.webRequest.onHeadersReceived(
     (details, callback) => {
-      if (details.responseHeaders) {
-        if (details.responseHeaders["Set-Cookie"]) {
-          delete details.responseHeaders["Set-Cookie"];
-        }
-        if (details.responseHeaders["set-cookie"]) {
-          delete details.responseHeaders["set-cookie"];
+      if (COOKIES_BLACKLIST.test(details.url)) {
+        if (details.responseHeaders) {
+          if (details.responseHeaders["Set-Cookie"]) {
+            delete details.responseHeaders["Set-Cookie"];
+          }
+          if (details.responseHeaders["set-cookie"]) {
+            delete details.responseHeaders["set-cookie"];
+          }
         }
       }
       callback({ responseHeaders: details.responseHeaders });
@@ -217,9 +221,10 @@ export function getMainWindow(): BrowserWindow | null {
 async function initProxy(): Promise<void> {
   const proc = getString("download.global-proxy");
   if (proc.trim().length === 0) {
-    await getMainWindow()?.webContents.session.setProxy({
-      mode: "system",
-    });
+    /* await getMainWindow()?.webContents.session.setProxy({
+      mode: "auto_detect",
+    }); */
+    // Let Electron decide!
     return;
   }
   await getMainWindow()?.webContents.session.setProxy({
