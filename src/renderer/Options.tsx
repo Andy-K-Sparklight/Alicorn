@@ -5,6 +5,7 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
+  Slider,
   Switch,
   Tab,
   Tabs,
@@ -13,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, webFrame } from "electron";
 import { copy } from "fs-extra";
 import os from "os";
 import React, { useEffect, useRef, useState } from "react";
@@ -46,6 +47,7 @@ export enum ConfigType {
   DIR,
   RADIO,
   FILE,
+  SLIDE,
 }
 
 export function OptionsPage(): JSX.Element {
@@ -123,6 +125,27 @@ export function OptionsPage(): JSX.Element {
           <InputItem type={ConfigType.STR} bindConfig={"user.name"} />
           <InputItem type={ConfigType.BOOL} bindConfig={"auto-launch"} />
           <InputItem
+            type={ConfigType.SLIDE}
+            bindConfig={"theme.zoom-factor"}
+            sliderMax={5.0}
+            sliderMin={0.1}
+            sliderStep={0.1}
+            onChange={() => {
+              webFrame.setZoomFactor(getNumber("theme.zoom-factor"));
+            }}
+          />
+          <InputItem
+            reload
+            type={ConfigType.RADIO}
+            bindConfig={"theme"}
+            choices={["Default"].concat(Object.keys(AL_THEMES))}
+          />
+          <InputItem
+            type={ConfigType.RADIO}
+            bindConfig={"theme.background"}
+            choices={["ACG", "Bing", "Disabled"]}
+          />
+          <InputItem
             type={ConfigType.RADIO}
             bindConfig={"assistant"}
             reload
@@ -133,18 +156,7 @@ export function OptionsPage(): JSX.Element {
             bindConfig={"interactive.assistant?"}
             reload
           />
-          <InputItem
-            reload
-            type={ConfigType.RADIO}
-            bindConfig={"theme"}
-            choices={["Default"].concat(Object.keys(AL_THEMES))}
-          />
           <InputItem type={ConfigType.BOOL} bindConfig={"alicorn-ping"} />
-          <InputItem
-            type={ConfigType.RADIO}
-            bindConfig={"theme.background"}
-            choices={["ACG", "Bing", "Disabled"]}
-          />
           <InputItem
             type={ConfigType.FILE}
             save
@@ -383,6 +395,9 @@ export function InputItem(props: {
   experimental?: boolean;
   reload?: boolean;
   save?: boolean; // Path selector
+  sliderMax?: number;
+  sliderMin?: number;
+  sliderStep?: number;
 }): JSX.Element {
   const originVal = useRef(get(props.bindConfig, undefined));
   const callChange = () => {
@@ -587,6 +602,23 @@ export function InputItem(props: {
                   );
                 })}
               </RadioGroup>
+            );
+          case ConfigType.SLIDE:
+            return (
+              <Slider
+                size={"small"}
+                min={props.sliderMin}
+                max={props.sliderMax}
+                defaultValue={getNumber(props.bindConfig)}
+                valueLabelDisplay={"auto"}
+                step={props.sliderStep}
+                onChange={(_e, v) => {
+                  markEdited(props.bindConfig);
+                  set(props.bindConfig, v);
+                  forceRefresh(!refreshBit);
+                  callChange();
+                }}
+              />
             );
           case ConfigType.STR:
           default:

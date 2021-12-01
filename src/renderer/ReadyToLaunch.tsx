@@ -1599,7 +1599,6 @@ function getProfileRelatedID(hash: string): string {
 const CODE_REGEX = /(?<=\?code=)[^&]+/gi;
 
 function AskURLDialog(): JSX.Element {
-  console.log(isBgDark());
   const [url, setUrl] = useState("");
   const [open, setOpen] = useState(false);
   useEffect(() => {

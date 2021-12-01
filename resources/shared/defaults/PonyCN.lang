@@ -1226,6 +1226,14 @@ AL 特殊能力
 
 高级和重置
 
+# Options.theme.zoom-factor.title
+
+缩放比例
+
+# Options.theme.zoom-factor.desc
+
+如果显示不正常，可于此修改 Alicorn 内容的缩放比例
+
 # Options.download.tls.keep-alive.title
 
 TLS 连接保持时间

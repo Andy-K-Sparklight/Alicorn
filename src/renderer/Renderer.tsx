@@ -1,5 +1,5 @@
 import { Box, createTheme, ThemeProvider, Typography } from "@mui/material";
-import { ipcRenderer, shell } from "electron";
+import { ipcRenderer, shell, webFrame } from "electron";
 import { emptyDir } from "fs-extra";
 import path from "path";
 import React from "react";
@@ -147,8 +147,9 @@ try {
       console.log("Reloading window...");
       ipcRenderer.send("reload");
     }
-    printScreen("Flushing theme colors...");
+    printScreen("Flushing theme colors and zoom factor...");
     flushColors();
+    webFrame.setZoomFactor(getNumber("theme.zoom-factor"));
     printScreen("Initializing command listener...");
     initCommandListener();
     printScreen("Rendering main application...");
@@ -449,9 +450,13 @@ const BACKGROUND_URLS: Record<string, string> = {
 function RendererBootstrap(): JSX.Element {
   let url =
     getString("theme.background.custom") || getString("theme.background");
-  url = BACKGROUND_URLS[url] || url;
-  if (path.isAbsolute(url)) {
-    url = "file://" + url;
+  if (url === "Disabled" || !url) {
+    url = "";
+  } else {
+    url = BACKGROUND_URLS[url] || url;
+    if (path.isAbsolute(url)) {
+      url = "file://" + url;
+    }
   }
   return (
     <Box
@@ -507,7 +512,7 @@ function RendererBootstrap(): JSX.Element {
               backgroundColor: "transparent",
               backgroundPosition: "center",
             }}
-          ></div>
+          />
         </ThemeProvider>
       </InstructionProvider>
     </Box>
