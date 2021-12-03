@@ -2140,15 +2140,15 @@ Mojang 版本
 
 # CrashReportDisplay.CopyLogs
 
-仅复制日志
+复制日志
 
 # CrashReportDisplay.Instruction
 
-你的游戏崩溃了！但是别慌，有我呢。我已经收集了必要信息，并为你准备了一个已经排版好的帖子。\n你可以<b>单击右侧的按钮将相关代码复制到剪贴板</b>，随后便可在 MCBBS 发帖求助。<br/>……或者也可以仅复制简短的日志，但会省略很多信息。
+@HTML你的游戏崩溃了！但是别慌，有我呢。我已经收集了必要信息，并为你准备了一个已经排版好的帖子。\n你可以<b>单击右侧的按钮将相关代码复制到剪贴板</b>，随后便可在 MCBBS 发帖求助。<br/>……或者也可以仅复制简短的日志，但会省略很多信息。
 
 # CrashReportDisplay.Copy
 
-生成发帖文本
+复制全部
 
 # Welcome.Suggest.Part1
 

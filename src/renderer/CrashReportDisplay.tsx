@@ -183,11 +183,15 @@ export function CrashReportDisplay(): JSX.Element {
 function BaseInfoDisplay(props: { info: MCFailureInfo }): JSX.Element {
   const classes = useAccStyles();
   return (
-    <Accordion>
-      <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
+    <Accordion color={"primary"} sx={{ backgroundColor: "primary.main" }}>
+      <AccordionSummary
+        className={classes.acc1}
+        color={"primary"}
+        expandIcon={<ExpandMore />}
+      >
         <Typography>{tr("CrashReportDisplay.BaseInfo")}</Typography>
       </AccordionSummary>
-      <AccordionDetails className={classes.acc1}>
+      <AccordionDetails color={"primary"} className={classes.acc1}>
         <Table className={classes.table}>
           <TableBody>
             <TableRow>
@@ -237,11 +241,15 @@ function BaseInfoDisplay(props: { info: MCFailureInfo }): JSX.Element {
 function LaunchTrackCount(props: { tracker: LaunchTracker }): JSX.Element {
   const classes = useAccStyles();
   return (
-    <Accordion className={classes.root}>
-      <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
+    <Accordion color={"primary"} sx={{ backgroundColor: "primary.main" }}>
+      <AccordionSummary
+        color={"primary"}
+        className={classes.acc1}
+        expandIcon={<ExpandMore />}
+      >
         <Typography>{tr("CrashReportDisplay.LaunchTrackCount")}</Typography>
       </AccordionSummary>
-      <AccordionDetails className={classes.acc1}>
+      <AccordionDetails color={"primary"} className={classes.acc1}>
         <Table className={classes.table}>
           <TableBody>
             <TableRow>
@@ -274,11 +282,15 @@ function LaunchTrackCount(props: { tracker: LaunchTracker }): JSX.Element {
 function ModList(props: { tracker: LaunchTracker }): JSX.Element {
   const classes = useAccStyles();
   return props.tracker.mods().total > 0 ? (
-    <Accordion>
-      <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
+    <Accordion color={"primary"} sx={{ backgroundColor: "primary.main" }}>
+      <AccordionSummary
+        color={"primary"}
+        className={classes.acc1}
+        expandIcon={<ExpandMore />}
+      >
         <Typography>{tr("CrashReportDisplay.Mods")}</Typography>
       </AccordionSummary>
-      <AccordionDetails className={classes.acc1}>
+      <AccordionDetails color={"primary"} className={classes.acc1}>
         <Table className={classes.table}>
           <TableBody>
             {props.tracker.mods().operateRecord.map((o) => {
@@ -319,13 +331,17 @@ function Analyze(props: {
     }
   }
   return (
-    <Accordion>
-      <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
+    <Accordion color={"primary"} sx={{ backgroundColor: "primary.main" }}>
+      <AccordionSummary
+        color={"primary"}
+        className={classes.acc1}
+        expandIcon={<ExpandMore />}
+      >
         <Badge badgeContent={total.toString()} color={"secondary"}>
           <Typography>{props.title}</Typography>
         </Badge>
       </AccordionSummary>
-      <AccordionDetails className={classes.acc1}>
+      <AccordionDetails color={"primary"} className={classes.acc1}>
         {props.isFull ? (
           ""
         ) : (
@@ -356,8 +372,13 @@ function Analyze(props: {
               }
               return (
                 <ListItem key={n}>
-                  <Accordion>
+                  <Accordion
+                    color={"primary"}
+                    sx={{ backgroundColor: "primary.dark" }}
+                  >
                     <AccordionSummary
+                      color={"primary"}
+                      sx={{ backgroundColor: "primary.dark" }}
                       className={classes.acc2}
                       expandIcon={<ExpandMore />}
                     >
@@ -377,8 +398,12 @@ function Analyze(props: {
                           }
                           return (
                             <ListItem key={r.by + r.reason}>
-                              <Accordion>
+                              <Accordion
+                                color={"primary"}
+                                sx={{ backgroundColor: "primary.main" }}
+                              >
                                 <AccordionSummary
+                                  color={"primary"}
                                   className={classes.acc1}
                                   expandIcon={
                                     r.suggestions !== undefined &&
@@ -398,7 +423,9 @@ function Analyze(props: {
                                       {r.suggestions.map((s) => {
                                         return (
                                           <ListItem key={s}>
-                                            <ListItemText>{s}</ListItemText>
+                                            <ListItemText color={"primary"}>
+                                              {s}
+                                            </ListItemText>
                                           </ListItem>
                                         );
                                       })}
@@ -443,8 +470,12 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
   }
   const oLogs = cLogs.slice(startIndex, endIndex + 1);
   return (
-    <Accordion>
-      <AccordionSummary className={classes.acc1} expandIcon={<ExpandMore />}>
+    <Accordion sx={{ backgroundColor: "primary.main" }} color={"primary"}>
+      <AccordionSummary
+        color={"primary"}
+        className={classes.acc1}
+        expandIcon={<ExpandMore />}
+      >
         <Typography>{props.title}</Typography>
       </AccordionSummary>
       <AccordionDetails className={classes.acc1}>
