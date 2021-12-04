@@ -544,7 +544,7 @@ export function InputItem(props: {
                 <Button
                   className={classex.inputDark}
                   type={"button"}
-                  variant={"outlined"}
+                  variant={"contained"}
                   sx={{
                     marginTop: "0.25em",
                   }}

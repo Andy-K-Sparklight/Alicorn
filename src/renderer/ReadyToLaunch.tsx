@@ -101,7 +101,7 @@ import {
   initLocalYggdrasilServer,
   ROOT_YG_URL,
   skinTypeFor,
-} from "../modules/localskin/LocalYggdrasilServer";
+} from "../modules/skin/LocalYggdrasilServer";
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
 import { loadProfile } from "../modules/profile/ProfileLoader";

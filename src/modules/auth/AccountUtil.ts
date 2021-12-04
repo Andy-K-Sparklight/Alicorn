@@ -10,7 +10,7 @@ import {
   saveData,
   saveDataSync,
 } from "../config/DataSupport";
-import { skinTypeFor } from "../localskin/LocalYggdrasilServer";
+import { skinTypeFor } from "../skin/LocalYggdrasilServer";
 import { decrypt2, decryptByMachine, encrypt2 } from "../security/Encrypt";
 import { Account } from "./Account";
 import { AuthlibAccount, getSkinByUUID } from "./AuthlibAccount";

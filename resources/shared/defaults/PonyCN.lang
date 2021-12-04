@@ -2917,11 +2917,47 @@ Sparklight 作品\n查找 Mod 并获取编号，用于 Pff 软件安装器安装
 
 # Utilities.CarouselBoutique.Description
 
-Sparklight 作品\n本地帐户服装和披风配送
+Sparklight 作品\n离线皮肤和 Mojang 服装配送（更换）服务
+
+# Utilities.CarouselBoutique.Tabs.LocalSkin
+
+离线皮肤设定
+
+# Utilities.CarouselBoutique.Tabs.Change
+
+服装配送服务
 
 # Utilities.CarouselBoutique.Hint
 
-@HTML欢迎！想在离线帐户使用皮肤，或是想要一件披风？简单到选择一张图片，就可以为你的本地帐户设置皮肤<b>和披风</b>！\n设置默认皮肤和披风将对任何本地帐户生效，但你可以为特定的玩家名设置特定的皮肤或披风。\n不过，<b>自定义皮肤和披风无法在 Yggdrasil 帐户和 Microsoft 帐户中使用！</b>如果你在游玩需要验证的服务器，请先想一下……\n下面会显示已经设置了皮肤的玩家。
+@HTML欢迎！想在离线帐户使用皮肤，或是想要一件披风？简单到选择一张图片，就可以为你的本地帐户设置皮肤<b>和披风</b>！\n设置默认皮肤和披风将对任何本地帐户生效，但你可以为特定的玩家名设置特定的皮肤或披风。\n不过，<b>自定义皮肤和披风无法在 Yggdrasil 帐户和 Microsoft 帐户中使用！</b>如果你在游玩需要验证的服务器，可以到右侧去使用<b>服装配送服务哦</b>～\n下面会显示已经设置了皮肤的玩家名。
+
+# Utilities.CarouselBoutique.HintChangeSkin
+
+@HTML欢迎！想要更换帐户皮肤？可以！不过只有一个小小的限制：我们目前只对 Microsoft 帐户服务。\n可以上传本地皮肤，也可以直接使用网络图片的 URL（无需下载！）。\n如果你还没有登录 Microsoft 帐户，或者已经太久没有使用它，请先去启动一次游戏。
+
+# Utilities.CarouselBoutique.SelectSkinFile
+
+选取文件
+
+# Utilities.CarouselBoutique.Uploading
+
+正在上传，请稍等一会儿～
+
+# Utilities.CarouselBoutique.TokenFailure
+
+帐户凭据无效，请尝试使用 Microsoft 帐户启动一次游戏再试。
+
+# Utilities.CarouselBoutique.UploadSkin
+
+上传/更换
+
+# Utilities.CarouselBoutique.UploadOK
+
+请求成功完成！
+
+# Utilities.CarouselBoutique.UploadFailed
+
+请求失败：{Reason}
 
 # Utilities.CarouselBoutique.RemoveSkin
 
