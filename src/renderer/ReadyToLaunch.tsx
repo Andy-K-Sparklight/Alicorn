@@ -33,7 +33,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import EventEmitter from "events";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { Account } from "../modules/auth/Account";
 import {
@@ -97,11 +97,6 @@ import {
 import { launchProfile, markSafeLaunch } from "../modules/launch/LaunchPad";
 import { stopMinecraft } from "../modules/launch/MinecraftBootstrap";
 import { LaunchTracker } from "../modules/launch/Tracker";
-import {
-  initLocalYggdrasilServer,
-  ROOT_YG_URL,
-  skinTypeFor,
-} from "../modules/skin/LocalYggdrasilServer";
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
 import { loadProfile } from "../modules/profile/ProfileLoader";
@@ -114,6 +109,11 @@ import {
   waitProfileReady,
 } from "../modules/readyboom/PrepareProfile";
 import { getMachineUniqueID } from "../modules/security/Unique";
+import {
+  initLocalYggdrasilServer,
+  ROOT_YG_URL,
+  skinTypeFor,
+} from "../modules/skin/LocalYggdrasilServer";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { ShiftEle } from "./Instruction";
 import { submitError, submitSucc, submitWarn } from "./Message";
@@ -907,21 +907,23 @@ function AccountChoose(props: {
   );
   const [bufPName, setBufPName] = useState(pName);
   const mounted = useRef<boolean>(false);
-
-  const accountMap = useRef<Record<string, Account>>({});
-  const accountMapRev = useRef<Map<Account, string>>(new Map());
+  const [accsMajor, accsRev] = useMemo(() => {
+    const accountMap: Record<string, Account> = {};
+    const accountMapRev: Map<Account, string> = new Map();
+    for (const a of props.allAccounts) {
+      const i = a.getAccountIdentifier();
+      accountMap[i] = a;
+      accountMapRev.set(a, i);
+    }
+    return [accountMap, accountMapRev];
+  }, [props.allAccounts]);
+  const accountMap = useRef<Record<string, Account>>(accsMajor);
+  const accountMapRev = useRef<Map<Account, string>>(accsRev);
   const [msLogout, setMSLogout] = useState<
     | "ReadyToLaunch.MSLogout"
     | "ReadyToLaunch.MSLogoutRunning"
     | "ReadyToLaunch.MSLogoutDone"
   >("ReadyToLaunch.MSLogout");
-  useEffect(() => {
-    for (const a of props.allAccounts) {
-      const i = a.getAccountIdentifier();
-      accountMap.current[i] = a;
-      accountMapRev.current.set(a, i);
-    }
-  }, [props.allAccounts]);
   const la =
     localStorage.getItem(LAST_YG_ACCOUNT_NAME + props.profileHash) || "";
   let ll = "";
@@ -1129,11 +1131,13 @@ function AccountChoose(props: {
                   fullWidth
                   labelId={"Select-Account"}
                   onChange={(e) => {
-                    setAccount(String(e.target.value));
-                    localStorage.setItem(
-                      LAST_YG_ACCOUNT_NAME + props.profileHash,
-                      String(e.target.value)
-                    );
+                    if (e.target.value) {
+                      setAccount(String(e.target.value));
+                      localStorage.setItem(
+                        LAST_YG_ACCOUNT_NAME + props.profileHash,
+                        String(e.target.value)
+                      );
+                    }
                   }}
                   value={sAccount || Object.keys(accountMap.current).shift()}
                 >

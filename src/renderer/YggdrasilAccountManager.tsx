@@ -150,13 +150,13 @@ export function YggdrasilAccountManager(): JSX.Element {
               key={a.getAccountIdentifier()}
               account={a}
               updateAccount={(n) => {
-                const aCopy = new Set(accounts.keys());
+                const aCopy = new Set(accounts);
                 aCopy.delete(a);
                 aCopy.add(n);
                 setAccounts(aCopy);
               }}
               deleteAccount={(c) => {
-                const aCopy = new Set(accounts.keys());
+                const aCopy = new Set(accounts);
                 aCopy.delete(c);
                 setAccounts(aCopy);
               }}
@@ -244,52 +244,36 @@ export function SingleAccountDisplay(props: {
             ) : (
               ""
             )}
-            <Tooltip
-              title={
-                <Typography className={"smtxt"}>
-                  {tr("AccountManager.Remove")}
-                </Typography>
-              }
+            <IconButton
+              disabled={isOperating}
+              color={"inherit"}
+              className={classes.operateButton}
+              onClick={() => {
+                setIsAsking(true);
+              }}
             >
-              <IconButton
-                disabled={isOperating}
-                color={"inherit"}
-                className={classes.operateButton}
-                onClick={() => {
-                  setIsAsking(true);
-                }}
-              >
-                <DeleteForever />
-              </IconButton>
-            </Tooltip>
-            <Tooltip
-              title={
-                <Typography className={"smtxt"}>
-                  {tr("AccountManager.Refresh")}
-                </Typography>
-              }
+              <DeleteForever />
+            </IconButton>
+            <IconButton
+              disabled={isOperating}
+              color={"inherit"}
+              className={classes.operateButton}
+              onClick={() => {
+                setOperating(true);
+                void (async () => {
+                  const status = await usingAccount.current.flushToken();
+                  if (status) {
+                    await saveAccount(usingAccount.current);
+                    setOperating(false);
+                  } else {
+                    setMjLWOpen(true);
+                  }
+                  props.updateAccount(props.account, usingAccount.current);
+                })();
+              }}
             >
-              <IconButton
-                disabled={isOperating}
-                color={"inherit"}
-                className={classes.operateButton}
-                onClick={() => {
-                  setOperating(true);
-                  void (async () => {
-                    const status = await usingAccount.current.flushToken();
-                    if (status) {
-                      await saveAccount(usingAccount.current);
-                      setOperating(false);
-                    } else {
-                      setMjLWOpen(true);
-                    }
-                    props.updateAccount(props.account, usingAccount.current);
-                  })();
-                }}
-              >
-                <Refresh />
-              </IconButton>
-            </Tooltip>
+              <Refresh />
+            </IconButton>
             <br />
           </Box>
           <Typography
