@@ -564,7 +564,7 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 # ReadyToLaunch.HoofoffCode
 
-你的友谊接力代码是：{Code}。请记住它，它不会再出现了！
+@HTML你的友谊接力代码是：<b>{Code}</b>。请记住它，它不会再出现了！
 
 # ReadyToLaunch.RequirePremium
 
@@ -1152,11 +1152,11 @@ Minecraft 版本号
 
 # JavaSelector.GetNew
 
-下载 AdoptOpenJDK JRE 16（适用于 Minecraft 17 及更新版本）
+下载 AdoptOpenJDK JRE 17（Minecraft 18 及以上必须使用）
 
 # JavaSelector.GetOld
 
-下载 AdoptOpenJDK JRE V8（适用于 Minecraft 16 及更旧版本）
+下载 AdoptOpenJDK JRE V8（Minecraft 12 及以下必须使用）
 
 # JavaSelector.Warn32
 
@@ -2209,7 +2209,7 @@ Mojang 版本
 设置 ASC 缓存路径后，才能创建和使用 ASC 容器哦！
 ASC 是 Alicorn Shared Container 的缩写！
 「容器」是传统启动器所谓的 .minecraft 文件夹，但 Alicorn 的容器更加聪明些～
-80% 的崩溃来源于 Mod，当然，如果是其它启动器，可能是 50%，考虑到 Java 16……
+80% 的崩溃来源于 Mod，当然，如果是其它启动器，可能是 50%，考虑到 Java 17……
 求助而不携带崩溃报告，无异于闭眼开车！
 生成的 BBCode 代码已经为您进行了排版，可以直接在 MCBBS 使用！（或者其它 BBCode 兼容编辑器）
 Alicorn 随时都可能有更新！请记得常回来看看！
@@ -2499,6 +2499,10 @@ Alicorn 更新服务
 # Utilities.NetCheck.SiteDesc.AlicornUpdate
 
 Alicorn 使用该服务进行更新，如果它不能使用，你可能需要联系我们。
+
+# Utilities.CutieConnect.EdgeFailure
+
+启动组网支援库失败：{Reason}
 
 # Utilities.CutieConnect.InstallingTAP
 
@@ -3105,11 +3109,11 @@ END
 
 # Instruction.JavaSelector.3
 
-注意！Minecraft 1.17 及之后的版本都需要 <Java 16> 才能运行，早期的某些版本却只能使用 <Java 8>……
+Minecraft 1.18 及更高版本需要 <Java 17> 才能运行，1.17 需要 <Java 16>，早期的版本却只能使用 <Java 8>……真是麻烦，不是吗？
 
 # Instruction.JavaSelector.4
 
-……所以如果你需要，可以使用下面的按钮 <安装合适的 Java>。Alicorn 将自动识别多个 Java，<不会冲突>。@@@JavaSelectorInstall
+……所以我才会在这里。可以使用下面的按钮 <安装合适的 Java>。Alicorn 将自动识别多个 Java，<不会冲突>。@@@JavaSelectorInstall
 
 # Instruction.JavaSelector.5
 

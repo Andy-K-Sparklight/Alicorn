@@ -1,11 +1,9 @@
 import childProcess from "child_process";
-import { remove } from "fs-extra";
 import os from "os";
 import sudo from "sudo-prompt";
-import { submitInfo } from "../../renderer/Message";
+import { submitInfo, submitWarn } from "../../renderer/Message";
 import { tr } from "../../renderer/Translator";
 import { uniqueHash } from "../commons/BasicHash";
-import { isFileExist } from "../commons/FileUtil";
 import { getActualDataPath, saveDefaultDataAs } from "../config/DataSupport";
 /*
 CLAIM FOR EXTERNAL RESOURCE
@@ -42,6 +40,97 @@ const TAP_NAME = "tap.exe";
 const TAP_ORIGIN = "tap-win.ald";
 const TAP_INSTALLED_BIT = "CutieConnet.TAPInstalled";
 
+const ELEVATOR = "elevate.ald";
+const ELEVATOR_TARGET = "elevate.exe";
+
+export async function prepareElevate(): Promise<void> {
+  await saveDefaultDataAs(ELEVATOR, ELEVATOR_TARGET);
+}
+
+export function waitWindowsEdgeBoot(
+  community: string,
+  psw: string,
+  ip: string,
+  supernode: string
+): Promise<void> {
+  const oArgs = [
+    "-c",
+    community === INTERNET ? INTERNET : uniqueHash(community),
+    "-l",
+    supernode,
+  ]
+    .concat(ip.length > 0 ? ["-a", ip] : [])
+    .concat(
+      psw.length > 0 && community !== INTERNET ? ["-k", uniqueHash(psw)] : []
+    );
+  return new Promise<void>((res, rej) => {
+    void (async () => {
+      await prepareElevate();
+      childProcess.execFile(
+        getActualDataPath(ELEVATOR_TARGET),
+        ["-k", "edge.exe", ...oArgs],
+        {
+          cwd: getActualDataPath("."),
+        },
+        (e) => {
+          if (e) {
+            rej(e);
+          } else {
+            res();
+          }
+        }
+      );
+    })();
+  });
+}
+
+export function waitUNIXEdgeBoot(
+  community: string,
+  psw: string,
+  ip: string,
+  supernode: string
+): Promise<void> {
+  const oArgs = [
+    "-c",
+    community === INTERNET ? INTERNET : uniqueHash(community),
+    "-l",
+    supernode,
+  ]
+    .concat(ip.length > 0 ? ["-a", ip] : [])
+    .concat(
+      psw.length > 0 && community !== INTERNET ? ["-k", uniqueHash(psw)] : []
+    );
+  return new Promise<void>((res, rej) => {
+    let resolved = false;
+    const p = childProcess.spawn(
+      "pkexec",
+      [getActualDataPath(getEdgeTargetName()), ...oArgs],
+      {
+        cwd: getActualDataPath("."),
+        detached: true,
+      }
+    );
+    p.once("error", (e) => {
+      if (!resolved) {
+        rej(e);
+      }
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fun = (d: any) => {
+      if (!resolved) {
+        if (d.toString().toLowerCase().includes("error")) {
+          rej("Elevate cancelled by user");
+        }
+        resolved = true;
+        res();
+      }
+    };
+    p.stdout.once("data", fun);
+    p.stderr.once("data", fun);
+  });
+}
+
 export async function installTAPDeviceWin(): Promise<void> {
   if (os.platform() !== "win32") {
     return;
@@ -64,8 +153,7 @@ export function waitTAPInstaller(t: string): Promise<void> {
   });
 }
 
-const EDGE_LOCK_FILE = "proc.lock";
-export function generateEdgeArgs(
+export function generateEdgeArgsUnix(
   community: string,
   psw: string,
   ip: string,
@@ -82,27 +170,7 @@ export function generateEdgeArgs(
       psw.length > 0 && community !== INTERNET ? ["-k", uniqueHash(psw)] : []
     ) // Beat command inject!
     .join(" ");
-  return os.platform() === "win32"
-    ? `echo 0 >> "${getActualDataPath(
-        EDGE_LOCK_FILE
-      )}" && start "CutieConnect N2N Edge" "${getActualDataPath(
-        getEdgeTargetName()
-      )}" ${o}`
-    : `sh -c "echo 0 >> '${getActualDataPath(
-        EDGE_LOCK_FILE
-      )}' && '${getActualDataPath(getEdgeTargetName())}' -f ${o}"`;
-}
-
-function queryFile(f: string): Promise<void> {
-  return new Promise<void>((res) => {
-    const i = setInterval(async () => {
-      if (await isFileExist(f)) {
-        clearInterval(i);
-        res();
-        await remove(f);
-      }
-    }, 500);
-  });
+  return `sh -c "'${getActualDataPath(getEdgeTargetName())}' ${o} &"`;
 }
 
 export async function runEdge(
@@ -124,13 +192,15 @@ export async function runEdge(
     await installTAPDeviceWin();
     localStorage.setItem(TAP_INSTALLED_BIT, "1");
   }
-  const cmd = generateEdgeArgs(community, psw, ip, supernode);
-  console.log("Starting edge with command line: " + cmd);
-
-  sudo.exec(cmd, {
-    name: "Alicorn Sudo Prompt Actions",
-  });
-  await queryFile(getActualDataPath(EDGE_LOCK_FILE));
+  try {
+    if (os.platform() === "win32") {
+      await waitWindowsEdgeBoot(community, psw, ip, supernode);
+    } else {
+      await waitUNIXEdgeBoot(community, psw, ip, supernode);
+    }
+  } catch (e) {
+    submitWarn(tr("Utilities.CutieConnect.EdgeFailure", `Reason=${e}`));
+  }
 }
 
 export function killEdge(): Promise<void> {

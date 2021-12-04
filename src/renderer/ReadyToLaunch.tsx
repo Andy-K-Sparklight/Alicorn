@@ -1329,25 +1329,32 @@ function getJavaAndCheckAvailable(hash: string, allowDefault = false): string {
 }
 
 async function trySelectProperJava(id: string): Promise<string> {
-  console.log("Selecting proper java for " + id);
   let b: string | undefined;
   if (LEGACY_VERSIONS.test(id)) {
     b = await getLegacyJDK();
   } else {
-    b = await getNewJDK();
+    if (MODERN_VERSIONS.test(id)) {
+      b = await getNewJDK(16);
+    } else {
+      b = await getNewJDK(17);
+    }
   }
   console.log("Configured java: " + b);
   return b || getDefaultJavaHome();
 }
 
 const LEGACY_VERSIONS = /^1\.([0-9]|1[0-2])([-.a-z].*?)?$/i;
-const MODERN_VERSIONS = /^1\.(1[7-9]|[2-9][0-9])(\.)?[0-9]*?/i;
+const MODERN_VERSIONS = /^1\.(17|[2-9][0-9])(\.)?[0-9]*?/i;
+const HIGH_VERSIONS = /^1\.(1[8-9]|[2-9][0-9])(\.)?[0-9]*?/i;
 
 function checkJMCompatibility(mv: string, jv: number): "OLD" | "NEW" | "OK" {
   if (LEGACY_VERSIONS.test(mv) && jv > 8) {
     return "NEW";
   }
   if (MODERN_VERSIONS.test(mv) && jv < 16) {
+    return "OLD";
+  }
+  if (HIGH_VERSIONS.test(mv) && jv < 17) {
     return "OLD";
   }
   return "OK";
@@ -1405,9 +1412,13 @@ function OpenWorldDialog(props: {
           {tr("ReadyToLaunch.GenerateLinkDesc")}
         </DialogContentText>
         {code ? (
-          <DialogContentText sx={{ color: "primary.main" }}>
-            {tr("ReadyToLaunch.HoofoffCode", `Code=${code}`)}
-          </DialogContentText>
+          <>
+            <br />
+            <DialogContentText sx={{ color: "primary.main" }}>
+              {tr("ReadyToLaunch.HoofoffCode", `Code=${code}`)}
+            </DialogContentText>
+            <br />
+          </>
         ) : (
           ""
         )}

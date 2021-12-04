@@ -51,7 +51,6 @@ export const CANNOT_LOAD_INFO: JavaInfo = {
 
 export function JavaSelector(): JSX.Element {
   const classes = useFormStyles();
-  const fullWidthClasses = fullWidth();
   const [isJavaInfoLoaded, setLoaded] = useState<boolean>(true);
   const mounted = useRef<boolean>(false);
   const [javaList, setJavaList] = useState<string[]>(getAllJava());
