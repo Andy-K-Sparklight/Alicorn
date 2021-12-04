@@ -1026,14 +1026,6 @@ Minecraft 版本号
 
 成功安装了核心
 
-# AccountManager.Remove
-
-移除帐户
-
-# AccountManager.Refresh
-
-刷新令牌
-
 # AccountManager.EnterPassword
 
 输入密码
