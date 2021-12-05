@@ -15,7 +15,7 @@ import {
   getNumber,
   getString,
   loadConfig,
-  saveDefaultConfig
+  saveDefaultConfig,
 } from "../modules/config/ConfigSupport";
 import { getActualDataPath } from "../modules/config/DataSupport";
 import { loadGDT } from "../modules/container/ContainerUtil";
@@ -166,7 +166,8 @@ try {
     bindSuperCowPower();
     console.log(
       "Render complete, time elapsed: " +
-        (new Date().getTime() - t0.getTime()) / 1000 +"s."
+        (new Date().getTime() - t0.getTime()) / 1000 +
+        "s."
     );
     console.log("Initializing modules...");
     const t1 = new Date();
@@ -344,7 +345,7 @@ function flushColors(): void {
   e.innerText =
     `html {background-color:${
       getString("theme.secondary.light") || "#" + getTheme()[3]
-    }; font-family:${tr("Font") + FONT_FAMILY};} a {color:${
+    }; font-family:${FONT_FAMILY};} a {color:${
       getString("theme.primary.main") || "#" + getTheme()[0]
     } !important;} ` +
     (isBgDark()
