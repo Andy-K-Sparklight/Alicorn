@@ -81,7 +81,7 @@ async function whenAppReady() {
   registerBackgroundListeners();
 
   mainWindow.once("ready-to-show", async () => {
-    console.log("Creating window!");
+    console.log("Opening window!");
     mainWindow?.show();
     applyDoHSettings();
     console.log("Setting up proxy!");

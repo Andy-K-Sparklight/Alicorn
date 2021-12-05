@@ -15,7 +15,7 @@ import {
   getNumber,
   getString,
   loadConfig,
-  saveDefaultConfig,
+  saveDefaultConfig
 } from "../modules/config/ConfigSupport";
 import { getActualDataPath } from "../modules/config/DataSupport";
 import { loadGDT } from "../modules/container/ContainerUtil";
@@ -49,6 +49,7 @@ import { initTranslator, tr } from "./Translator";
 
 try {
   console.log("Renderer first log.");
+  const t0 = new Date();
   printScreen("Setting up error pop system...");
   window.addEventListener("unhandledrejection", (e) => {
     ipcRenderer.send("SOS", e.reason);
@@ -150,8 +151,6 @@ try {
     printScreen("Flushing theme colors and zoom factor...");
     flushColors();
     webFrame.setZoomFactor(getNumber("theme.zoom-factor"));
-    printScreen("Initializing command listener...");
-    initCommandListener();
     printScreen("Rendering main application...");
     const e3 = document.getElementById("boot_3");
     if (e3) {
@@ -165,6 +164,10 @@ try {
     }
     console.log("This Alicorn has super cow powers.");
     bindSuperCowPower();
+    console.log(
+      "Render complete, time elapsed: " +
+        (new Date().getTime() - t0.getTime()) / 1000 +"s."
+    );
     console.log("Initializing modules...");
     const t1 = new Date();
     await initWorker();
@@ -175,6 +178,7 @@ try {
     // Essential works and light works
     await Promise.allSettled([initEncrypt()]);
     initDownloadWrapper();
+    initCommandListener();
     initStatistics();
     // Normal works
     await Promise.allSettled([
