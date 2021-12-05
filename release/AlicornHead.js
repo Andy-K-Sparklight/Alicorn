@@ -1,0 +1,1 @@
+(()=>{console.log("=== ALICORN ===");let e=null;Object.defineProperty(window,"al_undici",{get:()=>e||(e=require("./undici"))})})();
