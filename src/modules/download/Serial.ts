@@ -28,7 +28,8 @@ export class Serial extends AbstractDownloader {
 
   downloadFile(
     meta: DownloadMeta,
-    noTimeout?: boolean
+    noTimeout?: boolean,
+    fetchRequire = false
   ): Promise<DownloadStatus> {
     return new Promise<DownloadStatus>((resolve, reject) => {
       (async () => {
@@ -45,6 +46,7 @@ export class Serial extends AbstractDownloader {
             noTimeout ? 0 : getConfigOptn("timeout", 3000)
           );
           if (
+            fetchRequire ||
             getString("download.lib").toLowerCase() === "fetch" ||
             !["direct://", ""].includes(
               getString("download.global-proxy").trim()
