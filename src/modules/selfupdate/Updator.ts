@@ -208,7 +208,7 @@ export async function doUpdate(
       const meta = new DownloadMeta(baseUrl + v, target, "");
       o.push(
         (async () => {
-          const s = await Serial.getInstance().downloadFile(meta, true);
+          const s = await Serial.getInstance().downloadFile(meta, true, true);
           if (s !== 1) {
             throw "Failed to download: " + v;
           }
