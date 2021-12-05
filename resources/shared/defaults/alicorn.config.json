@@ -57,11 +57,13 @@
   "theme": "Default",
   "theme.background": "ACG",
   "theme.background.opacity": 20,
+  "theme.background.custom": "",
   "auto-launch": false,
   "features.skin-view-3d": true,
   "alicorn-ping": true,
   "readyboom": true,
   "readyboom.cores": 3,
   "system.ws-operation": false,
-  "features.notification": true
+  "features.notification": true,
+  "theme.zoom-factor": 1.0
 }

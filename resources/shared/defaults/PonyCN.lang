@@ -266,6 +266,38 @@ Pff 软件安装器
 
 查看或安装 Mod
 
+# ReadyToLaunch.IsLoginOK
+
+你是否遇到了问题？
+
+# ReadyToLaunch.LoginInstruction
+
+你的登录过程用时过长，你遇到什么问题了吗？\n\n如果没有，你可以单击「没有问题，让我继续」。\n\n如果你的帐户开启了二步验证或者一些特殊服务，则可能登录失败。\n你可以单击「帮助我登录！」来通过其它的方式登录 Microsoft 帐号。
+
+# ReadyToLaunch.ContinueLogin
+
+没有问题，让我继续
+
+# ReadyToLaunch.HelpMeLogin
+
+帮助我登录！
+
+# ReadyToLaunch.LoginStepTitle
+
+继续完成你的登录
+
+# ReadyToLaunch.LoginStep
+
+我们已经在你的浏览器中打开了登录链接，请：\n\n1. 在浏览器中完成登录，然后……\n2. 待登录完成，页面显示空白时，复制地址栏的 URL，并粘贴到这里。
+
+# ReadyToLaunch.AcceptLogin
+
+好
+
+# ReadyToLaunch.URLEnter
+
+输入登录完成后浏览器地址栏的 URL……
+
 # ReadyToLaunch.NoJava
 
 没有设置 Java 运行时（JRE）！游戏将无法启动！
@@ -532,7 +564,7 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 # ReadyToLaunch.HoofoffCode
 
-你的友谊接力代码是：{Code}。请记住它，它不会再出现了！
+@HTML你的友谊接力代码是：<b>{Code}</b>。请记住它，它不会再出现了！
 
 # ReadyToLaunch.RequirePremium
 
@@ -994,14 +1026,6 @@ Minecraft 版本号
 
 成功安装了核心
 
-# AccountManager.Remove
-
-移除帐户
-
-# AccountManager.Refresh
-
-刷新令牌
-
 # AccountManager.EnterPassword
 
 输入密码
@@ -1128,11 +1152,11 @@ Minecraft 版本号
 
 # JavaSelector.GetNew
 
-下载 AdoptOpenJDK JRE 16（适用于 Minecraft 17 及更新版本）
+下载 AdoptOpenJDK JRE 17（Minecraft 18 及以上必须使用）
 
 # JavaSelector.GetOld
 
-下载 AdoptOpenJDK JRE V8（适用于 Minecraft 16 及更旧版本）
+下载 AdoptOpenJDK JRE V8（Minecraft 12 及以下必须使用）
 
 # JavaSelector.Warn32
 
@@ -1148,7 +1172,7 @@ Minecraft 在 Client Java VM 上可能无法发挥出最好性能，建议安装
 
 # Options.Select
 
-选择目录
+选择目录/文件
 
 # Options.AutoSave
 
@@ -1193,6 +1217,14 @@ AL 特殊能力
 # Options.Page.Advanced
 
 高级和重置
+
+# Options.theme.zoom-factor.title
+
+缩放比例
+
+# Options.theme.zoom-factor.desc
+
+如果显示不正常，可于此修改 Alicorn 内容的缩放比例
 
 # Options.download.tls.keep-alive.title
 
@@ -1294,6 +1326,14 @@ Bing 每日背景图
 
 关闭（无）
 
+# Options.theme.background.custom.title
+
+自定义背景图片 ^
+
+# Options.theme.background.custom.desc
+
+选择一张你喜欢的图片，或者输入一个 URL 来显示吧！
+
 # Options.theme.background.opacity.title
 
 背景颜色透明度 ^
@@ -1325,6 +1365,10 @@ Bing 每日背景图
 # Options.theme.Cherry
 
 樱花粉
+
+# Options.theme.SheepGreen
+
+绵羊绿
 
 # Options.theme.Azure
 
@@ -2092,15 +2136,15 @@ Mojang 版本
 
 # CrashReportDisplay.CopyLogs
 
-仅复制日志
+复制日志
 
 # CrashReportDisplay.Instruction
 
-你的游戏崩溃了！但是别慌，有我呢。我已经收集了必要信息，并为你准备了一个已经排版好的帖子。\n你可以<b>单击右侧的按钮将相关代码复制到剪贴板</b>，随后便可在 MCBBS 发帖求助。<br/>……或者也可以仅复制简短的日志，但会省略很多信息。
+@HTML你的游戏崩溃了！但是别慌，有我呢。我已经收集了必要信息，并为你准备了一个已经排版好的帖子。\n你可以<b>单击右侧的按钮将相关代码复制到剪贴板</b>，随后便可在 MCBBS 发帖求助。<br/>……或者也可以仅复制简短的日志，但会省略很多信息。
 
 # CrashReportDisplay.Copy
 
-生成发帖文本
+复制全部
 
 # Welcome.Suggest.Part1
 
@@ -2169,7 +2213,7 @@ Mojang 版本
 设置 ASC 缓存路径后，才能创建和使用 ASC 容器哦！
 ASC 是 Alicorn Shared Container 的缩写！
 「容器」是传统启动器所谓的 .minecraft 文件夹，但 Alicorn 的容器更加聪明些～
-80% 的崩溃来源于 Mod，当然，如果是其它启动器，可能是 50%，考虑到 Java 16……
+80% 的崩溃来源于 Mod，当然，如果是其它启动器，可能是 50%，考虑到 Java 17……
 求助而不携带崩溃报告，无异于闭眼开车！
 生成的 BBCode 代码已经为您进行了排版，可以直接在 MCBBS 使用！（或者其它 BBCode 兼容编辑器）
 Alicorn 随时都可能有更新！请记得常回来看看！
@@ -2459,6 +2503,10 @@ Alicorn 更新服务
 # Utilities.NetCheck.SiteDesc.AlicornUpdate
 
 Alicorn 使用该服务进行更新，如果它不能使用，你可能需要联系我们。
+
+# Utilities.CutieConnect.EdgeFailure
+
+启动组网支援库失败：{Reason}
 
 # Utilities.CutieConnect.InstallingTAP
 
@@ -2869,11 +2917,47 @@ Sparklight 作品\n查找 Mod 并获取编号，用于 Pff 软件安装器安装
 
 # Utilities.CarouselBoutique.Description
 
-Sparklight 作品\n本地帐户服装和披风配送
+Sparklight 作品\n离线皮肤和 Mojang 服装配送（更换）服务
+
+# Utilities.CarouselBoutique.Tabs.LocalSkin
+
+离线皮肤设定
+
+# Utilities.CarouselBoutique.Tabs.Change
+
+服装配送服务
 
 # Utilities.CarouselBoutique.Hint
 
-@HTML欢迎！想在离线帐户使用皮肤，或是想要一件披风？简单到选择一张图片，就可以为你的本地帐户设置皮肤<b>和披风</b>！\n设置默认皮肤和披风将对任何本地帐户生效，但你可以为特定的玩家名设置特定的皮肤或披风。\n不过，<b>自定义皮肤和披风无法在 Yggdrasil 帐户和 Microsoft 帐户中使用！</b>如果你在游玩需要验证的服务器，请先想一下……\n下面会显示已经设置了皮肤的玩家。
+@HTML欢迎！想在离线帐户使用皮肤，或是想要一件披风？简单到选择一张图片，就可以为你的本地帐户设置皮肤<b>和披风</b>！\n设置默认皮肤和披风将对任何本地帐户生效，但你可以为特定的玩家名设置特定的皮肤或披风。\n不过，<b>自定义皮肤和披风无法在 Yggdrasil 帐户和 Microsoft 帐户中使用！</b>如果你在游玩需要验证的服务器，可以到右侧去使用<b>服装配送服务哦</b>～\n下面会显示已经设置了皮肤的玩家名。
+
+# Utilities.CarouselBoutique.HintChangeSkin
+
+@HTML欢迎！想要更换帐户皮肤？可以！不过只有一个小小的限制：我们目前只对 Microsoft 帐户服务。\n可以上传本地皮肤，也可以直接使用网络图片的 URL（无需下载！）。\n如果你还没有登录 Microsoft 帐户，或者已经太久没有使用它，请先去启动一次游戏。
+
+# Utilities.CarouselBoutique.SelectSkinFile
+
+选取文件
+
+# Utilities.CarouselBoutique.Uploading
+
+正在上传，请稍等一会儿～
+
+# Utilities.CarouselBoutique.TokenFailure
+
+帐户凭据无效，请尝试使用 Microsoft 帐户启动一次游戏再试。
+
+# Utilities.CarouselBoutique.UploadSkin
+
+上传/更换
+
+# Utilities.CarouselBoutique.UploadOK
+
+请求成功完成！
+
+# Utilities.CarouselBoutique.UploadFailed
+
+请求失败：{Reason}
 
 # Utilities.CarouselBoutique.RemoveSkin
 
@@ -3029,11 +3113,11 @@ END
 
 # Instruction.JavaSelector.3
 
-注意！Minecraft 1.17 及之后的版本都需要 <Java 16> 才能运行，早期的某些版本却只能使用 <Java 8>……
+Minecraft 1.18 及更高版本需要 <Java 17> 才能运行，1.17 需要 <Java 16>，早期的版本却只能使用 <Java 8>……真是麻烦，不是吗？
 
 # Instruction.JavaSelector.4
 
-……所以如果你需要，可以使用下面的按钮 <安装合适的 Java>。Alicorn 将自动识别多个 Java，<不会冲突>。@@@JavaSelectorInstall
+……所以我才会在这里。可以使用下面的按钮 <安装合适的 Java>。Alicorn 将自动识别多个 Java，<不会冲突>。@@@JavaSelectorInstall
 
 # Instruction.JavaSelector.5
 

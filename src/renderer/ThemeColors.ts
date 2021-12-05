@@ -9,6 +9,7 @@ export const AL_THEMES: Record<string, [string, string, string, string]> = {
   Azure: ["104ebb", "ffd700", "072150", "bfefff"],
   Winter: ["7898fd", "a4c2ff", "55abfc", "e7f0ff"],
   "66CCFF": ["3681c6", "5cd9ff", "007faf", "f0f0ff"],
+  SheepGreen: ["45bf4d", "6bd6dd", "009dac", "e9faea"],
   Classic: ["049ae5", "64b5f6", "ff80ab", "e1f5fe"],
   NightLightDark: ["808080", "202020", "888888", "000000"],
   OldPink: ["37474f", "607d8b", "f06292", "eceff1"],

@@ -1,6 +1,10 @@
-import { ipcRenderer } from "electron";
+import { ipcRenderer, webFrame } from "electron";
 import { throttle } from "throttle-debounce";
-import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
+import {
+  getBoolean,
+  getNumber,
+  saveAndReloadMain,
+} from "../modules/config/ConfigSupport";
 import { loadMirror } from "../modules/download/Mirror";
 import { waitUpdateFinished } from "../modules/selfupdate/Updator";
 import { prepareToQuit, remoteHideWindow } from "./App";

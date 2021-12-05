@@ -32,9 +32,8 @@ import {
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { ipcRenderer } from "electron";
 import EventEmitter from "events";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { Account } from "../modules/auth/Account";
 import {
@@ -98,11 +97,6 @@ import {
 import { launchProfile, markSafeLaunch } from "../modules/launch/LaunchPad";
 import { stopMinecraft } from "../modules/launch/MinecraftBootstrap";
 import { LaunchTracker } from "../modules/launch/Tracker";
-import {
-  initLocalYggdrasilServer,
-  ROOT_YG_URL,
-  skinTypeFor,
-} from "../modules/localskin/LocalYggdrasilServer";
 import { prepareModsCheckFor, restoreMods } from "../modules/modx/DynModLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
 import { loadProfile } from "../modules/profile/ProfileLoader";
@@ -115,6 +109,11 @@ import {
   waitProfileReady,
 } from "../modules/readyboom/PrepareProfile";
 import { getMachineUniqueID } from "../modules/security/Unique";
+import {
+  initLocalYggdrasilServer,
+  ROOT_YG_URL,
+  skinTypeFor,
+} from "../modules/skin/LocalYggdrasilServer";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { ShiftEle } from "./Instruction";
 import { submitError, submitSucc, submitWarn } from "./Message";
@@ -231,6 +230,7 @@ export function ReadyToLaunch(): JSX.Element {
           />
         )}
       </ThemeProvider>
+      <AskURLDialog />
     </Container>
   );
 }
@@ -907,21 +907,23 @@ function AccountChoose(props: {
   );
   const [bufPName, setBufPName] = useState(pName);
   const mounted = useRef<boolean>(false);
-
-  const accountMap = useRef<Record<string, Account>>({});
-  const accountMapRev = useRef<Map<Account, string>>(new Map());
+  const [accsMajor, accsRev] = useMemo(() => {
+    const accountMap: Record<string, Account> = {};
+    const accountMapRev: Map<Account, string> = new Map();
+    for (const a of props.allAccounts) {
+      const i = a.getAccountIdentifier();
+      accountMap[i] = a;
+      accountMapRev.set(a, i);
+    }
+    return [accountMap, accountMapRev];
+  }, [props.allAccounts]);
+  const accountMap = useRef<Record<string, Account>>(accsMajor);
+  const accountMapRev = useRef<Map<Account, string>>(accsRev);
   const [msLogout, setMSLogout] = useState<
     | "ReadyToLaunch.MSLogout"
     | "ReadyToLaunch.MSLogoutRunning"
     | "ReadyToLaunch.MSLogoutDone"
   >("ReadyToLaunch.MSLogout");
-  useEffect(() => {
-    for (const a of props.allAccounts) {
-      const i = a.getAccountIdentifier();
-      accountMap.current[i] = a;
-      accountMapRev.current.set(a, i);
-    }
-  }, [props.allAccounts]);
   const la =
     localStorage.getItem(LAST_YG_ACCOUNT_NAME + props.profileHash) || "";
   let ll = "";
@@ -1089,13 +1091,13 @@ function AccountChoose(props: {
                 className={btnClasses.btn}
                 disabled={msLogout === "ReadyToLaunch.MSLogoutRunning"}
                 onClick={() => {
-                  void (async () => {
+                  void (() => {
                     // @ts-ignore
                     window[SESSION_ACCESSDATA_CACHED_KEY] = false;
                     setMSLogout("ReadyToLaunch.MSLogoutRunning");
-                    await ipcRenderer.invoke(
-                      "msLogout",
-                      getString("web.global-proxy")
+                    window.localStorage.setItem(
+                      "MS.LoginWindowKey",
+                      "alicorn_ms_login_" + new Date().getTime()
                     );
                     dropAccountPromise();
                     localStorage.setItem(MS_LAST_USED_REFRESH_KEY, "");
@@ -1129,11 +1131,13 @@ function AccountChoose(props: {
                   fullWidth
                   labelId={"Select-Account"}
                   onChange={(e) => {
-                    setAccount(String(e.target.value));
-                    localStorage.setItem(
-                      LAST_YG_ACCOUNT_NAME + props.profileHash,
-                      String(e.target.value)
-                    );
+                    if (e.target.value) {
+                      setAccount(String(e.target.value));
+                      localStorage.setItem(
+                        LAST_YG_ACCOUNT_NAME + props.profileHash,
+                        String(e.target.value)
+                      );
+                    }
                   }}
                   value={sAccount || Object.keys(accountMap.current).shift()}
                 >
@@ -1325,25 +1329,32 @@ function getJavaAndCheckAvailable(hash: string, allowDefault = false): string {
 }
 
 async function trySelectProperJava(id: string): Promise<string> {
-  console.log("Selecting proper java for " + id);
   let b: string | undefined;
   if (LEGACY_VERSIONS.test(id)) {
     b = await getLegacyJDK();
   } else {
-    b = await getNewJDK();
+    if (MODERN_VERSIONS.test(id)) {
+      b = await getNewJDK(16);
+    } else {
+      b = await getNewJDK(17);
+    }
   }
   console.log("Configured java: " + b);
   return b || getDefaultJavaHome();
 }
 
 const LEGACY_VERSIONS = /^1\.([0-9]|1[0-2])([-.a-z].*?)?$/i;
-const MODERN_VERSIONS = /^1\.(1[7-9]|[2-9][0-9])(\.)?[0-9]*?/i;
+const MODERN_VERSIONS = /^1\.(17|[2-9][0-9])(\.)?[0-9]*?/i;
+const HIGH_VERSIONS = /^1\.(1[8-9]|[2-9][0-9])(\.)?[0-9]*?/i;
 
 function checkJMCompatibility(mv: string, jv: number): "OLD" | "NEW" | "OK" {
   if (LEGACY_VERSIONS.test(mv) && jv > 8) {
     return "NEW";
   }
   if (MODERN_VERSIONS.test(mv) && jv < 16) {
+    return "OLD";
+  }
+  if (HIGH_VERSIONS.test(mv) && jv < 17) {
     return "OLD";
   }
   return "OK";
@@ -1401,9 +1412,13 @@ function OpenWorldDialog(props: {
           {tr("ReadyToLaunch.GenerateLinkDesc")}
         </DialogContentText>
         {code ? (
-          <DialogContentText sx={{ color: "primary.main" }}>
-            {tr("ReadyToLaunch.HoofoffCode", `Code=${code}`)}
-          </DialogContentText>
+          <>
+            <br />
+            <DialogContentText sx={{ color: "primary.main" }}>
+              {tr("ReadyToLaunch.HoofoffCode", `Code=${code}`)}
+            </DialogContentText>
+            <br />
+          </>
         ) : (
           ""
         )}
@@ -1594,4 +1609,69 @@ function setProfileRelatedID(hash: string, rid: string): void {
 
 function getProfileRelatedID(hash: string): string {
   return sessionStorage.getItem("MinecraftID" + hash) || "";
+}
+
+const CODE_REGEX = /(?<=\?code=)[^&]+/gi;
+
+function AskURLDialog(): JSX.Element {
+  const [url, setUrl] = useState("");
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const fun = () => {
+      setOpen(true);
+    };
+    window.addEventListener("OpenAskUrlDialog", fun);
+    return () => {
+      window.removeEventListener("OpenAskUrlDialog", fun);
+    };
+  }, []);
+  return (
+    <ThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
+    >
+      <Dialog
+        open={open}
+        onClose={() => {
+          window.dispatchEvent(new CustomEvent("UrlAskCancelled"));
+          setOpen(false);
+        }}
+      >
+        <DialogTitle>{tr("ReadyToLaunch.LoginStepTitle")}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{tr("ReadyToLaunch.LoginStep")}</DialogContentText>
+          <br />
+          <DialogContentText>{tr("ReadyToLaunch.URLEnter")}</DialogContentText>
+          <TextField
+            autoFocus
+            margin={"dense"}
+            onChange={(e) => {
+              setUrl(e.target.value);
+            }}
+            type={"url"}
+            spellCheck={false}
+            color={"primary"}
+            fullWidth
+            variant={"outlined"}
+            value={url}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            disabled={!CODE_REGEX.test(url)}
+            onClick={() => {
+              window.dispatchEvent(
+                new CustomEvent("UrlAsked", { detail: url })
+              );
+              setUrl("");
+              setOpen(false);
+            }}
+          >
+            {tr("ReadyToLaunch.AcceptLogin")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </ThemeProvider>
+  );
 }

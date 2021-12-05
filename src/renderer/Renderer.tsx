@@ -1,6 +1,7 @@
 import { Box, createTheme, ThemeProvider, Typography } from "@mui/material";
-import { ipcRenderer, shell } from "electron";
+import { ipcRenderer, shell, webFrame } from "electron";
 import { emptyDir } from "fs-extra";
+import path from "path";
 import React from "react";
 import ReactDOM from "react-dom";
 import { HashRouter } from "react-router-dom";
@@ -48,6 +49,7 @@ import { initTranslator, tr } from "./Translator";
 
 try {
   console.log("Renderer first log.");
+  const t0 = new Date();
   printScreen("Setting up error pop system...");
   window.addEventListener("unhandledrejection", (e) => {
     ipcRenderer.send("SOS", e.reason);
@@ -146,10 +148,9 @@ try {
       console.log("Reloading window...");
       ipcRenderer.send("reload");
     }
-    printScreen("Flushing theme colors...");
+    printScreen("Flushing theme colors and zoom factor...");
     flushColors();
-    printScreen("Initializing command listener...");
-    initCommandListener();
+    webFrame.setZoomFactor(getNumber("theme.zoom-factor"));
     printScreen("Rendering main application...");
     const e3 = document.getElementById("boot_3");
     if (e3) {
@@ -163,6 +164,11 @@ try {
     }
     console.log("This Alicorn has super cow powers.");
     bindSuperCowPower();
+    console.log(
+      "Render complete, time elapsed: " +
+        (new Date().getTime() - t0.getTime()) / 1000 +
+        "s."
+    );
     console.log("Initializing modules...");
     const t1 = new Date();
     await initWorker();
@@ -173,6 +179,7 @@ try {
     // Essential works and light works
     await Promise.allSettled([initEncrypt()]);
     initDownloadWrapper();
+    initCommandListener();
     initStatistics();
     // Normal works
     await Promise.allSettled([
@@ -338,7 +345,7 @@ function flushColors(): void {
   e.innerText =
     `html {background-color:${
       getString("theme.secondary.light") || "#" + getTheme()[3]
-    }; font-family:${tr("Font") + FONT_FAMILY};} a {color:${
+    }; font-family:${FONT_FAMILY};} a {color:${
       getString("theme.primary.main") || "#" + getTheme()[0]
     } !important;} ` +
     (isBgDark()
@@ -440,15 +447,22 @@ export let ALICORN_DEFAULT_THEME_LIGHT = createTheme({
 });
 
 const BACKGROUND_URLS: Record<string, string> = {
-  ACG: "url(https://api.ixiaowai.cn/api/api.php)",
-  Bing: "url(https://api.oick.cn/bing/api.php)",
-  Disabled: "none",
-  "": "none",
+  ACG: "https://api.ixiaowai.cn/api/api.php",
+  Bing: "https://api.oick.cn/bing/api.php",
+  Disabled: "",
+  "": "",
 };
-
 function RendererBootstrap(): JSX.Element {
-  let url = getString("theme.background");
-  url = BACKGROUND_URLS[url] || url;
+  let url =
+    getString("theme.background.custom") || getString("theme.background");
+  if (url === "Disabled" || !url) {
+    url = "";
+  } else {
+    url = BACKGROUND_URLS[url] || url;
+    if (path.isAbsolute(url)) {
+      url = "file://" + url;
+    }
+  }
   return (
     <Box
       style={Object.assign(GLOBAL_STYLES, {
@@ -497,13 +511,13 @@ function RendererBootstrap(): JSX.Element {
               top: 0,
               bottom: 0,
               opacity: getNumber("theme.background.opacity") / 100,
-              backgroundImage: url || "none",
+              backgroundImage: `url(${url || ""})`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
               backgroundColor: "transparent",
               backgroundPosition: "center",
             }}
-          ></div>
+          />
         </ThemeProvider>
       </InstructionProvider>
     </Box>

@@ -193,12 +193,13 @@ export async function getLegacyJDK(): Promise<string | undefined> {
     } catch {}
   }
 }
-export async function getNewJDK(): Promise<string | undefined> {
+
+export async function getNewJDK(version = 16): Promise<string | undefined> {
   try {
     const df = getDefaultJavaHome();
     if (
       parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(df))).rootVersion >=
-      16
+      version
     ) {
       return df;
     }
@@ -208,7 +209,7 @@ export async function getNewJDK(): Promise<string | undefined> {
     try {
       if (
         parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(c))).rootVersion >=
-        16
+        version
       ) {
         return c;
       }

@@ -8,7 +8,7 @@ import { wrappedDownloadFile } from "../download/DownloadWrapper";
 
 const JDK_BASE_URL = "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/";
 const OLD_JAVA = "8";
-const NEW_JAVA = "16";
+const NEW_JAVA = "17";
 
 // Currently we cannot support *nix users
 export async function getLatestJREURL(old = false): Promise<string> {

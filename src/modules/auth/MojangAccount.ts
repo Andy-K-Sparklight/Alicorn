@@ -102,7 +102,7 @@ export async function getMojangSkinByUUID(a: Account): Promise<string> {
     if (op === "") {
       return "";
     }
-    const bdecode = JSON.parse(atob(op));
+    const bdecode = JSON.parse(Buffer.from(op, "base64").toString("utf-8"));
     const target = safeGet(bdecode, ["textures", "SKIN", "url"], "");
     return String(target);
   } catch {

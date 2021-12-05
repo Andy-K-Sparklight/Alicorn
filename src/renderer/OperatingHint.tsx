@@ -115,36 +115,42 @@ export function YNDialog(props: {
 }): JSX.Element {
   const [open, setOpen] = useState<boolean>(true);
   return (
-    <Dialog
-      open={open}
-      onClose={() => {
-        setOpen(false);
-        props.onClose();
-      }}
+    <ThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
     >
-      <DialogTitle>{props.title}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>{props.content}</DialogContentText>
-        <DialogActions>
-          <Button
-            onClick={() => {
-              props.onAccept();
-              setOpen(false);
-            }}
-          >
-            {props.yes}
-          </Button>
-          <Button
-            onClick={() => {
-              setOpen(false);
-              props.onClose();
-            }}
-          >
-            {props.no}
-          </Button>
-        </DialogActions>
-      </DialogContent>
-    </Dialog>
+      <Dialog
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          props.onClose();
+        }}
+      >
+        <DialogTitle>{props.title}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{props.content}</DialogContentText>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                props.onAccept();
+                setOpen(false);
+              }}
+            >
+              {props.yes}
+            </Button>
+            <Button
+              onClick={() => {
+                setOpen(false);
+                props.onClose();
+              }}
+            >
+              {props.no}
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
+    </ThemeProvider>
   );
 }
 
