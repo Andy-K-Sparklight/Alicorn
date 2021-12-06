@@ -59,7 +59,7 @@ export const useInputStyles = makeStyles((theme: AlicornTheme) => ({
     color: theme.palette.secondary.light,
   },
   inputDark: {
-    color: theme.palette.primary.main,
+    // color: theme.palette.primary.main,
   },
   border: {
     color: theme.palette.secondary.light,

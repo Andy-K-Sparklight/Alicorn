@@ -251,25 +251,27 @@ export function registerBackgroundListeners(): void {
                 return;
               }
               console.log("Not a callback URL, showing window...");
-              loginWindow?.show();
-              t = setTimeout(async () => {
-                const res = await dialog.showMessageBox({
-                  title: texts[0],
-                  message: texts[1],
-                  buttons: [texts[2], texts[3]],
-                  type: "question",
-                });
-                if (res.response === 1) {
-                  sCode = "USER PROVIDE";
-                  try {
-                    loginWindow?.close();
-                    loginWindow?.destroy();
-                  } catch {}
-                  loginWindow = null;
-                  await shell.openExternal(LOGIN_START);
-                  resolve(sCode);
-                }
-              }, 15000) as unknown as number;
+              if (!loginWindow?.isVisible()) {
+                loginWindow?.show();
+                t = setTimeout(async () => {
+                  const res = await dialog.showMessageBox({
+                    title: texts[0],
+                    message: texts[1],
+                    buttons: [texts[2], texts[3]],
+                    type: "question",
+                  });
+                  if (res.response === 1) {
+                    sCode = "USER PROVIDE";
+                    try {
+                      loginWindow?.close();
+                      loginWindow?.destroy();
+                    } catch {}
+                    loginWindow = null;
+                    await shell.openExternal(LOGIN_START);
+                    resolve(sCode);
+                  }
+                }, 30000) as unknown as number;
+              }
             }
           });
         });
