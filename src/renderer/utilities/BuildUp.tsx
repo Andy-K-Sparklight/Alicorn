@@ -14,6 +14,7 @@ import {
   ThemeProvider,
   Typography,
 } from "@mui/material";
+import { shell } from "electron";
 import objectHash from "object-hash";
 import os from "os";
 import path from "path";
@@ -341,6 +342,21 @@ function SelectAssets(props: {
         }}
       >
         {tr(buttonState)}
+      </Button>
+      <Button
+        type={"button"}
+        color={"primary"}
+        variant={"contained"}
+        onClick={() => {
+          // TODO:
+          void shell.showItemInFolder(
+            getContainer(props.container).resolvePath(
+              props.meta.name + ".prod.zip"
+            )
+          );
+        }}
+      >
+        {tr("Utilities.BuildUp.Asset.Show")}
       </Button>
       <Box sx={{ display: "flex", flexDirection: "row" }}>
         <List sx={{ width: "50%", display: "inline" }}>
