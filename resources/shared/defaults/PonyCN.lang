@@ -1578,53 +1578,61 @@ Maud 2（小马语/中国）
 
 66ccff（中文/中国）
 
-# Options.gc1.title
+# Options.jvm.extra-args.title
+
+JVM 附加运行参数
+
+# Options.jvm.extra-args.desc
+
+@HTML在启动 Minecraft 时，也为 JVM 添加如下参数\n请尽量只追加参数，若非必要，请<b>不要移除这里已有的参数</b>！它们保证 Minecraft 的正常运行。
+
+# Options.main-gc.title
 
 首选 GC 方案
 
-# Options.gc1.desc
+# Options.main-gc.desc
 
 JVM 首选的垃圾回收器方案，Alicorn 将永远优先尝试用它启动 JVM
 
-# Options.gc1.pure
+# Options.main-gc.pure
 
 默认（不指定）
 
-# Options.gc1.cms
-
-并发/标记/清除（CMSGC）
-
-# Options.gc1.g1
+# Options.main-gc.g1
 
 垃圾优先（G1GC）
 
-# Options.gc1.z
+# Options.main-gc.z
 
 Z（ZGC）
 
-# Options.gc2.title
+# Options.main-gc.aggressive
+
+最大利用（AggressiveHeap）
+
+# Options.para-gc.title
 
 备选 GC 方案
 
-# Options.gc2.desc
+# Options.para-gc.desc
 
 JVM 备选的垃圾回收器方案，当首选方案失败时，Alicorn 将使用此方案
 
-# Options.gc2.pure
+# Options.para-gc.pure
 
 默认（不指定）
 
-# Options.gc2.cms
-
-并发/标记/清除（CMSGC）
-
-# Options.gc2.g1
+# Options.para-gc.g1
 
 垃圾优先（G1GC）
 
-# Options.gc2.z
+# Options.para-gc.z
 
 Z（ZGC）
+
+# Options.para-gc.aggressive
+
+最大利用（AggressiveHeap）
 
 # Options.memory.title
 

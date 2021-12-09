@@ -242,15 +242,16 @@ export function OptionsPage(): JSX.Element {
         </TabPanel>
         <TabPanel index={3} value={tabValue}>
           <InputItem type={ConfigType.NUM} bindConfig={"memory"} />
+          <InputItem type={ConfigType.STR} bindConfig={"jvm.extra-args"} />
           <InputItem
             type={ConfigType.RADIO}
-            bindConfig={"gc1"}
-            choices={["pure", "cms", "g1", "z"]}
+            bindConfig={"main-gc"}
+            choices={["pure", "g1", "z", "aggressive"]}
           />
           <InputItem
             type={ConfigType.RADIO}
-            bindConfig={"gc2"}
-            choices={["pure", "cms", "g1", "z"]}
+            bindConfig={"para-gc"}
+            choices={["pure", "g1", "z", "aggressive"]}
           />
           <InputItem type={ConfigType.STR} bindConfig={"gw-size"} />
         </TabPanel>

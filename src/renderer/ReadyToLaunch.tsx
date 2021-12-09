@@ -850,8 +850,8 @@ async function startBoot(
       resolution: resolutionPolicy ? new Pair(w, h) : undefined,
       javaVersion: jInfo ? jInfo.rootVersion : 0,
       maxMem: getNumber("memory", 0),
-      gc1: getString("gc1", "pure"),
-      gc2: getString("gc2", "pure"),
+      gc1: getString("main-gc", "z"),
+      gc2: getString("para-gc", "pure"),
     });
   }
   addStatistics("Launch");
