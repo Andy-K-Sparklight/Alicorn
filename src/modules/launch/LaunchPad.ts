@@ -4,6 +4,7 @@ import { whereAJ } from "../auth/AJHelper";
 import { whereND } from "../auth/NDHelper";
 import { Pair, Trio } from "../commons/Collections";
 import { isNull } from "../commons/Null";
+import { getPathInDefaults } from "../config/DataSupport";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { GameProfile } from "../profile/GameProfile";
 import { setDirtyProfile } from "../readyboom/PrepareProfile";
@@ -18,6 +19,8 @@ import {
   generateVMArgs,
 } from "./ArgsGenerator";
 import { runMinecraft } from "./MinecraftBootstrap";
+
+const SAFE_LOG4J_FILE = "log4j2fix.ald";
 
 // Launch and return ID
 export function launchProfile(
@@ -41,7 +44,11 @@ export function launchProfile(
     maxMem?: number;
   }
 ): string {
+  const log4j2Fix = getPathInDefaults(SAFE_LOG4J_FILE);
   const vmArgs = generateVMArgs(profile, container);
+  if (policies.javaVersion && policies.javaVersion >= 8) {
+    vmArgs.unshift(`-javaagent:${log4j2Fix}`);
+  }
   const gameArgs = generateGameArgs(profile, container, authData);
   const ajArgs = policies.useAj
     ? applyAJ(whereAJ(), policies.ajHost || "", policies.ajPrefetch || "")
