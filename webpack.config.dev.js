@@ -3,8 +3,6 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { ContextReplacementPlugin } = require("webpack");
 const BuildInfoPlugin = require("./BuildInfoPlugin");
 const Version = require("./package.json").appVersion;
-const WebVersion = require("./package.json").version;
-const BannerPlugin = require("webpack").BannerPlugin;
 
 const MainDev = {
   entry: "./src/main/Bootstrap.ts",
@@ -18,6 +16,7 @@ const MainDev = {
     rules: [
       {
         test: /\.tsx?$/,
+        include: path.resolve(__dirname, "src"),
         use: {
           loader: "ts-loader",
           options: {
@@ -48,7 +47,7 @@ const MainDev = {
           from: path.resolve(__dirname, "node_modules", "undici"),
           to: path.resolve(__dirname, "dist", "undici"),
           filter: (source) => {
-            return !/(undici[/\\]docs|undici[/\\]README)/i.test(
+            return !/(undici[/\\]docs|undici[/\\]README|undici[/\\]types|undici[/\\]index\.d\.ts)/i.test(
               path.normalize(source)
             );
           },
@@ -56,7 +55,7 @@ const MainDev = {
       ],
     }),
   ],
-  devtool: "source-map",
+  devtool: "eval-source-map",
   mode: "development",
   target: "electron-main",
   externals: {
@@ -101,7 +100,7 @@ const RendererDev = {
     new BuildInfoPlugin("RendererBuild.json", Version),
     new ContextReplacementPlugin(/keyv/),
   ],
-  devtool: "source-map",
+  devtool: "eval-source-map",
   mode: "development",
   target: "electron-renderer",
   watchOptions: {
