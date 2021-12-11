@@ -65,5 +65,6 @@
   "readyboom.cores": 3,
   "system.ws-operation": false,
   "theme.zoom-factor": 1.0,
-  "jvm.extra-args": "-Dfile.encoding=UTF-8 -showversion -XX:+IgnoreUnrecognizedVMOptions -XX:+UnlockExperimentalVMOptions"
+  "jvm.extra-args": "-Dfile.encoding=UTF-8 -showversion -XX:+IgnoreUnrecognizedVMOptions -XX:+UnlockExperimentalVMOptions",
+  "features.sword": true
 }

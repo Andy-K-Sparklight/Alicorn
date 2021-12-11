@@ -358,6 +358,9 @@ function flushColors(): void {
         } !important;}`
       : "");
   // Set background
+  if (getBoolean("features.sword")) {
+    e.innerText += " * {cursor: url(Cursor.png), pointer !important;}";
+  }
   document.head.insertAdjacentElement("beforeend", e);
   e = null;
   window.dispatchEvent(new CustomEvent("ForceRefreshApp"));

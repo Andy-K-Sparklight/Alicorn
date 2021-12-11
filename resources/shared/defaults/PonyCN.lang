@@ -1286,6 +1286,14 @@ Alicorn Ping ^
 
 这种几乎不带任何信息的 Ping 可以让 ThatRarityEG 估计活跃用户数\nAlicorn Ping 仅收集一条不可逆的、单向加密过的哈希用于区分不同客户端。
 
+# Options.features.sword.title
+
+粉红剑指针
+
+# Options.features.sword.desc
+
+心心念念的指针回来啦！
+
 # Options.features.skin-view-3d.title
 
 Skin View 3D 皮肤显示
