@@ -18,6 +18,8 @@ import {
   buildCommonModpackJSON,
   convertCommonToCF,
 } from "./ModpackBuilder";
+import {submitInfo} from "../../../renderer/Message";
+import {tr} from "../../../renderer/Translator";
 
 const pipe = promisify(pipeline);
 
@@ -86,6 +88,7 @@ export async function sealPackCommon(
   await writeFile(path.join(MODPACK_WORK_DIR, MANIFEST_FILE), j2);
   await compressPack(MODPACK_WORK_DIR, container.rootDir, model.name);
   await remove(MODPACK_WORK_DIR);
+  submitInfo(tr("Utilities.BuildUp.Done"));
   setState("Build");
 }
 
