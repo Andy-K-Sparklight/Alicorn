@@ -356,7 +356,7 @@ function SelectAssets(props: {
           );
         }}
       >
-        {tr("Utilities.BuildUp.Asset.Show")}
+        {tr("Utilities.BuildUp.Show")}
       </Button>
       <Box sx={{ display: "flex", flexDirection: "row" }}>
         <List sx={{ width: "50%", display: "inline" }}>
