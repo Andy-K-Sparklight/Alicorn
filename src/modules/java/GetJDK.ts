@@ -24,7 +24,7 @@ export async function getLatestJREURL(old = false): Promise<string> {
   } else {
     throw new Error("Does not support this arch!");
   }
-  const u = `${JDK_BASE_URL}${old ? OLD_JAVA : NEW_JAVA}/jre/${cv}/windows/`;
+  const u = `${JDK_BASE_URL}${old ? OLD_JAVA : NEW_JAVA}/jdk/${cv}/windows/`;
   const res = await fetch(u, {
     method: "GET",
     credentials: "omit",
