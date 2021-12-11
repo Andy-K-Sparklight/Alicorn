@@ -51,9 +51,6 @@ export function VersionView(): JSX.Element {
       <Typography className={classes.text} color={"secondary"} gutterBottom>
         {tr("VersionView.Description")}
       </Typography>
-      <Typography className={classes.text} color={"secondary"} gutterBottom>
-        {tr("VersionView.AuthorName") + " " + tr("VersionView.Authors")}
-      </Typography>
       <br />
       <Typography className={classes.text} color={"secondary"} gutterBottom>
         {tr("VersionView.FreeSoftwareClaim")}
