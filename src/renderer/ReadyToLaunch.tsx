@@ -1559,7 +1559,7 @@ function OpenWorldDialog(props: {
               if (c.length === 6) {
                 setCode(c);
                 sessionStorage.setItem(CODE_KEY + props.port, c);
-                submitSucc(tr("ReadyToLaunch.HoofoffCode", `Code=${c}`));
+                submitSucc(tr("ReadyToLaunch.HoofoffCodeRaw", `Code=${c}`));
                 setErr("");
                 setShouldClose(true);
                 setRunning(false);

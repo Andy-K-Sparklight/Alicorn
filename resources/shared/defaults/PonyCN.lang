@@ -564,7 +564,11 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 # ReadyToLaunch.HoofoffCode
 
-@HTML你的友谊接力代码是：<b>{Code}</b>。请记住它，它不会再出现了！
+你的友谊接力代码是：{Code}。请记住它，它不会再出现了！
+
+# ReadyToLaunch.HoofoffCode
+
+@HTML你的友谊接力代码是：<b>{Code}</b>
 
 # ReadyToLaunch.RequirePremium
 
