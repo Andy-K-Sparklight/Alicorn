@@ -19,6 +19,18 @@ export async function loadProfileDirectly(
   }
 }
 
+export async function checkDep(
+  container: MinecraftContainer,
+  target: string
+): Promise<boolean> {
+  try {
+    await loadProfile(target, container, true);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function loadProfile(
   id: string,
   container: MinecraftContainer,
@@ -34,6 +46,16 @@ export async function loadProfile(
   if (isLegacy(jsonObj)) {
     legacyBit = true;
     jsonObj = convertFromLegacy(jsonObj);
+  }
+  const dep = jsonObj["inheritsFrom"];
+  if (dep) {
+    if (!(await checkDep(container, dep))) {
+      throw (
+        "Profile depends on another profile: " +
+        dep +
+        ", while it could not be loaded."
+      );
+    }
   }
   if (basicLoad) {
     return new GameProfile(jsonObj);

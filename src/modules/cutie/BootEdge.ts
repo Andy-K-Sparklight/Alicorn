@@ -1,10 +1,14 @@
 import childProcess from "child_process";
+import { readFile } from "fs-extra";
+import NBT from "mcnbt";
 import os from "os";
 import sudo from "sudo-prompt";
 import { submitInfo, submitWarn } from "../../renderer/Message";
 import { tr } from "../../renderer/Translator";
 import { uniqueHash } from "../commons/BasicHash";
+import { isFileExist } from "../commons/FileUtil";
 import { getActualDataPath, saveDefaultDataAs } from "../config/DataSupport";
+import { getAllMounted, getContainer } from "../container/ContainerUtil";
 /*
 CLAIM FOR EXTERNAL RESOURCE
 
@@ -217,4 +221,114 @@ export function killEdge(): Promise<void> {
       }
     );
   });
+}
+
+export async function prepareServerDat(
+  ip: string,
+  name: string
+): Promise<void> {
+  const ac = getAllMounted();
+  await Promise.allSettled(
+    ac.map(async (c) => {
+      const tp = getContainer(c).resolvePath("servers.dat");
+      if (await isFileExist(tp)) {
+        await modifyServers(ip, name, tp);
+      } else {
+        await createServers(ip, name, tp);
+      }
+    })
+  );
+}
+
+function createServers(
+  ip: string,
+  name: string,
+  targetFile: string
+): Promise<void> {
+  const nbt = buildNBT();
+  const nl = new NBT.Tags.TAGList();
+  nl.id = "servers";
+  nl.value = [buildServer(ip, name)];
+  // @ts-ignore
+  nbt.select("").select("servers").value = nl;
+  return new Promise<void>((res, rej) => {
+    // @ts-ignore
+    nbt.writeToFile(targetFile, (e) => {
+      if (e) {
+        rej(e);
+        return;
+      }
+      res();
+    });
+  });
+}
+
+function modifyServers(
+  ip: string,
+  name: string,
+  targetFile: string
+): Promise<void> {
+  return new Promise<void>((res, rej) => {
+    void (async () => {
+      const buf = await readFile(targetFile);
+      const nbt = new NBT();
+      nbt.loadFromBuffer(buf, (e) => {
+        if (e) {
+          rej(e);
+          return;
+        }
+        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let servers = nbt.select("").select("servers").value as Array<any>;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        servers = servers.filter(
+          (s) => !String(s.value.name.value).toUpperCase().startsWith("ALAN")
+        );
+        servers.push(buildServer(ip, name));
+        const sl = new NBT.Tags.TAGList();
+        sl.id = "servers";
+        sl.value = servers;
+        // @ts-ignore
+        nbt.root[""].value.servers = sl;
+        // @ts-ignore
+        nbt.writeToFile(targetFile, (e) => {
+          if (e) {
+            rej(e);
+            return;
+          }
+          res();
+        });
+      });
+    })();
+  });
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildServer(ip: string, name: string): any {
+  const sev = new NBT.Tags.TAGCompound();
+  const ipTag = new NBT.Tags.TAGString();
+  ipTag.id = "ip";
+  ipTag.value = ip;
+  const nameTag = new NBT.Tags.TAGString();
+  nameTag.id = "name";
+  nameTag.value = "ALAN - " + name;
+  sev.id = "";
+  sev.value = {
+    ip: ipTag,
+    name: nameTag,
+  };
+  return sev;
+}
+
+function buildNBT(): NBT {
+  const nbt = new NBT();
+  const servers = new NBT.Tags.TAGList();
+  servers.id = "servers";
+  servers.value = [];
+  const root = new NBT.Tags.TAGCompound();
+  root.id = "";
+  root.value = { servers: servers };
+  // @ts-ignore
+  nbt.root = { "": root };
+  return nbt;
 }

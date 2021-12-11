@@ -9,12 +9,11 @@ import {
   MOJANG_USER_TYPE,
 } from "../commons/Constants";
 import { isNull } from "../commons/Null";
-import { getBoolean } from "../config/ConfigSupport";
+import { getBoolean, getString } from "../config/ConfigSupport";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { GameProfile } from "../profile/GameProfile";
 import { makePath } from "../profile/LibrariesConvert";
 import { JAR_SUFFIX } from "./NativesLint";
-const COMMON_VM_ARGS = ["-Dfile.encoding=UTF-8", "-showversion"];
 
 // Generate game arguments
 export function generateGameArgs(
@@ -98,13 +97,16 @@ export function generateVMArgs(
     }
   }
   const logArgs: string[] = [];
+  logArgs.push("-Dlog4j2.formatMsgNoLookups=true"); // #72
 
   const tArg = profile.logArg.trim();
   if (!isNull(tArg) && !getBoolean("cmc.disable-log4j-config")) {
     logArgs.push(tArg);
   }
 
-  staticArgs = COMMON_VM_ARGS.concat(staticArgs)
+  staticArgs = getString("jvm.extra-args")
+    .split(/ +/i)
+    .concat(staticArgs)
     .concat(logArgs)
     .concat(profile.mainClass);
   return applyVars(vMap, staticArgs);
@@ -194,19 +196,7 @@ export function applyScheme(
 
 const RAM_SCHEME: Record<string, string[]> = {
   pure: [],
-  cms: [
-    "-XX:+IgnoreUnrecognizedVMOptions",
-    "-XX:+UnlockExperimentalVMOptions",
-    "-XX:+UseConcMarkSweepGC",
-    "-XX:+UseParNewGC",
-    "-XX:+CMSClassUnloadingEnabled",
-    "-XX:+CMSParallelRemarkEnabled",
-    "-XX:SurvivorRatio=2",
-    "-XX:+CMSScavengeBeforeRemark",
-    "-XX:+CMSParallelRemarkEnabled",
-    "-XX:+ScavengeBeforeFullGC",
-    "-XX:MaxTenuringThreshold=9",
-  ],
   g1: ["-XX:+UseG1GC"],
   z: ["-XX:+UseZGC"],
+  aggressive: ["-XX:+AggressiveHeap"], // TODO: add aggressive
 };

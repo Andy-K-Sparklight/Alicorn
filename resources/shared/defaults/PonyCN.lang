@@ -564,7 +564,11 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 # ReadyToLaunch.HoofoffCode
 
-@HTML你的友谊接力代码是：<b>{Code}</b>。请记住它，它不会再出现了！
+你的友谊接力代码是：{Code}。请记住它，它不会再出现了！
+
+# ReadyToLaunch.HoofoffCode
+
+@HTML你的友谊接力代码是：<b>{Code}</b>
 
 # ReadyToLaunch.RequirePremium
 
@@ -698,17 +702,9 @@ Alicorn 启动器 {AppVersion}（内核版本 {UpdatorVersion}）
 
 @HTML这个 Electron 太旧啦！Alicorn <b>可能无法正常运行</b>，非常建议重新下载 Alicorn，你的设置和数据会保留。
 
-# VersionView.AuthorName
-
-开发人员：
-
-# VersionView.Authors
-
-Andy K Rarity Sparklight
-
 # VersionView.Description
 
-@HTML欢迎使用 Alicorn！
+@HTML<b>欢迎使用 Alicorn 启动器！</b> <a href="javascript:ashow('https://alc.pages.dev')">前往官方网站</a> <a href="javascript:ashow('https://github.com/Andy-K-Sparklight/Alicorn')">查看源代码</a> <a href="javascript:ashow('https://www.gnu.org/licenses/gpl-3.0.html')">查看 GPL 3.0 许可证</a>
 
 # VersionView.ClickToSeeNext
 
@@ -1290,6 +1286,14 @@ Alicorn Ping ^
 
 这种几乎不带任何信息的 Ping 可以让 ThatRarityEG 估计活跃用户数\nAlicorn Ping 仅收集一条不可逆的、单向加密过的哈希用于区分不同客户端。
 
+# Options.features.sword.title
+
+粉红剑指针
+
+# Options.features.sword.desc
+
+心心念念的指针回来啦！
+
 # Options.features.skin-view-3d.title
 
 Skin View 3D 皮肤显示
@@ -1578,53 +1582,61 @@ Maud 2（小马语/中国）
 
 66ccff（中文/中国）
 
-# Options.gc1.title
+# Options.jvm.extra-args.title
+
+JVM 附加运行参数
+
+# Options.jvm.extra-args.desc
+
+@HTML在启动 Minecraft 时，也为 JVM 添加如下参数\n请尽量只追加参数，若非必要，请<b>不要移除这里已有的参数</b>！它们保证 Minecraft 的正常运行。
+
+# Options.main-gc.title
 
 首选 GC 方案
 
-# Options.gc1.desc
+# Options.main-gc.desc
 
 JVM 首选的垃圾回收器方案，Alicorn 将永远优先尝试用它启动 JVM
 
-# Options.gc1.pure
+# Options.main-gc.pure
 
 默认（不指定）
 
-# Options.gc1.cms
-
-并发/标记/清除（CMSGC）
-
-# Options.gc1.g1
+# Options.main-gc.g1
 
 垃圾优先（G1GC）
 
-# Options.gc1.z
+# Options.main-gc.z
 
 Z（ZGC）
 
-# Options.gc2.title
+# Options.main-gc.aggressive
+
+最大利用（AggressiveHeap）
+
+# Options.para-gc.title
 
 备选 GC 方案
 
-# Options.gc2.desc
+# Options.para-gc.desc
 
 JVM 备选的垃圾回收器方案，当首选方案失败时，Alicorn 将使用此方案
 
-# Options.gc2.pure
+# Options.para-gc.pure
 
 默认（不指定）
 
-# Options.gc2.cms
-
-并发/标记/清除（CMSGC）
-
-# Options.gc2.g1
+# Options.para-gc.g1
 
 垃圾优先（G1GC）
 
-# Options.gc2.z
+# Options.para-gc.z
 
 Z（ZGC）
+
+# Options.para-gc.aggressive
+
+最大利用（AggressiveHeap）
 
 # Options.memory.title
 
@@ -2154,7 +2166,9 @@ Mojang 版本
 
 [(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]好困……这个时候叫我……？
 
-[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]我尊重你的选择……但是我也要休息啊……
+[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]哈……好困，不行，我先去休息了，你自己玩吧（不悦）
+
+[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]保证充足睡眠有助于抵御病毒哦！
 
 [(()=>{const hours=new Date().getHours();return hours>=7&&hours<=11;})()]上午好！今天的天气真不错……什么？我猜错了？这不能怪我，要不你来预测天气试试？
 
@@ -2166,7 +2180,7 @@ Mojang 版本
 
 嗯呐……什么事？
 
-我是谁？我就是 Alicorn，你好！
+戴口罩，多通风，少聚集，玩玩 MC 就很好～
 
 ['{Config:interactive.i-have-a-crush-on-al}'=='true']你这是什么眼神……唔？唔唔唔！放开我！
 
@@ -2175,6 +2189,16 @@ Mojang 版本
 ['{Config:interactive.i-have-a-crush-on-al}'=='true']我可是会飞的哦～看着！（张开翅膀）
 
 ['{Config:updator.use-update}'=='false']不要担心升级！更新后的我就像暮光公主变成坎特拉女孩一样，虽然样子不同，但我不会忘了你的！
+
+['{Config:theme.background}'=='ACG']看多了 ACG 图片，会不会就不喜欢我了呢……
+
+['{Config:dev.f12}'=='true']好好使用 DevTools，可不要弄出什么问题！
+
+['{Config:updator.url}'!=='']订阅其它源的更新 URL 不一定可信，要小心哦！
+
+['{Config:readyboom}'=='false']没有 ReadyBoom，你都不知道我的速度有多快！
+
+['{Config:dev.experimental}'=='true']听说实验室容易爆炸，实验功能也是一样……
 
 我相信每个人都有一颗小马般的心～
 
@@ -3213,9 +3237,13 @@ END
 
 # Instruction.LaunchPad.2
 
-就这么简单！……如果需要更多信息，请访问 <帮助文档>，单击上面的 <寻求帮助> 就好。
+如果需要安装 Mod 之类的话，可以单击 <核心的图标>。（不过需要它支持 Mod 哦）
 
 # Instruction.LaunchPad.3
+
+就这么简单！……如果需要更多信息，请访问 <帮助文档>，单击上面的 <寻求帮助> 就好。
+
+# Instruction.LaunchPad.4
 
 END
 
@@ -3253,7 +3281,7 @@ Alicorn 的开发道路上，收到过不少来自个人、组织和企业的帮
 
 # EOE.Orgs
 
-MCBBS（Minecraft 中文论坛）……这里是热爱 MC 群体的天堂。\nFree Software Foundation……我们一同为自由软件而奋斗。\nGitHub……软件在这里诞生。\nStack Overflow……它解决了我们很多的问题。\nNode.js……JS 因你而不同。\nTypeScript……从混乱到有序的快速通道。\nMinecraft Wiki……玩家所认可的最强 Minecraft Wiki。\nMaterial UI……只做组件，而且做得很好。\nWiki.vg……快速解码帐户验证的奥秘。\nElectron……不止于浏览器！\nWebpack……打包，优化，压缩。\nBMCLAPI……下载速度提升 80% 的最强镜像！\nFabricMC……未来是你的天下！\nIris Shaders……更高更妙的光影和高清修复！\nGaz492 Curseforge API……它打开了一扇充满光明的大门。\nJsDelivr……走遍天涯海角，Web 始终在你身边。\nAdobe Source Hans Sans 和 Ubuntu Mono……渲染不够，字体来凑！\nAuthlib Injector……Yggdrasil 始终为你让一条路。\nMLPVector……颜色，但也不是颜色。\nVSCodium……纯净、自由的高效前端 IDE。\nMDN Web Docs……Mozilla 的 Web 开发参考。\n\n……还有许多许多值得我们感谢，只是限于篇幅未能列举……
+MCBBS（Minecraft 中文论坛）……这里是热爱 MC 群体的天堂。\nFree Software Foundation……我们一同为自由软件而奋斗。\nGitHub……软件在这里诞生。\nStack Overflow……它解决了我们很多的问题。\nNode.js……JS 因你而不同。\nTypeScript……从混乱到有序的快速通道。\nMinecraft Wiki……玩家所认可的最强 Minecraft Wiki。\nMaterial UI……只做组件，而且做得很好。\nWiki.vg……快速解码帐户验证的奥秘。\nElectron……不止于浏览器！\nWebpack……打包，优化，压缩。\nBMCLAPI……下载速度提升 80% 的最强镜像！\nUndici……这就是 WASM，这就是 Node！\nFabricMC……拥有未来的 Mod，开创新的时代。\nIris Shaders……更高更妙的光影和高清修复！\nGaz492 Curseforge API……它打开了一扇充满光明的大门。\nJsDelivr……走遍天涯海角，Web 始终在你身边。\nAdobe Source Hans Sans 和 Ubuntu Mono……渲染不够，字体来凑！\nAuthlib Injector……Yggdrasil 始终为你让一条路。SkinView3D……新一代皮肤 3D 显示。\nMLPVector……颜色，但也不是颜色。\nVSCodium……纯净、自由的高效前端 IDE。\nMDN Web Docs……Mozilla 的 Web 开发参考。\n\n……还有许多许多值得我们感谢，只是限于篇幅未能列举……
 
 # EOE.EndPoem
 

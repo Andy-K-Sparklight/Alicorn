@@ -10,7 +10,11 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { getBoolean, getString } from "../../modules/config/ConfigSupport";
-import { killEdge, runEdge } from "../../modules/cutie/BootEdge";
+import {
+  killEdge,
+  prepareServerDat,
+  runEdge,
+} from "../../modules/cutie/BootEdge";
 import { applyCode, OnlineGameInfo } from "../../modules/cutie/Hoofoff";
 import { generateWorldAnyUniqueId } from "../../modules/security/Unique";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "../GoTo";
@@ -121,12 +125,19 @@ export function CutieConnet(): JSX.Element {
                         NETWORK_PORT
                     );
                     submitSucc(tr("Utilities.CutieConnect.AllDone"));
-                    setTimeout(() => {
-                      jumpTo(
-                        "/LaunchPad/" + encodeURIComponent(d.ip + ":" + d.port)
-                      );
-                      triggerSetPage("LaunchPad");
-                    }, 10000);
+                    await Promise.all([
+                      prepareServerDat(
+                        d.ip + ":" + d.port,
+                        `${hoofoffCode} (${d.baseVersion})`
+                      ),
+                      new Promise<void>((res) => {
+                        setTimeout(() => {
+                          res();
+                        }, 10000);
+                      }),
+                    ]);
+                    jumpTo("/LaunchPad");
+                    triggerSetPage("LaunchPad");
                   }, 5000);
                   setChangePageWarn(false);
                 } catch {

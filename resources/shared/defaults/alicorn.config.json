@@ -35,8 +35,8 @@
   "starlight.join-server.timeout": 2000,
   "gw-size": "960x540",
   "memory": 0,
-  "gc1": "cms",
-  "gc2": "pure",
+  "main-gc": "g1",
+  "para-gc": "pure",
   "launch.fast-reboot": true,
   "command": false,
   "assistant": "PonyCN",
@@ -64,6 +64,7 @@
   "readyboom": true,
   "readyboom.cores": 3,
   "system.ws-operation": false,
-  "features.notification": true,
-  "theme.zoom-factor": 1.0
+  "theme.zoom-factor": 1.0,
+  "jvm.extra-args": "-Dfile.encoding=UTF-8 -showversion -XX:+IgnoreUnrecognizedVMOptions -XX:+UnlockExperimentalVMOptions",
+  "features.sword": true
 }

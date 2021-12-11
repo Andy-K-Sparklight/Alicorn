@@ -3,7 +3,6 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { ContextReplacementPlugin } = require("webpack");
 const BuildInfoPlugin = require("./BuildInfoPlugin");
 const Version = require("./package.json").appVersion;
-const WebVersion = require("./package.json").version;
 const BannerPlugin = require("webpack").BannerPlugin;
 
 const Main = {
@@ -40,7 +39,7 @@ const Main = {
           from: path.resolve(__dirname, "node_modules", "undici"),
           to: path.resolve(__dirname, "dist", "release", "undici"),
           filter: (source) => {
-            return !/(undici[/\\]docs|undici[/\\]README)/i.test(
+            return !/(undici[/\\]docs|undici[/\\]README|undici[/\\]types|undici[/\\]index\.d\.ts)/i.test(
               path.normalize(source)
             );
           },
