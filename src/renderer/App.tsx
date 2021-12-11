@@ -778,16 +778,20 @@ let mouseX: number | null = null;
 let mouseY: number | null = null;
 
 function onMouseDown(e: React.MouseEvent) {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-  document.addEventListener("mouseup", onMouseUp);
-  requestAnimationFrame(moveWindow);
+  if (e.button === 0) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    document.addEventListener("mouseup", onMouseUp);
+    requestAnimationFrame(moveWindow);
+  }
 }
 
-function onMouseUp() {
-  document.removeEventListener("mouseup", onMouseUp);
-  if (animationId) {
-    cancelAnimationFrame(animationId);
+function onMouseUp(e: MouseEvent) {
+  if (e.button === 0) {
+    document.removeEventListener("mouseup", onMouseUp);
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+    }
   }
 }
 
