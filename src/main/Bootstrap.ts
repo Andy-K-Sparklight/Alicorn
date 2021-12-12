@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut, screen } from "electron";
+import { app, BrowserWindow, globalShortcut, ipcMain, screen } from "electron";
 import { btoa } from "js-base64";
 import path from "path";
 import { DOH_CONFIGURE } from "../modules/commons/Constants";
@@ -80,9 +80,12 @@ async function whenAppReady() {
   console.log("Registering event listeners...");
   registerBackgroundListeners();
 
-  mainWindow.once("ready-to-show", async () => {
+  ipcMain.once("allowShowWindow", () => {
     console.log("Opening window!");
     mainWindow?.show();
+  });
+
+  mainWindow.once("ready-to-show", async () => {
     applyDoHSettings();
     console.log("Setting up proxy!");
     await initProxy();

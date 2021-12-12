@@ -1,6 +1,5 @@
 import { readFile } from "fs-extra";
 import os from "os";
-import path from "path";
 import React from "react";
 import { getString } from "../modules/config/ConfigSupport";
 import { getPathInDefaults } from "../modules/config/DataSupport";
@@ -140,7 +139,7 @@ async function buildLocale(
         ctitle = cline.slice(1).trim();
         buff = [];
       } else {
-        buff.push(eval("`" + cline.trim() + "`"));
+        buff.push(cline.trim().replaceAll("\\n", "\n"));
       }
       cursor++;
     }
@@ -171,8 +170,6 @@ function applyEnvironmentVars(strIn: string): string {
   let primary = strIn
     .replaceAll("{Date}", new Date().toLocaleDateString())
     .replaceAll("{UserName}", getString("user.name") || os.userInfo().username)
-    .replaceAll("{Home}", os.homedir())
-    .replaceAll("{AlicornHome}", path.join(os.homedir(), "alicorn"))
     .replaceAll("{Platform}", os.platform())
     .replaceAll("{}", "");
 

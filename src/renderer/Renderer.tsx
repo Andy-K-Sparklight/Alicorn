@@ -1,4 +1,5 @@
 import { Box, createTheme, ThemeProvider, Typography } from "@mui/material";
+import { Theme } from "@mui/system";
 import { ipcRenderer, shell, webFrame } from "electron";
 import { emptyDir } from "fs-extra";
 import path from "path";
@@ -49,6 +50,27 @@ import { initTranslator, tr } from "./Translator";
 
 try {
   console.log("Renderer first log.");
+  console.log("Configuring window...");
+  const windowPos = localStorage.getItem("System.WindowPos");
+  const windowSize = localStorage.getItem("System.WindowSize");
+  if (windowSize) {
+    const s = windowSize.split(",").map((r) => {
+      return parseInt(r);
+    });
+    ipcRenderer.send("configureWindowSize", ...s);
+  }
+  if (windowPos) {
+    const s = windowPos.split(",").map((r) => {
+      return parseInt(r);
+    });
+    ipcRenderer.send("configureWindowPos", ...s);
+  }
+  ipcRenderer.on("mainWindowMoved", (_e, pos: number[]) => {
+    localStorage.setItem("System.WindowPos", pos.join(","));
+  });
+  ipcRenderer.on("mainWindowResized", (_e, sz: number[]) => {
+    localStorage.setItem("System.WindowSize", sz.join(","));
+  });
   const t0 = new Date();
   printScreen("Setting up error pop system...");
   window.addEventListener("unhandledrejection", (e) => {
@@ -81,50 +103,20 @@ try {
   console.log(
     "This is free software, and you are welcome to redistribute it under certain conditions; see the license file for details."
   );
-  printScreen("Setting up health trigger...");
-  printScreen("Configuring font size...");
-  configureFontSize();
-
   printScreen("Pre init works done, running main tasks.");
   const e2 = document.getElementById("boot_2");
   if (e2) {
     e2.innerHTML = e2.innerHTML + "Done.";
   }
-  if (gc) {
-    console.log("GC Enabled.");
-  } else {
-    console.log("GC Disabled.");
-  }
-  const windowPos = localStorage.getItem("System.WindowPos");
-  const windowSize = localStorage.getItem("System.WindowSize");
-  if (windowSize) {
-    const s = windowSize.split(",").map((r) => {
-      return parseInt(r);
-    });
-    ipcRenderer.send("configureWindowSize", ...s);
-  }
-  if (windowPos) {
-    const s = windowPos.split(",").map((r) => {
-      return parseInt(r);
-    });
-    ipcRenderer.send("configureWindowPos", ...s);
-  }
-  ipcRenderer.on("mainWindowMoved", (_e, pos: number[]) => {
-    localStorage.setItem("System.WindowPos", pos.join(","));
-  });
-  ipcRenderer.on("mainWindowResized", (_e, sz: number[]) => {
-    localStorage.setItem("System.WindowSize", sz.join(","));
-  });
+  ipcRenderer.send("allowShowWindow"); // STI
   void (async () => {
-    printScreen("Initializing translator...");
-    await initTranslator();
-    printScreen("Setting up link trigger...");
-    // @ts-ignore
-    window["ashow"] = (a: string) => {
-      void shell.openExternal(a);
-    }; // Binding
-    printScreen("Loading config, gdt, jdt...");
-    await Promise.allSettled([loadConfig(), loadGDT(), loadJDT()]);
+    printScreen("Loading lang, config, gdt, jdt...");
+    await Promise.allSettled([
+      initTranslator(),
+      loadConfig(),
+      loadGDT(),
+      loadJDT(),
+    ]);
     // GDT & JDT is required by LaunchPad & JavaSelector
     if (getBoolean("clean-storage")) {
       console.log("Cleaning storage data!");
@@ -148,19 +140,31 @@ try {
       console.log("Reloading window...");
       ipcRenderer.send("reload");
     }
-    printScreen("Flushing theme colors and zoom factor...");
-    flushColors();
-    webFrame.setZoomFactor(getNumber("theme.zoom-factor"));
     printScreen("Rendering main application...");
     const e3 = document.getElementById("boot_3");
     if (e3) {
       e3.innerHTML = e3.innerHTML + "Done.";
     }
+    printScreen("Flushing theme colors and zoom factor...");
+    flushColors();
+    webFrame.setZoomFactor(getNumber("theme.zoom-factor"));
     try {
       ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
     } catch (e) {
       printScreen("ERR! " + String(e));
       throw e;
+    }
+    printScreen("Configuring font size...");
+    configureFontSize();
+    printScreen("Setting up link trigger...");
+    // @ts-ignore
+    window["ashow"] = (a: string) => {
+      void shell.openExternal(a);
+    }; // Binding
+    if (gc) {
+      console.log("GC Enabled.");
+    } else {
+      console.log("GC Disabled.");
     }
     console.log("This Alicorn has super cow powers.");
     bindSuperCowPower();
@@ -366,10 +370,6 @@ function flushColors(): void {
   window.dispatchEvent(new CustomEvent("ForceRefreshApp"));
 }
 
-const GLOBAL_STYLES: React.CSSProperties = {
-  userSelect: "none",
-};
-
 const FONT_FAMILY =
   '"Ubuntu Mono", Consolas, "Courier New", Courier, "Source Hans Sans", "Roboto Medium", "Microsoft YaHei", "Segoe UI", SimHei, Tahoma, Geneva, Verdana, sans-serif';
 
@@ -416,38 +416,8 @@ export function setThemeParams(
   });
 }
 
-export let ALICORN_DEFAULT_THEME_DARK = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#5d2391",
-      light: "#d796f0",
-    },
-    secondary: {
-      main: "#df307f",
-      light: "#ffe0f0",
-    },
-  },
-  typography: {
-    fontFamily: FONT_FAMILY,
-  },
-});
-export let ALICORN_DEFAULT_THEME_LIGHT = createTheme({
-  palette: {
-    mode: "light",
-    primary: {
-      main: "#5d2391",
-      light: "#d796f0",
-    },
-    secondary: {
-      main: "#df307f",
-      light: "#ffe0f0",
-    },
-  },
-  typography: {
-    fontFamily: FONT_FAMILY,
-  },
-});
+export let ALICORN_DEFAULT_THEME_DARK: Theme;
+export let ALICORN_DEFAULT_THEME_LIGHT: Theme;
 
 const BACKGROUND_URLS: Record<string, string> = {
   ACG: "https://api.ixiaowai.cn/api/api.php",
@@ -468,10 +438,11 @@ function RendererBootstrap(): JSX.Element {
   }
   return (
     <Box
-      style={Object.assign(GLOBAL_STYLES, {
+      style={{
+        userSelect: "none",
         backgroundColor:
           getString("theme.secondary.light") || "#" + getTheme()[3],
-      })}
+      }}
     >
       <InstructionProvider>
         <ThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
