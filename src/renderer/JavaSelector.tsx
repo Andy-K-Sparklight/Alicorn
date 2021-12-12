@@ -343,7 +343,7 @@ function JavaDownloader(): JSX.Element {
                 }
               } else {
                 void shell.openExternal(
-                  "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/16/jre/x64/linux/"
+                  "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/17/jdk/x64/linux/"
                 );
                 submitInfo(tr("JavaSelector.External"));
                 setRunning(false);
@@ -375,7 +375,7 @@ function JavaDownloader(): JSX.Element {
                 }
               } else {
                 void shell.openExternal(
-                  "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jre/x64/linux/"
+                  "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jdk/x64/linux/"
                 );
                 submitInfo(tr("JavaSelector.External"));
                 setRunning(false);
