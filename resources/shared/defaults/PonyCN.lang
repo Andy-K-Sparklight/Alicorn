@@ -438,6 +438,10 @@ Mod 兼容性检查……
 
 已退出
 
+# ReadyToLaunch.JCheck.TooDANGEROUS
+
+@HTML<b style="color: red;">警告 - 此 JRE 缺少对于某个漏洞的保护措施！（CVE-2021-44228）<br/>不要使用它进行多人游戏！</b>
+
 # ReadyToLaunch.JCheck.TooOLD
 
 警告 - 该 JRE 太旧啦！启动可能出现问题！

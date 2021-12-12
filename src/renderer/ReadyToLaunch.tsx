@@ -1347,7 +1347,13 @@ const LEGACY_VERSIONS = /^1\.([0-9]|1[0-2])([-.a-z].*?)?$/i;
 const MODERN_VERSIONS = /^1\.(17|[2-9][0-9])(\.)?[0-9]*?/i;
 const HIGH_VERSIONS = /^1\.(1[8-9]|[2-9][0-9])(\.)?[0-9]*?/i;
 
-function checkJMCompatibility(mv: string, jv: number): "OLD" | "NEW" | "OK" {
+function checkJMCompatibility(
+  mv: string,
+  jv: number
+): "OLD" | "NEW" | "OK" | "DANGEROUS" {
+  if (jv <= 7 && jv !== 0) {
+    return "DANGEROUS";
+  }
   if (LEGACY_VERSIONS.test(mv) && jv > 8) {
     return "NEW";
   }
