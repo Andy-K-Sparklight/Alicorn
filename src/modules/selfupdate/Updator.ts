@@ -131,8 +131,7 @@ export async function checkUpdate(): Promise<void> {
       console.log("Switching files...");
       IS_UPDATING = true;
       try {
-        await switchFile(res as BuildInfo);
-        await switchFile(res_rend as BuildInfo);
+        await switchFile();
       } catch (e) {
         console.log(e);
         console.log("File switch failed! Error is present above.");
@@ -200,18 +199,24 @@ export async function doUpdate(
 ): Promise<boolean> {
   try {
     const basePath = getBasePath();
+    const targetPath = basePath + ".local";
     const o: Promise<void>[] = [];
     for (const v of info.files) {
       console.log("Downloading " + v);
-      const target = path.resolve(basePath, v + ".local");
+      const target = path.resolve(targetPath, v);
       // First download all, then rename
       const meta = new DownloadMeta(baseUrl + v, target, "");
       o.push(
         (async () => {
-          const s = await Serial.getInstance().downloadFile(meta, true, true);
-          if (s !== 1) {
-            throw "Failed to download: " + v;
+          let tries = 0;
+          while (tries < 3) {
+            const s = await Serial.getInstance().downloadFile(meta, true, true);
+            if (s === 1) {
+              return;
+            }
+            tries++;
           }
+          throw "Failed to download: " + v;
         })()
       );
     }
@@ -223,16 +228,12 @@ export async function doUpdate(
   }
 }
 
-async function switchFile(bInfo: BuildInfo): Promise<boolean> {
+async function switchFile(): Promise<boolean> {
   try {
     const basePath = getBasePath();
-    await Promise.all(
-      bInfo.files.map((v) => {
-        const origin = path.resolve(basePath, v + ".local");
-        const target = path.resolve(basePath, v);
-        return fs.rename(origin, target); // Pass Promise
-      })
-    );
+    const originPath = basePath + ".local";
+    await fs.remove(basePath);
+    await fs.rename(originPath, basePath);
     return true;
   } catch (e) {
     return false;
