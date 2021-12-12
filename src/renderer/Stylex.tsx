@@ -20,7 +20,7 @@ export interface AlicornTheme {
 export const useCardStyles = makeStyles((theme: AlicornTheme) => ({
   text: {
     fontSize: "medium",
-    color: isBgDark() ? theme.palette.secondary.light : undefined,
+    color: theme.palette.secondary.light,
   },
   text2: { fontSize: "medium", color: theme.palette.secondary.light },
   desc: {
