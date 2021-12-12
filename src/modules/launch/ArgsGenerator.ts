@@ -98,7 +98,8 @@ export function generateVMArgs(
   }
   const logArgs: string[] = [];
   logArgs.push("-Dlog4j2.formatMsgNoLookups=true"); // #72
-
+  logArgs.push("-Dcom.sun.jndi.rmi.object.trustURLCodebase=false");
+  logArgs.push("-Dcom.sun.jndi.cosnaming.object.trustURLCodebase=false");
   const tArg = profile.logArg.trim();
   if (!isNull(tArg) && !getBoolean("cmc.disable-log4j-config")) {
     logArgs.push(tArg);
