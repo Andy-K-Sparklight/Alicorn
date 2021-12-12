@@ -19,7 +19,12 @@ class BuildInfoPlugin {
         (assets) => {
           const bInfo = {};
           bInfo.date = new Date().toUTCString();
-          bInfo.files = Array.from(Object.keys(assets));
+          bInfo.files = Array.from(Object.keys(assets)).filter(
+            (v) =>
+              !v.toUpperCase().includes("LICENSE") &&
+              !v.toLowerCase().endsWith(".d.ts") &&
+              !v.toLowerCase().endsWith(".map")
+          ); // Do not send unnecessary files to client
           bInfo.version = this.version;
           compilation.emitAsset(
             this.output,
