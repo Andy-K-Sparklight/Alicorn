@@ -36,13 +36,38 @@ const Main = {
           to: path.resolve(__dirname, "dist", "release"),
         },
         {
-          from: path.resolve(__dirname, "node_modules", "undici"),
-          to: path.resolve(__dirname, "dist", "release", "undici"),
-          filter: (source) => {
-            return !/(undici[/\\]docs|undici[/\\]README|undici[/\\]types|undici[/\\]index\.d\.ts)/i.test(
-              path.normalize(source)
-            );
-          },
+          from: path.resolve(
+            __dirname,
+            "node_modules",
+            "undici",
+            "lib",
+            "llhttp",
+            "llhttp.wasm"
+          ),
+          to: path.resolve(
+            __dirname,
+            "dist",
+            "release",
+            "llhttp",
+            "llhttp.wasm"
+          ),
+        },
+        {
+          from: path.resolve(
+            __dirname,
+            "node_modules",
+            "undici",
+            "lib",
+            "llhttp",
+            "llhttp_simd.wasm"
+          ),
+          to: path.resolve(
+            __dirname,
+            "dist",
+            "release",
+            "llhttp",
+            "llhttp_simd.wasm"
+          ),
         },
       ],
     }),
@@ -95,9 +120,6 @@ const Renderer = {
   ],
   mode: "production",
   target: "electron-renderer",
-  externals: {
-    undici: "al_undici",
-  },
 };
 
 module.exports = [Main, Renderer];
