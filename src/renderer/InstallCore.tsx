@@ -760,7 +760,9 @@ export function InstallCore(): JSX.Element {
                           selectedIrisContainer
                         )}/${encodeURIComponent(
                           prof.baseVersion
-                        )}/Fabric/iris-shaders/1`
+                        )}/Fabric/${encodeURIComponent(
+                          "@Modrinth:YL57xq9U @Modrinth:AANobbMI?"
+                        )}/1`
                       );
                       triggerSetPage("PffFront");
                     }

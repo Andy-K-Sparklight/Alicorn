@@ -610,10 +610,19 @@ async function pffInstall(
   modLoader: number
 ): Promise<void> {
   setChangePageWarn(true);
+  const optional = name.endsWith("?");
+  if (optional) {
+    name = name.slice(0, -1);
+  }
   const ml = modLoaderOf(modLoader);
   const idx = `[${name}] `;
   if (!ml) {
-    emitter.emit(PFF_MSG_GATE, `[${name}] ` + tr("PffFront.UnsupportedLoader"));
+    if (!optional) {
+      emitter.emit(
+        PFF_MSG_GATE,
+        `[${name}] ` + tr("PffFront.UnsupportedLoader")
+      );
+    }
     return;
   }
   setPffFlag("1");
@@ -627,11 +636,15 @@ async function pffInstall(
     if (await fetchModByName(name, version, ml, container)) {
       emitter.emit(PFF_MSG_GATE, idx + tr("PffFront.Done"));
     } else {
-      emitter.emit(PFF_MSG_GATE, idx + tr("PffFront.Failed"));
+      if (!optional) {
+        emitter.emit(PFF_MSG_GATE, idx + tr("PffFront.Failed"));
+      }
     }
   } catch (e) {
     console.log(e);
-    emitter.emit(PFF_MSG_GATE, idx + tr("PffFront.Failed"));
+    if (!optional) {
+      emitter.emit(PFF_MSG_GATE, idx + tr("PffFront.Failed"));
+    }
   }
   setPffFlag("0");
   setProxy("", 0);

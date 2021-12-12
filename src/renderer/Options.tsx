@@ -322,6 +322,11 @@ export function OptionsPage(): JSX.Element {
           />
           <InputItem
             type={ConfigType.RADIO}
+            bindConfig={"pff.upgrade-mode"}
+            choices={["Override", "Keep"]}
+          />
+          <InputItem
+            type={ConfigType.RADIO}
             bindConfig={"pff.first-source"}
             choices={["Curseforge", "Modrinth"]}
           />

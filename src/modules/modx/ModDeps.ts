@@ -32,25 +32,27 @@ export async function configureModDepChain(
   const collection: ModDepUnit[] = [];
   await Promise.allSettled(
     all.map(async (mf) => {
-      const cur = container.getModJar(mf);
-      const t = await getModType(cur);
-      if (t === loader) {
-        switch (loader) {
-          case ModLoader.FABRIC:
-            collection.push(
-              ...(await unfoldFabricJar(cur)).map((c) => {
-                return { ...c, origin: cur, loader: ModLoader.FABRIC };
-              })
-            );
-            break;
-          case ModLoader.FORGE:
-            collection.push(
-              ...(await unfoldForgeTomlJar(cur)).map((c) => {
-                return { ...c, origin: cur, loader: ModLoader.FABRIC };
-              })
-            );
+      try {
+        const cur = container.getModJar(mf);
+        const t = await getModType(cur);
+        if (t === loader) {
+          switch (loader) {
+            case ModLoader.FABRIC:
+              collection.push(
+                ...(await unfoldFabricJar(cur)).map((c) => {
+                  return { ...c, origin: cur, loader: ModLoader.FABRIC };
+                })
+              );
+              break;
+            case ModLoader.FORGE:
+              collection.push(
+                ...(await unfoldForgeTomlJar(cur)).map((c) => {
+                  return { ...c, origin: cur, loader: ModLoader.FABRIC };
+                })
+              );
+          }
         }
-      }
+      } catch {}
     })
   );
   const o: UnmetDepUnit[] = [];

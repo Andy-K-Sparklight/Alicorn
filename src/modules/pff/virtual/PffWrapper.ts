@@ -1,4 +1,4 @@
-import { copyFile } from "fs-extra";
+import { copyFile, remove } from "fs-extra";
 import { getString } from "../../config/ConfigSupport";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { DownloadMeta } from "../../download/AbstractDownloader";
@@ -100,17 +100,22 @@ export async function fetchSelectedMod(
   modLoader: "Fabric" | "Forge",
   container: MinecraftContainer
 ): Promise<boolean> {
+  const lf = await loadLockfile(container);
   try {
     if (!rsv.mainId) {
       return false;
     }
     if (await rsv.canSupport(gameVersion, modLoader)) {
       const a = await rsv.getArtifactFor(gameVersion, modLoader);
+      for (const r of Object.values(lf)) {
+        if (r.selectedArtifact.fileName === a.fileName) {
+          return true; // Two mods, one file, do not override or write
+        }
+      }
       try {
         const pc = await getCachedMod(rsv.mainId, a.id);
         if (pc) {
           await copyFile(pc, container.getModJar(a.fileName));
-          const lf = await loadLockfile(container);
           await rsv.writeLock(lf);
           await saveLockfile(lf, container);
           return true;
@@ -138,7 +143,19 @@ export async function fetchSelectedMod(
           } catch (e) {
             console.log("Failed to save cache for " + rsv.mainId + ": " + e);
           }
-          const lf = await loadLockfile(container);
+          if (getString("pff.upgrade-mode") === "Override") {
+            // Remove old
+            for (const l of Object.values(lf)) {
+              if (l.id === rsv.mainId) {
+                if (hasSameObj(l.selectedArtifact.gameVersion, a.gameVersion)) {
+                  await remove(
+                    container.getModJar(l.selectedArtifact.fileName)
+                  );
+                }
+                break;
+              }
+            }
+          }
           await rsv.writeLock(lf);
           await saveLockfile(lf, container);
         } catch (e) {
@@ -155,6 +172,15 @@ export async function fetchSelectedMod(
     console.log(e);
     return false;
   }
+}
+
+function hasSameObj<T>(a: Array<T>, b: Array<T>): boolean {
+  for (const o of a) {
+    if (b.includes(o)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 export function getResolvers(

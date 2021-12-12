@@ -1822,6 +1822,22 @@ Alicorn/MCBBS 镜像组（合并的记录，非自由）
 
 在下次启动时将设置重置为当前版本的默认内容 - 当你觉得你玩脱了的时候很有用，但所有改动都将丢失
 
+# Options.pff.upgrade-mode.title
+
+Pff Mod 更新模式
+
+# Options.pff.upgrade-mode.desc
+
+当 Pff 尝试安装 Mod 时，如果要安装的 Mod 已经存在一个旧版本，那么它应该……？
+
+# Options.pff.upgrade-mode.Override
+
+更新和覆盖
+
+# Options.pff.upgrade-mode.Keep
+
+保留两者
+
 # Options.pff.first-source.title
 
 Pff 优先搜索源
