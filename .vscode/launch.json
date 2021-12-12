@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Dev",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/dist",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+      "args": ["."],
+      "outputCapture": "std"
+    },
+    {
+      "name": "Run Production",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/dist/release",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+      "args": ["."],
+      "outputCapture": "std"
+    }
+  ]
+}

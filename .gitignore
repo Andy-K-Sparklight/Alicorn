@@ -108,7 +108,3 @@ dist
 
 # Build output
 out
-
-# VSCode
-.vscode
-.VSCodeCounter
