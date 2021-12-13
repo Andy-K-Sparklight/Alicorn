@@ -26,7 +26,7 @@ import path from "path";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { throttle } from "throttle-debounce";
-import { getBoolean, getString } from "../modules/config/ConfigSupport";
+import { getBoolean } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { setProxy } from "../modules/download/DownloadWrapper";
@@ -602,14 +602,15 @@ export function SingleModDisplay(props: {
   );
 }
 
-async function pffInstall(
+export async function pffInstall(
   name: string,
   container: MinecraftContainer,
   version: string,
   emitter: EventEmitter,
   modLoader: number
-): Promise<void> {
+): Promise<boolean> {
   setChangePageWarn(true);
+  let ok = false;
   const optional = name.endsWith("?");
   if (optional) {
     name = name.slice(0, -1);
@@ -623,18 +624,13 @@ async function pffInstall(
         `[${name}] ` + tr("PffFront.UnsupportedLoader")
       );
     }
-    return;
   }
   setPffFlag("1");
-  const proxy = getString("pff.proxy");
-  try {
-    const u = new URL(proxy);
-    setProxy(u.host, parseInt(u.port));
-  } catch {}
   emitter.emit(PFF_MSG_GATE, idx + tr("PffFront.Loading"));
   try {
     if (await fetchModByName(name, version, ml, container)) {
       emitter.emit(PFF_MSG_GATE, idx + tr("PffFront.Done"));
+      ok = true;
     } else {
       if (!optional) {
         emitter.emit(PFF_MSG_GATE, idx + tr("PffFront.Failed"));
@@ -649,6 +645,7 @@ async function pffInstall(
   setPffFlag("0");
   setProxy("", 0);
   setChangePageWarn(false);
+  return ok;
 }
 
 function TabPanel(props: {

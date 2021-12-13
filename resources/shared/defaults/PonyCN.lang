@@ -894,6 +894,10 @@ Pff 正安装 Mod……
 
 取消
 
+# InstallCore.Fabric.FabricAPIFailed
+
+安装 Fabric API 失败，许多 Fabric Mod 需要它。\n前往 Pff，输入 fabric-api 重新进行安装。
+
 # InstallCore.Progress.CouldNotExecute
 
 没能执行安装程序……

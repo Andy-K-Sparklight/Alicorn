@@ -316,7 +316,7 @@ function transformAddonInfoToMeta(aInfo: AddonInfo): ModMeta {
   };
 }
 
-export function modLoaderOf(type: number): "Forge" | "Fabric" | undefined {
+export function modLoaderOf(type: number): "Forge" | "Fabric" {
   if (type === 4) {
     return "Fabric";
   }

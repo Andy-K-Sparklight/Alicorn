@@ -13,6 +13,7 @@ import {
   ThemeProvider,
   Typography,
 } from "@mui/material";
+import { EventEmitter } from "events";
 import React, { useEffect, useRef, useState } from "react";
 import { throttle } from "throttle-debounce";
 import { ALICORN_SEPARATOR, ReleaseType } from "../modules/commons/Constants";
@@ -55,17 +56,17 @@ import { Icons } from "./Icons";
 import { ShiftEle } from "./Instruction";
 import { submitSucc, submitWarn } from "./Message";
 import { FailedHint, OperatingHintCustom } from "./OperatingHint";
+import { pffInstall } from "./PffFront";
 import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
   isBgDark,
 } from "./Renderer";
-import { fullWidth, useFormStyles } from "./Stylex";
+import { useFormStyles } from "./Stylex";
 import { tr } from "./Translator";
 
 export function InstallCore(): JSX.Element {
   const classes = useFormStyles();
-  const fullWidthClasses = fullWidth();
   const [foundCores, setCores] = useState<string[]>([]);
   const isLoaded = useRef<boolean>(false);
   const mounted = useRef<boolean>();
@@ -637,38 +638,41 @@ export function InstallCore(): JSX.Element {
                     }
                     return;
                   }
-                  setProgressMsg(
-                    tr(
-                      "InstallCore.Progress.Fetching",
-                      `Loader=Fabric`,
-                      `MCV=${mcv}`
-                    )
-                  );
-                  const stat = await getFabricInstaller(u, ct);
-                  if (!stat) {
-                    if (mounted.current) {
-                      setOperating(false);
-                      setChangePageWarn(false);
-                      setFailed(true);
-                      setFailedMsg(
+
+                  const [stat2, fbapi] = await Promise.allSettled([
+                    (async () => {
+                      setProgressMsg(
                         tr(
-                          "InstallCore.Progress.FailedToDownload",
-                          `Loader=Fabric`
+                          "InstallCore.Progress.Fetching",
+                          `Loader=Fabric`,
+                          `MCV=${mcv}`
                         )
                       );
-                    }
-                    return;
-                  }
-                  setProgressMsg(tr("InstallCore.Progress.ExecutingFabric"));
+                      if (!(await getFabricInstaller(u, ct))) {
+                        return false;
+                      }
+                      setProgressMsg(
+                        tr("InstallCore.Progress.ExecutingFabric")
+                      );
+                      const s0 = await performFabricInstall(
+                        await getJavaRunnable(getDefaultJavaHome()),
+                        u,
+                        fbv,
+                        mcv,
+                        ct
+                      );
+                      await removeFabricInstaller(u, ct);
+                      return s0;
+                    })(),
+                    pffInstall(
+                      "@Modrinth:P7dR8mSH",
+                      ct,
+                      mcv,
+                      new EventEmitter(),
+                      4
+                    ),
+                  ]);
 
-                  const stat2 = await performFabricInstall(
-                    await getJavaRunnable(getDefaultJavaHome()),
-                    u,
-                    fbv,
-                    mcv,
-                    ct
-                  );
-                  await removeFabricInstaller(u, ct);
                   if (!stat2) {
                     if (mounted.current) {
                       setOperating(false);
@@ -677,6 +681,8 @@ export function InstallCore(): JSX.Element {
                       setFailedMsg(tr("InstallCore.Progress.CouldNotExecute"));
                     }
                     return;
+                  } else if (!fbapi) {
+                    submitWarn(tr("InstallCore.Fabric.FabricAPIFailed"));
                   }
                   updateFabricCores(!updateFabricCoresBit);
                   setProgressMsg("Done! Cleaning up files...");
