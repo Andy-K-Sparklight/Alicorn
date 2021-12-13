@@ -46,7 +46,7 @@
   "dev.experimental": false,
   "web.global-proxy": "",
   "doh-server": "Native",
-  "pff.first-source": "Curseforge",
+  "pff.first-source": "Modrinth",
   "features.saying": true,
   "features.miniwiki": true,
   "features.detect-lan": true,
