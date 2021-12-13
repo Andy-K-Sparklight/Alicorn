@@ -4,6 +4,7 @@ import path from "path";
 import { DOH_CONFIGURE } from "../modules/commons/Constants";
 import {
   getBoolean,
+  getNumber,
   getString,
   loadConfigSync,
 } from "../modules/config/ConfigSupport";
@@ -43,6 +44,13 @@ process.on("SIGINT", () => {
   process.exit();
 });
 
+process.on("SIGTERM", () => {
+  if (READY_LOCK) {
+    app.releaseSingleInstanceLock();
+  }
+  process.exit();
+});
+
 process.on("exit", () => {
   if (READY_LOCK) {
     app.releaseSingleInstanceLock();
@@ -70,6 +78,8 @@ async function whenAppReady() {
       contextIsolation: false, // Node
       sandbox: false, // Node
       spellcheck: false,
+      zoomFactor: getNumber("theme.zoom-factor", 1.0),
+      defaultEncoding: "UTF-8",
     },
     frame: getString("frame.drag-impl") === "TitleBar",
     show: false,
@@ -79,12 +89,20 @@ async function whenAppReady() {
   console.log("Loading resources...");
   console.log("Registering event listeners...");
   registerBackgroundListeners();
-
+  let readyToClose = false;
   ipcMain.once("allowShowWindow", () => {
     console.log("Opening window!");
     mainWindow?.show();
   });
-
+  ipcMain.on("readyToClose", () => {
+    readyToClose = true;
+  });
+  mainWindow.on("close", (e) => {
+    if (!readyToClose) {
+      e.preventDefault();
+      mainWindow?.webContents.send("YouAreGoingToBeKilled");
+    }
+  });
   mainWindow.once("ready-to-show", async () => {
     applyDoHSettings();
     console.log("Setting up proxy!");
@@ -202,7 +220,7 @@ function main() {
     try {
       console.log(e);
       await mainWindow?.webContents.loadFile("Error.html", {
-        hash: btoa(escape(String(e.message))),
+        hash: btoa(encodeURIComponent(String(e.message))),
       });
     } catch {}
   });

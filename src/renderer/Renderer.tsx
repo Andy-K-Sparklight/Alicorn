@@ -1,6 +1,6 @@
 import { Box, createTheme, ThemeProvider, Typography } from "@mui/material";
 import { Theme } from "@mui/system";
-import { ipcRenderer, shell, webFrame } from "electron";
+import { ipcRenderer, shell } from "electron";
 import { emptyDir } from "fs-extra";
 import path from "path";
 import React from "react";
@@ -145,9 +145,8 @@ try {
     if (e3) {
       e3.innerHTML = e3.innerHTML + "Done.";
     }
-    printScreen("Flushing theme colors and zoom factor...");
+    printScreen("Flushing theme colors...");
     flushColors();
-    webFrame.setZoomFactor(getNumber("theme.zoom-factor"));
     try {
       ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
     } catch (e) {

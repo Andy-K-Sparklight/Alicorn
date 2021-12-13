@@ -201,6 +201,11 @@ export function App(): JSX.Element {
     });
   }, []);
   useEffect(() => {
+    ipcRenderer.once("YouAreGoingToBeKilled", () => {
+      void exitApp();
+    });
+  }, []);
+  useEffect(() => {
     const id = setInterval(async () => {
       await intervalSaveData();
     }, 300000);
@@ -397,6 +402,7 @@ export function App(): JSX.Element {
                     remoteHideWindow();
                     waitUpdateFinished(() => {
                       prepareToQuit();
+                      ipcRenderer.send("readyToClose");
                       ipcRenderer.send("reload");
                     });
                   }}
@@ -523,16 +529,7 @@ export function App(): JSX.Element {
             >
               <IconButton
                 className={classes.exitButton}
-                onClick={async () => {
-                  remoteHideWindow();
-                  await ipcRenderer.invoke(
-                    "markLoginItem",
-                    getBoolean("auto-launch")
-                  );
-                  waitUpdateFinished(() => {
-                    remoteCloseWindow();
-                  });
-                }}
+                onClick={exitApp}
                 color={"inherit"}
               >
                 <PowerSettingsNew />
@@ -686,6 +683,14 @@ export function App(): JSX.Element {
   );
 }
 
+async function exitApp(): Promise<void> {
+  remoteHideWindow();
+  await ipcRenderer.invoke("markLoginItem", getBoolean("auto-launch"));
+  waitUpdateFinished(() => {
+    remoteCloseWindow();
+  });
+}
+
 const PAGES_ICONS_MAP: Record<string, JSX.Element> = {
   LaunchPad: <FlightTakeoff />,
   Welcome: <Home />,
@@ -742,6 +747,7 @@ export function remoteHideWindow(): void {
 export function remoteCloseWindow(): void {
   console.log("Closing!");
   prepareToQuit();
+  ipcRenderer.send("readyToClose");
   ipcRenderer.send("closeWindow");
 }
 
