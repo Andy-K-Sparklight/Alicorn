@@ -92,7 +92,7 @@ Pff 软件安装器
 
 # System.JumpPageWarn.Description
 
-该页面想要告知您，您不应该在此时离开它，因为您可能有未保存的修改，或者该页面有些操作正在进行。仍要切换页面吗？
+你不应该在此时切换页面，这可能导致操作中断或丢失你的修改。\n仍要切换吗？
 
 # System.JumpPageWarn.Yes
 
@@ -104,15 +104,15 @@ Pff 软件安装器
 
 # System.HasUpdate
 
-发现了一个新版本，请稍等，我们正在为您更新……
+发现了一个新版本，请稍等，我们正在更新……
 
 # System.UpdateOK
 
-我们已为您更新至最新版本
+耶！我现在已经是全新的我了！
 
 # System.UpdateFailed
 
-更新失败……不过别担心！您的文件丝毫不受影响。
+更新失败……不过别担心！你的文件丝毫不受影响。
 
 # MainMenu.UtilitiesIndex
 
@@ -176,13 +176,13 @@ Pff 软件安装器
 
 # Operating.FailedInfo
 
-别担心！你的文件应该没有受到影响。\n引发问题的原因是：\n{Reason}
+别担心！你的文件应该没有受到影响。\n问题的原因如下：\n{Reason}
 
 # Operating.FailedSayings
 
 为什么会变成这样呢？
 
-嗯……您能给我半分钟吗？让我冷静下……谢谢！
+嗯……你能给我半分钟吗？让我冷静下……谢谢！
 
 幸亏我们在出现重大事故前阻止了操作。
 
@@ -194,7 +194,7 @@ Pff 软件安装器
 
 对不起对不起！我刚刚睡着了……
 
-没有哪只小马是完美无缺的，您……能理解吗？
+没有哪只小马是完美无缺的，你……能理解吗？
 
 再试试？或许这只是一场噩梦而已……
 
@@ -272,7 +272,7 @@ Pff 软件安装器
 
 # ReadyToLaunch.LoginInstruction
 
-你的登录过程用时过长，你遇到什么问题了吗？\n\n如果没有，你可以单击「没有问题，让我继续」。\n\n如果你的帐户开启了二步验证或者一些特殊服务，则可能登录失败。\n你可以单击「帮助我登录！」来通过其它的方式登录 Microsoft 帐号。
+你的登录过程用时过长，你遇到什么问题了吗？\n\n如果无法登录，你可以单击「帮助我登录！」来通过其它的方式登录 Microsoft 帐号。
 
 # ReadyToLaunch.ContinueLogin
 
@@ -320,7 +320,7 @@ Pff 软件安装器
 
 # ReadyToLaunch.Progress
 
-请稍候……还要处理 {Pending} 个文件（并发：{Current}/{BufferMax}）
+正在部署 {Pending} 个文件（并发：{Current}/{BufferMax}）
 
 # ReadyToLaunch.Getting
 
@@ -352,7 +352,7 @@ Pff 软件安装器
 
 # ReadyToLaunch.StartAuthMsg
 
-选择一个方式验证您的身份
+选择一个方式验证你的身份
 
 # ReadyToLaunch.UseMZ
 
@@ -440,7 +440,7 @@ Mod 兼容性检查……
 
 # ReadyToLaunch.JCheck.TooDANGEROUS
 
-@HTML<b style="color: red;">警告 - 此 JRE 缺少对于某个漏洞的保护措施！（CVE-2021-44228）<br/>不要使用它进行多人游戏！</b>
+@HTML<b style="color: red;">警告 - 此 JRE 不安全！（CVE-2021-44228）<br/>不要使用它进行多人游戏！</b>
 
 # ReadyToLaunch.JCheck.TooOLD
 
@@ -492,15 +492,15 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 # ReadyToLaunch.DryLaunchDesc
 
-运行所有启动操作，但不执行 Java，也不生成游戏进程
+用于测试核心配置或比较性能
 
 # ReadyToLaunch.GenerateLink
 
-想要联机游戏？我能帮你吗？
+你正在进行局域网联机
 
 # ReadyToLaunch.GenerateLinkDesc
 
-@HTML使用下面的设置<b>生成代码</b>，将其提供给你的好友，他（她）就能够在「友谊接力」中使用它加入你的世界！\n<b style="color: red;">（有效期指代码有效期，你需要保持世界开启！）</b>
+@HTML使用下面的设置<b>生成代码</b>，将其提供给你的好友，他（她）就能够在「友谊接力」中使用它加入你的世界！\n代码将于你退出游戏后自动销毁。
 
 # ReadyToLaunch.Expires
 
@@ -568,11 +568,11 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 # ReadyToLaunch.HoofoffCodeRaw
 
-你的友谊接力代码是：{Code}。请记住它，它不会再出现了！
+你的代码：{Code}，快去邀请你的好友吧！
 
 # ReadyToLaunch.HoofoffCode
 
-@HTML你的友谊接力代码是：<b>{Code}</b>
+@HTML你的代码：<b>{Code}</b>，它已经被复制到剪贴板。
 
 # ReadyToLaunch.RequirePremium
 
@@ -602,13 +602,13 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 {UserName} 可爱，我和 {UserName} 贴贴～
 
-Alicorn 是自由软件！您完全可以将她用于任何用途！
+Alicorn 是自由软件！你完全可以将她用于任何用途！
 
 我？我不过是个有点思想的 Shell，只能传达你的命令而已啦。
 
-感谢 Node.js，现在验证您的资源文件又快又准确。
+感谢 Node.js，现在验证你的资源文件又快又准确。
 
-就算您把并发数提升到 1000 个并发，Alicorn 也没有丝毫压力 —— 有压力的是您的电脑
+就算你把并发数提升到 1000 个并发，Alicorn 也没有丝毫压力 —— 有压力的是你的电脑
 
 请说出新人常用的启动器。不太确定？你确定吗？
 
@@ -692,7 +692,7 @@ Alicorn 启动器 {AppVersion}（内核版本 {UpdatorVersion}）
 
 # VersionView.EcVersion
 
-此版本是针对 Electron {Build} 构建的，您当前正在使用 Electron {Current}
+此版本是针对 Electron {Build} 构建的，你当前正在使用 Electron {Current}
 
 # VersionView.Electron.Perfect
 
@@ -716,7 +716,7 @@ Alicorn 启动器 {AppVersion}（内核版本 {UpdatorVersion}）
 
 # VersionView.Copyright
 
-以下内容为著作权声明的简体中文翻译，不可被视为原文本的替代。Alicorn 的开发人员拥有最终解释权。\n\nAlicorn 启动器是自由软件，复制、修改和重新分发等行为应遵循 GNU GENERAL PUBLIC LICENSE Version 3.0 许可证（或以后的版本）。\nCopyright (C) 2021 Andy K Rarity Sparklight\n\n该程序是自由软件：您可以根据自由软件基金会发布的 GNU 通用公共许可证（第三版或以后）的条款重新分发和/或修改它。\n分发此程序是希望它有用，但不作任何保证；甚至没有对适销性或针对特定目的的适用性的暗示保证。有关更多详细信息，请参阅 GNU 通用公共许可证（第三版或以后）原文。\nAlicorn 中所引用的 Minecraft 相关图片等内容不是 Alicorn 的一部分，它们来自 Minecraft Wiki 并以 知识共享 署名-非商业性使用-相同方式分享 3.0（CC BY-NC-SA 3.0）协议授权，不适用 Alicorn 的 GNU 通用公共许可证（第三版或以后）。
+以下内容为著作权声明的简体中文翻译，不可被视为原文本的替代。Alicorn 的开发人员拥有最终解释权。\n\nAlicorn 启动器是自由软件，复制、修改和重新分发等行为应遵循 GNU GENERAL PUBLIC LICENSE Version 3.0 许可证（或以后的版本）。\nCopyright (C) 2021 Andy K Rarity Sparklight\n\n该程序是自由软件：你可以根据自由软件基金会发布的 GNU 通用公共许可证（第三版或以后）的条款重新分发和/或修改它。\n分发此程序是希望它有用，但不作任何保证；甚至没有对适销性或针对特定目的的适用性的暗示保证。有关更多详细信息，请参阅 GNU 通用公共许可证（第三版或以后）原文。\nAlicorn 中所引用的 Minecraft 相关图片等内容不是 Alicorn 的一部分，它们来自 Minecraft Wiki 并以 知识共享 署名-非商业性使用-相同方式分享 3.0（CC BY-NC-SA 3.0）协议授权，不适用 Alicorn 的 GNU 通用公共许可证（第三版或以后）。
 
 # VersionView.Privacy
 
@@ -724,7 +724,7 @@ Alicorn 启动器 {AppVersion}（内核版本 {UpdatorVersion}）
 
 # VersionView.Credit
 
-@HTMLAlicorn 的创建离不开超过 505 个 NPM 可重用软件包，其中包括 Material UI、React、Electron 这些框架软件包，got、crypto-js、ajv 这些效用软件包，Webpack、TypeScript 这些构建软件包，以及许多许多被大量依赖的基础软件包。\nAlicorn 还要感谢包括 VSCodium 和 Vim 在内的开发工具，因为有它们，Alicorn 的开发效率成倍地提升。\n\n您是否想支持 Alicorn？或者只是想了解更多内容？欢迎访问 <a href="javascript:ashow('https://alc.pages.dev')">Alicorn Launcher 官方网站</a>
+@HTMLAlicorn 的创建离不开超过 505 个 NPM 可重用软件包，其中包括 Material UI、React、Electron 这些框架软件包，got、crypto-js、ajv 这些效用软件包，Webpack、TypeScript 这些构建软件包，以及许多许多被大量依赖的基础软件包。\nAlicorn 还要感谢包括 VSCodium 和 Vim 在内的开发工具，因为有它们，Alicorn 的开发效率成倍地提升。\n\n你是否想支持 Alicorn？或者只是想了解更多内容？欢迎访问 <a href="javascript:ashow('https://alc.pages.dev')">Alicorn Launcher 官方网站</a>
 
 # VersionView.FreeSoftwareClaim
 
@@ -748,7 +748,7 @@ Alicorn 启动器 {AppVersion}（内核版本 {UpdatorVersion}）
 
 # ContainerManager.AddDescription
 
-添加容器很简单：选择一个文件夹并给它起一个名字！
+选择一个文件夹并给它起一个名字！
 
 # ContainerManager.EnterName
 
@@ -868,7 +868,7 @@ Pff 正安装 Mod……
 
 # ContainerManager.AskRemoveDetail
 
-这不会修改容器中的任何文件，您可以稍后重新添加该容器。
+这不会修改容器中的任何文件，你可以稍后重新添加该容器。
 
 # ContainerManager.AskClear
 
@@ -1036,15 +1036,15 @@ Minecraft 版本号
 
 # AccountManager.Password
 
-您的密码
+你的密码
 
 # AccountManager.EnterPasswordHint
 
-为您的帐户输入密码（我不会看的！）
+为你的帐户输入密码（我不会看的！）
 
 # AccountManager.Failed
 
-验证失败 - 我们无法验证您的帐户，请检查密码与网络连接，或稍后再试
+验证失败 - 我们无法验证你的帐户，请检查密码与网络连接，或稍后再试
 
 # AccountManager.Validate
 
@@ -1072,7 +1072,7 @@ Minecraft 版本号
 
 # AccountManager.DeleteMsg
 
-下次使用此帐户时，您需要重新添加和登录它。
+下次使用此帐户时，你需要重新添加和登录它。
 
 # AccountManager.Yes
 
@@ -1088,7 +1088,7 @@ Minecraft 版本号
 
 # AccountManager.AddMsg
 
-输入您的帐户
+输入你的帐户
 
 # AccountManager.Email
 
@@ -1124,7 +1124,7 @@ Minecraft 版本号
 
 # AccountManager.Note
 
-@HTML如果您使用 Microsoft 帐户或本地帐户，则无需在此配置，请<b>直接启动游戏</b>，当启动时将（如果必要）询问您相关的信息。\n「将此按钮拖动至启动器」已受支持，将按钮拖向启动器的任意位置并松蹄就好。
+@HTML如果你使用 Microsoft 帐户或本地帐户，则无需在此配置，请<b>直接启动游戏</b>，当启动时将（如果必要）询问你相关的信息。\n「将此按钮拖动至启动器」已受支持，将按钮拖向启动器的任意位置并松蹄就好。
 
 # JavaSelector.External
 
@@ -1148,7 +1148,7 @@ Minecraft 版本号
 
 # JavaSelector.Loading
 
-请稍等，正在您的设备上查找所有可用的 Java 运行时……
+请稍等，正在你的设备上查找所有可用的 Java 运行时……
 
 # JavaSelector.Reload
 
@@ -1172,7 +1172,7 @@ Minecraft 在 Client Java VM 上可能无法发挥出最好性能，建议安装
 
 # JavaSelector.WarnNonFree
 
-这个 JRE 存在许可问题！Alicorn 建议您使用自由的 OpenJDK 运行时以获得更好的性能，同时避免潜在的恶意软件。
+这个 JRE 存在许可问题！Alicorn 建议你使用自由的 OpenJDK 运行时以获得更好的性能，同时避免潜在的恶意软件。
 
 # Options.Select
 
@@ -1180,11 +1180,11 @@ Minecraft 在 Client Java VM 上可能无法发挥出最好性能，建议安装
 
 # Options.AutoSave
 
-您的修改会自动保存。
+你的修改会自动保存。
 
 # Options.Hint
 
-@HTML<b>不要胡乱设置</b> - Alicorn 的默认值即是建议值，如果您不明确知道一个设置项的作用，请<b>不要</b>修改它。\n带 ^ 的项目在重新加载启动器后才能生效。带 * 的项目是开发人员选项，随意更改可能导致重大问题。
+@HTML<b>不要胡乱设置</b> - Alicorn 的默认值即是建议值，如果你不明确知道一个设置项的作用，请<b>不要</b>修改它。\n带 ^ 的项目在重新加载启动器后才能生效。带 * 的项目是开发人员选项，随意更改可能导致重大问题。
 
 # Options.Enabled
 
@@ -1764,7 +1764,7 @@ Alicorn 的小秘密
 
 # Options.dev.f12.desc
 
-按下 Ctrl + F12 以调试 Alicorn 渲染进程 - 请当心，胡乱使用 DevTools 可能导致启动器故障或您的数据丢失！
+按下 Ctrl + F12 以调试 Alicorn 渲染进程 - 请当心，胡乱使用 DevTools 可能导致启动器故障或你的数据丢失！
 
 # Options.hot-key.title
 
@@ -1812,7 +1812,7 @@ Alicorn/MCBBS 镜像组（合并的记录，非自由）
 
 # Options.dev.explicit-error-throw.desc
 
-在系统错误发生时额外使用一个对话框告知您错误信息 - 仅在开发时才有使用价值
+在系统错误发生时额外使用一个对话框告知你错误信息 - 仅在开发时才有使用价值
 
 # Options.dev.title
 
@@ -1876,7 +1876,7 @@ Pff 查询分页大小
 
 # Options.pff.page-size.desc
 
-进行模糊查询时请求的的分页大小 - 这项设置可能并不很有用，但如果 Pff 不能正确查找您的 Mod，可以扩大该值
+进行模糊查询时请求的的分页大小 - 这项设置可能并不很有用，但如果 Pff 不能正确查找你的 Mod，可以扩大该值
 
 # Options.java.search-depth.title
 
@@ -1892,15 +1892,15 @@ JRE 快速搜索
 
 # Options.java.simple-search.desc
 
-仅使用命令和环境变量寻找 JRE，不要搜索整台计算机 - 如果您知道如何设置，这可以非常快
+仅使用命令和环境变量寻找 JRE，不要搜索整台计算机 - 如果你知道如何设置，这可以非常快
 
 # Options.user.name.title
 
-您的昵称
+你的昵称
 
 # Options.user.name.desc
 
-Alicorn 会用这个名字亲切地称呼您 - 嗯……可爱~
+Alicorn 会用这个名字亲切地称呼你 - 嗯……可爱~
 
 # Options.doh-server.title
 
@@ -2020,7 +2020,7 @@ Mod 动态加载
 
 # Options.modx.global-dynamic-load-mods.desc
 
-在启动时根据启动的核心自动移动无法加载的 Mod - 如果这项功能导致您的 Mod 出现问题，请关闭它
+在启动时根据启动的核心自动移动无法加载的 Mod - 如果这项功能导致你的 Mod 出现问题，请关闭它
 
 # Options.modx.ignore-non-standard-mods.title
 
@@ -2028,7 +2028,7 @@ Mod 动态加载
 
 # Options.modx.ignore-non-standard-mods.desc
 
-动态加载 Mod 时遇到无法读取的 Mod 信息时，不要移动，将其保留在 Mod 文件夹中 - 如果您使用 LiteLoader，请开启它
+动态加载 Mod 时遇到无法读取的 Mod 信息时，不要移动，将其保留在 Mod 文件夹中 - 如果你使用 LiteLoader，请开启它
 
 # Options.cmc.disable-log4j-config.title
 
@@ -2184,7 +2184,7 @@ Mojang 版本
 
 # Welcome.Suggest.Part1
 
-['{Config:interactive.i-have-a-crush-on-al}'=='false']今天是 {Date}，欢迎您使用 Alicorn Launcher，{UserName}！
+['{Config:interactive.i-have-a-crush-on-al}'=='false']今天是 {Date}，欢迎你使用 Alicorn Launcher，{UserName}！
 
 [new Date().getHours()>=18]好上晚！哦，我刚刚在练习古小马语……
 
@@ -2263,7 +2263,7 @@ ASC 是 Alicorn Shared Container 的缩写！
 「容器」是传统启动器所谓的 .minecraft 文件夹，但 Alicorn 的容器更加聪明些～
 80% 的崩溃来源于 Mod，当然，如果是其它启动器，可能是 50%，考虑到 Java 17……
 求助而不携带崩溃报告，无异于闭眼开车！
-生成的 BBCode 代码已经为您进行了排版，可以直接在 MCBBS 使用！（或者其它 BBCode 兼容编辑器）
+生成的 BBCode 代码已经为你进行了排版，可以直接在 MCBBS 使用！（或者其它 BBCode 兼容编辑器）
 Alicorn 随时都可能有更新！请记得常回来看看！
 @HTMLMinecraft <b>不是</b>一个傻瓜式操作的游戏 —— 特别是安装 Mod！
 @HTML<b style="color: red;">永远不要</b>在<b style="color: red;">任何</b>第三方服务器输入你的<b style="color: red;">任何</b>隐私信息！—— <b style="color: red;">这非常危险！</b>
@@ -2478,7 +2478,7 @@ Alicorn 没有发现有问题的依赖～
 
 # Utilities.NetCheck.Description
 
-Sparklight 作品\n检查您的设备到各主流 Minecraft 相关站点的连通性
+Sparklight 作品\n检查你的设备到各主流 Minecraft 相关站点的连通性
 
 # Utilities.NetCheck.SiteName.MCBBS
 
@@ -2566,7 +2566,7 @@ Alicorn 使用该服务进行更新，如果它不能使用，你可能需要联
 
 # Utilities.CutieConnect.Description
 
-Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功能的实现靠的就是友谊的魔力！哦，还有无处不在的空气。
+Ntop 和 Sparklight 作品\n此工具可让你和好友一起游玩！这项功能的实现靠的就是友谊的魔力！哦，还有无处不在的空气。
 
 # Utilities.CutieConnect.JoinWithCode
 
@@ -2586,7 +2586,7 @@ Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功�
 
 # Utilities.CutieConnect.GameMeta
 
-@HTML这是一个使用版本 {BaseVersion} 的世界。<b>{IsPremium}</b>。\n世界创建者的留言：\n\n&nbsp;&nbsp;&nbsp;&nbsp;<b>“</b>{Message}<b>”</b>\n\n友谊接力提醒您：<b>我们不保证世界现在还存在，也不保证它的安全，请小心！</b>\n\n5 秒后将为您连接。
+@HTML这是一个使用版本 {BaseVersion} 的世界。<b>{IsPremium}</b>。\n世界创建者的留言：\n\n&nbsp;&nbsp;&nbsp;&nbsp;<b>“</b>{Message}<b>”</b>\n\n友谊接力提醒你：<b>我们不保证世界现在还存在，也不保证它的安全，请小心！</b>\n\n5 秒后将为你连接。
 
 # Utilities.CutieConnect.AllDone
 
@@ -2626,7 +2626,7 @@ Ntop 和 Sparklight 作品\n此工具可让您和好友一起游玩！这项功�
 
 # Utilities.CutieConnect.CommunityIsInternet
 
-！！您正处于公共区域中！！
+！！你正处于公共区域中！！
 
 # Utilities.CutieConnect.Password
 
@@ -2805,7 +2805,7 @@ Sparklight 作品\n从已有容器打包需要的资源，整合包创作的基�
 
 # Utilities.BuildUp.Meta.Author
 
-您的名字
+你的名字
 
 # Utilities.BuildUp.Meta.Version
 
@@ -3101,7 +3101,7 @@ Java 配置成功！
 
 # FirstRun.Preparing
 
-这是您第一次使用 Alicorn，我们正在进行一些准备工作……
+这是你第一次使用 Alicorn，我们正在进行一些准备工作……
 
 # FirstRun.FetchingJava
 
@@ -3113,7 +3113,7 @@ Java 配置成功！
 
 # FirstRun.InstallingJava
 
-您现在可以使用此安装程序安装 Java……
+你现在可以使用此安装程序安装 Java……
 
 # Instruction.Welcome.0
 
@@ -3306,6 +3306,32 @@ Alicorn 的开发道路上，收到过不少来自个人、组织和企业的帮
 # EOE.Orgs
 
 MCBBS（Minecraft 中文论坛）……这里是热爱 MC 群体的天堂。\nFree Software Foundation……我们一同为自由软件而奋斗。\nGitHub……软件在这里诞生。\nStack Overflow……它解决了我们很多的问题。\nNode.js……JS 因你而不同。\nTypeScript……从混乱到有序的快速通道。\nMinecraft Wiki……玩家所认可的最强 Minecraft Wiki。\nMaterial UI……只做组件，而且做得很好。\nWiki.vg……快速解码帐户验证的奥秘。\nElectron……不止于浏览器！\nWebpack……打包，优化，压缩。\nBMCLAPI……下载速度提升 80% 的最强镜像！\nUndici……这就是 WASM，这就是 Node！\nFabricMC……拥有未来的 Mod，开创新的时代。\nIris Shaders……更高更妙的光影和高清修复！\nGaz492 Curseforge API……它打开了一扇充满光明的大门。\nJsDelivr……走遍天涯海角，Web 始终在你身边。\nAdobe Source Hans Sans 和 Ubuntu Mono……渲染不够，字体来凑！\nAuthlib Injector……Yggdrasil 始终为你让一条路。SkinView3D……新一代皮肤 3D 显示。\nMLPVector……颜色，但也不是颜色。\nVSCodium……纯净、自由的高效前端 IDE。\nMDN Web Docs……Mozilla 的 Web 开发参考。\n\n……还有许多许多值得我们感谢，只是限于篇幅未能列举……
+
+# EOE.StoryTitle
+
+故事背后的故事
+
+# EOE.Story
+
+这是 Alicorn 的前世今生的全部时间线。我知道不会有多少人会想了解我，但这不重要，这相当于我的自传吧……\n\n\
+至今 - 你现在看到的 Alicorn。\n\
+2021 年 8 月 20 日 - Alicorn 在 MCBBS 发布，从此走上新的旅程。\n\
+2021 年 8 月 ?? 日 - Alicorn 结束了最后的测试，并发布了第一个核心，从那时至今，几乎每周都会发布一个新版本。\n\
+2021 年 5 月 29 日 - Alicorn 被重新移动回 GitHub 继续 Alpha 阶段的测试和开发。\n\
+2021 年 5 月 01 日 - Alicorn InDev 发布，这是第一个公开测试版本，在那里你依然可以找到只有六个按钮的菜单。\n\
+2021 年 4 月 17 日 - Alicorn 拥有了第一个功能界面，你大概已经猜到了，就是沿用至今的启动台！\n\
+2021 年 3 月 28 日 - Alicorn 拥有了第一个 GUI，那时还只能显示一个错误页面。\n\
+2021 年 3 月 25 日 - Alicorn 被移动到 Bitbucket 上继续开发，GitHub 仓库被暂时挂起。\n\
+2021 年 3 月 20 日 - Alicorn 首次生成启动参数就成功启动，那时 Minecraft 还只有 1.16 的版本。\n\
+2021 年 3 月 14 日 - Alicorn 项目在这个圆周率日被创建，仅包含一份许可证和 .gitignore 文件。\n\
+2021 年 2 月 12 日 - ThatRarityEG 购买了正版，然后就有了开发 Alicorn 的想法。她为此提前完成了 PluginDiary，然后开始着手设计 Alicorn。\n\n\
+再往前就没有 Alicorn 的身影了，但我们依然可以继续前进，看看在那之前，Alicorn 的一些雏形，以及一些失败的设计……\n\n\
+2020 年 11 月 06 日 - EQL，和 Alicorn 关系最近的一个项目，进行了最后一次更新，那是一个插件系统，当时 ThatRarityEG 还没有想到，那就是 EQL 的最后一次提交。\n\
+2020 年 10 月 17 日 - EQL 达到了 1 分钟安装 Minecraft 的速度（1.15.2），相比现在的 Alicorn 只慢了 20s 左右。\n\
+2020 年 10 月 02 日 - 停止更新了两个月后的 RL 经历了一次重构，并将名称修改为 EQL。然而在此之后却不再有更大的功能更新，Mod 安装等功能从未在 EQL 实现过。\n\
+2020 年  8 月 29 日 - RL 发布了一张预览照片，那时还是使用 Bootstrap 和 HTML 编写的，安全性和代码效率都远不及 Alicorn。\n\
+2020 年  7 月 ?? 日 - ThatRarityEG 开始编写 RL，最早采用 Java 和 Swing，后来考虑到许多问题而改用 JS 和 Electron，Alicorn 多少也受到了这一点的影响。\n\
+2020 年  7 月  6 日 - ThatRarityEG 已知的最早的启动器开发记录，那时只提出了 Forge 安装的一个小问题。\n\
 
 # EOE.EndPoem
 
