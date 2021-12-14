@@ -32,6 +32,7 @@ import {
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import copy from "copy-to-clipboard";
 import EventEmitter from "events";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router";
@@ -446,7 +447,7 @@ function Launching(props: {
               "ReadyToLaunch.Progress",
               `Current=${ws.inStack}`,
               `BufferMax=${getNumber("download.concurrent.max-tasks")}`,
-              `Pending=${ws.pending}`
+              `Pending=${ws.pending + ws.inStack}`
             )}
           </Typography>
         </>
@@ -1564,6 +1565,7 @@ function OpenWorldDialog(props: {
               );
               if (c.length === 6) {
                 setCode(c);
+                copy(c, { format: "text/plain" });
                 sessionStorage.setItem(CODE_KEY + props.port, c);
                 submitSucc(tr("ReadyToLaunch.HoofoffCodeRaw", `Code=${c}`));
                 setErr("");
