@@ -247,12 +247,12 @@ export function OptionsPage(): JSX.Element {
           <InputItem
             type={ConfigType.RADIO}
             bindConfig={"main-gc"}
-            choices={["pure", "g1", "z", "aggressive"]}
+            choices={["pure", "g1", "z", "aggressive", "sd"]}
           />
           <InputItem
             type={ConfigType.RADIO}
             bindConfig={"para-gc"}
-            choices={["pure", "g1", "z", "aggressive"]}
+            choices={["pure", "g1", "z", "aggressive", "sd"]}
           />
           <InputItem type={ConfigType.STR} bindConfig={"gw-size"} />
         </TabPanel>

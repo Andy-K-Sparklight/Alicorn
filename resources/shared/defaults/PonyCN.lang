@@ -1618,6 +1618,10 @@ JVM 首选的垃圾回收器方案，Alicorn 将永远优先尝试用它启动 J
 
 Z（ZGC）
 
+# Options.main-gc.sd
+
+Shenandoah（Shenandoah GC）
+
 # Options.main-gc.aggressive
 
 最大利用（AggressiveHeap）
@@ -1637,6 +1641,10 @@ JVM 备选的垃圾回收器方案，当首选方案失败时，Alicorn 将使�
 # Options.para-gc.g1
 
 垃圾优先（G1GC）
+
+# Options.para-gc.sd
+
+Shenandoah（Shenandoah GC）
 
 # Options.para-gc.z
 

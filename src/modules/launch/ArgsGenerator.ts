@@ -199,5 +199,6 @@ const RAM_SCHEME: Record<string, string[]> = {
   pure: [],
   g1: ["-XX:+UseG1GC"],
   z: ["-XX:+UseZGC"],
-  aggressive: ["-XX:+AggressiveHeap"], // TODO: add aggressive
+  aggressive: ["-XX:+AggressiveHeap"],
+  sd: ["-XX:+UseShenandoahGC"],
 };
