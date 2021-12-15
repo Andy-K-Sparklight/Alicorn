@@ -305,6 +305,11 @@ export function PffFront(): JSX.Element {
                 disabled={isRunning}
                 onClick={() => {
                   const p = Object.values(lockfile)
+                    .filter(
+                      (v) =>
+                        v.selectedArtifact.gameVersion.includes(version) &&
+                        v.selectedArtifact.modLoader === loader
+                    )
                     .map((v) => {
                       return (
                         "@" +
@@ -478,8 +483,10 @@ export function SinglePffModDisplay(props: {
       </ListItemAvatar>
       <ListItemText
         onContextMenu={(e) => {
-          props.onUpdate();
-          e.preventDefault();
+          if (isCompatible) {
+            props.onUpdate();
+            e.preventDefault();
+          }
         }}
         onClick={(e) => {
           if (e.button === 2) {
