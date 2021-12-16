@@ -1,8 +1,67 @@
 import {
+  AccessTime,
+  AlignHorizontalLeft,
+  AutoFixOff,
+  Bolt,
+  Book,
+  CameraEnhance,
+  CancelPresentation,
+  Chat,
+  CloudDone,
+  CloudSync,
+  Code,
+  DataArray,
+  DataSaverOff,
+  DataSaverOn,
+  DeviceHub,
+  DisplaySettings,
+  Dns,
+  Download,
+  Downloading,
+  EmojiEmotions,
+  ExtensionOff,
+  Favorite,
+  FirstPage,
+  Home,
+  Hub,
+  Inbox,
+  InsertPhoto,
+  Inventory2,
+  Iso,
+  KeyboardCommandKey,
+  LockReset,
+  Memory,
+  MonitorHeart,
+  Mouse,
+  Numbers,
+  Palette,
+  PermContactCalendar,
+  Public,
+  PublicOff,
+  Replay,
+  RestartAlt,
+  RocketLaunch,
+  SavedSearch,
+  SendTimeExtension,
+  Settings,
+  SettingsEthernet,
+  SnippetFolder,
+  Swipe,
+  SwitchAccessShortcut,
+  SyncAlt,
+  TextFormat,
+  ViewInAr,
+  WebAsset,
+  Webhook,
+  YoutubeSearchedFor,
+  ZoomOutMap,
+} from "@mui/icons-material";
+import {
   Box,
   Button,
   Container,
   FormControlLabel,
+  Grid,
   Radio,
   RadioGroup,
   Slider,
@@ -122,10 +181,19 @@ export function OptionsPage(): JSX.Element {
           />
         </Tabs>
         <TabPanel index={0} value={tabValue}>
-          <InputItem type={ConfigType.STR} bindConfig={"user.name"} />
-          <InputItem type={ConfigType.BOOL} bindConfig={"auto-launch"} />
+          <InputItem
+            icon={<PermContactCalendar />}
+            type={ConfigType.STR}
+            bindConfig={"user.name"}
+          />
+          <InputItem
+            icon={<RocketLaunch />}
+            type={ConfigType.BOOL}
+            bindConfig={"auto-launch"}
+          />
           <InputItem
             type={ConfigType.SLIDE}
+            icon={<ZoomOutMap />}
             bindConfig={"theme.zoom-factor"}
             sliderMax={5.0}
             sliderMin={0.1}
@@ -136,97 +204,165 @@ export function OptionsPage(): JSX.Element {
           />
           <InputItem
             reload
+            icon={<Inventory2 />}
             type={ConfigType.RADIO}
             bindConfig={"theme"}
             choices={["Default"].concat(Object.keys(AL_THEMES))}
           />
           <InputItem
+            icon={<InsertPhoto />}
             type={ConfigType.RADIO}
             bindConfig={"theme.background"}
             choices={["ACG", "Bing", "Disabled"]}
           />
           <InputItem
+            icon={<EmojiEmotions />}
             type={ConfigType.RADIO}
             bindConfig={"assistant"}
             reload
             choices={ALL_ASSISTANTS}
           />
           <InputItem
+            icon={<Chat />}
             type={ConfigType.BOOL}
             bindConfig={"interactive.assistant?"}
             reload
           />
-          <InputItem type={ConfigType.BOOL} bindConfig={"alicorn-ping"} />
           <InputItem
+            icon={<CloudDone />}
+            type={ConfigType.BOOL}
+            bindConfig={"alicorn-ping"}
+          />
+          <InputItem
+            icon={<CameraEnhance />}
             type={ConfigType.FILE}
             save
             bindConfig={"theme.background.custom"}
           />
           <InputItem
+            icon={<Iso />}
             type={ConfigType.NUM}
             bindConfig={"theme.background.opacity"}
           />
           <InputItem
             reload
+            icon={<Palette />}
             type={ConfigType.STR}
             bindConfig={"theme.primary.main"}
           />
           <InputItem
             reload
+            icon={<Palette />}
             type={ConfigType.STR}
             bindConfig={"theme.primary.light"}
           />
           <InputItem
+            icon={<Palette />}
             type={ConfigType.STR}
             reload
             bindConfig={"theme.secondary.main"}
           />
           <InputItem
             type={ConfigType.STR}
+            icon={<Palette />}
             reload
             bindConfig={"theme.secondary.light"}
           />
-          <InputItem type={ConfigType.BOOL} bindConfig={"goto.animate"} />
-          <InputItem type={ConfigType.STR} bindConfig={"startup-page.name"} />
-          <InputItem type={ConfigType.STR} bindConfig={"startup-page.url"} />
           <InputItem
+            icon={<SwitchAccessShortcut />}
+            type={ConfigType.BOOL}
+            bindConfig={"goto.animate"}
+          />
+          <InputItem
+            icon={<Home />}
+            type={ConfigType.STR}
+            bindConfig={"startup-page.name"}
+          />
+          <InputItem
+            icon={<Home />}
+            type={ConfigType.STR}
+            bindConfig={"startup-page.url"}
+          />
+          <InputItem
+            icon={<Favorite />}
             type={ConfigType.BOOL}
             bindConfig={"interactive.i-have-a-crush-on-al"}
           />
         </TabPanel>
         <TabPanel index={1} value={tabValue}>
-          <InputItem type={ConfigType.BOOL} bindConfig={"features.saying"} />
-          <InputItem type={ConfigType.BOOL} bindConfig={"features.sword"} />
           <InputItem
+            icon={<TextFormat />}
+            type={ConfigType.BOOL}
+            bindConfig={"features.saying"}
+          />
+          <InputItem
+            icon={<Mouse />}
+            type={ConfigType.BOOL}
+            bindConfig={"features.sword"}
+          />
+          <InputItem
+            icon={<ViewInAr />}
             type={ConfigType.BOOL}
             bindConfig={"features.skin-view-3d"}
           />
-          <InputItem type={ConfigType.BOOL} bindConfig={"features.miniwiki"} />
           <InputItem
+            icon={<Book />}
+            type={ConfigType.BOOL}
+            bindConfig={"features.miniwiki"}
+          />
+          <InputItem
+            icon={<SettingsEthernet />}
             type={ConfigType.BOOL}
             bindConfig={"features.detect-lan"}
           />
         </TabPanel>
         <TabPanel index={2} value={tabValue}>
           {/* AL Features */}
-          <InputItem type={ConfigType.BOOL} bindConfig={"readyboom"} />
-          <InputItem type={ConfigType.NUM} bindConfig={"readyboom.cores"} />
-          <InputItem type={ConfigType.STR} bindConfig={"hoofoff.central"} />
           <InputItem
+            icon={<Bolt />}
+            type={ConfigType.BOOL}
+            bindConfig={"readyboom"}
+          />
+          <InputItem
+            icon={<Numbers />}
+            type={ConfigType.NUM}
+            bindConfig={"readyboom.cores"}
+          />
+          <InputItem
+            icon={<DeviceHub />}
+            type={ConfigType.STR}
+            bindConfig={"hoofoff.central"}
+          />
+          <InputItem
+            icon={<Webhook />}
             type={ConfigType.BOOL}
             bindConfig={"system.ws-operation"}
           />
-          <InputItem type={ConfigType.BOOL} bindConfig={"command"} />
-          <InputItem type={ConfigType.DIR} bindConfig={"cx.shared-root"} />
           <InputItem
+            icon={<KeyboardCommandKey />}
+            type={ConfigType.BOOL}
+            bindConfig={"command"}
+          />
+          <InputItem
+            icon={<SnippetFolder />}
+            type={ConfigType.DIR}
+            bindConfig={"cx.shared-root"}
+          />
+          <InputItem
+            icon={<SendTimeExtension />}
             type={ConfigType.BOOL}
             bindConfig={"modx.global-dynamic-load-mods"}
           />
           <InputItem
+            icon={<ExtensionOff />}
             type={ConfigType.BOOL}
             bindConfig={"modx.ignore-non-standard-mods"}
           />
-          <InputItem type={ConfigType.BOOL} bindConfig={"launch.fast-reboot"} />
+          <InputItem
+            icon={<RestartAlt />}
+            type={ConfigType.BOOL}
+            bindConfig={"launch.fast-reboot"}
+          />
           <InputItem
             experimental
             type={ConfigType.BOOL}
@@ -238,26 +374,49 @@ export function OptionsPage(): JSX.Element {
             experimental
             bindConfig={"hot-key"}
           />
-          <InputItem type={ConfigType.BOOL} bindConfig={"java.simple-search"} />
-          <InputItem type={ConfigType.NUM} bindConfig={"java.search-depth"} />
+          <InputItem
+            icon={<SavedSearch />}
+            type={ConfigType.BOOL}
+            bindConfig={"java.simple-search"}
+          />
+          <InputItem
+            icon={<YoutubeSearchedFor />}
+            type={ConfigType.NUM}
+            bindConfig={"java.search-depth"}
+          />
         </TabPanel>
         <TabPanel index={3} value={tabValue}>
-          <InputItem type={ConfigType.NUM} bindConfig={"memory"} />
-          <InputItem type={ConfigType.STR} bindConfig={"jvm.extra-args"} />
           <InputItem
+            icon={<Memory />}
+            type={ConfigType.NUM}
+            bindConfig={"memory"}
+          />
+          <InputItem
+            icon={<DataArray />}
+            type={ConfigType.STR}
+            bindConfig={"jvm.extra-args"}
+          />
+          <InputItem
+            icon={<DataSaverOn />}
             type={ConfigType.RADIO}
             bindConfig={"main-gc"}
             choices={["pure", "g1", "z", "aggressive", "sd"]}
           />
           <InputItem
+            icon={<DataSaverOff />}
             type={ConfigType.RADIO}
             bindConfig={"para-gc"}
             choices={["pure", "g1", "z", "aggressive", "sd"]}
           />
-          <InputItem type={ConfigType.STR} bindConfig={"gw-size"} />
+          <InputItem
+            icon={<WebAsset />}
+            type={ConfigType.STR}
+            bindConfig={"gw-size"}
+          />
         </TabPanel>
         <TabPanel index={4} value={tabValue}>
           <InputItem
+            icon={<Download />}
             type={ConfigType.RADIO}
             choices={[
               "none",
@@ -271,88 +430,119 @@ export function OptionsPage(): JSX.Element {
             }}
           />
           <InputItem
+            icon={<MonitorHeart />}
             type={ConfigType.BOOL}
             bindConfig={"show-downloading-item"}
           />
           <InputItem
             type={ConfigType.BOOL}
+            icon={<AutoFixOff />}
             bindConfig={"download.skip-validate"}
           />
           <InputItem
             type={ConfigType.RADIO}
+            icon={<Downloading />}
             bindConfig={"download.primary-downloader"}
             choices={["Concurrent", "Serial"]}
           />
           <InputItem
+            icon={<Downloading />}
             type={ConfigType.RADIO}
             bindConfig={"download.lib"}
             choices={["Undici", "Fetch"]}
           />
           <InputItem
             type={ConfigType.NUM}
+            icon={<AccessTime />}
             bindConfig={"download.concurrent.timeout"}
           />
           <InputItem
             type={ConfigType.NUM}
+            icon={<AccessTime />}
             bindConfig={"download.pff.timeout"}
           />
           <InputItem
+            icon={<Replay />}
             type={ConfigType.NUM}
             bindConfig={"download.concurrent.tries-per-chunk"}
           />
           <InputItem
+            icon={<AlignHorizontalLeft />}
             type={ConfigType.NUM}
             bindConfig={"download.concurrent.max-tasks"}
           />
           <InputItem
+            icon={<Inbox />}
             type={ConfigType.NUM}
             bindConfig={"download.concurrent.chunk-size"}
           />
           <InputItem
             type={ConfigType.NUM}
+            icon={<AccessTime />}
             bindConfig={"download.tls.keep-alive"}
           />
           <InputItem
             type={ConfigType.NUM}
+            icon={<AlignHorizontalLeft />}
             bindConfig={"download.tls.pipeline"}
           />
           <InputItem
             type={ConfigType.NUM}
+            icon={<Inbox />}
             bindConfig={"download.pff.chunk-size"}
           />
           <InputItem
+            icon={<SyncAlt />}
             type={ConfigType.RADIO}
             bindConfig={"pff.upgrade-mode"}
             choices={["Override", "Keep"]}
           />
           <InputItem
             type={ConfigType.RADIO}
+            icon={<Hub />}
             bindConfig={"pff.first-source"}
             choices={["Curseforge", "Modrinth"]}
           />
-          <InputItem type={ConfigType.DIR} bindConfig={"pff.cache-root"} />
-          <InputItem type={ConfigType.NUM} bindConfig={"pff.page-size"} />
           <InputItem
+            type={ConfigType.DIR}
+            icon={<Inbox />}
+            bindConfig={"pff.cache-root"}
+          />
+          <InputItem
+            icon={<Inbox />}
+            type={ConfigType.NUM}
+            bindConfig={"pff.page-size"}
+          />
+          <InputItem
+            icon={<Public />}
             type={ConfigType.STR}
             bindConfig={"download.global-proxy"}
           />
-          <InputItem type={ConfigType.STR} bindConfig={"web.global-proxy"} />
           <InputItem
+            icon={<Public />}
+            type={ConfigType.STR}
+            bindConfig={"web.global-proxy"}
+          />
+          <InputItem
+            icon={<Dns />}
             type={ConfigType.RADIO}
             bindConfig={"doh-server"}
             choices={Object.keys(DOH_CONFIGURE).concat(["Native"])}
           />
           <InputItem
+            icon={<PublicOff />}
             type={ConfigType.STR}
             bindConfig={"download.proxy-bypass"}
           />
           <InputItem
+            icon={<AccessTime />}
             type={ConfigType.NUM}
             bindConfig={"starlight.join-server.timeout"}
           />
         </TabPanel>
         <TabPanel index={5} value={tabValue}>
           <InputItem
+            icon={<CloudSync />}
             type={ConfigType.BOOL}
             notOn={"darwin"}
             bindConfig={"updator.use-update"}
@@ -364,20 +554,46 @@ export function OptionsPage(): JSX.Element {
             bindConfig={"updator.url"}
           />
           <InputItem
+            icon={<Swipe />}
             type={ConfigType.RADIO}
             bindConfig={"frame.drag-impl"}
             choices={["Webkit", "Delta", "TitleBar"]}
           />
-          <InputItem type={ConfigType.BOOL} bindConfig={"hardware-acc"} />
-          <InputItem type={ConfigType.BOOL} bindConfig={"dev"} />
-          <InputItem type={ConfigType.BOOL} bindConfig={"dev.f12"} />
           <InputItem
             type={ConfigType.BOOL}
+            icon={<DisplaySettings />}
+            bindConfig={"hardware-acc"}
+          />
+          <InputItem
+            type={ConfigType.BOOL}
+            icon={<Code />}
+            bindConfig={"dev"}
+          />
+          <InputItem
+            type={ConfigType.BOOL}
+            icon={<Code />}
+            bindConfig={"dev.f12"}
+          />
+          <InputItem
+            type={ConfigType.BOOL}
+            icon={<Code />}
             bindConfig={"dev.explicit-error-throw"}
           />
-          <InputItem type={ConfigType.BOOL} bindConfig={"first-run?"} />
-          <InputItem type={ConfigType.BOOL} bindConfig={"reset"} />
-          <InputItem type={ConfigType.BOOL} bindConfig={"clean-storage"} />
+          <InputItem
+            icon={<FirstPage />}
+            type={ConfigType.BOOL}
+            bindConfig={"first-run?"}
+          />
+          <InputItem
+            icon={<LockReset />}
+            type={ConfigType.BOOL}
+            bindConfig={"reset"}
+          />
+          <InputItem
+            type={ConfigType.BOOL}
+            icon={<CancelPresentation />}
+            bindConfig={"clean-storage"}
+          />
         </TabPanel>
       </ThemeProvider>
     </Container>
@@ -395,6 +611,7 @@ export function markEdited(conf: string): void {
 export function InputItem(props: {
   type: ConfigType;
   bindConfig: string;
+  icon?: React.ReactNode;
   choices?: string[];
   onlyOn?: NodeJS.Platform;
   notOn?: NodeJS.Platform;
@@ -465,14 +682,21 @@ export function InputItem(props: {
   }
   return (
     <Container>
-      <Typography
-        color={"primary"}
-        variant={"h6"}
-        className={classes.title}
-        gutterBottom
-      >
-        {tr(`Options.${props.bindConfig}.title`)}
-      </Typography>
+      <Grid container direction="row" alignItems="center">
+        <Grid item sx={{ color: "primary.main" }}>
+          {props.icon || <Settings />}
+        </Grid>
+        <Grid item>
+          <Typography
+            color={"primary"}
+            variant={"h6"}
+            sx={{ marginLeft: "0.25em" }}
+            className={classes.title}
+          >
+            {tr(`Options.${props.bindConfig}.title`)}
+          </Typography>
+        </Grid>
+      </Grid>
       <Typography color={"secondary"} className={classes.desc} gutterBottom>
         {disabled
           ? tr("Options.NotOn")

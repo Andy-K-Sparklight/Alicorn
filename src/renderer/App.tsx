@@ -2,15 +2,16 @@ import {
   AccountCircle,
   AllInbox,
   ArrowBack,
-  Build,
   Code,
   Dns,
   FlightTakeoff,
   GetApp,
+  Handyman,
   Help,
   Home,
   ImportContacts,
   Info,
+  ManageAccounts,
   Menu,
   PowerSettingsNew,
   Refresh,
@@ -450,7 +451,7 @@ export function App(): JSX.Element {
                   triggerSetPage("UtilitiesIndex");
                 }}
               >
-                <Build />
+                <Handyman />
               </IconButton>
             </Tooltip>
             <Tooltip
@@ -468,7 +469,7 @@ export function App(): JSX.Element {
                 }}
                 color={"inherit"}
               >
-                <AccountCircle />
+                <ManageAccounts />
               </IconButton>
             </Tooltip>
             <Tooltip
@@ -699,7 +700,7 @@ const PAGES_ICONS_MAP: Record<string, JSX.Element> = {
   JavaSelector: <ViewModule />,
   AccountManager: <AccountCircle />,
   ServerList: <Dns />,
-  UtilitiesIndex: <Build />,
+  UtilitiesIndex: <Handyman />,
   Statistics: <ShowChart />,
   Options: <Settings />,
   Version: <Info />,
