@@ -10,6 +10,7 @@ import {
   Person,
   RssFeed,
   SportsScore,
+  ViewModule,
 } from "@mui/icons-material";
 import {
   Box,
@@ -1314,6 +1315,7 @@ function MiniJavaSelector(props: {
             {tr("JavaSelector.SelectJava")}
           </InputLabel>
           <Select
+            startAdornment={<ViewModule />}
             label={tr("JavaSelector.SelectJava")}
             variant={"outlined"}
             labelId={"Select-JRE"}

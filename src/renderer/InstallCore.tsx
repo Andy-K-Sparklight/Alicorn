@@ -1,3 +1,4 @@
+import { AllInbox, Inventory2, MergeType, Numbers } from "@mui/icons-material";
 import {
   Avatar,
   Box,
@@ -286,6 +287,7 @@ export function InstallCore(): JSX.Element {
                 </InputLabel>
                 <ShiftEle name={"InstallCoreMinecraft"} bgfill>
                   <Select
+                    startAdornment={<MergeType />}
                     sx={{ color: "primary.main" }}
                     variant={"outlined"}
                     labelId={"CoreInstall-Mojang-SelectArch"}
@@ -323,6 +325,7 @@ export function InstallCore(): JSX.Element {
                 </InputLabel>
                 <ShiftEle name={"InstallCoreMinecraft"} bgfill>
                   <Select
+                    startAdornment={<Numbers />}
                     sx={{ color: "primary.main" }}
                     variant={"outlined"}
                     labelId={"CoreInstall-Mojang-SelectVersion"}
@@ -353,6 +356,7 @@ export function InstallCore(): JSX.Element {
                 </InputLabel>
                 <ShiftEle name={"InstallCoreMinecraft"} bgfill>
                   <Select
+                    startAdornment={<AllInbox />}
                     sx={{ color: "primary.main" }}
                     label={tr("InstallCore.TargetContainer")}
                     variant={"outlined"}
@@ -451,6 +455,8 @@ export function InstallCore(): JSX.Element {
                   {tr("InstallCore.ForgeBaseVersion")}
                 </InputLabel>
                 <Select
+                  sx={{ color: "primary.main" }}
+                  startAdornment={<Inventory2 />}
                   label={tr("InstallCore.ForgeBaseVersion")}
                   variant={"outlined"}
                   labelId={"CoreInstall-Forge-SelectBase"}
@@ -572,6 +578,8 @@ export function InstallCore(): JSX.Element {
                   {tr("InstallCore.FabricBaseVersion")}
                 </InputLabel>
                 <Select
+                  sx={{ color: "primary.main" }}
+                  startAdornment={<Inventory2 />}
                   label={tr("InstallCore.FabricBaseVersion")}
                   variant={"outlined"}
                   labelId={"CoreInstall-Fabric-SelectBase"}
@@ -713,6 +721,8 @@ export function InstallCore(): JSX.Element {
                   {tr("InstallCore.IrisBaseVersion")}
                 </InputLabel>
                 <Select
+                  startAdornment={<Inventory2 />}
+                  sx={{ color: "primary.main" }}
                   label={tr("InstallCore.IrisBaseVersion")}
                   variant={"outlined"}
                   labelId={"CoreInstall-Iris-SelectBase"}
