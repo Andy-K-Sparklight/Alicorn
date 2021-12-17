@@ -1,4 +1,4 @@
-import { DeleteForever, EventBusy, Sync } from "@mui/icons-material";
+import { DeleteForever, EventBusy, Extension, Sync } from "@mui/icons-material";
 import {
   Box,
   Card,
@@ -257,6 +257,44 @@ function SingleCoreDisplay(props: {
                       <EventBusy />
                     </IconButton>
                   </Tooltip>
+                  {props.profile.versionType !== "Mojang" &&
+                  props.profile.versionType !== "Installer" ? (
+                    <Tooltip
+                      title={
+                        <Typography className={"smtxt"}>
+                          {tr("CoreInfo.Pff")}
+                        </Typography>
+                      }
+                    >
+                      <IconButton
+                        color={"inherit"}
+                        className={classes.operateButton}
+                        onClick={
+                          props.profile.versionType !== "Mojang" &&
+                          props.profile.versionType !== "Installer"
+                            ? (e) => {
+                                jumpTo(
+                                  `/PffFront/${encodeURIComponent(
+                                    props.profile.container
+                                  )}/${encodeURIComponent(
+                                    props.profile.baseVersion
+                                  )}/${encodeURIComponent(
+                                    props.profile.versionType
+                                  )}`
+                                );
+                                triggerSetPage("PffFront");
+                                addStatistics("Click");
+                                e.stopPropagation();
+                              }
+                            : undefined
+                        }
+                      >
+                        <Extension />
+                      </IconButton>
+                    </Tooltip>
+                  ) : (
+                    ""
+                  )}
                 </Box>
               </Fade>
               <Tooltip
