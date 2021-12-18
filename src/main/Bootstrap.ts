@@ -1,4 +1,11 @@
-import { app, BrowserWindow, globalShortcut, ipcMain, screen } from "electron";
+import {
+  app,
+  BrowserWindow,
+  dialog,
+  globalShortcut,
+  ipcMain,
+  screen,
+} from "electron";
 import { btoa } from "js-base64";
 import path from "path";
 import { DOH_CONFIGURE } from "../modules/commons/Constants";
@@ -92,6 +99,22 @@ async function whenAppReady() {
   let readyToClose = false;
   ipcMain.once("allowShowWindow", () => {
     console.log("Opening window!");
+    if (getBoolean("az5")) {
+      globalShortcut.register("A+Z+5", () => {
+        console.log("AZ-5 triggered, taking actions!");
+        const r = dialog.showMessageBoxSync({
+          title: "AZ5 Pressed, Terminate Alicorn?",
+          message:
+            'You have pressed AZ5 rescue button, which means "Rescue Alicorn".\nAZ5 救援按钮刚刚被按下。\n\nRestart Alicorn?\n重启 Alicorn？',
+          buttons: ["No", "Yes"],
+        });
+        if (r === 1) {
+          app.relaunch();
+          app.releaseSingleInstanceLock();
+          app.exit();
+        }
+      });
+    }
     mainWindow?.show();
   });
   ipcMain.on("readyToClose", () => {

@@ -22,6 +22,7 @@ import {
   ExtensionOff,
   Favorite,
   FirstPage,
+  Healing,
   Home,
   Hub,
   Inbox,
@@ -573,6 +574,11 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.BOOL}
             icon={<Code />}
             bindConfig={"dev.f12"}
+          />
+          <InputItem
+            type={ConfigType.BOOL}
+            icon={<Healing />}
+            bindConfig={"az5"}
           />
           <InputItem
             type={ConfigType.BOOL}

@@ -83,6 +83,9 @@ export function loadConfigSync(): void {
   } catch {
     cachedConfig = JSON.parse(fs.readFileSync(DEFAULT_CONFIG_FILE).toString());
   }
+  try {
+    defaultConfig = JSON.parse(fs.readFileSync(DEFAULT_CONFIG_FILE).toString());
+  } catch {}
 }
 
 export function getAllConfigKeys(): string[] {

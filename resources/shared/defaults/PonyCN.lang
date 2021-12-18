@@ -1550,6 +1550,14 @@ Webkit 拖拽区域（仅页面标题）
 
 操作系统托管（使用标题栏）
 
+# Options.az5.title
+
+AZ-5 应急救援
+
+# Options.az5.desc
+
+同时按住键盘上的 A、Z 和数字 5 （R 和 T 的上方），可以在 Alicorn 失去控制的情况下重启 Alicorn。\n如果产生快捷键冲突，可以关闭此功能。
+
 # Options.hardware-acc.title
 
 硬件加速 ^
