@@ -295,11 +295,11 @@ function bindSuperCowPower(): void {
 }
 
 function configureFontSize(): void {
-  const f = "0.875em";
+  const f = "0.875rem";
   console.log("Set small font size as " + f);
   sessionStorage.setItem("smallFontSize", f);
   let e: HTMLStyleElement | null = document.createElement("style");
-  e.innerText = `.smtxt{font-size:${f} !important;} .MuiTooltip-tooltip > .smtxt{font-size: 1.2em !important;}`;
+  e.innerText = `.smtxt{font-size:${f} !important;} .MuiTooltip-tooltip > .smtxt{font-size: 1.1rem !important;}`;
   document.head.insertAdjacentElement("beforeend", e);
   e = null;
 }
@@ -453,8 +453,8 @@ function RendererBootstrap(): JSX.Element {
               sx={{
                 pointerEvents: "none",
                 position: "fixed",
-                left: "0.3125em",
-                bottom: "0.3125em",
+                left: "0.3125rem",
+                bottom: "0.3125rem",
               }}
               color={"textPrimary"}
             >
@@ -468,8 +468,8 @@ function RendererBootstrap(): JSX.Element {
             sx={{
               pointerEvents: "none",
               position: "fixed",
-              right: "0.3125em",
-              bottom: "0.3125em",
+              right: "0.3125rem",
+              bottom: "0.3125rem",
             }}
             color={"primary"}
           >

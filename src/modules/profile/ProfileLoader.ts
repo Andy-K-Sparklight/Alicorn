@@ -1,5 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
+import { scanCoresIn } from "../container/ContainerScanner";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { JAR_SUFFIX } from "../launch/NativesLint";
 import { GameProfile } from "./GameProfile";
@@ -29,6 +30,32 @@ export async function checkDep(
   } catch {
     return false;
   }
+}
+
+export function isStillNeeded(
+  id: string,
+  container: MinecraftContainer
+): Promise<boolean> {
+  return new Promise<boolean>((res, rej) => {
+    void (async () => {
+      try {
+        await Promise.all(
+          (
+            await scanCoresIn(container, false)
+          ).map(async (c) => {
+            const f = container.getProfilePath(c);
+            const j = await fs.readJSON(f);
+            if (j.inheritsFrom === id) {
+              throw "Found";
+            }
+          })
+        );
+        res(false);
+      } catch {
+        res(true);
+      }
+    })();
+  });
 }
 
 export async function loadProfile(

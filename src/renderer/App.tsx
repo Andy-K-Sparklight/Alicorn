@@ -324,7 +324,7 @@ export function App(): JSX.Element {
           <IconButton
             sx={{
               display: showCommand ? "none" : undefined,
-              marginRight: "0.375em",
+              marginRight: "0.3rem",
             }}
             color={"inherit"}
             onClick={() => {

@@ -36,7 +36,7 @@ import {
   ALICORN_DEFAULT_THEME_LIGHT,
   isBgDark,
 } from "./Renderer";
-import { fullWidth, useFormStyles } from "./Stylex";
+import { useFormStyles } from "./Stylex";
 import { tr } from "./Translator";
 
 export const CANNOT_LOAD_INFO: JavaInfo = {
@@ -195,7 +195,7 @@ export function JavaSelector(): JSX.Element {
         >
           <IconButton
             color={"primary"}
-            sx={{ marginLeft: "1em" }}
+            sx={{ marginLeft: "1rem" }}
             onClick={() => {
               setLoaded(false);
             }}

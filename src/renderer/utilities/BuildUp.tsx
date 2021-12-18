@@ -295,7 +295,7 @@ function SelectAssets(props: {
       </Button>
       <Button
         type={"button"}
-        sx={{ marginLeft: "0.25em" }}
+        sx={{ marginLeft: "0.25rem" }}
         color={"primary"}
         variant={"contained"}
         onClick={() => {
@@ -315,7 +315,7 @@ function SelectAssets(props: {
           buttonState !== "Utilities.BuildUp.Build" || selectedAssets.size === 0
         }
         type={"button"}
-        sx={{ marginLeft: "0.25em" }}
+        sx={{ marginLeft: "0.25rem" }}
         color={"primary"}
         variant={"contained"}
         onClick={() => {

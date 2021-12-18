@@ -80,7 +80,7 @@ function InstructionInside(props: {
         <Box
           sx={{
             borderColor: "white",
-            borderWidth: "0.125em",
+            borderWidth: "0.125rem",
             borderStyle: "solid",
           }}
         >
@@ -90,17 +90,17 @@ function InstructionInside(props: {
           sx={{
             backgroundColor: "#00000095",
             borderColor: "white",
-            borderWidth: "0.125em",
+            borderWidth: "0.125rem",
             borderStyle: "solid",
-            marginLeft: "1.25em",
+            marginLeft: "1.25rem",
             width: "100%",
           }}
         >
           <Box
             sx={{
-              marginTop: "0.625em",
-              marginLeft: "0.5em",
-              marginRight: "0.5em",
+              marginTop: "0.625rem",
+              marginLeft: "0.5rem",
+              marginRight: "0.5rem",
             }}
           >
             <span

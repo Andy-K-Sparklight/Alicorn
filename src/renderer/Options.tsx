@@ -113,7 +113,7 @@ export function OptionsPage(): JSX.Element {
   const [tabValue, setTabValue] = useState(0);
   const classes = makeStyles((theme: AlicornTheme) => ({
     head: {
-      fontSize: sessionStorage.getItem("smallFontSize") || "1em",
+      fontSize: sessionStorage.getItem("smallFontSize") || "1rem",
       color: theme.palette.secondary.main,
     },
   }))();
@@ -658,7 +658,6 @@ export function InputItem(props: {
   }
   const classes = makeStyles((theme: AlicornTheme) => ({
     desc: {
-      // fontSize: sessionStorage.getItem("smallFontSize") || "1em",
       color: theme.palette.secondary.main,
     },
     switch: {
@@ -690,7 +689,7 @@ export function InputItem(props: {
           <Typography
             color={"primary"}
             variant={"h6"}
-            sx={{ marginLeft: "0.25em" }}
+            sx={{ marginLeft: "0.25rem" }}
             className={classes.title}
           >
             {tr(`Options.${props.bindConfig}.title`)}
@@ -777,7 +776,7 @@ export function InputItem(props: {
                   type={"button"}
                   variant={"contained"}
                   sx={{
-                    marginTop: "0.25em",
+                    marginTop: "0.25rem",
                   }}
                   onClick={async () => {
                     let d =

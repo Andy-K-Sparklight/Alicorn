@@ -157,10 +157,10 @@ export const REBOOT_KEY_BASE = "ReadyToLaunch.Reboot.";
 const useStyles = makeStyles((theme: AlicornTheme) => ({
   stepper: {
     backgroundColor: theme.palette.secondary.light,
-    fontSize: "14px",
+    fontSize: "0.9rem",
   },
   textSP: {
-    fontSize: sessionStorage.getItem("smallFontSize") || "1em",
+    fontSize: sessionStorage.getItem("smallFontSize") || "1rem",
     color: theme.palette.secondary.main,
   },
   text: {
@@ -1079,7 +1079,7 @@ function AccountChoose(props: {
                 }}
               >
                 <SkinDisplay3D skin={skinUrl} width={100} height={150} />
-                <Typography style={{ color: "gray", marginTop: "-0.25em" }}>
+                <Typography style={{ color: "gray", marginTop: "-0.25rem" }}>
                   {tr("AccountManager.SkinView3DShort")}
                 </Typography>
               </Box>
@@ -1096,7 +1096,7 @@ function AccountChoose(props: {
                 <SkinDisplay2D skin={skinUrl} />
                 <br />
                 <br />
-                <Typography style={{ color: "gray", marginTop: "2.625em" }}>
+                <Typography style={{ color: "gray", marginTop: "2.625rem" }}>
                   {tr("AccountManager.SkinView2DShort")}
                 </Typography>
               </Box>

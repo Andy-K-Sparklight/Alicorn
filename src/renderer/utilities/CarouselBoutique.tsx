@@ -225,7 +225,7 @@ function CarouselBoutiqueLocalSkin(): JSX.Element {
         disabled={
           playerName.trim().length === 0 || selectedFile.trim().length === 0
         }
-        sx={{ marginLeft: "0.25em" }}
+        sx={{ marginLeft: "0.25rem" }}
         color={"primary"}
         variant={"contained"}
         onClick={async () => {
@@ -242,7 +242,7 @@ function CarouselBoutiqueLocalSkin(): JSX.Element {
       </Button>
       <Button
         disabled={playerName.trim().length === 0}
-        sx={{ marginLeft: "0.25em" }}
+        sx={{ marginLeft: "0.25rem" }}
         color={"primary"}
         variant={"contained"}
         onClick={async () => {
@@ -260,7 +260,7 @@ function CarouselBoutiqueLocalSkin(): JSX.Element {
       </Button>
       <Button
         disabled={playerName.trim().length === 0}
-        sx={{ marginLeft: "0.25em" }}
+        sx={{ marginLeft: "0.25rem" }}
         color={"primary"}
         variant={"contained"}
         onClick={async () => {
@@ -271,7 +271,7 @@ function CarouselBoutiqueLocalSkin(): JSX.Element {
       </Button>
       <Button
         disabled={selectedFile.trim().length === 0}
-        sx={{ marginLeft: "0.25em" }}
+        sx={{ marginLeft: "0.25rem" }}
         color={"primary"}
         variant={"contained"}
         onClick={async () => {
@@ -287,7 +287,7 @@ function CarouselBoutiqueLocalSkin(): JSX.Element {
       </Button>
       <Button
         disabled={selectedFile.trim().length === 0}
-        sx={{ marginLeft: "0.25em" }}
+        sx={{ marginLeft: "0.25rem" }}
         color={"primary"}
         variant={"contained"}
         onClick={async () => {
@@ -376,7 +376,7 @@ function CarouselBoutiqueSkinUploader(): JSX.Element {
                 }
               }}
               sx={{
-                marginTop: "0.25em",
+                marginTop: "0.25rem",
               }}
             >
               {tr("Utilities.CarouselBoutique.SelectSkinFile")}
@@ -402,7 +402,7 @@ function CarouselBoutiqueSkinUploader(): JSX.Element {
           </FormControl>
         </Grid>
         {skinUrl.length > 0 ? (
-          <Grid item sx={{ marginLeft: "2em" }}>
+          <Grid item sx={{ marginLeft: "2rem" }}>
             {getBoolean("features.skin-view-3d") ? (
               <SkinDisplay3D skin={skinUrl} width={150} height={225} />
             ) : (

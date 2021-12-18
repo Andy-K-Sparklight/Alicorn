@@ -206,6 +206,10 @@ Pff 软件安装器
 
 正在进行操作……这可能需要几分钟。
 
+# CoreInfo.CannotDestroy
+
+还有其它核心需要此核心，不能摧毁它。
+
 # CoreInfo.StillLoading
 
 加载尚不完全时结果可能不完整或顺序不正确。

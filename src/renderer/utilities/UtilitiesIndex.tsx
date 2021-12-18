@@ -15,7 +15,6 @@ import { AlicornTheme, useCardStyles, useTextStyles } from "../Stylex";
 import { tr } from "../Translator";
 
 const useAccStyles = makeStyles((theme: AlicornTheme) => ({
-  root: {},
   acc1: {
     backgroundColor: theme.palette.primary.main,
   },
@@ -81,7 +80,7 @@ function SimpleUtil(props: {
               <Typography
                 variant={"h6"}
                 sx={{
-                  marginLeft: "0.25em",
+                  marginLeft: "0.25rem",
                   color: isBgDark() ? "secondary.light" : undefined,
                 }}
               >

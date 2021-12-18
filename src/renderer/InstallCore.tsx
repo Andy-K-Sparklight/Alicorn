@@ -208,7 +208,7 @@ export function InstallCore(): JSX.Element {
                     />
                   </Grid>
                   <Grid item>
-                    <Typography color={"primary"} sx={{ marginLeft: "0.25em" }}>
+                    <Typography color={"primary"} sx={{ marginLeft: "0.3rem" }}>
                       {tr("InstallCore.InstallMinecraft")}
                     </Typography>
                   </Grid>
@@ -226,7 +226,7 @@ export function InstallCore(): JSX.Element {
                     />
                   </Grid>
                   <Grid item>
-                    <Typography color={"primary"} sx={{ marginLeft: "0.25em" }}>
+                    <Typography color={"primary"} sx={{ marginLeft: "0.3rem" }}>
                       {tr("InstallCore.InstallForge")}
                     </Typography>
                   </Grid>
@@ -245,7 +245,7 @@ export function InstallCore(): JSX.Element {
                     />
                   </Grid>
                   <Grid item>
-                    <Typography color={"primary"} sx={{ marginLeft: "0.25em" }}>
+                    <Typography color={"primary"} sx={{ marginLeft: "0.3rem" }}>
                       {tr("InstallCore.InstallFabric")}
                     </Typography>
                   </Grid>
@@ -263,7 +263,7 @@ export function InstallCore(): JSX.Element {
                     />
                   </Grid>
                   <Grid item>
-                    <Typography color={"primary"} sx={{ marginLeft: "0.25em" }}>
+                    <Typography color={"primary"} sx={{ marginLeft: "0.3rem" }}>
                       {tr("InstallCore.InstallIris")}
                     </Typography>
                   </Grid>
