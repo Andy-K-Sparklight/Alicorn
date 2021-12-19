@@ -37,16 +37,6 @@
         "
       ></div>
     </div>
-    <script>
-      document.body.onkeydown = (e) => {
-        if (e.key === " ") {
-          if (sessionStorage.getItem("isCommand") === "1") {
-            e.preventDefault();
-            window.dispatchEvent(new CustomEvent("HelpSpace"));
-          }
-        }
-      };
-    </script>
     <p
       id="preboot_log"
       style="font-family: 'Ubuntu Mono', 'Courier New', Courier, monospace"

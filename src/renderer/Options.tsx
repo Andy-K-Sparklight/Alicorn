@@ -29,7 +29,6 @@ import {
   InsertPhoto,
   Inventory2,
   Iso,
-  KeyboardCommandKey,
   LockReset,
   Memory,
   MonitorHeart,
@@ -338,11 +337,6 @@ export function OptionsPage(): JSX.Element {
             icon={<Webhook />}
             type={ConfigType.BOOL}
             bindConfig={"system.ws-operation"}
-          />
-          <InputItem
-            icon={<KeyboardCommandKey />}
-            type={ConfigType.BOOL}
-            bindConfig={"command"}
           />
           <InputItem
             icon={<SnippetFolder />}

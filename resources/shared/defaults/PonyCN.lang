@@ -1574,14 +1574,6 @@ AZ-5 应急救援
 
 在启动监控页面显示正在获取和已经获取的内容 - 对性能有较大影响，请谨慎使用
 
-# Options.command.title
-
-Alicorn Functions
-
-# Options.command.desc
-
-控制 Alicorn 命令的启用或禁用，它们被 Starlight、Alicorn 脚本或你自己使用
-
 # Options.goto.animate.title
 
 平滑页面切换

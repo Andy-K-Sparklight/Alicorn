@@ -10,7 +10,6 @@ import pkg from "../../package.json";
 import { reloadAccounts } from "../modules/auth/AccountUtil";
 import { prepareAJ } from "../modules/auth/AJHelper";
 import { prepareND } from "../modules/auth/NDHelper";
-import { initCommandListener } from "../modules/command/CommandListener";
 import {
   getBoolean,
   getNumber,
@@ -182,7 +181,6 @@ try {
     // Essential works and light works
     await Promise.allSettled([initEncrypt()]);
     initDownloadWrapper();
-    initCommandListener();
     initStatistics();
     // Normal works
     await Promise.allSettled([
@@ -299,7 +297,7 @@ function configureFontSize(): void {
   console.log("Set small font size as " + f);
   sessionStorage.setItem("smallFontSize", f);
   let e: HTMLStyleElement | null = document.createElement("style");
-  e.innerText = `.smtxt{font-size:${f} !important;} .MuiTooltip-tooltip > .smtxt{font-size: 1.1rem !important;}`;
+  e.innerText = `.smtxt{font-size:${f} !important;}`;
   document.head.insertAdjacentElement("beforeend", e);
   e = null;
 }

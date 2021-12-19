@@ -121,8 +121,6 @@ const useStyles = makeStyles((theme: AlicornTheme) => ({
 export function App(): JSX.Element {
   const classes = useStyles();
   const [page, setPage] = useState(getString("startup-page.name", "Tutor"));
-  const [enteredCommand, setEnteredCommand] = useState("/");
-  const [showCommand, setShowCommand] = useState(false);
   const [openNotice, setNoticeOpen] = useState(false);
   const [openWarn, setWarnOpen] = useState(false);
   const [openChangePageWarn, setOpenChangePageWarn] = useState(false);
@@ -241,50 +239,6 @@ export function App(): JSX.Element {
     });
   }, []);
 
-  useEffect(() => {
-    const fun = (e: KeyboardEvent) => {
-      if (getBoolean("command")) {
-        if (e.key === "/") {
-          setEnteredCommand("/"); // Clear on "/"
-          setShowCommand(true);
-          sessionStorage.setItem("isCommand", "1");
-          return;
-        }
-        if (showCommand) {
-          if (e.key === "Delete") {
-            if (enteredCommand === "/") {
-              setShowCommand(false);
-              sessionStorage.removeItem("isCommand");
-            } else {
-              setEnteredCommand(enteredCommand.slice(0, -1));
-            }
-            return;
-          }
-          if (e.key === "Enter") {
-            window.dispatchEvent(
-              new CustomEvent("AlicornCommand", { detail: enteredCommand })
-            );
-            setEnteredCommand("/");
-            setShowCommand(false);
-            sessionStorage.removeItem("isCommand");
-            return;
-          }
-          setEnteredCommand(enteredCommand + e.key);
-        }
-      }
-    };
-    const f1 = () => {
-      if (showCommand) {
-        setEnteredCommand(enteredCommand + " ");
-      }
-    };
-    window.addEventListener("keypress", fun);
-    window.addEventListener("HelpSpace", f1);
-    return () => {
-      window.removeEventListener("keypress", fun);
-      window.removeEventListener("HelpSpace", f1);
-    };
-  });
   return (
     <Box
       className={classes.root}
@@ -323,14 +277,11 @@ export function App(): JSX.Element {
         >
           <IconButton
             sx={{
-              display: showCommand ? "none" : undefined,
               marginRight: "0.3rem",
             }}
             color={"inherit"}
             onClick={() => {
-              if (!showCommand) {
-                setOpenDrawer(true);
-              }
+              setOpenDrawer(true);
             }}
           >
             <Menu />
@@ -341,16 +292,11 @@ export function App(): JSX.Element {
               (getString("frame.drag-impl") === "Webkit" ? " window-drag" : "")
             }
           >
-            <Typography
-              variant={"h6"}
-              className={showCommand ? "smtxt" : undefined}
-            >
-              {showCommand ? enteredCommand : tr(page)}
-            </Typography>
+            <Typography variant={"h6"}>{tr(page)}</Typography>
           </Box>
           <Box
             style={
-              showCommand || window.location.hash.includes("QuickSetup")
+              window.location.hash.includes("QuickSetup")
                 ? { display: "none" }
                 : {}
             }
