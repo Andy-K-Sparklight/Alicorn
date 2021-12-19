@@ -39,7 +39,6 @@ import { checkUpdate, initUpdator } from "../modules/selfupdate/Updator";
 import { loadServers } from "../modules/server/ServerFiles";
 import { App } from "./App";
 import { completeFirstRun } from "./FirstRunSetup";
-import { registerHandlers } from "./Handlers";
 import { InstructionProvider } from "./Instruction";
 import { submitInfo, submitWarn } from "./Message";
 import { initWorker } from "./Schedule";
@@ -174,7 +173,6 @@ try {
     console.log("Initializing modules...");
     const t1 = new Date();
     await initWorker();
-    registerHandlers();
     ipcRenderer.on("CallFromSleep", () => {
       submitInfo(tr("System.WakeUp"));
     });

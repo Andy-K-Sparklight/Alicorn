@@ -52,7 +52,6 @@ import {
   TextFormat,
   ViewInAr,
   WebAsset,
-  Webhook,
   YoutubeSearchedFor,
   ZoomOutMap,
 } from "@mui/icons-material";
@@ -334,11 +333,6 @@ export function OptionsPage(): JSX.Element {
             bindConfig={"hoofoff.central"}
           />
           <InputItem
-            icon={<Webhook />}
-            type={ConfigType.BOOL}
-            bindConfig={"system.ws-operation"}
-          />
-          <InputItem
             icon={<SnippetFolder />}
             type={ConfigType.DIR}
             bindConfig={"cx.shared-root"}
@@ -528,11 +522,6 @@ export function OptionsPage(): JSX.Element {
             icon={<PublicOff />}
             type={ConfigType.STR}
             bindConfig={"download.proxy-bypass"}
-          />
-          <InputItem
-            icon={<AccessTime />}
-            type={ConfigType.NUM}
-            bindConfig={"starlight.join-server.timeout"}
           />
         </TabPanel>
         <TabPanel index={5} value={tabValue}>

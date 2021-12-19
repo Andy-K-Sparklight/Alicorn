@@ -16,7 +16,6 @@ import {
   loadConfigSync,
 } from "../modules/config/ConfigSupport";
 import { registerBackgroundListeners } from "./Background";
-import { closeWS, initWS } from "./WSServer";
 
 console.log("Starting Alicorn!");
 
@@ -143,7 +142,6 @@ async function whenAppReady() {
     }
   });
   mainWindow.once("closed", () => {
-    closeWS();
     console.log("Stopping!");
     setTimeout(() => {
       console.log("Too long! Forcefully stopping!");
@@ -173,10 +171,6 @@ async function whenAppReady() {
         mainWindow?.webContents.openDevTools();
       }
     });
-  }
-  if (getBoolean("system.ws-operation")) {
-    console.log("Preparing WS!");
-    initWS();
   }
   await mainWindow.loadFile(path.resolve(appPath, "Renderer.html"));
 }
