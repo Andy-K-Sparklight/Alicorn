@@ -64,6 +64,5 @@
   "theme.zoom-factor": 1.0,
   "jvm.extra-args": "-Dfile.encoding=UTF-8 -showversion -XX:+IgnoreUnrecognizedVMOptions -XX:+UnlockExperimentalVMOptions",
   "features.sword": true,
-  "pff.upgrade-mode": "Override",
-  "az5": true
+  "pff.upgrade-mode": "Override"
 }
