@@ -1,5 +1,6 @@
 import {
   Add,
+  CopyAll,
   Eject,
   FolderOpen,
   Input,
@@ -51,6 +52,7 @@ import {
 import {
   clearContainer,
   createNewContainer,
+  forkContainer,
   unlinkContainer,
 } from "../modules/container/ContainerWrapper";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
@@ -66,8 +68,9 @@ import {
 import { isWebFileExist } from "../modules/download/RainbowFetch";
 import { deployIJPack } from "../modules/pff/modpack/InstallIJModpack";
 import { wrappedInstallModpack } from "../modules/pff/modpack/InstallModpack";
+import { setChangePageWarn } from "./GoTo";
 import { Icons } from "./Icons";
-import { submitSucc } from "./Message";
+import { submitSucc, submitWarn } from "./Message";
 import {
   FailedHint,
   OperatingHint,
@@ -271,11 +274,41 @@ function SingleContainerDisplay(props: {
                       <IconButton
                         color={"inherit"}
                         className={classes.operateButton}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setOpen(true);
                         }}
                       >
                         <LinkOff />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip
+                      title={
+                        <Typography className={"smtxt"}>
+                          {tr("ContainerManager.Fork")}
+                        </Typography>
+                      }
+                    >
+                      <IconButton
+                        color={"inherit"}
+                        className={classes.operateButton}
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          setOperating(true);
+                          setChangePageWarn(true);
+                          try {
+                            await forkContainer(props.container);
+                            submitSucc(tr("ContainerManager.Forked"));
+                          } catch (e) {
+                            submitWarn(tr("ContainerManager.FailedToFork"));
+                          }
+                          setChangePageWarn(false);
+                          setOperating(false);
+                          setContainerListDirty();
+                          setRefresh(!refresh);
+                        }}
+                      >
+                        <CopyAll />
                       </IconButton>
                     </Tooltip>
                     <Tooltip
@@ -288,7 +321,8 @@ function SingleContainerDisplay(props: {
                       <IconButton
                         color={"inherit"}
                         className={classes.operateButton}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setClearOpen(true);
                         }}
                       >
@@ -308,11 +342,7 @@ function SingleContainerDisplay(props: {
                         <IconButton
                           color={"inherit"}
                           className={classes.operateButton}
-                          onClick={() => {
-                            unmount(props.container.id);
-                            setContainerListDirty();
-                            setRefresh(!refresh);
-                          }}
+                          // This has the same effect with just click the card
                         >
                           <Eject />
                         </IconButton>
@@ -328,11 +358,6 @@ function SingleContainerDisplay(props: {
                         <IconButton
                           color={"inherit"}
                           className={classes.operateButton}
-                          onClick={() => {
-                            mount(props.container.id);
-                            setContainerListDirty();
-                            setRefresh(!refresh);
-                          }}
                         >
                           <Input />
                         </IconButton>
@@ -348,7 +373,8 @@ function SingleContainerDisplay(props: {
                       <IconButton
                         color={"inherit"}
                         className={classes.operateButton}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           try {
                             shell.showItemInFolder(props.container.rootDir);
                           } catch {}

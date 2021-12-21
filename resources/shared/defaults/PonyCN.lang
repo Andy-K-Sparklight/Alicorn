@@ -766,6 +766,25 @@ Minecraft 容器名
 
 容器创建成功～
 
+# ContainerManager.Fork
+
+复制该容器
+
+# ContainerManager.Forked
+
+成功复制了容器～
+
+# ContainerManager.FailedToFork
+
+复制失败：{Reason}
+
+# ContainerManager.ForkName
+
+{Original} 的副本
+复制的 {Original}
+{Original} 的复制品
+{Original} 的拷贝
+
 # ContainerManager.FetchingModpack
 
 正在获取整合包……

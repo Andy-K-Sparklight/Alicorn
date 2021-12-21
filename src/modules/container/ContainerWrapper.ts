@@ -1,7 +1,10 @@
 import fs from "fs-extra";
 import path from "path";
+import { randsl } from "../../renderer/Translator";
+import { isFileExist } from "../commons/FileUtil";
 import { getBasePath } from "../config/PathSolve";
 import {
+  getAllContainers,
   getContainer,
   registerContainer,
   unregisterContainer,
@@ -48,6 +51,20 @@ export function unlinkContainer(name: string): void {
   unregisterContainer(name);
 }
 
+export async function forkContainer(c: MinecraftContainer): Promise<void> {
+  let pt = c.rootDir + "_fork";
+  while (await isFileExist(pt)) {
+    pt += "_fork";
+  }
+  let nid = randsl("ContainerManager.ForkName", `Original=${c.id}`);
+  while (getAllContainers().includes(nid)) {
+    nid = randsl("ContainerManager.ForkName", `Original=${nid}`);
+  }
+  await fs.ensureDir(pt);
+  await fs.copy(c.rootDir, pt);
+  await createNewContainer(pt, nid);
+}
+
 // Remove files, don't unlink
 export async function clearContainer(name: string): Promise<void> {
   const dir = getContainer(name).resolvePath();
@@ -58,20 +75,5 @@ export async function clearContainer(name: string): Promise<void> {
     await fs.emptydir(dir);
   } catch (e) {
     throw new Error("Cannot delete container. Caused by: " + e);
-  }
-}
-
-// Fork a container, this will delete everything in the target directory!
-export async function forkContainer(
-  c1: MinecraftContainer,
-  c2: MinecraftContainer
-): Promise<void> {
-  try {
-    unlinkContainer(c2.id);
-    await fs.emptyDir(c2.resolvePath());
-    registerContainer(c2);
-    await fs.copy(c1.resolvePath(), c2.resolvePath());
-  } catch (e) {
-    throw new Error("Cannot fork container. Caused by: " + e);
   }
 }
