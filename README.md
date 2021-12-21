@@ -36,16 +36,6 @@
   
   请注意非 Windows 操作系统在构建 Windows 应用时需要 wine 的支持，可参考 electron-packager 的输出信息安装。
 
-#### 构建 Starlight
-
-自内核版本 33 开始，Starlight 不再随 Alicorn 一同构建，使用如下命令构建 Starlight：
-
-```shell
-yarn user-script
-```
-
-文件将输出到 `out` 下。 
-
 #### 构建开发
 
 如果你正在考虑向 Alicorn 提交代码，你可能需要使用如下的命令：
