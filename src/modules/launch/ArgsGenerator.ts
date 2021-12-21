@@ -1,3 +1,4 @@
+import os from "os";
 import path from "path";
 import { Trio } from "../commons/Collections";
 import {
@@ -193,6 +194,30 @@ export function applyScheme(
     return RAM_SCHEME[scheme1] || [];
   }
   return RAM_SCHEME[scheme2];
+}
+
+export function autoMemory(): number {
+  const totalMem = Math.floor(os.totalmem() / 1048576);
+  const freeMem = Math.floor(os.freemem() / 1048576);
+  // Free > 70%, Max = 90% of free
+  // Free > 50%, Max = 75% of free
+  // Free > 30%, Use = 60% of free
+  // Else let vm choose
+  const rate = freeMem / totalMem;
+  let m = 0;
+  if (rate > 0.7) {
+    m = Math.floor(freeMem * 0.9);
+  } else if (rate > 0.5) {
+    m = Math.floor(freeMem * 0.75);
+  } else if (rate > 0.3) {
+    m = Math.floor(freeMem * 0.6);
+  }
+  // If less then 1536M then let vm choose
+  if (m < 1536) {
+    m = 0;
+  }
+  console.log("Auto set memory as " + m + "m.");
+  return m;
 }
 
 const RAM_SCHEME: Record<string, string[]> = {

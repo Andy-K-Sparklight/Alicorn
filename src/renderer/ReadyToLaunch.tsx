@@ -97,6 +97,7 @@ import {
   parseJavaInfo,
   parseJavaInfoRaw,
 } from "../modules/java/JInfo";
+import { autoMemory } from "../modules/launch/ArgsGenerator";
 import {
   ensureAllAssets,
   ensureAssetsIndex,
@@ -929,7 +930,7 @@ async function startBoot(
       ndServerId: ndServerId,
       resolution: resolutionPolicy ? new Pair(w, h) : undefined,
       javaVersion: jInfo ? jInfo.rootVersion : 0,
-      maxMem: getNumber("memory", 0),
+      maxMem: getNumber("memory") || autoMemory(),
       gc1: getString("main-gc", "z"),
       gc2: getString("para-gc", "pure"),
     });

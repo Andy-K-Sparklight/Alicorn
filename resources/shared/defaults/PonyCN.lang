@@ -1683,7 +1683,7 @@ Z（ZGC）
 
 # Options.memory.desc
 
-设置最大内存大小，单位 MB - 设置为 0 以让 JVM 自行选择
+设置最大内存大小，单位 MB - 设置为 0 以让 Alicorn 选择
 
 # Options.gw-size.title
 
