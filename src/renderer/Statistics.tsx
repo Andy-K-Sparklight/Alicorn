@@ -51,7 +51,7 @@ export function addStatistics(i: string, amount = 1): void {
   STATISTICS_MAP.set(i, (STATISTICS_MAP.get(i) || 0) + amount);
 }
 
-export function getStatistics(i: string): number {
+function getStatistics(i: string): number {
   return STATISTICS_MAP.get(i) || 0;
 }
 
@@ -59,6 +59,6 @@ export function saveStatistics(): void {
   localStorage.setItem("Statistics", buildMap(STATISTICS_MAP));
 }
 
-export function loadStatistics(): void {
+function loadStatistics(): void {
   STATISTICS_MAP = parseMap(localStorage.getItem("Statistics") || "");
 }

@@ -184,5 +184,3 @@ enum FabricFilter {
   STABLE,
   ANY,
 }
-
-export { FabricFilter };

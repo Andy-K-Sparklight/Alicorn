@@ -18,7 +18,7 @@ import { copyProfile, GameProfile } from "./GameProfile";
 import { loadProfile } from "./ProfileLoader";
 
 // gfBase <- gfHead, just like merge in git
-export async function makeInherit(
+async function makeInherit(
   gfBase: GameProfile,
   gfHead: GameProfile,
   legacyBit = false
@@ -78,49 +78,6 @@ export async function makeInherit(
   return retGF;
 }
 
-export async function abortableNoDuplicateConcat<T>(
-  a1: T[],
-  a2: T[]
-): Promise<T[]> {
-  const copy = a2.concat();
-  const hashList = await Promise.all(
-    copy.map((a) => {
-      return schedulePromiseTask(() => {
-        return Promise.resolve(objectHash(a));
-      });
-    })
-  );
-  const buff: T[] = [];
-  for (const x of a1) {
-    const xh = await schedulePromiseTask(() => {
-      return Promise.resolve(objectHash(x));
-    });
-    if (!hashList.includes(xh) && !a2.includes(x)) {
-      buff.push(x);
-    }
-  }
-  return buff.concat(copy);
-}
-
-/**
- * @deprecated use abortable one instead
- */
-// a1 <- a2, a2 overrides a1 if necessary
-export function noDuplicateConcat<T>(a1: T[], a2: T[]): T[] {
-  const copy = a2.concat();
-  const hashList = copy.map((a) => {
-    return objectHash(a);
-  });
-  const buff: T[] = [];
-  for (const x of a1) {
-    const xh = objectHash(x);
-    if (!hashList.includes(xh) && !a2.includes(x)) {
-      buff.push(x);
-    }
-  }
-  return buff.concat(copy);
-}
-
 export class InheritedProfile extends GameProfile {
   inheritsFrom = "";
 
@@ -150,7 +107,7 @@ export class InheritedProfile extends GameProfile {
     }
   }
 }
-export async function prepareClient(
+async function prepareClient(
   modifiedId: string,
   sourceId: string,
   container: MinecraftContainer

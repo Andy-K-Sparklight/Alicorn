@@ -161,7 +161,7 @@ export class LibraryMeta {
   }
 }
 
-export class RuleSet {
+class RuleSet {
   private readonly rules: Rule[] = [];
 
   clone(): RuleSet {
@@ -212,7 +212,7 @@ export class RuleSet {
 // This is a fake one
 // We don't (and can't) really judge those rules by parsing the JSON
 // Mojang only uses 'os.name' 'os.version' and 'os.arch' so far, though
-export class Rule {
+class Rule {
   isAllow: boolean;
   requireOSType: string;
   requireOSVersion: string;

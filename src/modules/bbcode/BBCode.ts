@@ -1,4 +1,4 @@
-export abstract class BaseComponent {
+abstract class BaseComponent {
   abstract toBBCode(): string;
 }
 

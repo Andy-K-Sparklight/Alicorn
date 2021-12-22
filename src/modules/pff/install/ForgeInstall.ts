@@ -64,7 +64,7 @@ export async function performForgeInstall(
 }
 
 // Make sure that you call this function AFTER extracted the installer!
-export function bootForgeInstaller(
+function bootForgeInstaller(
   jExecutable: string,
   forgeJar: string,
   container: MinecraftContainer
@@ -104,7 +104,7 @@ export function bootForgeInstaller(
 
 // Gets the converted profile
 // This is NOT bootable! Only for 'ensureLibraries'
-export async function getPolyfillForgeProfile(
+async function getPolyfillForgeProfile(
   forgeJar: string,
   container: MinecraftContainer
 ): Promise<Pair<GameProfile, boolean>> {

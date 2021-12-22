@@ -1,14 +1,5 @@
 import { ALICORN_SEPARATOR } from "./Constants";
 
-export function parseMultiMap<T = boolean | string | number>(
-  str: string
-): Map<string, T>[] {
-  // '***' spilts
-  return str.split("***").map((s) => {
-    return parseMap(s);
-  });
-}
-
 // Separator '❤❤' is just a choice
 // MapUtil will only be used in our code, not for plugins or user data
 // In that case, we shall use JSON instead

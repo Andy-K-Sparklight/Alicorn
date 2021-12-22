@@ -52,19 +52,6 @@ export async function saveAccount(a: Account): Promise<boolean> {
   }
 }
 
-export function saveAccountSync(a: Account): boolean {
-  try {
-    const fName = a.getAccountIdentifier() + ALICORN_ENCRYPTED_DATA_SUFFIX;
-    saveDataSync(
-      path.join(ACCOUNT_ROOT, fName),
-      encrypt2(decideWhichAccountByCls(a) + a.serialize())
-    );
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 export async function getAllAccounts(): Promise<string[]> {
   try {
     return await fs.readdir(getActualDataPath(ACCOUNT_ROOT));

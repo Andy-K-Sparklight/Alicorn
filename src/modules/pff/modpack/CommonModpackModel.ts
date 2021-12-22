@@ -46,7 +46,7 @@ export function generateBaseVersion(
     return m.baseVersion;
   }
 }
-export async function xdeploy(
+async function xdeploy(
   o: {
     id: string;
     version: string;

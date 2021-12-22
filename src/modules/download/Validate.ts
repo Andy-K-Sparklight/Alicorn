@@ -20,7 +20,7 @@ export async function getHash(f: string): Promise<string> {
   return String(await invokeWorker("Sha1File", f));
 }
 
-export async function sizeValidate(f: string, size: number): Promise<boolean> {
+async function sizeValidate(f: string, size: number): Promise<boolean> {
   if (size <= 0) {
     return true;
   }

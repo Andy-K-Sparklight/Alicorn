@@ -7,7 +7,7 @@ import { wrappedDownloadFile } from "../../download/DownloadWrapper";
 import { xgot } from "../../download/GotWrapper";
 import { ensureClient } from "../../launch/Ensurance";
 import { loadProfile } from "../../profile/ProfileLoader";
-export const MOJANG_CORES_KEY = "MojangCores";
+const MOJANG_CORES_KEY = "MojangCores";
 
 export async function getAllMojangCores(
   filter = ReleaseType.RELEASE,
@@ -84,14 +84,6 @@ export async function downloadProfile(
     console.log(e);
     throw e;
   }
-}
-/**
- * @deprecated
- */
-export async function getProfile(
-  url: string
-): Promise<Record<string, unknown>> {
-  return (await xgot(url)) as Record<string, unknown>;
 }
 
 export async function prefetchMojangVersions(): Promise<void> {

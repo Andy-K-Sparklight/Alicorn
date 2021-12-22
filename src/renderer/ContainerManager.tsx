@@ -867,7 +867,7 @@ export async function remoteSelectDir(): Promise<string> {
   return String((await ipcRenderer.invoke("selectDir")) || "");
 }
 
-export async function remoteSelectModpack(): Promise<string> {
+async function remoteSelectModpack(): Promise<string> {
   return String((await ipcRenderer.invoke("selectModpack")) || "");
 }
 

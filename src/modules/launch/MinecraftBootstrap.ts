@@ -11,7 +11,7 @@ export function getRunningInstanceCount(): number {
   return POOL.size;
 }
 
-export class RunningMinecraft {
+class RunningMinecraft {
   readonly args: string[];
   readonly executable: string;
   readonly container: MinecraftContainer;
@@ -132,47 +132,4 @@ export function runMinecraft(
 
 export function stopMinecraft(runID: string): void {
   POOL.get(runID)?.kill();
-}
-
-export function disconnectMinecraft(runID: string): void {
-  POOL.get(runID)?.disconnect();
-}
-
-export function onEnd(runID: string, fn: (exitCode: string) => void): void {
-  const ins = POOL.get(runID);
-  ins?.onEnd((c) => {
-    fn(String(c));
-  });
-}
-
-export function onInfo(runID: string, fn: (data: string) => void): void {
-  const ins = POOL.get(runID);
-  ins?.onLog(
-    (s) => {
-      fn(s);
-    },
-    () => {
-      return;
-    }
-  );
-}
-
-export function onError(runID: string, fn: (data: string) => void): void {
-  const ins = POOL.get(runID);
-  ins?.onLog(
-    () => {
-      return;
-    },
-    (s) => {
-      fn(s);
-    }
-  );
-}
-
-export function getExitCode(id: string): string {
-  return POOL.get(id)?.exitCode || "";
-}
-
-export function getStatus(id: string): RunningStatus {
-  return POOL.get(id)?.status || RunningStatus.UNKNOWN;
 }

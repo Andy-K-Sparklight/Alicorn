@@ -3,7 +3,7 @@ import { CommonModpackModel } from "./CommonModpackModel";
 export interface MMCModpackMeta {
   components: MMCComponent[];
 }
-export interface MMCComponent {
+interface MMCComponent {
   uid: string;
   version: string;
 }

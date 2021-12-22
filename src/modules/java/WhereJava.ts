@@ -5,7 +5,7 @@ import path from "path";
 import { invokeWorker } from "../../renderer/Schedule";
 import { isFileExist } from "../commons/FileUtil";
 import { getBoolean, getNumber } from "../config/ConfigSupport";
-import { resetJavaList } from "./JInfo";
+import { resetJavaList } from "./JavaInfo";
 
 // This function is VERY SLOW!
 // It searches the whole os directory to find 'java.exe'(or 'java' on unix-liked)

@@ -53,19 +53,12 @@ export interface FileOperateReport {
   operateRecord: OperateRecord[];
 }
 
-export interface OperateRecord {
+interface OperateRecord {
   file: string;
   operation: "SKIPPED" | "OPERATED" | "FAILED";
 }
 
-export interface ProfileReport {
-  baseVersion: string;
-  id: string;
-  isLegacy: boolean;
-  type: ProfileType;
-}
-
-export interface JavaReport {
+interface JavaReport {
   runtime: string;
   version: number;
 }

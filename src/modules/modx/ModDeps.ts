@@ -6,7 +6,7 @@ import { safeGet } from "../commons/Null";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { escapeQuote, ModLoader } from "./ModInfo";
 
-export interface ModDepUnit {
+interface ModDepUnit {
   name: string; // MyName
   depends: string[];
   origin: string; // File
@@ -74,7 +74,7 @@ export async function configureModDepChain(
   return o;
 }
 
-export async function getModType(mod: string): Promise<ModLoader> {
+async function getModType(mod: string): Promise<ModLoader> {
   try {
     const zip = new StreamZip.async({ file: mod });
     const entries = await zip.entries();
@@ -96,9 +96,7 @@ export async function getModType(mod: string): Promise<ModLoader> {
 
 // Support for mcmod.info has been dropped
 
-export async function unfoldForgeTomlJar(
-  source: string
-): Promise<ShortModDepUnit[]> {
+async function unfoldForgeTomlJar(source: string): Promise<ShortModDepUnit[]> {
   const zip = new StreamZip.async({ file: source });
   const entries = await zip.entries();
   const o: ShortModDepUnit[] = [];
@@ -127,9 +125,7 @@ export async function unfoldForgeTomlJar(
   }
   return o;
 }
-export function unfoldFabricJar(
-  source: Buffer | string
-): Promise<ShortModDepUnit[]> {
+function unfoldFabricJar(source: Buffer | string): Promise<ShortModDepUnit[]> {
   return new Promise<ShortModDepUnit[]>((res) => {
     const fun = async (e: unknown, zip?: ZipFile) => {
       if (e || !zip) {

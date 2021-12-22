@@ -18,12 +18,12 @@ import {
   buildCommonModpackJSON,
   convertCommonToCF,
 } from "./ModpackBuilder";
-import {submitInfo} from "../../../renderer/Message";
-import {tr} from "../../../renderer/Translator";
+import { submitInfo } from "../../../renderer/Message";
+import { tr } from "../../../renderer/Translator";
 
 const pipe = promisify(pipeline);
 
-export async function compressPack(
+async function compressPack(
   source: string,
   outputDir: string,
   name: string

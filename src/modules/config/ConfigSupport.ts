@@ -88,10 +88,6 @@ export function loadConfigSync(): void {
   } catch {}
 }
 
-export function getAllConfigKeys(): string[] {
-  return Object.keys(cachedConfig);
-}
-
 export function saveConfigSync(): void {
   try {
     fs.ensureDirSync(path.dirname(CONFIG_FILE));

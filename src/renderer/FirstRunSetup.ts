@@ -15,10 +15,11 @@ import {
   parseJavaInfo,
   parseJavaInfoRaw,
   setDefaultJavaHome,
-} from "../modules/java/JInfo";
+} from "../modules/java/JavaInfo";
 import { whereJava } from "../modules/java/WhereJava";
 import {
   downloadProfile,
+  getLatestMojangCore,
   getProfileURLById,
 } from "../modules/pff/get/MojangCore";
 import { startInst } from "./Instruction";
@@ -34,7 +35,7 @@ export function waitInstDone(): Promise<void> {
   });
 }
 
-export async function waitJavaSearch(): Promise<boolean> {
+async function waitJavaSearch(): Promise<boolean> {
   const r = await whereJava(true, true);
   if (r.length > 0) {
     return true;
@@ -51,11 +52,9 @@ export async function completeFirstRun(): Promise<void> {
     tr("FirstRun.Default") || "Minecraft"
   );
   const ct = getContainer(tr("FirstRun.Default") || "Minecraft");
-  const u = await getProfileURLById("1.17.1");
-  await Promise.allSettled([
-    setupFirstJavaCheck(),
-    downloadProfile(u, ct, "1.17.1"),
-  ]);
+  const lv = await getLatestMojangCore();
+  const u = await getProfileURLById(lv);
+  await Promise.allSettled([setupFirstJavaCheck(), downloadProfile(u, ct, lv)]);
   set("first-run?", false);
 }
 
@@ -79,7 +78,7 @@ function getMCDefaultRootDir(): string {
   }
 }
 
-export async function setupFirstJavaCheck(): Promise<void> {
+async function setupFirstJavaCheck(): Promise<void> {
   submitInfo(tr("FirstRun.Preparing"));
   let s = false;
   void (async () => {

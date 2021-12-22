@@ -159,7 +159,7 @@ export async function checkUpdate(): Promise<void> {
   }
 }
 
-export async function findLatestCanUpdateVersion(): Promise<number> {
+async function findLatestCanUpdateVersion(): Promise<number> {
   let target = pkg.updatorVersion + 1;
   let bu = getString(
     "updator.url",
@@ -193,10 +193,7 @@ export async function findLatestCanUpdateVersion(): Promise<number> {
   return target - 1;
 }
 
-export async function doUpdate(
-  baseUrl: string,
-  info: BuildInfo
-): Promise<boolean> {
+async function doUpdate(baseUrl: string, info: BuildInfo): Promise<boolean> {
   try {
     const basePath = getBasePath();
     const targetPath = basePath + ".local";

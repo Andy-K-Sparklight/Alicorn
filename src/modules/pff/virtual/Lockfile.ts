@@ -34,7 +34,7 @@ export async function loadLockfile(
   }
 }
 
-export async function fixLockfile(
+async function fixLockfile(
   lockfile: Lockfile2,
   container: MinecraftContainer
 ): Promise<void> {

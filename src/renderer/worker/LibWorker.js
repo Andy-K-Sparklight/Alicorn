@@ -41,7 +41,7 @@ addHandler("SHA256", async (o) => {
 
 addHandler("Sha256File", async (target) => {
   let s = await readFile(target);
-  return CryptoJS.SHA256(s.toString());
+  return CryptoJS.SHA256(s.toString()).toString();
 });
 
 addHandler("Sha1File", (target) => {

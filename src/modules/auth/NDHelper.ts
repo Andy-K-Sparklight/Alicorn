@@ -1,6 +1,6 @@
 import { getActualDataPath, saveDefaultData } from "../config/DataSupport";
 
-export const NIDE8_NAME = "nide8auth.ald";
+const NIDE8_NAME = "nide8auth.ald";
 
 export async function prepareND(): Promise<void> {
   await saveDefaultData(NIDE8_NAME);

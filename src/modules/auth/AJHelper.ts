@@ -12,7 +12,7 @@ For details, please see https://github.com/yushijinhun/authlib-injector/blob/dev
 A copy of authlib-injector.ald will be saved to the root dir of alicorn data.
 */
 
-export const AJ_FILE_BASE = "authlib-injector.ald";
+const AJ_FILE_BASE = "authlib-injector.ald";
 
 export async function prepareAJ(): Promise<void> {
   await saveDefaultData(AJ_FILE_BASE);

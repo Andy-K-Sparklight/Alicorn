@@ -143,7 +143,7 @@ export function Instruction(): JSX.Element {
   );
 }
 
-export const InstructionHighlight = createContext({
+const InstructionHighlight = createContext({
   target: "",
   changeTarget: (_t: string) => {},
   page: "",
@@ -213,7 +213,7 @@ export function ShiftEle(props: {
 
 let busylock = false;
 
-export function setInstBusy(b: boolean): void {
+function setInstBusy(b: boolean): void {
   busylock = b;
 }
 

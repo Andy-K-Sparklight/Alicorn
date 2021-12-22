@@ -25,7 +25,7 @@ import {
   analyzeCrashReport,
   CrashReportMap,
 } from "../modules/crhelper/CrashLoader";
-import { LaunchTracker } from "../modules/launch/Tracker";
+import { LaunchTracker } from "../modules/launch/LaunchTracker";
 import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
 import { submitSucc, submitWarn } from "./Message";
 import {

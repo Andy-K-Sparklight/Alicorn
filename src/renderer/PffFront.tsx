@@ -30,10 +30,10 @@ import { getBoolean } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { setProxy } from "../modules/download/DownloadWrapper";
-import { loadMetas } from "../modules/modx/DynModLoad";
+import { loadMetas } from "../modules/modx/ModDynLoad";
 import { configureModDepChain, UnmetDepUnit } from "../modules/modx/ModDeps";
 import { ModInfo, ModLoader } from "../modules/modx/ModInfo";
-import { canModVersionApply } from "../modules/modx/VersionUtil";
+import { canModVersionApply } from "../modules/modx/ModVersionUtil";
 import { PFF_MSG_GATE } from "../modules/pff/curseforge/Values";
 import {
   loadLockfile,
@@ -453,7 +453,7 @@ export function PffFront(): JSX.Element {
   );
 }
 
-export function SinglePffModDisplay(props: {
+function SinglePffModDisplay(props: {
   meta: LockfileModMeta;
   container: string;
   loader: string;
@@ -528,7 +528,7 @@ export function SinglePffModDisplay(props: {
   );
 }
 
-export function SingleModDisplay(props: {
+function SingleModDisplay(props: {
   m: ModInfo;
   loader: ModLoader;
   mcversion: string;

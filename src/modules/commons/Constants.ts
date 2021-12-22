@@ -41,10 +41,6 @@ export enum ReleaseType {
 
 export const PLACE_HOLDER = "#//!?PH>>";
 
-export const COMMON_HEADER = {
-  connection: "keep-alive",
-};
-
 export const DOH_CONFIGURE: Record<string, string> = {
   iQDNS: "https://a.passcloud.xyz/dns-query",
   Cloudflare: "https://cloudflare-dns.com/dns-query",

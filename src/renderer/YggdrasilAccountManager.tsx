@@ -169,7 +169,7 @@ export function YggdrasilAccountManager(): JSX.Element {
   );
 }
 
-export function SingleAccountDisplay(props: {
+function SingleAccountDisplay(props: {
   account: Account;
   updateAccount: (origin: Account, newAccount: Account) => unknown;
   deleteAccount: (origin: Account) => unknown;

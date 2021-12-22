@@ -162,7 +162,7 @@ export function escapeQuote(s: string): string {
 
 const COERCE_REGEX = /(?<=[0-9])-[A-Za-z][0-9A-Za-z.]*/gi;
 const END_REGEX = /-([A-Za-z][0-9A-Za-z.]*)?$/;
-export function escapeVersion(s: string): string {
+function escapeVersion(s: string): string {
   return String(eval('"' + s + '"'))
     .replaceAll(COERCE_REGEX, "")
     .replace(END_REGEX, "")

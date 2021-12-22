@@ -13,13 +13,13 @@ import { isNull } from "../commons/Null";
 const VALIDATE_FILE = "f.record" + ALICORN_DATA_SUFFIX;
 let VF: Map<string, string> = new Map();
 
-export async function saveDefaultVF(): Promise<void> {
+async function saveDefaultVF(): Promise<void> {
   if (!(await isFileExist(getActualDataPath(VALIDATE_FILE)))) {
     await saveData(VALIDATE_FILE, "");
   }
 }
 
-export async function loadVF(): Promise<void> {
+async function loadVF(): Promise<void> {
   try {
     VF = parseMap(await loadData(VALIDATE_FILE));
   } catch {}

@@ -24,7 +24,7 @@ export async function prepareEdgeExecutable(): Promise<void> {
   await saveDefaultDataAs(getEdgeName(), getEdgeTargetName());
 }
 
-export function getEdgeName(): string {
+function getEdgeName(): string {
   if (os.platform() === "win32") {
     return "edge-win.ald";
   } else {
@@ -32,7 +32,7 @@ export function getEdgeName(): string {
   }
 }
 
-export function getEdgeTargetName(): string {
+function getEdgeTargetName(): string {
   if (os.platform() === "win32") {
     return "edge.exe";
   } else {
@@ -47,11 +47,11 @@ const TAP_INSTALLED_BIT = "CutieConnet.TAPInstalled";
 const ELEVATOR = "elevate.ald";
 const ELEVATOR_TARGET = "elevate.exe";
 
-export async function prepareElevate(): Promise<void> {
+async function prepareElevate(): Promise<void> {
   await saveDefaultDataAs(ELEVATOR, ELEVATOR_TARGET);
 }
 
-export function waitWindowsEdgeBoot(
+function waitWindowsEdgeBoot(
   community: string,
   psw: string,
   ip: string,
@@ -88,7 +88,7 @@ export function waitWindowsEdgeBoot(
   });
 }
 
-export function waitUNIXEdgeBoot(
+function waitUNIXEdgeBoot(
   community: string,
   psw: string,
   ip: string,
@@ -135,7 +135,7 @@ export function waitUNIXEdgeBoot(
   });
 }
 
-export async function installTAPDeviceWin(): Promise<void> {
+async function installTAPDeviceWin(): Promise<void> {
   if (os.platform() !== "win32") {
     return;
   }
@@ -143,7 +143,7 @@ export async function installTAPDeviceWin(): Promise<void> {
   await waitTAPInstaller(getActualDataPath(TAP_NAME));
 }
 
-export function waitTAPInstaller(t: string): Promise<void> {
+function waitTAPInstaller(t: string): Promise<void> {
   return new Promise<void>((res) => {
     void (() => {
       const s = childProcess.exec(`"${t}"`);
@@ -155,26 +155,6 @@ export function waitTAPInstaller(t: string): Promise<void> {
       });
     })();
   });
-}
-
-export function generateEdgeArgsUnix(
-  community: string,
-  psw: string,
-  ip: string,
-  supernode: string
-): string {
-  const o = [
-    "-c",
-    community === INTERNET ? INTERNET : uniqueHash(community),
-    "-l",
-    supernode,
-  ]
-    .concat(ip.length > 0 ? ["-a", ip] : [])
-    .concat(
-      psw.length > 0 && community !== INTERNET ? ["-k", uniqueHash(psw)] : []
-    ) // Beat command inject!
-    .join(" ");
-  return `sh -c "'${getActualDataPath(getEdgeTargetName())}' ${o} &"`;
 }
 
 export async function runEdge(

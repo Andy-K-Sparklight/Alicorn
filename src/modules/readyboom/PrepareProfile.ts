@@ -24,11 +24,11 @@ export function setDirtyProfile(container: string, id: string): void {
   READY_SET.delete(container + "/" + id);
 }
 
-export function isProfileReady(container: string, id: string): boolean {
+function isProfileReady(container: string, id: string): boolean {
   return READY_SET.has(container + "/" + id);
 }
 
-export function willProfileBeReady(container: string, id: string): boolean {
+function willProfileBeReady(container: string, id: string): boolean {
   return isProfileReady(container, id) || READY_MAP.has(container + "/" + id);
 }
 
@@ -52,7 +52,7 @@ export function setLastUsed(container: string, id: string) {
   localStorage.setItem(LAST_USED_KEY, container + "/" + id);
 }
 
-export async function prepareProfile(
+async function prepareProfile(
   container: MinecraftContainer,
   id: string
 ): Promise<boolean> {
@@ -76,7 +76,7 @@ export async function prepareProfile(
   }
 }
 
-export async function scanAndActivateHotProfiles(): Promise<void> {
+async function scanAndActivateHotProfiles(): Promise<void> {
   const rMap = await scanCoresInAllMountedContainers(false);
   const cores = [];
   for (const [c, ids] of rMap.entries()) {

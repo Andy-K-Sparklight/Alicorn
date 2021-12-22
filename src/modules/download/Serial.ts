@@ -16,7 +16,6 @@ import {
   getGuardStream,
   getTimeoutController,
 } from "./RainbowFetch";
-import { addRecord } from "./ResolveLock";
 import { getHash, getIdentifier } from "./Validate";
 
 export class Serial extends AbstractDownloader {
@@ -120,9 +119,6 @@ export class Serial extends AbstractDownloader {
               const id = await schedulePromiseTask(() => {
                 return getIdentifier(meta.savePath);
               });
-              if (id.length > 0) {
-                addRecord(id, meta.url);
-              }
             })(meta); // 'Drop' this promise
             return DownloadStatus.RESOLVED;
           }
@@ -133,9 +129,6 @@ export class Serial extends AbstractDownloader {
               const id = await schedulePromiseTask(() => {
                 return getIdentifier(meta.savePath);
               });
-              if (id.length > 0) {
-                addRecord(id, meta.url);
-              }
             })(meta); // 'Drop' this promise
             return DownloadStatus.RESOLVED;
           }

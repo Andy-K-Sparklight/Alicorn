@@ -97,7 +97,7 @@ import { AlicornTheme, useInputStyles } from "./Stylex";
 import { AL_THEMES } from "./ThemeColors";
 import { ALL_ASSISTANTS, tr } from "./Translator";
 
-export enum ConfigType {
+enum ConfigType {
   BOOL,
   NUM,
   STR,
@@ -587,11 +587,11 @@ export function hasEdited(conf: string): boolean {
   return localStorage.getItem("Edited." + conf) === "1";
 }
 
-export function markEdited(conf: string): void {
+function markEdited(conf: string): void {
   localStorage.setItem("Edited." + conf, "1");
 }
 
-export function InputItem(props: {
+function InputItem(props: {
   type: ConfigType;
   bindConfig: string;
   icon?: React.ReactNode;
@@ -858,7 +858,7 @@ export function InputItem(props: {
     </Container>
   );
 }
-export async function remoteSelectFile(): Promise<string> {
+async function remoteSelectFile(): Promise<string> {
   return String((await ipcRenderer.invoke("selectFile")) || "");
 }
 function TabPanel(props: {

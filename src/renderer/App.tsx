@@ -50,11 +50,7 @@ import {
 import { saveGDT, saveGDTSync } from "../modules/container/ContainerUtil";
 import { saveVF, saveVFSync } from "../modules/container/ValidateRecord";
 import { handleDnD } from "../modules/dnd/DnDCenter";
-import {
-  saveResolveLock,
-  saveResolveLockSync,
-} from "../modules/download/ResolveLock";
-import { saveJDT, saveJDTSync } from "../modules/java/JInfo";
+import { saveJDT, saveJDTSync } from "../modules/java/JavaInfo";
 import { waitUpdateFinished } from "../modules/selfupdate/Updator";
 import { saveServers, saveServersSync } from "../modules/server/ServerFiles";
 import { ContainerManager } from "./ContainerManager";
@@ -691,7 +687,7 @@ export function remoteHideWindow(): void {
   ipcRenderer.send("hideWindow");
 }
 
-export function remoteCloseWindow(): void {
+function remoteCloseWindow(): void {
   console.log("Closing!");
   prepareToQuit();
   ipcRenderer.send("readyToClose");
@@ -708,7 +704,6 @@ export function prepareToQuit(): void {
   saveGDTSync();
   saveJDTSync();
   saveVFSync();
-  saveResolveLockSync();
   saveServersSync();
   saveStatistics();
   console.log("All chunks are saved.");
@@ -720,7 +715,6 @@ async function intervalSaveData(): Promise<void> {
   await saveGDT();
   await saveJDT();
   await saveVF();
-  await saveResolveLock();
   await saveServers();
   saveStatistics();
   console.log("All chunks are saved.");

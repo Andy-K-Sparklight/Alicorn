@@ -128,7 +128,7 @@ export async function wrappedDownloadFile(
   }
 }
 
-export async function existsAndValidate(meta: DownloadMeta): Promise<boolean> {
+async function existsAndValidate(meta: DownloadMeta): Promise<boolean> {
   return await _existsAndValidate(meta.savePath, meta.sha1);
 }
 
@@ -314,7 +314,7 @@ export function setProxy(_host: string, _port: number): void {
   // sessionStorage.setItem(PROXY_PORT, port.toString());
 }
 
-export function addState(s: string): void {
+function addState(s: string): void {
   addDoing(s);
   DOING.unshift(s);
   if (DOING.length > 3) {

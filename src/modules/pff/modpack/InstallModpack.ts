@@ -8,7 +8,7 @@ import { isFileExist } from "../../commons/FileUtil";
 import { isNull, safeGet } from "../../commons/Null";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { addDoing } from "../../download/DownloadWrapper";
-import { getDefaultJavaHome, getJavaRunnable } from "../../java/JInfo";
+import { getDefaultJavaHome, getJavaRunnable } from "../../java/JavaInfo";
 import { ProfileType } from "../../profile/WhatProfile";
 import {
   getFabricInstaller,
@@ -41,7 +41,7 @@ import {
 } from "./CommonModpackModel";
 import { mmc2common, MMCModpackMeta } from "./MMCSupport";
 export const MANIFEST_FILE = "manifest.json";
-export const MMC_PACK = "mmc-pack.json";
+const MMC_PACK = "mmc-pack.json";
 export const PACK_META = "mcbbs.packmeta";
 async function parseModpack(
   container: MinecraftContainer,

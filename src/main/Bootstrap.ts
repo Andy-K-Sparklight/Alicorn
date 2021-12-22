@@ -252,7 +252,7 @@ async function initProxy(): Promise<void> {
   console.log("MainWindow Proxy set.");
 }
 
-export function applyDoHSettings(): void {
+function applyDoHSettings(): void {
   // @ts-ignore
   if (app.configureHostResolver) {
     // Compatibility

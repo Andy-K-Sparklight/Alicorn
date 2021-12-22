@@ -172,7 +172,7 @@ export async function getAddonInfoBySlug(
   }
 }
 
-export async function strDiff(str1: string, str2: string): Promise<number> {
+async function strDiff(str1: string, str2: string): Promise<number> {
   return (await invokeWorker("StrDiff", str1, str2)) as number;
 }
 
@@ -209,41 +209,10 @@ export interface File {
   downloadUrl: string;
 }
 
-export interface GameVersionFilesIndex {
+interface GameVersionFilesIndex {
   gameVersion: string;
   projectFileId: number;
   modLoader: number;
-}
-
-export function getLatestFileByVersion(
-  addonInfo: AddonInfo,
-  gameVersion: string,
-  allowDefault = true,
-  modLoader = 4, // 4 for Fabric and 1 for Forge, -1 for any
-  allowLoaderDiff = true
-): number {
-  if (gameVersion === "") {
-    if (!allowDefault) {
-      return 0;
-    }
-    return addonInfo.defaultFileId;
-  }
-  const indexes = addonInfo.gameVersionLatestFiles;
-  for (const i of indexes) {
-    if (i.gameVersion === gameVersion) {
-      if (modLoader === -1 || modLoader === i.modLoader) {
-        return i.projectFileId;
-      }
-    }
-  }
-  if (allowLoaderDiff) {
-    for (const i of indexes) {
-      if (i.gameVersion === gameVersion) {
-        return i.projectFileId;
-      }
-    }
-  }
-  return 0;
 }
 
 export async function lookupFileInfo(

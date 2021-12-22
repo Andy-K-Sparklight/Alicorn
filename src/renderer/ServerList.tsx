@@ -202,7 +202,7 @@ function AddNewServer(props: {
   );
 }
 
-export function SingleServerDisplay(props: {
+function SingleServerDisplay(props: {
   address: string;
   cores: string[];
 }): JSX.Element {

@@ -42,7 +42,7 @@ export function waitMSAccountReady(): Promise<boolean> {
   return Promise.resolve(false);
 }
 
-export function isMSAccountValid(): boolean {
+function isMSAccountValid(): boolean {
   const refreshedAt = new Date(
     localStorage.getItem(ACCOUNT_LAST_REFRESHED_KEY) || 0
   );
@@ -52,7 +52,7 @@ export function isMSAccountValid(): boolean {
   return new Date().getTime() < validTo.getTime();
 }
 
-export async function keepMSAccountLowPriority(): Promise<boolean> {
+async function keepMSAccountLowPriority(): Promise<boolean> {
   const refreshedAt = new Date(
     localStorage.getItem(ACCOUNT_LAST_REFRESHED_KEY) || 0
   );

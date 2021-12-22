@@ -8,7 +8,7 @@ import { wrappedDownloadFile } from "../download/DownloadWrapper";
 import { GameProfile } from "../profile/GameProfile";
 import { ArtifactMeta, AssetIndexFileMeta, AssetMeta } from "../profile/Meta";
 import { checkExtractTrimNativeLocal, getNativeArtifact } from "./NativesLint";
-import { FileOperateReport, LaunchTracker } from "./Tracker";
+import { FileOperateReport, LaunchTracker } from "./LaunchTracker";
 
 // This file can not only check resources, but also download packages when installing!
 
@@ -202,7 +202,7 @@ export async function ensureAllAssets(
 
 // Ensure one asset
 // Since there are loads of objects, always call this function concurrently!
-export async function ensureAsset(
+async function ensureAsset(
   assetMeta: AssetMeta,
   container: MinecraftContainer,
   isLegacy: boolean,
@@ -219,7 +219,7 @@ export async function ensureAsset(
   return (await wrappedDownloadFile(meta, !containerShared)) === 1;
 }
 
-export function generateAssetURL(assetMeta: AssetMeta): string {
+function generateAssetURL(assetMeta: AssetMeta): string {
   return ASSET_WEB_ROOT + assetMeta.hash.slice(0, 2) + "/" + assetMeta.hash;
 }
 

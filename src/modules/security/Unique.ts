@@ -11,9 +11,6 @@ export async function getMachineUniqueID(): Promise<string> {
   machineIDCache = id;
   return id;
 }
-export function instantGetMachineUniqueID(): string {
-  return uniqueHash(machineIDCache);
-}
 
 export function generateWorldAnyUniqueId(): string {
   const mid =

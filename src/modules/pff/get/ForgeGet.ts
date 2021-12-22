@@ -121,8 +121,6 @@ enum ForgeFilter {
   RECOMMENDED = "recommended",
 }
 
-export { ForgeFilter };
-
 function generateForgeWebJarPath(mcv: string, fgv: string): string {
   return (
     FORGE_MAVEN_ROOT +
@@ -152,17 +150,11 @@ export function generateForgeInstallerName(mcv: string, fgv: string): string {
   return `forge-${mcv}-${fgv}-${SUFFIX}`;
 }
 
-export function generateForgeInstallerNameOld(
-  mcv: string,
-  fgv: string
-): string {
+function generateForgeInstallerNameOld(mcv: string, fgv: string): string {
   return `forge-${mcv}-${fgv}-${mcv}-${SUFFIX}`;
 }
 
-export function generateForgeInstallerNameNew(
-  mcv: string,
-  fgv: string
-): string {
+function generateForgeInstallerNameNew(mcv: string, fgv: string): string {
   return `forge-${mcv}-${fgv}-new-${SUFFIX}`;
 }
 
@@ -186,6 +178,7 @@ export async function getForgeInstaller(
         isWebFileExist(pt2),
         isWebFileExist(pt3),
       ]);
+      console.log("Downloading from " + pt);
       if (pt) {
         return (
           (await wrappedDownloadFile(new DownloadMeta(pt, dest, ""))) === 1
@@ -219,7 +212,7 @@ export async function removeForgeInstaller(
 // Forge doesn't open their full versions list, but thanks to semver, we can infer it.
 // I don't want to do this, but I have to!
 // Forge only leads to harm!!!
-export function getMCVersionByForgeVersion(
+function getMCVersionByForgeVersion(
   fgv: string,
   promos: Record<string, string>
 ): string {

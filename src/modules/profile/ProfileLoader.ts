@@ -9,18 +9,7 @@ import { convertFromLegacy } from "./LegacyProfileAdaptor";
 import { convertLibsByName } from "./LibrariesConvert";
 import { isLegacy, ProfileType, whatProfile } from "./WhatProfile";
 
-export async function loadProfileDirectly(
-  id: string,
-  container: MinecraftContainer
-): Promise<GameProfile> {
-  try {
-    return new GameProfile(await fs.readJSON(container.getProfilePath(id)));
-  } catch (e) {
-    throw new Error("Cannot load profile! Caused by: " + e);
-  }
-}
-
-export async function checkDep(
+async function checkDep(
   container: MinecraftContainer,
   target: string
 ): Promise<boolean> {

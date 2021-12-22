@@ -3,11 +3,11 @@ import path from "path";
 import { getBoolean } from "../config/ConfigSupport";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { JAR_SUFFIX } from "../launch/NativesLint";
-import { FileOperateReport, LaunchTracker } from "../launch/Tracker";
+import { FileOperateReport, LaunchTracker } from "../launch/LaunchTracker";
 import { GameProfile } from "../profile/GameProfile";
 import { ProfileType } from "../profile/WhatProfile";
 import { loadModInfo, ModInfo, ModLoader } from "./ModInfo";
-import { canModVersionApply, gatherVersionInfo } from "./VersionUtil";
+import { canModVersionApply, gatherVersionInfo } from "./ModVersionUtil";
 // How we manage mods:
 // Before launch:
 // 1. Info loading: load all metas in 'mods' folder
@@ -179,7 +179,7 @@ export async function prepareModsCheckFor(
   } catch {}
 }
 
-export async function scanModsList(
+async function scanModsList(
   container: MinecraftContainer,
   tracker: LaunchTracker
 ): Promise<void> {

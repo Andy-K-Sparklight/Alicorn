@@ -174,7 +174,7 @@ function saveAccessToken(v: string): void {
 
 // User -> Code
 // Only in remote!
-export async function browserGetCode(quiet = false): Promise<string> {
+async function browserGetCode(quiet = false): Promise<string> {
   const LOGIN_WINDOW_KEY =
     window.localStorage.getItem("MS.LoginWindowKey") ||
     "alicorn_ms_login_initial";

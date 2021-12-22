@@ -1,49 +1,8 @@
-import fs, { WriteStream } from "fs-extra";
+import fs from "fs-extra";
 import { PassThrough, Readable } from "stream";
-import { IntervalChecker, WatchDog } from "../commons/WatchDog";
+import { WatchDog } from "../commons/WatchDog";
 import { getNumber } from "../config/ConfigSupport";
 import { MirrorChain } from "./Mirror";
-export function guardPipeFile(
-  origin: NodeJS.ReadableStream,
-  target: WriteStream,
-  timeout?: number
-): Promise<void> {
-  const pipingStream = origin.pipe(target);
-
-  return new Promise((res, rej) => {
-    let dog: IntervalChecker | null = null;
-    if (timeout) {
-      let lastPiped = 0;
-      dog = new IntervalChecker(
-        timeout,
-        () => {
-          const b = pipingStream.bytesWritten > lastPiped;
-          lastPiped = pipingStream.bytesWritten;
-          console.log(b);
-          console.log(lastPiped);
-          return b;
-        },
-        () => {
-          pipingStream.close();
-          target.close();
-          rej();
-        }
-      );
-    }
-    pipingStream.on("finish", () => {
-      if (dog) {
-        dog.kill();
-      }
-      res();
-    });
-    pipingStream.on("error", (e) => {
-      if (dog) {
-        dog.kill();
-      }
-      rej(e);
-    });
-  });
-}
 export function getGuardStream(
   i: Readable,
   f: fs.WriteStream,
@@ -143,8 +102,10 @@ export async function isWebFileExist(u: string): Promise<string> {
         signal: controller.signal,
         credentials: "omit",
       });
+      const s = r.ok;
       sti();
-      if (r.ok) {
+      controller.abort(); // Abort this
+      if (s) {
         return u;
       }
       mrc.markBad();

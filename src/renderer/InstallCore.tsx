@@ -30,7 +30,7 @@ import {
   subscribeDoing,
   unsubscribeDoing,
 } from "../modules/download/DownloadWrapper";
-import { getDefaultJavaHome, getJavaRunnable } from "../modules/java/JInfo";
+import { getDefaultJavaHome, getJavaRunnable } from "../modules/java/JavaInfo";
 import {
   canSupportGame,
   getFabricInstaller,

@@ -22,18 +22,6 @@ export function createBaseCommonModel(): CommonModpackModel {
   };
 }
 
-export function createBaseCFModel(): ModpackModel {
-  return {
-    displayName: "MyModpack",
-    overrideSourceDir: "overrides",
-    author: "Me",
-    baseVersion: "1.17.1",
-    modLoaders: [],
-    files: [],
-    packVersion: "0.1",
-  };
-}
-
 export function addPffMod(
   addonId: string,
   fileId: string,

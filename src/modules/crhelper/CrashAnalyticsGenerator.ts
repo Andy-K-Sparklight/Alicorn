@@ -7,7 +7,7 @@ import {
   Spoiler,
   StyleComponent,
 } from "../bbcode/BBCode";
-import { LaunchTracker } from "../launch/Tracker";
+import { LaunchTracker } from "../launch/LaunchTracker";
 import { CrashReportMap } from "./CrashLoader";
 
 const TITLE_FONT = "Trebuchet MS";
@@ -15,7 +15,7 @@ const PINKIE_COLOR = "#df307f";
 const TWILIGHT_COLOR = "#5d2391";
 const BR = "\n";
 
-export function generateTrackerInfo(tracker: LaunchTracker): string {
+function generateTrackerInfo(tracker: LaunchTracker): string {
   const br1 = new StyleComponent("[已查验]");
   br1.color = "Green";
   br1.bold = true;
@@ -175,7 +175,7 @@ export function generateCrashAnalytics(
   );
 }
 
-export function makeFirstPage(): string {
+function makeFirstPage(): string {
   const group = new ComponentsGroup();
   const sc = new StyleComponent("Minecraft 崩溃啦！");
   sc.color = "#5d2391";
@@ -229,7 +229,7 @@ export function makeFirstPage(): string {
   return group.out();
 }
 
-export function makeCrashAnalytics(
+function makeCrashAnalytics(
   crashReport: CrashReportMap,
   originCrashReport: string[],
   type: string
@@ -293,6 +293,6 @@ export function makeCrashAnalytics(
   return group.out();
 }
 
-export function makeIndex(): string {
+function makeIndex(): string {
   return "[index]\n[#1]开始\n[#2]崩溃报告\n[#3]启动信息摘要（模组列表与日志）\n[/index]";
 }

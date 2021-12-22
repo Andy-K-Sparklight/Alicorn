@@ -108,3 +108,6 @@ dist
 
 # Build output
 out
+
+# VSCode
+.vscode/settings.json

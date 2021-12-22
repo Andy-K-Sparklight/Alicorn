@@ -1,7 +1,6 @@
 import fs from "fs-extra";
 import os from "os";
 import path from "path";
-import { schedulePromiseTask } from "../../renderer/Schedule";
 import { basicHash } from "../commons/BasicHash";
 import { getBoolean, getString } from "../config/ConfigSupport";
 import {
@@ -11,9 +10,8 @@ import {
 } from "./AbstractDownloader";
 import { getConfigOptn } from "./DownloadWrapper";
 import { getFileWriteStream, getTimeoutController } from "./RainbowFetch";
-import { addRecord } from "./ResolveLock";
 import { Serial } from "./Serial";
-import { getHash, getIdentifier } from "./Validate";
+import { getHash } from "./Validate";
 
 const TEMP_SAVE_PATH_ROOT = path.join(os.tmpdir(), "alicorn-download");
 
@@ -93,14 +91,6 @@ async function sealAndVerify(
 
   wStream.close();
   if (hash === "" || getBoolean("download.skip-validate")) {
-    void (async (url) => {
-      const id = await schedulePromiseTask(() => {
-        return getIdentifier(savePath);
-      });
-      if (id.length > 0) {
-        addRecord(id, url);
-      }
-    })(url); // 'Drop' this promise
     return;
   }
 
@@ -112,15 +102,6 @@ async function sealAndVerify(
   if (hash !== h) {
     throw new Error("File hash mismatch for " + savePath);
   }
-  void (async (url) => {
-    const id = await schedulePromiseTask(() => {
-      return getIdentifier(savePath);
-    });
-    if (id.length > 0) {
-      addRecord(id, url);
-    }
-  })(url); // 'Drop' this promise
-
   return;
 }
 

@@ -22,7 +22,7 @@ export function getAllContainerPaths(): string[] {
   return Array.from(GlobalContainerDescriptorTable.values());
 }
 
-export function rootOf(containerID: string): string {
+function rootOf(containerID: string): string {
   return GlobalContainerDescriptorTable.get(containerID) || "";
 }
 

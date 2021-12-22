@@ -64,9 +64,6 @@ export function deactiveCode(code: string, central: string): Promise<void> {
   });
 }
 
-export const HOUR_MS = 3600000;
-export const DAY_MS = 86400000;
-
 export function acquireCode(
   info: OnlineGameInfo,
   expires: number, // In ms

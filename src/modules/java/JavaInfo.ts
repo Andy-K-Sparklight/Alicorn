@@ -75,14 +75,6 @@ export function getAllJava(): string[] {
   return res;
 }
 
-export function removeJava(jHome: string): void {
-  JDT.delete(jHome);
-}
-
-export function addJava(jHome: string): void {
-  JDT.set(jHome, PLACE_HOLDER);
-}
-
 export function resetJavaList(list: string[]): void {
   const lt = JDT.get(LATEST_TAG) || "";
   JDT.clear();

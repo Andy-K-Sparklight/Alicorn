@@ -11,7 +11,7 @@ export interface CrashLoader {
 // And returns {reason?: string, suggestions?: string[]}
 // If cannot handle it, leave 'reason' to 'undefined' and Alicorn will ignore this line
 
-export interface CrashLoaderRule {
+interface CrashLoaderRule {
   match: string;
   script: string;
 }

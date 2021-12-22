@@ -26,7 +26,7 @@ import {
   parseJavaInfoRaw,
   resetJavaList,
   setDefaultJavaHome,
-} from "../modules/java/JInfo";
+} from "../modules/java/JavaInfo";
 import { whereJava } from "../modules/java/WhereJava";
 import { setChangePageWarn } from "./GoTo";
 import { ShiftEle } from "./Instruction";
@@ -39,7 +39,7 @@ import {
 import { useFormStyles } from "./Stylex";
 import { tr } from "./Translator";
 
-export const CANNOT_LOAD_INFO: JavaInfo = {
+const CANNOT_LOAD_INFO: JavaInfo = {
   rootVersion: -1,
   vm: "",
   vmSide: "Server",

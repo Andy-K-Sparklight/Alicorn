@@ -26,15 +26,7 @@ export function decryptByMachine(data: string): string {
   }
 }
 
-export function decryptObject(objSrc: string): unknown {
-  try {
-    return JSON.parse(decryptByMachine(objSrc));
-  } catch {
-    return {};
-  }
-}
-
-export function encryptByMachine(data: string): string {
+function encryptByMachine(data: string): string {
   if (data === "") {
     return ""; // NULL safe
   }

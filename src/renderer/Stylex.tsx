@@ -161,7 +161,7 @@ export const useTextStyles = makeStyles((theme: AlicornTheme) => ({
   },
 }));
 
-export const useTextStylesLight = makeStyles((theme: AlicornTheme) => ({
+const useTextStylesLight = makeStyles((theme: AlicornTheme) => ({
   root: {},
   firstText: {
     color: theme.palette.secondary.light,
