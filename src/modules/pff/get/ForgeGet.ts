@@ -203,6 +203,12 @@ export async function removeForgeInstaller(
     await fs.remove(
       container.getTempFileStorePath(generateForgeInstallerName(mcv, fgv))
     );
+    await fs.remove(
+      container.getTempFileStorePath(generateForgeInstallerNameOld(mcv, fgv))
+    );
+    await fs.remove(
+      container.getTempFileStorePath(generateForgeInstallerNameNew(mcv, fgv))
+    );
   } catch {
     return;
   }
