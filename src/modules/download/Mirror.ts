@@ -3,7 +3,7 @@
 // Reflecting has to be done manually
 
 import { parseMap } from "../commons/MapUtil";
-import { getString } from "../config/ConfigSupport";
+import { getNumber, getString } from "../config/ConfigSupport";
 import { loadData, saveDefaultData } from "../config/DataSupport";
 
 const BLACKLIST_URL: Set<string> = new Set();
@@ -79,7 +79,10 @@ export async function loadAllMirrors(): Promise<void> {
   await Promise.allSettled(
     MIRROR_FILES.map(async (f) => {
       await saveDefaultData(f);
-      mirrors.push(parseMap(await loadData(f)));
+      const m: Map<string, string> = parseMap(await loadData(f));
+      for (let i = 1; i <= getNumber("download.mirror-tries"); i++) {
+        mirrors.push(m); // Each times tries
+      }
     })
   );
 }

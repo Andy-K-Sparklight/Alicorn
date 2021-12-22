@@ -1813,6 +1813,14 @@ Alicorn 快捷键 ^
 
 访问网络时所使用的代理服务器，应当以 <协议>://<主机名>:<端口> 的格式设置，如 http://localhost:1080，所有网络请求都将从此服务器转发，浏览器不受此设置影响 - 如果你不知道你在做什么，请留空，不要胡乱设置！
 
+# Options.download.mirror-tries.title
+
+镜像重试
+
+# Options.download.mirror-tries.desc
+
+在降级到原始 URL 之前，每个下载镜像的重试次数 - 如果设置太高，可能会出问题哦！
+
 # Options.download.mirror.title
 
 下载源镜像

@@ -1,6 +1,7 @@
 import {
   AccessTime,
   AlignHorizontalLeft,
+  AltRoute,
   AutoFixOff,
   Bolt,
   Book,
@@ -416,6 +417,11 @@ export function OptionsPage(): JSX.Element {
             onChange={() => {
               void loadMirror();
             }}
+          />
+          <InputItem
+            icon={<AltRoute />}
+            type={ConfigType.NUM}
+            bindConfig={"download.mirror-tries"}
           />
           <InputItem
             icon={<MonitorHeart />}
