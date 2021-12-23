@@ -47,13 +47,7 @@ export class Concurrent extends AbstractDownloader {
       }
       const allChunks = generateChunks(fileSize);
       await Promise.all(getAllPromises(meta, allChunks, overrideTimeout));
-      await sealAndVerify(
-        meta.url,
-        meta.savePath,
-        allChunks,
-        meta.sha1,
-        fileSize
-      );
+      await sealAndVerify(meta.savePath, allChunks, meta.sha1, fileSize);
       return DownloadStatus.RESOLVED;
     } catch (e) {
       console.log(e);
@@ -63,14 +57,12 @@ export class Concurrent extends AbstractDownloader {
 }
 
 async function sealAndVerify(
-  url: string,
   savePath: string,
   chunks: Chunk[],
   hash: string,
   size: number
 ) {
-  await fs.createFile(savePath);
-  const wStream = fs.createWriteStream(savePath);
+  const wStream = fs.createWriteStream(savePath, { mode: 0o777 });
   for (const c of chunks) {
     const pt = path.join(
       TEMP_SAVE_PATH_ROOT,

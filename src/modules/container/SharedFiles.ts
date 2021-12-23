@@ -17,7 +17,7 @@ export async function isSharedContainer(
 }
 
 export async function markASC(dir: string): Promise<void> {
-  await writeFile(path.join(dir, ASC_NAME), PLACE_HOLDER);
+  await writeFile(path.join(dir, ASC_NAME), PLACE_HOLDER, {mode:0o777});
 }
 
 const STANDALONE_FILE = /forge|client/i;

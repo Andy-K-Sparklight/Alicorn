@@ -30,14 +30,14 @@ export async function saveData(
   try {
     const dest = getActualDataPath(relativePath);
     await fs.ensureDir(path.dirname(dest));
-    await fs.writeFile(dest, data);
+    await fs.writeFile(dest, data, { mode: 0o777 });
   } catch {}
 }
 
 export function saveDataSync(relativePath: string, data: string): void {
   const dest = getActualDataPath(relativePath);
   fs.ensureDirSync(path.dirname(dest));
-  fs.writeFileSync(dest, data);
+  fs.writeFileSync(dest, data, { mode: 0o777 });
 }
 
 // Hint: DO NOT use 'fs.copyFile' here!

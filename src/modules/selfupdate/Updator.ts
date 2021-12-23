@@ -139,7 +139,7 @@ export async function checkUpdate(): Promise<void> {
         notifyAll();
       }
       await fs.ensureDir(path.dirname(LOCK_FILE));
-      await fs.writeFile(LOCK_FILE, (res as BuildInfo).date);
+      await fs.writeFile(LOCK_FILE, (res as BuildInfo).date, { mode: 0o777 });
       console.log("Update completed.");
       submitSucc(tr("System.UpdateOK"));
       IS_UPDATING = false;

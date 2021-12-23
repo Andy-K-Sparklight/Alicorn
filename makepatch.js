@@ -5,7 +5,7 @@ const { zip } = require("compressing");
   console.log("Making patch file!");
   await fs.ensureDir("./dist/Alicorn/release");
   await fs.ensureDir("./out");
-  await fs.copy("./dist/release", "./dist/Alicorn/release/");
+  await fs.copy("./dist/release", "./dist/Alicorn/release/", { mode: "0777" });
   console.log("Compressing!");
   await zip.compressDir("./dist/Alicorn", "./out/patch.zip");
   await fs.remove("./dist/Alicorn");

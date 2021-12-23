@@ -39,7 +39,7 @@ export async function rebuildForgeInstaller(
     oStream.addEntry(path.join(tDir, f));
   }
   const target = source + ".patched.jar";
-  const o = createWriteStream(target);
+  const o = createWriteStream(target, { mode: 0o777 });
   await pipe(oStream, o);
   await fs.remove(source);
   await fs.move(target, source);

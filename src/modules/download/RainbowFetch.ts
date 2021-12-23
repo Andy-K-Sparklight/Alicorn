@@ -32,7 +32,7 @@ export function getFileWriteStream(
   timeout = 0
 ): WritableStream {
   let dog: WatchDog | null = null;
-  const f = fs.createWriteStream(pt);
+  const f = fs.createWriteStream(pt, { mode: 0o777 });
   if (timeout > 0) {
     dog = new WatchDog(timeout * 2, () => {
       f.close();

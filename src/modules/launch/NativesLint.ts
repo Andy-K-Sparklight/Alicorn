@@ -138,5 +138,5 @@ async function saveLockFile(dir: string): Promise<void> {
       });
     })
   );
-  await fs.writeFile(lPath, buildMap(fMap));
+  await fs.writeFile(lPath, buildMap(fMap), { mode: 0o777 });
 }
