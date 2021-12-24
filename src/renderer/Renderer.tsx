@@ -33,6 +33,7 @@ import { setupMSAccountRefreshService } from "../modules/readyboom/AccountMaster
 import { setupHotProfilesService } from "../modules/readyboom/PrepareProfile";
 import { initEncrypt } from "../modules/security/Encrypt";
 import { getMachineUniqueID } from "../modules/security/Unique";
+import { setBeacon } from "../modules/selfupdate/Beacon";
 import { todayPing } from "../modules/selfupdate/Ping";
 import { checkUpdate, initUpdator } from "../modules/selfupdate/Updator";
 import { loadServers } from "../modules/server/ServerFiles";
@@ -43,7 +44,7 @@ import { submitInfo, submitWarn } from "./Message";
 import { initWorker } from "./Schedule";
 import { initStatistics } from "./Statistics";
 import { AL_THEMES } from "./ThemeColors";
-import { initTranslator, tr } from "./Translator";
+import { initTranslator, loadTips, tr } from "./Translator";
 
 try {
   console.log("Renderer first log.");
@@ -110,6 +111,7 @@ try {
     printScreen("Loading lang, config, gdt, jdt...");
     await Promise.allSettled([
       initTranslator(),
+      loadTips(),
       loadConfig(),
       loadGDT(),
       loadJDT(),
@@ -197,7 +199,7 @@ try {
     void completeFirstRun(); // Not blocking
     void todayPing();
     // Heavy works and minor works
-    await Promise.allSettled([initVF(), preCacheJavaInfo()]);
+    await Promise.allSettled([initVF(), preCacheJavaInfo(), setBeacon()]);
     const t2 = new Date();
     console.log(
       "Delayed init tasks finished. Time elapsed: " +

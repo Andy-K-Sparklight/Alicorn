@@ -71,6 +71,9 @@ export function registerBackgroundListeners(): void {
   ipcMain.on("getAppPath", (e) => {
     e.returnValue = app.getAppPath();
   });
+  ipcMain.on("getMainExecutable", (e) => {
+    e.returnValue = app.getPath("exe");
+  });
   ipcMain.on("openDevTools", () => {
     getMainWindow()?.webContents.openDevTools();
   });
