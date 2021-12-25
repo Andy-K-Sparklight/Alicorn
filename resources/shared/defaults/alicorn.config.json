@@ -47,6 +47,7 @@
   "doh-server": "Native",
   "pff.first-source": "Modrinth",
   "features.saying": true,
+  "features.tips-of-today": true,
   "features.miniwiki": true,
   "features.detect-lan": true,
   "hoofoff.central": "",

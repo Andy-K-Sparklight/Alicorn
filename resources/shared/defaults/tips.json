@@ -1,0 +1,68 @@
+[
+  {
+    "name": "看看实用工具",
+    "text": "它们真的很实用！（换皮肤，制作整合包，联机……）",
+    "img": "https://img.gejiba.com/images/c3bbb9f45902c12889f758d85b87e70d.png",
+    "rel": ""
+  },
+  {
+    "name": "加入好友的游戏",
+    "text": "前往「实用工具」，并看看「友谊接力」？",
+    "img": "https://img.gejiba.com/images/44ca3fe3f4a7f521f486b3f38744433b.png",
+    "rel": ""
+  },
+  {
+    "name": "原始而又全新的联机方式",
+    "text": "打开 Minecraft 并单击「对局域网开放」，然后再去看看 Alicorn 吧！",
+    "img": "https://img.gejiba.com/images/74b3eee6fcfa8d4e9dd94c267aebe03e.png",
+    "rel": ""
+  },
+  {
+    "name": "高清修复与光影",
+    "text": "使用 Iris 和 Fabric，你不需要什么 OptiFine！",
+    "img": "https://img.gejiba.com/images/c8b3f418d17bd3fcdca4398b4987b8bf.png",
+    "rel": ""
+  },
+  {
+    "name": "改装核心",
+    "text": "安装原版核心后，可将它「改装」为 Forge 或 Fabric！",
+    "img": "https://img.gejiba.com/images/5e39911cd57f742f011b7a4d8dbc37a2.png",
+    "rel": ""
+  },
+  {
+    "name": "自动 Java 选择",
+    "text": "不必手动选取 Java，Alicorn 将自动选择。",
+    "img": "https://img.gejiba.com/images/0d5a1796c9a83738eda8cef5bee3a15e.png",
+    "rel": ""
+  },
+  {
+    "name": "登录 Microsoft 帐户",
+    "text": "只需在启动时选择「Microsoft 帐户」，无需创建档案！",
+    "img": "https://img.gejiba.com/images/431348787e067073d403f9805090b910.png",
+    "rel": ""
+  },
+  {
+    "name": "使用整合包",
+    "text": "将整合包丢进 Alicorn 试试？（Alicorn 会自动为你填写信息哦！）",
+    "img": "https://img.gejiba.com/images/963679a29650d876a87ff0042f84031d.png",
+    "rel": ""
+  },
+  {
+    "name": "安装和查看 Mod",
+    "text": "单击 Fabric 或者 Forge 的徽标，就可以查看和安装对应核心的 Mod！",
+    "img": "https://img.gejiba.com/images/9f0fb343b8b016013a7b6d1703242775.png",
+    "rel": ""
+  },
+  {
+    "name": "切换主题",
+    "text": "在「选项」里给 Alicorn 重新喷漆！（现在加入了更多的颜色！）",
+    "img": "https://img.gejiba.com/images/000dda277e6c2834edd75d2265a05199.png",
+    "rel": ""
+  },
+  {
+    "name": "所有功能",
+    "text": "标题左侧的按钮是用来打开侧边栏菜单的。",
+    "img": "https://img.gejiba.com/images/f9b7d812b3fa4b45c38aaedd2a896c8f.png",
+    "rel": ""
+  }
+]

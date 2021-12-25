@@ -232,3 +232,25 @@ function trimControlCode(origin: string[], rules: string[]): string[] {
   });
   return output;
 }
+
+export interface Tip {
+  name: string;
+  text: string;
+  img: string;
+  rel?: string;
+}
+
+let TIPS: Tip[] = [];
+
+export async function loadTips(): Promise<void> {
+  try {
+    const f = JSON.parse(
+      (await readFile(getPathInDefaults("tips.json"))).toString()
+    );
+    TIPS = f;
+  } catch {}
+}
+
+export function getTip(): Tip {
+  return TIPS[Math.floor(Math.random() * TIPS.length)];
+}

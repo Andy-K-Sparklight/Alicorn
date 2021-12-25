@@ -172,7 +172,7 @@ export function YNDialog2(props: {
     >
       <Dialog
         open={props.open}
-        onClose={(e) => {
+        onClose={() => {
           props.onClose();
         }}
         onClick={(e) => {

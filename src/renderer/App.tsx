@@ -76,6 +76,7 @@ import { ServerList } from "./ServerList";
 import { saveStatistics, Statistics } from "./Statistics";
 import { AlicornTheme } from "./Stylex";
 import { TheEndingOfTheEnd } from "./TheEndingOfTheEnd";
+import { TipsOfToday } from "./TipsOfToday";
 import { tr } from "./Translator";
 import { BuildUp } from "./utilities/BuildUp";
 import { CarouselBoutique } from "./utilities/CarouselBoutique";
@@ -131,6 +132,9 @@ export function App(): JSX.Element {
   const [succ, setSucc] = useState("");
   const [refreshBit, setRefreshBit] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [openTips, setOpenTips] = useState(
+    getBoolean("features.tips-of-today")
+  );
   const sessionID = useRef(0);
   const clearSnacks = () => {
     setInfoOpen(false);
@@ -550,7 +554,12 @@ export function App(): JSX.Element {
         yes={tr("System.JumpPageWarn.Yes")}
         no={tr("System.JumpPageWarn.No")}
       />
-
+      <TipsOfToday
+        onClose={() => {
+          setOpenTips(false);
+        }}
+        open={openTips}
+      />
       <Snackbar
         open={openNotice}
         sx={{
