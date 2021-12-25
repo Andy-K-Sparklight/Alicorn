@@ -346,12 +346,12 @@ function SelectAssets(props: {
       <Button
         type={"button"}
         color={"primary"}
+        sx={{ marginLeft: "0.25rem" }}
         variant={"contained"}
         onClick={() => {
-          // TODO:
           void shell.showItemInFolder(
             getContainer(props.container).resolvePath(
-              props.meta.name + ".prod.zip"
+              props.meta.name.toLowerCase() + ".prod.zip"
             )
           );
         }}
