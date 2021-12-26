@@ -5,6 +5,7 @@ import {
   AutoFixOff,
   Bolt,
   Book,
+  CalendarToday,
   CameraEnhance,
   CancelPresentation,
   Chat,
@@ -289,6 +290,11 @@ export function OptionsPage(): JSX.Element {
           />
         </TabPanel>
         <TabPanel index={1} value={tabValue}>
+          <InputItem
+            icon={<CalendarToday />}
+            type={ConfigType.BOOL}
+            bindConfig={"features.tips-of-today"}
+          />
           <InputItem
             icon={<TextFormat />}
             type={ConfigType.BOOL}

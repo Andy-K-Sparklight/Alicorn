@@ -1317,6 +1317,14 @@ Alicorn Ping ^
 
 这种几乎不带任何信息的 Ping 可以让 ThatRarityEG 估计活跃用户数\nAlicorn Ping 仅收集一条不可逆的、单向加密过的哈希用于区分不同客户端。
 
+# Options.features.tips-of-today.title
+
+Alicorn 使用技巧
+
+# Options.features.tips-of-today.desc
+
+启动 Alicorn 时显示一条使用技巧提示
+
 # Options.features.sword.title
 
 粉红剑指针
@@ -3242,6 +3250,22 @@ END
 
 END
 
+# Instruction.HavePack.0
+
+（好像我还忘了一件事情……你是不是刚刚下载了一个 <整合包>？！）
+
+# Instruction.HavePack.1
+
+……在 Alicorn 中，我们通常直接 <将整合包拖入 Alicorn> 来安装它。
+
+# Instruction.HavePack.2
+
+……算啦，这次就让我来做这件事吧。等一下下，很快就好。
+
+# Instruction.HavePack.3
+
+END
+
 # Instruction.JavaOK.0
 
 好啦，我要说的也就这么多啦，你现在可以去 <安装核心> 那里安装新的 Minecraft～@@@MainMenuInstallCore
@@ -3379,6 +3403,10 @@ Blowin' in the Wind —— Bob Dylan
 # EOE.EndPoemContent
 
 How many roads must a man walk down\nBefore they call him a man?\nHow many seas must a white dove sail\nBefore she sleeps in the sand?\nHow many times must the cannon-balls fly\nBefore they're forever banned?\nThe answer, my friend, is blowin' in the wind\nThe answer is blowin' in the wind.\n\nHow many years must a mountain exist\nBefore it is washed to the sea?\nHow many years can some people exist\nBefore they're allowed to be free?\nHow many times can a man turn his head\nPretend that he just doesn't see?\nThe answer my friend is blowin' in the wind\nThe answer is blowin' in the wind.\n\nHow many times must a man look up\nBefore he can see the sky?\nHow many ears must one man have\nBefore he can hear people cry?\nHow many deaths will it take\nTill he knows that too many people have died?\nThe answer, my friend, is blowin' in the wind\nThe answer is blowin'in the wind.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n继续往下翻……\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nI missed you.
+
+# TipsOfToday.Disable
+
+不要再显示
 
 # TipsOfToday.More
 

@@ -45,7 +45,8 @@ const MMC_PACK = "mmc-pack.json";
 export const PACK_META = "mcbbs.packmeta";
 async function parseModpack(
   container: MinecraftContainer,
-  source: string
+  source: string,
+  unpacked = false
 ): Promise<
   Pair<
     "CF" | "CM" | "MMC",
@@ -53,12 +54,16 @@ async function parseModpack(
   >
 > {
   const sourceHash = basicHash(path.basename(source));
-  const baseDir = container.getTempFileStorePath(path.join(sourceHash));
-  try {
-    await zip.uncompress(source, baseDir);
-  } catch (e) {
-    console.log(e);
-    return new Pair("CF", null);
+  const baseDir = unpacked
+    ? source
+    : container.getTempFileStorePath(path.join(sourceHash));
+  if (!unpacked) {
+    try {
+      await zip.uncompress(source, baseDir);
+    } catch (e) {
+      console.log(e);
+      return new Pair("CF", null);
+    }
   }
   const mf = path.join(baseDir, MANIFEST_FILE);
   const mp = path.join(baseDir, PACK_META);
@@ -258,7 +263,14 @@ export async function wrappedInstallModpack(
   source: string
 ): Promise<void> {
   addDoing(tr("ContainerManager.ParsingModpack"));
-  const o = await parseModpack(container, source);
+  let unpacked = false;
+  try {
+    const s = await fs.stat(source);
+    if (s.isDirectory()) {
+      unpacked = true;
+    }
+  } catch {}
+  const o = await parseModpack(container, source, unpacked);
   let model = o.getSecondValue();
   if (!model) {
     throw "Could not parse this modpack!";
@@ -280,7 +292,9 @@ export async function wrappedInstallModpack(
           container
         );
         addDoing(tr("ContainerManager.CleaningUp"));
-        await removeTempFiles(container, source);
+        if (!unpacked) {
+          await removeTempFiles(container, source);
+        }
       }
       break;
 
@@ -297,7 +311,9 @@ export async function wrappedInstallModpack(
       );
       await deployOverrides(overrideSource, container.rootDir);
       addDoing(tr("ContainerManager.CleaningUp"));
-      await removeTempFiles(container, source);
+      if (!unpacked) {
+        await removeTempFiles(container, source);
+      }
       break;
     }
     case "CF":
@@ -317,7 +333,9 @@ export async function wrappedInstallModpack(
       addDoing(tr("ContainerManager.DeployingDeltas"));
       await deployOverrides(model.overrideSourceDir, container.rootDir);
       addDoing(tr("ContainerManager.CleaningUp"));
-      await removeTempFiles(container, source);
+      if (!unpacked) {
+        await removeTempFiles(container, source);
+      }
     // TODO
   }
 }

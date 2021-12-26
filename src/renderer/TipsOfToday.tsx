@@ -9,7 +9,8 @@ import {
   Typography,
 } from "@mui/material";
 import { shell } from "electron";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { set } from "../modules/config/ConfigSupport";
 import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
@@ -22,6 +23,15 @@ export function TipsOfToday(props: {
   onClose: () => unknown;
 }): JSX.Element {
   const [tip, setTip] = useState(getTip());
+  useEffect(() => {
+    const fun = () => {
+      props.onClose();
+    };
+    window.addEventListener("closeTips", fun);
+    return () => {
+      window.removeEventListener("closeTips", fun);
+    };
+  }, []);
   return (
     <ThemeProvider
       theme={
@@ -33,6 +43,7 @@ export function TipsOfToday(props: {
         onClose={() => {
           props.onClose();
         }}
+        maxWidth={"sm"}
       >
         <DialogTitle>{tip.name}</DialogTitle>
         <DialogContent>
@@ -56,7 +67,6 @@ export function TipsOfToday(props: {
           ) : (
             ""
           )}
-
           <Button
             color={"primary"}
             onClick={() => {
@@ -64,6 +74,15 @@ export function TipsOfToday(props: {
             }}
           >
             {tr("TipsOfToday.Next")}
+          </Button>
+          <Button
+            color={"primary"}
+            onClick={() => {
+              set("features.tips-of-today", false);
+              props.onClose();
+            }}
+          >
+            {tr("TipsOfToday.Disable")}
           </Button>
           <Button
             color={"primary"}

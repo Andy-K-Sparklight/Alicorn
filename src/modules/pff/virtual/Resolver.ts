@@ -76,8 +76,6 @@ export class CurseforgeModResolver extends AbstractModResolver {
   protected static CF_API_BASE = "https://addons-ecs.forgesvc.net";
   protected insideCachedAddonInfo: AddonInfo | undefined;
   async resolveMod(): Promise<ModMeta> {
-    console.log(this.mainId);
-    console.log(this.artifactId);
     if (this.cachedMeta) {
       return this.cachedMeta;
     }

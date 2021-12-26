@@ -9,7 +9,7 @@ import {
   DownloadStatus,
 } from "./AbstractDownloader";
 import { getPool } from "./Connections";
-import { getConfigOptn } from "./DownloadWrapper";
+import { getConfigOptn, getPffFlag } from "./DownloadWrapper";
 import {
   getFileWriteStream,
   getGuardStream,
@@ -45,6 +45,7 @@ export class Serial extends AbstractDownloader {
           );
           if (
             fetchRequire ||
+            getPffFlag() === "1" ||
             getString("download.lib").toLowerCase() === "fetch" ||
             !["direct://", ""].includes(
               getString("download.global-proxy").trim()

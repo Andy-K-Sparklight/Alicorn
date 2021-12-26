@@ -504,7 +504,7 @@ export function App(): JSX.Element {
           />
           <Route path={"/Version"} component={VersionView} />
           <Route
-            path={"/ContainerManager/:modpack?"}
+            path={"/ContainerManager/:modpack?/:togo?"}
             component={ContainerManager}
           />
           <Route

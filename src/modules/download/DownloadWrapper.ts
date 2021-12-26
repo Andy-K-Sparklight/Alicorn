@@ -294,7 +294,7 @@ export function getWrapperStatus(): WrapperStatus {
 
 const PFF_FLAG = "Downloader.IsPff";
 
-function getPffFlag(): string {
+export function getPffFlag(): string {
   return sessionStorage.getItem(PFF_FLAG) || "0";
 }
 
