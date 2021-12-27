@@ -8,6 +8,7 @@ import {
   getString,
   loadConfigSync,
 } from "../modules/config/ConfigSupport";
+import { setBeacon } from "../modules/selfupdate/Beacon";
 import { registerBackgroundListeners } from "./Background";
 
 console.log("Starting Alicorn!");
@@ -112,6 +113,12 @@ async function whenAppReady() {
     mainWindow?.on("move", () => {
       mainWindow?.webContents.send("mainWindowMoved", mainWindow.getPosition());
     });
+    console.log("Placing beacon!");
+    try {
+      await setBeacon();
+    } catch (e) {
+      console.log(e);
+    }
     console.log("All caught up! Alicorn is now initialized.");
     if (getBoolean("dev")) {
       console.log("Development mode detected, opening devtools...");
