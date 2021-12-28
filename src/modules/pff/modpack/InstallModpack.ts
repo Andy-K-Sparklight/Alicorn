@@ -41,7 +41,7 @@ import {
 } from "./CommonModpackModel";
 import { mmc2common, MMCModpackMeta } from "./MMCSupport";
 export const MANIFEST_FILE = "manifest.json";
-const MMC_PACK = "mmc-pack.json";
+export const MMC_PACK = "mmc-pack.json";
 export const PACK_META = "mcbbs.packmeta";
 async function parseModpack(
   container: MinecraftContainer,
