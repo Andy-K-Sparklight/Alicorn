@@ -309,11 +309,6 @@ export function getConfigOptn(name: string, def: number): number {
   }
 }
 
-export function setProxy(_host: string, _port: number): void {
-  // sessionStorage.setItem(PROXY_HOST, host);
-  // sessionStorage.setItem(PROXY_PORT, port.toString());
-}
-
 function addState(s: string): void {
   addDoing(s);
   DOING.unshift(s);

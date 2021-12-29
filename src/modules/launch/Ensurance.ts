@@ -7,8 +7,8 @@ import { DownloadMeta, DownloadStatus } from "../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../download/DownloadWrapper";
 import { GameProfile } from "../profile/GameProfile";
 import { ArtifactMeta, AssetIndexFileMeta, AssetMeta } from "../profile/Meta";
-import { checkExtractTrimNativeLocal, getNativeArtifact } from "./NativesLint";
 import { FileOperateReport, LaunchTracker } from "./LaunchTracker";
+import { checkExtractTrimNativeLocal, getNativeArtifact } from "./NativesLint";
 
 // This file can not only check resources, but also download packages when installing!
 
@@ -125,7 +125,6 @@ async function performSingleCheck(
       operation: "FAILED",
     });
   }
-
   return t;
 }
 

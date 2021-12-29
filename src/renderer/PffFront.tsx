@@ -29,9 +29,8 @@ import { throttle } from "throttle-debounce";
 import { getBoolean } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
-import { setProxy } from "../modules/download/DownloadWrapper";
-import { loadMetas } from "../modules/modx/ModDynLoad";
 import { configureModDepChain, UnmetDepUnit } from "../modules/modx/ModDeps";
+import { loadMetas } from "../modules/modx/ModDynLoad";
 import { ModInfo, ModLoader } from "../modules/modx/ModInfo";
 import { canModVersionApply } from "../modules/modx/ModVersionUtil";
 import { PFF_MSG_GATE } from "../modules/pff/curseforge/Values";
@@ -650,7 +649,6 @@ export async function pffInstall(
     }
   }
   setPffFlag("0");
-  setProxy("", 0);
   setChangePageWarn(false);
   return ok;
 }
