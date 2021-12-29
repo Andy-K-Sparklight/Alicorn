@@ -184,6 +184,7 @@ export function registerBackgroundListeners(): void {
             backgroundColor: "#fff",
             webPreferences: {
               partition: "persist:" + key,
+              spellcheck: false,
             },
           });
         loginWindow.webContents.setUserAgent(getMainWindowUATrimmed());
