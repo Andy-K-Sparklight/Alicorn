@@ -41,6 +41,7 @@ export class Concurrent extends AbstractDownloader {
         }
       } */
 
+      await fs.ensureDir(path.dirname(meta.savePath));
       const fileSize = meta.size ? meta.size : await getSize(meta.url);
       if (fileSize <= getConfigOptn("chunk-size", 1024) * 1024) {
         return await Serial.getInstance().downloadFile(meta);
