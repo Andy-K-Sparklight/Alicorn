@@ -1694,7 +1694,7 @@ function getProfileRelatedID(hash: string): string {
   return sessionStorage.getItem("MinecraftID" + hash) || "";
 }
 
-const CODE_REGEX = /(?<=\?code=)[^&]+/gi;
+const CODE_REGEX = /(?<=\?code=)[^&]+/i;
 
 function AskURLDialog(): JSX.Element {
   const [url, setUrl] = useState("");

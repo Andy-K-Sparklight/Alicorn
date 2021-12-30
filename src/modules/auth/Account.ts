@@ -207,8 +207,8 @@ export function updateAccount(
     base.selectedProfile = status.selectedProfile;
     base.availableProfiles = status.availableProfiles;
     if (status.selectedProfile) {
-      base.lastUsedUUID = status.selectedProfile?.id;
-      base.lastUsedUsername = status.selectedProfile?.name;
+      base.lastUsedUUID = status.selectedProfile.id;
+      base.lastUsedUsername = status.selectedProfile.name;
     }
   }
 }

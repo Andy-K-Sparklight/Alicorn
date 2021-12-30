@@ -46,7 +46,7 @@ export function getString(key: string, def = "", nonEmpty = false): string {
       return val;
     }
   }
-  if (typeof val === "object" && val !== undefined && val !== null) {
+  if (typeof val === "object" && val !== null) {
     return val.toString();
   }
   return String(val) || def;

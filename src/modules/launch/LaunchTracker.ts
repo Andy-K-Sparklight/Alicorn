@@ -1,5 +1,3 @@
-import { ProfileType } from "../profile/WhatProfile";
-
 export class LaunchTracker {
   javaReport: JavaReport = { runtime: "", version: 0 };
   libraryReport: FileOperateReport = {

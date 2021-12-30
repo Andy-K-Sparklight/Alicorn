@@ -50,7 +50,7 @@ async function _getLatestFabricInstallerAndLoader(
       // @ts-ignore
       window[FABRIC_INSTALLER_MANIFEST_CACHE_KEY] !== undefined &&
       // @ts-ignore
-      Object.keys(window[FABRIC_INSTALLER_MANIFEST_CACHE_KEY].length > 0)
+      Object.keys(window[FABRIC_INSTALLER_MANIFEST_CACHE_KEY]).length > 0
     ) {
       // @ts-ignore
       jInstaller = window[FABRIC_INSTALLER_MANIFEST_CACHE_KEY];
@@ -88,7 +88,7 @@ async function _getLatestFabricInstallerAndLoader(
       // @ts-ignore
       window[FABRIC_LOADER_MANIFEST_CACHE_KEY] !== undefined &&
       // @ts-ignore
-      Object.keys(window[FABRIC_LOADER_MANIFEST_CACHE_KEY].length > 0)
+      Object.keys(window[FABRIC_LOADER_MANIFEST_CACHE_KEY]).length > 0
     ) {
       // @ts-ignore
       jLoader = window[FABRIC_LOADER_MANIFEST_CACHE_KEY];

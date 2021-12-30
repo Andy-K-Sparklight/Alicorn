@@ -176,15 +176,13 @@ export function initLocalYggdrasilServer(
           ) {
             let uname = "";
             let uid = "";
-            if (req.url) {
-              const unameResult = req.url.match(MATCH_USERNAME_REGEX);
-              if (unameResult) {
-                uname = unameResult[0] || "";
-              }
-              const uidResult = req.url.match(MATCH_UUID_REGEX);
-              if (uidResult) {
-                uid = uidResult[0] || "";
-              }
+            const unameResult = req.url.match(MATCH_USERNAME_REGEX);
+            if (unameResult) {
+              uname = unameResult[0] || "";
+            }
+            const uidResult = req.url.match(MATCH_UUID_REGEX);
+            if (uidResult) {
+              uid = uidResult[0] || "";
             }
             if (uname) {
               NAME_MAP_UUID.set(

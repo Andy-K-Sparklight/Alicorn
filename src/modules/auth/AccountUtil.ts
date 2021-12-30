@@ -4,12 +4,7 @@ import { abortableBasicHash, abortableUniqueHash } from "../commons/BasicHash";
 import { Pair, Trio } from "../commons/Collections";
 import { ALICORN_ENCRYPTED_DATA_SUFFIX } from "../commons/Constants";
 import { isFileExist } from "../commons/FileUtil";
-import {
-  getActualDataPath,
-  loadData,
-  saveData,
-  saveDataSync,
-} from "../config/DataSupport";
+import { getActualDataPath, loadData, saveData } from "../config/DataSupport";
 import { decrypt2, decryptByMachine, encrypt2 } from "../security/Encrypt";
 import { skinTypeFor } from "../skin/LocalYggdrasilServer";
 import { Account } from "./Account";

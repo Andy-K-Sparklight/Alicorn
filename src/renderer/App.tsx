@@ -175,7 +175,7 @@ export function App(): JSX.Element {
     };
   });
   useEffect(() => {
-    window.addEventListener("changePageWarn", (e) => {
+    const f1 = (e: Event) => {
       setOpenChangePageWarn(true);
       const s = safeGet(e, ["detail"], {});
       // @ts-ignore
@@ -184,20 +184,30 @@ export function App(): JSX.Element {
       const history = !!s.history;
       setHaveHistory(history);
       setJumpPageTarget(target);
-    });
-    window.addEventListener("changePageWarnTitle", (e) => {
+    };
+    window.addEventListener("changePageWarn", f1);
+    const f = (e: Event) => {
       setPageTarget(String(safeGet(e, ["detail"], "Welcome")));
-    });
+    };
+    window.addEventListener("changePageWarnTitle", f);
+    return () => {
+      window.removeEventListener("changePageWarn", f1);
+      window.removeEventListener("changePageWarnTitle", f);
+    };
   }, []);
   useEffect(() => {
-    document.addEventListener("setPage", (e) => {
+    const f = (e: Event) => {
       // @ts-ignore
       if (window[CHANGE_PAGE_WARN]) {
         setPageTarget(String(safeGet(e, ["detail"], "Welcome")));
         return;
       }
       setPage(String(safeGet(e, ["detail"], "Welcome")));
-    });
+    };
+    document.addEventListener("setPage", f);
+    return () => {
+      document.removeEventListener("setPage", f);
+    };
   }, []);
   useEffect(() => {
     ipcRenderer.once("YouAreGoingToBeKilled", () => {
@@ -213,7 +223,7 @@ export function App(): JSX.Element {
     };
   }, []);
   useEffect(() => {
-    window.addEventListener("sysError", (e) => {
+    const f3 = (e: Event) => {
       setErr(String(safeGet(e, ["detail"], "Unknown Error")));
       clearSnacks();
       setNoticeOpen(true);
@@ -221,22 +231,34 @@ export function App(): JSX.Element {
         "reportError",
         String(safeGet(e, ["detail"], "Unknown Error"))
       );
-    });
-    window.addEventListener("sysWarn", (e) => {
+    };
+    window.addEventListener("sysError", f3);
+    const f1 = (e: Event) => {
       setWarn(String(safeGet(e, ["detail"], "Unknown Warning")));
       clearSnacks();
       setWarnOpen(true);
-    });
-    window.addEventListener("sysInfo", (e) => {
+    };
+    window.addEventListener("sysWarn", f1);
+
+    const f0 = (e: Event) => {
       setInfo(String(safeGet(e, ["detail"], "")));
       clearSnacks();
       setInfoOpen(true);
-    });
-    window.addEventListener("sysSucc", (e) => {
+    };
+    window.addEventListener("sysInfo", f0);
+
+    const f = (e: Event) => {
       setSucc(String(safeGet(e, ["detail"], "")));
       clearSnacks();
       setSuccOpen(true);
-    });
+    };
+    window.addEventListener("sysSucc", f);
+    return () => {
+      window.removeEventListener("sysError", f3);
+      window.removeEventListener("sysSucc", f);
+      window.removeEventListener("sysInfo", f0);
+      window.removeEventListener("sysWarn", f1);
+    };
   }, []);
 
   return (

@@ -6,9 +6,7 @@
 // You builds FREE software rather than SPONSOR ones, thank you very much!
 // Anyway, we'll keep on supporting Forge since there are tremendous requirements.
 import { copy, remove } from "fs-extra";
-import objectHash from "object-hash";
 import path from "path";
-import { schedulePromiseTask } from "../../renderer/Schedule";
 import { ReleaseType, SPACE } from "../commons/Constants";
 import { isFileExistAndNonEmpty } from "../commons/FileUtil";
 import { isNull } from "../commons/Null";

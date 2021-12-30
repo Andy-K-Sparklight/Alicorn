@@ -2,8 +2,8 @@ import fs from "fs-extra";
 import path from "path";
 import { getBoolean } from "../config/ConfigSupport";
 import { MinecraftContainer } from "../container/MinecraftContainer";
-import { JAR_SUFFIX } from "../launch/NativesLint";
 import { FileOperateReport, LaunchTracker } from "../launch/LaunchTracker";
+import { JAR_SUFFIX } from "../launch/NativesLint";
 import { GameProfile } from "../profile/GameProfile";
 import { ProfileType } from "../profile/WhatProfile";
 import { loadModInfo, ModInfo, ModLoader } from "./ModInfo";
@@ -61,7 +61,7 @@ async function moveModsTo(
         mi.loader === ModLoader.UNKNOWN
       ) {
         tFile.operateRecord.push({
-          file: `${mi.displayName} (${mi.fileName})` || "",
+          file: `${mi.displayName} (${mi.fileName})`,
           operation: "SKIPPED",
         });
         continue;
@@ -78,7 +78,7 @@ async function moveModsTo(
         toProcess.push(mi);
       } else {
         tFile.operateRecord.push({
-          file: `${mi.displayName} (${mi.fileName})` || "",
+          file: `${mi.displayName} (${mi.fileName})`,
           operation: "SKIPPED",
         });
       }
@@ -101,12 +101,12 @@ async function moveModsTo(
                     if (e) {
                       tFile.resolved--;
                       tFile.operateRecord.push({
-                        file: `${mi.displayName} (${mi.fileName})` || "",
+                        file: `${mi.displayName} (${mi.fileName})`,
                         operation: "FAILED",
                       });
                     } else {
                       tFile.operateRecord.push({
-                        file: `${mi.displayName} (${mi.fileName})` || "",
+                        file: `${mi.displayName} (${mi.fileName})`,
                         operation: "OPERATED",
                       });
                     }
@@ -114,7 +114,7 @@ async function moveModsTo(
                   });
                 } else {
                   tFile.operateRecord.push({
-                    file: `${mi.displayName} (${mi.fileName})` || "",
+                    file: `${mi.displayName} (${mi.fileName})`,
                     operation: "FAILED",
                   });
                   tFile.resolved--;

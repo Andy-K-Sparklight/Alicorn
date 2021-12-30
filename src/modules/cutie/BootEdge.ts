@@ -123,10 +123,11 @@ function waitUNIXEdgeBoot(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fun = (d: any) => {
       if (!resolved) {
+        resolved = true;
         if (d.toString().toLowerCase().includes("error")) {
           rej("Elevate cancelled by user");
+          return;
         }
-        resolved = true;
         res();
       }
     };

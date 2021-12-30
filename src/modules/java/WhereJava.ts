@@ -19,7 +19,7 @@ export async function whereJava(
   all.push(findJavaInPATH());
   if (justExist && all.length > 0) {
     const p = await chkJava(all);
-    if (justExist && p.length > 0) {
+    if (p.length > 0) {
       return p;
     }
   }

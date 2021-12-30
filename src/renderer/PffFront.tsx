@@ -214,7 +214,7 @@ export function PffFront(): JSX.Element {
                     <CircularProgress size={"1.5rem"} />
                   ) : (
                     <IconButton
-                      disabled={isRunning || packageName.trim().length === 0}
+                      disabled={packageName.trim().length === 0}
                       color={"primary"}
                       onClick={() => {
                         start(packageName);
@@ -373,7 +373,7 @@ export function PffFront(): JSX.Element {
               ""
             )}
             <List>
-              {allMods?.map((m) => {
+              {allMods.map((m) => {
                 if (m.displayName && m.fileName) {
                   return (
                     <SingleModDisplay

@@ -160,27 +160,3 @@ export const useTextStyles = makeStyles((theme: AlicornTheme) => ({
     marginTop: theme.spacing(-2),
   },
 }));
-
-const useTextStylesLight = makeStyles((theme: AlicornTheme) => ({
-  root: {},
-  firstText: {
-    color: theme.palette.secondary.light,
-    fontSize: "large",
-  },
-  secondText: {
-    color: theme.palette.secondary.light,
-    fontSize: sessionStorage.getItem("smallFontSize") || "1rem",
-  },
-  mediumText: {
-    color: theme.palette.secondary.light,
-    fontSize: "medium",
-  },
-  link: {
-    color: theme.palette.primary.light,
-    fontSize: sessionStorage.getItem("smallFontSize") || "1rem",
-  },
-  thirdText: {
-    color: theme.palette.primary.light,
-    fontSize: "medium",
-  },
-}));

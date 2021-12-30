@@ -259,14 +259,13 @@ async function tokenRequest(
     const refreshToken = String(safeGet(ret, ["refresh_token"], ""));
     // @ts-ignore
     const expires = parseInt(safeGet(ret, ["expires_in"], null));
-    if (typeof expires === "number") {
-      if (!isNaN(expires)) {
-        localStorage.setItem(
-          ACCOUNT_EXPIRES_KEY,
-          (expires - 3600).toString() // SAFE
-        );
-      }
+    if (!isNaN(expires)) {
+      localStorage.setItem(
+        ACCOUNT_EXPIRES_KEY,
+        (expires - 3600).toString() // SAFE
+      );
     }
+
     if (isNull(accessToken) || isNull(refreshToken)) {
       return { success: false };
     }

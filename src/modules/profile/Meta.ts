@@ -61,25 +61,14 @@ export class ArtifactMeta {
     if (typeof sz !== "number") {
       sz = parseInt(String(sz));
     }
-    // Ugh! Just trying to avoid ignoring ts
-    if (typeof sz === "number") {
-      if (isNaN(sz)) {
-        sz = 0;
-      }
-    }
-    if (typeof sz === "number") {
-      return new ArtifactMeta(
-        String(obj["url"]),
-        String(obj["sha1"]),
-        String(obj["path"] || obj["id"]),
-        sz
-      );
+    if (isNaN(sz as number)) {
+      sz = 0;
     }
     return new ArtifactMeta(
       String(obj["url"]),
       String(obj["sha1"]),
       String(obj["path"] || obj["id"]),
-      0
+      sz as number
     );
   }
 }

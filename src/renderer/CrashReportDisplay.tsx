@@ -69,9 +69,13 @@ export function CrashReportDisplay(): JSX.Element {
   const [oc, setOC] = useState<string[]>([]);
   const [showFullLogsReport, setShowFullLogsReport] = useState(false);
   useEffect(() => {
-    window.addEventListener("EnableShowFullLogsReport", () => {
+    const f = () => {
       setShowFullLogsReport(true);
-    });
+    };
+    window.addEventListener("EnableShowFullLogsReport", f);
+    return () => {
+      window.removeEventListener("EnableShowFullLogsReport", f);
+    };
   }, []);
   const mounted = useRef<boolean>(false);
   useEffect(() => {
@@ -394,7 +398,7 @@ function Analyze(props: {
                       <List>
                         {cr?.report.map((r) => {
                           if (r.by === undefined || r.reason === undefined) {
-                            return <></>;
+                            return "";
                           }
                           return (
                             <ListItem key={r.by + r.reason}>

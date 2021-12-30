@@ -102,7 +102,6 @@ export async function analyzeCrashReport(
   loader = CMC_CRASH_LOADER
 ): Promise<Map<number, { origin: string; report: CrashLoaderReport[] }>> {
   try {
-    let f: string;
     const c = new CrashReportCursor(crashReport);
 
     while (c.getLine() !== undefined) {
