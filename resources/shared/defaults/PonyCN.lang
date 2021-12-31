@@ -2257,6 +2257,10 @@ Mojang 版本
 
 ['{Config:updator.use-update}'=='false']不要担心升级！更新后的我就像暮光公主变成坎特拉女孩一样，虽然样子不同，但我不会忘了你的！
 
+拒绝 Mod 平台的广告。使用 Modrinth 而拒绝 Curseforge，就是在为大家贡献力量。
+
+['{Config:dev.experimental}'=='true']不要一边驾驶飞机，一边测试飞机的引擎……
+
 ['{Config:theme.background}'=='ACG']看多了 ACG 图片，会不会就不喜欢我了呢……
 
 ['{Config:dev.f12}'=='true']好好使用 DevTools，可不要弄出什么问题！
@@ -2280,6 +2284,8 @@ Mojang 版本
 ['{Config:interactive.i-have-a-crush-on-al}'=='true']我可是书虫！不然我怎么对付 Forge 的安装器呢？
 
 ['{Config:interactive.i-have-a-crush-on-al}'=='true']在你玩游戏的时候，我可没有偷懒，我在默默地看着你呢～
+
+['{Config:interactive.i-have-a-crush-on-al}'=='false']您还记得我吗？我？我记得每一位用户……
 
 # Welcome.TipName
 
@@ -2311,7 +2317,6 @@ Alicorn 随时都可能有更新！请记得常回来看看！
 @HTMLMinecraft <b>不是</b>一个傻瓜式操作的游戏 —— 特别是安装 Mod！
 @HTML<b style="color: red;">永远不要</b>在<b style="color: red;">任何</b>第三方服务器输入你的<b style="color: red;">任何</b>隐私信息！—— <b style="color: red;">这非常危险！</b>
 当你能够正常关闭游戏时，不要使用强制退出。
-遇到问题？可以单击上面的「寻求帮助」哦～
 我们支持自由软件，我们的终极目标是全人类的数字自由，一个没有非自由软件的世界。
 @HTMLAlicorn 的众多功能，都是由自由软件构成的！请支持我们 —— <b>简单到多使用一次 Firefox 或者 Fabric，<span style="color: red;">哪怕只有一次！</span></b>
 
@@ -2397,7 +2402,7 @@ Pff|也就是「Package File Finder」，Alicorn 用来搜索和安装 Mod 的�
 
 # PffFront.Failed
 
-获取失败：没能获取此 Mod，请再试一次，或至 Mod 平台手动安装它们。
+获取失败，若非网络故障，那就是该 Mod 不存在或不兼容
 
 # PffFront.Slug
 
