@@ -85,6 +85,7 @@ async function whenAppReady() {
     show: false,
     backgroundColor: "#fff",
   });
+  mainWindow.setAspectRatio(1.92);
   mainWindow.setMenu(null);
   console.log("Loading resources...");
   console.log("Registering event listeners...");
