@@ -93,7 +93,9 @@ try {
   console.log(`Alicorn ${pkg.appVersion} Renderer Process`);
   console.log("❤ From Andy K Rarity Sparklight");
   console.log("Sparklight is a girl - a filly, to be accurate.");
-  console.log("Alicorn Launcher Copyright (C) 2021 Andy K Rarity Sparklight");
+  console.log(
+    "Alicorn Launcher Copyright (C) 2021-2022 Andy K Rarity Sparklight"
+  );
   console.log(
     "This program comes with ABSOLUTELY NO WARRANTY; for details, please see 'resources/app/LICENSE'."
   );
