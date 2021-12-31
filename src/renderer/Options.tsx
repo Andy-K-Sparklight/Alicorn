@@ -201,6 +201,7 @@ export function OptionsPage(): JSX.Element {
             onChange={() => {
               webFrame.setZoomFactor(getNumber("theme.zoom-factor"));
             }}
+            reload
           />
           <InputItem
             reload
@@ -834,7 +835,7 @@ function InputItem(props: {
                 size={"small"}
                 min={props.sliderMin}
                 max={props.sliderMax}
-                defaultValue={getNumber(props.bindConfig)}
+                value={getNumber(props.bindConfig)}
                 valueLabelDisplay={"auto"}
                 step={props.sliderStep}
                 onChange={(_e, v) => {

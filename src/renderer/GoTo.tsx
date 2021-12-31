@@ -22,6 +22,7 @@ export const jumpTo = throttle(500, (target: string, keepHistory = true) => {
     );
     return;
   }
+  ifLeavingConfigThenReload();
   // if (keepHistory) {
   PAGES_HISTORY.push(target);
   // }
@@ -32,7 +33,6 @@ export const jumpTo = throttle(500, (target: string, keepHistory = true) => {
     setTimeout(() => {
       window.scrollTo({ top: 0 });
       ifLeavingContainerManagerThenSetContainerListDirty();
-      ifLeavingConfigThenReload();
       window.location.hash = target;
       setTimeout(() => {
         fadeIn(e);
@@ -41,7 +41,6 @@ export const jumpTo = throttle(500, (target: string, keepHistory = true) => {
   } else {
     window.scrollTo({ top: 0 });
     ifLeavingContainerManagerThenSetContainerListDirty();
-    ifLeavingConfigThenReload();
     window.location.hash = target;
   }
 });
@@ -58,8 +57,8 @@ function ifLeavingConfigThenReload(): void {
   if (sessionStorage.getItem("Options.Reload") === "1") {
     sessionStorage.removeItem("Options.Reload");
     remoteHideWindow();
+    prepareToQuit();
     waitUpdateFinished(() => {
-      prepareToQuit();
       ipcRenderer.send("reload");
     });
   }

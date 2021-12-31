@@ -26,6 +26,7 @@ const ERROR_DESCRIPTION = /(?<=&error_description=)[^&]+/gi;
 
 export function registerBackgroundListeners(): void {
   ipcMain.on("reload", () => {
+    getMainWindow()?.webContents.removeAllListeners();
     app.relaunch();
     app.exit(); // Immediately
   });
@@ -39,6 +40,7 @@ export function registerBackgroundListeners(): void {
     // My poor hooves!!!
     // Use destroy to make sure they close
     try {
+      getMainWindow()?.webContents.removeAllListeners();
       getMainWindow()?.close();
     } catch {}
     try {
