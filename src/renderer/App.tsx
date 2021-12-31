@@ -292,11 +292,7 @@ export function App(): JSX.Element {
       }}
     >
       <AppBar enableColorOnDark>
-        <Toolbar
-          onMouseDown={
-            getString("frame.drag-impl") === "Delta" ? onMouseDown : undefined
-          }
-        >
+        <Toolbar>
           <IconButton
             sx={{
               marginRight: "0.3rem",
@@ -308,13 +304,20 @@ export function App(): JSX.Element {
           >
             <Menu />
           </IconButton>
-          <Box
-            className={
-              classes.title +
-              (getString("frame.drag-impl") === "Webkit" ? " window-drag" : "")
-            }
-          >
-            <Typography variant={"h6"}>{tr(page)}</Typography>
+          <Box className={classes.title}>
+            <Typography
+              variant={"h6"}
+              className={
+                getString("frame.drag-impl") === "Webkit" ? " window-drag" : ""
+              }
+              onMouseDown={
+                getString("frame.drag-impl") === "Delta"
+                  ? onMouseDown
+                  : undefined
+              }
+            >
+              {tr(page)}
+            </Typography>
           </Box>
           <Box
             style={
