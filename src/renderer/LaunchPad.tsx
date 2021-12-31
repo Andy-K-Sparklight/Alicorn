@@ -3,7 +3,9 @@ import {
   Box,
   Card,
   CardContent,
+  Checkbox,
   Fade,
+  FormControlLabel,
   IconButton,
   LinearProgress,
   Tooltip,
@@ -51,6 +53,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
   const mountedBit = useRef<boolean>(false);
   const [cores, setCores] = useState<SimplifiedCoreInfo[]>([]);
   const [isLoading, setLoading] = useState(false);
+  const ignoreCorrupted = useRef(true);
   useEffect(() => {
     mountedBit.current = true;
     return () => {
@@ -81,14 +84,16 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
                 container: c.id,
               });
             } catch {
-              cachedAllCores.push({
-                id: id,
-                corrupted: true,
-                location: c.id + "/" + id,
-                versionType: "???????",
-                baseVersion: "???????",
-                container: c.id,
-              });
+              if (!ignoreCorrupted.current) {
+                cachedAllCores.push({
+                  id: id,
+                  corrupted: true,
+                  location: c.id + "/" + id,
+                  versionType: "???????",
+                  baseVersion: "???????",
+                  container: c.id,
+                });
+              }
             } finally {
               counter++;
               if (counter >= 5) {
@@ -123,6 +128,27 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
   return (
     <>
       <Box sx={{ textAlign: "right" }}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              sx={{ color: "primary.main" }}
+              color={"primary"}
+              disabled={isLoading}
+              checked={ignoreCorrupted.current}
+              onChange={(_e, v) => {
+                ignoreCorrupted.current = v;
+                if (mountedBit.current) {
+                  window.dispatchEvent(new CustomEvent("ReloadCores"));
+                }
+              }}
+            />
+          }
+          label={
+            <Typography color={"primary"}>
+              {tr("CoreInfo.IgnoreCorrupted")}
+            </Typography>
+          }
+        />
         <Tooltip
           title={
             <Typography className={"smtxt"}>{tr("CoreInfo.Reload")}</Typography>
