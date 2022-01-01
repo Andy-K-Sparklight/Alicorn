@@ -495,9 +495,6 @@ function Launching(props: {
               `Container=${props.container.id}`
             )}
       </Typography>
-      <Typography variant={"h6"} className={classes.primaryText} gutterBottom>
-        {tr("ReadyToLaunch.Status." + status)}
-      </Typography>
       <br />
 
       <Stepper
@@ -648,7 +645,6 @@ function Launching(props: {
           }
         />
       </Tooltip>
-      <br />
       <br />
       <SpecialKnowledge />
       <OpenWorldDialog

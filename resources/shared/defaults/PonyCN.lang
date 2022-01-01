@@ -394,30 +394,6 @@ Yggdrasil 帐户
 
 默认（尝试自动选择）
 
-# ReadyToLaunch.Status.Pending
-
-准备就绪
-
-# ReadyToLaunch.Status.CheckingFiles
-
-检查游戏文件……
-
-# ReadyToLaunch.Status.PreparingMods
-
-Mod 兼容性检查……
-
-# ReadyToLaunch.Status.PerformingAuth
-
-验证帐户……
-
-# ReadyToLaunch.Status.GeneratingArgs
-
-生成启动指令……
-
-# ReadyToLaunch.Status.Finished
-
-已启动 Minecraft
-
 # ReadyToLaunch.Status.Short.Pending
 
 开始
