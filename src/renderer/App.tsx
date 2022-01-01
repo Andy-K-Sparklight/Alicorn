@@ -7,7 +7,6 @@ import {
   FlightTakeoff,
   GetApp,
   Handyman,
-  Help,
   Home,
   ImportContacts,
   Info,
@@ -37,7 +36,7 @@ import {
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { ipcRenderer, shell } from "electron";
+import { ipcRenderer } from "electron";
 import React, { useEffect, useRef, useState } from "react";
 import { Route } from "react-router-dom";
 import { safeGet } from "../modules/commons/Null";
@@ -347,18 +346,6 @@ export function App(): JSX.Element {
             ) : (
               ""
             )}
-            <Fab
-              variant={"extended"}
-              color={"secondary"}
-              className={classes.floatMore}
-              size={"medium"}
-              onClick={() => {
-                void shell.openExternal("https://almc.pages.dev");
-              }}
-            >
-              <Help className={classes.buttonText} />
-              {tr("MainMenu.Help")}
-            </Fab>
             {getBoolean("dev") ? (
               <Tooltip
                 title={

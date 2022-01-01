@@ -118,10 +118,6 @@ Pff 软件安装器
 
 打开实用工具
 
-# MainMenu.Help
-
-寻求帮助
-
 # MainMenu.GoBack
 
 上一页
@@ -160,7 +156,7 @@ Pff 软件安装器
 
 # Operating.ClickToDebug
 
-如果希望向他人寻求帮助，单击本窗口的任何位置可打开日志。
+如果希望向他人寻求帮助，请单击我（如果你会用 Devtools 的话）。
 
 # Operating.PleaseWait
 
@@ -3305,7 +3301,7 @@ END
 
 # Instruction.LaunchPad.3
 
-就这么简单！……如果需要更多信息，请访问 <帮助文档>，单击上面的 <寻求帮助> 就好。
+就这么简单！现在继续你的旅程吧！
 
 # Instruction.LaunchPad.4
 
