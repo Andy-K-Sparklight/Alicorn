@@ -22,6 +22,7 @@ import {
   Alert,
   AppBar,
   Box,
+  Chip,
   Container,
   Drawer,
   Fab,
@@ -670,6 +671,8 @@ const PAGES_ICONS_MAP: Record<string, JSX.Element> = {
   TheEndingOfTheEnd: <ImportContacts />,
 };
 
+const BETAS = ["ServerList"];
+
 function PagesDrawer(props: {
   open: boolean;
   onClose: () => unknown;
@@ -694,7 +697,10 @@ function PagesDrawer(props: {
               button
             >
               <ListItemIcon>{i}</ListItemIcon>
-              <ListItemText>{tr(p)}</ListItemText>
+              <ListItemText>
+                {tr(p)}
+                {BETAS.includes(p) ? <BetaTag /> : ""}
+              </ListItemText>
             </ListItem>
           );
         })}
@@ -766,4 +772,18 @@ function onMouseUp(e: MouseEvent) {
 function moveWindow() {
   ipcRenderer.send("windowMoving", { mouseX, mouseY });
   animationId = requestAnimationFrame(moveWindow);
+}
+
+export function BetaTag(): JSX.Element {
+  return (
+    <>
+      &nbsp;
+      <Chip
+        label={tr("Beta")}
+        size={"small"}
+        color={"warning"}
+        variant={"outlined"}
+      />
+    </>
+  );
 }

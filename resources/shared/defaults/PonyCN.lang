@@ -114,6 +114,10 @@ Pff 软件安装器
 
 更新失败……不过别担心！你的文件丝毫不受影响。
 
+# Beta
+
+实验特性
+
 # MainMenu.UtilitiesIndex
 
 打开实用工具
@@ -129,10 +133,6 @@ Pff 软件安装器
 # MainMenu.QuickManageAccount
 
 管理帐户
-
-# MainMenu.QuickServerList
-
-显示服务器列表
 
 # MainMenu.Exit
 
