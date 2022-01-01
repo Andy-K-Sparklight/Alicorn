@@ -1416,7 +1416,7 @@ async function trySelectProperJava(id: string): Promise<string> {
 }
 
 const LEGACY_VERSIONS = /^1\.([0-9]|1[0-2])([-.a-z].*?)?$/i;
-const MODERN_VERSIONS = /^1\.(17|[2-9][0-9])(\.)?[0-9]*?/i;
+const MODERN_VERSIONS = /^1\.17(\.)?[0-9]*?/i;
 const HIGH_VERSIONS = /^1\.(1[8-9]|[2-9][0-9])(\.)?[0-9]*?/i;
 
 function checkJMCompatibility(
