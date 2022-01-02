@@ -25,7 +25,6 @@ import EventEmitter from "events";
 import path from "path";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
-import { throttle } from "throttle-debounce";
 import { getBoolean } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
@@ -73,6 +72,8 @@ export function PffFront(): JSX.Element {
   const logs = useRef<string[]>([]);
   const [unmetWarns, setUnmetWarns] = useState<UnmetDepUnit[]>([]);
   const fullWidthClasses = fullWidth();
+  const [isDirty, setDirty] = useState(false);
+
   const f = async () => {
     const m = await loadMetas(getContainer(container));
     if (mounted.current) {
@@ -94,26 +95,12 @@ export function PffFront(): JSX.Element {
       setUnmetWarns(a);
     }
   };
-  const f0 = throttle(1000, f);
-  const f2 = throttle(1000, f1);
   useEffect(() => {
-    const fun = () => {
-      void (async () => {
-        const lock = await loadLockfile(getContainer(container));
-        if (mounted.current) {
-          setLockfile(lock);
-        }
-      })();
-      void f0();
-      void f2();
-    };
-    window.addEventListener("blur", fun);
-    window.addEventListener("focus", fun);
-    return () => {
-      window.removeEventListener("focus", fun);
-      window.removeEventListener("blur", fun);
-    };
-  }, []);
+    if (!isDirty) {
+      void f();
+      void f1();
+    }
+  }, [isDirty]);
   useEffect(() => {
     void (async () => {
       const lock = await loadLockfile(getContainer(container));
@@ -121,8 +108,6 @@ export function PffFront(): JSX.Element {
         setLockfile(lock);
       }
     })();
-    void f0();
-    void f2();
   }, [isRunning]);
   useEffect(() => {
     mounted.current = true;
@@ -170,6 +155,7 @@ export function PffFront(): JSX.Element {
     }
   }, []);
   const start = (packageName: string) => {
+    setDirty(true);
     setInfo("");
     logs.current = [];
     setRunning(true);
@@ -289,6 +275,18 @@ export function PffFront(): JSX.Element {
             }
           />
         </Tabs>
+        {isDirty ? (
+          <Alert
+            severity={"info"}
+            onClick={() => {
+              setDirty(false);
+            }}
+          >
+            {tr("PffFront.ReloadToRenew")}
+          </Alert>
+        ) : (
+          ""
+        )}
         <TabPanel value={val} index={0}>
           <Container>
             <Typography

@@ -2380,6 +2380,10 @@ eee|一种梗语言，大致就是把每个字都改成 e。幸好，我不会�
 
 Pff|也就是「Package File Finder」，Alicorn 用来搜索和安装 Mod 的工具。具有 Pff Front 和 Pff Visual 两个组件，前者通过 ID 直接安装 Mod，后者通过搜索查找 ID。具有类似 Maven 的缓存能力。
 
+# PffFront.ReloadToRenew
+
+Mod 信息直到下一次进入 Pff 时才会刷新，单击我可以立即刷新。
+
 # PffFront.WarnNoCache
 
 警告 - 你没有为 Pff 设置下载缓存，二次安装 Mod 时将无法得到加速！
