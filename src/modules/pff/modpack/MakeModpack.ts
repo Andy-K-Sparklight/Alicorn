@@ -1,6 +1,13 @@
 import { zip } from "compressing";
-import { copy, ensureDir, readdir, remove, stat, writeFile } from "fs-extra";
-import { createWriteStream } from "original-fs";
+import {
+  copy,
+  createWriteStream,
+  ensureDir,
+  outputFile,
+  readdir,
+  remove,
+  stat,
+} from "fs-extra";
 import path from "path";
 import { pipeline } from "stream";
 import { promisify } from "util";
@@ -85,8 +92,8 @@ export async function sealPackCommon(
   const j = buildCommonModpackJSON(model);
   const j2 = buildCFModpackJSON(convertCommonToCF(model));
   setState("Compressing");
-  await writeFile(path.join(MODPACK_WORK_DIR, PACK_META), j, {mode:0o777});
-  await writeFile(path.join(MODPACK_WORK_DIR, MANIFEST_FILE), j2, {
+  await outputFile(path.join(MODPACK_WORK_DIR, PACK_META), j, { mode: 0o777 });
+  await outputFile(path.join(MODPACK_WORK_DIR, MANIFEST_FILE), j2, {
     mode: 0o777,
   });
   await compressPack(MODPACK_WORK_DIR, container.rootDir, model.name);

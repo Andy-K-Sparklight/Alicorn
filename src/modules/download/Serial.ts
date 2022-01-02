@@ -61,14 +61,20 @@ export class Serial extends AbstractDownloader {
             if (!r.ok) {
               return DownloadStatus.RETRY; // Mark as bad
             }
-            const f = getFileWriteStream(
-              meta.savePath,
-              sti,
-              () => {
-                resolve(DownloadStatus.TIMEOUT); // Break in advance
-              },
-              noTimeout ? 0 : getConfigOptn("timeout", 3000)
-            ); // Require first byte
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            let f: WritableStream<any>;
+            try {
+              f = getFileWriteStream(
+                meta.savePath,
+                sti,
+                () => {
+                  resolve(DownloadStatus.TIMEOUT); // Break in advance
+                },
+                noTimeout ? 0 : getConfigOptn("timeout", 3000)
+              ); // Require first byte
+            } catch {
+              return DownloadStatus.FATAL;
+            }
             if (r.body) {
               try {
                 await r.body.pipeTo(f);

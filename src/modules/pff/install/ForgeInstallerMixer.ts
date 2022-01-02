@@ -1,6 +1,6 @@
 import { zip } from "compressing";
 import fs from "fs-extra";
-import { createWriteStream } from "original-fs";
+import { createWriteStream } from "fs-extra";
 import path from "path";
 import { pipeline } from "stream";
 import { promisify } from "util";

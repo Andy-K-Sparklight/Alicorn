@@ -1,5 +1,8 @@
+import fs from "fs-extra";
 import StreamZip from "node-stream-zip";
 import toml from "toml";
+import { submitWarn } from "../../renderer/Message";
+import { tr } from "../../renderer/Translator";
 import { isNull, safeGet } from "../commons/Null";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 
@@ -28,7 +31,6 @@ enum ModLoader {
 }
 
 export { ModLoader };
-
 // Load mod info
 export async function loadModInfo(
   modJar: string,
@@ -37,7 +39,16 @@ export async function loadModInfo(
   try {
     const ret: ModInfo = {};
     ret.fileName = container.getModJar(modJar);
-    const zip = new StreamZip.async({ file: ret.fileName });
+    let d: number;
+    try {
+      d = await fs.open(ret.fileName, "r"); // Control this manually
+    } catch (e) {
+      submitWarn(tr("System.EPERM"));
+      throw e;
+    }
+    const zip = new StreamZip.async({
+      fd: d,
+    });
     try {
       const d = await zip.entryData(FABRIC_MOD_JSON);
       ret.loader = ModLoader.FABRIC;

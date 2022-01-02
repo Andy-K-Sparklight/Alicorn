@@ -1,4 +1,4 @@
-import { readFile, writeFile } from "fs-extra";
+import { outputFile, readFile } from "fs-extra";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 
 const OPTIONS_FILE = "options.txt";
@@ -34,5 +34,5 @@ export async function buildOptions(
       o.push(c);
     }
   }
-  await writeFile(f, o.join("\n"));
+  await outputFile(f, o.join("\n"));
 }

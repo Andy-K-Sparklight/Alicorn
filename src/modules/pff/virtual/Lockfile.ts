@@ -1,4 +1,4 @@
-import { readFile, writeFile } from "fs-extra";
+import { outputFile, readFile } from "fs-extra";
 import { basicHash } from "../../commons/BasicHash";
 import { isFileExist } from "../../commons/FileUtil";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
@@ -22,11 +22,11 @@ export async function loadLockfile(
         await fixLockfile(l, container);
         return l;
       } catch {
-        await writeFile(lockPath, "{}", { mode: 0o777 });
+        await outputFile(lockPath, "{}", { mode: 0o777 });
         return {};
       }
     } else {
-      await writeFile(lockPath, "{}", { mode: 0o777 });
+      await outputFile(lockPath, "{}", { mode: 0o777 });
       return {};
     }
   } catch {
@@ -56,7 +56,7 @@ export async function saveLockfile(
   container: MinecraftContainer
 ): Promise<void> {
   try {
-    await writeFile(
+    await outputFile(
       container.getPff2LockFile(),
       JSON.stringify(lockfile, null, 2),
       { mode: 0o777 }

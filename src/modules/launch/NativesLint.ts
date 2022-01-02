@@ -1,17 +1,17 @@
+import { zip } from "compressing";
+import fs from "fs-extra";
+import path from "path";
+import { isFileExist } from "../commons/FileUtil";
+import { buildMap, parseMap } from "../commons/MapUtil";
+import { MinecraftContainer } from "../container/MinecraftContainer";
+import { updateRecord } from "../container/ValidateRecord";
+import { existsAndValidateRaw } from "../download/DownloadWrapper";
+import { getHash } from "../download/Validate";
 import {
   ArtifactMeta,
   getCurrentOSNameAsMojang,
   LibraryMeta,
 } from "../profile/Meta";
-import { MinecraftContainer } from "../container/MinecraftContainer";
-import path from "path";
-import fs from "fs-extra";
-import { zip } from "compressing";
-import { buildMap, parseMap } from "../commons/MapUtil";
-import { getHash } from "../download/Validate";
-import { isFileExist } from "../commons/FileUtil";
-import { existsAndValidateRaw } from "../download/DownloadWrapper";
-import { updateRecord } from "../container/ValidateRecord";
 
 export const JAR_SUFFIX = ".jar";
 const META_INF = "META-INF";
@@ -138,5 +138,5 @@ async function saveLockFile(dir: string): Promise<void> {
       });
     })
   );
-  await fs.writeFile(lPath, buildMap(fMap), { mode: 0o777 });
+  await fs.outputFile(lPath, buildMap(fMap), { mode: 0o777 });
 }

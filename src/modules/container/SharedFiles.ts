@@ -1,4 +1,4 @@
-import { ensureDir, symlink, unlink, writeFile } from "fs-extra";
+import { ensureDir, outputFile, symlink, unlink } from "fs-extra";
 import path from "path";
 import { basicHash } from "../commons/BasicHash";
 import { PLACE_HOLDER } from "../commons/Constants";
@@ -17,7 +17,7 @@ export async function isSharedContainer(
 }
 
 export async function markASC(dir: string): Promise<void> {
-  await writeFile(path.join(dir, ASC_NAME), PLACE_HOLDER, {mode:0o777});
+  await outputFile(path.join(dir, ASC_NAME), PLACE_HOLDER, { mode: 0o777 });
 }
 
 const STANDALONE_FILE = /forge|client/i;

@@ -6,7 +6,7 @@ import path from "path";
 export async function setBeacon(): Promise<void> {
   try {
     const target = path.join(os.homedir(), "alicorn-is-here");
-    await fs.writeFile(target, app.getPath("exe"));
+    await fs.outputFile(target, app.getPath("exe"));
     console.log("Beacon set!");
   } catch (e) {
     console.log(e);

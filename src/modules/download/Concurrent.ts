@@ -1,6 +1,8 @@
 import fs from "fs-extra";
 import os from "os";
 import path from "path";
+import { submitWarn } from "../../renderer/Message";
+import { tr } from "../../renderer/Translator";
 import { basicHash } from "../commons/BasicHash";
 import { getBoolean, getString } from "../config/ConfigSupport";
 import {
@@ -63,7 +65,13 @@ async function sealAndVerify(
   hash: string,
   size: number
 ) {
-  const wStream = fs.createWriteStream(savePath, { mode: 0o777 });
+  let wStream: fs.WriteStream;
+  try {
+    wStream = fs.createWriteStream(savePath, { mode: 0o777 });
+  } catch (e) {
+    submitWarn(tr("System.EPERM"));
+    throw e;
+  }
   for (const c of chunks) {
     const pt = path.join(
       TEMP_SAVE_PATH_ROOT,
@@ -155,14 +163,20 @@ function downloadSingleChunk(
       const [ac, sti] = getTimeoutController(
         overrideTimeout ? 0 : getConfigOptn("timeout", 5000)
       );
-      const f = getFileWriteStream(
-        tmpSavePath,
-        sti,
-        () => {
-          reject();
-        },
-        overrideTimeout ? 0 : getConfigOptn("timeout", 5000)
-      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let f: WritableStream<any>;
+      try {
+        f = getFileWriteStream(
+          tmpSavePath,
+          sti,
+          () => {
+            reject();
+          },
+          overrideTimeout ? 0 : getConfigOptn("timeout", 5000)
+        );
+      } catch {
+        throw "Failed to write! Path: " + tmpSavePath;
+      }
       const r = await fetch(url, {
         signal: ac.signal,
         method: "GET",
@@ -187,8 +201,8 @@ function downloadSingleChunk(
         throw "Body is empty!";
       }
     })()
-      .then((b) => {
-        resolve(b);
+      .then(() => {
+        resolve();
       })
       .catch((e) => {
         reject(e);

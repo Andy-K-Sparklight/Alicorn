@@ -29,15 +29,13 @@ export async function saveData(
 ): Promise<void> {
   try {
     const dest = getActualDataPath(relativePath);
-    await fs.ensureDir(path.dirname(dest));
-    await fs.writeFile(dest, data, { mode: 0o777 });
+    await fs.outputFile(dest, data, { mode: 0o777 });
   } catch {}
 }
 
 export function saveDataSync(relativePath: string, data: string): void {
   const dest = getActualDataPath(relativePath);
-  fs.ensureDirSync(path.dirname(dest));
-  fs.writeFileSync(dest, data, { mode: 0o777 });
+  fs.outputFileSync(dest, data, { mode: 0o777 });
 }
 
 // Hint: DO NOT use 'fs.copyFile' here!

@@ -70,6 +70,10 @@ Pff 软件安装器
 
 终末之末
 
+# System.EPERM
+
+Alicorn 无法读/写 {Target}，请检查此目录的权限，相关操作已经中止。
+
 # System.Offline
 
 似乎已断开与互联网的连接……

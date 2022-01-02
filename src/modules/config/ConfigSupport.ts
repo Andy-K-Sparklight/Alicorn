@@ -90,16 +90,14 @@ export function loadConfigSync(): void {
 
 export function saveConfigSync(): void {
   try {
-    fs.ensureDirSync(path.dirname(CONFIG_FILE));
-    fs.writeFileSync(CONFIG_FILE, JSON.stringify(cachedConfig, null, 4), {
+    fs.outputFileSync(CONFIG_FILE, JSON.stringify(cachedConfig, null, 4), {
       mode: 0o777,
     });
   } catch {}
 }
 
 export async function saveConfig(): Promise<void> {
-  await fs.ensureDir(path.dirname(CONFIG_FILE));
-  await fs.writeFile(CONFIG_FILE, JSON.stringify(cachedConfig, null, 4), {
+  await fs.outputFile(CONFIG_FILE, JSON.stringify(cachedConfig, null, 4), {
     mode: 0o777,
   });
 }

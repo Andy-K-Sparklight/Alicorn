@@ -1,5 +1,7 @@
 import fs from "fs-extra";
 import { PassThrough, Readable } from "stream";
+import { submitWarn } from "../../renderer/Message";
+import { tr } from "../../renderer/Translator";
 import { WatchDog } from "../commons/WatchDog";
 import { getNumber } from "../config/ConfigSupport";
 import { MirrorChain } from "./Mirror";
@@ -32,7 +34,13 @@ export function getFileWriteStream(
   timeout = 0
 ): WritableStream {
   let dog: WatchDog | null = null;
-  const f = fs.createWriteStream(pt, { mode: 0o777 });
+  let f: fs.WriteStream;
+  try {
+    f = fs.createWriteStream(pt, { mode: 0o777 });
+  } catch (e) {
+    submitWarn(tr("System.EPERM"));
+    throw e;
+  }
   if (timeout > 0) {
     dog = new WatchDog(timeout * 2, () => {
       f.close();
