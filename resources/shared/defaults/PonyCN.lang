@@ -206,6 +206,22 @@ Alicorn 无法读/写 {Target}，请检查此目录的权限，相关操作已�
 
 正在进行操作……这可能需要几分钟。
 
+# CoreInfo.Sorting.HL
+
+按版本从高到低
+
+# CoreInfo.Sorting.LH
+
+按版本从低到高
+
+# CoreInfo.Sorting.USE
+
+按使用次数
+
+# CoreInfo.Sorting.TIME
+
+按最后访问时间
+
 # CoreInfo.IgnoreCorrupted
 
 不显示损坏核心

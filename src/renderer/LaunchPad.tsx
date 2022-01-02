@@ -1,6 +1,8 @@
 import { DeleteForever, EventBusy, Extension, Sync } from "@mui/icons-material";
 import {
   Box,
+  Button,
+  ButtonGroup,
   Card,
   CardContent,
   Checkbox,
@@ -54,6 +56,15 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
   const [cores, setCores] = useState<SimplifiedCoreInfo[]>([]);
   const [isLoading, setLoading] = useState(false);
   const ignoreCorrupted = useRef(true);
+  type Sorting = "LH" | "HL" | "USE" | "TIME";
+  const [sorting, _setSorting] = useState<Sorting>(
+    (window.localStorage.getItem("LaunchPad.Sorting") || "USE") as Sorting
+  );
+  const setSorting = (a: Sorting) => {
+    window.localStorage.setItem("LaunchPad.Sorting", a);
+    _setSorting(a);
+  };
+
   useEffect(() => {
     mountedBit.current = true;
     return () => {
@@ -111,7 +122,18 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
             const hashB = objectHash(b);
             const pinA = getUsed(hashA);
             const pinB = getUsed(hashB);
-            return pinB - pinA;
+            const timeA = getMarkTime(hashA);
+            const timeB = getMarkTime(hashB);
+            switch (sorting) {
+              case "LH":
+                return a.id < b.id ? -1 : 1;
+              case "HL":
+                return a.id < b.id ? 1 : -1;
+              case "USE":
+                return pinB - pinA;
+              case "TIME":
+                return timeB.getTime() - timeA.getTime();
+            }
           });
           setCores(cachedAllCores);
           setLoading(false);
@@ -123,11 +145,45 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
     return () => {
       window.removeEventListener("ReloadCores", fun);
     };
-  }, []);
+  }, [sorting]);
 
   return (
     <>
       <Box sx={{ textAlign: "right" }}>
+        <ButtonGroup
+          variant={"contained"}
+          color={"primary"}
+          sx={{ marginRight: "1rem" }}
+        >
+          <Button
+            onClick={() => {
+              setSorting("HL");
+            }}
+          >
+            {tr("CoreInfo.Sorting.HL")}
+          </Button>
+          <Button
+            onClick={() => {
+              setSorting("LH");
+            }}
+          >
+            {tr("CoreInfo.Sorting.LH")}
+          </Button>
+          <Button
+            onClick={() => {
+              setSorting("USE");
+            }}
+          >
+            {tr("CoreInfo.Sorting.USE")}
+          </Button>
+          <Button
+            onClick={() => {
+              setSorting("TIME");
+            }}
+          >
+            {tr("CoreInfo.Sorting.TIME")}
+          </Button>
+        </ButtonGroup>
         <FormControlLabel
           control={
             <Checkbox
@@ -227,6 +283,7 @@ function SingleCoreDisplay(props: {
             return;
           }
           markUsed(hash);
+          markTime(hash);
           jumpTo(
             "/ReadyToLaunch/" +
               encodeURIComponent(props.profile.container) +
@@ -285,6 +342,7 @@ function SingleCoreDisplay(props: {
                       className={classes.operateButton}
                       onClick={(e) => {
                         markUsed(hash, 0);
+                        markTime(hash, true);
                         props.refresh();
                         addStatistics("Click");
                         e.stopPropagation();
@@ -438,6 +496,7 @@ function SingleCoreDisplay(props: {
                 );
               } finally {
                 markUsed(hash, 0);
+                markTime(hash, true);
                 props.refresh();
               }
             }
@@ -458,6 +517,19 @@ function SingleCoreDisplay(props: {
 }
 
 const PIN_NUMBER_KEY = "PinIndex.";
+const PIN_TIME_KEY = "PinTime.";
+
+function getMarkTime(hash: string): Date {
+  return new Date(localStorage.getItem(PIN_TIME_KEY + hash) || "0");
+}
+
+function markTime(hash: string, clear = false): void {
+  if (clear) {
+    localStorage.removeItem(PIN_TIME_KEY + hash);
+    return;
+  }
+  localStorage.setItem(PIN_TIME_KEY + hash, new Date().toString());
+}
 
 function getUsed(hash: string): number {
   return parseInt(localStorage.getItem(PIN_NUMBER_KEY + hash) || "0") || 0;
