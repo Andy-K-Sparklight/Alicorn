@@ -61,8 +61,8 @@ export function registerBackgroundListeners(): void {
   });
   ipcMain.on("SOS", (_i, e) => {
     dialog.showErrorBox(
-      "Alicorn has crashed!",
-      "An error has occurred, consider REPORT or REINSTALL.\nError message is:\n\n" +
+      "Unexpected Error Happened!",
+      "A fatal error has been detected.\nAlicorn 检测到一个未捕获的错误。\nThis should not have happened. Please report it to us.\n这在正常情况下不会发生，建议您向我们报告。\n\nError message is:\n错误信息如下：\n\n" +
         String(e)
     );
   });
