@@ -736,7 +736,7 @@ Alicorn 启动器 {AppVersion}（内核版本 {UpdatorVersion}）
 
 # VersionView.Copyright
 
-以下内容为著作权声明的简体中文翻译，不可被视为原文本的替代。Alicorn 的开发人员拥有最终解释权。\n\nAlicorn 启动器是自由软件，复制、修改和重新分发等行为应遵循 GNU GENERAL PUBLIC LICENSE Version 3.0 许可证（或以后的版本）。\nCopyright (C) 2021-2022 Andy K Rarity Sparklight\n\n该程序是自由软件：你可以根据自由软件基金会发布的 GNU 通用公共许可证（第三版或以后）的条款重新分发和/或修改它。\n分发此程序是希望它有用，但不作任何保证；甚至没有对适销性或针对特定目的的适用性的暗示保证。有关更多详细信息，请参阅 GNU 通用公共许可证（第三版或以后）原文。\nAlicorn 中所引用的 Minecraft 相关图片等内容不是 Alicorn 的一部分，它们来自 Minecraft Wiki 并以 知识共享 署名-非商业性使用-相同方式分享 3.0（CC BY-NC-SA 3.0）协议授权，不适用 Alicorn 的 GNU 通用公共许可证（第三版或以后）。
+以下内容为著作权声明的简体中文翻译，不可被视为原文本的替代。Alicorn 的开发人员拥有最终解释权。\n\nAlicorn 启动器是自由软件，复制、修改和重新分发等行为应遵循 GNU GENERAL PUBLIC LICENSE Version 3.0 许可证（或以后的版本）。\nCopyright (C) 2021-2022 Annie K Rarity Sparklight\n\n该程序是自由软件：你可以根据自由软件基金会发布的 GNU 通用公共许可证（第三版或以后）的条款重新分发和/或修改它。\n分发此程序是希望它有用，但不作任何保证；甚至没有对适销性或针对特定目的的适用性的暗示保证。有关更多详细信息，请参阅 GNU 通用公共许可证（第三版或以后）原文。\nAlicorn 中所引用的 Minecraft 相关图片等内容不是 Alicorn 的一部分，它们来自 Minecraft Wiki 并以 知识共享 署名-非商业性使用-相同方式分享 3.0（CC BY-NC-SA 3.0）协议授权，不适用 Alicorn 的 GNU 通用公共许可证（第三版或以后）。
 
 # VersionView.Privacy
 
