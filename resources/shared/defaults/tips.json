@@ -1,5 +1,11 @@
 [
   {
+    "name": "自动 Fabric/Forge 版本选择",
+    "text": "无须担心版本错误，Alicorn 能为你搞定这些！",
+    "img": "https://img.gejiba.com/images/e8e64aa83759da961d9fe72d7723fefe.png",
+    "rel": ""
+  },
+  {
     "name": "看看实用工具",
     "text": "它们真的很实用！（换皮肤，制作整合包，联机……）",
     "img": "https://img.gejiba.com/images/c3bbb9f45902c12889f758d85b87e70d.png",
