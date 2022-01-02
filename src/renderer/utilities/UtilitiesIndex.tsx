@@ -5,9 +5,9 @@ import {
   SettingsEthernet,
   ShoppingCart,
 } from "@mui/icons-material";
-import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
+import { Box, Card, CardContent, Fade, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import React from "react";
+import React, { useState } from "react";
 import { getBoolean } from "../../modules/config/ConfigSupport";
 import { jumpTo, triggerSetPage } from "../GoTo";
 import { isBgDark } from "../Renderer";
@@ -55,6 +55,7 @@ function SimpleUtil(props: {
 }): JSX.Element {
   const classes = useCardStyles();
   const accClasses = useAccStyles();
+  const [isHover, setHover] = useState(false);
   if (props.experimental) {
     if (!getBoolean("dev.experimental")) {
       return <></>;
@@ -62,6 +63,12 @@ function SimpleUtil(props: {
   }
   return (
     <Box
+      onMouseEnter={() => {
+        setHover(true);
+      }}
+      onMouseLeave={() => {
+        setHover(false);
+      }}
       onClick={() => {
         jumpTo(`/Utilities/${props.name}`);
         triggerSetPage(tr(`Utilities.${props.name}.Title`));
@@ -88,9 +95,14 @@ function SimpleUtil(props: {
               </Typography>
             </Grid>
           </Grid>
-          <Typography className={classes.text2}>
-            {tr(`Utilities.${props.name}.Description`)}
-          </Typography>
+          <Fade in={isHover}>
+            <Typography
+              className={classes.text2}
+              sx={{ display: isHover ? undefined : "none" }}
+            >
+              {tr(`Utilities.${props.name}.Description`)}
+            </Typography>
+          </Fade>
         </CardContent>
       </Card>
       <br />
