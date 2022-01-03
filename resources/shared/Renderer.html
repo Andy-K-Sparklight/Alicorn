@@ -69,6 +69,9 @@
       window.showLogScreen = () => {
         document.getElementById("preboot_log").style.display = "none";
       };
+      window.oncontextmenu = (e) => {
+        e.preventDefault();
+      };
     </script>
     <script src="Renderer.js" async></script>
     <script src="SkinView3D.js" defer></script>
