@@ -1,14 +1,9 @@
-import { shell } from "electron";
 import os from "os";
 import path from "path";
 import { getBoolean, set } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { createNewContainer } from "../modules/container/ContainerWrapper";
-import {
-  downloadJREInstaller,
-  getLatestJREURL,
-  waitJREInstaller,
-} from "../modules/java/GetJDK";
+import { installBothJDKs } from "../modules/java/BuiltInJDK";
 import {
   getAllJava,
   getJavaInfoRaw,
@@ -24,7 +19,7 @@ import {
 } from "../modules/pff/get/MojangCore";
 import { isInstBusy, startInst } from "./Instruction";
 import { checkToGoAndDecideJump, loadToGoHook } from "./linkage/AlicornToGo";
-import { submitInfo, submitSucc } from "./Message";
+import { submitInfo, submitWarn } from "./Message";
 import { tr } from "./Translator";
 export function waitInstDone(): Promise<void> {
   return new Promise<void>((res) => {
@@ -97,24 +92,11 @@ async function setupFirstJavaCheckAndCheckToGo(): Promise<void> {
   if (!s) {
     startInst("NoJava");
     await waitInstDone();
-    if (os.platform() === "win32") {
-      const j8 = await getLatestJREURL(true);
-      const j17 = await getLatestJREURL(false);
-      submitInfo(tr("FirstRun.FetchingJava"));
-      await Promise.all([downloadJREInstaller(j8), downloadJREInstaller(j17)]);
-      submitInfo(tr("FirstRun.InstallingJava"));
-      await waitJREInstaller(j8);
-      await waitJREInstaller(j17);
-      await whereJava(true);
+    submitInfo(tr("FirstRun.FetchingJava"));
+    if (await installBothJDKs()) {
+      submitInfo(tr("FirstRun.JavaInstalled"));
     } else {
-      void shell.openExternal(
-        "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/17/jre/x64/linux/"
-      );
-      void shell.openExternal(
-        "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jre/x64/linux/"
-      );
-      submitInfo(tr("JavaSelector.External"));
-      return; // No following filtering
+      submitWarn(tr("FirstRun.JavaFailed"));
     }
   } else {
     startInst("JavaOK");
@@ -133,7 +115,7 @@ async function setupFirstJavaCheckAndCheckToGo(): Promise<void> {
         })
       );
       setDefaultJavaHome(a || getAllJava()[0] || "");
-      submitSucc(tr("FirstRun.JavaConfigured"));
+      submitInfo(tr("FirstRun.JavaConfigured"));
     })
     .catch(() => {});
   await waitInstDone();

@@ -12,11 +12,10 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { ipcRenderer, shell } from "electron";
-import os from "os";
+import { ipcRenderer } from "electron";
 import path from "path";
 import React, { useEffect, useRef, useState } from "react";
-import { installJRE } from "../modules/java/GetJDK";
+import { installBothJDKs, setBuiltInJava } from "../modules/java/BuiltInJDK";
 import {
   getAllJava,
   getDefaultJavaHome,
@@ -30,7 +29,7 @@ import {
 import { whereJava } from "../modules/java/WhereJava";
 import { setChangePageWarn } from "./GoTo";
 import { ShiftEle } from "./Instruction";
-import { submitError, submitInfo } from "./Message";
+import { submitInfo, submitSucc, submitWarn } from "./Message";
 import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
@@ -81,6 +80,36 @@ export function JavaSelector(): JSX.Element {
       mounted.current = false;
     };
   }, [refreshBit]);
+
+  useEffect(() => {
+    const f = async () => {
+      const j = getAllJava();
+      if (j.length > 0) {
+        setJavaList(j);
+        setCurrentJava(j[0]);
+        const tMap: Map<string, JavaInfo> = new Map();
+        for (const j2 of j) {
+          try {
+            tMap.set(
+              j2,
+              parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(j2)))
+            );
+          } catch {
+            tMap.set(j2, CANNOT_LOAD_INFO);
+          }
+        }
+        setJavaInfo(tMap);
+        setCurrentJavaInfo(
+          parseJavaInfo(parseJavaInfoRaw(await getJavaInfoRaw(j[0])))
+        );
+      }
+    };
+    window.addEventListener("ReloadJavaList", f);
+    return () => {
+      window.removeEventListener("ReloadJavaList", f);
+    };
+  }, []);
+
   useEffect(() => {
     void (async () => {
       setChangePageWarn(true);
@@ -127,7 +156,6 @@ export function JavaSelector(): JSX.Element {
       <Container>
         <br />
         <br />
-
         <FormControl variant={"outlined"} fullWidth>
           <InputLabel id={"Select-JRE"} className={classes.label}>
             {tr("JavaSelector.SelectJava")}
@@ -145,7 +173,7 @@ export function JavaSelector(): JSX.Element {
                 setCurrentJava(sj);
                 setDefaultJavaHome(sj);
               }}
-              value={currentJava}
+              value={currentJava || javaList[0] || ""}
             >
               {javaList.map((j) => {
                 return (
@@ -157,7 +185,6 @@ export function JavaSelector(): JSX.Element {
             </Select>
           </ShiftEle>
         </FormControl>
-
         <br />
         <br />
         <ShiftEle name={"JavaSelectorManual"}>
@@ -323,6 +350,9 @@ function JavaDownloader(): JSX.Element {
   }, []);
   return (
     <>
+      <Typography color={"primary"} className={"smtxt"}>
+        {tr("JavaSelector.HintBuiltIn")}
+      </Typography>
       <ShiftEle name={"JavaSelectorInstall"} bgfill>
         <Button
           variant={"contained"}
@@ -331,62 +361,22 @@ function JavaDownloader(): JSX.Element {
           onClick={() => {
             setRunning(true);
             void (async () => {
-              if (os.platform() === "win32") {
-                try {
-                  await installJRE(false);
-                } catch (e) {
-                  submitError(String(e));
-                } finally {
-                  if (mounted.current) {
-                    setRunning(false);
-                  }
-                }
+              submitInfo(tr("FirstRun.FetchingJava"));
+              const s = await installBothJDKs();
+              await setBuiltInJava();
+              if (s) {
+                submitSucc(tr("FirstRun.JavaInstalled"));
               } else {
-                void shell.openExternal(
-                  "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/17/jdk/x64/linux/"
-                );
-                submitInfo(tr("JavaSelector.External"));
+                submitWarn(tr("FirstRun.FailedJava"));
+              }
+              window.dispatchEvent(new CustomEvent("ReloadJavaList"));
+              if (mounted.current) {
                 setRunning(false);
               }
             })();
           }}
         >
-          {tr("JavaSelector.GetNew")}
-        </Button>
-      </ShiftEle>
-      <br />
-      <ShiftEle name={"JavaSelectorInstall"} bgfill>
-        <Button
-          disabled={isRunning}
-          variant={"contained"}
-          color={"primary"}
-          onClick={() => {
-            setRunning(true);
-            void (async () => {
-              if (os.platform() === "win32") {
-                try {
-                  await installJRE(true);
-                } catch (e) {
-                  submitError(String(e));
-                } finally {
-                  if (mounted.current) {
-                    setRunning(false);
-                  }
-                }
-              } else {
-                void shell.openExternal(
-                  "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jdk/x64/linux/"
-                );
-                submitInfo(tr("JavaSelector.External"));
-                setRunning(false);
-              }
-            })();
-          }}
-          sx={{
-            marginTop: "1%",
-          }}
-        >
-          {tr("JavaSelector.GetOld")}
+          {tr("JavaSelector.BuiltIn")}
         </Button>
       </ShiftEle>
     </>
