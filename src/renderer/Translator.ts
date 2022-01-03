@@ -233,7 +233,7 @@ function trimControlCode(origin: string[], rules: string[]): string[] {
   return output;
 }
 
-export interface Tip {
+interface Tip {
   name: string;
   text: string;
   img: string;

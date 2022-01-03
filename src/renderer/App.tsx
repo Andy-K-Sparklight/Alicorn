@@ -774,7 +774,7 @@ function moveWindow() {
   animationId = requestAnimationFrame(moveWindow);
 }
 
-export function BetaTag(): JSX.Element {
+function BetaTag(): JSX.Element {
   return (
     <>
       &nbsp;

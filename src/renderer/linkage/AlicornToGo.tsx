@@ -19,7 +19,7 @@ export async function loadToGoHook(): Promise<string> {
   }
 }
 
-export async function removeToGoHook(): Promise<void> {
+async function removeToGoHook(): Promise<void> {
   try {
     await remove(path.join(os.homedir(), HOOK_NAME));
   } catch {}

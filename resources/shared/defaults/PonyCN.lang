@@ -584,6 +584,24 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 # ReadyToLaunch.WaitingText
 
+贴心提示古来多，其中有用又几条？
+
+用木炭烧木头，获得更多木炭。
+
+有些宝石山必须挖穿，有些传送们总得走过。
+
+人类不喜欢亲手撰写，总是想着复制粘贴。
+
+不是什么都能通过重启解决，观察者也不能看透每个世界。
+
+本小马会一直陪着你的……只要你不卸掉 Alicorn 的话！
+
+天上的飞机只与你相隔十千米，出门访一位旧友，不如抬头望一眼陌生人。
+
+我一个倒立，谁能说我没有举起地球？
+
+费尽力气扇动翅膀，不如索性推动大地。
+
 暴风雨的来临需要酝酿，新冒险的开始需要准备。
 
 这可能需要一段时间，不过只有你第一次玩某个版本时会这样。
@@ -1165,9 +1183,9 @@ Minecraft 版本号
 
 @HTML如果你使用 Microsoft 帐户或本地帐户，则无需在此配置，请<b>直接启动游戏</b>，当启动时将（如果必要）询问你相关的信息。\n「将此按钮拖动至启动器」已受支持，将按钮拖向启动器的任意位置并松蹄就好。
 
-# JavaSelector.External
+# JavaSelector.FailedToInstall
 
-我无法在此自动安装，请在打开的页面中自行下载安装～
+获取 Java 失败，请检查网络连接或目录权限。\n……或者手动安装 Java 并重新扫描。
 
 # JavaSelector.CustomAdd
 
@@ -1193,13 +1211,13 @@ Minecraft 版本号
 
 重新查找 Java 运行时
 
-# JavaSelector.GetNew
+# JavaSelector.BuiltIn
 
-下载 AdoptOpenJDK JRE 17（Minecraft 18 及以上必须使用）
+快速安装 Java 并自动设置
 
-# JavaSelector.GetOld
+# JavaSelector.HintBuiltIn
 
-下载 AdoptOpenJDK JRE V8（Minecraft 12 及以下必须使用）
+如果你尚未安装 Java 或者 Java 版本不对，并且想要现在重新安装 Java，可以使用下面的按钮。
 
 # JavaSelector.Warn32
 
@@ -3161,7 +3179,7 @@ Minecraft 默认位置
 
 # FirstRun.JavaConfigured
 
-Java 配置成功！
+已更新 Java 信息
 
 # FirstRun.Preparing
 
@@ -3169,15 +3187,19 @@ Java 配置成功！
 
 # FirstRun.FetchingJava
 
-正在获取 Java 安装包……
+正在获取 Java……
 
 # FirstRun.ConfiguringJava
 
-正在配置 Java……
+正在查询 Java 信息……
 
-# FirstRun.InstallingJava
+# FirstRun.JavaInstalled
 
-你现在可以使用此安装程序安装 Java……
+耶！我们已经成功安装了所需的 Java 版本！
+
+# FirstRun.FailedJava
+
+自动安装失败，稍后你可以前往「Java 选择器」页面重新安装。
 
 # Instruction.Welcome.0
 
@@ -3249,21 +3271,13 @@ END
 
 # Instruction.NoJava.2
 
-……当然，我早就想到会有这种问题……所以这里有两份 <Java 安装程序>，是为你准备的。
+……当然，我早就想到会有这种问题……没关系，这次就让我来吧。
 
 # Instruction.NoJava.3
 
-如果你 <不能 100% 确定> 你已经安装了合适的 Java，请使用它们完成安装。
+安装完 Java 后就可以去 <安装核心> 那里安装新的 Minecraft 咯！@@@MainMenuInstallCore
 
 # Instruction.NoJava.4
-
-好啦，祝你好运！安装完 Java 后就可以去 <安装核心> 那里安装新的 Minecraft 咯！@@@MainMenuInstallCore
-
-# Instruction.NoJava.5
-
-我们会在那里再见面的，再会！@@@MainMenuInstallCore
-
-# Instruction.NoJava.6
 
 END
 
