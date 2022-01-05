@@ -50,30 +50,34 @@ export async function loadModInfo(
       fd: d,
     });
     try {
-      const d = await zip.entryData(FABRIC_MOD_JSON);
+      const d2 = await zip.entryData(FABRIC_MOD_JSON);
       ret.loader = ModLoader.FABRIC;
-      loadFabricInfo(JSON.parse(escapeQuote(d.toString())), ret);
+      loadFabricInfo(JSON.parse(escapeQuote(d2.toString())), ret);
       void zip.close();
+      void fs.close(d);
       return ret;
     } catch {}
 
     try {
-      const d = await zip.entryData(META_INF + "/" + MODS_TOML);
+      const d2 = await zip.entryData(META_INF + "/" + MODS_TOML);
       ret.loader = ModLoader.FORGE;
-      loadTomlInfo(toml.parse(d.toString()), ret);
+      loadTomlInfo(toml.parse(d2.toString()), ret);
       void zip.close();
+      void fs.close(d);
       return ret;
     } catch {}
 
     try {
-      const d = await zip.entryData(MCMOD_INFO);
+      const d2 = await zip.entryData(MCMOD_INFO);
       ret.loader = ModLoader.FORGE;
-      loadMCMODInfo(JSON.parse(escapeQuote(d.toString())), ret);
+      loadMCMODInfo(JSON.parse(escapeQuote(d2.toString())), ret);
       void zip.close();
+      void fs.close(d);
       return ret;
     } catch {}
     // Bad Loader
     void zip.close();
+    void fs.close(d);
     return {
       fileName: container.getModJar(modJar),
       loader: ModLoader.UNKNOWN,
