@@ -82,6 +82,7 @@ export class Serial extends AbstractDownloader {
                 try {
                   await fs.remove(meta.savePath);
                 } catch {}
+                console.log(e);
                 throw e;
               }
             } else {
@@ -117,6 +118,7 @@ export class Serial extends AbstractDownloader {
               try {
                 await fs.remove(meta.savePath);
               } catch {}
+              console.log(e);
               throw e;
             }
           }
@@ -141,6 +143,7 @@ export class Serial extends AbstractDownloader {
           resolve(b);
         })
         .catch((e) => {
+          console.log(e);
           reject(e);
         });
     });

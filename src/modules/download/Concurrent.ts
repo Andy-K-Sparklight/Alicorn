@@ -4,7 +4,9 @@ import path from "path";
 import { submitWarn } from "../../renderer/Message";
 import { tr } from "../../renderer/Translator";
 import { basicHash } from "../commons/BasicHash";
+import { alterPath } from "../commons/FileUtil";
 import { getBoolean, getString } from "../config/ConfigSupport";
+import { getBasePath } from "../config/PathSolve";
 import {
   AbstractDownloader,
   DownloadMeta,
@@ -15,10 +17,20 @@ import { getFileWriteStream, getTimeoutController } from "./RainbowFetch";
 import { Serial } from "./Serial";
 import { getHash } from "./Validate";
 
-const TEMP_SAVE_PATH_ROOT = path.join(os.tmpdir(), "alicorn-download");
+let TEMP_SAVE_PATH_ROOT: string;
+let CONC_AVAILABLE = true;
 
 export async function initConcurrentDownloader(): Promise<void> {
-  await fs.ensureDir(TEMP_SAVE_PATH_ROOT);
+  TEMP_SAVE_PATH_ROOT = await alterPath(
+    path.join(os.tmpdir(), "alicorn-download"),
+    path.join(os.homedir(), "alicorn-download"),
+    path.join(getBasePath(), "alicorn-download")
+  );
+  if (TEMP_SAVE_PATH_ROOT.length > 0) {
+    await fs.ensureDir(TEMP_SAVE_PATH_ROOT);
+  } else {
+    CONC_AVAILABLE = false;
+  }
 }
 
 export class Concurrent extends AbstractDownloader {
@@ -32,7 +44,10 @@ export class Concurrent extends AbstractDownloader {
     meta: DownloadMeta,
     overrideTimeout?: boolean
   ): Promise<DownloadStatus> {
-    if (getString("download.primary-downloader") !== "Concurrent") {
+    if (
+      !CONC_AVAILABLE ||
+      getString("download.primary-downloader") !== "Concurrent"
+    ) {
       return await Serial.getInstance().downloadFile(meta);
     }
     try {
@@ -194,6 +209,7 @@ function downloadSingleChunk(
           try {
             await fs.remove(tmpSavePath);
           } catch {}
+          console.log(e);
           throw e;
         }
       } else {
@@ -205,6 +221,7 @@ function downloadSingleChunk(
         resolve();
       })
       .catch((e) => {
+        console.log(e);
         reject(e);
       });
   });
