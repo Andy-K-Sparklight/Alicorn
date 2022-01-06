@@ -37,7 +37,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { throttle } from "throttle-debounce";
 import { abortableBasicHash, basicHash } from "../modules/commons/BasicHash";
-import { isFileExist } from "../modules/commons/FileUtil";
+import { chkPermissions, isFileExist } from "../modules/commons/FileUtil";
 import { scanCoresIn } from "../modules/container/ContainerScanner";
 import {
   getAllContainerPaths,
@@ -539,6 +539,9 @@ async function validateDir(n: string): Promise<boolean> {
   }
   n = path.resolve(n);
   if (getAllContainerPaths().includes(n)) {
+    return false;
+  }
+  if (!(await chkPermissions(n))) {
     return false;
   }
   if (!(await isFileExist(n))) {

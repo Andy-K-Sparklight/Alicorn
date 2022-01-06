@@ -1,6 +1,45 @@
 import fs from "fs-extra";
 import path from "path";
 
+export async function alterPath(...pt: string[]): Promise<string> {
+  for (const p of pt) {
+    if (await chkPermissions(p)) {
+      return p;
+    }
+  }
+  return "";
+}
+
+async function chkDirExist(pt: string): Promise<boolean> {
+  try {
+    await fs.access(pt, fs.constants.F_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function chkPermissions(pt: string): Promise<boolean> {
+  while (!(await chkDirExist(pt))) {
+    const opt = pt;
+    pt = path.dirname(pt);
+    if (opt === pt) {
+      break;
+    }
+  }
+  try {
+    await fs.access(pt, fs.constants.R_OK);
+    await fs.access(pt, fs.constants.W_OK);
+    // Not meant to be executable
+    return true;
+  } catch {}
+  try {
+    await fs.chmod(pt, 0o777);
+    return true;
+  } catch {}
+  return false;
+}
+
 export async function isFileExist(pt: string): Promise<boolean> {
   if (pt.length === 0) {
     return false; // Null safe
