@@ -1,5 +1,6 @@
 import os from "os";
 import path from "path";
+import { alterPath } from "../modules/commons/FileUtil";
 import { getBoolean, set } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { createNewContainer } from "../modules/container/ContainerWrapper";
@@ -48,8 +49,9 @@ export async function completeFirstRun(): Promise<void> {
     await checkToGoAndDecideJump();
     return;
   }
+  await configureDefaultDirs();
   await createNewContainer(
-    getMCDefaultRootDir(),
+    await getMCDefaultRootDir(),
     tr("FirstRun.Default") || "Minecraft"
   );
   const ct = getContainer(tr("FirstRun.Default") || "Minecraft");
@@ -62,12 +64,17 @@ export async function completeFirstRun(): Promise<void> {
   set("first-run?", false);
 }
 
-function getMCDefaultRootDir(): string {
+async function getMCDefaultRootDir(): Promise<string> {
   switch (os.platform()) {
     case "win32":
-      return path.join(
-        process.env["APPDATA"] || path.join(os.homedir(), "AppData", "Roaming"),
-        ".minecraft"
+      return (
+        (await alterPath(
+          path.join(
+            process.env["APPDATA"] ||
+              path.join(os.homedir(), "AppData", "Roaming"),
+            ".minecraft"
+          )
+        )) || path.join(os.homedir(), ".minecraft")
       );
     case "darwin":
       return path.join(
@@ -123,5 +130,18 @@ async function setupFirstJavaCheckAndCheckToGo(): Promise<void> {
     startInst("HavePack");
     await waitInstDone();
     await checkToGoAndDecideJump();
+  }
+}
+
+export async function configureDefaultDirs(): Promise<void> {
+  const pff = await alterPath(path.join(os.homedir(), "alicorn", "pff-cache"));
+  const cx = await alterPath(path.join(os.homedir(), "alicorn", "asc-cache"));
+  if (pff.length > 0) {
+    set("pff.cache-root", pff);
+    localStorage.setItem("Edited.pff.cache-root", "1");
+  }
+  if (cx.length > 0) {
+    set("cx.shared-root", cx);
+    localStorage.setItem("Edited.cx.shared-root", "1");
   }
 }
