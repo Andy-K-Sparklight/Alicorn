@@ -3178,13 +3178,17 @@ Minecraft 默认位置
 
 自动安装失败，稍后你可以前往「Java 选择器」页面重新安装。
 
+# Instruction.Welcome.-1
+
+END
+
 # Instruction.Welcome.0
 
 欢迎使用 Alicorn！我是 Alicorn 开发者 <ThatRarityEG> 的 AI。在你使用 Alicorn 期间，我可以提供各种帮助。
 
 # Instruction.Welcome.1
 
-现在我将向你介绍 Alicorn 的 <几个基本操作>。动动你的鼠标，我们快速完成这个过程。
+现在我将向你介绍 Alicorn 的 <几个基本操作>。动动你的鼠标，我们快速完成这个过程。或者，你可以按下 <右键> 跳过引导。
 
 # Instruction.Welcome.2
 
@@ -3207,6 +3211,10 @@ Alicorn 默认安装了 Minecraft 1.17.1，可以在 <核心列表> 中直接启
 如果需要其它版本的核心，你需要 <安装核心>，然后再去启动。@@@MainMenuInstallCore
 
 # Instruction.Welcome.7
+
+END
+
+# Instruction.JavaSelector.-1
 
 END
 
@@ -3238,6 +3246,10 @@ Minecraft 1.18 及更高版本需要 <Java 17> 才能运行，1.17 需要 <Java 
 
 END
 
+# Instruction.NoJava.-1
+
+END
+
 # Instruction.NoJava.0
 
 让我看看……嗯，就快好了，不过还有一件重要的事情需要你处理……
@@ -3258,6 +3270,10 @@ END
 
 END
 
+# Instruction.HavePack.-1
+
+END
+
 # Instruction.HavePack.0
 
 （好像我还忘了一件事情……你是不是刚刚下载了一个 <整合包>？！）
@@ -3274,6 +3290,10 @@ END
 
 END
 
+# Instruction.JavaOK.-1
+
+END
+
 # Instruction.JavaOK.0
 
 好啦，我要说的也就这么多啦，你现在可以去 <安装核心> 那里安装新的 Minecraft～@@@MainMenuInstallCore
@@ -3283,6 +3303,10 @@ END
 我们会在那里再见面的，再会！@@@MainMenuInstallCore
 
 # Instruction.JavaOK.2
+
+END
+
+# Instruction.InstallCore.-1
 
 END
 
@@ -3322,6 +3346,10 @@ Fabric 和 Forge <不兼容>！使用 Fabric 的 Mod 只能通过 Fabric 加载�
 
 END
 
+# Instruction.LaunchPad.-1
+
+END
+
 # Instruction.LaunchPad.0
 
 欢迎来到 <启动台>！在这里你可以选择一个核心来启动……或者别的操作。
@@ -3339,6 +3367,10 @@ END
 就这么简单！现在继续你的旅程吧！
 
 # Instruction.LaunchPad.4
+
+END
+
+# Instruction.ReadyToLaunch.-1
 
 END
 

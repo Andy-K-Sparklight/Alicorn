@@ -63,8 +63,14 @@ function InstructionInside(props: {
         backgroundColor: "#21212190",
         zIndex: 10,
       }}
-      onClick={() => {
+      onClick={(e) => {
+        if (e.button === 2) {
+          return;
+        }
         setCurPage(curPage + 1);
+      }}
+      onContextMenu={() => {
+        setCurPage(-1);
       }}
     >
       <Box
