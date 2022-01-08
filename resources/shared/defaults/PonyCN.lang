@@ -1343,6 +1343,14 @@ Alicorn Ping ^
 
 这种几乎不带任何信息的 Ping 可以让 ThatRarityEG 估计活跃用户数\nAlicorn Ping 仅收集一条不可逆的、单向加密过的哈希用于区分不同客户端。
 
+# Options.features.cursepp.title
+
+Curseforge ++
+
+# Options.features.cursepp.desc
+
+使用 Alicorn Magic 回到过去调用 Curseforge 的 API，这样 Alicorn 就不用修改代码，只需要建造时间机器（认真
+
 # Options.features.tips-of-today.title
 
 Alicorn 使用技巧
@@ -1918,22 +1926,6 @@ Pff Mod 更新模式
 # Options.pff.upgrade-mode.Keep
 
 保留两者
-
-# Options.pff.first-source.title
-
-Pff 优先搜索源
-
-# Options.pff.first-source.desc
-
-选择优先搜索 Mod 的软件源 - 通常，当安装的 Mod 不是你想要的时候，切换源可能有用
-
-# Options.pff.first-source.Curseforge
-
-Curseforge
-
-# Options.pff.first-source.Modrinth
-
-Modrinth
 
 # Options.pff.cache-root.title
 
@@ -2586,29 +2578,13 @@ BMCLAPI
 
 最重要的 Minecraft 资源下载镜像，如果它都不能工作了……今天就休息下，和我聊聊天吧～
 
-# Utilities.NetCheck.SiteName.AlicornAccess
-
-Alicorn 轻松访问镜像
-
-# Utilities.NetCheck.SiteDesc.AlicornAccess
-
-轻松获取各种核心的版本列表，尤其是 Forge 的……但是，果真那么「轻松」吗？
-
-# Utilities.NetCheck.SiteName.CurseAPI
-
-CurseForge 接口
-
-# Utilities.NetCheck.SiteDesc.CurseAPI
-
-大多数 Mod 创作者将 Mod 发布在这里，此网站的连通性直接决定 Pff 和整合包安装器的工作效率
-
 # Utilities.NetCheck.SiteName.Modrinth
 
 Modrinth 接口
 
 # Utilities.NetCheck.SiteDesc.Modrinth
 
-未来主流 Mod 发布之处，此网站的连通性影响着 Pff 和整合包安装器的工作效率
+主流 Mod 发布之处，此网站的连通性影响着 Pff 和整合包安装器的工作效率
 
 # Utilities.NetCheck.SiteName.MojangAuth
 
@@ -3149,13 +3125,14 @@ Minecraft 默认位置
 
 # Statistics.Crash
 
-你可能不知道，游戏崩溃了 {Value} 次……
+游戏已经崩溃了 {Value} 次……
 
 # Statistics.Crash.As
 
 [{Value}>1000]……比 Alicorn 开发过程中的更多！
 ……但不会是最后一次……
 [{Value}==0]……好希望永远这样……
+我们的错（不是 Alicorn 的）。
 
 # Statistics.Launch
 
@@ -3399,7 +3376,7 @@ Alicorn 的开发道路上，收到过不少来自个人、组织和企业的帮
 
 # EOE.Orgs
 
-MCBBS（Minecraft 中文论坛）……这里是热爱 MC 群体的天堂。\nFree Software Foundation……我们一同为自由软件而奋斗。\nGitHub……软件在这里诞生。\nStack Overflow……它解决了我们很多的问题。\nNode.js……JS 因你而不同。\nTypeScript……从混乱到有序的快速通道。\nMinecraft Wiki……玩家所认可的最强 Minecraft Wiki。\nMaterial UI……只做组件，而且做得很好。\nWiki.vg……快速解码帐户验证的奥秘。\nElectron……不止于浏览器！\nWebpack……打包，优化，压缩。\nBMCLAPI……下载速度提升 80% 的最强镜像！\nUndici……这就是 WASM，这就是 Node！\nFabricMC……拥有未来的 Mod，开创新的时代。\nIris Shaders……更高更妙的光影和高清修复！\nGaz492 Curseforge API……它打开了一扇充满光明的大门。\nJsDelivr……走遍天涯海角，Web 始终在你身边。\nAdobe Source Hans Sans 和 Ubuntu Mono……渲染不够，字体来凑！\nAuthlib Injector……Yggdrasil 始终为你让一条路。SkinView3D……新一代皮肤 3D 显示。\nMLPVector……颜色，但也不是颜色。\nVSCodium……纯净、自由的高效前端 IDE。\nMDN Web Docs……Mozilla 的 Web 开发参考。\n\n……还有许多许多值得我们感谢，只是限于篇幅未能列举……
+MCBBS（Minecraft 中文论坛）……这里是热爱 MC 群体的天堂。\nFree Software Foundation……我们一同为自由软件而奋斗。\nGitHub……软件在这里诞生。\nStack Overflow……它解决了我们很多的问题。\nNode.js……JS 因你而不同。\nTypeScript……从混乱到有序的快速通道。\nMinecraft Wiki……玩家所认可的最强 Minecraft Wiki。\nMaterial UI……只做组件，而且做得很好。\nwiki.vg……快速解码帐户验证的奥秘。\nElectron……不止于浏览器！\nWebpack……打包，优化，压缩。\nBMCLAPI……下载速度提升 80% 的最强镜像！\nundici……这就是 WASM，这就是 Node！\nFabricMC……拥有未来的 Mod，开创新的时代。\nIris Shaders……更高更妙的光影和高清修复！\njsDelivr……走遍天涯海角，Web 始终在你身边。\nAdobe Source Hans Sans 和 Ubuntu Mono……渲染不够，字体来凑！\nAuthlib Injector……Yggdrasil 始终为你让一条路。SkinView3D……新一代皮肤 3D 显示。\nMLPVector……颜色，但也不是颜色。\nVSCodium……纯净、自由的高效前端 IDE。\nMDN Web Docs……Mozilla 的 Web 开发参考。\n\n……还有许多许多值得我们感谢，只是限于篇幅未能列举……
 
 # EOE.StoryTitle
 

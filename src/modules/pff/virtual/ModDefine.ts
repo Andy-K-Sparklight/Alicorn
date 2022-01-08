@@ -1,5 +1,6 @@
 export interface ModMeta {
-  provider: "Modrinth" | "Curseforge";
+  provider: "Modrinth" | "Curseforge" | "CursePlusPlus";
+  // ...CPP stands for a browser-based Curseforge API
   id: string;
   slug: string;
   displayName: string;

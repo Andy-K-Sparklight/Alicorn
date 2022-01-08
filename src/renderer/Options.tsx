@@ -25,11 +25,11 @@ import {
   Favorite,
   FirstPage,
   Home,
-  Hub,
   Inbox,
   InsertPhoto,
   Inventory2,
   Iso,
+  LockOpen,
   LockReset,
   Memory,
   MonitorHeart,
@@ -297,6 +297,11 @@ export function OptionsPage(): JSX.Element {
             bindConfig={"features.tips-of-today"}
           />
           <InputItem
+            icon={<LockOpen />}
+            type={ConfigType.BOOL}
+            bindConfig={"features.cursepp"}
+          />
+          <InputItem
             icon={<TextFormat />}
             type={ConfigType.BOOL}
             bindConfig={"features.saying"}
@@ -497,12 +502,6 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.RADIO}
             bindConfig={"pff.upgrade-mode"}
             choices={["Override", "Keep"]}
-          />
-          <InputItem
-            type={ConfigType.RADIO}
-            icon={<Hub />}
-            bindConfig={"pff.first-source"}
-            choices={["Curseforge", "Modrinth"]}
           />
           <InputItem
             type={ConfigType.DIR}

@@ -182,7 +182,7 @@ export interface ExtraAddonInfo extends AddonInfo {
 }
 
 export interface AddonInfo {
-  id: number;
+  id: number; // Sorry, but id cannot work now, we should use slug. In future, id will always be 0.
   name: string;
   websiteUrl: string;
   slug: string;
@@ -190,13 +190,6 @@ export interface AddonInfo {
   defaultFileId: number;
   thumbNail: string;
 }
-
-/*
-export interface Dependency {
-  id: number;
-  addonId: number;
-  fileId: number;
-}*/
 
 export interface File {
   id: number;

@@ -1,7 +1,9 @@
 import { outputFile, readFile } from "fs-extra";
 import { basicHash } from "../../commons/BasicHash";
 import { isFileExist } from "../../commons/FileUtil";
+import { getBoolean } from "../../config/ConfigSupport";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
+import { apiHasGone } from "../curseforge/CurseControllerFront";
 import { ModArtifact, ModMeta } from "./ModDefine";
 
 export type LockfileModMeta = ModMeta & {
@@ -38,6 +40,7 @@ async function fixLockfile(
   lockfile: Lockfile2,
   container: MinecraftContainer
 ): Promise<void> {
+  transformCursePlusPlus(lockfile);
   await Promise.allSettled(
     Object.keys(lockfile).map(async (name) => {
       if (
@@ -75,4 +78,18 @@ export function addToLockfile(
     selectedArtifact: artifact,
     insallDate: new Date().getTime(),
   };
+}
+
+function transformCursePlusPlus(lockfile: Lockfile2): void {
+  if (getBoolean("features.cursepp") && apiHasGone()) {
+    for (const [name, obj] of Object.entries(lockfile)) {
+      if (obj.provider === "Curseforge") {
+        obj.provider = "CursePlusPlus";
+        obj.id = obj.slug;
+        const newName = basicHash(obj.id) + "#" + basicHash(obj.id);
+        delete lockfile[name];
+        lockfile[newName] = obj;
+      }
+    }
+  }
 }

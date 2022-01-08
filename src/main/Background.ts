@@ -16,6 +16,10 @@ import {
   getNumber,
   loadConfig,
 } from "../modules/config/ConfigSupport";
+import {
+  bindCurseListeners,
+  closeCurseWindow,
+} from "../modules/pff/curseforge/CurseController";
 import { getMainWindow, getMainWindowUATrimmed } from "./Bootstrap";
 const LOGIN_START =
   "https://login.live.com/oauth20_authorize.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf";
@@ -25,6 +29,7 @@ const ERROR_REGEX = /(?<=\?error=)[^&]+/gi;
 const ERROR_DESCRIPTION = /(?<=&error_description=)[^&]+/gi;
 
 export function registerBackgroundListeners(): void {
+  bindCurseListeners();
   ipcMain.on("reload", () => {
     getMainWindow()?.webContents.removeAllListeners();
     app.relaunch();
@@ -48,6 +53,9 @@ export function registerBackgroundListeners(): void {
     } catch {}
     try {
       getMainWindow()?.destroy();
+    } catch {}
+    try {
+      closeCurseWindow();
     } catch {}
 
     console.log("All windows are closed.");

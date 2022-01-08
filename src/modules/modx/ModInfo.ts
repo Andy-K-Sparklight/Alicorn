@@ -53,7 +53,6 @@ export async function loadModInfo(
       const d2 = await zip.entryData(FABRIC_MOD_JSON);
       ret.loader = ModLoader.FABRIC;
       loadFabricInfo(JSON.parse(escapeQuote(d2.toString())), ret);
-      void zip.close();
       void fs.close(d);
       return ret;
     } catch {}
@@ -62,7 +61,6 @@ export async function loadModInfo(
       const d2 = await zip.entryData(META_INF + "/" + MODS_TOML);
       ret.loader = ModLoader.FORGE;
       loadTomlInfo(toml.parse(d2.toString()), ret);
-      void zip.close();
       void fs.close(d);
       return ret;
     } catch {}
@@ -71,12 +69,10 @@ export async function loadModInfo(
       const d2 = await zip.entryData(MCMOD_INFO);
       ret.loader = ModLoader.FORGE;
       loadMCMODInfo(JSON.parse(escapeQuote(d2.toString())), ret);
-      void zip.close();
       void fs.close(d);
       return ret;
     } catch {}
     // Bad Loader
-    void zip.close();
     void fs.close(d);
     return {
       fileName: container.getModJar(modJar),

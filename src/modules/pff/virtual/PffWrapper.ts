@@ -1,18 +1,20 @@
 import { copyFile, remove } from "fs-extra";
-import { getString } from "../../config/ConfigSupport";
+import { getBoolean, getString } from "../../config/ConfigSupport";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { DownloadMeta } from "../../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../../download/DownloadWrapper";
+import { apiHasGone } from "../curseforge/CurseControllerFront";
 import { getCachedMod, saveModFileAsCache } from "./Cache";
 import { loadLockfile, saveLockfile } from "./Lockfile";
 import {
   AbstractModResolver,
   CurseforgeModResolver,
+  CursePlusPlusModResolver,
   ModResolver,
   ModrinthModResolver,
 } from "./Resolver";
 
-const SLUG_SCOPE_REGEX = /(?<=@)(curseforge|modrinth)(?=:.+?)/i;
+const SLUG_SCOPE_REGEX = /(?<=@)(curseforge|modrinth|curseplusplus)(?=:.+?)/i;
 
 export async function fetchModByName(
   slug: string,
@@ -191,15 +193,23 @@ export function getResolvers(
     scope = scope.toLowerCase();
   }
   if (scope === "curseforge") {
-    return [new CurseforgeModResolver(slug)];
+    if (getBoolean("features.cursepp") && apiHasGone()) {
+      return [new CursePlusPlusModResolver(slug)];
+    } else {
+      return [new CurseforgeModResolver(slug)];
+    }
+  }
+  if (scope === "curseplusplus") {
+    return [new CursePlusPlusModResolver(slug)];
   }
   if (scope === "modrinth") {
     return [new ModrinthModResolver(slug)];
   }
-  if (getString("pff.first-source").toLowerCase() === "curseforge") {
-    return [new CurseforgeModResolver(slug), new ModrinthModResolver(slug)];
+  if (getBoolean("features.cursepp") && apiHasGone()) {
+    return [new ModrinthModResolver(slug), new CursePlusPlusModResolver(slug)];
+  } else {
+    return [new ModrinthModResolver(slug), new CurseforgeModResolver(slug)];
   }
-  return [new ModrinthModResolver(slug), new CurseforgeModResolver(slug)];
 }
 
 const PFF_FLAG = "Downloader.IsPff";
