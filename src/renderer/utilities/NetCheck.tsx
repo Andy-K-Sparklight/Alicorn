@@ -15,22 +15,12 @@ export function NetCheck(): JSX.Element {
       />
       <TestReachable site={"https://www.mcbbs.net/portal.php"} name={"MCBBS"} />
       <TestReachable
-        site={"https://versions.al.xuogroup.top/"}
-        name={"AlicornAccess"}
-      />
-      <TestReachable
         site={"https://download.mcbbs.net/mc/game/version_manifest.json"}
         name={"MCBBSDownload"}
       />
       <TestReachable
         site={"https://bmclapi2.bangbang93.com/mc/game/version_manifest.json"}
         name={"BMCLAPI"}
-      />
-      <TestReachable
-        site={
-          "https://addons-ecs.forgesvc.net/api/v2/addon/search?categoryId=0&gameId=432&searchFilter=foobar"
-        }
-        name={"CurseAPI"}
       />
       <TestReachable
         site={"https://api.modrinth.com/api/v1/mod?query=foobar"}
