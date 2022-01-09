@@ -13,6 +13,28 @@ const FIRST_MATCH_CODE = `(()=>{const e=document.querySelector("main > div > div
 const QUERY_CAPTCHA_CODE = `(()=>{const ele=document.querySelector("meta[name='captcha-bypass']");return !!ele;})()`;
 const GET_DOM_CONTENT_CODE = `(()=>{return document.querySelector("html").outerHTML})()`;
 
+let LOCK = false;
+const LOCK_LISTENERS: ((value: void | PromiseLike<void>) => void)[] = [];
+function acquireLock(): Promise<void> {
+  if (!LOCK) {
+    LOCK = true;
+    return Promise.resolve();
+  } else {
+    return new Promise<void>((res) => {
+      LOCK_LISTENERS.push(res);
+    });
+  }
+}
+
+function releaseLock(): void {
+  LOCK = false;
+  const bf = LOCK_LISTENERS.shift();
+  if (bf) {
+    LOCK = true;
+    bf();
+  }
+}
+
 export function closeCurseWindow(): void {
   cWindow?.destroy(); // Curse? Just give it a destroy! I don't care!
 }
@@ -43,7 +65,7 @@ function jmpPage(url: string): Promise<void> {
     const fun = async () => {
       if (!(await hasCAPTCHA()) && url === cWindow?.webContents.getURL()) {
         res();
-        cWindow?.webContents.off("did-finish-load", fun);
+        cWindow?.webContents.off("did-navigate", fun);
       }
     };
     cWindow?.webContents.on("did-navigate", fun);
@@ -55,12 +77,14 @@ function jmpPage(url: string): Promise<void> {
 // To get slug
 export async function queryModByName(query: string): Promise<string> {
   ensureCurseWindow();
+  await acquireLock();
   await jmpPage(
     `https://www.curseforge.com/minecraft/mc-mods/search?search=${encodeURIComponent(
       query
     )}`
   );
   const s = await codeQueryData(FIRST_MATCH_CODE);
+  releaseLock();
   const slug = s.split("/").pop();
   return slug || "";
 }
@@ -69,10 +93,12 @@ export async function queryModInfoBySlug(
   slug: string
 ): Promise<[ModMeta, ModArtifact[]]> {
   ensureCurseWindow();
+  await acquireLock();
   await jmpPage(`https://www.curseforge.com/minecraft/mc-mods/${slug}/files`);
   const dom =
     "<!DOCTYPE html>" + String(await codeQueryData(GET_DOM_CONTENT_CODE));
   // Pull the dom out
+  releaseLock();
   const $ = load(dom);
   const displayName = $(
     "main > div > header > div > div > div > div > h2"
@@ -91,7 +117,7 @@ export async function queryModInfoBySlug(
     if (lnk.startsWith("/")) {
       lnk = "https://www.curseforge.com" + lnk;
     }
-    const fid = lnk?.split("/").pop() || "";
+    const fid = lnk.split("/").pop() || "";
     const mv = er.find("td > div > div").text().trim();
     const ov =
       er
@@ -127,10 +153,12 @@ export async function deicdeFullInformation(
   artifact: ModArtifact
 ): Promise<ModArtifact> {
   ensureCurseWindow();
+  await acquireLock();
   await jmpPage(artifact.downloadUrl);
   const $ = load(
     "<!DOCTYPE html>" + (await codeQueryData(GET_DOM_CONTENT_CODE))
   );
+  releaseLock();
   const fName = $(
     "main > div > div > section > div > div > div > section > section > article > div > div:nth-child(1) > span:nth-last-child(1)"
   )
