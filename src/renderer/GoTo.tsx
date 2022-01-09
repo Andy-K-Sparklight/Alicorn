@@ -1,5 +1,4 @@
 import { ipcRenderer } from "electron";
-import { throttle } from "throttle-debounce";
 import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
 import { loadMirror } from "../modules/download/Mirror";
 import { waitUpdateFinished } from "../modules/selfupdate/Updator";
@@ -9,7 +8,7 @@ import { isInstBusy } from "./Instruction";
 
 const PAGES_HISTORY: string[] = [];
 const TITLE_HISTORY: string[] = [];
-export const jumpTo = throttle(500, (target: string, keepHistory = true) => {
+export function jumpTo(target: string, keepHistory = true): void {
   if (isInstBusy()) {
     return;
   }
@@ -32,7 +31,7 @@ export const jumpTo = throttle(500, (target: string, keepHistory = true) => {
     fadeOut(e);
     setTimeout(() => {
       window.scrollTo({ top: 0 });
-      ifLeavingContainerManagerThenSetContainerListDirty();
+      setContainerListDirty();
       window.location.hash = target;
       setTimeout(() => {
         fadeIn(e);
@@ -40,13 +39,9 @@ export const jumpTo = throttle(500, (target: string, keepHistory = true) => {
     }, ANIMATION_TIME);
   } else {
     window.scrollTo({ top: 0 });
-    ifLeavingContainerManagerThenSetContainerListDirty();
+    setContainerListDirty();
     window.location.hash = target;
   }
-});
-
-function ifLeavingContainerManagerThenSetContainerListDirty(): void {
-  setContainerListDirty();
 }
 
 function ifLeavingConfigThenReload(): void {
@@ -66,31 +61,29 @@ function ifLeavingConfigThenReload(): void {
   }
 }
 
-export const triggerSetPage = throttle(
-  500,
-  (page: string, _keepHistory = true) => {
-    if (isInstBusy()) {
-      return;
-    }
-    // @ts-ignore
-    if (window[CHANGE_PAGE_WARN]) {
-      window.dispatchEvent(
-        new CustomEvent("changePageWarnTitle", { detail: page })
-      );
-      return;
-    }
-    //if (keepHistory) {
-    TITLE_HISTORY.push(page);
-    //}
-    if (getBoolean("goto.animate")) {
-      setTimeout(() => {
-        document.dispatchEvent(new CustomEvent("setPage", { detail: page }));
-      }, 230); // Smaller than 250 to avoid init set change page warn
-    } else {
-      document.dispatchEvent(new CustomEvent("setPage", { detail: page }));
-    }
+export function triggerSetPage(page: string, _keepHistory = true): void {
+  if (isInstBusy()) {
+    return;
   }
-);
+  // @ts-ignore
+  if (window[CHANGE_PAGE_WARN]) {
+    window.dispatchEvent(
+      new CustomEvent("changePageWarnTitle", { detail: page })
+    );
+    return;
+  }
+  //if (keepHistory) {
+  TITLE_HISTORY.push(page);
+  //}
+  if (getBoolean("goto.animate")) {
+    setTimeout(() => {
+      document.dispatchEvent(new CustomEvent("setPage", { detail: page }));
+    }, 230); // Smaller than 250 to avoid init set change page warn
+  } else {
+    document.dispatchEvent(new CustomEvent("setPage", { detail: page }));
+  }
+}
+
 export function canGoBack(): boolean {
   return PAGES_HISTORY.length > 1 && TITLE_HISTORY.length > 1;
 }
