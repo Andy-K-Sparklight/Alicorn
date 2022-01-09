@@ -45,14 +45,13 @@ import {
   getBoolean,
   getString,
   saveConfig,
-  saveConfigSync,
 } from "../modules/config/ConfigSupport";
-import { saveGDT, saveGDTSync } from "../modules/container/ContainerUtil";
-import { saveVF, saveVFSync } from "../modules/container/ValidateRecord";
+import { saveGDT } from "../modules/container/ContainerUtil";
+import { saveVF } from "../modules/container/ValidateRecord";
 import { handleDnD } from "../modules/dnd/DnDCenter";
-import { saveJDT, saveJDTSync } from "../modules/java/JavaInfo";
+import { saveJDT } from "../modules/java/JavaInfo";
 import { waitUpdateFinished } from "../modules/selfupdate/Updator";
-import { saveServers, saveServersSync } from "../modules/server/ServerFiles";
+import { saveServers } from "../modules/server/ServerFiles";
 import { ContainerManager } from "./ContainerManager";
 import { CrashReportDisplay } from "./CrashReportDisplay";
 import { waitInstDone } from "./FirstRunSetup";
@@ -361,9 +360,12 @@ export function App(): JSX.Element {
                   onClick={() => {
                     remoteHideWindow();
                     waitUpdateFinished(() => {
-                      prepareToQuit();
-                      ipcRenderer.send("readyToClose");
-                      ipcRenderer.send("reload");
+                      intervalSaveData()
+                        .then(() => {
+                          ipcRenderer.send("readyToClose");
+                          ipcRenderer.send("reload");
+                        })
+                        .catch(() => {});
                     });
                   }}
                 >
@@ -711,32 +713,25 @@ function PagesDrawer(props: {
 
 export function remoteHideWindow(): void {
   console.log("Preparing to exit!");
+
   ipcRenderer.send("hideWindow");
 }
 
 function remoteCloseWindow(): void {
   console.log("Closing!");
-  prepareToQuit();
-  ipcRenderer.send("readyToClose");
-  ipcRenderer.send("closeWindow");
+  intervalSaveData()
+    .then(() => {
+      ipcRenderer.send("readyToClose");
+      ipcRenderer.send("closeWindow");
+    })
+    .catch(() => {});
 }
 
 function remoteOpenDevTools(): void {
   ipcRenderer.send("openDevTools");
 }
 
-export function prepareToQuit(): void {
-  console.log("Preparing to quit...");
-  saveConfigSync();
-  saveGDTSync();
-  saveJDTSync();
-  saveVFSync();
-  saveServersSync();
-  saveStatistics();
-  console.log("All chunks are saved.");
-}
-
-async function intervalSaveData(): Promise<void> {
+export async function intervalSaveData(): Promise<void> {
   console.log("Saving data...");
   await saveConfig();
   await saveGDT();

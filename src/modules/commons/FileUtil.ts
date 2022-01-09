@@ -45,7 +45,7 @@ export async function isFileExist(pt: string): Promise<boolean> {
     return false; // Null safe
   }
   try {
-    await fs.access(pt);
+    await fs.access(pt, fs.constants.F_OK);
     return true;
   } catch {
     return false;

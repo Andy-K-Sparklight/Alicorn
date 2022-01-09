@@ -3,7 +3,7 @@ import { throttle } from "throttle-debounce";
 import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
 import { loadMirror } from "../modules/download/Mirror";
 import { waitUpdateFinished } from "../modules/selfupdate/Updator";
-import { prepareToQuit, remoteHideWindow } from "./App";
+import { intervalSaveData, remoteHideWindow } from "./App";
 import { setContainerListDirty } from "./ContainerManager";
 import { isInstBusy } from "./Instruction";
 
@@ -50,17 +50,19 @@ function ifLeavingContainerManagerThenSetContainerListDirty(): void {
 }
 
 function ifLeavingConfigThenReload(): void {
-  if (window.location.hash.includes("Options")) {
-    void saveAndReloadMain();
-    void loadMirror();
-  }
   if (sessionStorage.getItem("Options.Reload") === "1") {
     sessionStorage.removeItem("Options.Reload");
     remoteHideWindow();
-    prepareToQuit();
     waitUpdateFinished(() => {
-      ipcRenderer.send("reload");
+      intervalSaveData()
+        .then(() => {
+          ipcRenderer.send("reload");
+        })
+        .catch(() => {});
     });
+  } else if (window.location.hash.includes("Options")) {
+    void saveAndReloadMain();
+    void loadMirror();
   }
 }
 

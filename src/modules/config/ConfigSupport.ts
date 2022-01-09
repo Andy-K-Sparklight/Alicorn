@@ -2,7 +2,6 @@ import { ipcRenderer } from "electron";
 import fs from "fs-extra";
 import os from "os";
 import path from "path";
-import { isFileExist } from "../commons/FileUtil";
 import { DEFAULTS_ROOT } from "./DataSupport";
 import { getBasePath } from "./PathSolve";
 
@@ -27,12 +26,21 @@ export function set(key: string, value: unknown): void {
 
 export function get(key: string, def: unknown): unknown {
   // @ts-ignore
-  let v = cachedConfig[key];
-  if (v === undefined && !key.endsWith("?")) {
-    // @ts-ignore
-    v = cachedConfig[key] = defaultConfig[key]; // Repair
-  }
+  const v = cachedConfig[key];
   return v === undefined ? def : v;
+}
+
+function fixConfig(
+  cur: Record<string, unknown>,
+  def: Record<string, unknown>
+): void {
+  const curKeys = Object.keys(cur);
+  const defKeys = Object.keys(def);
+  for (const k of defKeys) {
+    if (!k.endsWith("?") && !curKeys.includes(k)) {
+      cur[k] = def[k];
+    }
+  }
 }
 
 export function getBoolean(key: string, def = false): boolean {
@@ -58,13 +66,8 @@ export function getNumber(key: string, def = 0): number {
 
 export async function loadConfig(): Promise<void> {
   try {
-    if (!(await isFileExist(CONFIG_FILE))) {
-      await saveDefaultConfig();
-    }
     cachedConfig = JSON.parse((await fs.readFile(CONFIG_FILE)).toString());
-  } catch {
-    await saveDefaultConfig();
-  }
+  } catch {}
   try {
     defaultConfig = Object.freeze(
       JSON.parse(
@@ -75,7 +78,9 @@ export async function loadConfig(): Promise<void> {
     );
   } catch (e) {
     console.log(e);
+    return;
   }
+  fixConfig(cachedConfig, defaultConfig);
 }
 export function loadConfigSync(): void {
   try {
@@ -90,14 +95,16 @@ export function loadConfigSync(): void {
 
 export function saveConfigSync(): void {
   try {
-    fs.outputFileSync(CONFIG_FILE, JSON.stringify(cachedConfig, null, 4), {
+    const dat = JSON.stringify(cachedConfig, null, 4);
+    fs.outputFileSync(CONFIG_FILE, dat, {
       mode: 0o777,
     });
   } catch {}
 }
 
 export async function saveConfig(): Promise<void> {
-  await fs.outputFile(CONFIG_FILE, JSON.stringify(cachedConfig, null, 4), {
+  const dat = JSON.stringify(cachedConfig, null, 4);
+  await fs.outputFile(CONFIG_FILE, dat, {
     mode: 0o777,
   });
 }

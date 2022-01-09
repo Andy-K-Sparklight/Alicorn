@@ -76,7 +76,7 @@ import { makeStyles } from "@mui/styles";
 import { ipcRenderer, webFrame } from "electron";
 import { copy } from "fs-extra";
 import os from "os";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { DOH_CONFIGURE } from "../modules/commons/Constants";
 import {
   get,
@@ -84,7 +84,6 @@ import {
   getNumber,
   getString,
   parseNum,
-  saveConfig,
   set,
 } from "../modules/config/ConfigSupport";
 import { getActualDataPath } from "../modules/config/DataSupport";
@@ -635,11 +634,6 @@ function InputItem(props: {
   const [cSelect, setSelect] = useState<string>(
     getString(props.bindConfig, (props.choices || [""])[0] || "")
   );
-  useEffect(() => {
-    saveConfig()
-      .then(() => {})
-      .catch(() => {});
-  });
   let disabled = false;
   if (props.onlyOn) {
     if (os.platform() !== props.onlyOn) {
