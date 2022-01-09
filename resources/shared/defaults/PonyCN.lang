@@ -1425,7 +1425,7 @@ Bing 每日背景图
 
 # Options.theme.desc
 
-修改主题配色 - 带 * 的不利于视觉健康，请谨慎使用，当感觉眼睛不舒服的时候请切换到「褪色灰」以避免视力损伤。另请注意部分深色主题可能不利于操作。
+修改主题配色 - 带 * 的不利于视觉健康，请谨慎使用，另请注意部分深色主题可能不利于操作。
 
 # Options.theme.Default
 
@@ -1502,6 +1502,10 @@ Bing 每日背景图
 # Options.theme.OldPink
 
 灰色粉
+
+# Options.theme.PinkDark
+
+粉色灰
 
 # Options.theme.WhatGreenDark
 
