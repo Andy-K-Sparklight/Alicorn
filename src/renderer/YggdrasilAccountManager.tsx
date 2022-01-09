@@ -129,6 +129,7 @@ export function YggdrasilAccountManager(): JSX.Element {
           </IconButton>
         </Tooltip>
       </Box>
+
       <AddAccountWrapper
         open={isAdding}
         server={server}
@@ -351,77 +352,71 @@ function YggdrasilForm(props: {
   const [isRunning, isRunningUpdate] = useState(false);
   const [hasError, setError] = useState(false);
   return (
-    <ThemeProvider
-      theme={
-        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
-      }
+    <Dialog
+      open={props.open}
+      onClose={() => {
+        setError(false);
+        setPwd("");
+        isRunningUpdate(false);
+        props.onClose();
+      }}
     >
-      <Dialog
-        open={props.open}
-        onClose={() => {
-          setError(false);
-          setPwd("");
-          isRunningUpdate(false);
-          props.onClose();
-        }}
-      >
-        <DialogTitle>{tr("AccountManager.EnterPassword")}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {tr("AccountManager.EnterPasswordHint")}
-          </DialogContentText>
-          <TextField
-            className={classes.input}
-            autoFocus
-            margin={"dense"}
-            onChange={(e) => {
-              setPwd(e.target.value);
+      <DialogTitle>{tr("AccountManager.EnterPassword")}</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          {tr("AccountManager.EnterPasswordHint")}
+        </DialogContentText>
+        <TextField
+          className={classes.input}
+          autoFocus
+          margin={"dense"}
+          onChange={(e) => {
+            setPwd(e.target.value);
+          }}
+          label={tr("AccountManager.Password")}
+          type={"password"}
+          spellCheck={false}
+          color={"secondary"}
+          disabled={isRunning}
+          fullWidth
+          variant={"outlined"}
+          value={pwd}
+        />
+        {hasError ? (
+          <DialogContentText
+            sx={{
+              color: "#ff8400",
             }}
-            label={tr("AccountManager.Password")}
-            type={"password"}
-            spellCheck={false}
-            color={"secondary"}
-            disabled={isRunning}
-            fullWidth
-            variant={"outlined"}
-            value={pwd}
-          />
-          {hasError ? (
-            <DialogContentText
-              sx={{
-                color: "#ff8400",
-              }}
-              className={"smtxt"}
-            >
-              {tr("AccountManager.Failed")}
-            </DialogContentText>
-          ) : (
-            ""
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button
-            disabled={pwd.length === 0 || isRunning}
-            onClick={() => {
-              isRunningUpdate(true);
-              void (async () => {
-                setError(false);
-                const acc = copyAccount(props.account);
-                if (await acc.performAuth(pwd)) {
-                  props.updateAccount(acc);
-                } else {
-                  setError(true);
-                }
-                isRunningUpdate(false);
-                setPwd("");
-              })();
-            }}
+            className={"smtxt"}
           >
-            {tr("AccountManager.Validate")}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </ThemeProvider>
+            {tr("AccountManager.Failed")}
+          </DialogContentText>
+        ) : (
+          ""
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button
+          disabled={pwd.length === 0 || isRunning}
+          onClick={() => {
+            isRunningUpdate(true);
+            void (async () => {
+              setError(false);
+              const acc = copyAccount(props.account);
+              if (await acc.performAuth(pwd)) {
+                props.updateAccount(acc);
+              } else {
+                setError(true);
+              }
+              isRunningUpdate(false);
+              setPwd("");
+            })();
+          }}
+        >
+          {tr("AccountManager.Validate")}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 
@@ -454,130 +449,109 @@ function AddAccount(props: {
     };
   }, []);
   return (
-    <Box
-      onDrop={(e) => {
-        e.preventDefault();
-        const data = e.dataTransfer.getData("text/plain");
-        setIsCustom(true);
-        setAuthHost(
-          decodeURIComponent(
-            data.toString().split("authlib-injector:yggdrasil-server:")[1]
-          )
-        );
-      }}
-      onDragOver={(e) => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = "move";
+    <Dialog
+      open={props.open}
+      onClose={() => {
+        props.onClose();
+        setEmail("");
       }}
     >
-      <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-        <Dialog
-          open={props.open}
-          onClose={() => {
-            props.onClose();
-            setEmail("");
+      <DialogContent>
+        <DialogTitle>{tr("AccountManager.AddTitle")}</DialogTitle>
+        <TextField
+          autoFocus
+          className={classes.input}
+          margin={"dense"}
+          color={"secondary"}
+          onChange={(e) => {
+            setEmail(e.target.value);
           }}
-        >
-          <DialogContent>
-            <DialogTitle>{tr("AccountManager.AddTitle")}</DialogTitle>
-            <TextField
-              autoFocus
-              className={classes.input}
-              margin={"dense"}
-              color={"secondary"}
+          label={tr("AccountManager.Email")}
+          type={"email"}
+          spellCheck={false}
+          fullWidth
+          variant={"outlined"}
+          value={email}
+        />
+        <FormControlLabel
+          control={
+            <Switch
+              checked={isCustom}
               onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-              label={tr("AccountManager.Email")}
-              type={"email"}
-              spellCheck={false}
-              fullWidth
-              variant={"outlined"}
-              value={email}
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={isCustom}
-                  onChange={(e) => {
-                    setIsCustom(e.target.checked);
-                    if (!e.target.checked) {
-                      setNide(false);
-                    }
-                  }}
-                />
-              }
-              label={tr("AccountManager.UseCustomHost")}
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  disabled={!isCustom}
-                  checked={isCustom && isNide}
-                  onChange={(e) => {
-                    setNide(e.target.checked);
-                  }}
-                />
-              }
-              label={tr("AccountManager.UseNide8")}
-            />
-            <TextField
-              disabled={!isCustom}
-              className={classes.input}
-              margin={"dense"}
-              color={"secondary"}
-              onChange={(e) => {
-                setAuthHost(e.target.value);
-              }}
-              label={tr("AccountManager.Host")}
-              spellCheck={false}
-              value={authHost}
-              fullWidth
-              variant={"outlined"}
-            />
-            {isCustom ? (
-              <DialogContentText
-                sx={{
-                  color: "#ff8400",
-                }}
-                className={"smtxt"}
-              >
-                {tr("AccountManager.Warn")}
-              </DialogContentText>
-            ) : (
-              ""
-            )}
-          </DialogContent>
-          <DialogActions>
-            <Button
-              disabled={
-                email.length === 0 || (isCustom && authHost.trim().length === 0)
-              }
-              onClick={() => {
-                if (isCustom) {
-                  if (isNide) {
-                    props.handleNewAccount(new Nide8Account(email, authHost));
-                  } else {
-                    props.handleNewAccount(
-                      new AuthlibAccount(
-                        email,
-                        authHost.endsWith("/")
-                          ? authHost.slice(0, -1)
-                          : authHost
-                      )
-                    );
-                  }
-                } else {
-                  props.handleNewAccount(new MojangAccount(email));
+                setIsCustom(e.target.checked);
+                if (!e.target.checked) {
+                  setNide(false);
                 }
               }}
-            >
-              {tr("AccountManager.Next")}
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </ThemeProvider>
-    </Box>
+            />
+          }
+          label={tr("AccountManager.UseCustomHost")}
+        />
+        <FormControlLabel
+          control={
+            <Switch
+              disabled={!isCustom}
+              checked={isCustom && isNide}
+              onChange={(e) => {
+                setNide(e.target.checked);
+              }}
+            />
+          }
+          label={tr("AccountManager.UseNide8")}
+        />
+        <TextField
+          disabled={!isCustom}
+          className={classes.input}
+          margin={"dense"}
+          color={"secondary"}
+          onChange={(e) => {
+            setAuthHost(e.target.value);
+          }}
+          label={tr("AccountManager.Host")}
+          spellCheck={false}
+          value={authHost}
+          fullWidth
+          variant={"outlined"}
+        />
+        {isCustom ? (
+          <DialogContentText
+            sx={{
+              color: "#ff8400",
+            }}
+            className={"smtxt"}
+          >
+            {tr("AccountManager.Warn")}
+          </DialogContentText>
+        ) : (
+          ""
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button
+          disabled={
+            email.length === 0 || (isCustom && authHost.trim().length === 0)
+          }
+          onClick={() => {
+            if (isCustom) {
+              if (isNide) {
+                props.handleNewAccount(new Nide8Account(email, authHost));
+              } else {
+                props.handleNewAccount(
+                  new AuthlibAccount(
+                    email,
+                    authHost.endsWith("/") ? authHost.slice(0, -1) : authHost
+                  )
+                );
+              }
+            } else {
+              props.handleNewAccount(new MojangAccount(email));
+            }
+          }}
+        >
+          {tr("AccountManager.Next")}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 
@@ -591,7 +565,11 @@ function AddAccountWrapper(props: {
   const [isEmailOpen, isEmailOpenUpdate] = useState(true);
   const [tmpAccount, tmpAccountUpdate] = useState<Account>();
   return (
-    <>
+    <ThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
+    >
       <YggdrasilForm
         onClose={() => {
           isPwdOpenUpdate(false);
@@ -622,6 +600,6 @@ function AddAccountWrapper(props: {
           tmpAccountUpdate(a);
         }}
       />
-    </>
+    </ThemeProvider>
   );
 }
