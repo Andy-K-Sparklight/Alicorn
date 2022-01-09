@@ -9,7 +9,7 @@ import { ModArtifact, ModMeta } from "../virtual/ModDefine";
 
 let cWindow: BrowserWindow | null = null;
 let d = false;
-const FIRST_MATCH_CODE = `(()=>{const e=document.querySelector("main > div > div > ul > div > div:nth-child(1) > div > div.flex.flex-col > div > a");if(!e){return "";};return e.href||"";})()`;
+const FIRST_MATCH_CODE = `(()=>{const e=document.querySelector("main > div > div > ul > div > div:nth-child(1) > div > div > div > a");if(!e){return "";};return e.href||"";})()`;
 const QUERY_CAPTCHA_CODE = `(()=>{const ele=document.querySelector("meta[name='captcha-bypass']");return !!ele;})()`;
 const GET_DOM_CONTENT_CODE = `(()=>{return document.querySelector("html").outerHTML})()`;
 
