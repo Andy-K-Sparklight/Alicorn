@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Alicorn</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <link rel="preload" as="script" href="./Renderer.js" />
+    <link rel="preload" as="font" href="./SourceHanSansCN-Regular.otf" />
+    <link rel="preload" as="font" href="./UbuntuMono-Latin.woff2" />
+    <link rel="preload" as="script" href="./SkinView3D.js" />
+    <link rel="stylesheet" href="HardCodedStyles.css" type="text/css" />
+  </head>
+  <body>
+    <div
+      id="boot_stages"
+      style="position: fixed; left: auto; top: auto"
+      onclick="this.style.display='none'"
+    >
+      <p>
+        Alicorn Renderer has been loaded, and it's initializing.<br />
+        If this text won't disappear in a few seconds, considering fix or
+        reinstall Alicorn. <br />
+        Or click to hide me if Alicorn runs well.
+      </p>
+      <h3 id="boot_1">Boot Stage 1: Renderer First Show...</h3>
+      <h3 id="boot_2">Boot Stage 2: Renderer Script Load...</h3>
+      <h3 id="boot_3">Boot Stage 3: Pre Render...</h3>
+    </div>
+    <div id="root">
+      <div
+        style="
+          position: fixed;
+          background-color: #5d2391;
+          left: 0;
+          right: 0;
+          top: 0;
+          height: 64px;
+        "
+      ></div>
+    </div>
+    <p
+      id="preboot_log"
+      style="font-family: 'Ubuntu Mono', 'Courier New', Courier, monospace"
+    ></p>
+    <script>
+      if (process.env.ALICORN_REACT_DEVTOOLS) {
+        let { ipcRenderer } = require("electron");
+        if (ipcRenderer.sendSync("askInject")) {
+          let dev = document.createElement("script");
+          dev.src = "http://localhost:8097";
+          document.head.appendChild(dev);
+          dev = null;
+        }
+      }
+    </script>
+    <script>
+      window.logToScreen = (msg) => {
+        let e = document.getElementById("preboot_log");
+        if (e) {
+          e.innerHTML = e.innerHTML + msg;
+        }
+      };
+      window.clearLogScreen = () => {
+        document.getElementById("preboot_log").style.display = "none";
+      };
+      window.showLogScreen = () => {
+        document.getElementById("preboot_log").style.display = "none";
+      };
+      window.oncontextmenu = (e) => {
+        e.preventDefault();
+      };
+    </script>
+    <script src="Renderer.js" async></script>
+    <script src="SkinView3D.js" defer></script>
+  </body>
+</html>
