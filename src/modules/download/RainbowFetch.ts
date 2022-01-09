@@ -12,7 +12,12 @@ export function getGuardStream(
 ): PassThrough {
   let dog: WatchDog | null = null;
   const s = new PassThrough();
-  f.on("error", () => {
+  f.on("error", (e) => {
+    dog?.kill();
+    f.close();
+    s.emit("error", "Stream ERR: " + e);
+  });
+  f.on("finish", () => {
     dog?.kill();
     f.close();
   });
@@ -56,6 +61,10 @@ export function getFileWriteStream(
     dog?.kill();
     f.close(); // Close anyway
     thrower();
+  });
+  f.on("finish", () => {
+    dog?.kill();
+    f.close(); // Close anyway
   });
   return new WritableStream({
     write(chk) {
