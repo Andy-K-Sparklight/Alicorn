@@ -9,11 +9,15 @@ export async function moreAddonInfoBySlug(
   apiBase: string,
   extraParams: string,
   pageSize: string | number,
-  timeout: number
+  timeout: number,
+  modOnly = true
 ): Promise<ExtraAddonInfo[]> {
   const ACCESS_URL =
     apiBase +
-    `/api/v2/addon/search?gameId=${GAME_ID}&pageSize=${pageSize}&searchFilter=${slug}&sort=1${extraParams}`;
+    `/api/v2/addon/search?gameId=${GAME_ID}&pageSize=${pageSize}&searchFilter=${slug}&sort=1${extraParams}` +
+    modOnly
+      ? "&sectionId=6"
+      : "";
   try {
     const r = await pgot(ACCESS_URL, timeout);
     if (!(r instanceof Array)) {

@@ -117,7 +117,8 @@ export function PffVisual(): JSX.Element {
                                   "https://addons-ecs.forgesvc.net",
                                   "",
                                   getNumber("pff.page-size"),
-                                  getNumber("download.pff.timeout")
+                                  getNumber("download.pff.timeout"),
+                                  false
                                 );
                                 if (mounted.current) {
                                   setModpackSearchResults(r);

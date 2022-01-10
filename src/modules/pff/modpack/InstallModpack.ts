@@ -10,7 +10,6 @@ import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { addDoing } from "../../download/DownloadWrapper";
 import { getDefaultJavaHome, getJavaRunnable } from "../../java/JavaInfo";
 import { ProfileType } from "../../profile/WhatProfile";
-import { apiHasGone } from "../curseforge/CurseControllerFront";
 import {
   getFabricInstaller,
   getLatestFabricInstallerAndLoader,
@@ -247,7 +246,7 @@ async function installSingleMod(
   modLoader: "Fabric" | "Forge"
 ): Promise<void> {
   let mr: AbstractModResolver;
-  if ((typeof aid === "number" || typeof fid === "number") && !apiHasGone()) {
+  if (typeof aid === "number" || typeof fid === "number") {
     aid = aid.toString();
     fid = fid.toString();
     mr = new CurseforgeModResolver("");
@@ -338,6 +337,5 @@ export async function wrappedInstallModpack(
       if (!unpacked) {
         await removeTempFiles(container, source);
       }
-    // TODO
   }
 }

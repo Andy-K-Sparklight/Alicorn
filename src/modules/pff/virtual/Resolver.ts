@@ -1,5 +1,6 @@
 import { getNumber } from "../../config/ConfigSupport";
 import {
+  apiHasGone,
   deicdeFullInformation,
   queryModByName,
   queryModInfoBySlug,
@@ -82,7 +83,9 @@ export abstract class AbstractModResolver implements ModResolver {
  * @deprecated The API has been closed.
  */
 export class CurseforgeModResolver extends AbstractModResolver {
-  protected static CF_API_BASE = "https://addons-ecs.forgesvc.net";
+  protected CF_API_BASE = apiHasGone()
+    ? "https://auto.xmdhs.top/curse"
+    : "https://addons-ecs.forgesvc.net";
   protected insideCachedAddonInfo: AddonInfo | undefined;
   async resolveMod(): Promise<ModMeta> {
     if (this.cachedMeta) {
@@ -92,13 +95,13 @@ export class CurseforgeModResolver extends AbstractModResolver {
     if (this.mainId) {
       b = await lookupAddonInfo(
         this.mainId,
-        CurseforgeModResolver.CF_API_BASE,
+        this.CF_API_BASE,
         getNumber("download.pff.timeout")
       );
     } else {
       b = await getAddonInfoBySlug(
         this.slug,
-        CurseforgeModResolver.CF_API_BASE,
+        this.CF_API_BASE,
         "",
         getNumber("pff.page-size"),
         false,
@@ -117,7 +120,7 @@ export class CurseforgeModResolver extends AbstractModResolver {
   async searchMods(num: number): Promise<ModMeta[]> {
     const s = await moreAddonInfoBySlug(
       this.slug,
-      CurseforgeModResolver.CF_API_BASE,
+      this.CF_API_BASE,
       "",
       getNumber("pff.page-size"),
       getNumber("download.pff.timeout")
@@ -161,7 +164,7 @@ export class CurseforgeModResolver extends AbstractModResolver {
     const f = await lookupFileInfo(
       this.insideCachedAddonInfo,
       af,
-      CurseforgeModResolver.CF_API_BASE,
+      this.CF_API_BASE,
       getNumber("download.pff.timeout")
     );
     if (f) {
