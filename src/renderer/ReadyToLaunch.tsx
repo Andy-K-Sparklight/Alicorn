@@ -1008,7 +1008,9 @@ function AccountChoose(props: {
   } else {
     // ll = Object.keys(accountMap)[0] || "";
   }
-  const [sAccount, setAccount] = useState<string>(ll);
+  const [sAccount, setAccount] = useState<string>(
+    ll || Object.keys(accountMap.current).shift() || ""
+  );
   const [skinUrl, setSkinUrl] = useState("");
   const lastRequireSkinDate = useRef(new Date().getTime());
   useEffect(() => {
