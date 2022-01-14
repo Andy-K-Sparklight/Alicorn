@@ -5,8 +5,8 @@ import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { addDoing } from "../../download/DownloadWrapper";
 import { xgot } from "../../download/GotWrapper";
 import { ensureLibraries } from "../../launch/Ensurance";
-import { convertLibsByName } from "../../profile/LibrariesConvert";
 import { GameProfile } from "../../profile/GameProfile";
+import { convertLibsByName } from "../../profile/LibrariesConvert";
 import {
   FABRIC_VERSIONS_LOADER,
   generateFabricJarName,
@@ -14,8 +14,6 @@ import {
 import { makeTempLP } from "./ForgeInstall";
 
 const JAR_ARG = "-jar";
-const INSTALL_ARG =
-  "client -dir ${install_dir} -mcversion ${mc_version} -loader ${loader_version}";
 const PROFILE_JSON_SUFFIX = "/profile/json";
 
 export async function performFabricInstall(
@@ -51,10 +49,15 @@ function bootFabricInstaller(
   mcv: string,
   container: MinecraftContainer
 ) {
-  const fArg = INSTALL_ARG.replace("${install_dir}", container.resolvePath())
-    .replace("${mc_version}", mcv)
-    .replace("${loader_version}", fbv)
-    .split(" ");
+  const fArg = [
+    "client",
+    "-dir",
+    container.resolvePath(),
+    "-mcversion",
+    mcv,
+    "-loader",
+    fbv,
+  ];
   const fbJar = container.getTempFileStorePath(
     generateFabricJarName(basicHash(fbURL).slice(0, 8))
   );
