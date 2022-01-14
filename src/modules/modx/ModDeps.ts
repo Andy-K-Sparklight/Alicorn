@@ -27,51 +27,55 @@ export async function configureModDepChain(
   container: MinecraftContainer,
   loader: ModLoader
 ): Promise<UnmetDepUnit[]> {
-  // Return missing dep info
-  const all = await readdir(container.getModsRoot());
-  const collection: ModDepUnit[] = [];
-  await Promise.allSettled(
-    all.map(async (mf) => {
-      try {
-        const cur = container.getModJar(mf);
-        const t = await getModType(cur);
-        if (t === loader) {
-          switch (loader) {
-            case ModLoader.FABRIC:
-              collection.push(
-                ...(await unfoldFabricJar(cur)).map((c) => {
-                  return { ...c, origin: cur, loader: ModLoader.FABRIC };
-                })
-              );
-              break;
-            case ModLoader.FORGE:
-              collection.push(
-                ...(await unfoldForgeTomlJar(cur)).map((c) => {
-                  return { ...c, origin: cur, loader: ModLoader.FABRIC };
-                })
-              );
+  try {
+    // Return missing dep info
+    const all = await readdir(container.getModsRoot());
+    const collection: ModDepUnit[] = [];
+    await Promise.allSettled(
+      all.map(async (mf) => {
+        try {
+          const cur = container.getModJar(mf);
+          const t = await getModType(cur);
+          if (t === loader) {
+            switch (loader) {
+              case ModLoader.FABRIC:
+                collection.push(
+                  ...(await unfoldFabricJar(cur)).map((c) => {
+                    return { ...c, origin: cur, loader: ModLoader.FABRIC };
+                  })
+                );
+                break;
+              case ModLoader.FORGE:
+                collection.push(
+                  ...(await unfoldForgeTomlJar(cur)).map((c) => {
+                    return { ...c, origin: cur, loader: ModLoader.FABRIC };
+                  })
+                );
+            }
           }
+        } catch {}
+      })
+    );
+    const o: UnmetDepUnit[] = [];
+    const allProvided: Set<string> = new Set(
+      loader === ModLoader.FABRIC
+        ? ["fabric", "fabricloader", "minecraft", "java"]
+        : ["forge", "minecraft", "fml"]
+    );
+    collection.forEach((c) => {
+      allProvided.add(c.name);
+    });
+    for (const x of collection) {
+      for (const d of x.depends) {
+        if (!allProvided.has(d)) {
+          o.push({ name: x.name, origin: x.origin, missing: d });
         }
-      } catch {}
-    })
-  );
-  const o: UnmetDepUnit[] = [];
-  const allProvided: Set<string> = new Set(
-    loader === ModLoader.FABRIC
-      ? ["fabric", "fabricloader", "minecraft", "java"]
-      : ["forge", "minecraft", "fml"]
-  );
-  collection.forEach((c) => {
-    allProvided.add(c.name);
-  });
-  for (const x of collection) {
-    for (const d of x.depends) {
-      if (!allProvided.has(d)) {
-        o.push({ name: x.name, origin: x.origin, missing: d });
       }
     }
+    return o;
+  } catch {
+    return [];
   }
-  return o;
 }
 
 async function getModType(mod: string): Promise<ModLoader> {
