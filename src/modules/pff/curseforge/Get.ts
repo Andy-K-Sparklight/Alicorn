@@ -15,9 +15,7 @@ export async function moreAddonInfoBySlug(
   const ACCESS_URL =
     apiBase +
     `/api/v2/addon/search?gameId=${GAME_ID}&pageSize=${pageSize}&searchFilter=${slug}&sort=1${extraParams}` +
-    modOnly
-      ? "&sectionId=6"
-      : "";
+    (modOnly ? "&sectionId=6" : "");
   try {
     const r = await pgot(ACCESS_URL, timeout);
     if (!(r instanceof Array)) {
