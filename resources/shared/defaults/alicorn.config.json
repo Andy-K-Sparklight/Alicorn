@@ -68,5 +68,6 @@
   "jvm.extra-args": "-Dfile.encoding=UTF-8 -showversion -XX:+IgnoreUnrecognizedVMOptions -XX:+UnlockExperimentalVMOptions",
   "features.sword": true,
   "pff.upgrade-mode": "Override",
-  "cx.shared-root": ""
+  "cx.shared-root": "",
+  "interactive.cadance": false
 }

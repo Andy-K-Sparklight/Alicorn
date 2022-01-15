@@ -70,6 +70,10 @@ Pff 软件安装器
 
 终末之末
 
+# Cadance
+
+语音控制面板
+
 # System.EPERM
 
 Alicorn 无法读/写 {Target}，请检查此目录的权限，相关操作已经中止。
@@ -3394,6 +3398,65 @@ END
 
 END
 
+# Cadance.Desc
+
+Cadance（不是 Cadence）用于让 Alicorn 在本机上识别你的声音。\n感谢 Vosk 和 NLP.js，这一切在 Alicorn 中变得可能。
+
+# Cadance.NotCompatible
+
+Cadance 不支持 32 位 Windows 版本。
+
+# Cadance.Disabled
+
+Cadance 已安装，但没有启用。
+
+# Cadance.NotInstalled
+
+Cadance 尚未安装。
+
+# Cadance.Enabled
+
+Cadance 正在运行。
+
+# Cadance.Install
+
+快速安装 Cadance
+
+# Cadance.Installing
+
+正在安装 Cadance……保持网络畅通，这不会需要很久的。
+
+# Cadance.FaildToInstall
+
+安装失败，检查你的网络连接，或者稍后再试。
+
+# Cadance.Enable
+
+启用 Cadance
+
+# Cadance.Disable
+
+禁用 Cadance
+
+# Cadance.VoiceTest
+
+若要测试你的麦克风，请打开它，并说出：
+
+# Cadance.Voice
+
+识别结果：{Voice}
+
+# Cadance.TestWord
+
+我能吞下玻璃而不伤身体
+上次说这句话还是在上次
+这个是曹操小时候的头骨
+零一二三四五六七八九十
+
+# Cadance.VoiceTestHint
+
+小提示：识别结果不必 100% 准确，大致相同即可。Alicorn 能够理解你的意思。
+
 # EOE.Thanks
 
 鸣谢
@@ -3422,6 +3485,7 @@ MCBBS（Minecraft 中文论坛）……这里是热爱 MC 群体的天堂。\nFr
 
 这是 Alicorn 的前世今生的全部时间线。我知道不会有多少人会想了解我，但这不重要，这相当于我的自传吧……\n\n\
 至今 - 你现在看到的 Alicorn。\n\
+2022 年 1 月 15 日 - 这对于 Alicorn 来说是一个重要的夜晚，继触觉之后，Alicorn 拥有了听觉。\n\
 2021 年 8 月 20 日 - Alicorn 在 MCBBS 发布，从此走上新的旅程。\n\
 2021 年 8 月 ?? 日 - Alicorn 结束了最后的测试，并发布了第一个核心，从那时至今，几乎每周都会发布一个新版本。\n\
 2021 年 5 月 29 日 - Alicorn 被重新移动回 GitHub 继续 Alpha 阶段的测试和开发。\n\
@@ -3436,7 +3500,7 @@ MCBBS（Minecraft 中文论坛）……这里是热爱 MC 群体的天堂。\nFr
 2020 年 11 月 06 日 - EQL，和 Alicorn 关系最近的一个项目，进行了最后一次更新，那是一个插件系统，当时 ThatRarityEG 还没有想到，那就是 EQL 的最后一次提交。\n\
 2020 年 10 月 17 日 - EQL 达到了 1 分钟安装 Minecraft 的速度（1.15.2），相比现在的 Alicorn 只慢了 20s 左右。\n\
 2020 年 10 月 02 日 - 停止更新了两个月后的 RL 经历了一次重构，并将名称修改为 EQL。然而在此之后却不再有更大的功能更新，Mod 安装等功能从未在 EQL 实现过。\n\
-2020 年  8 月 29 日 - RL 发布了一张预览照片，那时还是使用 Bootstrap 和 HTML 编写的，安全性和代码效率都远不及 Alicorn。\n\
+2020 年  8 月 29 日 - RL 发布了一张预览照片，那时还是使用 Bootstrap 和 Vanilla HTML 编写的，安全性和代码效率都远不及 Alicorn。\n\
 2020 年  7 月 ?? 日 - ThatRarityEG 开始编写 RL，最早采用 Java 和 Swing，后来考虑到许多问题而改用 JS 和 Electron，Alicorn 多少也受到了这一点的影响。\n\
 2020 年  7 月  6 日 - ThatRarityEG 已知的最早的启动器开发记录，那时只提出了 Forge 安装的一个小问题。\n\
 

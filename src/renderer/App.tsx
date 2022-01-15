@@ -12,6 +12,7 @@ import {
   Info,
   ManageAccounts,
   Menu,
+  Mic,
   PowerSettingsNew,
   Refresh,
   Settings,
@@ -67,6 +68,7 @@ import { InstallCore } from "./InstallCore";
 import { Instruction, isInstBusy, startInst } from "./Instruction";
 import { JavaSelector } from "./JavaSelector";
 import { LaunchPad } from "./LaunchPad";
+import { CadanceControlPanel, terminateCadanceProc } from "./linkage/Cadance";
 import { YNDialog2 } from "./OperatingHint";
 import { OptionsPage } from "./Options";
 import { PffFront } from "./PffFront";
@@ -526,6 +528,7 @@ export function App(): JSX.Element {
             path={"/AccountManager/:adding?/:server?"}
             component={YggdrasilAccountManager}
           />
+          <Route path={"/Cadance"} component={CadanceControlPanel} />
           <Route path={"/JavaSelector"} component={JavaSelector} />
           <Route path={"/Options"} component={OptionsPage} />
           <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
@@ -665,10 +668,11 @@ const PAGES_ICONS_MAP: Record<string, JSX.Element> = {
   ContainerManager: <AllInbox />,
   JavaSelector: <ViewModule />,
   AccountManager: <AccountCircle />,
-  ServerList: <Dns />,
+  Cadance: <Mic />,
   UtilitiesIndex: <Handyman />,
   Statistics: <ShowChart />,
   Options: <Settings />,
+  ServerList: <Dns />,
   Version: <Info />,
   TheEndingOfTheEnd: <ImportContacts />,
 };
@@ -713,7 +717,6 @@ function PagesDrawer(props: {
 
 export function remoteHideWindow(): void {
   console.log("Preparing to exit!");
-
   ipcRenderer.send("hideWindow");
 }
 
@@ -739,6 +742,7 @@ export async function intervalSaveData(): Promise<void> {
   await saveVF();
   await saveServers();
   saveStatistics();
+  terminateCadanceProc();
   console.log("All chunks are saved.");
 }
 

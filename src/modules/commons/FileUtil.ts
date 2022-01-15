@@ -19,7 +19,10 @@ async function chkDirExist(pt: string): Promise<boolean> {
   }
 }
 
-export async function chkPermissions(pt: string): Promise<boolean> {
+export async function chkPermissions(
+  pt: string,
+  exec = false
+): Promise<boolean> {
   while (!(await chkDirExist(pt))) {
     const opt = pt;
     pt = path.dirname(pt);
@@ -30,6 +33,9 @@ export async function chkPermissions(pt: string): Promise<boolean> {
   try {
     await fs.access(pt, fs.constants.R_OK);
     await fs.access(pt, fs.constants.W_OK);
+    if (exec) {
+      await fs.access(pt, fs.constants.X_OK);
+    }
     // Not meant to be executable
     return true;
   } catch {}
