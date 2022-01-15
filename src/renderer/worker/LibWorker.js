@@ -24,7 +24,7 @@ onmessage = (e) => {
 };
 
 addHandler("POST", () => {
-  return "...Magic!";
+  console.log("...Magic! Hello from worker. I'm ready!");
 });
 
 addHandler("Close", () => {

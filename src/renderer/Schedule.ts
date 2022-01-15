@@ -44,7 +44,7 @@ export async function initWorker(): Promise<void> {
   };
   WORKER.addEventListener("message", fun);
   console.log("Checking worker. Friendship is...");
-  console.log(await invokeWorker("POST"));
+  await invokeWorker("POST");
   WORKER.onerror = (e) => {
     submitError(e.message);
     console.log(e.message);
