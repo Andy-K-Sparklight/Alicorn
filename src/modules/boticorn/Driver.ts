@@ -50,6 +50,9 @@ export async function initBoticorn(): Promise<void> {
         }
         if (e instanceof CustomEvent) {
           const cab = (await sendToBot(String(e.detail))).answer;
+          if (!cab) {
+            return;
+          }
           if (!cab.startsWith("AL:")) {
             submitInfo(cab);
           } else {
