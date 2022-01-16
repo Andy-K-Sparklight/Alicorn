@@ -231,7 +231,7 @@ export async function detectCadance(): Promise<boolean> {
 function xzDecompressFile(source: string): Promise<void> {
   return new Promise<void>((res, rej) => {
     if (os.platform() === "win32") {
-      execFile(getPathInDefaults("xzdec.ald"), [source], (e) => {
+      execFile(getPathInDefaults("xz.ald"), ["-d", source], (e) => {
         if (e) {
           rej(e);
         } else {
