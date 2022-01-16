@@ -3398,6 +3398,10 @@ END
 
 END
 
+# Cadance.InstallOK
+
+Cadance 已成功安装，现在试试吧！
+
 # Cadance.Desc
 
 Cadance（不是 Cadence）用于让 Alicorn 在本机上识别你的声音。\n感谢 Vosk 和 NLP.js，这一切在 Alicorn 中变得可能。
@@ -3424,7 +3428,7 @@ Cadance 正在运行。
 
 # Cadance.Installing
 
-正在安装 Cadance……保持网络畅通，这不会需要很久的。
+正在安装 Cadance……保持网络畅通，这不会需要很久的（约一分钟）。
 
 # Cadance.FaildToInstall
 
@@ -3450,7 +3454,6 @@ Cadance 正在运行。
 
 我能吞下玻璃而不伤身体
 上次说这句话还是在上次
-这个是曹操小时候的头骨
 零一二三四五六七八九十
 
 # Cadance.VoiceTestHint

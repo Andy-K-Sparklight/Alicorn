@@ -1,4 +1,5 @@
 import { Button, Container, Typography } from "@mui/material";
+import { ThemeProvider } from "@mui/styles";
 import cp, { execFile } from "child_process";
 import { tar } from "compressing";
 import { remove } from "fs-extra";
@@ -11,7 +12,12 @@ import { getPathInDefaults } from "../../modules/config/DataSupport";
 import { getBasePath } from "../../modules/config/PathSolve";
 import { DownloadMeta } from "../../modules/download/AbstractDownloader";
 import { Serial } from "../../modules/download/Serial";
-import { submitError, submitInfo } from "../Message";
+import { submitError, submitInfo, submitSucc } from "../Message";
+import {
+  ALICORN_DEFAULT_THEME_DARK,
+  ALICORN_DEFAULT_THEME_LIGHT,
+  isBgDark,
+} from "../Renderer";
 import { useTextStyles } from "../Stylex";
 import { randsl, tr } from "../Translator";
 
@@ -53,83 +59,91 @@ export function CadanceControlPanel(): JSX.Element {
     })();
   }, []);
   return (
-    <Container>
-      <Typography className={classes.secondText} gutterBottom>
-        {tr("Cadance.Desc")}
-      </Typography>
-      <br />
-      <Typography className={classes.secondText} gutterBottom>
-        {tr(
-          compatible
-            ? available
-              ? enabled
-                ? "Cadance.Enabled"
-                : "Cadance.Disabled"
-              : "Cadance.NotInstalled"
-            : "Cadance.NotCompatible"
-        )}
-      </Typography>
-      <br />
-      {compatible ? (
-        <Button
-          color={"primary"}
-          variant={"contained"}
-          disabled={isRunning}
-          onClick={async () => {
-            if (available) {
-              if (enabled) {
-                set("interactive.cadance", false);
-                setEnabled(false);
-                terminateCadanceProc();
-              } else {
-                set("interactive.cadance", true);
-                setEnabled(true);
-                await startCadanceProc();
-              }
-            } else {
-              try {
-                setRunning(true);
-                submitInfo(tr("Cadance.Installing"));
-                await enableCadanceFeature();
-                set("interactive.cadance", true);
-                setEnabled(true);
-                await startCadanceProc();
-              } catch {
-                submitError(tr("Cadance.FailedToInstall"));
-              }
-            }
-          }}
-        >
+    <ThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
+    >
+      <Container>
+        <Typography className={classes.secondText} gutterBottom>
+          {tr("Cadance.Desc")}
+        </Typography>
+        <br />
+        <Typography className={classes.secondText} gutterBottom>
           {tr(
-            available
-              ? enabled
-                ? "Cadance.Disable"
-                : "Cadance.Enable"
-              : "Cadance.Install"
+            compatible
+              ? available
+                ? enabled
+                  ? "Cadance.Enabled"
+                  : "Cadance.Disabled"
+                : "Cadance.NotInstalled"
+              : "Cadance.NotCompatible"
           )}
-        </Button>
-      ) : (
-        ""
-      )}
-      {enabled ? (
-        <Container sx={{ textAlign: "center" }}>
-          <Typography className={classes.secondText}>
-            {tr("Cadance.VoiceTest")}
-          </Typography>
-          <br />
-          <Typography className={classes.firstText}>{word}</Typography>
-          <Typography className={classes.secondText}>
-            {tr("Cadance.Voice", `Voice=${voice}`)}
-          </Typography>
-          <br />
-          <Typography className={classes.secondText}>
-            {tr("Cadance.VoiceTestHint")}
-          </Typography>
-        </Container>
-      ) : (
-        ""
-      )}
-    </Container>
+        </Typography>
+        <br />
+        {compatible ? (
+          <Button
+            color={"primary"}
+            variant={"contained"}
+            disabled={isRunning}
+            onClick={async () => {
+              if (available) {
+                if (enabled) {
+                  set("interactive.cadance", false);
+                  setEnabled(false);
+                  terminateCadanceProc();
+                } else {
+                  set("interactive.cadance", true);
+                  setEnabled(true);
+                  await startCadanceProc();
+                }
+              } else {
+                try {
+                  setRunning(true);
+                  submitInfo(tr("Cadance.Installing"));
+                  await enableCadanceFeature();
+                  set("interactive.cadance", true);
+                  setEnabled(true);
+                  setAvailable(true);
+                  await startCadanceProc();
+                  submitSucc(tr("Cadance.InstallOK"));
+                } catch {
+                  submitError(tr("Cadance.FailedToInstall"));
+                }
+              }
+            }}
+          >
+            {tr(
+              available
+                ? enabled
+                  ? "Cadance.Disable"
+                  : "Cadance.Enable"
+                : "Cadance.Install"
+            )}
+          </Button>
+        ) : (
+          ""
+        )}
+        {available && enabled ? (
+          <Container sx={{ textAlign: "center" }}>
+            <Typography className={classes.secondText}>
+              {tr("Cadance.VoiceTest")}
+            </Typography>
+            <br />
+            <Typography className={classes.firstText}>{word}</Typography>
+            <Typography className={classes.secondText}>
+              {tr("Cadance.Voice", `Voice=${voice}`)}
+            </Typography>
+            <br />
+            <Typography className={classes.secondText}>
+              {tr("Cadance.VoiceTestHint")}
+            </Typography>
+          </Container>
+        ) : (
+          ""
+        )}
+      </Container>
+    </ThemeProvider>
   );
 }
 
@@ -165,7 +179,7 @@ export async function startCadanceProc(): Promise<void> {
           if (pj.length > 1) {
             // Partial will be dropped
             window.dispatchEvent(
-              new CustomEvent("CadanceInput", { detail: obj.text })
+              new CustomEvent("CadanceInput", { detail: pj })
             );
           }
         }
