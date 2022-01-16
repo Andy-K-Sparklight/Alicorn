@@ -69,5 +69,6 @@
   "features.sword": true,
   "pff.upgrade-mode": "Override",
   "cx.shared-root": "",
-  "interactive.cadance": false
+  "interactive.cadance": false,
+  "interactive.boticorn": false
 }

@@ -45,7 +45,7 @@ export function CadanceControlPanel(): JSX.Element {
   useEffect(() => {
     const fun = (e: Event) => {
       if (e instanceof CustomEvent) {
-        setVoice(String(e.detail));
+        setVoice(String(e.detail).replaceAll(" ", ""));
       }
     };
     window.addEventListener("CadanceInput", fun);
@@ -173,9 +173,7 @@ export async function startCadanceProc(): Promise<void> {
       try {
         const obj = JSON.parse(inp);
         if (obj.text) {
-          const pj = obj.text
-            .replaceAll(" ", "")
-            .replaceAll(/\[[A-Z]{3}\]/g, "");
+          const pj = obj.text.replaceAll(/\[[A-Z]{3}\]/g, "");
           if (pj.length > 1) {
             // Partial will be dropped
             window.dispatchEvent(

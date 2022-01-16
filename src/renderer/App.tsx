@@ -14,6 +14,7 @@ import {
   Menu,
   Mic,
   PowerSettingsNew,
+  Psychology,
   Refresh,
   Settings,
   ShowChart,
@@ -41,6 +42,7 @@ import { makeStyles } from "@mui/styles";
 import { ipcRenderer } from "electron";
 import React, { useEffect, useRef, useState } from "react";
 import { Route } from "react-router-dom";
+import { registerFunc } from "../modules/boticorn/FTable";
 import { safeGet } from "../modules/commons/Null";
 import {
   getBoolean,
@@ -68,6 +70,7 @@ import { InstallCore } from "./InstallCore";
 import { Instruction, isInstBusy, startInst } from "./Instruction";
 import { JavaSelector } from "./JavaSelector";
 import { LaunchPad } from "./LaunchPad";
+import { Boticorn } from "./linkage/Boticorn";
 import { CadanceControlPanel, terminateCadanceProc } from "./linkage/Cadance";
 import { YNDialog2 } from "./OperatingHint";
 import { OptionsPage } from "./Options";
@@ -529,6 +532,7 @@ export function App(): JSX.Element {
             component={YggdrasilAccountManager}
           />
           <Route path={"/Cadance"} component={CadanceControlPanel} />
+          <Route path={"/Boticorn"} component={Boticorn} />
           <Route path={"/JavaSelector"} component={JavaSelector} />
           <Route path={"/Options"} component={OptionsPage} />
           <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
@@ -653,6 +657,7 @@ export function App(): JSX.Element {
   );
 }
 
+registerFunc({ exitApp });
 async function exitApp(): Promise<void> {
   remoteHideWindow();
   await ipcRenderer.invoke("markLoginItem", getBoolean("auto-launch"));
@@ -669,6 +674,7 @@ const PAGES_ICONS_MAP: Record<string, JSX.Element> = {
   JavaSelector: <ViewModule />,
   AccountManager: <AccountCircle />,
   Cadance: <Mic />,
+  Boticorn: <Psychology />,
   UtilitiesIndex: <Handyman />,
   Statistics: <ShowChart />,
   Options: <Settings />,
@@ -677,7 +683,7 @@ const PAGES_ICONS_MAP: Record<string, JSX.Element> = {
   TheEndingOfTheEnd: <ImportContacts />,
 };
 
-const BETAS = ["ServerList"];
+const BETAS = ["ServerList", "Boticorn", "Cadance"];
 
 function PagesDrawer(props: {
   open: boolean;

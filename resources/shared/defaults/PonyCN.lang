@@ -74,6 +74,10 @@ Pff 软件安装器
 
 语音控制面板
 
+# Boticorn
+
+Alicorn 助理
+
 # System.EPERM
 
 Alicorn 无法读/写 {Target}，请检查此目录的权限，相关操作已经中止。
@@ -3404,7 +3408,7 @@ Cadance 已成功安装，现在试试吧！
 
 # Cadance.Desc
 
-Cadance（不是 Cadence）用于让 Alicorn 在本机上识别你的声音。\n感谢 Vosk 和 NLP.js，这一切在 Alicorn 中变得可能。
+Cadance（不是 Cadence）用于让 Alicorn 在本机上识别你的声音。\n感谢 Vosk，这一切在 Alicorn 中变得可能。
 
 # Cadance.NotCompatible
 
@@ -3459,6 +3463,50 @@ Cadance 正在运行。
 # Cadance.VoiceTestHint
 
 小提示：识别结果不必 100% 准确，大致相同即可。Alicorn 能够理解你的意思。
+
+# Boticorn.Desc
+
+Alicorn 助理（Boticorn）可以允许你使用自然语言和 Alicorn 交流，并处理你的命令。搭配语音识别，效果更好！\nNLP 由 NLP.js 强力驱动，AI 由 ThatRarityEG 注入情感……别再犹豫，现在就把新助理抱回家吧～\n\n（小提示：助理 AI 会时常更新，因此要多和 TA 交流哦）
+
+# Boticorn.Enabled
+
+Alicorn 助理 AI 已启用。
+
+# Boticorn.Disabled
+
+Alicorn 助理 AI 可用，但未启用。
+
+# Boticorn.NotInstalled
+
+Alicorn 助理 AI 尚未安装。
+
+# Boticorn.InstallOK
+
+AI 同步成功！
+
+# Boticorn.FailedToInstall
+
+AI 同步失败，检查网络连接，或者稍后再试。
+
+# Boticorn.Installing
+
+正在和 Boticorn 同步 AI，请稍等，马上就好……
+
+# Boticorn.Enable
+
+启用 Alicorn 助理
+
+# Boticorn.Disable
+
+禁用 Alicorn 助理
+
+# Boticorn.Install
+
+安装 Alicorn 助理 AI
+
+# Boticorn.Hint
+
+小提示：目前 Alicorn 助理仅能通过 Cadance 调用，打开你的麦克风，并说「你好！」试试吧！
 
 # EOE.Thanks
 

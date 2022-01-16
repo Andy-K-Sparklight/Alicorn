@@ -84,6 +84,7 @@ const RendererDev = {
   entry: {
     Renderer: "./src/renderer/Renderer.tsx",
     LibWorker: "./src/renderer/worker/LibWorker.js",
+    BotWorker: "./src/modules/boticorn/BotWorker.js",
   },
   output: {
     filename: "[name].js",

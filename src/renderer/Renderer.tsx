@@ -10,6 +10,7 @@ import pkg from "../../package.json";
 import { reloadAccounts } from "../modules/auth/AccountUtil";
 import { prepareAJ } from "../modules/auth/AJHelper";
 import { prepareND } from "../modules/auth/NDHelper";
+import { initBoticorn } from "../modules/boticorn/Driver";
 import {
   getBoolean,
   getNumber,
@@ -204,6 +205,7 @@ try {
     void completeFirstRun(); // Not blocking
     void todayPing();
     void startCadanceProc();
+    void initBoticorn();
 
     // Heavy works and minor works
     await Promise.allSettled([initVF(), preCacheJavaInfo()]);
