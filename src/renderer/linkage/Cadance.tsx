@@ -1,8 +1,15 @@
-import { Button, Container, Typography } from "@mui/material";
-import { ThemeProvider } from "@mui/styles";
+import {
+  Box,
+  Button,
+  Container,
+  TextField,
+  ThemeProvider,
+  Typography,
+} from "@mui/material";
 import cp, { execFile } from "child_process";
 import { tar } from "compressing";
 import { remove } from "fs-extra";
+import { decode } from "iconv-lite";
 import os from "os";
 import { join } from "path";
 import React, { useEffect, useState } from "react";
@@ -37,6 +44,10 @@ export function CadanceControlPanel(): JSX.Element {
   const [voice, setVoice] = useState("");
   const [word, setWord] = useState(randsl("Cadance.TestWord"));
   const compatible = !(os.platform() === "win32" && os.arch() !== "x64");
+  const [encoding, setEncoding] = useState(
+    localStorage.getItem(OVERRIDE_ENCODING_KEY) ||
+      (os.platform() === "win32" ? "gbk" : "utf-8")
+  );
   useEffect(() => {
     if (voice === word) {
       setWord(randsl("Cadance.TestWord"));
@@ -58,92 +69,119 @@ export function CadanceControlPanel(): JSX.Element {
       setAvailable(await detectCadance());
     })();
   }, []);
+  console.log(isBgDark());
   return (
-    <ThemeProvider
-      theme={
-        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
-      }
-    >
-      <Container>
-        <Typography className={classes.secondText} gutterBottom>
-          {tr("Cadance.Desc")}
-        </Typography>
-        <br />
-        <Typography className={classes.secondText} gutterBottom>
-          {tr(
-            compatible
-              ? available
-                ? enabled
-                  ? "Cadance.Enabled"
-                  : "Cadance.Disabled"
-                : "Cadance.NotInstalled"
-              : "Cadance.NotCompatible"
-          )}
-        </Typography>
-        <br />
-        {compatible ? (
-          <Button
-            color={"primary"}
-            variant={"contained"}
-            disabled={isRunning}
-            onClick={async () => {
-              if (available) {
-                if (enabled) {
-                  set("interactive.cadance", false);
-                  setEnabled(false);
-                  terminateCadanceProc();
-                } else {
-                  set("interactive.cadance", true);
-                  setEnabled(true);
-                  await startCadanceProc();
-                }
-              } else {
-                try {
-                  setRunning(true);
-                  submitInfo(tr("Cadance.Installing"));
-                  await enableCadanceFeature();
-                  set("interactive.cadance", true);
-                  setEnabled(true);
-                  setAvailable(true);
-                  await startCadanceProc();
-                  submitSucc(tr("Cadance.InstallOK"));
-                } catch {
-                  submitError(tr("Cadance.FailedToInstall"));
-                }
-              }
-            }}
-          >
+    <Container>
+      <ThemeProvider
+        theme={
+          isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+        }
+      >
+        <Box>
+          <Typography className={classes.secondText} gutterBottom>
+            {tr("Cadance.Desc")}
+          </Typography>
+          <br />
+          <Typography className={classes.secondText} gutterBottom>
             {tr(
-              available
-                ? enabled
-                  ? "Cadance.Disable"
-                  : "Cadance.Enable"
-                : "Cadance.Install"
+              compatible
+                ? available
+                  ? enabled
+                    ? "Cadance.Enabled"
+                    : "Cadance.Disabled"
+                  : "Cadance.NotInstalled"
+                : "Cadance.NotCompatible"
             )}
-          </Button>
-        ) : (
-          ""
-        )}
-        {available && enabled ? (
-          <Container sx={{ textAlign: "center" }}>
-            <Typography className={classes.secondText}>
-              {tr("Cadance.VoiceTest")}
-            </Typography>
-            <br />
-            <Typography className={classes.firstText}>{word}</Typography>
-            <Typography className={classes.secondText}>
-              {tr("Cadance.Voice", `Voice=${voice}`)}
-            </Typography>
-            <br />
-            <Typography className={classes.secondText}>
-              {tr("Cadance.VoiceTestHint")}
-            </Typography>
-          </Container>
-        ) : (
-          ""
-        )}
-      </Container>
-    </ThemeProvider>
+          </Typography>
+          <br />
+          {compatible ? (
+            <Button
+              color={"primary"}
+              variant={"contained"}
+              disabled={isRunning}
+              onClick={async () => {
+                if (available) {
+                  if (enabled) {
+                    set("interactive.cadance", false);
+                    setEnabled(false);
+                    terminateCadanceProc();
+                  } else {
+                    set("interactive.cadance", true);
+                    setEnabled(true);
+                    await startCadanceProc();
+                  }
+                } else {
+                  try {
+                    setRunning(true);
+                    submitInfo(tr("Cadance.Installing"));
+                    await enableCadanceFeature();
+                    set("interactive.cadance", true);
+                    setEnabled(true);
+                    setAvailable(true);
+                    await startCadanceProc();
+                    submitSucc(tr("Cadance.InstallOK"));
+                  } catch {
+                    submitError(tr("Cadance.FailedToInstall"));
+                  }
+                }
+              }}
+            >
+              {tr(
+                available
+                  ? enabled
+                    ? "Cadance.Disable"
+                    : "Cadance.Enable"
+                  : "Cadance.Install"
+              )}
+            </Button>
+          ) : (
+            ""
+          )}
+          {available && enabled ? (
+            <Container sx={{ textAlign: "center" }}>
+              <Typography className={classes.secondText}>
+                {tr("Cadance.VoiceTest")}
+              </Typography>
+              <br />
+              <Typography className={classes.firstText}>{word}</Typography>
+              <Typography className={classes.secondText}>
+                {tr("Cadance.Voice", `Voice=${voice}`)}
+              </Typography>
+              <br />
+              <Typography className={classes.secondText}>
+                {tr("Cadance.VoiceTestHint")}
+              </Typography>
+              <br />
+              <br />
+              <Typography className={classes.secondText}>
+                {tr("Cadance.EncodingDesc")}
+              </Typography>
+
+              <TextField
+                margin={"dense"}
+                color={"primary"}
+                onChange={(e) => {
+                  const v = e.target.value.trim();
+                  if (v.length > 0) {
+                    setEncoding(v);
+                    localStorage.setItem(OVERRIDE_ENCODING_KEY, v);
+                  }
+                }}
+                label={tr("Cadance.Encoding")}
+                type={"text"}
+                spellCheck={false}
+                fullWidth
+                variant={"outlined"}
+                value={encoding}
+                placeholder={"UTF-8"}
+              />
+            </Container>
+          ) : (
+            ""
+          )}
+        </Box>
+      </ThemeProvider>
+    </Container>
   );
 }
 
@@ -166,7 +204,7 @@ export async function startCadanceProc(): Promise<void> {
     CADANCE_PROC = cp.spawn(cadance, { cwd: cadanceDir });
     console.log("Cadance started.");
     CADANCE_PROC.stdout?.on("data", (msg) => {
-      const inp = String(msg.toString());
+      const inp = decodeText(msg);
       if (!inp.includes("text")) {
         return;
       }
@@ -248,4 +286,18 @@ function xzDecompressFile(source: string): Promise<void> {
       });
     }
   });
+}
+
+const OVERRIDE_ENCODING_KEY = "Cadance.OverrideEncoding";
+
+function decodeText(buffer: Buffer): string {
+  try {
+    return decode(
+      buffer,
+      localStorage.getItem(OVERRIDE_ENCODING_KEY) ||
+        (os.platform() === "win32" ? "gbk" : "utf-8")
+    );
+  } catch {
+    return "Decode Failure";
+  }
 }

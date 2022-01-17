@@ -3464,6 +3464,14 @@ Cadance 正在运行。
 
 小提示：识别结果不必 100% 准确，大致相同即可。Alicorn 能够理解你的意思。
 
+# Cadance.Encoding
+
+设定 Cadance 编码
+
+# Cadance.EncodingDesc
+
+在部分操作系统（如 Windows）上，中文文本不能被很好的处理。Alicorn 会尝试选择正确的编码，但如果识别结果不正常，请手动设置你使用的编码。
+
 # Boticorn.Desc
 
 Alicorn 助理（Boticorn）可以允许你使用自然语言和 Alicorn 交流，并处理你的命令。搭配语音识别，效果更好！\nNLP 由 NLP.js 强力驱动，AI 由 ThatRarityEG 注入情感……别再犹豫，现在就把新助理抱回家吧～\n\n（小提示：助理 AI 会时常更新，因此要多和 TA 交流哦）
