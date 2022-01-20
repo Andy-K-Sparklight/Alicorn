@@ -498,6 +498,14 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 模拟启动
 
+# ReadyToLaunch.SecureLaunch
+
+安全启动
+
+# ReadyToLaunch.SecureLaunchDesc
+
+快速启动失败时可以尝试
+
 # ReadyToLaunch.DryLaunchDesc
 
 用于测试核心配置或比较性能

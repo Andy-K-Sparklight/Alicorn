@@ -349,6 +349,7 @@ function Launching(props: {
   const [openLanWindow, setOpenLanWindow] = useState(false);
   const [openLanButtonEnabled, setOpenLanButtonEnabled] = useState(false);
   const [dry, setDry] = useState(false);
+  const [secure, setSecure] = useState(false);
   const profileHash = useRef<string>(
     props.container.id + "/" + props.profile.id
   );
@@ -456,7 +457,8 @@ function Launching(props: {
               (id) => {
                 setProfileRelatedID(profileHash.current, id);
               },
-              dry
+              dry,
+              secure
             );
           })();
         }}
@@ -592,7 +594,8 @@ function Launching(props: {
                       (id) => {
                         setProfileRelatedID(profileHash.current, id);
                       },
-                      dry
+                      dry,
+                      secure
                     );
                   } else {
                     setSelecting(true);
@@ -645,6 +648,25 @@ function Launching(props: {
           }
         />
       </Tooltip>
+      <Tooltip title={tr("ReadyToLaunch.SecureLaunchDesc")}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              color={"primary"}
+              disabled={status !== "Pending"}
+              checked={secure}
+              onChange={(e) => {
+                setSecure(e.target.checked);
+              }}
+            />
+          }
+          label={
+            <Typography color={"primary"}>
+              {tr("ReadyToLaunch.SecureLaunch")}
+            </Typography>
+          }
+        />
+      </Tooltip>
       <br />
       <SpecialKnowledge />
       <OpenWorldDialog
@@ -675,7 +697,8 @@ async function startBoot(
   account: Account,
   server?: string,
   setRunID: (id: string) => unknown = () => {},
-  dry = false
+  dry = false,
+  secure = false
 ): Promise<LaunchTracker> {
   // @ts-ignore
   window[LAST_FAILURE_INFO_KEY] = undefined;
@@ -695,8 +718,8 @@ async function startBoot(
   if (account.type === AccountType.MICROSOFT) {
     // @ts-ignore
     // if (!window[SESSION_ACCESSDATA_CACHED_KEY]) {
-    if (!isReboot(profileHash)) {
-      if (!(await waitMSAccountReady())) {
+    if (secure || !isReboot(profileHash)) {
+      if (secure || !(await waitMSAccountReady())) {
         // If not reboot then validate
         if (!(await account.isAccessTokenValid())) {
           // Check if the access token is valid
@@ -778,8 +801,8 @@ async function startBoot(
       resolutionPolicy = true;
     }
   }
-  const safe = shouldSafeLaunch(container.id, profile.id);
-  if (!isReboot(profileHash)) {
+  const safe = secure || shouldSafeLaunch(container.id, profile.id);
+  if (secure || !isReboot(profileHash)) {
     NEED_QUERY_STATUS = true;
     setStatus(LaunchingStatus.FILES_FILLING);
     let st = false;
