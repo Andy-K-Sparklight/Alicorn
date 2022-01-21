@@ -45,6 +45,7 @@ import {
   getAllMounted,
   getAllNotMounted,
   getContainer,
+  getDirSize,
   isMounted,
   mount,
   unmount,
@@ -207,7 +208,8 @@ function SingleContainerDisplay(props: {
   const [coreCount, setCount] = useState(-1);
   const [isASC, setASCBit] = useState<boolean | null>(null);
   const [refresh, setRefresh] = useState(false);
-
+  const [size, setSize] = useState(-1);
+  const [fullSize, setFullSize] = useState(-1);
   const [showBtn, setShowBtn] = useState(false);
   useEffect(() => {
     mounted.current = true;
@@ -234,6 +236,24 @@ function SingleContainerDisplay(props: {
       mounted.current = false;
     };
   }, [refresh]);
+  useEffect(() => {
+    if (props.isMounted) {
+      void getDirSize(props.container.rootDir).then((r) => {
+        if (mounted.current) {
+          setSize(r);
+        }
+      });
+    }
+  }, [props.isMounted]);
+  useEffect(() => {
+    if (isASC && props.isMounted) {
+      void getDirSize(props.container.rootDir, true).then((r) => {
+        if (mounted.current) {
+          setFullSize(r);
+        }
+      });
+    }
+  }, [isASC]);
   return (
     <>
       <OperatingHint open={operating} />
@@ -499,21 +519,52 @@ function SingleContainerDisplay(props: {
             {tr("ContainerManager.RootDir") + " " + props.container.rootDir}
           </Typography>
           {props.isMounted ? (
-            <Typography
-              sx={{ color: isBgDark() ? "secondary.light" : undefined }}
-              className={classes.text}
-              gutterBottom
-            >
-              {(coreCount >= 0
-                ? tr("ContainerManager.Cores", `Count=${coreCount}`)
-                : tr("ContainerManager.CoresLoading")) +
-                " - " +
-                tr(
-                  isASC
-                    ? "ContainerManager.Type.Shared"
-                    : "ContainerManager.Type.Physical"
-                )}
-            </Typography>
+            <>
+              <Typography
+                sx={{ color: isBgDark() ? "secondary.light" : undefined }}
+                className={classes.text}
+                gutterBottom
+              >
+                {(coreCount >= 0
+                  ? tr("ContainerManager.Cores", `Count=${coreCount}`)
+                  : tr("ContainerManager.CoresLoading")) +
+                  " - " +
+                  tr(
+                    isASC
+                      ? "ContainerManager.Type.Shared"
+                      : "ContainerManager.Type.Physical"
+                  )}
+              </Typography>
+              <Typography
+                sx={{ color: isBgDark() ? "secondary.light" : undefined }}
+                className={classes.text}
+                gutterBottom
+              >
+                {(() => {
+                  let opac = "";
+                  if (size > 0) {
+                    opac += tr(
+                      "ContainerManager.Size",
+                      `Size=${Math.round(size / 1048576)}`
+                    );
+                    if (isASC && fullSize > size) {
+                      opac +=
+                        " - " +
+                        tr(
+                          "ContainerManager.DiscountASC",
+                          `Rate=${
+                            Math.round(((fullSize - size) * 1000) / fullSize) /
+                            10
+                          }`
+                        );
+                    }
+                    return opac;
+                  } else {
+                    return tr("ContainerManager.Calculating");
+                  }
+                })()}
+              </Typography>
+            </>
           ) : (
             ""
           )}

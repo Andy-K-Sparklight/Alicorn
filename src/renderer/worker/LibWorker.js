@@ -44,6 +44,10 @@ addHandler("Sha256File", async (target) => {
   return CryptoJS.SHA256(s.toString()).toString();
 });
 
+addHandler("DirSize", async (dir, symlink) => {
+  return await getContainerSize(dir, symlink);
+});
+
 addHandler("Sha1File", (target) => {
   return new Promise((resolve) => {
     sha.get(target, (e, s) => {
@@ -61,6 +65,30 @@ addHandler("StrDiff", (str1, str2) => {
   const lcs = mdiff(str1, str2).getLcs()?.length || 0;
   return ed * 2 - lcs * 8 + 30 + str2.length;
 });
+
+async function getContainerSize(dir, symlink) {
+  try {
+    const op = symlink ? await fs.stat(dir) : await fs.lstat(dir);
+    if (op.isDirectory()) {
+      const dirs = await fs.readdir(dir);
+      return (
+        (
+          await Promise.all(
+            dirs.map(async (d) => {
+              return await getContainerSize(path.join(dir, d), symlink);
+            })
+          )
+        ).reduce((p, c) => {
+          return p + c;
+        }) + op.size
+      );
+    } else {
+      return op.size;
+    }
+  } catch {
+    return 0;
+  }
+}
 
 function callHandler(n, args) {
   const f = HANDLERS.get(n);

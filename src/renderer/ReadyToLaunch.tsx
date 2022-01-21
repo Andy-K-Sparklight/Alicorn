@@ -419,6 +419,9 @@ function Launching(props: {
   }, []);
   useEffect(() => {
     mountedBit.current = true;
+    return () => {
+      mountedBit.current = false;
+    };
   }, []);
   useEffect(() => {
     const fun = () => {

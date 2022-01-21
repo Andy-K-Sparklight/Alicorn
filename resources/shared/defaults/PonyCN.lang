@@ -796,6 +796,18 @@ Alicorn 启动器 {AppVersion}（内核版本 {UpdatorVersion}）
 
 本 Alicorn 具有超级牛力。
 
+# ContainerManager.Size
+
+已使用 {Size} MiB 存储空间
+
+# ContainerManager.DiscountASC
+
+ASC 节约 {Rate}%
+
+# ContainerManager.Calculating
+
+正在计算容器大小
+
 # ContainerManager.RootDir
 
 起始于
