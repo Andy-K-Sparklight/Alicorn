@@ -1,6 +1,7 @@
 import EventEmitter from "events";
 import { schedulePromiseTask } from "../../renderer/Schedule";
 import { tr } from "../../renderer/Translator";
+import { expose } from "../boticorn/FTable";
 import { getModifiedDate, isFileExist } from "../commons/FileUtil";
 import { getNumber } from "../config/ConfigSupport";
 import { getAllContainers, getContainer } from "../container/ContainerUtil";
@@ -19,6 +20,8 @@ import { Concurrent } from "./Concurrent";
 import { MirrorChain } from "./Mirror";
 import { Serial } from "./Serial";
 import { validate } from "./Validate";
+
+expose({ wrappedDownloadFile });
 
 let DOINGX = "";
 const DOING_X_SUBSCRIBES: Map<string, (d: string) => unknown> = new Map();

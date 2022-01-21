@@ -1,11 +1,13 @@
+import { expose } from "../boticorn/FTable";
 import { getNumber } from "../config/ConfigSupport";
 import { applyMirror } from "./Mirror";
 import { getTimeoutController } from "./RainbowFetch";
 
+expose({ xgot, pgot });
+
 export async function xgot(
   url: string,
   noMirror = false,
-  noCache = false, // Ignored
   noTimeout = false
 ): Promise<unknown> {
   if (noMirror) {

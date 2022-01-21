@@ -48,14 +48,14 @@ export async function getMojangByForge(fgv: string): Promise<string> {
         tBody = window[FORGE_MANIFEST_CACHE_KEY];
       } else {
         // @ts-ignore
-        tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror, false, noTimeout);
+        tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror, noTimeout);
 
         // @ts-ignore
         window[FORGE_MANIFEST_CACHE_KEY] = tBody;
       }
     } catch {
       // @ts-ignore
-      tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror, false, noTimeout);
+      tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror, noTimeout);
 
       // @ts-ignore
       window[FORGE_MANIFEST_CACHE_KEY] = tBody;
@@ -89,14 +89,14 @@ async function _getForgeVersionByMojang(
         tBody = window[FORGE_MANIFEST_CACHE_KEY];
       } else {
         // @ts-ignore
-        tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror, false, noTimeout);
+        tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror, noTimeout);
 
         // @ts-ignore
         window[FORGE_MANIFEST_CACHE_KEY] = tBody;
       }
     } catch {
       // @ts-ignore
-      tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror, false, noTimeout);
+      tBody = await xgot(FORGE_VERSIONS_MANIFEST, noMirror, noTimeout);
 
       // @ts-ignore
       window[FORGE_MANIFEST_CACHE_KEY] = tBody;

@@ -17,7 +17,7 @@ export async function getAllMojangCores(
     const mObj =
       // @ts-ignore
       window[MOJANG_CORES_KEY] ||
-      (await xgot(MOJANG_VERSIONS_MANIFEST, false, false, noTimeout));
+      (await xgot(MOJANG_VERSIONS_MANIFEST, false, noTimeout));
     const arr = safeGet(mObj, ["versions"], []);
     const all = new Set<string>();
     if (arr instanceof Array) {
@@ -50,7 +50,7 @@ export async function getLatestMojangCore(
 
 export async function getProfileURLById(id: string): Promise<string> {
   try {
-    const mObj = await xgot(MOJANG_VERSIONS_MANIFEST, false, false);
+    const mObj = await xgot(MOJANG_VERSIONS_MANIFEST, false);
     const arr = safeGet(mObj, ["versions"], []);
     if (arr instanceof Array) {
       for (const v of arr) {

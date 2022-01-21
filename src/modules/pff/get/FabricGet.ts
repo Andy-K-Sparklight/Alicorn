@@ -55,12 +55,7 @@ async function _getLatestFabricInstallerAndLoader(
       // @ts-ignore
       jInstaller = window[FABRIC_INSTALLER_MANIFEST_CACHE_KEY];
     } else {
-      jInstaller = await xgot(
-        FABRIC_VERSIONS_INSTALLER,
-        noMirror,
-        false,
-        noTimeout
-      );
+      jInstaller = await xgot(FABRIC_VERSIONS_INSTALLER, noMirror, noTimeout);
 
       // @ts-ignore
       window[FABRIC_INSTALLER_MANIFEST_CACHE_KEY] = jInstaller;
@@ -93,7 +88,7 @@ async function _getLatestFabricInstallerAndLoader(
       // @ts-ignore
       jLoader = window[FABRIC_LOADER_MANIFEST_CACHE_KEY];
     } else {
-      jLoader = await xgot(FABRIC_VERSIONS_LOADER, noMirror, false, noTimeout);
+      jLoader = await xgot(FABRIC_VERSIONS_LOADER, noMirror, noTimeout);
 
       // @ts-ignore
       window[FABRIC_LOADER_MANIFEST_CACHE_KEY] = jLoader;

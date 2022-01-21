@@ -42,7 +42,7 @@ import { makeStyles } from "@mui/styles";
 import { ipcRenderer } from "electron";
 import React, { useEffect, useRef, useState } from "react";
 import { Route } from "react-router-dom";
-import { registerFunc } from "../modules/boticorn/FTable";
+import { expose } from "../modules/boticorn/FTable";
 import { safeGet } from "../modules/commons/Null";
 import {
   getBoolean,
@@ -91,6 +91,8 @@ import { UtilitiesIndex } from "./utilities/UtilitiesIndex";
 import { VersionView } from "./VersionView";
 import { Welcome } from "./Welcome";
 import { YggdrasilAccountManager } from "./YggdrasilAccountManager";
+
+expose({ exitApp });
 
 const useStyles = makeStyles((theme: AlicornTheme) => ({
   root: {
@@ -657,7 +659,6 @@ export function App(): JSX.Element {
   );
 }
 
-registerFunc({ exitApp });
 async function exitApp(): Promise<void> {
   remoteHideWindow();
   await ipcRenderer.invoke("markLoginItem", getBoolean("auto-launch"));

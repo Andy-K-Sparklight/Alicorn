@@ -2,9 +2,13 @@ import fs from "fs-extra";
 import { PassThrough, Readable } from "stream";
 import { submitWarn } from "../../renderer/Message";
 import { tr } from "../../renderer/Translator";
+import { expose } from "../boticorn/FTable";
 import { WatchDog } from "../commons/WatchDog";
 import { getNumber } from "../config/ConfigSupport";
 import { MirrorChain } from "./Mirror";
+
+expose({ isWebFileExist });
+
 export function getGuardStream(
   i: Readable,
   f: fs.WriteStream,

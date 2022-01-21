@@ -1,10 +1,13 @@
 import { ipcRenderer } from "electron";
+import { expose } from "../modules/boticorn/FTable";
 import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
 import { loadMirror } from "../modules/download/Mirror";
 import { waitUpdateFinished } from "../modules/selfupdate/Updator";
 import { intervalSaveData, remoteHideWindow } from "./App";
 import { setContainerListDirty } from "./ContainerManager";
 import { isInstBusy } from "./Instruction";
+
+expose({ jumpTo, triggerSetPage });
 
 const PAGES_HISTORY: string[] = [];
 const TITLE_HISTORY: string[] = [];
