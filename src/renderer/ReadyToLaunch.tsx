@@ -10,7 +10,7 @@ import {
   Person,
   RssFeed,
   SportsScore,
-  ViewModule
+  ViewModule,
 } from "@mui/icons-material";
 import {
   Box,
@@ -39,11 +39,12 @@ import {
   TextField,
   ThemeProvider,
   Tooltip,
-  Typography
+  Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import copy from "copy-to-clipboard";
 import EventEmitter from "events";
+import os from "os";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { Account } from "../modules/auth/Account";
@@ -51,7 +52,7 @@ import {
   AccountType,
   fillAccessData,
   getPresentAccounts,
-  querySkinFor
+  querySkinFor,
 } from "../modules/auth/AccountUtil";
 import { prefetchData } from "../modules/auth/AJHelper";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
@@ -63,7 +64,7 @@ import {
   MS_LAST_USED_ACTOKEN_KEY,
   MS_LAST_USED_REFRESH_KEY,
   MS_LAST_USED_USERNAME_KEY,
-  MS_LAST_USED_UUID_KEY
+  MS_LAST_USED_UUID_KEY,
 } from "../modules/auth/MicrosoftAccount";
 import { Nide8Account } from "../modules/auth/Nide8Account";
 import { uniqueHash } from "../modules/commons/BasicHash";
@@ -71,13 +72,13 @@ import { Pair } from "../modules/commons/Collections";
 import {
   PROCESS_END_GATE,
   PROCESS_LOG_GATE,
-  ReleaseType
+  ReleaseType,
 } from "../modules/commons/Constants";
 import { isNull } from "../modules/commons/Null";
 import {
   getBoolean,
   getNumber,
-  getString
+  getString,
 } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
@@ -85,7 +86,7 @@ import { killEdge, runEdge } from "../modules/cutie/BootEdge";
 import { acquireCode, deactiveCode } from "../modules/cutie/Hoofoff";
 import {
   getWrapperStatus,
-  WrapperStatus
+  WrapperStatus,
 } from "../modules/download/DownloadWrapper";
 import {
   getAllJava,
@@ -95,7 +96,7 @@ import {
   getLegacyJDK,
   getNewJDK,
   parseJavaInfo,
-  parseJavaInfoRaw
+  parseJavaInfoRaw,
 } from "../modules/java/JavaInfo";
 import { autoMemory } from "../modules/launch/ArgsGenerator";
 import {
@@ -104,12 +105,12 @@ import {
   ensureClient,
   ensureLibraries,
   ensureLog4jFile,
-  ensureNatives
+  ensureNatives,
 } from "../modules/launch/Ensurance";
 import {
   launchProfile,
   markSafeLaunch,
-  shouldSafeLaunch
+  shouldSafeLaunch,
 } from "../modules/launch/LaunchTool";
 import { LaunchTracker } from "../modules/launch/LaunchTracker";
 import { stopMinecraft } from "../modules/launch/MinecraftBootstrap";
@@ -118,17 +119,17 @@ import { GameProfile } from "../modules/profile/GameProfile";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import {
   dropAccountPromise,
-  waitMSAccountReady
+  waitMSAccountReady,
 } from "../modules/readyboom/AccountMaster";
 import {
   setLastUsed,
-  waitProfileReady
+  waitProfileReady,
 } from "../modules/readyboom/PrepareProfile";
 import { getMachineUniqueID } from "../modules/security/Unique";
 import {
   initLocalYggdrasilServer,
   ROOT_YG_URL,
-  skinTypeFor
+  skinTypeFor,
 } from "../modules/skin/LocalYggdrasilServer";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { ShiftEle } from "./Instruction";
@@ -137,7 +138,7 @@ import { YNDialog } from "./OperatingHint";
 import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
-  isBgDark
+  isBgDark,
 } from "./Renderer";
 import { SkinDisplay2D, SkinDisplay3D } from "./SkinDisplay";
 import { addStatistics } from "./Statistics";
@@ -145,13 +146,13 @@ import {
   AlicornTheme,
   fullWidth,
   useFormStyles,
-  useInputStyles
+  useInputStyles,
 } from "./Stylex";
 import { randsl, tr } from "./Translator";
 import {
   HOOFOFF_CENTRAL,
   NETWORK_PORT,
-  QUERY_PORT
+  QUERY_PORT,
 } from "./utilities/CutieConnect";
 import { SpecialKnowledge } from "./Welcome";
 import { toReadableType } from "./YggdrasilAccountManager";
@@ -669,6 +670,7 @@ function Launching(props: {
       </Tooltip>
       <br />
       <SpecialKnowledge />
+      <SystemUsage />
       <OpenWorldDialog
         open={openLanWindow}
         baseVersion={props.profile.baseVersion}
@@ -1780,5 +1782,62 @@ function AskURLDialog(): JSX.Element {
         </DialogActions>
       </Dialog>
     </ThemeProvider>
+  );
+}
+
+function SystemUsage(): JSX.Element {
+  const [mem, setMem] = useState(os.freemem());
+  const [totalMem, setTotalMem] = useState(os.totalmem());
+  const [loadAverage, setLoadAverage] = useState(os.loadavg()[0]);
+  const cpus = os.cpus().length;
+  useEffect(() => {
+    const fun = () => {
+      setMem(os.freemem());
+      setTotalMem(os.totalmem());
+      setLoadAverage(os.loadavg()[0]);
+    };
+    const t = setInterval(fun, 1000);
+    return () => {
+      clearInterval(t);
+    };
+  }, []);
+  return (
+    <>
+      <Box
+        sx={{ display: "flex", flexDirection: "row", alignItems: "baseline" }}
+      >
+        <Box
+          sx={{
+            marginTop: "2rem",
+            height: "0.2rem",
+            width: `${(1 - mem / totalMem) * 100}%`,
+            backgroundColor: "primary.main",
+          }}
+        />
+        <Typography color={"primary"} sx={{ fontSize: "0.8rem" }}>
+          &nbsp;
+          {tr(
+            "ReadyToLaunch.RAM",
+            `Total=${Math.round((totalMem * 100) / 1073741824) / 100}`,
+            `InUse=${Math.round(((totalMem - mem) * 100) / 1073741824) / 100}`
+          )}
+        </Typography>
+      </Box>
+      <Box
+        sx={{ display: "flex", flexDirection: "row", alignItems: "baseline" }}
+      >
+        <Box
+          sx={{
+            height: "0.2rem",
+            width: `${(loadAverage / cpus) * 100}%`,
+            backgroundColor: "secondary.main",
+          }}
+        />
+        <Typography color={"secondary"} sx={{ fontSize: "0.8rem" }}>
+          &nbsp;
+          {tr("ReadyToLaunch.CPU", `Total=${cpus}`, `Load=${loadAverage}`)}
+        </Typography>
+      </Box>
+    </>
   );
 }

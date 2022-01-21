@@ -330,6 +330,14 @@ Alicorn 无法读/写 {Target}，请检查此目录的权限，相关操作已�
 
 输入登录完成后浏览器地址栏的 URL……
 
+# ReadyToLaunch.CPU
+
+{Load}/{Total}
+
+# ReadyToLaunch.RAM
+
+{InUse}/{Total} GiB
+
 # ReadyToLaunch.NoJava
 
 没有设置 Java 运行时（JRE）！游戏将无法启动！
@@ -2400,7 +2408,7 @@ GitHub|全球最大的 Git 存储库和项目协同及管理网站，它具有�
 
 超级牛力|起源于 Debian 包管理器 APT 的一个彩蛋，当在终端中执行 apt moo 时便可看到。
 
-Discord|一个匿名的、保护隐私的、自由而开放的即时通讯平台。主要针对游戏讨论，亦可用作跨平台的一般通讯工具。尽管其中偶尔会包含还没来得及被处理的有害内容，但不失为一个极为优秀的匿名交流平台。
+Discord|一个匿名的、保护隐私的、自由而开放的即时通讯平台。主要针对游戏讨论，亦可用作跨平台的一般通讯工具。尽管有某些众所周知的缺陷（比如不能启动 Minecraft），但不失为一个极为优秀的匿名交流平台。
 
 自由软件|Alicorn 就是一种自由软件。<b>自由软件意味着使用者有运行、复制、发布、研究、修改和改进该软件的自由。</b>这是你应得的权利。使用自由软件，你将<b>永远不必</b>听从开发者的无理要求！会员特权？再也不了！
 
@@ -2433,6 +2441,8 @@ eee|一种梗语言，大致就是把每个字都改成 e。幸好，我不会�
 小马利亚|也就是「Equestria」，小马们生活的国度。那里遍布友谊的魔法，没有人世间的黑暗。
 
 Pff|也就是「Package File Finder」，Alicorn 用来搜索和安装 Mod 的工具。具有 Pff Front 和 Pff Visual 两个组件，前者通过 ID 直接安装 Mod，后者通过搜索查找 ID。具有类似 Maven 的缓存能力。
+
+Modrinth|超过 Curseforge 的 Mod 发布平台，在 Curseforge 关闭 API 后，许多启动器开发者和玩家，都把目光投向了这个开放自由而且快速的 Mod 平台，Alicorn 也不例外。
 
 # PffFront.ReloadToRenew
 
