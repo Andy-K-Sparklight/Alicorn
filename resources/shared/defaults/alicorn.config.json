@@ -34,6 +34,7 @@
   "startup-page.name": "Welcome",
   "startup-page.url": "/Welcome",
   "gw-size": "960x540",
+  "features.local-skin": true,
   "memory": 0,
   "main-gc": "g1",
   "para-gc": "pure",

@@ -9,6 +9,7 @@ import {
   CameraEnhance,
   CancelPresentation,
   Chat,
+  Checkroom,
   CloudDone,
   CloudSync,
   Code,
@@ -304,6 +305,11 @@ export function OptionsPage(): JSX.Element {
             icon={<TextFormat />}
             type={ConfigType.BOOL}
             bindConfig={"features.saying"}
+          />
+          <InputItem
+            icon={<Checkroom />}
+            type={ConfigType.BOOL}
+            bindConfig={"features.local-skin"}
           />
           <InputItem
             icon={<Mouse />}
