@@ -35,6 +35,18 @@ export function VersionView(): JSX.Element {
           `UpdatorVersion=${pkg.updatorVersion}`
         )}
       </Typography>
+      <Typography className={classes.text} color={"secondary"} gutterBottom>
+        {tr("VersionView.Description")}
+      </Typography>
+      <br />
+      <Typography className={classes.text} color={"secondary"}>
+        {tr(
+          "VersionView.Modules",
+          `List=${buildDepList()
+            .map((x) => x.join(" "))
+            .join(", ")}`
+        )}
+      </Typography>
       <Typography className={classes.text} color={"secondary"}>
         {tr(
           "VersionView.EcVersion",
@@ -47,9 +59,6 @@ export function VersionView(): JSX.Element {
           "VersionView.Electron." +
             cmpVersion(ecVersion, pkg.devDependencies.electron.slice(1))
         )}
-      </Typography>
-      <Typography className={classes.text} color={"secondary"} gutterBottom>
-        {tr("VersionView.Description")}
       </Typography>
       <br />
       <Typography className={classes.text} color={"secondary"} gutterBottom>
@@ -97,4 +106,12 @@ function cmpVersion(
     return "OK";
   }
   return "Attention";
+}
+
+function buildDepList(): [string, string][] {
+  const o: [string, string][] = [];
+  o.push(["React", pkg.dependencies.react.slice(1)]);
+  o.push(["Material UI", pkg.dependencies["@mui/material"].slice(1)]);
+  o.push(["Undici", pkg.dependencies.undici.slice(1)]);
+  return o;
 }
