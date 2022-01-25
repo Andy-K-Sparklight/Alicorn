@@ -1817,7 +1817,10 @@ function SystemUsage(): JSX.Element {
             backgroundColor: "primary.main",
           }}
         />
-        <Typography color={"primary"} sx={{ fontSize: "0.8rem" }}>
+        <Typography
+          color={"primary"}
+          sx={{ fontSize: "0.8rem", whiteSpace: "nowrap" }}
+        >
           &nbsp;
           {tr(
             "ReadyToLaunch.RAM",
@@ -1836,7 +1839,10 @@ function SystemUsage(): JSX.Element {
             backgroundColor: "secondary.main",
           }}
         />
-        <Typography color={"secondary"} sx={{ fontSize: "0.8rem" }}>
+        <Typography
+          color={"secondary"}
+          sx={{ fontSize: "0.8rem", whiteSpace: "nowrap" }}
+        >
           &nbsp;
           {tr("ReadyToLaunch.CPU", `Total=${cpus}`, `Load=${loadAverage}`)}
         </Typography>
