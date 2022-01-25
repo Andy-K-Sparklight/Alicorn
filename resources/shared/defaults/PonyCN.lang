@@ -332,7 +332,7 @@ Alicorn 无法读/写 {Target}，请检查此目录的权限，相关操作已�
 
 # ReadyToLaunch.CPU
 
-{Load}/{Total}
+{Load}/{Total} CPU
 
 # ReadyToLaunch.RAM
 
@@ -746,7 +746,11 @@ Alicorn 每周都有新版本！
 
 # VersionView.Name
 
-Alicorn 启动器 {AppVersion}（内核版本 {UpdatorVersion}）
+Alicorn Launcher: {AppVersion} #{UpdatorVersion}
+
+# VersionView.Modules
+
+具有 {List}
 
 # VersionView.Electron.Fetching
 
