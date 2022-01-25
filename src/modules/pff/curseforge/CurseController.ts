@@ -245,6 +245,10 @@ function ensureCurseWindow(): void {
       }
       callback({}); // Accept
     });
+    w.webContents.session.preconnect({
+      url: "https://www.curseforge.com",
+      numSockets: 3,
+    });
     cWindow = w;
   }
 }
