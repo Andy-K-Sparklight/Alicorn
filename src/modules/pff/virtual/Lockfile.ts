@@ -81,7 +81,7 @@ export function addToLockfile(
 }
 
 function transformCursePlusPlus(lockfile: Lockfile2): void {
-  if (getBoolean("features.cursepp") && apiHasGone()) {
+  if (getBoolean("pff.cursepp") && apiHasGone()) {
     for (const [name, obj] of Object.entries(lockfile)) {
       if (obj.provider === "Curseforge") {
         obj.provider = "CursePlusPlus";

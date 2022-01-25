@@ -297,11 +297,6 @@ export function OptionsPage(): JSX.Element {
             bindConfig={"features.tips-of-today"}
           />
           <InputItem
-            icon={<LockOpen />}
-            type={ConfigType.BOOL}
-            bindConfig={"features.cursepp"}
-          />
-          <InputItem
             icon={<TextFormat />}
             type={ConfigType.BOOL}
             bindConfig={"features.saying"}
@@ -345,6 +340,16 @@ export function OptionsPage(): JSX.Element {
             bindConfig={"readyboom.cores"}
           />
           <InputItem
+            icon={<LockOpen />}
+            type={ConfigType.BOOL}
+            bindConfig={"pff.cursepp"}
+          />
+          <InputItem
+            icon={<AlignHorizontalLeft />}
+            type={ConfigType.NUM}
+            bindConfig={"pff.cursepp-cluster-size"}
+          />
+          <InputItem
             icon={<DeviceHub />}
             type={ConfigType.STR}
             bindConfig={"hoofoff.central"}
@@ -374,7 +379,6 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.BOOL}
             bindConfig={"cmc.disable-log4j-config"}
           />
-
           <InputItem
             type={ConfigType.BOOL}
             experimental
