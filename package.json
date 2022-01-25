@@ -1,8 +1,8 @@
 {
   "private": true,
-  "appVersion": "Pony Pokey",
+  "appVersion": "Harmony",
   "version": "1.0.0",
-  "updatorVersion": 43,
+  "updatorVersion": 44,
   "scripts": {
     "lc": "yarn lcd",
     "df": "yarn dev-full",
