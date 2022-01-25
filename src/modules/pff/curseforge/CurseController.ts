@@ -51,18 +51,19 @@ function jmpPage(url: string, cWindow: BrowserWindow | null): Promise<void> {
   // Jump to there and complete CAPTCHA if necessary, then callback.
   return new Promise<void>((res) => {
     const fun = async () => {
-      if (
-        cWindow &&
-        !(await hasCAPTCHA(cWindow)) &&
-        url === cWindow?.webContents.getURL()
-      ) {
-        res();
-        cWindow?.webContents.off("did-navigate", fun);
+      if (cWindow) {
+        if (
+          !(await hasCAPTCHA(cWindow)) &&
+          url === cWindow.webContents.getURL()
+        ) {
+          res();
+          cWindow.webContents.off("did-navigate", fun);
+        }
       }
+      cWindow?.webContents.on("did-navigate", fun);
+      cWindow?.setMenu(null);
+      void cWindow?.loadURL(url);
     };
-    cWindow?.webContents.on("did-navigate", fun);
-    cWindow?.setMenu(null);
-    void cWindow?.loadURL(url);
   });
 }
 
