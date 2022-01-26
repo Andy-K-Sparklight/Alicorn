@@ -39,7 +39,7 @@
   "main-gc": "g1",
   "para-gc": "pure",
   "launch.fast-reboot": true,
-  "assistant": "PonyCN",
+  "assistant": "",
   "hardware-acc": false,
   "download.primary-downloader": "Concurrent",
   "goto.animate": true,

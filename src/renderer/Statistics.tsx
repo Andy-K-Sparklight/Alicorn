@@ -4,7 +4,7 @@ import { buildMap, parseMap } from "../modules/commons/MapUtil";
 import { useTextStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
 let STATISTICS_MAP: Map<string, number> = new Map();
-const ALL_STATS = ["Click", "Launch", "Crash"];
+const ALL_STATS = ["Click", "Launch", "Crash", "Keyboard"];
 export function Statistics(): JSX.Element {
   const classes = useTextStyles();
   return (

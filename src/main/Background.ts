@@ -307,6 +307,9 @@ export function registerBackgroundListeners(): void {
       });
     }
   });
+  ipcMain.on("getLocale", (e) => {
+    e.returnValue = app.getLocale();
+  });
   ipcMain.handle(
     "isReachable",
     async (_e, address: string, timeout?: number) => {

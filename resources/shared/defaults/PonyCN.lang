@@ -1715,6 +1715,10 @@ Maud 2（小马语/中国）
 
 66ccff（中文/中国）
 
+# Options.assistant.Equish
+
+Alicorn i18n (Equish/Equestria)
+
 # Options.jvm.extra-args.title
 
 JVM 附加运行参数
@@ -1810,14 +1814,6 @@ Z（ZGC）
 # Options.clean-storage.desc
 
 摧毁 Alicorn 存储的一切数据，包括设置、效用缓存和使用记录 - 几乎相当于重新安装
-
-# Options.starlight.join-server.timeout.title
-
-Starlight - 服务器 TCP 检查等待时间
-
-# Options.starlight.join-server.timeout.desc
-
-Starlight 在加入服务器前会检查其连通性，在这一过程中，她最多应该等待多少毫秒？- 设置为 0 以禁用该功能。
 
 # Options.cx.shared-root.title
 
@@ -2401,10 +2397,6 @@ Alicorn 随时都可能有更新！请记得常回来看看！
 当你能够正常关闭游戏时，不要使用强制退出。
 我们支持自由软件，我们的终极目标是全人类的数字自由，一个没有非自由软件的世界。
 @HTMLAlicorn 的众多功能，都是由自由软件构成的！请支持我们 —— <b>简单到多使用一次 Firefox 或者 Fabric，<span style="color: red;">哪怕只有一次！</span></b>
-
-# Welcome.Suggest.LastSuccessfulLaunch
-
-最近一次游戏
 
 # Welcome.Knowledges
 
@@ -3266,7 +3258,7 @@ END
 
 # Instruction.Welcome.5
 
-Alicorn 默认安装了 Minecraft 1.17.1，可以在 <核心列表> 中直接启动。@@@MainMenuLaunchPad
+Alicorn 默认安装了 Minecraft 的最新版，可以在 <核心列表> 中直接启动。@@@MainMenuLaunchPad
 
 # Instruction.Welcome.6
 
