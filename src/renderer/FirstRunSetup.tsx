@@ -4,6 +4,7 @@ import { alterPath } from "../modules/commons/FileUtil";
 import { getBoolean, set } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { createNewContainer } from "../modules/container/ContainerWrapper";
+import { getTimeoutController } from "../modules/download/RainbowFetch";
 import { installBothJDKs } from "../modules/java/BuiltInJDK";
 import {
   getAllJava,
@@ -54,6 +55,7 @@ export async function completeFirstRun(): Promise<void> {
     await getMCDefaultRootDir(),
     tr("FirstRun.Default") || "Minecraft"
   );
+  await decideMirror();
   const ct = getContainer(tr("FirstRun.Default") || "Minecraft");
   const lv = await getLatestMojangCore();
   const u = await getProfileURLById(lv);
@@ -144,4 +146,34 @@ export async function configureDefaultDirs(): Promise<void> {
     set("cx.shared-root", cx);
     localStorage.setItem("Edited.cx.shared-root", "1");
   }
+}
+
+export async function decideMirror(): Promise<void> {
+  const URLS = {
+    "alicorn-mcbbs-nonfree":
+      "https://download.mcbbs.net/mc/game/version_manifest.json",
+    "alicorn-bmclapi-nonfree":
+      "https://bmclapi2.bangbang93.com/mc/game/version_manifest.json",
+    none: "https://launchermeta.mojang.com/mc/game/version_manifest.json",
+    alicorn: "https://al-versions-manifest.vercel.app/api/mojang",
+  };
+  let sl = "none";
+  let rtt = 0;
+  for (const [n, u] of Object.entries(URLS)) {
+    try {
+      const d0 = new Date();
+      const [ac, sti] = getTimeoutController(3000);
+      const r = await fetch(u, { signal: ac.signal });
+      sti();
+      const d1 = new Date();
+      if (r.ok) {
+        const dt = d1.getTime() - d0.getTime();
+        if (dt < rtt) {
+          sl = n;
+          rtt = dt;
+        }
+      }
+    } catch {}
+  }
+  set("download.mirror", sl);
 }
