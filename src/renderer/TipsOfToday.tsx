@@ -8,7 +8,7 @@ import {
   ThemeProvider,
   Typography,
 } from "@mui/material";
-import { shell } from "electron";
+import { ipcRenderer, shell } from "electron";
 import React, { useEffect, useState } from "react";
 import { set } from "../modules/config/ConfigSupport";
 import {
@@ -45,9 +45,9 @@ export function TipsOfToday(props: {
         }}
         maxWidth={"sm"}
       >
-        <DialogTitle>{tip.name}</DialogTitle>
+        <DialogTitle>{i18nTip(tip.name)}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{tip.text}</DialogContentText>
+          <DialogContentText>{i18nTip(tip.text)}</DialogContentText>
           <br />
           <img style={{ width: "100%", height: "auto" }} src={tip.img} />
         </DialogContent>
@@ -96,4 +96,17 @@ export function TipsOfToday(props: {
       </Dialog>
     </ThemeProvider>
   );
+}
+
+let locale: string;
+
+function i18nTip(origin: Record<string, string>): string {
+  locale = locale || ipcRenderer.sendSync("getLocale");
+  if (locale.startsWith("zh")) {
+    return origin["zh"];
+  }
+  if (locale.startsWith("en")) {
+    return origin["en"];
+  }
+  return origin[locale] || origin["en"];
 }

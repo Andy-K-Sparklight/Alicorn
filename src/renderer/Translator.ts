@@ -246,8 +246,8 @@ function trimControlCode(origin: string[], rules: string[]): string[] {
 }
 
 interface Tip {
-  name: string;
-  text: string;
+  name: Record<string, string>;
+  text: Record<string, string>;
   img: string;
   rel?: string;
 }
