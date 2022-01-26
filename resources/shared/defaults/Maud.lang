@@ -740,10 +740,6 @@ Client VM 不适合 Minecraft。
 
 摧毁 Alicorn 存储的一切数据
 
-# Options.starlight.join-server.timeout.desc
-
-Starlight 等待的最长时间
-
 # Options.cx.shared-root.desc
 
 在这里存储 ASC 共享文件
@@ -879,10 +875,6 @@ Pff 的请求等待时间
 # Welcome.Tips
 
 我并不支持此功能。
-
-# Welcome.Suggest.LastSuccessfulLaunch
-
-最近游戏
 
 # PffFront.WarnNoCache
 

@@ -1,13 +1,25 @@
+import { ipcRenderer } from "electron";
 import { readFile } from "fs-extra";
 import os from "os";
 import React from "react";
-import { getString } from "../modules/config/ConfigSupport";
+import { getString, set } from "../modules/config/ConfigSupport";
 import { getPathInDefaults } from "../modules/config/DataSupport";
 
-export const ALL_ASSISTANTS = ["PonyCN", "Maud", "66CCFF"];
+export const ALL_ASSISTANTS = ["PonyCN", "Equish", "Maud", "66CCFF"];
 
 function currentLocale(): string {
-  return getString("assistant", "PonyCN");
+  let pr = getString("assistant");
+  if (pr.length === 0) {
+    const l = ipcRenderer.sendSync("getLocale");
+    if (l.startsWith("zh")) {
+      set("assistant", "PonyCN");
+      pr = "PonyCN";
+    } else {
+      set("assistant", "Equish");
+      pr = "Equish";
+    }
+  }
+  return pr;
 }
 
 const localesMap = new Map<string, Record<string, string | string[]>>();
