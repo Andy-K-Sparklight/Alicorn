@@ -14,6 +14,8 @@ export async function getLatestJREURL(old = false): Promise<string> {
     cv = "x32";
   } else if (bits === "x64") {
     cv = "x64";
+  } else if (bits === "arm64") {
+    cv = "aarch64";
   } else {
     throw new Error("Does not support this arch!");
   }
