@@ -22,6 +22,8 @@ jobs:
       - run: yarn github-unix
       - run: sha1sum out/compressed/Alicorn-linux-x64.tar.gz
       - run: md5sum out/compressed/Alicorn-linux-x64.tar.gz
+      - run: sha1sum out/compressed/Alicorn-linux-arm64.tar.gz
+      - run: md5sum out/compressed/Alicorn-linux-arm64.tar.gz
 
   package-windows:
     runs-on: windows-latest

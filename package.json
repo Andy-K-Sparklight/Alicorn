@@ -19,7 +19,7 @@
     "compress": "node eliminate.js&&node pack.js",
     "windows": "yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=win32 --arch=ia32 --icon ./resources/build/icon --out out",
     "macos": "yarn electron-packager dist/release Alicorn --overwrite --platform=darwin --arch=x64 --icon ./resources/build/icon --out out",
-    "linux": "yarn electron-packager dist/release Alicorn --overwrite --platform=linux --arch=x64 --icon ./resources/build/icon --out out&&node makesh.js",
+    "linux": "yarn electron-packager dist/release Alicorn --overwrite --platform=linux --arch=x64 --icon ./resources/build/icon --out out&&yarn electron-packager dist/release Alicorn --overwrite --platform=linux --arch=arm64 --icon ./resources/build/icon --out out&&node makesh.js",
     "clean": "node clean.js",
     "launch-dev": "cd dist&&npx electron .",
     "launch-release": "cd dist&&cd release&&npx electron .",
