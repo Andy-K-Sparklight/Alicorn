@@ -56,13 +56,7 @@ export async function completeFirstRun(): Promise<void> {
     tr("FirstRun.Default") || "Minecraft"
   );
   await decideMirror();
-  const ct = getContainer(tr("FirstRun.Default") || "Minecraft");
-  const lv = await getLatestMojangCore();
-  const u = await getProfileURLById(lv);
-  await Promise.allSettled([
-    setupFirstJavaCheckAndCheckToGo(),
-    downloadProfile(u, ct, lv),
-  ]);
+  await setupFirstJavaCheckAndCheckToGo();
   set("first-run?", false);
 }
 

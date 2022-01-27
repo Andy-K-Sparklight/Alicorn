@@ -3258,13 +3258,9 @@ END
 
 # Instruction.Welcome.5
 
-Alicorn 默认安装了 Minecraft 的最新版，可以在 <核心列表> 中直接启动。@@@MainMenuLaunchPad
+启动游戏前，你需要 <安装所需的核心>，然后再启动。@@@MainMenuInstallCore
 
 # Instruction.Welcome.6
-
-如果需要其它版本的核心，你需要 <安装核心>，然后再去启动。@@@MainMenuInstallCore
-
-# Instruction.Welcome.7
 
 END
 

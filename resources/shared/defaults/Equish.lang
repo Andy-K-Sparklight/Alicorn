@@ -3063,13 +3063,9 @@ This is <Quick Access Area> and you can access the most popular features.@20.60@
 
 # Instruction.Welcome.5
 
-The latest Minecraft has been built-in and is available at <Launch Pad>.@@@MainMenuLaunchPad
+Use <Install Cores> to install one or more Minecraft releases/snapshots (i.e., cores).@@@MainMenuInstallCore
 
 # Instruction.Welcome.6
-
-Use <Install Cores> to install other versions (cores).@@@MainMenuInstallCore
-
-# Instruction.Welcome.7
 
 END
 
