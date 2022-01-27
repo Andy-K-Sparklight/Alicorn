@@ -2,7 +2,6 @@ import os from "os";
 import path from "path";
 import { alterPath } from "../modules/commons/FileUtil";
 import { getBoolean, set } from "../modules/config/ConfigSupport";
-import { getContainer } from "../modules/container/ContainerUtil";
 import { createNewContainer } from "../modules/container/ContainerWrapper";
 import { getTimeoutController } from "../modules/download/RainbowFetch";
 import { installBothJDKs } from "../modules/java/BuiltInJDK";
@@ -14,11 +13,6 @@ import {
   setDefaultJavaHome,
 } from "../modules/java/JavaInfo";
 import { whereJava } from "../modules/java/WhereJava";
-import {
-  downloadProfile,
-  getLatestMojangCore,
-  getProfileURLById,
-} from "../modules/pff/get/MojangCore";
 import { isInstBusy, startInst } from "./Instruction";
 import { checkToGoAndDecideJump, loadToGoHook } from "./linkage/AlicornToGo";
 import { submitInfo, submitWarn } from "./Message";
