@@ -67,7 +67,16 @@ export function getNumber(key: string, def = 0): number {
 export async function loadConfig(): Promise<void> {
   try {
     cachedConfig = JSON.parse((await fs.readFile(CONFIG_FILE)).toString());
-  } catch {}
+  } catch {
+    try {
+      cachedConfig = JSON.parse(
+        (await fs.readFile(DEFAULT_CONFIG_FILE)).toString()
+      );
+    } catch (e) {
+      console.log(e);
+      return;
+    }
+  }
   try {
     defaultConfig = Object.freeze(
       JSON.parse(
@@ -91,6 +100,7 @@ export function loadConfigSync(): void {
   try {
     defaultConfig = JSON.parse(fs.readFileSync(DEFAULT_CONFIG_FILE).toString());
   } catch {}
+  fixConfig(cachedConfig, defaultConfig);
 }
 
 export function saveConfigSync(): void {
