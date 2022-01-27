@@ -366,6 +366,7 @@ export function App(): JSX.Element {
                   className={classes.floatButton}
                   onClick={() => {
                     remoteHideWindow();
+                    terminateCadanceProc();
                     waitUpdateFinished(() => {
                       intervalSaveData()
                         .then(() => {
@@ -729,6 +730,7 @@ export function remoteHideWindow(): void {
 
 function remoteCloseWindow(): void {
   console.log("Closing!");
+  terminateCadanceProc();
   intervalSaveData()
     .then(() => {
       ipcRenderer.send("readyToClose");
@@ -749,7 +751,6 @@ export async function intervalSaveData(): Promise<void> {
   await saveVF();
   await saveServers();
   saveStatistics();
-  terminateCadanceProc();
   console.log("All chunks are saved.");
 }
 

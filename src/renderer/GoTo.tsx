@@ -6,6 +6,7 @@ import { waitUpdateFinished } from "../modules/selfupdate/Updator";
 import { intervalSaveData, remoteHideWindow } from "./App";
 import { setContainerListDirty } from "./ContainerManager";
 import { isInstBusy } from "./Instruction";
+import { terminateCadanceProc } from "./linkage/Cadance";
 
 expose({ jumpTo, triggerSetPage });
 
@@ -51,6 +52,7 @@ function ifLeavingConfigThenReload(): void {
   if (sessionStorage.getItem("Options.Reload") === "1") {
     sessionStorage.removeItem("Options.Reload");
     remoteHideWindow();
+  terminateCadanceProc();
     waitUpdateFinished(() => {
       intervalSaveData()
         .then(() => {
