@@ -79,7 +79,7 @@
   yarn make
   ```
 
-  该命令构建所有的二进制文件并输出到 `out` 下：Windows x64，Windows ia32，GNU/Linux x64 ~~以及 macOS x64~~。该命令同时会生成对应的压缩包。
+  该命令构建所有的二进制文件并输出到 `out` 下：Windows x64，Windows ia32，GNU/Linux x64，GNU/Linux arm64 ~~以及 macOS x64~~。该命令同时会生成对应的压缩包。
 
   _macOS 的支持已经正式告终，Alicorn 现在不再为 macOS 编写平台相关代码。已有模块仍然保留，但可能无法正常工作。_
 

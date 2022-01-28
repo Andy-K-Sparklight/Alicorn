@@ -58,25 +58,25 @@ To build Alicorn, you'll need:
 - [Git](https://git-scm.com)
 
 - Clone the repository:
-  
+
   ```shell
   git clone https://github.com/Andy-K-Sparklight/Alicorn.git --depth=1
   ```
 
 - Install dependencies:
-  
+
   ```shell
   yarn
   ```
 
 - Run build:
-  
+
   ```shell
   yarn make
   ```
-  
-  This will generate binaries and put them under `out`, including Windows x64, Windows ia32, GNU/Linux x64 ~~and macOS x64~~. This will also generate corresponding archives.
-  
+
+  This will generate binaries and put them under `out`, including Windows x64, Windows ia32, GNU/Linux x64, GNU/Linux arm64 ~~and macOS x64~~. This will also generate corresponding archives.
+
   _The support for macOS has ended and no more platform dependent code will be commited. The modules present are still kept, but might not run correctly._
-  
+
   You also need `wine` to complete the cross build progress on platforms other than Windows. Follow the instructions given by `electron-packager`.
