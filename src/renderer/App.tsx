@@ -498,6 +498,7 @@ export function App(): JSX.Element {
               }
             >
               <IconButton
+                id={"hotbar_exit"}
                 className={classes.exitButton}
                 onClick={exitApp}
                 color={"inherit"}

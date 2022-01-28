@@ -46,6 +46,7 @@ import { initWorker } from "./Schedule";
 import { initStatistics } from "./Statistics";
 import { AL_THEMES } from "./ThemeColors";
 import { initTranslator, loadTips, tr } from "./Translator";
+import { initValueEventsFromMain } from "./ValueCenter";
 
 try {
   console.log("Renderer first log.");
@@ -112,6 +113,7 @@ try {
   if (e2) {
     e2.innerHTML = e2.innerHTML + "Done.";
   }
+  initValueEventsFromMain();
   ipcRenderer.send("allowShowWindow"); // STI
   void (async () => {
     printScreen("Loading lang, config, gdt, jdt...");
@@ -140,7 +142,6 @@ try {
       console.log("Resetting and reloading config...");
       await saveDefaultConfig();
       await loadConfig();
-      ipcRenderer.send("reloadConfig");
       console.log("Reset complete.");
       console.log("Reloading window...");
       ipcRenderer.send("reload");

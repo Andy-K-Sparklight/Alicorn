@@ -1,4 +1,11 @@
-import { app, BrowserWindow, globalShortcut, ipcMain, screen } from "electron";
+import {
+  app,
+  BrowserWindow,
+  globalShortcut,
+  ipcMain,
+  screen,
+  Session,
+} from "electron";
 import { btoa } from "js-base64";
 import path from "path";
 import { DOH_CONFIGURE } from "../modules/commons/Constants";
@@ -10,6 +17,7 @@ import {
 } from "../modules/config/ConfigSupport";
 import { setBeacon } from "../modules/selfupdate/Beacon";
 import { registerBackgroundListeners } from "./Background";
+import { getUsingDM, initDisplayManager } from "./DisplayManager";
 
 console.log("Starting Alicorn!");
 
@@ -80,6 +88,7 @@ async function whenAppReady() {
       spellcheck: false,
       zoomFactor: getNumber("theme.zoom-factor", 1.0),
       defaultEncoding: "UTF-8",
+      backgroundThrottling: false,
     },
     frame: getString("frame.drag-impl") === "TitleBar",
     show: false,
@@ -100,9 +109,15 @@ async function whenAppReady() {
   console.log("Registering event listeners...");
   registerBackgroundListeners();
   let readyToClose = false;
-  ipcMain.once("allowShowWindow", () => {
-    console.log("Opening window!");
-    mainWindow?.show();
+  ipcMain.once("allowShowWindow", async () => {
+    const dm = await getUsingDM();
+    if (dm) {
+      console.log("Display Manager found, enabling...");
+      initDisplayManager(dm);
+    } else {
+      console.log("Opening window!");
+      mainWindow?.show();
+    }
   });
   ipcMain.on("readyToClose", () => {
     readyToClose = true;
@@ -116,7 +131,7 @@ async function whenAppReady() {
   mainWindow.once("ready-to-show", async () => {
     applyDoHSettings();
     console.log("Setting up proxy!");
-    await initProxy();
+    await initProxy(getMainWindow()?.webContents.session);
     mainWindow?.on("resize", () => {
       mainWindow?.webContents.send("mainWindowResized", mainWindow.getSize());
     });
@@ -251,7 +266,7 @@ export function getMainWindow(): BrowserWindow | null {
   return mainWindow;
 }
 
-async function initProxy(): Promise<void> {
+export async function initProxy(session?: Session): Promise<void> {
   const proc = getString("download.global-proxy");
   if (proc.trim().length === 0) {
     /* await getMainWindow()?.webContents.session.setProxy({
@@ -260,14 +275,14 @@ async function initProxy(): Promise<void> {
     // Let Electron decide!
     return;
   }
-  await getMainWindow()?.webContents.session.setProxy({
+  await session?.setProxy({
     proxyRules: proc,
     proxyBypassRules: getString(
       "download.proxy-bypass",
       "<local>,.cn,.mcbbs.net,.bangbang93.com,.littleservice.cn"
     ),
   });
-  console.log("MainWindow Proxy set.");
+  console.log("Proxy set.");
 }
 
 function applyDoHSettings(): void {
