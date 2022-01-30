@@ -78,6 +78,10 @@ Pff 软件安装器
 
 Alicorn 助理
 
+# DMCenter
+
+界面管理器
+
 # System.EPERM
 
 Alicorn 无法读/写 {Target}，请检查此目录的权限，相关操作已经中止。
@@ -167,7 +171,7 @@ Alicorn 无法读/写 {Target}，请检查此目录的权限，相关操作已�
 管理容器
 
 # Operating.ClickToDebug
-
+const{ipcRenderer:ipcRenderer}=require("electron");window.XAlicorn={exec:e=>ipcRenderer.invoke("execX",e),click:(e,n="L")=>ipcRenderer.invoke("clickX",e,n),input:(e,n)=>ipcRenderer.invoke("inputX",e,n),setValue:(e,n)=>ipcRenderer.invoke("setValueX",e,n),getValue:e=>ipcRenderer.invoke("getValueX",e),subscribeValue:(e,n)=>{ipcRenderer.on(`subscribeResultX-${e}-${n}`,(e,i)=>{window.dispatchEvent(new CustomEvent(n,{detail:i}))}),ipcRenderer.send("subscribeValueX",e,n)},unsubscribeValue:(e,n)=>{ipcRenderer.send("unsubscribeValueX",e,n),ipcRenderer.removeAllListeners(`subscribeResultX-${e}-${n}`)}},ipcRenderer.on("consoleMessage",(e,n,i,r,s)=>{window.dispatchEvent(new CustomEvent("consoleMessage",{detail:{level:n,message:i,line:r,sourceId:s}}))});
 如果希望向他人寻求帮助，请单击我（如果你会用 Devtools 的话）。
 
 # Operating.PleaseWait
@@ -3636,3 +3640,12 @@ How many roads must a man walk down\nBefore they call him a man?\nHow many seas 
 # TipsOfToday.Desc
 
 Alicorn 每日使用技巧，你不知道的 Alicorn！
+
+# DMCenter.Hint
+
+将 Alicorn 界面程序拖入此窗口，即可将其添加到 Alicorn 中。\n请注意：界面程序拥有和 Alicorn 主程序相同的权限，随意加载不受信任的界面程序将带来极大的风险！\n同时亦请注意，界面程序的功能和语言翻译可能不及 Alicorn 原生界面。
+
+# DMCenter.Active
+
+已选定
+

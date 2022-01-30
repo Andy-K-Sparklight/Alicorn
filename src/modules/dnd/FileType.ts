@@ -9,6 +9,7 @@ export enum FileType {
   SHADER_PACK = "ShaderPack",
   RESOURCE_PACK = "ResourcePack",
   ALICORN_UPDATE = "AlicornUpdate",
+  DISPLAY_MANAGER = "DisplayManager",
   UNKNOWN = "Unknown",
 }
 
@@ -74,6 +75,8 @@ export async function justifyFileType(file: string): Promise<FileType> {
         }
       }
       return FileType.UNKNOWN;
+    } else if (file.endsWith(".aldm")) {
+      return FileType.DISPLAY_MANAGER;
     } else {
       return FileType.UNKNOWN;
     }

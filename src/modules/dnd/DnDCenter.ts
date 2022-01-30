@@ -1,9 +1,11 @@
+import { tgz } from "compressing";
 import { copy, ensureDir } from "fs-extra";
 import path from "path";
 import React from "react";
 import { jumpTo, triggerSetPage } from "../../renderer/GoTo";
 import { submitInfo, submitSucc } from "../../renderer/Message";
 import { tr } from "../../renderer/Translator";
+import { getActualDataPath } from "../config/DataSupport";
 import { getAllMounted, getContainer } from "../container/ContainerUtil";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { updateFromSource } from "../selfupdate/Updator";
@@ -74,5 +76,12 @@ async function genDeployTask(
   }
   if (type === FileType.ALICORN_UPDATE) {
     await updateFromSource(f);
+  }
+  if (type === FileType.DISPLAY_MANAGER) {
+    const target = getActualDataPath(
+      path.join("dms", path.basename(f, ".aldm"))
+    );
+    await ensureDir(target);
+    await tgz.uncompress(f, target);
   }
 }

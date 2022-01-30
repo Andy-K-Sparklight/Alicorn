@@ -3,6 +3,7 @@ import {
   AllInbox,
   ArrowBack,
   Code,
+  DisplaySettings,
   Dns,
   FlightTakeoff,
   GetApp,
@@ -57,6 +58,7 @@ import { waitUpdateFinished } from "../modules/selfupdate/Updator";
 import { saveServers } from "../modules/server/ServerFiles";
 import { ContainerManager } from "./ContainerManager";
 import { CrashReportDisplay } from "./CrashReportDisplay";
+import { DMCenter } from "./DMCenter";
 import { waitInstDone } from "./FirstRunSetup";
 import {
   canGoBack,
@@ -539,6 +541,7 @@ export function App(): JSX.Element {
           <Route path={"/Boticorn"} component={Boticorn} />
           <Route path={"/JavaSelector"} component={JavaSelector} />
           <Route path={"/Options"} component={OptionsPage} />
+          <Route path={"/DMCenter"} component={DMCenter} />
           <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
           <Route
             path={"/PffFront/:container/:version/:loader/:name?/:autostart?"}
@@ -681,12 +684,13 @@ const PAGES_ICONS_MAP: Record<string, JSX.Element> = {
   UtilitiesIndex: <Handyman />,
   Statistics: <ShowChart />,
   Options: <Settings />,
+  DMCenter: <DisplaySettings />,
   ServerList: <Dns />,
   Version: <Info />,
   TheEndingOfTheEnd: <ImportContacts />,
 };
 
-const BETAS = ["ServerList", "Boticorn", "Cadance"];
+const BETAS = ["ServerList", "Boticorn", "Cadance", "DMCenter"];
 
 function PagesDrawer(props: {
   open: boolean;

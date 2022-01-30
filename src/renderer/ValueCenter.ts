@@ -15,7 +15,7 @@ export function registerXValue<T>(
   // Notify all
   const ls = VALUE_LISTENERS.get(id);
   if (ls) {
-    if (ls?.size > 0) {
+    if (ls.size > 0) {
       for (const f of ls.values()) {
         try {
           f(current);

@@ -37,7 +37,7 @@ export async function getUsingDM(): Promise<string> {
 
 export function closeDM(): void {
   if (DM_WINDOW) {
-    DM_WINDOW?.close();
+    DM_WINDOW.close();
   }
 }
 

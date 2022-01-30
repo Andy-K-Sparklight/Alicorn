@@ -343,7 +343,8 @@ function Launching(props: {
   const [warning, setWarning] = useState(false);
   const [status, setStatus] = useState(LaunchingStatus.PENDING);
   const [activeStep, setActiveStep] = useState(0);
-  const [selectedAccount, setSelectedAccount] = useState<Account>();
+  // eslint-disable-next-line prefer-const
+  let [selectedAccount, setSelectedAccount] = useState<Account>();
   const [selecting, setSelecting] = useState<boolean>(false);
   const [ws, setWrapperStatus] = useState<WrapperStatus>(getWrapperStatus());
   const [lanPort, setLanPort] = useState(0);
@@ -582,10 +583,55 @@ function Launching(props: {
                 if (status === LaunchingStatus.PENDING) {
                   if (reConfigureAccount) {
                     localStorage.removeItem(
-                      ACCOUNT_CONFIGURED_KEY + profileHash
+                      ACCOUNT_CONFIGURED_KEY + profileHash.current
                     );
                   }
                   setProfileRelatedID(profileHash.current, "");
+                  // If account already configured then just continue
+                  if (
+                    localStorage.getItem(
+                      ACCOUNT_CONFIGURED_KEY + profileHash.current
+                    ) === "1"
+                  ) {
+                    const accountMap: Record<string, Account> = {};
+                    for (const a of getPresentAccounts()) {
+                      const i = a.getAccountIdentifier();
+                      accountMap[i] = a;
+                    }
+                    const choice =
+                      localStorage.getItem(
+                        LAST_ACCOUNT_TAB_KEY + profileHash.current
+                      ) || "MZ";
+                    switch (choice) {
+                      case "MZ":
+                        selectedAccount = new MicrosoftAccount("");
+                        break;
+                      case "YG":
+                        {
+                          const la =
+                            localStorage.getItem(
+                              LAST_YG_ACCOUNT_NAME + profileHash.current
+                            ) || "";
+                          let ll = "";
+                          if (la && accountMap[la] !== undefined) {
+                            ll = la;
+                          }
+                          const sAccount =
+                            ll || Object.keys(accountMap.current).shift() || "";
+                          selectedAccount = accountMap[sAccount];
+                        }
+
+                        break;
+                      case "AL":
+                      default:
+                        selectedAccount = new LocalAccount(
+                          localStorage.getItem(
+                            LAST_USED_USER_NAME_KEY + profileHash.current
+                          ) || "Player"
+                        );
+                    }
+                    setSelectedAccount(selectedAccount);
+                  }
                   if (selectedAccount !== undefined) {
                     // @ts-ignore
                     window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
@@ -1015,7 +1061,7 @@ async function startBoot(
 const LAST_ACCOUNT_TAB_KEY = "ReadyToLaunch.LastSelectedAccountType";
 const LAST_YG_ACCOUNT_NAME = "ReadyToLaunch.LastSelectedYggdrasilName";
 const ACCOUNT_CONFIGURED_KEY = "ReadyToLaunch.AccountConfigured";
-// TODO: fewer clicks
+
 function AccountChoose(props: {
   open: boolean;
   closeFunc: () => void;
@@ -1116,24 +1162,6 @@ function AccountChoose(props: {
     })();
   }, [sAccount, choice, msLogout, bufPName]);
 
-  // If account already configured then just continue
-  if (
-    localStorage.getItem(ACCOUNT_CONFIGURED_KEY + props.profileHash) === "1"
-  ) {
-    props.closeFunc();
-    switch (choice) {
-      case "MZ":
-        props.onChose(new MicrosoftAccount(""));
-        break;
-      case "YG":
-        props.onChose(accountMap.current[sAccount]);
-        break;
-      case "AL":
-      default:
-        props.onChose(new LocalAccount(pName));
-    }
-    return <></>;
-  }
   return (
     <ThemeProvider
       theme={
