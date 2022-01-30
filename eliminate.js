@@ -3,6 +3,7 @@ let OUTPUT_DIRS = [
   "out/Alicorn-linux-x64",
   "out/Alicorn-win32-ia32",
   "out/Alicorn-win32-x64",
+  "out/Alicorn-linux-arm64",
 ];
 const path = require("path");
 async function eliminateExtraFiles() {
