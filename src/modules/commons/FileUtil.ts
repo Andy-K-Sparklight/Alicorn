@@ -1,5 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
+import { expose } from "../boticorn/FTable";
 
 export async function alterPath(...pt: string[]): Promise<string> {
   for (const p of pt) {
@@ -46,6 +47,7 @@ export async function chkPermissions(
   return false;
 }
 
+expose({isFileExist})
 export async function isFileExist(pt: string): Promise<boolean> {
   if (pt.length === 0) {
     return false; // Null safe
@@ -58,6 +60,7 @@ export async function isFileExist(pt: string): Promise<boolean> {
   }
 }
 
+expose({isFileExistAndNonEmpty})
 export async function isFileExistAndNonEmpty(pt: string): Promise<boolean> {
   try {
     const s = await fs.lstat(pt);

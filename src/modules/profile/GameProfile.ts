@@ -1,4 +1,5 @@
 import { schedulePromiseTask } from "../../renderer/Schedule";
+import { expose } from "../boticorn/FTable";
 import { ReleaseType } from "../commons/Constants";
 import { isNull, safeGet } from "../commons/Null";
 import {
@@ -111,6 +112,7 @@ export class GameProfile {
   }
 }
 
+expose({copyProfile})
 export async function copyProfile(input: GameProfile): Promise<GameProfile> {
   return await schedulePromiseTask(() => {
     const gp = new GameProfile({});

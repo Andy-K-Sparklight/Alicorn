@@ -12,6 +12,7 @@ import childProcess from "child_process";
 import { zip } from "compressing";
 import fs, { readJSON } from "fs-extra";
 import path from "path";
+import { expose } from "../../boticorn/FTable";
 import { Pair } from "../../commons/Collections";
 import { FILE_SEPARATOR } from "../../commons/Constants";
 import { isFileExist, wrappedLoadJSON } from "../../commons/FileUtil";
@@ -34,6 +35,15 @@ const PONY_KIND_MAIN_CLASS = "rarityeg.alicorn.ForgeInstallerWrapper";
 const VERSION_PROFILE = "version.json";
 const INSTALL_PROFILE = "install_profile.json";
 
+expose({
+  performForgeInstall,
+  bootForgeInstaller,
+  getPolyfillForgeProfile,
+  downloadMappings,
+  rmTempForgeFiles,
+  makeTempLP,
+  extractForgeFiles,
+});
 // Save 'forge.iw.jar'
 export async function initForgeInstallModule(): Promise<void> {
   await saveDefaultData(FORGE_INSTALLER_HEADLESS);

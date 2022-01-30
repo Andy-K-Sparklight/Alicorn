@@ -2,11 +2,13 @@ import { ipcRenderer } from "electron";
 import { readFile } from "fs-extra";
 import os from "os";
 import React from "react";
+import { expose } from "../modules/boticorn/FTable";
 import { getString, set } from "../modules/config/ConfigSupport";
 import { getPathInDefaults } from "../modules/config/DataSupport";
 
 export const ALL_ASSISTANTS = ["PonyCN", "Equish", "Maud", "66CCFF"];
 
+expose({ tr, randsl });
 function currentLocale(): string {
   let pr = getString("assistant");
   if (pr.length === 0) {

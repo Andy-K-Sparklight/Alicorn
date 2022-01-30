@@ -1,5 +1,6 @@
 import childProcess from "child_process";
 import fs from "fs-extra";
+import { expose } from "../../boticorn/FTable";
 import { basicHash } from "../../commons/BasicHash";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { addDoing } from "../../download/DownloadWrapper";
@@ -16,6 +17,7 @@ import { makeTempLP } from "./ForgeInstall";
 const JAR_ARG = "-jar";
 const PROFILE_JSON_SUFFIX = "/profile/json";
 
+expose({ performFabricInstall, bootFabricInstaller, ensureFabricLibrariesOL });
 export async function performFabricInstall(
   jExecutable: string,
   fbURL: string,

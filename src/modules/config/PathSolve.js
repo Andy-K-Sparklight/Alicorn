@@ -1,3 +1,5 @@
+import { expose } from "../boticorn/FTable";
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function getBasePath() {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -8,3 +10,5 @@ export function getBasePath() {
     return electron.app.getAppPath();
   }
 }
+
+expose({ getBasePath });

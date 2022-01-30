@@ -2,6 +2,7 @@ import { ipcRenderer } from "electron";
 import fs from "fs-extra";
 import os from "os";
 import path from "path";
+import { expose } from "../boticorn/FTable";
 import { DEFAULTS_ROOT } from "./DataSupport";
 import { getBasePath } from "./PathSolve";
 
@@ -19,6 +20,8 @@ const DEFAULT_CONFIG_FILE = path.resolve(
 
 let cachedConfig = {};
 let defaultConfig = {};
+
+expose({ set, get, getBoolean, getString, getNumber });
 export function set(key: string, value: unknown): void {
   // @ts-ignore
   cachedConfig[key] = value;

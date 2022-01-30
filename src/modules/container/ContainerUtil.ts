@@ -1,4 +1,5 @@
 import { invokeWorker, schedulePromiseTask } from "../../renderer/Schedule";
+import { expose } from "../boticorn/FTable";
 import { ALICORN_DATA_SUFFIX } from "../commons/Constants";
 import { buildMap, parseMap } from "../commons/MapUtil";
 import { loadData, saveData, saveDataSync } from "../config/DataSupport";
@@ -11,6 +12,19 @@ const GMT_NAME = "global-mount-descriptor" + ALICORN_DATA_SUFFIX;
 
 // GDT stands for Global container Descriptor Table
 
+expose({
+  getAllContainerPaths,
+  getAllContainers,
+  getContainer,
+  registerContainer,
+  getAllMounted,
+  getAllNotMounted,
+  unregisterContainer,
+  isMounted,
+  mount,
+  unmount,
+  getDirSize,
+});
 export function getAllContainers(): string[] {
   return Array.from(GlobalContainerDescriptorTable.keys());
 }

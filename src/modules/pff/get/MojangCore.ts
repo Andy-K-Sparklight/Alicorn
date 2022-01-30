@@ -1,4 +1,5 @@
 import path from "path";
+import { expose } from "../../boticorn/FTable";
 import { MOJANG_VERSIONS_MANIFEST, ReleaseType } from "../../commons/Constants";
 import { safeGet } from "../../commons/Null";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
@@ -9,6 +10,12 @@ import { ensureClient } from "../../launch/Ensurance";
 import { loadProfile } from "../../profile/ProfileLoader";
 const MOJANG_CORES_KEY = "MojangCores";
 
+expose({
+  getAllMojangCores,
+  getLatestMojangCore,
+  getProfileURLById,
+  downloadProfile,
+});
 export async function getAllMojangCores(
   filter = ReleaseType.RELEASE,
   noTimeout = false

@@ -1,4 +1,5 @@
 import fs from "fs-extra";
+import { expose } from "../boticorn/FTable";
 import { isNull } from "../commons/Null";
 import { getBoolean } from "../config/ConfigSupport";
 import { MinecraftContainer } from "../container/MinecraftContainer";
@@ -14,6 +15,14 @@ import { checkExtractTrimNativeLocal, getNativeArtifact } from "./NativesLint";
 
 const ASSET_WEB_ROOT = "https://resources.download.minecraft.net/";
 
+expose({
+  ensureNatives,
+  ensureClient,
+  ensureLibraries,
+  ensureLog4jFile,
+  ensureAllAssets,
+  ensureAssetsIndex,
+});
 // Ensure that native libraries(*.dll) exists
 // This is only a try, no GUARANTEE
 // DO perform this AFTER 'ensureLibraries'!

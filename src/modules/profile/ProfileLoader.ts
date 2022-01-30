@@ -1,5 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
+import { expose } from "../boticorn/FTable";
 import { scanCoresIn } from "../container/ContainerScanner";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { JAR_SUFFIX } from "../launch/NativesLint";
@@ -9,6 +10,7 @@ import { convertFromLegacy } from "./LegacyProfileAdaptor";
 import { convertLibsByName } from "./LibrariesConvert";
 import { isLegacy, ProfileType, whatProfile } from "./WhatProfile";
 
+expose({ loadProfile, isStillNeeded, fixProfileClient });
 async function checkDep(
   container: MinecraftContainer,
   target: string

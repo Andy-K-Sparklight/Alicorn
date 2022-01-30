@@ -1,5 +1,8 @@
 import CryptoJS from "crypto-js";
 import { invokeWorker } from "../../renderer/Schedule";
+import { expose } from "../boticorn/FTable";
+
+expose({ basicHash, uniqueHash });
 export function basicHash(
   obj: string | number | Record<string, unknown>
 ): string {

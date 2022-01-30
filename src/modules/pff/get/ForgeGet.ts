@@ -1,5 +1,6 @@
 import fs from "fs-extra";
 import semver from "semver";
+import { expose } from "../../boticorn/FTable";
 import {
   FORGE_MAVEN_ROOT,
   FORGE_VERSIONS_MANIFEST,
@@ -20,6 +21,13 @@ const SUFFIX = "installer" + JAR_SUFFIX;
 
 const FORGE_MANIFEST_CACHE_KEY = "ForgeManifestCache";
 
+expose({
+  getForgeVersionByMojang,
+  getMojangByForge,
+  getForgeInstaller,
+  removeForgeInstaller,
+  getMCVersionByForgeVersion,
+});
 export async function getForgeVersionByMojang(
   id: string,
   filter = ForgeFilter.RECOMMENDED

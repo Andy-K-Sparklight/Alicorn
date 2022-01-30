@@ -1,3 +1,4 @@
+import { expose } from "../boticorn/FTable";
 import { isNull } from "../commons/Null";
 
 const FABRIC_NAME = /fabric/i;
@@ -11,6 +12,12 @@ const MOJANG_OLD_RD = /^rd-[0-9]+?$/i;
 const MOJANG_PRE_RC = /^[0-9]+?\.[0-9]+?(\.)?[0-9]*-(pre|rc)[0-9]*$/i;
 const MOJANG_EXPERIMENTAL = /_experimental-snapshot/;
 const INSTALLER = /-installer$/i;
+
+expose({
+  whatProfile,
+  inferModLoaderVersionFabric,
+  inferModLoaderVersionForge,
+});
 export function whatProfile(id: string): ProfileType {
   if (
     MOJANG_NAME_RELEASE.test(id) ||

@@ -1,3 +1,5 @@
+import { expose } from "../modules/boticorn/FTable";
+
 export const AL_THEMES: Record<string, [string, string, string, string]> = {
   FadeGray: ["373737", "808080", "626262", "f0f0f0"],
   Twikie: ["5d2391", "d796f0", "df307f", "ffe0f0"],
@@ -35,3 +37,5 @@ function randomColorUnit(): string {
   }
   return b;
 }
+
+expose({ AL_THEMES });

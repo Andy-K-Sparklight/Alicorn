@@ -1,3 +1,4 @@
+import { expose } from "../boticorn/FTable";
 import {
   ArtifactMeta,
   AssetIndexArtifactMeta,
@@ -6,6 +7,7 @@ import {
   LibraryMeta,
 } from "../profile/Meta";
 
+expose({ isNull, safeGet });
 export function isNull(obj: unknown): boolean {
   try {
     return (
