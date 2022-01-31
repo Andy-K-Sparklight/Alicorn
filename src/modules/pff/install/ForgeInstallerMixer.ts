@@ -1,6 +1,5 @@
 import { zip } from "compressing";
-import fs from "fs-extra";
-import { createWriteStream } from "fs-extra";
+import fs, { createWriteStream } from "fs-extra";
 import path from "path";
 import { pipeline } from "stream";
 import { promisify } from "util";
@@ -31,6 +30,15 @@ export async function rebuildForgeInstaller(
       }
     }
   }
+  try {
+    const vJson = path.join(tDir, "version.json");
+    // Not because it's not important! Just because work first...
+    const j2 = await fs.readJSON(vJson);
+    if (j2["_comment_"] instanceof Array) {
+      j2["_comment_"].push("And don't forget to use Fabric next time!");
+    }
+    await fs.writeJSON(vJson, j2);
+  } catch {}
   await fs.writeJSON(tJson, j);
   await fs.remove(path.join(tDir, "META-INF")); // Dispose jar signature
   const files = await fs.readdir(tDir);
