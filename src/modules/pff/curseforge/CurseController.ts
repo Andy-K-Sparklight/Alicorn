@@ -68,7 +68,7 @@ function jmpPage(url: string, cWindow: BrowserWindow | null): Promise<void> {
 }
 
 // To get slug
-export async function queryModByName(query: string): Promise<string> {
+async function queryModByName(query: string): Promise<string> {
   ensureCurseWindow();
   const x = (await cWindow?.allocate()) || null;
   await jmpPage(
@@ -83,7 +83,7 @@ export async function queryModByName(query: string): Promise<string> {
   return slug || "";
 }
 
-export async function queryModInfoBySlug(
+async function queryModInfoBySlug(
   slug: string
 ): Promise<[ModMeta, ModArtifact[]]> {
   ensureCurseWindow();
@@ -146,7 +146,7 @@ export async function queryModInfoBySlug(
   ];
 }
 
-export async function deicdeFullInformation(
+async function deicdeFullInformation(
   artifact: ModArtifact
 ): Promise<ModArtifact> {
   ensureCurseWindow();

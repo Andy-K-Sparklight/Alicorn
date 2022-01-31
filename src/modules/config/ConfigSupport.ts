@@ -103,15 +103,6 @@ export function loadConfigSync(): void {
   fixConfig(cachedConfig, defaultConfig);
 }
 
-export function saveConfigSync(): void {
-  try {
-    const dat = JSON.stringify(cachedConfig, null, 4);
-    fs.outputFileSync(CONFIG_FILE, dat, {
-      mode: 0o777,
-    });
-  } catch {}
-}
-
 export async function saveConfig(): Promise<void> {
   const dat = JSON.stringify(cachedConfig, null, 4);
   await fs.outputFile(CONFIG_FILE, dat, {

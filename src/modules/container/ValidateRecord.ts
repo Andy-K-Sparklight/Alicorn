@@ -1,14 +1,9 @@
+import path from "path";
 import { ALICORN_DATA_SUFFIX } from "../commons/Constants";
-import {
-  getActualDataPath,
-  loadData,
-  saveData,
-  saveDataSync,
-} from "../config/DataSupport";
 import { isFileExist } from "../commons/FileUtil";
 import { buildMap, parseMap } from "../commons/MapUtil";
-import path from "path";
 import { isNull } from "../commons/Null";
+import { getActualDataPath, loadData, saveData } from "../config/DataSupport";
 
 const VALIDATE_FILE = "f.record" + ALICORN_DATA_SUFFIX;
 let VF: Map<string, string> = new Map();
@@ -43,10 +38,6 @@ export function updateRecord(file: string): void {
 export function deleteRecord(file: string): void {
   file = path.isAbsolute(file) ? file : path.resolve(file);
   VF.delete(path.resolve(file));
-}
-
-export function saveVFSync(): void {
-  saveDataSync(VALIDATE_FILE, buildMap(VF));
 }
 
 export async function saveVF(): Promise<void> {

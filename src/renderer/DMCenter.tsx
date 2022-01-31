@@ -140,7 +140,7 @@ export function DMCenter(): JSX.Element {
 
 const ACTIVE_DM = "active.ald";
 const PACKAGE = "package.json";
-export async function getUsingDM(): Promise<string> {
+async function getUsingDM(): Promise<string> {
   try {
     const dm = (await fs.readFile(path.join(DM_ROOT, ACTIVE_DM)))
       .toString()

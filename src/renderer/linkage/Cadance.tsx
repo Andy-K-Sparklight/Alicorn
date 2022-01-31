@@ -230,7 +230,7 @@ export function terminateCadanceProc(): void {
   CADANCE_PROC?.kill();
 }
 
-export async function enableCadanceFeature(): Promise<void> {
+async function enableCadanceFeature(): Promise<void> {
   let u = CADANCE_GNU;
   if (os.platform() === "win32") {
     u = CADANCE_WIN;
@@ -254,7 +254,7 @@ export async function enableCadanceFeature(): Promise<void> {
   }
 }
 
-export async function detectCadance(): Promise<boolean> {
+async function detectCadance(): Promise<boolean> {
   const cadance = join(
     getBasePath(),
     "Cadance",

@@ -4,7 +4,7 @@ import path from "path";
 import { ALICORN_DATA_SUFFIX, PLACE_HOLDER } from "../commons/Constants";
 import { isFileExist } from "../commons/FileUtil";
 import { buildMap, parseMap } from "../commons/MapUtil";
-import { loadData, saveData, saveDataSync } from "../config/DataSupport";
+import { loadData, saveData } from "../config/DataSupport";
 
 const JAVA_RECORD_BASE = "java.record" + ALICORN_DATA_SUFFIX;
 const LATEST_TAG = "?LATEST>>";
@@ -94,10 +94,6 @@ export function getDefaultJavaHome(): string {
 
 export function setDefaultJavaHome(jHome: string): void {
   JDT.set(LATEST_TAG, jHome);
-}
-
-export function saveJDTSync(): void {
-  saveDataSync(JAVA_RECORD_BASE, buildMap(JDT));
 }
 
 export async function saveJDT(): Promise<void> {

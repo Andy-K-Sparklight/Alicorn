@@ -93,12 +93,6 @@ export async function loadGDT(): Promise<void> {
   syncGDTGMT();
 }
 
-export function saveGDTSync(): void {
-  syncGDTGMT();
-  saveDataSync(GMT_NAME, buildMap(GlobalMountDescriptorTable));
-  saveDataSync(GDT_NAME, buildMap(GlobalContainerDescriptorTable));
-}
-
 export async function saveGDT(): Promise<void> {
   syncGDTGMT();
   await saveData(GMT_NAME, buildMap(GlobalMountDescriptorTable));

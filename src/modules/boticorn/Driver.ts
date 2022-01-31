@@ -13,7 +13,7 @@ const MODEL_SHA = "https://alicorn-mc-bot.pages.dev/driver.bundle.js.sha1sum";
 const LOCAL_MODEL = "boticorn.js";
 let BOT_WORKER: Worker;
 
-export async function initBotWorker(): Promise<void> {
+async function initBotWorker(): Promise<void> {
   BOT_WORKER = new Worker("BotWorker.js");
   const fun = (e: MessageEvent) => {
     const data = e.data;
@@ -112,7 +112,7 @@ interface Answer {
 const TASK_ID_MAP: Map<number, (value: Answer) => void> = new Map();
 let cEid = 0;
 
-export function sendToBot(input: string, init = false): Promise<Answer> {
+function sendToBot(input: string, init = false): Promise<Answer> {
   return new Promise<Answer>((res) => {
     cEid++;
     TASK_ID_MAP.set(cEid, res);

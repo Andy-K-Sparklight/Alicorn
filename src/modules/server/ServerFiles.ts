@@ -19,9 +19,6 @@ export async function saveServers(): Promise<void> {
     await saveData(SERVERS_NAME, Array.from(SERVERS).join(","));
   } catch {}
 }
-export function saveServersSync(): void {
-  saveDataSync(SERVERS_NAME, Array.from(SERVERS).join(","));
-}
 
 export function getServerList(): string[] {
   return Array.from(SERVERS);
