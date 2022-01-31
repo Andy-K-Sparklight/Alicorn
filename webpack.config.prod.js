@@ -119,6 +119,7 @@ const Renderer = {
       include: ["Renderer", "LibWorker", "BotWorker"],
     }),
   ],
+  externals: { "util/types": "commonjs util/types" },
   mode: "production",
   target: "electron-renderer",
 };

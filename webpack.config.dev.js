@@ -120,6 +120,7 @@ const RendererDev = {
   watchOptions: {
     ignored: ["**/node_modules", "**/dist"],
   },
+  externals: { "util/types": "commonjs util/types" },
 };
 
 module.exports = [MainDev, RendererDev];
