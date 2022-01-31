@@ -1,9 +1,6 @@
 import { stat } from "fs-extra";
 import { invokeWorker } from "../../renderer/Schedule";
-import { expose } from "../boticorn/FTable";
 import { getBoolean } from "../config/ConfigSupport";
-
-expose({ validate, getHash, sizeValidate });
 export async function validate(
   file: string,
   expected: string,

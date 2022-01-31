@@ -1,6 +1,3 @@
-import { expose } from "../modules/boticorn/FTable";
-
-expose({ submitError, submitInfo, submitSucc, submitWarn });
 export function submitError(msg: string): void {
   console.log(msg);
   window.dispatchEvent(new CustomEvent("sysError", { detail: msg }));

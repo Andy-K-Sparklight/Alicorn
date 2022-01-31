@@ -21,7 +21,7 @@ import { MirrorChain } from "./Mirror";
 import { Serial } from "./Serial";
 import { validate } from "./Validate";
 
-expose({ wrappedDownloadFile, getWrapperStatus });
+expose({ wrappedDownloadFile });
 
 let DOINGX = "";
 const DOING_X_SUBSCRIBES: Map<string, (d: string) => unknown> = new Map();

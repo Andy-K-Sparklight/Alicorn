@@ -1,9 +1,7 @@
-import { expose } from "../modules/boticorn/FTable";
 import { submitError } from "./Message";
 
 let WORKER: Worker;
 
-expose({ schedulePromiseTask, invokeWorker });
 export function schedulePromiseTask<T>(
   fn: () => Promise<T> | T,
   timeout?: number

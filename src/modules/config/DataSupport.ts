@@ -1,21 +1,12 @@
 import fs from "fs-extra";
 import os from "os";
 import path from "path";
-import { expose } from "../boticorn/FTable";
 import { copyFileStream, isFileExist } from "../commons/FileUtil";
 import { getBasePath } from "./PathSolve";
 
 const DATA_ROOT = path.resolve(os.homedir(), "alicorn");
 export const DEFAULTS_ROOT = path.resolve(getBasePath(), "defaults");
 
-expose({
-  loadData,
-  getPathInDefaults,
-  getActualDataPath,
-  saveData,
-  saveDefaultData,
-  saveDefaultDataAs,
-});
 export async function loadData(dataPath: string): Promise<string> {
   try {
     return (await fs.readFile(getActualDataPath(dataPath))).toString();

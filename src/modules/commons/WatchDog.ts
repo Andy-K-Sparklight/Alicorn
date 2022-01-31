@@ -1,5 +1,3 @@
-import { expose } from "../boticorn/FTable";
-
 export class WatchDog {
   timer: NodeJS.Timeout;
   action: () => unknown;
@@ -35,4 +33,3 @@ export class IntervalChecker {
     clearInterval(this.timer);
   }
 }
-expose({ WatchDog, IntervalChecker });

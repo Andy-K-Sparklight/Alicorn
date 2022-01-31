@@ -1,11 +1,9 @@
 import fs from "fs-extra";
 import path from "path";
-import { expose } from "../boticorn/FTable";
 import { GameProfile } from "../profile/GameProfile";
 import { getAllContainers, getContainer, isMounted } from "./ContainerUtil";
 import { MinecraftContainer } from "./MinecraftContainer";
 
-expose({ scanCoresIn, isValidCore, scanCoresInAllMountedContainers });
 export async function scanCoresIn(
   c: MinecraftContainer,
   unsafe = false

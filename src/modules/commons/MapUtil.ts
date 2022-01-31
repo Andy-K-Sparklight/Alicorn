@@ -1,10 +1,8 @@
-import { expose } from "../boticorn/FTable";
 import { ALICORN_SEPARATOR } from "./Constants";
 
 // Separator '❤❤' is just a choice
 // MapUtil will only be used in our code, not for plugins or user data
 // In that case, we shall use JSON instead
-expose({ parseMap, buildMap });
 export function parseMap<T = boolean | string | number>(
   str: string
 ): Map<string, T> {

@@ -4,7 +4,6 @@ import { createWriteStream } from "fs-extra";
 import path from "path";
 import { pipeline } from "stream";
 import { promisify } from "util";
-import { expose } from "../../boticorn/FTable";
 import { uniqueHash } from "../../commons/BasicHash";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 
@@ -12,7 +11,6 @@ const pipe = promisify(pipeline);
 
 // Forge has been removing the already downloaded mappings, and that's more than I can bear.
 // It's high time we end this.
-expose({ rebuildForgeInstaller });
 export async function rebuildForgeInstaller(
   container: MinecraftContainer,
   source: string

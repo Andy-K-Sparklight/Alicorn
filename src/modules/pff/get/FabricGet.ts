@@ -1,5 +1,4 @@
 import fs from "fs-extra";
-import { expose } from "../../boticorn/FTable";
 import { basicHash } from "../../commons/BasicHash";
 import { Pair } from "../../commons/Collections";
 import { FABRIC_META_ROOT } from "../../commons/Constants";
@@ -22,7 +21,6 @@ const FABRIC_VERSIONS_INSTALLER = FABRIC_VERSIONS_ROOT + "/installer";
 const FABRIC_INSTALLER_MANIFEST_CACHE_KEY = "FabricInstallerManifestCache";
 const FABRIC_LOADER_MANIFEST_CACHE_KEY = "FabricLoaderManifestCache";
 
-expose({ getLatestFabricInstallerAndLoader, getFabricInstaller,generateFabricJarName,removeFabricInstaller });
 export async function getLatestFabricInstallerAndLoader(
   filter = FabricFilter.STABLE
 ): Promise<Pair<string, string>> {

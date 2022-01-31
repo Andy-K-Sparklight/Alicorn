@@ -1,7 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
 import { randsl } from "../../renderer/Translator";
-import { expose } from "../boticorn/FTable";
 import { isFileExist } from "../commons/FileUtil";
 import { getBasePath } from "../config/PathSolve";
 import {
@@ -12,8 +11,6 @@ import {
 } from "./ContainerUtil";
 import { MinecraftContainer } from "./MinecraftContainer";
 import { markASC } from "./SharedFiles";
-
-expose({ createNewContainer, unlinkContainer, forkContainer, clearContainer });
 
 // Create a container at specified dir
 export async function createNewContainer(

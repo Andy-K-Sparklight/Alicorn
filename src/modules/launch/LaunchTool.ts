@@ -2,7 +2,6 @@ import { ipcRenderer } from "electron";
 import EventEmitter from "events";
 import { whereAJ } from "../auth/AJHelper";
 import { whereND } from "../auth/NDHelper";
-import { expose } from "../boticorn/FTable";
 import { Pair, Trio } from "../commons/Collections";
 import { isNull } from "../commons/Null";
 import { MinecraftContainer } from "../container/MinecraftContainer";
@@ -21,7 +20,6 @@ import {
 import { runMinecraft } from "./MinecraftBootstrap";
 
 // Launch and return ID
-expose({ launchProfile, shouldSafeLaunch, markSafeLaunch });
 export function launchProfile(
   profile: GameProfile,
   container: MinecraftContainer,

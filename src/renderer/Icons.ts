@@ -1,5 +1,3 @@
-import { expose } from "../modules/boticorn/FTable";
-
 export enum Icons {
   PROFILE_MOJANG = "img/Grass.png",
   PROFILE_FORGE = "img/DamagedAnvil.png",
@@ -10,4 +8,3 @@ export enum Icons {
   CONTAINER_MCX = "img/Chest.gif",
   PROFILE_IRIS = "img/Iris.webp",
 }
-expose({ Icons });
