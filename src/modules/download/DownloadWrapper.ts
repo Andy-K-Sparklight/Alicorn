@@ -95,7 +95,8 @@ export function initDownloadWrapper(): void {
 // If file already exists, downloader will resolve if hash matches
 export async function wrappedDownloadFile(
   meta: DownloadMeta,
-  noAutoLn = false
+  noAutoLn = false,
+  disableMirror = false
 ): Promise<DownloadStatus> {
   const ou = meta.url;
   // POST
@@ -122,7 +123,7 @@ export async function wrappedDownloadFile(
     }
   }
 
-  if ((await _wrappedDownloadFile(meta)) === 1) {
+  if ((await _wrappedDownloadFile(meta, disableMirror)) === 1) {
     MIRROR_CHAIN.delete(meta);
     return DownloadStatus.RESOLVED;
   } else {
@@ -174,7 +175,10 @@ async function _existsAndValidate(
   return res;
 }
 
-function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
+function _wrappedDownloadFile(
+  meta: DownloadMeta,
+  disableMirror = false
+): Promise<DownloadStatus> {
   return new Promise<DownloadStatus>((resolve) => {
     void existsAndValidate(meta).then((b) => {
       if (b) {
@@ -190,7 +194,10 @@ function _wrappedDownloadFile(meta: DownloadMeta): Promise<DownloadStatus> {
         }
         WAITING_RESOLVES_MAP.set(meta.savePath, [resolve]); // Start it
         PENDING_TASKS.push(meta);
-        const chain = new MirrorChain(meta.url);
+        const chain = disableMirror
+          ? MirrorChain.origin(meta.url)
+          : new MirrorChain(meta.url);
+
         MIRROR_CHAIN.set(meta, chain);
         scheduleNextTask();
       }

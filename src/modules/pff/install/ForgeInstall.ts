@@ -15,7 +15,7 @@ import path from "path";
 import { Pair } from "../../commons/Collections";
 import { FILE_SEPARATOR } from "../../commons/Constants";
 import { isFileExist, wrappedLoadJSON } from "../../commons/FileUtil";
-import { isNull, safeGet } from "../../commons/Null";
+import { safeGet } from "../../commons/Null";
 import { getActualDataPath, saveDefaultData } from "../../config/DataSupport";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { DownloadMeta } from "../../download/AbstractDownloader";
@@ -234,8 +234,9 @@ function generateForgeDownloadableLibrariesLegacyInProfileAsProfile(
     if (allLibraries instanceof Array) {
       for (const l of allLibraries) {
         if (
-          safeGet(l, ["clientreq"], null) === true &&
-          !isNull(safeGet(l, ["checksums"]))
+          safeGet(l, ["clientreq"], null) === true // &&
+          // !isNull(safeGet(l, ["checksums"]))
+          // Or some libs will not be downloaded, if clientreq has been set, we'de better follow it
         ) {
           // This function comes from Fabric
           gp.libraries.push(LibraryMeta.fromObject(makeLibrary(l)));

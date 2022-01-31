@@ -75,21 +75,30 @@ export async function loadMirror(): Promise<void> {
 }
 
 export async function loadAllMirrors(): Promise<void> {
-  mirrors.push(mirrorMap); // First choice
-  await Promise.allSettled(
+  mirrors.push(mirrorMap); // First choice, once more
+  const rets = await Promise.allSettled(
     MIRROR_FILES.map(async (f) => {
       await saveDefaultData(f);
-      const m: Map<string, string> = parseMap(await loadData(f));
-      for (let i = 1; i <= getNumber("download.mirror-tries"); i++) {
-        mirrors.push(m); // Each times tries
-      }
+      return parseMap(await loadData(f)) as Map<string, string>;
     })
   );
+  rets.forEach((v) => {
+    if (v.status === "fulfilled") {
+      for (let i = 1; i <= getNumber("download.mirror-tries"); i++) {
+        mirrors.push(v.value); // Each times tries
+      }
+    }
+  });
 }
 
 export class MirrorChain {
   url: string;
   cIndex = 0;
+  static origin(url: string): MirrorChain {
+    const mc = new MirrorChain(url);
+    mc.cIndex = mirrors.length - 1; // Set to last
+    return mc;
+  }
   constructor(url: string) {
     this.url = url;
   }
@@ -108,16 +117,16 @@ export class MirrorChain {
   }
   next(): void {
     const cu = applyMirror(this.url, mirrors[this.cIndex] || new Map());
+    this.cIndex++; // Next anyway
     if (BLACKLIST_URL.has(cu)) {
-      this.cIndex++;
       return;
     }
     let c = SKIPPED_URL_MAP.get(cu) || 0;
     c++;
     if (c >= 3 && cu !== this.url) {
+      // If failed for 3 times, ban this url
       // Should not ban origin
       BLACKLIST_URL.add(cu);
-      this.cIndex++;
     }
     SKIPPED_URL_MAP.set(cu, c);
   }

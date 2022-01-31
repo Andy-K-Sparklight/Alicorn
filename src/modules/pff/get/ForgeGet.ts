@@ -178,10 +178,18 @@ export async function getForgeInstaller(
         isWebFileExist(pt2),
         isWebFileExist(pt3),
       ]);
-      console.log("Downloading from " + pt);
+      console.log("Downloading from (unmirrored): " + pt);
+      let mirror = true;
+      if (parseInt(String(mcv.split(".")[1])) <= 7) {
+        mirror = false;
+      }
       if (pt) {
         return (
-          (await wrappedDownloadFile(new DownloadMeta(pt, dest, ""))) === 1
+          (await wrappedDownloadFile(
+            new DownloadMeta(pt, dest, ""),
+            true,
+            !mirror
+          )) === 1
         );
       }
       return false;
