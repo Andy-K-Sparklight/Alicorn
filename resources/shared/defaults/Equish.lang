@@ -244,7 +244,7 @@ Forge Mods are supported.
 
 # CoreInfo.Introduction.Fabric
 
-Fabric Mod are supported.
+Fabric Mods are supported.
 
 # CoreInfo.Introduction.Installer
 
@@ -702,7 +702,7 @@ Click To See More
 
 # VersionView.Copyright
 
-The following are translation of the original text and should not be considered as an alternative. \n\nAlicorn Launcher is a free software. It's licensed under the GNU GENERAL PUBLIC LICENSE (Version 3.0 or later).\nCopyright (C) 2021-2022 Annie K Rarity Sparklight\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\nImaged in Alicorn is not a part of Alicorn. They are from Minecraft Wiki and are licensed under the CC BY-NC-SA 3.0 License.
+The following are translation of the original text and should not be considered as an alternative. \n\nAlicorn Launcher is a free software. It's licensed under the GNU GENERAL PUBLIC LICENSE (Version 3.0 or later).\nCopyright (C) 2021-2022 Annie K Rarity Sparklight\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\nImages in Alicorn are not a part of Alicorn. They are from Minecraft Wiki and are licensed under the CC BY-NC-SA 3.0 License.
 
 # VersionView.Privacy
 
@@ -3420,3 +3420,11 @@ Close
 # TipsOfToday.Desc
 
 Alicorn Tips Of Today!
+
+# DMCenter.Hint
+
+Drop Display Manager into Alicorn to add it to thus list.\nDO NOT add a DM you do not trust! This can be very DANGEROUS!
+
+# DMCenter.Active
+
+Active
