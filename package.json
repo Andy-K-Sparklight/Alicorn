@@ -90,7 +90,7 @@
     "sudo-prompt": "^9.2.1",
     "throttle-debounce": "^3.0.1",
     "toml": "^3.0.0",
-    "undici": "^4.12.2",
+    "undici": "^4.13.0",
     "uuid": "^8.3.2",
     "ws": "^8.4.2"
   }
