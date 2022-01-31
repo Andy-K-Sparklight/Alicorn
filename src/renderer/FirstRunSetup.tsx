@@ -13,6 +13,7 @@ import {
   setDefaultJavaHome,
 } from "../modules/java/JavaInfo";
 import { whereJava } from "../modules/java/WhereJava";
+import { fetchARMPackage } from "../modules/launch/ARMChair";
 import { isInstBusy, startInst } from "./Instruction";
 import { checkToGoAndDecideJump, loadToGoHook } from "./linkage/AlicornToGo";
 import { submitInfo, submitWarn } from "./Message";
@@ -51,6 +52,7 @@ export async function completeFirstRun(): Promise<void> {
   );
   await decideMirror();
   await setupFirstJavaCheckAndCheckToGo();
+  await fetchARMPackage(); // This is selective
   set("first-run?", false);
 }
 
@@ -123,7 +125,7 @@ async function setupFirstJavaCheckAndCheckToGo(): Promise<void> {
   }
 }
 
-export async function configureDefaultDirs(): Promise<void> {
+async function configureDefaultDirs(): Promise<void> {
   const pff = await alterPath(path.join(os.homedir(), "alicorn", "pff-cache"));
   const cx = await alterPath(path.join(os.homedir(), "alicorn", "asc-cache"));
   if (pff.length > 0) {
@@ -136,7 +138,7 @@ export async function configureDefaultDirs(): Promise<void> {
   }
 }
 
-export async function decideMirror(): Promise<void> {
+async function decideMirror(): Promise<void> {
   const URLS = {
     "alicorn-mcbbs-nonfree":
       "https://download.mcbbs.net/mc/game/version_manifest.json",

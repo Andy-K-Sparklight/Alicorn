@@ -17,7 +17,7 @@ const REMOTE =
 // Download the prebuilt package
 export async function fetchARMPackage(): Promise<boolean> {
   try {
-    if (os.arch() !== "arm64") {
+    if (os.arch() !== "arm64" || os.platform() !== "linux") {
       // Obviously
       return false;
     }
