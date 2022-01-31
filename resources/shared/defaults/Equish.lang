@@ -364,11 +364,15 @@ Hit: {Url}
 
 # ReadyToLaunch.Retry
 
-Retry: {Url}
+Ret: {Url}
+
+# ReadyToLaunch.Linked
+
+Lnk: {Url}
 
 # ReadyToLaunch.Ignored
 
-Ignored: {Url}
+Ign: {Url}
 
 # ReadyToLaunch.Got
 
@@ -376,7 +380,7 @@ Got: {Url}
 
 # ReadyToLaunch.Failed
 
-Failed: {Url}
+Err: {Url}
 
 # ReadyToLaunch.StartAuthTitle
 

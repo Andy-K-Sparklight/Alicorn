@@ -1,12 +1,13 @@
 import { ensureDir, outputFile, symlink, unlink } from "fs-extra";
 import path from "path";
+import { tr } from "../../renderer/Translator";
 import { basicHash } from "../commons/BasicHash";
 import { PLACE_HOLDER } from "../commons/Constants";
 import { isFileExist } from "../commons/FileUtil";
 import { getString } from "../config/ConfigSupport";
 import { getActualDataPath } from "../config/DataSupport";
 import { DownloadMeta } from "../download/AbstractDownloader";
-import { wrappedDownloadFile } from "../download/DownloadWrapper";
+import { addDoing, wrappedDownloadFile } from "../download/DownloadWrapper";
 import { MinecraftContainer } from "./MinecraftContainer";
 const ASC_NAME = "asc.lock";
 // Use symlink
@@ -49,7 +50,6 @@ export async function fetchSharedFile(meta: DownloadMeta): Promise<boolean> {
   }
 
   if (t === 1) {
-    console.log("Target file at " + targetFile);
     await ensureDir(path.dirname(meta.savePath));
     try {
       await symlink(targetFile, meta.savePath, "file");
@@ -57,6 +57,8 @@ export async function fetchSharedFile(meta: DownloadMeta): Promise<boolean> {
       try {
         await unlink(meta.savePath);
         await symlink(targetFile, meta.savePath, "file");
+        addDoing(tr("ReadyToLaunch.Linked", `Url=${meta.url}`));
+        console.log("Target file at " + targetFile);
         return true;
       } catch {
         return false;

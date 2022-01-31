@@ -374,6 +374,10 @@ Alicorn 无法读/写 {Target}，请检查此目录的权限，相关操作已�
 
 命中：{Url}
 
+# ReadyToLaunch.Linked
+
+连接：{Url}
+
 # ReadyToLaunch.Retry
 
 重试：{Url}
@@ -1061,7 +1065,7 @@ Pff 正安装 Mod……
 
 # InstallCore.InstallForgeInstr
 
-@HTML为已有的 Minecraft 核心进行改装并安装 Forge，Forge Mod 需要进行此改装后才可用。\n<span style="color:#ff8400;">注意：你必须安装了对应版本的 Minecraft 核心才可以进行改装！</span>
+@HTML为已有的 Minecraft 核心进行改装并安装 Forge，Forge Mod 需要进行此改装后才可用。\n<span style="color:#ff8400;">注意：你必须安装了对应版本的 Minecraft 核心才可以进行改装！</span>\n\n<b>注意：</b>有些版本（例如 1.7.10）的 Forge 安装<b>不能使用</b> MCBBS 或 BMCLAPI 镜像，它们的文件尚未更新，直接安装将<b>引发错误</b>。\n
 
 # InstallCore.InstallFabric
 
