@@ -97,8 +97,7 @@ export function PffFront(): JSX.Element {
   };
   useEffect(() => {
     if (!isDirty) {
-      void f();
-      void f1();
+      void Promise.allSettled([f(), f1()]);
     }
   }, [isDirty]);
   useEffect(() => {

@@ -29,16 +29,19 @@ export async function loadMetas(
         allMods.push(x);
       }
     }
-    return await Promise.all(
-      allMods.map((m) => {
-        return new Promise<ModInfo>((resolve) => {
-          void loadModInfo(m, container).then((d) => {
+    return (
+      (
+        await Promise.allSettled(
+          allMods.map(async (m) => {
+            const d = await loadModInfo(m, container);
             d.fileName = d.fileName || container.getModJar(m);
-            // If this meta is loaded from cache we should regenerate
-            resolve(d);
-          });
-        });
-      })
+            return d;
+          })
+        )
+      )
+        .filter((v) => v.status === "fulfilled")
+        // @ts-ignore
+        .map((v) => v.value)
     );
   } catch {
     return [];
