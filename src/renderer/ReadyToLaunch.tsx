@@ -983,6 +983,7 @@ async function startBoot(
   });
   em.on(PROCESS_END_GATE, async (c) => {
     console.log(`Minecraft(${runID}) exited with exit code ${c}.`);
+    window.dispatchEvent(new CustomEvent("WorldStoppedServing"));
     window.dispatchEvent(new CustomEvent("GameQuit"));
     setStatus(LaunchingStatus.PENDING);
     window.dispatchEvent(new CustomEvent("MinecraftExitCleanUp"));
