@@ -497,6 +497,9 @@ function SingleCoreDisplay(props: {
               } finally {
                 markUsed(hash, 0);
                 markTime(hash, true);
+                localStorage.removeItem(
+                  "ReadyToLaunch.AccountConfigured" + hash
+                );
                 props.refresh();
               }
             }
