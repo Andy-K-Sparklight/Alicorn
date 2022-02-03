@@ -350,12 +350,20 @@ function Launching(props: {
   const [lanPort, setLanPort] = useState(0);
   const [openLanWindow, setOpenLanWindow] = useState(false);
   const [openLanButtonEnabled, setOpenLanButtonEnabled] = useState(false);
+  const currentEM = useRef<EventEmitter>();
   const [dry, setDry] = useState(false);
   const [secure, setSecure] = useState(false);
   const [reConfigureAccount, setReConfigureAccount] = useState(false);
   const profileHash = useRef<string>(
     props.container.id + "/" + props.profile.id
   );
+  useEffect(() => {
+    currentEM.current = new EventEmitter();
+    return () => {
+      currentEM.current?.removeAllListeners();
+      currentEM.current = undefined;
+    };
+  }, []);
   useEffect(() => {
     const subscribe = setInterval(() => {
       if (NEED_QUERY_STATUS) {
@@ -463,6 +471,7 @@ function Launching(props: {
               (id) => {
                 setProfileRelatedID(profileHash.current, id);
               },
+              currentEM.current,
               dry,
               secure
             );
@@ -650,6 +659,7 @@ function Launching(props: {
                       (id) => {
                         setProfileRelatedID(profileHash.current, id);
                       },
+                      currentEM.current,
                       dry,
                       secure
                     );
@@ -774,6 +784,7 @@ async function startBoot(
   account: Account,
   server?: string,
   setRunID: (id: string) => unknown = () => {},
+  gem?: EventEmitter,
   dry = false,
   secure = false
 ): Promise<LaunchTracker> {
@@ -944,7 +955,7 @@ async function startBoot(
       return GLOBAL_LAUNCH_TRACKER;
     }
   }
-  const em = new EventEmitter();
+  const em = gem || new EventEmitter();
   em.on(PROCESS_LOG_GATE, (d: string) => {
     const ds = d.split("\n");
     ds.forEach((d) => {
