@@ -29,7 +29,7 @@
     "rmx": "rm -rf node_modules/@types/react-router/node_modules node_modules/@types/react-transition-group/node_modules node_modules/@types/react-dom/node_modules node_modules/@types/react-router-dom/node_modules node_modules/@types/react-is/node_modules"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.12",
+    "@babel/core": "^7.17.0",
     "@types/crypto-js": "^4.1.0",
     "@types/fs-extra": "^9.0.13",
     "@types/js-levenshtein": "^1.1.1",
