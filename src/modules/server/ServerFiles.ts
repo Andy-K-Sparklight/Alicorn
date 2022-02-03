@@ -1,4 +1,4 @@
-import { loadData, saveData, saveDataSync } from "../config/DataSupport";
+import { loadData, saveData } from "../config/DataSupport";
 
 const SERVERS: Set<string> = new Set();
 const SERVERS_NAME = "servers.csv";

@@ -1,7 +1,7 @@
 import { invokeWorker, schedulePromiseTask } from "../../renderer/Schedule";
 import { ALICORN_DATA_SUFFIX } from "../commons/Constants";
 import { buildMap, parseMap } from "../commons/MapUtil";
-import { loadData, saveData, saveDataSync } from "../config/DataSupport";
+import { loadData, saveData } from "../config/DataSupport";
 import { MinecraftContainer } from "./MinecraftContainer";
 
 let GlobalContainerDescriptorTable: Map<string, string> = new Map();

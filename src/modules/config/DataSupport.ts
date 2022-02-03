@@ -33,11 +33,6 @@ export async function saveData(
   } catch {}
 }
 
-export function saveDataSync(relativePath: string, data: string): void {
-  const dest = getActualDataPath(relativePath);
-  fs.outputFileSync(dest, data, { mode: 0o777 });
-}
-
 // Hint: DO NOT use 'fs.copyFile' here!
 // 'No permission', I don't know why, but we have to do this manually
 
