@@ -5,7 +5,9 @@
 高性能并且自由的第三方 Minecraft 启动器。
 
 ![.](https://img.shields.io/badge/Alicorn-is%20cute!-df307f)
-![.](https://img.shields.io/github/workflow/status/Andy-K-Sparklight/Alicorn/Node.js%20CI)
+![.](https://github.com/Andy-K-Sparklight/Alicorn/actions/workflows/codeql-analysis.yml/badge.svg)
+![.](https://github.com/Andy-K-Sparklight/Alicorn/actions/workflows/node.js.yml/badge.svg)
+![.](https://deepscan.io/api/teams/16407/projects/19670/branches/514338/badge/grade.svg)
 ![.](https://img.shields.io/github/repo-size/Andy-K-Sparklight/Alicorn)
 ![.](https://img.shields.io/github/license/Andy-K-Sparklight/Alicorn)
 
