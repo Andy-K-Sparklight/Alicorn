@@ -514,6 +514,14 @@ Select Account
 
 Select another account
 
+# ReadyToLaunch.NoValidate
+
+No Files Check
+
+# ReadyToLaunch.NoValidateDesc
+
+Some clients might need this to run well
+
 # ReadyToLaunch.DryLaunch
 
 Dry Launch

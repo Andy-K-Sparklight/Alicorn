@@ -530,6 +530,14 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 选择帐户
 
+# ReadyToLaunch.NoValidate
+
+禁用校验
+
+# ReadyToLaunch.NoValidateDesc
+
+某些特殊客户端需要这样做
+
 # ReadyToLaunch.SelectAccountDesc
 
 更改已选的帐户

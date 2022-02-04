@@ -354,6 +354,7 @@ function Launching(props: {
   const currentEM = useRef<EventEmitter>();
   const [dry, setDry] = useState(false);
   const [secure, setSecure] = useState(false);
+  const [noValidate, setNoValidate] = useState(false);
   const [reConfigureAccount, setReConfigureAccount] = useState(false);
   const profileHash = useRef<string>(
     props.container.id + "/" + props.profile.id
@@ -466,7 +467,8 @@ function Launching(props: {
         },
         currentEM.current,
         dry,
-        secure
+        secure,
+        noValidate
       );
     })();
   };
@@ -746,6 +748,25 @@ function Launching(props: {
           }
         />
       </Tooltip>
+      <Tooltip title={tr("ReadyToLaunch.NoValidateDesc")}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              color={"primary"}
+              disabled={status !== "Pending"}
+              checked={noValidate}
+              onChange={(e) => {
+                setNoValidate(e.target.checked);
+              }}
+            />
+          }
+          label={
+            <Typography color={"primary"}>
+              {tr("ReadyToLaunch.NoValidate")}
+            </Typography>
+          }
+        />
+      </Tooltip>
       <br />
       <SpecialKnowledge />
       <SystemUsage />
@@ -779,7 +800,8 @@ async function startBoot(
   setRunID: (id: string) => unknown = () => {},
   gem?: EventEmitter,
   dry = false,
-  secure = false
+  secure = false,
+  noValidate = false
 ): Promise<LaunchTracker> {
   // @ts-ignore
   window[LAST_FAILURE_INFO_KEY] = undefined;
@@ -890,45 +912,50 @@ async function startBoot(
       resolutionPolicy = true;
     }
   }
+  setStatus(LaunchingStatus.FILES_FILLING);
   const safe = secure || shouldSafeLaunch(container.id, profile.id);
-  if (secure || !isReboot(profileHash)) {
-    NEED_QUERY_STATUS = true;
-    setStatus(LaunchingStatus.FILES_FILLING);
-    let st = false;
-    if (!safe) {
-      st = await waitProfileReady(container.id, profile.id);
-    }
-    if (!st) {
-      // I shall do this
-      await ensureAssetsIndex(profile, container);
-      await Promise.all([
-        ensureClient(profile),
-        ensureLog4jFile(profile, container),
-        (async () => {
-          await ensureLibraries(profile, container, GLOBAL_LAUNCH_TRACKER);
-          await ensureNatives(profile, container);
-        })(),
-        (async () => {
-          await ensureAllAssets(profile, container, GLOBAL_LAUNCH_TRACKER);
-        })(),
-      ]); // Parallel
+  if (!noValidate) {
+    // Files check
+    if (secure || !isReboot(profileHash)) {
+      NEED_QUERY_STATUS = true;
+      let st = false;
+      if (!safe) {
+        st = await waitProfileReady(container.id, profile.id);
+      }
+      if (!st) {
+        // I shall do this
+        await ensureAssetsIndex(profile, container);
+        await Promise.all([
+          ensureClient(profile),
+          ensureLog4jFile(profile, container),
+          (async () => {
+            await ensureLibraries(profile, container, GLOBAL_LAUNCH_TRACKER);
+            await ensureNatives(profile, container);
+          })(),
+          (async () => {
+            await ensureAllAssets(profile, container, GLOBAL_LAUNCH_TRACKER);
+          })(),
+        ]); // Parallel
+      } else {
+        GLOBAL_LAUNCH_TRACKER.library({
+          total: 1,
+          resolved: 1,
+          operateRecord: [{ file: "ReadyBoom Proxied", operation: "OPERATED" }],
+        });
+      }
+      if (getBoolean("launch.fast-reboot")) {
+        markReboot(profileHash);
+      }
+      NEED_QUERY_STATUS = false;
     } else {
       GLOBAL_LAUNCH_TRACKER.library({
         total: 1,
         resolved: 1,
-        operateRecord: [{ file: "ReadyBoom Proxied", operation: "OPERATED" }],
+        operateRecord: [
+          { file: "Quick Restart Proxied", operation: "OPERATED" },
+        ],
       });
     }
-    if (getBoolean("launch.fast-reboot")) {
-      markReboot(profileHash);
-    }
-    NEED_QUERY_STATUS = false;
-  } else {
-    GLOBAL_LAUNCH_TRACKER.library({
-      total: 1,
-      resolved: 1,
-      operateRecord: [{ file: "Quick Restart Proxied", operation: "OPERATED" }],
-    });
   }
   setStatus(LaunchingStatus.MODS_PREPARING);
   if (profile.type === ReleaseType.MODIFIED) {
