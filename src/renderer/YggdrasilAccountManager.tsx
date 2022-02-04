@@ -481,6 +481,7 @@ function AddAccount(props: {
                 setIsCustom(e.target.checked);
                 if (!e.target.checked) {
                   setNide(false);
+                  setAuthHost("");
                 }
               }}
             />
