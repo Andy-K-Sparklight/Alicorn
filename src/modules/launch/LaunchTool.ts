@@ -39,10 +39,16 @@ export function launchProfile(
     gc1?: string;
     gc2?: string;
     maxMem?: number;
+    demo?: boolean;
   }
 ): string {
   const vmArgs = generateVMArgs(profile, container);
-  const gameArgs = generateGameArgs(profile, container, authData);
+  const gameArgs = generateGameArgs(
+    profile,
+    container,
+    authData,
+    !!policies.demo
+  );
   const ajArgs = policies.useAj
     ? applyAJ(whereAJ(), policies.ajHost || "", policies.ajPrefetch || "")
     : [];

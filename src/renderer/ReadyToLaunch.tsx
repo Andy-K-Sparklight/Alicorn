@@ -68,7 +68,7 @@ import {
 } from "../modules/auth/MicrosoftAccount";
 import { Nide8Account } from "../modules/auth/Nide8Account";
 import { uniqueHash } from "../modules/commons/BasicHash";
-import { Pair } from "../modules/commons/Collections";
+import { Pair, Trio } from "../modules/commons/Collections";
 import {
   PROCESS_END_GATE,
   PROCESS_LOG_GATE,
@@ -132,6 +132,7 @@ import {
   skinTypeFor,
 } from "../modules/skin/LocalYggdrasilServer";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
+import { Icons } from "./Icons";
 import { ShiftEle } from "./Instruction";
 import { submitError, submitSucc, submitWarn } from "./Message";
 import { YNDialog } from "./OperatingHint";
@@ -443,6 +444,33 @@ function Launching(props: {
     };
   }, []);
 
+  const start = (a: Account | null) => {
+    void (async () => {
+      setProfileRelatedID(profileHash.current, "");
+      // @ts-ignore
+      window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
+        (st) => {
+          if (mountedBit.current) {
+            setStatus(st);
+            setActiveStep(REV_LAUNCH_STEPS[st]);
+            setChangePageWarn(st !== LaunchingStatus.PENDING);
+          }
+        },
+        props.profile,
+        profileHash.current,
+        props.container,
+        a,
+        props.server,
+        (id) => {
+          setProfileRelatedID(profileHash.current, id);
+        },
+        currentEM.current,
+        dry,
+        secure
+      );
+    })();
+  };
+
   return (
     <Container className={classes.root}>
       <AccountChoose
@@ -451,31 +479,10 @@ function Launching(props: {
           setSelecting(false);
         }}
         onChose={(a) => {
-          setSelectedAccount(a);
-          void (async () => {
-            setProfileRelatedID(profileHash.current, "");
-            // @ts-ignore
-            window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
-              (st) => {
-                if (mountedBit.current) {
-                  setStatus(st);
-                  setActiveStep(REV_LAUNCH_STEPS[st]);
-                  setChangePageWarn(st !== LaunchingStatus.PENDING);
-                }
-              },
-              props.profile,
-              profileHash.current,
-              props.container,
-              a,
-              props.server,
-              (id) => {
-                setProfileRelatedID(profileHash.current, id);
-              },
-              currentEM.current,
-              dry,
-              secure
-            );
-          })();
+          if (a) {
+            setSelectedAccount(a);
+          }
+          start(a);
         }}
         allAccounts={getPresentAccounts()}
         profileHash={profileHash.current}
@@ -588,7 +595,7 @@ function Launching(props: {
                 status !== LaunchingStatus.PENDING &&
                 status !== LaunchingStatus.FINISHED
               }
-              onClick={async () => {
+              onClick={() => {
                 if (status === LaunchingStatus.PENDING) {
                   if (reConfigureAccount) {
                     localStorage.removeItem(
@@ -632,37 +639,23 @@ function Launching(props: {
 
                         break;
                       case "AL":
-                      default:
                         selectedAccount = new LocalAccount(
                           localStorage.getItem(
                             LAST_USED_USER_NAME_KEY + profileHash.current
                           ) || "Player"
                         );
+                        break;
+                      case "DM":
+                      default:
+                        // @ts-ignore
+                        selectedAccount = null;
                     }
-                    setSelectedAccount(selectedAccount);
+                    if (selectedAccount) {
+                      setSelectedAccount(selectedAccount);
+                    }
                   }
                   if (selectedAccount !== undefined) {
-                    // @ts-ignore
-                    window[LAST_LAUNCH_REPORT_KEY] = await startBoot(
-                      (st) => {
-                        if (mountedBit.current) {
-                          setStatus(st);
-                          setActiveStep(REV_LAUNCH_STEPS[st]);
-                          setChangePageWarn(st !== LaunchingStatus.PENDING);
-                        }
-                      },
-                      props.profile,
-                      profileHash.current,
-                      props.container,
-                      selectedAccount,
-                      props.server,
-                      (id) => {
-                        setProfileRelatedID(profileHash.current, id);
-                      },
-                      currentEM.current,
-                      dry,
-                      secure
-                    );
+                    start(selectedAccount);
                   } else {
                     setSelecting(true);
                   }
@@ -781,7 +774,7 @@ async function startBoot(
   profile: GameProfile,
   profileHash: string,
   container: MinecraftContainer,
-  account: Account,
+  account: Account | null,
   server?: string,
   setRunID: (id: string) => unknown = () => {},
   gem?: EventEmitter,
@@ -803,76 +796,81 @@ async function startBoot(
     profile: profile,
   };
   setStatus(LaunchingStatus.ACCOUNT_AUTHING);
-  if (account.type === AccountType.MICROSOFT) {
-    // @ts-ignore
-    // if (!window[SESSION_ACCESSDATA_CACHED_KEY]) {
-    if (secure || !isReboot(profileHash)) {
-      if (secure || !(await waitMSAccountReady())) {
-        // If not reboot then validate
-        if (!(await account.isAccessTokenValid())) {
-          // Check if the access token is valid
-          console.log("Token has expired! Refreshing.");
-          if (!(await account.flushToken())) {
-            console.log("Flush failed! Reauthing.");
-            if (!(await account.performAuth(""))) {
-              submitWarn(tr("ReadyToLaunch.FailedToAuth"));
+  let acData = new Trio("", "", "");
+  if (account !== null) {
+    if (account.type === AccountType.MICROSOFT) {
+      // @ts-ignore
+      // if (!window[SESSION_ACCESSDATA_CACHED_KEY]) {
+      if (secure || !isReboot(profileHash)) {
+        if (secure || !(await waitMSAccountReady())) {
+          // If not reboot then validate
+          if (!(await account.isAccessTokenValid())) {
+            // Check if the access token is valid
+            console.log("Token has expired! Refreshing.");
+            if (!(await account.flushToken())) {
+              console.log("Flush failed! Reauthing.");
+              if (!(await account.performAuth(""))) {
+                submitWarn(tr("ReadyToLaunch.FailedToAuth"));
+              }
+            } else {
+              console.log("Token flushed successfully, continue.");
             }
           } else {
-            console.log("Token flushed successfully, continue.");
+            console.log("Token valid, skipped auth.");
           }
         } else {
-          console.log("Token valid, skipped auth.");
+          console.log(
+            "MS account auth job has been done by ReadyBoom. Skipped."
+          );
         }
-      } else {
-        console.log("MS account auth job has been done by ReadyBoom. Skipped.");
+      }
+      // @ts-ignore
+      //window[SESSION_ACCESSDATA_CACHED_KEY] = true;
+      //}
+    } else if (account.type !== AccountType.ALICORN) {
+      // Alicorn don't need to flush fake token
+      if (!(await account.isAccessTokenValid())) {
+        // Don't know whether this will work or not, but we have to give a try
+        if (!(await account.flushToken())) {
+          submitWarn(tr("ReadyToLaunch.FailedToAuth"));
+        }
       }
     }
-    // @ts-ignore
-    //window[SESSION_ACCESSDATA_CACHED_KEY] = true;
-    //}
-  } else if (account.type !== AccountType.ALICORN) {
-    // Alicorn don't need to flush fake token
-    if (!(await account.isAccessTokenValid())) {
-      // Don't know whether this will work or not, but we have to give a try
-      if (!(await account.flushToken())) {
-        submitWarn(tr("ReadyToLaunch.FailedToAuth"));
-      }
-    }
+    acData = await fillAccessData(await account.buildAccessData());
   }
-  const acData = await fillAccessData(await account.buildAccessData());
   let useAj = false;
   let ajHost = "";
   let prefetch = "";
   let useNd = false;
   let ndServerId = "";
-
-  // Setup skin if configured
-  if (
-    account.type === AccountType.ALICORN &&
-    getBoolean("features.local-skin")
-  ) {
-    try {
-      const skin = await skinTypeFor(account);
-
-      await initLocalYggdrasilServer(account, skin);
-      useAj = true;
-      ajHost = ROOT_YG_URL; // Use local yggdrasil
-      console.log("Successfully set skin!");
-    } catch (e) {
-      console.log("Skin setup failed!");
-      console.log(e);
+  if (account !== null) {
+    // Setup skin if configured
+    if (
+      account.type === AccountType.ALICORN &&
+      getBoolean("features.local-skin")
+    ) {
+      try {
+        const skin = await skinTypeFor(account);
+        await initLocalYggdrasilServer(account, skin);
+        useAj = true;
+        ajHost = ROOT_YG_URL; // Use local yggdrasil
+        console.log("Successfully set skin!");
+      } catch (e) {
+        console.log("Skin setup failed!");
+        console.log(e);
+      }
     }
-  }
-  if (account.type === AccountType.AUTHLIB_INJECTOR) {
-    useAj = true;
-    ajHost = (account as AuthlibAccount).authServer;
-    console.log("Auth server is " + ajHost);
-    console.log("Prefetching data!");
-    prefetch = await prefetchData((account as AuthlibAccount).authServer);
-  } else if (account.type === AccountType.NIDE8) {
-    useNd = true;
-    ndServerId = (account as Nide8Account).serverId;
-    console.log("Nide server id is " + ndServerId);
+    if (account.type === AccountType.AUTHLIB_INJECTOR) {
+      useAj = true;
+      ajHost = (account as AuthlibAccount).authServer;
+      console.log("Auth server is " + ajHost);
+      console.log("Prefetching data!");
+      prefetch = await prefetchData((account as AuthlibAccount).authServer);
+    } else if (account.type === AccountType.NIDE8) {
+      useNd = true;
+      ndServerId = (account as Nide8Account).serverId;
+      console.log("Nide server id is " + ndServerId);
+    }
   }
   let useServer = false;
   let serverHost = "";
@@ -1052,6 +1050,7 @@ async function startBoot(
       maxMem: getNumber("memory") || autoMemory(),
       gc1: getString("main-gc", "z"),
       gc2: getString("para-gc", "pure"),
+      demo: account === null,
     });
   }
   addStatistics("Launch");
@@ -1077,7 +1076,7 @@ const ACCOUNT_CONFIGURED_KEY = "ReadyToLaunch.AccountConfigured";
 function AccountChoose(props: {
   open: boolean;
   closeFunc: () => void;
-  onChose: (a: Account) => unknown;
+  onChose: (a: Account | null) => unknown;
   allAccounts: Set<Account>;
   profileHash: string;
 }): JSX.Element {
@@ -1088,11 +1087,12 @@ function AccountChoose(props: {
       borderColor: theme.palette.primary.main,
     },
   }))();
-  const [choice, setChoice] = useState<"MZ" | "AL" | "YG">(
+  const [choice, setChoice] = useState<"MZ" | "AL" | "YG" | "DM">(
     (localStorage.getItem(LAST_ACCOUNT_TAB_KEY + props.profileHash) as
       | "MZ"
       | "AL"
-      | "YG") || "MZ"
+      | "YG"
+      | "DM") || "MZ"
   );
   const [pName, setName] = useState<string>(
     localStorage.getItem(LAST_USED_USER_NAME_KEY + props.profileHash) ||
@@ -1170,6 +1170,12 @@ function AccountChoose(props: {
           return;
         }
       }
+      if (choice === "DM") {
+        if (lastRequireSkinDate.current === d) {
+          setSkinUrl(Icons.ALEX);
+          return;
+        }
+      }
       setSkinUrl("");
     })();
   }, [sAccount, choice, msLogout, bufPName]);
@@ -1232,7 +1238,7 @@ function AccountChoose(props: {
           <RadioGroup
             row
             onChange={(e) => {
-              if (["MZ", "AL", "YG"].includes(e.target.value)) {
+              if (["MZ", "AL", "YG", "DM"].includes(e.target.value)) {
                 // @ts-ignore
                 setChoice(e.target.value);
                 localStorage.setItem(
@@ -1257,7 +1263,19 @@ function AccountChoose(props: {
               control={<Radio checked={choice === "AL"} />}
               label={tr("ReadyToLaunch.UseAL")}
             />
+            <FormControlLabel
+              value={"DM"}
+              control={<Radio checked={choice === "DM"} />}
+              label={tr("ReadyToLaunch.UseDM")}
+            />
           </RadioGroup>
+          {choice === "DM" ? (
+            <DialogContentText>
+              {tr("ReadyToLaunch.DemoDescription")}
+            </DialogContentText>
+          ) : (
+            ""
+          )}
           {choice === "AL" ? (
             <TextField
               className={classes.input}
@@ -1375,12 +1393,15 @@ function AccountChoose(props: {
                   props.onChose(accountMap.current[sAccount]);
                   return;
                 case "AL":
-                default:
                   localStorage.setItem(
                     LAST_USED_USER_NAME_KEY + props.profileHash,
                     pName
                   );
                   props.onChose(new LocalAccount(pName));
+                  return;
+                case "DM":
+                default:
+                  props.onChose(null);
               }
             }}
           >

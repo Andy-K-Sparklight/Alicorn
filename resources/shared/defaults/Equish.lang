@@ -392,15 +392,23 @@ Choose an authenticate method.
 
 # ReadyToLaunch.UseMZ
 
-Microsoft Account
+Microsoft
 
 # ReadyToLaunch.UseYG
 
-Yggdrasil Account
+Yggdrasil
 
 # ReadyToLaunch.UseAL
 
-Local Account
+Local
+
+# ReadyToLaunch.UseDM
+
+Demo
+
+# ReadyToLaunch.DemoDescription
+
+If you haven't purchased Minecraft yet, use demo mode to have a try.
 
 # ReadyToLaunch.Next
 

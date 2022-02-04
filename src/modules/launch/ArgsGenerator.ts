@@ -20,22 +20,27 @@ import { JAR_SUFFIX } from "./NativesLint";
 export function generateGameArgs(
   profile: GameProfile,
   container: MinecraftContainer,
-  authData: Trio<string, string, string>
+  authData: Trio<string, string, string>,
+  demo: boolean
 ): string[] {
   const vMap = new Map<string, string>();
   vMap.set("version_name", profile.id);
   vMap.set("game_directory", container.rootDir);
-  vMap.set("auth_player_name", authData.getFirstValue());
+  vMap.set("auth_player_name", authData.getFirstValue() || "Player");
   vMap.set("assets_root", container.getAssetsRoot());
   vMap.set("assets_index_name", profile.assetIndex.id);
-  vMap.set("auth_uuid", authData.getThirdValue());
-  vMap.set("auth_session", authData.getSecondValue()); // Pre 1.6
+  vMap.set("auth_uuid", authData.getThirdValue() || "0");
+  vMap.set("auth_session", authData.getSecondValue() || "0"); // Pre 1.6
   vMap.set("user_type", MOJANG_USER_TYPE);
   vMap.set("version_type", ALICORN_VERSION_TYPE);
-  vMap.set("auth_access_token", authData.getSecondValue());
+  vMap.set("auth_access_token", authData.getSecondValue() || "0");
   vMap.set("user_properties", "[]"); // Currently we don't support twitch
   vMap.set("game_assets", container.getAssetsRootLegacy()); // Pre 1.6
-  return applyVars(vMap, profile.gameArgs.concat());
+  const args = profile.gameArgs.concat();
+  if (demo) {
+    args.push("--demo");
+  }
+  return applyVars(vMap, args);
 }
 // Generate vm arguments, not for GCs or anything else
 export function generateVMArgs(
