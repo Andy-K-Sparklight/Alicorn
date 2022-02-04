@@ -3,6 +3,7 @@ import EventEmitter from "events";
 import os from "os";
 import { PROCESS_END_GATE, PROCESS_LOG_GATE } from "../commons/Constants";
 import { MinecraftContainer } from "../container/MinecraftContainer";
+import { restoreMods } from "../modx/ModDynLoad";
 
 const POOL = new Map<string, RunningMinecraft>();
 const REV_POOL = new Map<RunningMinecraft, string>();
@@ -127,6 +128,9 @@ export function runMinecraft(
     container,
     emitter
   );
+  runningArtifact.onEnd(() => {
+    void restoreMods(container);
+  });
   return runningArtifact.run();
 }
 

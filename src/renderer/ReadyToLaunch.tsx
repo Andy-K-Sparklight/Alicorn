@@ -1058,8 +1058,6 @@ async function startBoot(
         gc();
       }
     }
-    console.log("Restoring mods...");
-    await restoreMods(container);
     console.log("Done!");
   });
   let runID = "0";
