@@ -117,7 +117,7 @@ export async function wrappedDownloadFile(
       (await isSharedContainer(getContainer(targetContainer)))
     ) {
       if (await fetchSharedFile(meta)) {
-        addState(tr("ReadyToLaunch.Validated", `Url=${ou}`));
+        // addState(tr("ReadyToLaunch.Validated", `Url=${ou}`)); Already in SharedFiles.ts
         return DownloadStatus.RESOLVED;
       }
     }
@@ -182,7 +182,7 @@ function _wrappedDownloadFile(
   return new Promise<DownloadStatus>((resolve) => {
     void existsAndValidate(meta).then((b) => {
       if (b) {
-        addState(tr("ReadyToLaunch.Validated", `Url=${meta.url}`));
+        // addState(tr("ReadyToLaunch.Validated", `Url=${meta.url}`)); Huge outputs!
         resolve(DownloadStatus.RESOLVED);
       } else {
         FAILED_COUNT_MAP.set(meta, getConfigOptn("tries-per-chunk", 3));
