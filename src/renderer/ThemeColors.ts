@@ -7,6 +7,7 @@ export const AL_THEMES: Record<string, [string, string, string, string]> = {
   Starlight: ["562875", "c394d7", "ac7dc9", "f2c7f8"],
   Cherry: ["ed81af", "ef91b9", "f772b9", "ffdfed"],
   PurpleDark: ["fad000", "6943ff", "97ffff", "2d2b55"],
+  ClassicDark: ["9e9e9e", "808080", "409eff", "282828"],
   Azure: ["104ebb", "ffd700", "072150", "bfefff"],
   Winter: ["7898fd", "a4c2ff", "55abfc", "e7f0ff"],
   SweetieBelle: ["785b88", "b28dc1", "f08ab4", "efeded"],
