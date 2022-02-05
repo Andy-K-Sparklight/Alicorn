@@ -114,7 +114,7 @@ import {
 } from "../modules/launch/LaunchTool";
 import { LaunchTracker } from "../modules/launch/LaunchTracker";
 import { stopMinecraft } from "../modules/launch/MinecraftBootstrap";
-import { prepareModsCheckFor, restoreMods } from "../modules/modx/ModDynLoad";
+import { prepareModsCheckFor } from "../modules/modx/ModDynLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import {
@@ -156,7 +156,7 @@ import {
   QUERY_PORT,
 } from "./utilities/CutieConnect";
 import { SpecialKnowledge } from "./Welcome";
-import { toReadableType } from "./YggdrasilAccountManager";
+import { toReadableType, YggdrasilForm } from "./YggdrasilAccountManager";
 
 const SESSION_ACCESSDATA_CACHED_KEY = "ReadyToLaunch.SessionAccessData"; // Microsoft account only
 export const LAST_SUCCESSFUL_GAME_KEY = "ReadyToLaunch.LastSuccessfulGame";
@@ -1017,7 +1017,7 @@ async function startBoot(
       }
     });
   });
-  em.on(PROCESS_END_GATE, async (c) => {
+  em.on(PROCESS_END_GATE, (c) => {
     console.log(`Minecraft(${runID}) exited with exit code ${c}.`);
     window.dispatchEvent(new CustomEvent("WorldStoppedServing"));
     window.dispatchEvent(new CustomEvent("GameQuit"));
@@ -1123,6 +1123,8 @@ function AccountChoose(props: {
     localStorage.getItem(LAST_USED_USER_NAME_KEY + props.profileHash) ||
       "Player"
   );
+  const [openForm, setOpenForm] = useState(false);
+  const [nextDisabled, setNextDisabled] = useState(false);
   const [bufPName, setBufPName] = useState(pName);
   const mounted = useRef<boolean>(false);
   const [accsMajor, accsRev] = useMemo(() => {
@@ -1399,12 +1401,13 @@ function AccountChoose(props: {
         <DialogActions>
           <Button
             disabled={
+              nextDisabled ||
               (choice === "YG" &&
                 (sAccount.length === 0 ||
                   isNull(accountMap.current[sAccount]))) ||
               (choice === "AL" && pName.trim().length === 0)
             }
-            onClick={() => {
+            onClick={async () => {
               props.closeFunc();
               localStorage.setItem(
                 ACCOUNT_CONFIGURED_KEY + props.profileHash,
@@ -1415,7 +1418,22 @@ function AccountChoose(props: {
                   props.onChose(new MicrosoftAccount(""));
                   return;
                 case "YG":
-                  props.onChose(accountMap.current[sAccount]);
+                  {
+                    const cur = accountMap.current[sAccount];
+                    if (cur) {
+                      setNextDisabled(true);
+                      if (
+                        !(await cur.isAccessTokenValid()) &&
+                        !(await cur.flushToken())
+                      ) {
+                        props.closeFunc();
+                        setOpenForm(true);
+                      } else {
+                        props.onChose(cur);
+                      }
+                      setNextDisabled(false);
+                    }
+                  }
                   return;
                 case "AL":
                   localStorage.setItem(
@@ -1434,6 +1452,16 @@ function AccountChoose(props: {
           </Button>
         </DialogActions>
       </Dialog>
+      <YggdrasilForm
+        open={openForm}
+        onClose={() => {
+          setOpenForm(false);
+        }}
+        account={accountMap.current[sAccount]}
+        updateAccount={(a) => {
+          props.onChose(a);
+        }}
+      />
     </ThemeProvider>
   );
 }
