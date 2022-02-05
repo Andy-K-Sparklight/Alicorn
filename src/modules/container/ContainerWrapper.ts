@@ -10,7 +10,7 @@ import {
   unregisterContainer,
 } from "./ContainerUtil";
 import { MinecraftContainer } from "./MinecraftContainer";
-import { markASC } from "./SharedFiles";
+import { isSharedContainer, markASC } from "./SharedFiles";
 
 // Create a container at specified dir
 export async function createNewContainer(
@@ -62,7 +62,7 @@ export async function forkContainer(c: MinecraftContainer): Promise<void> {
   }
   await fs.ensureDir(pt);
   await fs.copy(c.rootDir, pt);
-  await createNewContainer(pt, nid);
+  await createNewContainer(pt, nid, await isSharedContainer(c));
 }
 
 // Remove files, don't unlink

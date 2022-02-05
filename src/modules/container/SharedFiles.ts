@@ -58,7 +58,6 @@ export async function fetchSharedFile(meta: DownloadMeta): Promise<boolean> {
         await unlink(meta.savePath);
         await symlink(targetFile, meta.savePath, "file");
         addDoing(tr("ReadyToLaunch.Linked", `Url=${meta.url}`));
-        console.log("Target file at " + targetFile);
         return true;
       } catch {
         return false;

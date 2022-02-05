@@ -647,7 +647,7 @@ function AddNewContainer(props: {
   const [nameError, setNameError] = useState(false);
   const [dirError, setDirError] = useState(false);
   const [modpackError, setModpackError] = useState(false);
-  const [createASC, setCreateASC] = useState(hasEdited("cx.shared-root"));
+  const [createASC, setCreateASC] = useState(true);
   const [allowModpack, setAllowModpack] = useState(!!props.modpack);
   const [modpackPath, setModpackPath] = useState(props.modpack || "");
   const classes = useInputStyles();
