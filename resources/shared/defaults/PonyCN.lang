@@ -1431,11 +1431,11 @@ Curseforge ++
 
 使用 Alicorn Magic 回到过去调用 Curseforge 的 API，这样 Alicorn 就不用修改代码，只需要建造时间机器（认真
 
-# Options.pff.cursepp.title
+# Options.pff.cursepp-cluster-size.title
 
 Curseforge ++ 并发量
 
-# Options.pff.cursepp.desc
+# Options.pff.cursepp-cluster-size.desc
 
 Curseforge ++ 同时进行几个任务？请不要将它设置得太高，每台时间机器的消耗和一个浏览器相当！
 

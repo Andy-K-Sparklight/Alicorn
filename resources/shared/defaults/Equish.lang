@@ -1336,11 +1336,11 @@ Curseforge ++
 
 Believe it or not, use a time machine to invoke the legacy Curseforge API.
 
-# Options.pff.cursepp.title
+# Options.pff.cursepp-cluster-size.title
 
 Curseforge ++ Multi Tasks
 
-# Options.pff.cursepp.desc
+# Options.pff.cursepp-cluster-size.desc
 
 How many tasks should Curseforge ++ run at the same time?
 
