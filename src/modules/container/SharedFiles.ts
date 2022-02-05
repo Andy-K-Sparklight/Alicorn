@@ -21,8 +21,8 @@ export async function markASC(dir: string): Promise<void> {
   await outputFile(path.join(dir, ASC_NAME), PLACE_HOLDER, { mode: 0o777 });
 }
 
-const STANDALONE_FILE = /forge|client/i;
-const STANDALONE_PATH = /net[/\\]minecraft(forge)?/i;
+const STANDALONE_FILE = /forge|client|fabric/i;
+const STANDALONE_PATH = /net[/\\](minecraft(forge)?|fabricmc)/i;
 export function needsStandalone(pt: string): boolean {
   return STANDALONE_FILE.test(path.basename(pt)) || STANDALONE_PATH.test(pt);
 }
