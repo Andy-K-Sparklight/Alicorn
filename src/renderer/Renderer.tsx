@@ -34,6 +34,7 @@ import { setupMSAccountRefreshService } from "../modules/readyboom/AccountMaster
 import { setupHotProfilesService } from "../modules/readyboom/PrepareProfile";
 import { initEncrypt } from "../modules/security/Encrypt";
 import { getMachineUniqueID } from "../modules/security/Unique";
+import { updateWebEchos } from "../modules/selfupdate/Echo";
 import { todayPing } from "../modules/selfupdate/Ping";
 import { checkUpdate, initUpdator } from "../modules/selfupdate/Updator";
 import { loadServers } from "../modules/server/ServerFiles";
@@ -248,6 +249,12 @@ try {
       }
     })();
 
+    if (getBoolean("features.echo")) {
+      setInterval(() => {
+        void updateWebEchos();
+      }, 600000);
+      void updateWebEchos();
+    }
     await Promise.allSettled([
       updPm,
       prefetchForgeManifest(),

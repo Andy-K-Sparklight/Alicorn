@@ -1320,6 +1320,14 @@ Alicorn Ping ^
 
 Send completely anonymous pings to Alicorn server so that we can know how many users do we have.
 
+# Options.features.echo.title
+
+Echo
+
+# Options.features.echo.desc
+
+Enable echo.
+
 # Options.features.local-skin.title
 
 Local Skin Support
@@ -1828,22 +1836,6 @@ My Secrets
 
 Do you Pinkie promise that you are not going to tell anypony?
 
-# Options.dev.f12.title
-
-F12 DevTools * ^
-
-# Options.dev.f12.desc
-
-Allow opening DevTools by pressing Ctrl + F12.
-
-# Options.hot-key.title
-
-Alicorn Hot Keys ^
-
-# Options.hot-key.desc
-
-Enable Alicorn hot keys.
-
 # Options.download.global-proxy.title
 
 Proxy ^
@@ -1883,14 +1875,6 @@ Alicorn/MCBBS Mirror Group
 # Options.download.mirror.none
 
 Mojang Origin
-
-# Options.dev.explicit-error-throw.title
-
-Explicitly Error Throw *
-
-# Options.dev.explicit-error-throw.desc
-
-Show a dialog when something go wrong.
 
 # Options.dev.title
 
@@ -2262,8 +2246,6 @@ What's happening?
 ['{Config:interactive.i-have-a-crush-on-al}'=='true']These two pony ears? They are cute? You want to have a touch?
 
 ['{Config:interactive.i-have-a-crush-on-al}'=='true']Yes, I can fly! (Wings open)
-
-['{Config:dev.f12}'=='true']You are going to give me an operation? Through DevTools?
 
 ['{Config:readyboom}'=='false']ReadyBoom is half of my speed!
 
@@ -3452,3 +3434,23 @@ Drop Display Manager into Alicorn to add it to thus list.\nDO NOT add a DM you d
 # DMCenter.Active
 
 Active
+
+# Echo.Title
+
+Echo
+
+# Echo.Hint
+
+Write something...\n(Unfortunately, currently no ASCII characters are allowed.)
+
+# Echo.PlaceHolder
+
+I Can Eat Glass
+
+# Echo.Send
+
+Send
+
+# Echo.Format
+
+{Text} -- Alicorn Echo

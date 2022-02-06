@@ -44,6 +44,7 @@ import {
   RestartAlt,
   RocketLaunch,
   SavedSearch,
+  Send,
   SendTimeExtension,
   Settings,
   SettingsEthernet,
@@ -302,6 +303,11 @@ export function OptionsPage(): JSX.Element {
             bindConfig={"features.saying"}
           />
           <InputItem
+            icon={<Send />}
+            type={ConfigType.BOOL}
+            bindConfig={"features.echo"}
+          />
+          <InputItem
             icon={<Checkroom />}
             type={ConfigType.BOOL}
             bindConfig={"features.local-skin"}
@@ -378,11 +384,6 @@ export function OptionsPage(): JSX.Element {
             experimental
             type={ConfigType.BOOL}
             bindConfig={"cmc.disable-log4j-config"}
-          />
-          <InputItem
-            type={ConfigType.BOOL}
-            experimental
-            bindConfig={"hot-key"}
           />
           <InputItem
             icon={<SavedSearch />}
@@ -572,16 +573,6 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.BOOL}
             icon={<Code />}
             bindConfig={"dev"}
-          />
-          <InputItem
-            type={ConfigType.BOOL}
-            icon={<Code />}
-            bindConfig={"dev.f12"}
-          />
-          <InputItem
-            type={ConfigType.BOOL}
-            icon={<Code />}
-            bindConfig={"dev.explicit-error-throw"}
           />
           <InputItem
             icon={<FirstPage />}

@@ -25,8 +25,14 @@ import {
   Alert,
   AppBar,
   Box,
+  Button,
   Chip,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Drawer,
   Fab,
   IconButton,
@@ -35,12 +41,15 @@ import {
   ListItemIcon,
   ListItemText,
   Snackbar,
+  TextField,
+  ThemeProvider,
   Toolbar,
   Tooltip,
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { ipcRenderer } from "electron";
+import hotkeys from "hotkeys-js";
 import React, { useEffect, useRef, useState } from "react";
 import { Route } from "react-router-dom";
 import { expose } from "../modules/boticorn/FTable";
@@ -54,6 +63,7 @@ import { saveGDT } from "../modules/container/ContainerUtil";
 import { saveVF } from "../modules/container/ValidateRecord";
 import { handleDnD } from "../modules/dnd/DnDCenter";
 import { saveJDT } from "../modules/java/JavaInfo";
+import { sendEcho } from "../modules/selfupdate/Echo";
 import { waitUpdateFinished } from "../modules/selfupdate/Updator";
 import { saveServers } from "../modules/server/ServerFiles";
 import { ContainerManager } from "./ContainerManager";
@@ -78,6 +88,11 @@ import { YNDialog2 } from "./OperatingHint";
 import { OptionsPage } from "./Options";
 import { PffFront } from "./PffFront";
 import { ReadyToLaunch } from "./ReadyToLaunch";
+import {
+  ALICORN_DEFAULT_THEME_DARK,
+  ALICORN_DEFAULT_THEME_LIGHT,
+  isBgDark,
+} from "./Renderer";
 import { ServerList } from "./ServerList";
 import { saveStatistics, Statistics } from "./Statistics";
 import { AlicornTheme } from "./Stylex";
@@ -235,10 +250,6 @@ export function App(): JSX.Element {
       setErr(String(safeGet(e, ["detail"], "Unknown Error")));
       clearSnacks();
       setNoticeOpen(true);
-      ipcRenderer.send(
-        "reportError",
-        String(safeGet(e, ["detail"], "Unknown Error"))
-      );
     };
     window.addEventListener("sysError", f3);
     const f1 = (e: Event) => {
@@ -589,6 +600,7 @@ export function App(): JSX.Element {
         }}
         open={openTips}
       />
+      <Echo />
       <Snackbar
         open={openNotice}
         sx={{
@@ -797,5 +809,62 @@ function BetaTag(): JSX.Element {
         variant={"outlined"}
       />
     </>
+  );
+}
+
+function Echo(): JSX.Element {
+  const [open, setOpen] = useState(false);
+  const [input, setInput] = useState("");
+  useEffect(() => {
+    if (getBoolean("features.echo")) {
+      hotkeys("t", () => {
+        if (!open) {
+          setOpen(true);
+        }
+      });
+    }
+    return () => {
+      hotkeys.unbind("t");
+    };
+  }, []);
+
+  return (
+    <ThemeProvider
+      theme={
+        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
+      }
+    >
+      <Dialog
+        open={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+      >
+        <DialogContent>
+          <DialogTitle>{tr("Echo.Title")}</DialogTitle>
+          <DialogContentText>{tr("Echo.Hint")}</DialogContentText>
+          <TextField
+            value={input}
+            fullWidth
+            placeholder={tr("Echo.PlaceHolder")}
+            onChange={(e) => {
+              setInput(e.target.value);
+            }}
+          />
+          <DialogActions>
+            <Button
+              disabled={input.trim().length <= 0}
+              onClick={() => {
+                setOpen(false);
+                setInput("");
+                sendEcho(input);
+              }}
+            >
+              {tr("Echo.Send")}
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
+    </ThemeProvider>
   );
 }

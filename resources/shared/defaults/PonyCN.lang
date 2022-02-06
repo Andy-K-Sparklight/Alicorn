@@ -1415,6 +1415,14 @@ Alicorn Ping ^
 
 这种匿名的 Ping 可以让 ThatRarityEG 估计活跃用户数
 
+# Options.features.echo.title
+
+漂流瓶
+
+# Options.features.echo.desc
+
+发送和收取来自 Alicorn 的漂流瓶，看看世界上的另个你在做些什么～\n如果事情看上去不对，请关闭此功能并向我们提供反馈。这既有利于你，也有利于地球。
+
 # Options.features.local-skin.title
 
 本地皮肤支持
@@ -1923,22 +1931,6 @@ Alicorn 的小秘密
 
 如果你真的想要听的话……那好吧，不过先说好，不许告诉别人哦！
 
-# Options.dev.f12.title
-
-快速打开 DevTools * ^
-
-# Options.dev.f12.desc
-
-按下 Ctrl + F12 以调试 Alicorn 渲染进程 - 请当心，胡乱使用 DevTools 可能导致启动器故障或你的数据丢失！
-
-# Options.hot-key.title
-
-Alicorn 快捷键 ^
-
-# Options.hot-key.desc
-
-启用快捷键以进行高效操作 - 查看帮助以了解使用方法
-
 # Options.download.global-proxy.title
 
 下载代理 ^
@@ -1978,14 +1970,6 @@ Alicorn/MCBBS 镜像组（合并的记录，非自由）
 # Options.download.mirror.none
 
 不使用镜像
-
-# Options.dev.explicit-error-throw.title
-
-显式抛出错误 *
-
-# Options.dev.explicit-error-throw.desc
-
-在系统错误发生时额外使用一个对话框告知你错误信息 - 仅在开发时才有使用价值
 
 # Options.dev.title
 
@@ -2376,8 +2360,6 @@ Mojang 版本
 ['{Config:dev.experimental}'=='true']不要一边驾驶飞机，一边测试飞机的引擎……
 
 ['{Config:theme.background}'=='ACG']看多了 ACG 图片，会不会就不喜欢我了呢……
-
-['{Config:dev.f12}'=='true']好好使用 DevTools，可不要弄出什么问题！
 
 ['{Config:updator.url}'!=='']订阅其它源的更新 URL 不一定可信，要小心哦！
 
@@ -3673,3 +3655,22 @@ Alicorn 每日使用技巧，你不知道的 Alicorn！
 
 已选定
 
+# Echo.Title
+
+漂流瓶
+
+# Echo.Hint
+
+给世界上的另个你写一句话吧～\n（请勿使用英文字母或数字，长度 100 字符以内）
+
+# Echo.PlaceHolder
+
+我能吞下玻璃而不伤身体
+
+# Echo.Send
+
+发送
+
+# Echo.Format
+
+{Text} —— Alicorn 漂流瓶

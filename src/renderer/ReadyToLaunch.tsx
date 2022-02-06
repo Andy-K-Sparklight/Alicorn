@@ -126,6 +126,7 @@ import {
   waitProfileReady,
 } from "../modules/readyboom/PrepareProfile";
 import { getMachineUniqueID } from "../modules/security/Unique";
+import { getEchos } from "../modules/selfupdate/Echo";
 import {
   initLocalYggdrasilServer,
   ROOT_YG_URL,
@@ -1860,6 +1861,20 @@ function WaitingText(): JSX.Element {
   const [hint, setHint] = useState(randsl("ReadyToLaunch.WaitingText"));
   useEffect(() => {
     const timer = setInterval(() => {
+      if (getBoolean("features.echo")) {
+        const echos = getEchos();
+        if (Math.random() > 0.6) {
+          if (echos.length > 0) {
+            setHint(
+              tr(
+                "Echo.Format",
+                `Text=${echos[Math.floor(Math.random() * echos.length)]}`
+              )
+            );
+            return;
+          }
+        }
+      }
       setHint(randsl("ReadyToLaunch.WaitingText"));
     }, 5000);
     return () => {

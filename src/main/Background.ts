@@ -2,7 +2,6 @@ import {
   app,
   BrowserWindow,
   dialog,
-  globalShortcut,
   ipcMain,
   safeStorage,
   screen,
@@ -11,11 +10,7 @@ import {
 import isReachable from "is-reachable";
 import os from "os";
 import path from "path";
-import {
-  getBoolean,
-  getNumber,
-  loadConfig,
-} from "../modules/config/ConfigSupport";
+import { getNumber, loadConfig } from "../modules/config/ConfigSupport";
 import {
   bindCurseListeners,
   closeCurseWindow,
@@ -297,18 +292,6 @@ export function registerBackgroundListeners(): void {
   ipcMain.on("reloadConfig", async () => {
     await loadConfig();
     console.log("Config reloaded.");
-  });
-  ipcMain.on("reportError", (_e, msg) => {
-    if (getBoolean("dev.explicit-error-throw")) {
-      dialog.showErrorBox("Oops!", msg);
-    }
-  });
-  ipcMain.on("registerHotKey", (_e, keyBound: string, signal = keyBound) => {
-    if (getBoolean("hot-key")) {
-      globalShortcut.register(keyBound, () => {
-        getMainWindow()?.webContents.send(signal);
-      });
-    }
   });
   ipcMain.on("getLocale", (e) => {
     e.returnValue = app.getLocale();

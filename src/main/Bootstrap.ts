@@ -1,11 +1,4 @@
-import {
-  app,
-  BrowserWindow,
-  globalShortcut,
-  ipcMain,
-  screen,
-  Session,
-} from "electron";
+import { app, BrowserWindow, ipcMain, screen, Session } from "electron";
 import { btoa } from "js-base64";
 import path from "path";
 import { DOH_CONFIGURE } from "../modules/commons/Constants";
@@ -174,13 +167,6 @@ async function whenAppReady() {
     }
   );
   console.log("Preparing window!");
-  if (getBoolean("hot-key")) {
-    globalShortcut.register("Ctrl+F12", () => {
-      if (getBoolean("dev.f12")) {
-        mainWindow?.webContents.openDevTools();
-      }
-    });
-  }
   await mainWindow.loadFile(path.resolve(appPath, "Renderer.html"));
   mainWindow?.webContents.setZoomLevel(0);
 }

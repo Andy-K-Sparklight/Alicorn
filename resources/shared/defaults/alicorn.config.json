@@ -1,8 +1,5 @@
 {
   "dev": false,
-  "dev.explicit-error-throw": false,
-  "dev.f12": false,
-  "hot-key": false,
   "updator.use-update": true,
   "updator.url": "",
   "download.concurrent.chunk-size": 8192,
@@ -35,6 +32,7 @@
   "startup-page.url": "/Welcome",
   "gw-size": "960x540",
   "features.local-skin": true,
+  "features.echo": true,
   "memory": 0,
   "main-gc": "g1",
   "para-gc": "pure",
