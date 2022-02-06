@@ -1,0 +1,917 @@
+# _BaseOn
+
+PonyCN
+
+# PrefTheme
+
+Maud
+
+# LaunchPad
+
+启动
+
+# InstallCore
+
+下载
+
+# ContainerManager
+
+容器
+
+# ReadyToLaunch
+
+开始
+
+# Version
+
+关于
+
+# AccountManager
+
+帐户
+
+# JavaSelector
+
+JRE
+
+# Options
+
+选项
+
+# CrashReportDisplay
+
+启动帮助
+
+# Welcome
+
+欢迎
+
+# Tutor
+
+快速开始
+
+# ServerList
+
+服务器
+
+# UtilitiesIndex
+
+工具
+
+# System.WakeUp
+
+嗯？
+
+# System.JumpPageWarn.Title
+
+切换？
+
+# System.JumpPageWarn.Description
+
+有些任务还没得到妥善完成或保存。
+
+# System.JumpPageWarn.Yes
+
+嗯
+
+# System.JumpPageWarn.No
+
+不
+
+# MainMenu.UtilitiesIndex
+
+工具
+
+# MainMenu.Help
+
+帮助
+
+# MainMenu.GoBack
+
+后退
+
+# MainMenu.OpenDevToolsFormal
+
+调试
+
+# MainMenu.QuickLaunchPad
+
+启动
+
+# Operating.ClickToDebug
+
+单击打开日志。
+
+# Operating.PleaseWait
+
+等一下。
+
+# Operating.Failed
+
+有问题。
+
+# Operating.FailedConfirm
+
+嗯
+
+# Operating.FailedInfo
+
+有哪个地方出错了。
+
+# Operating.FailedSayings
+
+没办法。
+
+我不知道。
+
+我只对石头很了解。
+
+也许吧。
+
+可能吧。
+
+好像吧。
+
+['{Platform}'==='win32'||'{Platform}'==='darwin']告诉过你，要用自由软件。
+
+# Operating.PleaseWaitDetail
+
+需要点时间。
+
+# CoreInfo.StillLoading
+
+顺序可能有误。
+
+# CoreInfo.Used
+
+访问：{Count}
+
+# CoreInfo.Introduction.Forge
+
+支持 Forge Mod
+
+# CoreInfo.Introduction.Fabric
+
+支持 Fabric Mod
+
+# CoreInfo.Introduction.Installer
+
+整合包安装器
+
+# CoreInfo.CorruptedWarning
+
+读取失败
+
+# CoreInfo.Reload
+
+再试
+
+# CoreInfo.Destroy
+
+摧毁
+
+# CoreInfo.Destroy.Yes
+
+嗯
+
+# CoreInfo.Destroy.No
+
+不
+
+# CoreInfo.Destroy.Title
+
+我将摧毁 {Name}。
+
+# CoreInfo.Destroy.Content
+
+希望你知道你要做什么。
+
+# CoreInfo.At
+
+{Container}/{ID}
+
+# CoreInfo.Pff
+
+Mod
+
+# ReadyToLaunch.CouldNotLoad
+
+没有这个核心
+
+# ReadyToLaunch.Hint
+
+可以开始了。
+
+# ReadyToLaunch.HintServer
+
+可以开始了，同时会加入 {Server}
+
+# ReadyToLaunch.Progress
+
+请等一会儿。（{Pending}/{Current}）
+
+# ReadyToLaunch.Getting
+
+获取：{Url}
+
+# ReadyToLaunch.Validated
+
+命中：{Url}
+
+# ReadyToLaunch.Retry
+
+重试：{Url}
+
+# ReadyToLaunch.Ignored
+
+忽略：{Url}
+
+# ReadyToLaunch.Got
+
+成功：{Url}
+
+# ReadyToLaunch.Failed
+
+错误：{Url}
+
+# ReadyToLaunch.StartAuthTitle
+
+你是谁
+
+# ReadyToLaunch.StartAuthMsg
+
+验证你的身份
+
+# ReadyToLaunch.Next
+
+嗯
+
+# ReadyToLaunch.UseALName
+
+名字
+
+# ReadyToLaunch.UseYGChoose
+
+使用
+
+# ReadyToLaunch.DefaultJava
+
+默认
+
+# ReadyToLaunch.Status.Pending
+
+准备就绪。
+
+# ReadyToLaunch.Status.CheckingFiles
+
+游戏文件。
+
+# ReadyToLaunch.Status.PreparingMods
+
+Mod 兼容性。
+
+# ReadyToLaunch.Status.PerformingAuth
+
+验证帐户。
+
+# ReadyToLaunch.Status.GeneratingArgs
+
+生成指令。
+
+# ReadyToLaunch.Status.Finished
+
+好了。
+
+# ReadyToLaunch.MSLogoutRunning
+
+请等一会儿。
+
+# ReadyToLaunch.JCheck.TooOLD
+
+JRE 版本太低
+
+# ReadyToLaunch.JCheck.TooNEW
+
+JRE 版本太高
+
+# ReadyToLaunch.WarnError.Title
+
+可能有问题。
+
+# ReadyToLaunch.WarnError.Yes
+
+帮助我
+
+# ReadyToLaunch.WarnError.No
+
+没关系
+
+# ReadyToLaunch.WarnError.Description
+
+Minecraft 没正常退出。
+
+# ReadyToLaunch.Status.Short.CheckingFiles
+
+游戏文件
+
+# ReadyToLaunch.Status.Short.GeneratingArgs
+
+生成指令
+
+# ReadyToLaunch.WaitingText
+
+请等一会儿。
+
+这需要时间。
+
+我的话比较少，请别介意。
+
+请使用 Fabric。
+
+Alicorn 是自由软件。
+
+我喜欢 Node.js。
+
+不要说「开源」，说「自由」。
+
+友谊就是魔法。的确。
+
+# VersionView.EcVersion
+
+此版本是针对 Electron {Build} 构建的，当前正运行 Electron {Current}
+
+# VersionView.Electron.Perfect
+
+兼容性没问题。
+
+# VersionView.Electron.OK
+
+兼容性没什么问题。
+
+# VersionView.Electron.Attention
+
+@HTML兼容性有点问题，可能会<b>出现错误</b>。
+
+# VersionView.Description
+
+@HTML你好啊。
+
+# VersionView.ClickToSeeNext
+
+单击来查看更多。
+
+# ContainerManager.InstallOK
+
+安装完成。
+
+# ContainerManager.OpenInDir
+
+打开
+
+# ContainerManager.Add
+
+添加
+
+# ContainerManager.AddDescription
+
+选择一个文件夹并命名。
+
+# ContainerManager.EnterName
+
+容器名
+
+# ContainerManager.Dir
+
+文件夹
+
+# ContainerManager.Select
+
+选择
+
+# ContainerManager.Type.Physical
+
+MCX
+
+# ContainerManager.Type.Shared
+
+ASC
+
+# ContainerManager.ASCCacheNotSet
+
+不能创建 - 请设置「ASC 共享文件存储路径」
+
+# ContainerManager.CreateModpack
+
+使用安装包
+
+# ContainerManager.ModpackWarn
+
+安装包（整合包）可能含有病毒，请注意安全。
+
+# ContainerManager.ModpackPath
+
+安装包路径
+
+# ContainerManager.InvalidModpackPath
+
+无效的安装包路径
+
+# ContainerManager.ParsingModpack
+
+解析中。
+
+# ContainerManager.DeployingProfile
+
+安装档案。
+
+# ContainerManager.DeployingMods
+
+安装 Mod。
+
+# ContainerManager.DeployingModLoader
+
+安装 Mod 加载器。
+
+# ContainerManager.DeployingDeltas
+
+计算差异。
+
+# ContainerManager.CleaningUp
+
+清理。
+
+# ContainerManager.ChooseModpack
+
+选择安装包
+
+# ContainerManager.Remove
+
+解绑
+
+# ContainerManager.Mount
+
+装载
+
+# ContainerManager.Unmount
+
+卸载
+
+# ContainerManager.Clear
+
+摧毁
+
+# ContainerManager.CoresLoading
+
+……
+
+# ContainerManager.AskRemove
+
+解除链接？
+
+# ContainerManager.AskRemoveDetail
+
+这不会修改文件。
+
+# ContainerManager.AskClear
+
+准备摧毁。
+
+# ContainerManager.AskClearDetail
+
+摧毁 {ID} 将同时摧毁其中的全部数据，你应该知道你在做什么。
+
+# ContainerManager.Yes
+
+嗯
+
+# ContainerManager.No
+
+不
+
+# ContainerManager.Continue
+
+继续
+
+# ContainerManager.Cancel
+
+取消
+
+# InstallCore.Progress.CouldNotExecute
+
+安装程序有问题。
+
+# InstallCore.Progress.FailedToInstallProfile
+
+档案放置失败。
+
+# InstallCore.Progress.InvalidProfile
+
+此档案无效。
+
+# InstallCore.Progress.DownloadingProfile
+
+下载中。
+
+# InstallCore.Progress.FailedToFetchProfile
+
+获取档案失败
+
+# InstallCore.Progress.FetchingProfile
+
+获取中。
+
+# InstallCore.Progress.Fetching
+
+获取安装程序中。
+
+# InstallCore.Progress.FailedToDownload
+
+获取安装程序失败。
+
+# InstallCore.Progress.ExecutingForge
+
+运行中。
+
+# InstallCore.Progress.ExecutingFabric
+
+运行中。
+
+# InstallCore.InstallMinecraft
+
+添加核心
+
+# InstallCore.InstallMinecraftInstr
+
+安装 Minecraft 原版核心。
+
+# InstallCore.InstallForge
+
+Forge
+
+# InstallCore.InstallForgeInstr
+
+安装 Forge，注意，需要已经安装对应原版核心。
+
+# InstallCore.InstallFabric
+
+Fabric
+
+# InstallCore.InstallFabricInstr
+
+安装 Fabric，注意，需要已经安装对应原版核心。
+
+# InstallCore.InstallIris
+
+高清修复
+
+# InstallCore.InstallIrisInstr
+
+安装高清修复，注意，需要 Fabric。
+
+# InstallCore.TargetContainer
+
+容器
+
+# InstallCore.Unknown
+
+……
+
+# InstallCore.Release
+
+稳定
+
+# InstallCore.Snapshot
+
+快照
+
+# InstallCore.OldAlpha
+
+Alpha
+
+# InstallCore.OldBeta
+
+Beta
+
+# InstallCore.MinecraftVersion
+
+版本号
+
+# InstallCore.Success
+
+完成。
+
+# AccountManager.Remove
+
+移除
+
+# AccountManager.Password
+
+密码
+
+# AccountManager.EnterPasswordHint
+
+输入密码
+
+# AccountManager.Failed
+
+无法验证。
+
+# AccountManager.DeleteMsg
+
+下次使用会需要重新登录。
+
+# AccountManager.Yes
+
+嗯
+
+# AccountManager.No
+
+不
+
+# AccountManager.Warn
+
+保护好你的密码。
+
+# AccountManager.Next
+
+嗯
+
+# AccountManager.Note
+
+@HTMLMicrosoft 帐户无需验证。可以将验证按钮拖向此处。
+
+# JavaSelector.CustomAdd
+
+让我选择
+
+# JavaSelector.CannotLoadDetail
+
+正在读取
+
+# JavaSelector.Loading
+
+正在查找。
+
+# JavaSelector.Reload
+
+重新查找
+
+# JavaSelector.GetNew
+
+下载 AdoptOpenJDK JRE 16（适用于 Minecraft 17 及更新版本）
+
+# JavaSelector.GetOld
+
+下载 AdoptOpenJDK JRE V8（适用于 Minecraft 16 及更旧版本）
+
+# JavaSelector.Warn32
+
+32 位 VM  不适合 Minecraft。
+
+# JavaSelector.WarnClient
+
+Client VM 不适合 Minecraft。
+
+# JavaSelector.WarnNonFree
+
+这个非自由运行时不受支持。
+
+# Options.AutoSave
+
+自动保存。
+
+# Options.Hint
+
+默认值就是建议值。\n^ 重启生效，* 开发专用
+
+# Options.NotOn
+
+不支持此平台
+
+# Options.download.proxy-bypass.title
+
+以下站点不使用代理 ^
+
+# Options.download.proxy-bypass.desc
+
+当访问以下站点时直接连接
+
+# Options.download.skip-validate.desc
+
+在下载时不对文件进行完整性检验
+
+# Options.updator.url.title
+
+更新来源
+
+# Options.updator.url.desc
+
+下一次从这里下载更新
+
+# Options.hardware-acc.title
+
+硬件加速 ^
+
+# Options.hardware-acc.desc
+
+启用或禁用硬件加速
+
+# Options.show-downloading-item.title
+
+显示进度
+
+# Options.show-downloading-item.desc
+
+显示正在获取和已经获取的内容 
+
+# Options.memory.desc
+
+设置最大内存大小，单位 MB
+
+# Options.gw-size.desc
+
+设置游戏窗口的大小
+
+# Options.launch.fast-reboot.desc
+
+在一次会话中，除第一次成功启动外，启动游戏时将跳过支援库和游戏资源的检查
+
+# Options.clean-storage.desc
+
+摧毁 Alicorn 存储的一切数据
+
+# Options.cx.shared-root.desc
+
+在这里存储 ASC 共享文件
+
+# Options.dev.experimental.desc
+
+开启 Alicorn 默认没有开启的特性 - 可能有危险。
+
+# Options.interactive.i-have-a-crush-on-al.desc
+
+Maud 2 不支持此功能，但其他助理可能支持。
+
+# Options.download.global-proxy.desc
+
+访问网络时所使用的代理服务器
+
+# Options.download.mirror.desc
+
+@HTML选择一个用于加快下载速度的镜像 - MCBBS 镜像与 BMCLAPI 镜像是由 BMCLAPI 和 MCBBS 共同为你提供的。
+
+# Options.dev.desc
+
+打开开发人员模式
+
+# Options.reset.desc
+
+在下次启动时将设置重置为当前版本的默认内容
+
+# Options.pff.cache-root.desc
+
+设置 Pff 的文件缓存目录
+
+# Options.pff.page-size.desc
+
+进行模糊查询时请求的的分页大小
+
+# Options.pff.first-source.desc
+
+选择优先搜索 Mod 的地方
+
+# Options.pff.first-source.Curseforge
+
+Curseforge
+
+# Options.pff.first-source.Modrinth
+
+Modrinth
+
+# Options.java.simple-search.desc
+
+仅使用命令和环境变量寻找 JRE，不要搜索整台计算机
+
+# Options.user.name.desc
+
+你好。
+
+# Options.web.global-proxy.desc
+
+设置用于 Alicorn 附属浏览器的代理，包括 Microsoft 帐户登录
+
+# Options.updator.use-update.desc
+
+启用来自 Alicorn 的自动更新，以及时获取新功能
+
+# Options.download.concurrent.chunk-size.desc
+
+并发分段下载时每个文件段的大小
+
+# Options.download.pff.chunk-size.desc
+
+Pff 的并发下载区块大小
+
+# Options.download.concurrent.timeout.desc
+
+在提交错误前最长允许的服务器响应时间
+
+# Options.download.pff.timeout.desc
+
+Pff 的请求等待时间
+
+# Options.download.concurrent.tries-per-chunk.desc
+
+在放弃某个文件的下载前最多的重试次数
+
+# Options.cmc.disable-log4j-config.desc
+
+不使用 Mojang 提供的 Log4j 配置文件
+
+# CrashReportDisplay.BaseInfo.ID
+
+档案
+
+# CrashReportDisplay.Instruction
+
+此处有适合发帖使用的 BBCode 代码，点击来复制。
+
+# Welcome.Suggest.Part1
+
+你好。
+
+嗨。
+
+[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]时间比较晚了，记得休息。
+
+[(()=>{const hours=new Date().getHours();return hours>=7&&hours<=11;})()]上午好。
+
+嗯。
+
+# Welcome.TipName
+
+@empty
+
+# Welcome.Short.LaunchPad
+
+启动
+
+# Welcome.Short.LastLaunch
+
+最近
+
+# Welcome.Short.Install
+
+安装
+
+# Welcome.Tips
+
+我并不支持此功能。
+
+# PffFront.WarnNoCache
+
+没有设置缓存。
+
+# PffFront.Loading
+
+获取中。
+
+# PffFront.Done
+
+完成。
+
+# PffFront.Failed
+
+获取失败。
+
+# PffFront.QuickWatch
+
+速览
+
+# PffFront.Hint
+
+@HTML这里只显示由 Pff 安装的软件包，单击软件包可以查看它。
+
+# ServerList.AddNewServer.SincereWarn
+
+多人游戏是一个非常危险的环境，你应该知道你在做什么。
+
+# ServerList.AddNewServer.OK
+
+继续
+
+# ServerList.AddNewServer.Cancel
+
+不了
+
+# ServerList.Remove
+
+移除
+
+# UtilitiesIndex.Description
+
+这里是 Alicorn 工具库。
+
+# UtilitiesIndex.Open
+
+启动
