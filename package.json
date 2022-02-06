@@ -2,7 +2,7 @@
   "private": true,
   "appVersion": "Harmony",
   "version": "1.0.0",
-  "updatorVersion": 45,
+  "updatorVersion": 46,
   "scripts": {
     "lc": "yarn lcd",
     "df": "yarn dev-full",
