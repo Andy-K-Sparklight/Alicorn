@@ -218,6 +218,10 @@ Alicorn 无法读/写 {Target}，请检查此目录的权限，相关操作已�
 
 正在进行操作……这可能需要几分钟。
 
+# CoreInfo.Isolated
+
+已检测到版本隔离
+
 # CoreInfo.Sorting.HL
 
 按版本从高到低

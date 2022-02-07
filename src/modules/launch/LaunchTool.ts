@@ -40,6 +40,7 @@ export function launchProfile(
     gc2?: string;
     maxMem?: number;
     demo?: boolean;
+    isolated?: boolean;
   }
 ): string {
   const vmArgs = generateVMArgs(profile, container);
@@ -47,7 +48,8 @@ export function launchProfile(
     profile,
     container,
     authData,
-    !!policies.demo
+    !!policies.demo,
+    !!policies.isolated
   );
   const ajArgs = policies.useAj
     ? applyAJ(whereAJ(), policies.ajHost || "", policies.ajPrefetch || "")
@@ -87,10 +89,16 @@ export function launchProfile(
       .concat(serverArgs)
       .concat(resolutions);
   }
-  process.chdir(container.rootDir);
+
+  const ir = policies.isolated
+    ? container.getVersionRoot(profile.id)
+    : container.rootDir;
+
+  process.chdir(ir);
+  ipcRenderer.send("changeDir", ir);
+
   console.log(totalArgs);
-  ipcRenderer.send("changeDir", container.rootDir);
-  return runMinecraft(totalArgs, jExecutable, container, emitter);
+  return runMinecraft(totalArgs, jExecutable, container, ir, emitter);
 }
 
 const SAFE_LAUNCH_SET: Set<string> = new Set();

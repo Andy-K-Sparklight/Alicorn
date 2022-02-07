@@ -21,11 +21,15 @@ export function generateGameArgs(
   profile: GameProfile,
   container: MinecraftContainer,
   authData: Trio<string, string, string>,
-  demo: boolean
+  demo: boolean,
+  isolated: boolean
 ): string[] {
   const vMap = new Map<string, string>();
   vMap.set("version_name", profile.id);
-  vMap.set("game_directory", container.rootDir);
+  vMap.set(
+    "game_directory",
+    isolated ? container.getVersionRoot(profile.id) : container.rootDir
+  );
   vMap.set("auth_player_name", authData.getFirstValue() || "Player");
   vMap.set("assets_root", container.getAssetsRoot());
   vMap.set("assets_index_name", profile.assetIndex.id);

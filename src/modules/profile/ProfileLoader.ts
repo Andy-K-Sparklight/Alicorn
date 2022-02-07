@@ -1,5 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
+import { isFileExist } from "../commons/FileUtil";
 import { scanCoresIn } from "../container/ContainerScanner";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { JAR_SUFFIX } from "../launch/NativesLint";
@@ -101,4 +102,16 @@ function fixProfileClient<T extends GameProfile>(
   }
 
   return profile;
+}
+
+export async function isProfileIsolated(
+  container: MinecraftContainer,
+  id: string
+): Promise<boolean> {
+  const root = container.getVersionRoot(id);
+  return (
+    (await isFileExist(path.join(root, "saves"))) ||
+    (await isFileExist(path.join(root, "mods"))) ||
+    (await isFileExist(path.join(root, "logs")))
+  );
 }

@@ -116,7 +116,10 @@ import { LaunchTracker } from "../modules/launch/LaunchTracker";
 import { stopMinecraft } from "../modules/launch/MinecraftBootstrap";
 import { prepareModsCheckFor } from "../modules/modx/ModDynLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
-import { loadProfile } from "../modules/profile/ProfileLoader";
+import {
+  isProfileIsolated,
+  loadProfile,
+} from "../modules/profile/ProfileLoader";
 import {
   dropAccountPromise,
   waitMSAccountReady,
@@ -958,9 +961,13 @@ async function startBoot(
       });
     }
   }
+  const isolated = await isProfileIsolated(container, profile.id);
+
   setStatus(LaunchingStatus.MODS_PREPARING);
-  if (profile.type === ReleaseType.MODIFIED) {
-    await prepareModsCheckFor(profile, container, GLOBAL_LAUNCH_TRACKER);
+  if (!isolated) {
+    if (profile.type === ReleaseType.MODIFIED) {
+      await prepareModsCheckFor(profile, container, GLOBAL_LAUNCH_TRACKER);
+    }
   }
   setStatus(LaunchingStatus.ARGS_GENERATING);
   let jHome = getJavaAndCheckAvailable(profileHash, true);
@@ -1077,6 +1084,7 @@ async function startBoot(
       gc1: getString("main-gc", "z"),
       gc2: getString("para-gc", "pure"),
       demo: account === null,
+      isolated: isolated,
     });
   }
   addStatistics("Launch");

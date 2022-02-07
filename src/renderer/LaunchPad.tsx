@@ -19,7 +19,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
 import { getContainer } from "../modules/container/ContainerUtil";
-import { isStillNeeded, loadProfile } from "../modules/profile/ProfileLoader";
+import {
+  isProfileIsolated,
+  isStillNeeded,
+  loadProfile,
+} from "../modules/profile/ProfileLoader";
 import { whatProfile } from "../modules/profile/WhatProfile";
 import { setDirtyProfile } from "../modules/readyboom/PrepareProfile";
 import { jumpTo, triggerSetPage } from "./GoTo";
@@ -38,6 +42,7 @@ interface SimplifiedCoreInfo {
   corrupted: boolean;
   versionType: string;
   baseVersion: string;
+  isolated: boolean;
 }
 
 export function LaunchPad(): JSX.Element {
@@ -93,6 +98,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
                 versionType: whatProfile(id),
                 corrupted: false,
                 container: c.id,
+                isolated: await isProfileIsolated(c, id),
               });
             } catch {
               if (!ignoreCorrupted.current) {
@@ -103,6 +109,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
                   versionType: "???????",
                   baseVersion: "???????",
                   container: c.id,
+                  isolated: false,
                 });
               }
             } finally {
@@ -480,6 +487,16 @@ function SingleCoreDisplay(props: {
             >
               {getDescriptionFor(props.profile.versionType)}
             </Typography>
+          )}
+          {props.profile.isolated ? (
+            <Typography
+              className={classes.text}
+              sx={{ color: isBgDark() ? "secondary.light" : undefined }}
+            >
+              {tr("CoreInfo.Isolated")}
+            </Typography>
+          ) : (
+            ""
           )}
         </CardContent>
         <YNDialog2

@@ -16,6 +16,7 @@ class RunningMinecraft {
   readonly args: string[];
   readonly executable: string;
   readonly container: MinecraftContainer;
+  readonly isolateRoot: string;
   status: RunningStatus = RunningStatus.STARTING;
   emitter: EventEmitter | null = null;
   exitCode = "";
@@ -26,17 +27,19 @@ class RunningMinecraft {
     args: string[],
     exec: string,
     container: MinecraftContainer,
+    isolateRoot: string,
     emitter: EventEmitter | null = null
   ) {
     this.args = args;
     this.container = container;
     this.executable = exec;
     this.emitter = emitter;
+    this.isolateRoot = isolateRoot;
   }
   run(): string {
     try {
       this.process = spawn(this.executable, this.args, {
-        cwd: this.container.rootDir,
+        cwd: this.isolateRoot || this.container.rootDir,
         detached: true, // Won't close after launcher closed
       });
     } catch (e) {
@@ -120,12 +123,14 @@ export function runMinecraft(
   args: string[],
   javaExecutable: string,
   container: MinecraftContainer,
+  isolateRoot: string,
   emitter?: EventEmitter
 ): string {
   const runningArtifact = new RunningMinecraft(
     args,
     javaExecutable,
     container,
+    isolateRoot,
     emitter
   );
   runningArtifact.onEnd(() => {
