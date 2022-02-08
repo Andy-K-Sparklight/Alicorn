@@ -5,7 +5,7 @@ import React from "react";
 import { getString, set } from "../modules/config/ConfigSupport";
 import { getPathInDefaults } from "../modules/config/DataSupport";
 
-export const ALL_ASSISTANTS = ["PonyCN", "Equish", "Maud", "66CCFF"];
+export const ALL_ASSISTANTS = ["PonyCN", "Equish", "PonyTW", "Maud", "66CCFF"];
 
 function currentLocale(): string {
   let pr = getString("assistant");
