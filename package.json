@@ -44,7 +44,7 @@
     "@types/uuid": "^8.3.4",
     "@types/ws": "^8.2.2",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
-    "@typescript-eslint/parser": "^5.10.2",
+    "@typescript-eslint/parser": "^5.11.0",
     "copy-webpack-plugin": "^10.2.4",
     "electron": "^17.0.0",
     "electron-packager": "^15.4.0",
