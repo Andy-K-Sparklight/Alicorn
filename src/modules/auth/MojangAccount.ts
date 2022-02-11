@@ -1,4 +1,3 @@
-import { Trio } from "../commons/Collections";
 import { safeGet } from "../commons/Null";
 import {
   Account,
@@ -19,14 +18,13 @@ const MJ_AUTH_SERVER_ROOT = "https://authserver.mojang.com";
 // Mojang Account
 // Simply forked from AuthlibAccount
 export class MojangAccount extends Account {
-  buildAccessData(): Promise<Trio<string, string, string>> {
-    return Promise.resolve(
-      new Trio<string, string, string>(
-        this.lastUsedUsername,
-        this.lastUsedAccessToken,
-        this.lastUsedUUID
-      )
-    );
+  buildAccessData(): Promise<[string, string, string, string]> {
+    return Promise.resolve([
+      this.lastUsedUsername,
+      this.lastUsedAccessToken,
+      this.lastUsedUUID,
+      "0",
+    ]);
   }
 
   async flushToken(): Promise<boolean> {

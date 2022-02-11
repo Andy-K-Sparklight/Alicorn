@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import { abortableBasicHash, abortableUniqueHash } from "../commons/BasicHash";
-import { Pair, Trio } from "../commons/Collections";
+import { Pair } from "../commons/Collections";
 import { ALICORN_ENCRYPTED_DATA_SUFFIX } from "../commons/Constants";
 import { isFileExist } from "../commons/FileUtil";
 import { getActualDataPath, loadData, saveData } from "../config/DataSupport";
@@ -124,6 +124,7 @@ function loadMSAccount(obj: Record<string, unknown>): MicrosoftAccount {
   la.lastUsedAccessToken = String(obj["lastUsedAccessToken"] || "");
   la.lastUsedUUID = String(obj["lastUsedUUID"] || "");
   la.refreshToken = String(obj["refreshToken"] || "");
+  la.lastUsedXuid = String(obj["lastUsedXuid"] || "");
   return la;
 }
 
@@ -226,17 +227,6 @@ export function copyAccount(aIn: Account | undefined): Account {
     default:
       return new LocalAccount(aIn.accountName);
   }
-}
-
-export async function fillAccessData(
-  acData: Trio<string, string, string>
-): Promise<Trio<string, string, string>> {
-  for (const v of acData.get()) {
-    if (v.trim().length === 0) {
-      return await new LocalAccount("Player").buildAccessData();
-    }
-  }
-  return acData;
 }
 
 let ACCOUNT_SET: Set<Account> = new Set();

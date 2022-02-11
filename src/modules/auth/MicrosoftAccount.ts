@@ -1,6 +1,5 @@
 import { ipcRenderer } from "electron";
 import { tr } from "../../renderer/Translator";
-import { Trio } from "../commons/Collections";
 import { isNull, safeGet } from "../commons/Null";
 import { getString } from "../config/ConfigSupport";
 import { decrypt2, encrypt2 } from "../security/Encrypt";
@@ -26,19 +25,19 @@ const MJ_PROFILE_API = "https://api.minecraftservices.com/minecraft/profile";
 export const MS_LAST_USED_USERNAME_KEY = "MS.LastUsedUserName";
 export const MS_LAST_USED_ACTOKEN_KEY = "MS.LastUsedACToken"; // Encrypt
 export const MS_LAST_USED_UUID_KEY = "MS.LastUsedUUID";
+export const MS_LAST_USED_XUID_KEY = "MS.LastUsedXUID";
 export const MS_LAST_USED_REFRESH_KEY = "MS.LastUsedRefresh"; // Encrypt
 export const ACCOUNT_LAST_REFRESHED_KEY = "MS.AccountRefreshDate";
 export const ACCOUNT_EXPIRES_KEY = "MS.Expires";
 
 export class MicrosoftAccount extends Account {
-  buildAccessData(): Promise<Trio<string, string, string>> {
-    return Promise.resolve(
-      new Trio<string, string, string>(
-        this.lastUsedUsername,
-        this.lastUsedAccessToken,
-        this.lastUsedUUID
-      )
-    );
+  buildAccessData(): Promise<[string, string, string, string]> {
+    return Promise.resolve([
+      this.lastUsedUsername,
+      this.lastUsedAccessToken,
+      this.lastUsedUUID,
+      this.lastUsedXuid,
+    ]);
   }
 
   constructor(accountName: string) {
@@ -49,6 +48,7 @@ export class MicrosoftAccount extends Account {
     this.lastUsedAccessToken = decrypt2(
       localStorage.getItem(MS_LAST_USED_ACTOKEN_KEY) || ""
     );
+    this.lastUsedXuid = localStorage.getItem(MS_LAST_USED_XUID_KEY) || "";
     this.refreshToken = decrypt2(
       localStorage.getItem(MS_LAST_USED_REFRESH_KEY) || ""
     );
@@ -80,11 +80,12 @@ export class MicrosoftAccount extends Account {
       }
       const m3 = r3.token;
       console.log("XSTS -> Mojang");
-      const r4 = await getMojangToken(String(u), String(m3));
-      if (isNull(r4)) {
+      const [r4, xuid] = await getMojangTokenAndXuid(String(u), String(m3));
+      if (isNull(r4) || isNull(xuid)) {
         return false;
       }
       this.lastUsedAccessToken = r4;
+      this.lastUsedXuid = xuid;
       const r5 = await getUUIDAndUserName(r4);
       if (!r5.success) {
         return false;
@@ -97,6 +98,7 @@ export class MicrosoftAccount extends Account {
         new Date().toISOString()
       );
       saveUUID(this.lastUsedUUID);
+      saveXuid(this.lastUsedXuid);
       saveUserName(this.lastUsedUsername);
       saveRefreshToken(this.refreshToken);
       saveAccessToken(this.lastUsedAccessToken);
@@ -134,6 +136,7 @@ export class MicrosoftAccount extends Account {
         return await this.flushToken();
       }
       saveUUID(this.lastUsedUUID);
+      saveXuid(this.lastUsedXuid);
       saveUserName(this.lastUsedUsername);
       saveRefreshToken(this.refreshToken);
       saveAccessToken(this.lastUsedAccessToken);
@@ -150,6 +153,7 @@ export class MicrosoftAccount extends Account {
       accountName: this.accountName,
       lastUsedUsername: this.lastUsedUsername,
       refreshToken: this.refreshToken,
+      lastUsedXuid: this.lastUsedXuid,
     });
   }
 
@@ -162,6 +166,10 @@ function saveRefreshToken(v: string): void {
 
 function saveUUID(v: string): void {
   localStorage.setItem(MS_LAST_USED_UUID_KEY, v);
+}
+
+function saveXuid(v: string): void {
+  localStorage.setItem(MS_LAST_USED_XUID_KEY, v);
 }
 
 function saveUserName(v: string): void {
@@ -366,7 +374,10 @@ async function getXSTSToken(
 }
 
 // Xbox uhs & XSTS Token -> MC Token
-async function getMojangToken(uhs: string, xstsToken: string): Promise<string> {
+async function getMojangTokenAndXuid(
+  uhs: string,
+  xstsToken: string
+): Promise<[string, string]> {
   try {
     const response = await (
       await fetch(MJ_LOGIN_XBOX, {
@@ -381,9 +392,12 @@ async function getMojangToken(uhs: string, xstsToken: string): Promise<string> {
         }),
       })
     ).json();
-    return String(safeGet(response, ["access_token"], ""));
+    return [
+      String(safeGet(response, ["access_token"], "")),
+      String(safeGet(response, ["username"], "")),
+    ];
   } catch {
-    return "";
+    return ["", ""];
   }
 }
 

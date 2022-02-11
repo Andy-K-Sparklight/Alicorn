@@ -1,6 +1,5 @@
 import os from "os";
 import path from "path";
-import { Trio } from "../commons/Collections";
 import {
   ALICORN_SEPARATOR,
   ALICORN_VERSION_TYPE,
@@ -20,7 +19,7 @@ import { JAR_SUFFIX } from "./NativesLint";
 export function generateGameArgs(
   profile: GameProfile,
   container: MinecraftContainer,
-  authData: Trio<string, string, string>,
+  authData: [string, string, string, string],
   demo: boolean,
   isolated: boolean
 ): string[] {
@@ -30,14 +29,17 @@ export function generateGameArgs(
     "game_directory",
     isolated ? container.getVersionRoot(profile.id) : container.rootDir
   );
-  vMap.set("auth_player_name", authData.getFirstValue() || "Player");
+  const [playerName, acToken, uuid, xuid] = authData;
+  vMap.set("auth_player_name", playerName || "Player");
   vMap.set("assets_root", container.getAssetsRoot());
   vMap.set("assets_index_name", profile.assetIndex.id);
-  vMap.set("auth_uuid", authData.getThirdValue() || "0");
-  vMap.set("auth_session", authData.getSecondValue() || "0"); // Pre 1.6
+  vMap.set("auth_uuid", uuid || "0");
+  vMap.set("auth_session", acToken || "0"); // Pre 1.6
   vMap.set("user_type", MOJANG_USER_TYPE);
   vMap.set("version_type", ALICORN_VERSION_TYPE);
-  vMap.set("auth_access_token", authData.getSecondValue() || "0");
+  vMap.set("clientid", "00000000402b5328"); // Literal
+  vMap.set("auth_xuid", xuid || "0"); // TODO: Confirm this arg
+  vMap.set("auth_access_token", acToken || "0");
   vMap.set("user_properties", "[]"); // Currently we don't support twitch
   vMap.set("game_assets", container.getAssetsRootLegacy()); // Pre 1.6
   const args = profile.gameArgs.concat();

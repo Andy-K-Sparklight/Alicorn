@@ -1,6 +1,5 @@
 import { v3 } from "uuid";
 import { basicHash } from "../commons/BasicHash";
-import { Trio } from "../commons/Collections";
 import { Account } from "./Account";
 import { AccountType } from "./AccountUtil";
 const OFFLINE_PLAYER_PREFIX = "OfflinePlayer:";
@@ -12,13 +11,14 @@ export class LocalAccount extends Account {
     this.lastUsedUUID = buildOfflinePlayerUUID(name);
   }
 
-  async buildAccessData(): Promise<Trio<string, string, string>> {
+  async buildAccessData(): Promise<[string, string, string, string]> {
     await this.flushToken();
-    return new Trio(
+    return [
       this.lastUsedUsername,
       this.lastUsedAccessToken,
-      this.lastUsedUUID
-    );
+      this.lastUsedUUID,
+      "0",
+    ];
   }
 
   flushToken(): Promise<boolean> {

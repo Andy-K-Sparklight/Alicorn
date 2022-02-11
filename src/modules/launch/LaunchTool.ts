@@ -2,7 +2,7 @@ import { ipcRenderer } from "electron";
 import EventEmitter from "events";
 import { whereAJ } from "../auth/AJHelper";
 import { whereND } from "../auth/NDHelper";
-import { Pair, Trio } from "../commons/Collections";
+import { Pair } from "../commons/Collections";
 import { isNull } from "../commons/Null";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { GameProfile } from "../profile/GameProfile";
@@ -24,7 +24,7 @@ export function launchProfile(
   profile: GameProfile,
   container: MinecraftContainer,
   jExecutable: string,
-  authData: Trio<string, string, string>,
+  authData: [string, string, string, string],
   emitter: EventEmitter,
   policies: {
     useAj?: boolean;

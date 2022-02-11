@@ -1,5 +1,4 @@
 import { uniqueHash } from "../commons/BasicHash";
-import { Trio } from "../commons/Collections";
 import { isNull, safeGet } from "../commons/Null";
 import { getUniqueID32 } from "../security/Encrypt";
 import { AccountType } from "./AccountUtil";
@@ -14,6 +13,7 @@ export abstract class Account {
     this.accountName = accountName;
     this.lastUsedUUID = "";
     this.lastUsedAccessToken = "";
+    this.lastUsedXuid = "";
     this.type = accountType;
   }
 
@@ -23,7 +23,7 @@ export abstract class Account {
 
   abstract flushToken(): Promise<boolean>;
 
-  abstract buildAccessData(): Promise<Trio<string, string, string>>;
+  abstract buildAccessData(): Promise<[string, string, string, string]>;
 
   // AccessData(or AuthData) is a Trio
   // Username, AccessToken, UUID
@@ -33,10 +33,10 @@ export abstract class Account {
   }
 
   abstract serialize(): string;
-
   lastUsedUsername: string;
   lastUsedUUID: string;
   lastUsedAccessToken: string;
+  lastUsedXuid: string;
   accountName: string;
 }
 

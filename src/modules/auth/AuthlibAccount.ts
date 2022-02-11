@@ -1,6 +1,5 @@
 import { atob } from "js-base64";
 import { uniqueHash } from "../commons/BasicHash";
-import { Trio } from "../commons/Collections";
 import { safeGet } from "../commons/Null";
 import {
   Account,
@@ -15,14 +14,13 @@ import { AccountType } from "./AccountUtil";
 // Account using Authlib Injector
 export class AuthlibAccount extends Account {
   // Only gather information, this function doesn't do any authentication!
-  buildAccessData(): Promise<Trio<string, string, string>> {
-    return Promise.resolve(
-      new Trio<string, string, string>(
-        this.lastUsedUsername,
-        this.lastUsedAccessToken,
-        this.lastUsedUUID
-      )
-    );
+  buildAccessData(): Promise<[string, string, string, string]> {
+    return Promise.resolve([
+      this.lastUsedUsername,
+      this.lastUsedAccessToken,
+      this.lastUsedUUID,
+      "0",
+    ]);
   }
 
   // Get a new token
