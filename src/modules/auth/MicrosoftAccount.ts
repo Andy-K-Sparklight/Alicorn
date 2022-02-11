@@ -394,7 +394,9 @@ async function getMojangTokenAndXuid(
     ).json();
     return [
       String(safeGet(response, ["access_token"], "")),
-      String(safeGet(response, ["username"], "")),
+      // String(safeGet(response, ["username"], "")), TODO: find out how to get xuid
+      // Currently we don't know its usage, leave to 0
+      "0",
     ];
   } catch {
     return ["", ""];

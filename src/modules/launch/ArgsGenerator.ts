@@ -38,7 +38,7 @@ export function generateGameArgs(
   vMap.set("user_type", MOJANG_USER_TYPE);
   vMap.set("version_type", ALICORN_VERSION_TYPE);
   vMap.set("clientid", "00000000402b5328"); // Literal
-  vMap.set("auth_xuid", xuid || "0"); // TODO: Confirm this arg
+  vMap.set("auth_xuid", xuid || "0");
   vMap.set("auth_access_token", acToken || "0");
   vMap.set("user_properties", "[]"); // Currently we don't support twitch
   vMap.set("game_assets", container.getAssetsRootLegacy()); // Pre 1.6
