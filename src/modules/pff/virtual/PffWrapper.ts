@@ -192,7 +192,7 @@ export function getResolvers(
     scope = scope.toLowerCase();
   }
   if (scope === "curseforge") {
-    if (getBoolean("pff.cursepp")) {
+    if (getBoolean("pff.cursepp2")) {
       return [new CursePlusPlusModResolver(slug)];
     } else {
       return [new CurseforgeModResolver(slug)];
@@ -204,7 +204,7 @@ export function getResolvers(
   if (scope === "modrinth") {
     return [new ModrinthModResolver(slug)];
   }
-  if (getBoolean("pff.cursepp")) {
+  if (getBoolean("pff.cursepp2")) {
     return [new ModrinthModResolver(slug), new CursePlusPlusModResolver(slug)];
   } else {
     return [new ModrinthModResolver(slug), new CurseforgeModResolver(slug)];

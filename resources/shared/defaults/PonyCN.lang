@@ -1435,11 +1435,11 @@ Alicorn Ping ^
 
 使用本地帐户时，支持本地皮肤的设置，若不使用此功能，关闭它将有利于提升启动速度（虽然也就几十毫秒吧（
 
-# Options.pff.cursepp.title
+# Options.pff.cursepp2.title
 
 Curseforge ++
 
-# Options.pff.cursepp.desc
+# Options.pff.cursepp2.desc
 
 使用 Alicorn Magic 回到过去调用 Curseforge 的 API，这样 Alicorn 就不用修改代码，只需要建造时间机器（认真
 

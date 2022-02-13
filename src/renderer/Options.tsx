@@ -348,7 +348,7 @@ export function OptionsPage(): JSX.Element {
           <InputItem
             icon={<LockOpen />}
             type={ConfigType.BOOL}
-            bindConfig={"pff.cursepp"}
+            bindConfig={"pff.cursepp2"}
           />
           <InputItem
             icon={<AlignHorizontalLeft />}

@@ -49,7 +49,7 @@
   "features.tips-of-today": true,
   "features.miniwiki": true,
   "features.detect-lan": true,
-  "pff.cursepp": true,
+  "pff.cursepp2": false,
   "pff.cursepp-cluster-size": 3,
   "hoofoff.central": "",
   "frame.drag-impl": "Webkit",
