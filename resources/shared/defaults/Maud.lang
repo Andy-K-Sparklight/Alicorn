@@ -776,18 +776,6 @@ Maud 2 不支持此功能，但其他助理可能支持。
 
 进行模糊查询时请求的的分页大小
 
-# Options.pff.first-source.desc
-
-选择优先搜索 Mod 的地方
-
-# Options.pff.first-source.Curseforge
-
-Curseforge
-
-# Options.pff.first-source.Modrinth
-
-Modrinth
-
 # Options.java.simple-search.desc
 
 仅使用命令和环境变量寻找 JRE，不要搜索整台计算机
