@@ -32,7 +32,6 @@ import { configureModDepChain, UnmetDepUnit } from "../modules/modx/ModDeps";
 import { loadMetas } from "../modules/modx/ModDynLoad";
 import { ModInfo, ModLoader } from "../modules/modx/ModInfo";
 import { canModVersionApply } from "../modules/modx/ModVersionUtil";
-import { PFF_MSG_GATE } from "../modules/pff/curseforge/Values";
 import {
   loadLockfile,
   Lockfile2,
@@ -47,6 +46,7 @@ import { ALICORN_DEFAULT_THEME_LIGHT } from "./Renderer";
 import { fullWidth } from "./Stylex";
 import { tr } from "./Translator";
 
+const PFF_MSG_GATE = "message";
 export function PffFront(): JSX.Element {
   const emitter = useRef(new EventEmitter());
   let { container, version, name, loader, autostart, root } = useParams<{

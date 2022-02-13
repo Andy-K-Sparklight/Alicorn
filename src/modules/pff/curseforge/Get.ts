@@ -1,7 +1,6 @@
 import { invokeWorker } from "../../../renderer/Schedule";
 import { safeGet } from "../../commons/Null";
 import { pgot } from "../../download/GotWrapper";
-import { GAME_ID } from "./Values";
 
 // With modpack
 export async function moreAddonInfoBySlug(
@@ -14,7 +13,7 @@ export async function moreAddonInfoBySlug(
 ): Promise<ExtraAddonInfo[]> {
   const ACCESS_URL =
     apiBase +
-    `/api/v2/addon/search?gameId=${GAME_ID}&pageSize=${pageSize}&searchFilter=${slug}&sort=1${extraParams}` +
+    `/api/v2/addon/search?gameId=432&pageSize=${pageSize}&searchFilter=${slug}&sort=1${extraParams}` +
     (modOnly ? "&sectionId=6" : "");
   try {
     const r = await pgot(ACCESS_URL, timeout);
@@ -82,7 +81,7 @@ export async function getAddonInfoBySlug(
 ): Promise<AddonInfo | undefined> {
   const ACCESS_URL =
     apiBase +
-    `/api/v2/addon/search?gameId=${GAME_ID}&pageSize=${pageSize}&searchFilter=${slug}&sort=1${extraParams}`;
+    `/api/v2/addon/search?gameId=432&pageSize=${pageSize}&searchFilter=${slug}&sort=1${extraParams}`;
   try {
     const r = await pgot(ACCESS_URL, timeout);
     if (!(r instanceof Array)) {
