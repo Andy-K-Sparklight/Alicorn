@@ -3,7 +3,6 @@ import { basicHash } from "../../commons/BasicHash";
 import { isFileExist } from "../../commons/FileUtil";
 import { getBoolean } from "../../config/ConfigSupport";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
-import { apiHasGone } from "../curseforge/CurseControllerFront";
 import { ModArtifact, ModMeta } from "./ModDefine";
 
 export type LockfileModMeta = ModMeta & {
@@ -81,7 +80,7 @@ export function addToLockfile(
 }
 
 function transformCursePlusPlus(lockfile: Lockfile2): void {
-  if (getBoolean("pff.cursepp") && apiHasGone()) {
+  if (getBoolean("pff.cursepp")) {
     for (const [name, obj] of Object.entries(lockfile)) {
       if (obj.provider === "Curseforge") {
         obj.provider = "CursePlusPlus";

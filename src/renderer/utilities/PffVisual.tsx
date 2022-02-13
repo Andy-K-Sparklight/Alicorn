@@ -17,7 +17,6 @@ import {
 import copy from "copy-to-clipboard";
 import React, { useEffect, useRef, useState } from "react";
 import { getNumber } from "../../modules/config/ConfigSupport";
-import { apiHasGone } from "../../modules/pff/curseforge/CurseControllerFront";
 import {
   ExtraAddonInfo,
   moreAddonInfoBySlug,
@@ -168,28 +167,24 @@ export function PffVisual(): JSX.Element {
               }
               label={tr("Utilities.PffVisual.MultiSelect")}
             />
-            {apiHasGone() ? (
-              ""
-            ) : (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    color={"primary"}
-                    disabled={searching}
-                    checked={mode === "Modpack"}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setMode("Modpack");
-                        setMultiSelect(false);
-                      } else {
-                        setMode("Normal");
-                      }
-                    }}
-                  />
-                }
-                label={tr("Utilities.PffVisual.Modpack")}
-              />
-            )}
+            <FormControlLabel
+              control={
+                <Checkbox
+                  color={"primary"}
+                  disabled={searching}
+                  checked={mode === "Modpack"}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setMode("Modpack");
+                      setMultiSelect(false);
+                    } else {
+                      setMode("Normal");
+                    }
+                  }}
+                />
+              }
+              label={tr("Utilities.PffVisual.Modpack")}
+            />
           </Container>
         </ThemeProvider>
 

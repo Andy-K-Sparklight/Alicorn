@@ -17,7 +17,3 @@ export async function deicdeFullInformation(
   const n = await ipcRenderer.invoke("curseDecideFullInformation", origin);
   Object.assign(origin, n);
 }
-
-export function apiHasGone(): boolean {
-  return new Date().getTime() > 1643673599000; // 2022-1-31 23:59:59 GMT
-}

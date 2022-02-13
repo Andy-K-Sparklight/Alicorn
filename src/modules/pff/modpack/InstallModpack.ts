@@ -249,9 +249,8 @@ async function installSingleMod(
   if (typeof aid === "number" || typeof fid === "number") {
     aid = aid.toString();
     fid = fid.toString();
-    mr = new CurseforgeModResolver("");
+    mr = new CurseforgeModResolver(""); // From xmdhs
   } else {
-    // If has gone, treat as modrinth
     mr = new ModrinthModResolver("");
   }
   await mr.setSelected(String(aid), String(fid));

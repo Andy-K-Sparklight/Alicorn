@@ -3,7 +3,6 @@ import { getBoolean, getString } from "../../config/ConfigSupport";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { DownloadMeta } from "../../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../../download/DownloadWrapper";
-import { apiHasGone } from "../curseforge/CurseControllerFront";
 import { getCachedMod, saveModFileAsCache } from "./Cache";
 import { loadLockfile, saveLockfile } from "./Lockfile";
 import {
@@ -193,7 +192,7 @@ export function getResolvers(
     scope = scope.toLowerCase();
   }
   if (scope === "curseforge") {
-    if (getBoolean("pff.cursepp") && apiHasGone()) {
+    if (getBoolean("pff.cursepp")) {
       return [new CursePlusPlusModResolver(slug)];
     } else {
       return [new CurseforgeModResolver(slug)];
@@ -205,7 +204,7 @@ export function getResolvers(
   if (scope === "modrinth") {
     return [new ModrinthModResolver(slug)];
   }
-  if (getBoolean("pff.cursepp") && apiHasGone()) {
+  if (getBoolean("pff.cursepp")) {
     return [new ModrinthModResolver(slug), new CursePlusPlusModResolver(slug)];
   } else {
     return [new ModrinthModResolver(slug), new CurseforgeModResolver(slug)];

@@ -1,6 +1,5 @@
 import { getNumber } from "../../config/ConfigSupport";
 import {
-  apiHasGone,
   deicdeFullInformation,
   queryModByName,
   queryModInfoBySlug,
@@ -79,13 +78,9 @@ export abstract class AbstractModResolver implements ModResolver {
 }
 
 // Due to #85, we have to make a change to pff, we now use the slug directly as id
-/**
- * @deprecated The API has been closed.
- */
 export class CurseforgeModResolver extends AbstractModResolver {
-  protected CF_API_BASE = apiHasGone()
-    ? "https://auto.xmdhs.top/curse"
-    : "https://addons-ecs.forgesvc.net";
+  protected CF_API_BASE = "https://auto.xmdhs.top/curse";
+  // Old API has gone, sad :(
   protected insideCachedAddonInfo: AddonInfo | undefined;
   async resolveMod(): Promise<ModMeta> {
     if (this.cachedMeta) {
