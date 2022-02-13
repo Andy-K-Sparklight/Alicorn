@@ -142,9 +142,9 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
             const timeB = getMarkTime(hashB);
             switch (sorting) {
               case "LH":
-                return vcmp(a.id, b.id);
+                return vcmp(a.baseVersion, b.baseVersion);
               case "HL":
-                return vcmp(b.id, a.id);
+                return vcmp(b.baseVersion, a.baseVersion);
               case "USE":
                 return pinB - pinA;
               case "TIME":
