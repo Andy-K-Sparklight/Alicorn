@@ -130,6 +130,18 @@ Alicorn 無法讀/寫 {Target}，請檢查此目錄的權限，相關操作已�
 
 更新失敗……不過別擔心！你的文件絲毫不受影響。
 
+# System.DevToolsWarn1
+
+等一下！
+
+# System.DevToolsWarn2
+
+如果有人告訴你要在這裡輸入一些東西，110% 你被騙了。
+
+# System.DevToolsWarn3
+
+在這裡輸入任何內容都將使你的電腦面臨嚴重風險！
+
 # Beta
 
 實驗特性

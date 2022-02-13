@@ -82,8 +82,20 @@ export function FailedHint(props: {
       <>
         <DialogTitle>{tr("Operating.Failed")}</DialogTitle>
         <DialogContent
-          onClick={() => {
-            void ipcRenderer.send("openDevTools");
+          onClick={async () => {
+            await ipcRenderer.send("openDevTools");
+            console.log(
+              "%c" + tr("System.DevToolsWarn1"),
+              "font-size:3.5rem;color:royalblue;font-weight:900;"
+            );
+            console.log(
+              "%c" + tr("System.DevToolsWarn2"),
+              "font-size:1rem;color:red;"
+            );
+            console.log(
+              "%c" + tr("System.DevToolsWarn3"),
+              "font-size:2rem;color:red;"
+            );
           }}
         >
           <DialogContentText>{reason}</DialogContentText>

@@ -95,11 +95,17 @@ try {
   }
   printScreen("Log system enabled.");
   console.log(`Alicorn ${pkg.appVersion} Renderer Process`);
-  console.log("%c❤ From Annie K Rarity Sparklight", "color:#df307f");
+  console.log("%c❤ From Annie K Rarity Sparklight", "color:#df307f;");
   console.log(
     "%cSparklight is a girl - a filly, to be accurate.",
-    "color:#df307f"
+    "color:#df307f;"
   );
+  console.log("Life is better if you stay away from 'slime-liked' Forge.");
+  console.log(
+    "%cStay with Fabric, stay with performance.",
+    "font-weight:bold;"
+  );
+  console.log("%cDedicated to Linus Torvalds and FSF.", "font-weight:bold;");
   console.log(
     "Alicorn Launcher Copyright (C) 2021-2022 Annie K Rarity Sparklight"
   );
@@ -217,6 +223,12 @@ try {
         (t2.getTime() - t1.getTime()) / 1000 +
         "s."
     );
+    console.log(
+      "%c" + tr("System.DevToolsWarn1"),
+      "font-size:3.5rem;color:royalblue;font-weight:900;"
+    );
+    console.log("%c" + tr("System.DevToolsWarn2"), "font-size:1rem;color:red;");
+    console.log("%c" + tr("System.DevToolsWarn3"), "font-size:2rem;color:red;");
     // Deferred Check
     if (!navigator.onLine) {
       submitWarn(tr("System.Offline"));
