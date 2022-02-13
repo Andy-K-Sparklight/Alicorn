@@ -26,7 +26,7 @@ export function isStillNeeded(
   id: string,
   container: MinecraftContainer
 ): Promise<boolean> {
-  return new Promise<boolean>((res, rej) => {
+  return new Promise<boolean>((res) => {
     void (async () => {
       try {
         await Promise.all(
