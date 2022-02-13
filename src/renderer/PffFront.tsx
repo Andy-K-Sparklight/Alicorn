@@ -26,7 +26,7 @@ import path from "path";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { getBoolean } from "../modules/config/ConfigSupport";
-import { getContainer } from "../modules/container/ContainerUtil";
+import { getContainer as _getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { configureModDepChain, UnmetDepUnit } from "../modules/modx/ModDeps";
 import { loadMetas } from "../modules/modx/ModDynLoad";
@@ -49,14 +49,16 @@ import { tr } from "./Translator";
 
 export function PffFront(): JSX.Element {
   const emitter = useRef(new EventEmitter());
-  let { container, version, name, loader, autostart } = useParams<{
+  let { container, version, name, loader, autostart, root } = useParams<{
     container: string;
     version: string;
     name?: string;
     autostart?: string;
     loader: string;
+    root: string;
   }>();
   container = decodeURIComponent(container);
+  root = decodeURIComponent(root);
   version = decodeURIComponent(version);
   name = name ? decodeURIComponent(name) : undefined;
   loader = decodeURIComponent(loader);
@@ -73,6 +75,10 @@ export function PffFront(): JSX.Element {
   const [unmetWarns, setUnmetWarns] = useState<UnmetDepUnit[]>([]);
   const fullWidthClasses = fullWidth();
   const [isDirty, setDirty] = useState(false);
+
+  const getContainer = (c: string) => {
+    return chroot(_getContainer(c), root);
+  };
 
   const f = async () => {
     const m = await loadMetas(getContainer(container));
@@ -349,6 +355,7 @@ export function PffFront(): JSX.Element {
                             start(pName);
                           }
                         }}
+                        root={root}
                       />
                     );
                   })
@@ -455,6 +462,7 @@ function SinglePffModDisplay(props: {
   loader: string;
   version: string;
   onUpdate: () => void;
+  root: string;
 }): JSX.Element {
   const [showDesc, setShowDesc] = useState(false);
   const isCompatible =
@@ -489,7 +497,7 @@ function SinglePffModDisplay(props: {
             return;
           }
           shell.showItemInFolder(
-            getContainer(props.container).getModJar(
+            chroot(_getContainer(props.container), props.root).getModJar(
               props.meta.selectedArtifact.fileName
             )
           );
@@ -603,6 +611,13 @@ function SingleModDisplay(props: {
       />
     </ListItem>
   );
+}
+
+function chroot(c: MinecraftContainer, id: string): MinecraftContainer {
+  if (id === "0") {
+    return c;
+  }
+  return new MinecraftContainer(c.getVersionRoot(id), c.id + "/" + id);
 }
 
 export async function pffInstall(

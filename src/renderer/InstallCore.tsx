@@ -12,7 +12,7 @@ import {
   Tab,
   Tabs,
   ThemeProvider,
-  Typography,
+  Typography
 } from "@mui/material";
 import { EventEmitter } from "events";
 import React, { useEffect, useRef, useState } from "react";
@@ -22,31 +22,31 @@ import { isNull } from "../modules/commons/Null";
 import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
 import {
   getAllMounted,
-  getContainer,
+  getContainer
 } from "../modules/container/ContainerUtil";
 import {
   clearDoing,
   getDoing,
   subscribeDoing,
-  unsubscribeDoing,
+  unsubscribeDoing
 } from "../modules/download/DownloadWrapper";
 import { getDefaultJavaHome, getJavaRunnable } from "../modules/java/JavaInfo";
 import {
   canSupportGame,
   getFabricInstaller,
   getLatestFabricInstallerAndLoader,
-  removeFabricInstaller,
+  removeFabricInstaller
 } from "../modules/pff/get/FabricGet";
 import {
   generateForgeInstallerName,
   getForgeInstaller,
   getForgeVersionByMojang,
-  removeForgeInstaller,
+  removeForgeInstaller
 } from "../modules/pff/get/ForgeGet";
 import {
   downloadProfile,
   getAllMojangCores,
-  getProfileURLById,
+  getProfileURLById
 } from "../modules/pff/get/MojangCore";
 import { performFabricInstall } from "../modules/pff/install/FabricInstall";
 import { performForgeInstall } from "../modules/pff/install/ForgeInstall";
@@ -61,7 +61,7 @@ import { pffInstall } from "./PffFront";
 import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
-  isBgDark,
+  isBgDark
 } from "./Renderer";
 import { useFormStyles } from "./Stylex";
 import { tr } from "./Translator";
@@ -776,7 +776,7 @@ export function InstallCore(): JSX.Element {
                           selectedIrisContainer
                         )}/${encodeURIComponent(
                           prof.baseVersion
-                        )}/Fabric/${encodeURIComponent(
+                        )}/Fabric/0/${encodeURIComponent(
                           "@Modrinth:YL57xq9U @Modrinth:AANobbMI?"
                         )}/1`
                       );

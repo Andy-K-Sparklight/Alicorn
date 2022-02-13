@@ -56,6 +56,15 @@ export function LaunchPad(): JSX.Element {
   );
 }
 
+function vcmp(v0: string, v1: string): number {
+  const v00 = v0.split(".")[1];
+  const v01 = v1.split(".")[1];
+  if (v00 === undefined || v01 === undefined) {
+    return 0;
+  }
+  return parseInt(v00) - parseInt(v01);
+}
+
 function CoresDisplay(props: { server?: string }): JSX.Element {
   const mountedBit = useRef<boolean>(false);
   const [cores, setCores] = useState<SimplifiedCoreInfo[]>([]);
@@ -133,9 +142,9 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
             const timeB = getMarkTime(hashB);
             switch (sorting) {
               case "LH":
-                return a.id < b.id ? -1 : 1;
+                return vcmp(a.id, b.id);
               case "HL":
-                return a.id < b.id ? 1 : -1;
+                return vcmp(b.id, a.id);
               case "USE":
                 return pinB - pinA;
               case "TIME":
@@ -381,7 +390,11 @@ function SingleCoreDisplay(props: {
                                     props.profile.baseVersion
                                   )}/${encodeURIComponent(
                                     props.profile.versionType
-                                  )}`
+                                  )}/${
+                                    props.profile.isolated
+                                      ? props.profile.id
+                                      : "0"
+                                  }`
                                 );
                                 triggerSetPage("PffFront");
                                 addStatistics("Click");
@@ -431,7 +444,11 @@ function SingleCoreDisplay(props: {
                               props.profile.container
                             )}/${encodeURIComponent(
                               props.profile.baseVersion
-                            )}/${encodeURIComponent(props.profile.versionType)}`
+                            )}/${encodeURIComponent(
+                              props.profile.versionType
+                            )}/${
+                              props.profile.isolated ? props.profile.id : "0"
+                            }`
                           );
                           triggerSetPage("PffFront");
                           addStatistics("Click");

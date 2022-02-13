@@ -555,7 +555,9 @@ export function App(): JSX.Element {
           <Route path={"/DMCenter"} component={DMCenter} />
           <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
           <Route
-            path={"/PffFront/:container/:version/:loader/:name?/:autostart?"}
+            path={
+              "/PffFront/:container/:version/:loader/:root/:name?/:autostart?" // root: Ask Pff to Re-Assign mods root as this. Pass core id will be fine. Only for some ancient isolated cores. 0 to disable.
+            }
             component={PffFront}
           />
           <Route path={"/Welcome"} component={Welcome} />
