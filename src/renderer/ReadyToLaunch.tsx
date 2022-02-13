@@ -928,7 +928,6 @@ async function startBoot(
       }
       if (!st) {
         // I shall do this
-        await ensureAssetsIndex(profile, container);
         await Promise.all([
           ensureClient(profile),
           ensureLog4jFile(profile, container),
@@ -937,6 +936,7 @@ async function startBoot(
             await ensureNatives(profile, container);
           })(),
           (async () => {
+            await ensureAssetsIndex(profile, container);
             await ensureAllAssets(profile, container, GLOBAL_LAUNCH_TRACKER);
           })(),
         ]); // Parallel

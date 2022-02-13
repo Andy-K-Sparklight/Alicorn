@@ -58,7 +58,6 @@ async function prepareProfile(
 ): Promise<boolean> {
   try {
     const profile = await loadProfile(id, container);
-    await ensureAssetsIndex(profile, container);
     await Promise.all([
       ensureClient(profile),
       ensureLog4jFile(profile, container),
@@ -67,6 +66,7 @@ async function prepareProfile(
         await ensureNatives(profile, container);
       })(),
       (async () => {
+        await ensureAssetsIndex(profile, container);
         await ensureAllAssets(profile, container);
       })(),
     ]); // Parallel
