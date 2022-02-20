@@ -154,7 +154,7 @@ Minecraft 实例（看上去）没有正常退出，你需要帮忙吗？
 
 # Welcome.Suggest.Part1
 
-['{Config:interactive.i-have-a-crush-on-al}'=='false']今天是 {Date}，欢迎您使用 Alicorn Launcher，{UserName}！
+['{Config:interactive.i-have-a-crush-on-al}'=='false']今天是 {Date}，欢迎您使用 Alicorn JE，{UserName}！
 
 [new Date().getHours()>=18]晚上好，想听首歌吗？哦不，你不是认真的吧？
 

@@ -1,4 +1,4 @@
-# Alicorn Launcher
+# Alicorn Launcher JS Edition
 
 [English README](./README.md)
 
