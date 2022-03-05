@@ -368,7 +368,7 @@ Launch: {Container}/{ID} & Join: {Server}
 
 # ReadyToLaunch.Progress
 
-Deploying {Pending} fils (Buffer: {Current}/{BufferMax})
+Deploying {Pending} files (Buffer: {Current}/{BufferMax})
 
 # ReadyToLaunch.Getting
 
