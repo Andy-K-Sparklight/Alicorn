@@ -194,6 +194,7 @@ function main() {
     "mojang.com",
     "launcher.mojang.com",
     "launchermeta.mojang.com",
+    "piston-meta.mojang.com",
     "minecraftforge.net",
     "maven.minecraftforge.net",
     "files.minecraftforge.net",

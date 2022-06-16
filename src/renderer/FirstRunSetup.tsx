@@ -144,7 +144,7 @@ async function decideMirror(): Promise<void> {
       "https://download.mcbbs.net/mc/game/version_manifest.json",
     "alicorn-bmclapi-nonfree":
       "https://bmclapi2.bangbang93.com/mc/game/version_manifest.json",
-    none: "https://launchermeta.mojang.com/mc/game/version_manifest.json",
+    none: "https://piston-meta.mojang.com/mc/game/version_manifest.json",
     alicorn: "https://al-versions-manifest.vercel.app/api/mojang",
   };
   let sl = "none";
