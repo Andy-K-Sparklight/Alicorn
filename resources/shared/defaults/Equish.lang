@@ -368,7 +368,7 @@ Launch: {Container}/{ID} & Join: {Server}
 
 # ReadyToLaunch.Progress
 
-Deploying {Pending} fils (Buffer: {Current}/{BufferMax})
+Deploying {Pending} files (Buffer: {Current}/{BufferMax})
 
 # ReadyToLaunch.Getting
 
@@ -702,7 +702,7 @@ Spawning Mobs...
 
 # VersionView.Name
 
-Alicorn Launcher: {AppVersion} #{UpdatorVersion}
+Alicorn Launcher: JE {AppVersion} #{UpdatorVersion}
 
 # VersionView.Modules
 

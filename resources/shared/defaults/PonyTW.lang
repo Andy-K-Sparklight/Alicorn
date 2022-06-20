@@ -794,7 +794,7 @@ Alicorn 每周都有新版本！
 
 # VersionView.Name
 
-Alicorn Launcher: {AppVersion} #{UpdatorVersion}
+Alicorn Launcher: JE {AppVersion} #{UpdatorVersion}
 
 # VersionView.Modules
 

@@ -1,4 +1,4 @@
-# Alicorn Launcher
+# Alicorn Launcher JS Edition
 
 [中文 README](./README_ZH.md)
 

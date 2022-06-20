@@ -20,7 +20,7 @@ export const ALICORN_DATA_SUFFIX = ".ald";
 export const ALICORN_ENCRYPTED_DATA_SUFFIX = ".alpp";
 
 export const MOJANG_VERSIONS_MANIFEST =
-  "https://launchermeta.mojang.com/mc/game/version_manifest.json";
+  "https://piston-meta.mojang.com/mc/game/version_manifest.json";
 
 export const FORGE_MAVEN_ROOT = "https://maven.minecraftforge.net";
 export const FORGE_VERSIONS_MANIFEST =

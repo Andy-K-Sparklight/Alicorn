@@ -1,11 +1,13 @@
 @method❤❤simple
-https://launchermeta.mojang.com/mc/game/version_manifest.json❤❤@no-mirror
+https://piston-meta.mojang.com/mc/game/version_manifest.json❤❤@no-mirror
 [EXACT]https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json❤❤https://al-versions-manifest.vercel.app/api/forge
 [EXACT]https://meta.fabricmc.net/v2/versions/loader❤❤https://al-versions-manifest.vercel.app/api/fabric-loader
 [EXACT]https://meta.fabricmc.net/v2/versions/installer❤❤https://al-versions-manifest.vercel.app/api/fabric-installer
 # non-free start
 launcher.mojang.com❤❤download.mcbbs.net
 launchermeta.mojang.com❤❤download.mcbbs.net
+piston-meta.mojang.com❤❤download.mcbbs.net
+piston-data.mojang.com❤❤download.mcbbs.net
 maven.minecraftforge.net❤❤download.mcbbs.net/maven
 libraries.minecraft.net❤❤download.mcbbs.net/maven
 resources.download.minecraft.net❤❤download.mcbbs.net/assets
