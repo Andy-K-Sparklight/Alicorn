@@ -1,0 +1,3476 @@
+# Avatar
+
+https://attachment.mcbbs.net/uc_server/data/avatar/003/28/10/25_avatar_big.jpg
+
+# PrefTheme
+
+Twikie
+
+# LaunchPad
+
+Launch
+
+# InstallCore
+
+Install Cores
+
+# ContainerManager
+
+Manage Containers
+
+# QuickSetup
+
+Quick Setup
+
+# ReadyToLaunch
+
+Let's Go!
+
+# Version
+
+Launcher Information
+
+# AccountManager
+
+Account Manager
+
+# JavaSelector
+
+Java Selector
+
+# Statistics
+
+Alicorn Statistics
+
+# Options
+
+Options
+
+# CrashReportDisplay
+
+Crash Report
+
+# PffFront
+
+Pff Mods Installer
+
+# Welcome
+
+Welcome Back
+
+# ServerList
+
+Servers List
+
+# UtilitiesIndex
+
+Utilities
+
+# TheEndingOfTheEnd
+
+The Ending Of The End
+
+# Cadance
+
+STT Control Panel
+
+# Boticorn
+
+Alicorn Assistant
+
+# System.EPERM
+
+I cannot read/write {Target}. Please check the permissions of it.
+
+# System.Offline
+
+There seems to be trouble with your network connection.
+
+# System.DnDProcessing
+
+Processing DnD files...
+
+# System.DnDOK
+
+OK, all files are processed.
+
+# System.WakeUp
+
+Hi!
+
+# System.JumpPageWarn.Title
+
+Are You Sure You Are Leaving?
+
+# System.JumpPageWarn.Description
+
+If you leave this page, some actions might be terminated and this might cause data loss.\nStill leaving?
+
+# System.JumpPageWarn.Yes
+
+Yes
+
+# System.JumpPageWarn.No
+
+No
+
+# System.HasUpdate
+
+A new version is available, we're updating...
+
+# System.UpdateOK
+
+Yeah! I'm brand new now!
+
+# System.UpdateFailed
+
+Update failed, but don't worry, files are still safe.
+
+# System.DevToolsWarn1
+
+Hold On!
+
+# System.DevToolsWarn2
+
+If someone told you to enter something here, 11 out of 10 you're fooled.
+
+# System.DevToolsWarn3
+
+You are taking SEVERE SAFETY RISKS when entering anything here!
+
+# Beta
+
+Beta
+
+# MainMenu.UtilitiesIndex
+
+Open Utilities
+
+# MainMenu.GoBack
+
+Go Back
+
+# MainMenu.Reload
+
+Reload
+
+# MainMenu.QuickManageAccount
+
+Manage Accounts
+
+# MainMenu.Exit
+
+Quit
+
+# MainMenu.OpenDevToolsFormal
+
+Open DevTools
+
+# MainMenu.QuickInstallCore
+
+Install Cores
+
+# MainMenu.QuickLaunchPad
+
+Launch Game
+
+# MainMenu.QuickManageContainer
+
+Manage Containers
+
+# Operating.ClickToDebug
+
+If you hope to find out what had happened, click me to open DevTools.
+
+# Operating.PleaseWait
+
+Please Wait
+
+# Operating.Failed
+
+Operation Failed...
+
+# Operating.FailedConfirm
+
+OK
+
+# Operating.FailedInfo
+
+But don't worry, your files are still safe.\nWhat caused this failure:\n{Reason}
+
+# Operating.FailedSayings
+
+How did we get here?
+
+...That was close!
+
+I didn't mean it...
+
+It's not you.
+
+Not a big deal... I guess?
+
+Easy, easy...
+
+['{Platform}'==='win32'||'{Platform}'==='darwin']This problem will never occur if I'm on a GNU/Linux OS! 
+
+# Operating.PleaseWaitDetail
+
+In progress... This might take some minutes.
+
+# CoreInfo.Isolated
+
+Context Isolation Detected
+
+# CoreInfo.Sorting.HL
+
+Latest
+
+# CoreInfo.Sorting.LH
+
+Earliest
+
+# CoreInfo.Sorting.USE
+
+Most Clicks
+
+# CoreInfo.Sorting.TIME
+
+Most Recently Accessed
+
+# CoreInfo.IgnoreCorrupted
+
+Ignore Corrupted Cores
+
+# CoreInfo.CannotDestroy
+
+Sorry, but this core is still needed.
+
+# CoreInfo.StillLoading
+
+Loading... Some results might be missing.
+
+# CoreInfo.Used
+
+{Count} Clicks 
+
+# CoreInfo.Introduction.Forge
+
+Forge Mods are supported.
+
+# CoreInfo.Introduction.Fabric
+
+Fabric Mods are supported.
+
+# CoreInfo.Introduction.Installer
+
+It's a modpack installer!
+
+# CoreInfo.CorruptedWarning
+
+Failed to load - Is this core corrupted?
+
+# CoreInfo.Reload
+
+Reload
+
+# CoreInfo.Destroy
+
+Destroy
+
+# CoreInfo.Destroy.Yes
+
+Yes, destroy it.
+
+# CoreInfo.Destroy.No
+
+No, don't do that
+
+# CoreInfo.Destroy.Title
+
+Are You Sure You Want To Destroy {Name}?
+
+# CoreInfo.Destroy.Content
+
+@HTMLI will remove {Name} and it's related cores, together with their click numbers.<b>It's irreversible</b>!\nContinue?
+
+# CoreInfo.ClearUse
+
+Clear Clicks
+
+# CoreInfo.At
+
+{ID} At {Container}
+
+# CoreInfo.Pff
+
+View Or Install Mods
+
+# ReadyToLaunch.IsLoginOK
+
+Any Problems?
+
+# ReadyToLaunch.LoginInstruction
+
+You've been logining for a long time, and we guess that you might have encountered some trouble.\nIs that true?
+
+# ReadyToLaunch.ContinueLogin
+
+Everything is right
+
+# ReadyToLaunch.HelpMeLogin
+
+Help me
+
+# ReadyToLaunch.LoginStepTitle
+
+Continue With Your Browser
+
+# ReadyToLaunch.LoginStep
+
+Your login page has been opened in your browser. Please:\n\n1. Finish the login progress, and you'll see a blank page.\n2. Copy the link address. Paste it in the dialog window which will appear after you've clicked the button below.
+
+# ReadyToLaunch.AcceptLogin
+
+Continue
+
+# ReadyToLaunch.URLEnter
+
+Paste The URL Here:
+
+# ReadyToLaunch.CPU
+
+{Load}/{Total} CPU
+
+# ReadyToLaunch.RAM
+
+{InUse}/{Total} GiB
+
+# ReadyToLaunch.NoJava
+
+You haven't specified a JRE! The game won't launch.
+
+# ReadyToLaunch.InvalidJava
+
+Failed to detect the manifest of this JRE. Launching is terminated.
+
+# ReadyToLaunch.CouldNotLoad
+
+Failed to load - This core cannot be loaded.
+
+# ReadyToLaunch.Hint
+
+Launch: {Container}/{ID}
+
+# ReadyToLaunch.HintServer
+
+Launch: {Container}/{ID} & Join: {Server}
+
+# ReadyToLaunch.Progress
+
+Deploying {Pending} files (Buffer: {Current}/{BufferMax})
+
+# ReadyToLaunch.Getting
+
+Get: {Url}
+
+# ReadyToLaunch.Validated
+
+Hit: {Url}
+
+# ReadyToLaunch.Retry
+
+Ret: {Url}
+
+# ReadyToLaunch.Linked
+
+Lnk: {Url}
+
+# ReadyToLaunch.Ignored
+
+Ign: {Url}
+
+# ReadyToLaunch.Got
+
+Got: {Url}
+
+# ReadyToLaunch.Failed
+
+Err: {Url}
+
+# ReadyToLaunch.StartAuthTitle
+
+Who Are You?
+
+# ReadyToLaunch.StartAuthMsg
+
+Choose an authenticate method.
+
+# ReadyToLaunch.UseMZ
+
+Microsoft
+
+# ReadyToLaunch.UseYG
+
+Yggdrasil
+
+# ReadyToLaunch.UseAL
+
+Local
+
+# ReadyToLaunch.UseDM
+
+Demo
+
+# ReadyToLaunch.DemoDescription
+
+If you haven't purchased Minecraft yet, use demo mode to have a try.
+
+# ReadyToLaunch.Next
+
+Next
+
+# ReadyToLaunch.UseALName
+
+Name
+
+# ReadyToLaunch.UseYGChoose
+
+Selected Account
+
+# ReadyToLaunch.FailedToAuth
+
+Could not auth you against the specified server. But I'll continue...
+
+# ReadyToLaunch.DefaultJava
+
+Default (Auto)
+
+# ReadyToLaunch.Status.Short.Pending
+
+Go
+
+# ReadyToLaunch.OpenGameToLan
+
+Generate Hoofoff Code
+
+# ReadyToLaunch.Start
+
+Launch
+
+# ReadyToLaunch.Kill
+
+Forcefully Exit
+
+# ReadyToLaunch.MSLogout
+
+Logout Microsoft Account
+
+# ReadyToLaunch.MSLogoutRunning
+
+Logging out...
+
+# ReadyToLaunch.MSLogoutDone
+
+Logout completed.
+
+# ReadyToLaunch.JCheck.TooDANGEROUS
+
+@HTML<b style="color: red;">This JRE is not safe! (CVE-2021-44228)<br/>DO NOT use it to play in servers!</b>
+
+# ReadyToLaunch.JCheck.TooOLD
+
+Warning - This JRE is too old! Use a later one.
+
+# ReadyToLaunch.JCheck.TooNEW
+
+Warning - This JRE is too new! Use an earlier one.
+
+# ReadyToLaunch.WarnError.Title
+
+Minecraft Has Crashed?
+
+# ReadyToLaunch.WarnError.Yes
+
+Yes, help me
+
+# ReadyToLaunch.WarnError.No
+
+No, everything is right
+
+# ReadyToLaunch.WarnError.Description
+
+Minecraft might have crashed. Do you wish to get some help?
+
+# ReadyToLaunch.Status.Short.CheckingFiles
+
+Check Files
+
+# ReadyToLaunch.Status.Short.PerformingAuth
+
+Authenticate
+
+# ReadyToLaunch.Status.Short.PreparingMods
+
+Prepare Mods
+
+# ReadyToLaunch.Status.Short.GeneratingArgs
+
+Generate Arguments
+
+# ReadyToLaunch.Status.Short.Finished
+
+Done
+
+# ReadyToLaunch.SelectAccount
+
+Select Account
+
+# ReadyToLaunch.SelectAccountDesc
+
+Select another account
+
+# ReadyToLaunch.NoValidate
+
+No Files Check
+
+# ReadyToLaunch.NoValidateDesc
+
+Some clients might need this to run well
+
+# ReadyToLaunch.DryLaunch
+
+Dry Launch
+
+# ReadyToLaunch.SecureLaunch
+
+Safe Launch
+
+# ReadyToLaunch.SecureLaunchDesc
+
+Use when launch failed
+
+# ReadyToLaunch.DryLaunchDesc
+
+Run all tasks, but won't spawn game process
+
+# ReadyToLaunch.GenerateLink
+
+You Have Opened Your Game To LAN
+
+# ReadyToLaunch.GenerateLinkDesc
+
+@HTMLYou can use the following settings to <b>generate code</b>. Send it to your friends and they will be able to join your game!\n(Do not use this if you and your friends are already in the same LAN)
+
+# ReadyToLaunch.Expires
+
+Expire In
+
+# ReadyToLaunch.10Min
+
+10 Min
+
+# ReadyToLaunch.30Min
+
+30 Min
+
+# ReadyToLaunch.1Hour
+
+1 Hour
+
+# ReadyToLaunch.3Hour
+
+3 Hour
+
+# ReadyToLaunch.CanUse
+
+Usage Count
+
+# ReadyToLaunch.Once
+
+1
+
+# ReadyToLaunch.FiveTimes
+
+5
+
+# ReadyToLaunch.TwentyTimes
+
+20
+
+# ReadyToLaunch.Unlimited
+
+Inf (Really a lot!)
+
+# ReadyToLaunch.Message
+
+Leave a message here and joiners will see it.
+
+# ReadyToLaunch.Count
+
+Usage Count
+
+# ReadyToLaunch.GetLink
+
+Confirm And Generate
+
+# ReadyToLaunch.Errors.AcquireFailed
+
+Failed to contact server, no data sent.
+
+# ReadyToLaunch.GoBack
+
+Close
+
+# ReadyToLaunch.CodeDeactivated
+
+You've left this world and the code is deactivated.
+
+# ReadyToLaunch.HoofoffCodeRaw
+
+Your code is: {Code}
+
+# ReadyToLaunch.HoofoffCode
+
+@HTMLYour code is:<b>{Code}</b>. Copied to clipboard.
+
+# ReadyToLaunch.RequirePremium
+
+This World Requires Premium
+
+# ReadyToLaunch.RequirePremiumDesc
+
+Tell joiners that they must use a valid premium Minecraft account.
+
+# ReadyToLaunch.WaitingText
+
+Tips are a lot. Useful not among.
+
+No pain, no gain.
+
+People don't like to make, they just like to paste.
+
+Neither is not nether.
+
+I'll be with you... As long as you don't uninstall me!
+
+An aircraft is only ten miles away from you. What about your closest friends?
+
+Reindeers are better than people. So are ponies.
+
+Nothing takes nothing.
+
+I'm a free software - FREE as in FREEDOM!
+
+eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee - These are called 'e's.
+
+Minecraft is not Mine Craft!
+
+Yes, but not necessary..
+
+I've seen this tip last time when I saw it last time!
+
+What will 18 crashes bring? Not only 18 crash reports!
+
+61096da20861084f1e6a442d939717a8 (What's this?)
+
+We've put a horn on a pegasus!
+
+"I can see your soul grow, through the pain as it hit the ground" -- Rainbow
+
+"Our journey here is never really done" -- We'll Make Our Mark
+
+"It's a perfect day for fun when I spend it with you" -- Perfect Day for Fun
+
+"We'll paint the sky all the colors" -- Equestria Girls Forever
+
+You've already got an iron pickaxe, if you've got an iron will.
+
+It's black if it's not white.
+
+"I know it's wrong, but what does it matter" -- I'll Fly
+
+"You can't have a nightmare, if you never dream" -- In Our Town
+
+Friendship is magic! (So it is!)
+
+Building Terrain...
+
+Spawning Pillagers...
+
+Spawning Mobs...
+
+# VersionView.Name
+
+Alicorn Launcher: JE {AppVersion} #{UpdatorVersion}
+
+# VersionView.Modules
+
+With {List}
+
+# VersionView.Electron.Fetching
+
+Fetching Electron Version...
+
+# VersionView.EcVersion
+
+Build for Electron {Build}, you are using Electron {Current}
+
+# VersionView.Electron.Perfect
+
+Perfect!
+
+# VersionView.Electron.OK
+
+That should work!
+
+# VersionView.Electron.Attention
+
+This Electron is too old... Have an update?
+
+# VersionView.Description
+
+@HTML<b>Thank you for using Alicorn Launcher!</b> <a href="javascript:ashow('https://alc.pages.dev')">Website</a> <a href="javascript:ashow('https://github.com/Andy-K-Sparklight/Alicorn')">Source</a> <a href="javascript:ashow('https://www.gnu.org/licenses/gpl-3.0.html')">GPL-3.0 License</a>
+
+# VersionView.ClickToSeeNext
+
+Click To See More
+
+# VersionView.Copyright
+
+The following are translation of the original text and should not be considered as an alternative. \n\nAlicorn Launcher is a free software. It's licensed under the GNU GENERAL PUBLIC LICENSE (Version 3.0 or later).\nCopyright (C) 2021-2022 Annie K Rarity Sparklight\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\nImages in Alicorn are not a part of Alicorn. They are from Minecraft Wiki and are licensed under the CC BY-NC-SA 3.0 License.
+
+# VersionView.Privacy
+
+@HTMLAbout privacy (the data containing your personal or usage information), we：<b><ul><li>Will always ask you before we send any (except when we are performing authentication)</li><li>Will try to send as little as possible</li><li>Have an option to reset and clear all storaged data</li><li>Won't ask you for any personal information about real life</li></ul></b>
+
+# VersionView.Credit
+
+@HTMLAlicorn consists of more than 500 NPM packages, including Material UI, React, Electron, undici, crypto-js, ajv and more.\nWe also want to thank VSCodium and Vim.\n\nWelcome to <a href="javascript:ashow('https://alc.pages.dev')">Alicorn Launcher Official Website</a>!
+
+# VersionView.FreeSoftwareClaim
+
+No (or least) proprietary components.
+
+# VersionView.SuperCowPower
+
+This Alicorn has super cow powers.
+
+# ContainerManager.Size
+
+{Size} MiB Disk Space In Use
+
+# ContainerManager.DiscountASC
+
+ASC Compressed {Rate}%
+
+# ContainerManager.Calculating
+
+Calculating Size...
+
+# ContainerManager.RootDir
+
+At
+
+# ContainerManager.OpenInDir
+
+Reveal In File Explorer
+
+# ContainerManager.Add
+
+Add New Minecraft Container
+
+# ContainerManager.AddDescription
+
+Choose a folder and give it a name!
+
+# ContainerManager.EnterName
+
+Name
+
+# ContainerManager.Dir
+
+At
+
+# ContainerManager.InstallOK
+
+Created~
+
+# ContainerManager.Fork
+
+Fork This Container
+
+# ContainerManager.Forked
+
+Fork complete!
+
+# ContainerManager.FailedToFork
+
+Fork failed: {Reason}
+
+# ContainerManager.ForkName
+
+The fork of {Original}
+
+# ContainerManager.FetchingModpack
+
+Fetching modpack...
+
+# ContainerManager.FailedToFetch
+
+Fetch failed! Check your network connection.
+
+# ContainerManager.Select
+
+Choose target folder
+
+# ContainerManager.InvalidName
+
+Invalid Name
+
+# ContainerManager.InvalidDir
+
+Invalid Folder
+
+# ContainerManager.Type.Physical
+
+MCX Extended
+
+# ContainerManager.Type.Shared
+
+ASC Shared
+
+# ContainerManager.ASCCacheNotSet
+
+Sorry - You need to specify ASC Share Root first
+
+# ContainerManager.CreateModpack
+
+Use Modpack
+
+# ContainerManager.ModpackWarn
+
+@HTMLBe aware! Modpacks might contain potential malwares!
+
+# ContainerManager.ModpackPath
+
+Modpack Path
+
+# ContainerManager.InvalidModpackPath
+
+Invalid Modpack Path
+
+# ContainerManager.ParsingModpack
+
+Parsing Modpack...
+
+# ContainerManager.DeployingProfile
+
+Deploying Profiles...
+
+# ContainerManager.DeployingMods
+
+Installing Mods...
+
+# ContainerManager.DeployingModLoader
+
+Deploying Mod Loaders...
+
+# ContainerManager.DeployingDeltas
+
+Deploying Deltas...
+
+# ContainerManager.CleaningUp
+
+Cleaning Up...
+
+# ContainerManager.ChooseModpack
+
+Choose a modpack
+
+# ContainerManager.Remove
+
+Remove
+
+# ContainerManager.Mount
+
+Mount
+
+# ContainerManager.Unmount
+
+Unmount
+
+# ContainerManager.Clear
+
+Destroy
+
+# ContainerManager.Cores
+
+{Count} Cores
+
+# ContainerManager.CoresLoading
+
+Counting...
+
+# ContainerManager.AskRemove
+
+Remove This Container?
+
+# ContainerManager.AskRemoveDetail
+
+No data in it will be erased.
+
+# ContainerManager.AskClear
+
+Destroy This Container?
+
+# ContainerManager.AskClearDetail
+
+I'll erase all data in {ID}. It's irreversible!\nAre you absolutely sure, {UserName}?\n{ID} will be lost FOREVER (really a long time)!
+
+# ContainerManager.Yes
+
+Yes
+
+# ContainerManager.No
+
+No
+
+# ContainerManager.Continue
+
+Continue
+
+# ContainerManager.Cancel
+
+Cancel
+
+# InstallCore.Fabric.FabricAPIFailed
+
+I cannot install fabric-api. You might want to install it manually using Pff.
+
+# InstallCore.Progress.CouldNotExecute
+
+Could Not Execute Installer
+
+# InstallCore.Progress.FailedToInstallProfile
+
+Failed To Install Profile
+
+# InstallCore.Progress.InvalidProfile
+
+Invalid Profile
+
+# InstallCore.Progress.DownloadingProfile
+
+Downloading Profile...
+
+# InstallCore.Progress.FailedToFetchProfile
+
+Failed To Fetch Profile
+
+# InstallCore.Progress.FetchingProfile
+
+Fetching Profile...
+
+# InstallCore.Progress.Fetching
+
+Fetching {Loader} for Minecraft {MCV}...
+
+# InstallCore.Progress.FailedToDownload
+
+Failed To Download Installer Of {Loader}
+
+# InstallCore.Progress.ExecutingForge
+
+Running Forge Installer...
+
+# InstallCore.Progress.ExecutingFabric
+
+Running Fabric Installer...
+
+# InstallCore.InstallMinecraft
+
+Add New Core
+
+# InstallCore.InstallMinecraftInstr
+
+Add new Minecraft core here, with which you can play with datapacks, but not mods.
+
+# InstallCore.InstallForge
+
+Retrofit (Forge)
+
+# InstallCore.InstallForgeInstr
+
+@HTMLRetrofit an installed Minecraft core to a Forge core. Both of them will be available. With this you can play Forge mods.
+
+# InstallCore.InstallFabric
+
+Retrofit (Fabric)
+
+# InstallCore.InstallFabricInstr
+
+@HTMLRetrofit an installed Minecraft core to a Fabric core. Both of then will be available. With this you can play Fabric mods.
+
+# InstallCore.InstallIris
+
+Install Iris
+
+# InstallCore.InstallIrisInstr
+
+@HTMLUse Iris to have a better support for shaderpacks. A Fabric core is required for install.
+
+# InstallCore.IrisBaseVersion
+
+Install To
+
+# InstallCore.TargetContainer
+
+Target Container
+
+# InstallCore.Unknown
+
+Unknown
+
+# InstallCore.Release
+
+Stable Releases
+
+# InstallCore.Snapshot
+
+Snapshots
+
+# InstallCore.OldAlpha
+
+Old Alphas
+
+# InstallCore.OldBeta
+
+Old Betas
+
+# InstallCore.MinecraftArch
+
+Arch
+
+# InstallCore.Start
+
+Install
+
+# InstallCore.MinecraftVersion
+
+Version
+
+# InstallCore.ForgeVersion
+
+Forge Version:
+
+# InstallCore.ForgeBaseVersion
+
+Retrofit Using
+
+# InstallCore.FabricVersion
+
+Fabric Version:
+
+# InstallCore.FabricBaseVersion
+
+Retrofit Using
+
+# InstallCore.Success
+
+Install Complete!
+
+# AccountManager.EnterPassword
+
+Enter The Password
+
+# AccountManager.Password
+
+Password
+
+# AccountManager.EnterPasswordHint
+
+Enter Your Password (I won't remember it!)
+
+# AccountManager.Failed
+
+Authenticate failed - Cannot contact server
+
+# AccountManager.Validate
+
+Authenticate
+
+# AccountManager.SkinView3D
+
+Using 3D Skin Renderer
+
+# AccountManager.SkinView3DShort
+
+3D Preview
+
+# AccountManager.SkinView2D
+
+Using 2D Skin Renderer
+
+# AccountManager.SkinView2DShort
+
+2D Preview
+
+# AccountManager.DeleteTitle
+
+Delete This Account?
+
+# AccountManager.DeleteMsg
+
+You can still add it next time you want to use it.
+
+# AccountManager.Yes
+
+Yes
+
+# AccountManager.No
+
+No
+
+# AccountManager.AddTitle
+
+Add Yggdrasil Account
+
+# AccountManager.AddMsg
+
+Configure Your Account
+
+# AccountManager.Email
+
+Email Address
+
+# AccountManager.Host
+
+Auth Host
+
+# AccountManager.UseCustomHost
+
+Allow Third Party Hosts
+
+# AccountManager.UseNide8
+
+Allow Nide8 Host
+
+# AccountManager.Warn
+
+NEVER enter the password of your Microsoft Account in third party servers!
+
+# AccountManager.Next
+
+Next
+
+# AccountManager.Reload
+
+Reload
+
+# AccountManager.AddYggdrasil
+
+Add Yggdrasil Account
+
+# AccountManager.Note
+
+@HTMLIf you are using Microsoft Account, <b>DO NOT</b> try to add it here. Simply launch the game and I'll ask you if necessary.
+
+# JavaSelector.FailedToInstall
+
+Failed to auto install Java runtime.
+
+# JavaSelector.CustomAdd
+
+Let me choose one
+
+# JavaSelector.SelectJava
+
+Select Java Runtime
+
+# JavaSelector.CannotLoad
+
+Loading...
+
+# JavaSelector.CannotLoadDetail
+
+Loading... If this has taken too long, it might have corrupted.
+
+# JavaSelector.Loading
+
+Please wait, I'm finding all available Java runtimes...
+
+# JavaSelector.Reload
+
+Search Again
+
+# JavaSelector.BuiltIn
+
+Quick Install
+
+# JavaSelector.HintBuiltIn
+
+If you wish to install by clicking only once, use the button below.
+
+# JavaSelector.Warn32
+
+Use a 64-bit Java runtime for better performance.
+
+# JavaSelector.WarnClient
+
+Use a server Java runtime for better performance.
+
+# JavaSelector.WarnNonFree
+
+This might not be a free software! I suggest you use OpenJDK.
+
+# Options.Select
+
+Select Dir/File
+
+# Options.AutoSave
+
+Your changes will be saved automatically.
+
+# Options.Hint
+
+@HTMLThe default value is also the suggested. Please <b>DO NOT</b> change any unless you know what you are doing.\nItems with ^ requires restart. Items with * are for development only.
+
+# Options.Enabled
+
+Enabled
+
+# Options.Disabled
+
+Disabled
+
+# Options.NotOn
+
+Incompatible
+
+# Options.Page.IAndAL
+
+You and AL
+
+# Options.Page.FeaturesConfigure
+
+Features
+
+# Options.Page.Features
+
+Special Skills
+
+# Options.Page.Game
+
+Game
+
+# Options.Page.Network
+
+Network
+
+# Options.Page.Advanced
+
+Advanced
+
+# Options.theme.zoom-factor.title
+
+Zoom Factor
+
+# Options.theme.zoom-factor.desc
+
+Change the zoom factor if display doesn't seem right.
+
+# Options.download.tls.keep-alive.title
+
+TLS Timeout
+
+# Options.download.tls.keep-alive.desc
+
+How long should I wait before closing a TLS conection.
+
+# Options.download.tls.pipeline.title
+
+HTTP/1.1 Pipeline
+
+# Options.download.tls.pipeline.desc
+
+How many requests can be run on one connecton - Set it to 1 if not supported.
+
+# Options.download.lib.title
+
+Dowload Library
+
+# Options.download.lib.desc
+
+Choose a library to download - Undici is fast, but has limited support for proxies; Fetch has full support for proxies, but not very fast when downloading tons of files.
+
+# Options.download.lib.Undici
+
+Undici (Fast)
+
+# Options.download.lib.Fetch
+
+Fetch (For Proxies)
+
+# Options.readyboom.cores.title
+
+ReadyBoom Cores ^
+
+# Options.readyboom.cores.desc
+
+How many cores should ReadyBoom prepare?
+
+# Options.readyboom.title
+
+ReadyBoom ^
+
+# Options.readyboom.desc
+
+Make launch faster.
+
+# Options.alicorn-ping.title
+
+Alicorn Ping ^
+
+# Options.alicorn-ping.desc
+
+Send completely anonymous pings to Alicorn server so that we can know how many users do we have.
+
+# Options.features.echo.title
+
+Echo
+
+# Options.features.echo.desc
+
+Enable echo.
+
+# Options.features.local-skin.title
+
+Local Skin Support
+
+# Options.features.local-skin.desc
+
+Enable local skin support for local account.
+
+# Options.pff.cursepp2.title
+
+Curseforge ++
+
+# Options.pff.cursepp2.desc
+
+Believe it or not, use a time machine to invoke the legacy Curseforge API.
+
+# Options.pff.cursepp-cluster-size.title
+
+Curseforge ++ Multi Tasks
+
+# Options.pff.cursepp-cluster-size.desc
+
+How many tasks should Curseforge ++ run at the same time?
+
+# Options.features.tips-of-today.title
+
+Tips Of Today
+
+# Options.features.tips-of-today.desc
+
+Show a tip when opening Alicorn.
+
+# Options.features.sword.title
+
+Pink Sword Pointer
+
+# Options.features.sword.desc
+
+The pointer you've always wanted!
+
+# Options.features.skin-view-3d.title
+
+Skin View 3D Support
+
+# Options.features.skin-view-3d.desc
+
+Use WebGL to render skins in 3D, provided by Skin View 3D from bs-community.\nHardware accerlation will be enabled forcefully.
+
+# Options.auto-launch.title
+
+Open When Login ^
+
+# Options.auto-launch.desc
+
+Auto open Alicorn when you login into your OS.
+
+# Options.theme.background.title
+
+Background Image ^
+
+# Options.theme.background.desc
+
+Choose background image, of disable them.\nNot provided by Alicorn, so we are not able to know what the API is displaying.
+
+# Options.theme.background.ACG
+
+ACG Anime Pictures
+
+# Options.theme.background.Bing
+
+Bing Today
+
+# Options.theme.background.Disabled
+
+Disable
+
+# Options.theme.background.custom.title
+
+Custom Background Image ^
+
+# Options.theme.background.custom.desc
+
+Choose a picture you like!
+
+# Options.theme.background.opacity.title
+
+Background Image Opacity
+
+# Options.theme.background.opacity.desc
+
+Set opacity of the image.
+
+# Options.theme.title
+
+Theme ^
+
+# Options.theme.desc
+
+Change theme.
+
+# Options.theme.Default
+
+Assistant Default
+
+# Options.theme.PurpleDark
+
+Purple Dark
+
+# Options.theme.Winter
+
+Winter
+
+# Options.theme.Cherry
+
+Cherry
+
+# Options.theme.SweetieBelle
+
+Sweetie
+
+# Options.theme.Starlight
+
+Starlight
+
+# Options.theme.SheepGreen
+
+Sheep Green
+
+# Options.theme.Azure
+
+Azure
+
+# Options.theme.Twikie
+
+Twikie
+
+# Options.theme.Maud
+
+Maud Purple
+
+# Options.theme.66CCFF
+
+66CCFF
+
+# Options.theme.UNIXDark
+
+Terminal
+
+# Options.theme.Apple
+
+Orange
+
+# Options.theme.Mint
+
+Mint
+
+# Options.theme.Grass
+
+Grass
+
+# Options.theme.FadeGray
+
+Faded Gray
+
+# Options.theme.NightLightDark
+
+Night
+
+# Options.theme.ClassicDark
+
+Classic Dark
+
+# Options.theme.Classic
+
+Classic
+
+# Options.theme.OldPink
+
+Old Pink
+
+# Options.theme.PinkDark
+
+Pink Dark
+
+# Options.theme.WhatGreenDark
+
+What's The Green
+
+# Options.theme.GoldDark
+
+Gold Mine
+
+# Options.theme.Random
+
+Randomly Generated
+
+# Options.theme.Rarity
+
+Rarity
+
+# Options.hoofoff.central.title
+
+Hoofoff Central Server
+
+# Options.hoofoff.central.desc
+
+Set central server address for Hoofoff/CutieConnect multiplayer game.
+
+# Options.features.detect-lan.title
+
+Detect LAN Game
+
+# Options.features.detect-lan.desc
+
+Guide you to generate Hoofoff code when a world is opened to LAN.
+
+# Options.features.saying.title
+
+Tips
+
+# Options.features.saying.desc
+
+Tips at the launch page.
+
+# Options.features.miniwiki.title
+
+Mini Wiki
+
+# Options.features.miniwiki.desc
+
+Mini Wiki at the launch page.
+
+# Options.interactive.assistant?.title
+
+Assistant Dialog ^
+
+# Options.interactive.assistant?.desc
+
+Pop a dialog for assistant to say something.
+
+# Options.first-run?.title
+
+First Run ^
+
+# Options.first-run?.desc
+
+Perform initalize actions next time.
+
+# Options.download.proxy-bypass.title
+
+No Proxy For ^
+
+# Options.download.proxy-bypass.desc
+
+Disable proxy for the following hosts.
+
+# Options.download.skip-validate.title
+
+Disable file validation
+
+# Options.download.skip-validate.desc
+
+Do not calculate checksum of the downloaded file - Fast but not safe enough.
+
+# Options.updator.url.title
+
+Update From
+
+# Options.updator.url.desc
+
+Next time, Alicorn will try to update from this url.
+
+# Options.frame.drag-impl.title
+
+Drag Mode ^
+
+# Options.frame.drag-impl.desc
+
+Change how you drag the window.
+
+# Options.frame.drag-impl.Webkit
+
+Webkit (Page Title Only)
+
+# Options.frame.drag-impl.Delta
+
+Pure JavaScript (The Entire Toolbar)
+
+# Options.frame.drag-impl.TitleBar
+
+Native (Show Title Bar)
+
+# Options.hardware-acc.title
+
+Hardware Accleration ^
+
+# Options.hardware-acc.desc
+
+Use GPU for renderering.
+
+# Options.show-downloading-item.title
+
+Show Downloading Detail
+
+# Options.show-downloading-item.desc
+
+Show what I'm doing at the launch page.
+
+# Options.goto.animate.title
+
+Fade In/Out Navigation
+
+# Options.goto.animate.desc
+
+Animate when navigating.
+
+# Options.assistant.title
+
+助理（语言） Assistant (Language) ^
+
+# Options.assistant.desc
+
+选择你的助理和你喜欢的语言风格\nSelect your assistant and your preferred style
+
+# Options.assistant.PonyCN
+
+Alicorn 默认（小马语/中国）
+
+# Options.assistant.PonyTW
+
+Alicorn 默認（繁體中文/中國）
+
+# Options.assistant.Maud
+
+Maud 2（小马语/中国）
+
+# Options.assistant.66CCFF
+
+66ccff（中文/中国）
+
+# Options.assistant.Equish
+
+Alicorn i18n (Equish/Equestria)
+
+# Options.jvm.extra-args.title
+
+JVM Flags
+
+# Options.jvm.extra-args.desc
+
+@HTMLAdd extra JVM flags when launching.\n<b>Do not remove flags here unless you known what you are doing!</b> Some of them are important for Minecraft.
+
+# Options.main-gc.title
+
+JVM Garbage Collector
+
+# Options.main-gc.desc
+
+Use the following garbage collector as primary GC.
+
+# Options.main-gc.pure
+
+VM Default
+
+# Options.main-gc.g1
+
+G1GC
+
+# Options.main-gc.z
+
+ZGC
+
+# Options.main-gc.sd
+
+Shenandoah GC
+
+# Options.main-gc.aggressive
+
+Aggressive Heap
+
+# Options.para-gc.title
+
+Alternative Garbage Collector 
+
+# Options.para-gc.desc
+
+If primary GC is not available, use this GC.
+
+# Options.para-gc.pure
+
+VM Default
+
+# Options.para-gc.g1
+
+G1GC
+
+# Options.para-gc.sd
+
+Shenandoah GC
+
+# Options.para-gc.z
+
+ZGC
+
+# Options.para-gc.aggressive
+
+Aggressive Heap
+
+# Options.memory.title
+
+Allocated Memory
+
+# Options.memory.desc
+
+How much memory should be allocated for Minecraft? (In MiB) - Set it to 0 to let Alicorn choose.
+
+# Options.gw-size.title
+
+Game Window Size
+
+# Options.gw-size.desc
+
+How large should the game window be? (In pixels. e.g., 960x540)
+
+# Options.launch.fast-reboot.title
+
+Fast Relaunch
+
+# Options.launch.fast-reboot.desc
+
+Make the same core launch faster when making the second launch.
+
+# Options.clean-storage.title
+
+Clear Storage ^
+
+# Options.clean-storage.desc
+
+Remove all data Alicorn stored, including usage counts, but not including data in containers. (That's not a part of Alicorn, right?)
+
+# Options.cx.shared-root.title
+
+ASC Shared Root
+
+# Options.cx.shared-root.desc
+
+Select a folder where the shared files will be stored.
+
+# Options.startup-page.url.title
+
+Home Page
+
+# Options.startup-page.url.desc
+
+What page should I show when you open Alicorn?
+
+# Options.startup-page.name.title
+
+Home Page Title
+
+# Options.startup-page.name.desc
+
+The title of the home page.
+
+# Options.theme.primary.main.title
+
+Primary Main Color ^
+
+# Options.theme.primary.main.desc
+
+For menu and titles.
+
+# Options.theme.primary.light.title
+
+Primary Light Color ^
+
+# Options.theme.primary.light.desc
+
+For some highlight texts.
+
+# Options.theme.secondary.main.title
+
+Secondary Main Color ^
+
+# Options.theme.secondary.main.desc
+
+For most texts.
+
+# Options.theme.secondary.light.title
+
+Secondary Light Color ^
+
+# Options.theme.secondary.light.desc
+
+For backgrounds.
+
+# Options.dev.experimental.title
+
+Experimental Features
+
+# Options.dev.experimental.desc
+
+Enable experimental features. Note: at your own risk!
+
+# Options.interactive.i-have-a-crush-on-al.title
+
+My Secrets
+
+# Options.interactive.i-have-a-crush-on-al.desc
+
+Do you Pinkie promise that you are not going to tell anypony?
+
+# Options.download.global-proxy.title
+
+Proxy ^
+
+# Options.download.global-proxy.desc
+
+Set proxy server. (e.g., http://127.0.0.1:8889)
+
+# Options.download.mirror-tries.title
+
+Mirror Retry
+
+# Options.download.mirror-tries.desc
+
+Retries before downgrade to origin.
+
+# Options.download.mirror.title
+
+Download Mirror
+
+# Options.download.mirror.desc
+
+@HTMLSelect a mirror for downloading.\nMCBBS Mirror and BMCLAPI Mirror is provided by BMCLAPI and MCBBS together.
+
+# Options.download.mirror.alicorn-bmclapi-nonfree
+
+Alicorn/BMCLAPI Mirror Group
+
+# Options.download.mirror.alicorn
+
+Alicorn Mirror (Manifests Only)
+
+# Options.download.mirror.alicorn-mcbbs-nonfree
+
+Alicorn/MCBBS Mirror Group
+
+# Options.download.mirror.none
+
+Mojang Origin
+
+# Options.dev.title
+
+Development Mode *
+
+# Options.dev.desc
+
+Enable development mode.
+
+# Options.reset.title
+
+Reset Configs ^
+
+# Options.reset.desc
+
+Undo all your configurations and reset them, including settings, but not including usage counts or data in containers.
+
+# Options.pff.upgrade-mode.title
+
+Pff Mod Upgrade
+
+# Options.pff.upgrade-mode.desc
+
+How should Pff deal with an already existed mod?
+
+# Options.pff.upgrade-mode.Override
+
+Replace with the later one
+
+# Options.pff.upgrade-mode.Keep
+
+Keep both
+
+# Options.pff.cache-root.title
+
+Pff Cache
+
+# Options.pff.cache-root.desc
+
+Where should Pff put the cache files?
+
+# Options.pff.page-size.title
+
+Pff Query Page Size
+
+# Options.pff.page-size.desc
+
+Change page size when searching mods.
+
+# Options.java.search-depth.title
+
+JRE Search Depth
+
+# Options.java.search-depth.desc
+
+How deep should I walk from the root dir when searching for JRE?
+
+# Options.java.simple-search.title
+
+JRE Quick Search
+
+# Options.java.simple-search.desc
+
+Only query environment variables to find JRE.
+
+# Options.user.name.title
+
+Your Nickname
+
+# Options.user.name.desc
+
+That's how I call you.
+
+# Options.doh-server.title
+
+DNS over HTTPS (DoH) ^
+
+# Options.doh-server.desc
+
+Select DoH server if you want to use. 
+
+# Options.doh-server.Native
+
+System (Disable)
+
+# Options.doh-server.iQDNS
+
+iQDNS (CN)
+
+# Options.doh-server.Cloudflare
+
+Cloudflare (Global)
+
+# Options.doh-server.RubyFish
+
+Red Fish (CN)
+
+# Options.doh-server.OpenDNS
+
+OpenDNS (Global)
+
+# Options.doh-server.AdGuard
+
+AdGuard (Global)
+
+# Options.web.global-proxy.title
+
+HTTP Proxy In Browser
+
+# Options.web.global-proxy.desc
+
+Specify the proxy server used for login, etc..
+
+# Options.updator.use-update.title
+
+Auto Update ^
+
+# Options.updator.use-update.desc
+
+Update myself from GitHub tags. Partly using jsDelivr.
+
+# Options.download.primary-downloader.title
+
+Download Algorithum
+
+# Options.download.primary-downloader.desc
+
+The algorithum used for downloading. Concurrent is good for large files while Serial is more stable.
+
+# Options.download.primary-downloader.Concurrent
+
+Concurrent
+
+# Options.download.primary-downloader.Serial
+
+Serial
+
+# Options.download.concurrent.chunk-size.title
+
+Concurrent Chunk Size
+
+# Options.download.concurrent.chunk-size.desc
+
+Chunk size when downloading using concurrent algorithum. (In KiB, the smallest resonable value is 512.)
+
+# Options.download.pff.chunk-size.title
+
+Pff Concurrent Chunk Size
+
+# Options.download.pff.chunk-size.desc
+
+Same as above, but for Pff only.
+
+# Options.download.concurrent.timeout.title
+
+Request Timeout
+
+# Options.download.concurrent.timeout.desc
+
+Timeout when downloading.
+
+# Options.download.pff.timeout.title
+
+Pff Request Timeout
+
+# Options.download.pff.timeout.desc
+
+Same as above, but for Pff only.
+
+# Options.download.concurrent.tries-per-chunk.title
+
+Retries
+
+# Options.download.concurrent.tries-per-chunk.desc
+
+Specify retries before giving up.
+
+# Options.download.concurrent.max-tasks.title
+
+Multitasks
+
+# Options.download.concurrent.max-tasks.desc
+
+How many files can be downloaded at the same time? The largest reasonable value is 256.
+
+# Options.modx.global-dynamic-load-mods.title
+
+Dynamic Mods Loading
+
+# Options.modx.global-dynamic-load-mods.desc
+
+Only put compatible mods in mods folder when launching.
+
+# Options.modx.ignore-non-standard-mods.title
+
+Ignore Unknown Mods
+
+# Options.modx.ignore-non-standard-mods.desc
+
+If I cannot recognize the type of a mod, ignore it rather than move it.
+
+# Options.cmc.disable-log4j-config.title
+
+Disable Log4j Configuration
+
+# Options.cmc.disable-log4j-config.desc
+
+Disable Log4j configuration provided by Mojang. 
+
+# CrashReportDisplay.BaseInfo
+
+Base Information
+
+# CrashReportDisplay.BaseInfo.ID
+
+Profile ID
+
+# CrashReportDisplay.BaseInfo.BaseVersion
+
+Version (Mojang)
+
+# CrashReportDisplay.BaseInfo.AssetIndex
+
+Version (Assets)
+
+# CrashReportDisplay.BaseInfo.Time
+
+Release Time
+
+# CrashReportDisplay.BaseInfo.Modded
+
+Mods Compatibility
+
+# CrashReportDisplay.BaseInfo.Modded.Yes
+
+Yes
+
+# CrashReportDisplay.BaseInfo.Modded.No
+
+No
+
+# CrashReportDisplay.BaseInfo.Modded.Unknown
+
+Not Sure
+
+# CrashReportDisplay.FailedToCopy
+
+Copy failed...
+
+# CrashReportDisplay.Copied
+
+Copied!
+
+# CrashReportDisplay.LaunchTrackCount
+
+Launch Tracker
+
+# CrashReportDisplay.Libraries
+
+Libraries
+
+# CrashReportDisplay.Assets
+
+Game Assets
+
+# CrashReportDisplay.Total
+
+Total
+
+# CrashReportDisplay.Resolved
+
+Resolved
+
+# CrashReportDisplay.Mods
+
+Mods
+
+# CrashReportDisplay.Mods.Name
+
+Name
+
+# CrashReportDisplay.Mods.Reserved
+
+Kept
+
+# CrashReportDisplay.Mods.Moved
+
+Moved
+
+# CrashReportDisplay.Mods.Failed
+
+Failed
+
+# CrashReportDisplay.CrashReport
+
+Original Crash Report
+
+# CrashReportDisplay.Analyze
+
+Crash Report Analytics
+
+# CrashReportDisplay.AnalyzeLogs
+
+Logs Analytics
+
+# CrashReportDisplay.AnalyzeLogs.Up
+
+Click to show more above...
+
+# CrashReportDisplay.AnalyzeLogs.Down
+
+Click to show more below...
+
+# CrashReportDisplay.AnalyzeLogs.PerformanceIssue
+
+Only part of the data is analyzed. Click to analyze all...
+
+# CrashReportDisplay.Analyze.Line
+
+Line No. {Line}: {Content}
+
+# CrashReportDisplay.Complain
+
+How did we get here?
+It's impossible!
+
+# CrashReportDisplay.Analyze.Suggestions
+
+Here are the suggestions
+
+# CrashReportDisplay.Analyze.NoSuggestions
+
+No suggestion available
+
+# CrashReportDisplay.Logs
+
+Logs
+
+# CrashReportDisplay.CopyLogs
+
+Copy Logs
+
+# CrashReportDisplay.Instruction
+
+Your game has crashed! That's not good.\nYou can copy the generated BBCode and use it in supported forums, or just copy the logs (crash report should be at the end of the logs).
+
+# CrashReportDisplay.Copy
+
+Copy BBCode
+
+# Welcome.Suggest.Part1
+
+['{Config:interactive.i-have-a-crush-on-al}'=='false']Today is {Date}. Welcome, {UserName}！
+
+[new Date().getHours()>=18]Gnineve doog! Oh, that's Ancient Equish...
+
+[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]...Sleepy...
+
+[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]The better you sleep, the safer you are away from the virus.
+
+[new Date().getHours()==12]It's noon! The sextant is ready, let's go!
+
+[(()=>{const hours=new Date().getHours();return hours>=7&&hours<=9;})()]Morning! Want some milk?
+
+I'm always here~
+
+What's happening?
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']These two pony ears? They are cute? You want to have a touch?
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']Yes, I can fly! (Wings open)
+
+['{Config:readyboom}'=='false']ReadyBoom is half of my speed!
+
+[(()=>{const hours=new Date().getHours();return hours>=18&&hours<=21;})()]Romantic night... Have some cider, will you?
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']No... no hugs, sorry.
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']Have a dance?
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']This one? It's not water but cider. It can keep me awake... Want some? 
+
+# Welcome.TipName
+
+Tip:
+
+# Welcome.Short.LaunchPad
+
+Launch Pad
+
+# Welcome.Short.LastLaunch
+
+Last Game Launched
+
+# Welcome.Short.Install
+
+Install Cores
+
+# Welcome.Tips
+
+ASC stands for Alicorn Shared Container!
+A container is a .minecraft folder, but not just a folder!
+There are no difference between driving with both eyes closed and asking for help without crash reports!
+The BBCode generated has already been well formatted.
+Alicorn can have updates at any time!
+NEVER EVER enter ANY sensitive information in ANY thiry party server!
+DO NOT forcefully exit unless your can do nothing else.
+Our ultimate goal is digital freedom for all, a world without proprietary software.
+
+# Welcome.Knowledges
+
+404|Sorry, but Mini Wiki is not yet available in this language.
+
+# PffFront.ReloadToRenew
+
+Mod information won't be updated until next time you enter - Click me to refresh now
+
+# PffFront.WarnNoCache
+
+Cache has been disabled!
+
+# PffFront.Loading
+
+Fetching...
+
+# PffFront.UnsupportedLoader
+
+Loader not supported
+
+# PffFront.Done
+
+Installed
+
+# PffFront.Failed
+
+Failed: Network failure or incompatible
+
+# PffFront.Slug
+
+Slug
+
+# PffFront.QuickWatch
+
+Mods
+
+# PffFront.Hint
+
+Only mods installed by Pff are displayed here. Left click to reveal in explorer and right click to upgrade.
+
+# PffFront.UpgradeAll
+
+Upgrade All
+
+# PffFront.Mods
+
+Local Mods
+
+# PffFront.ModsHint
+
+All mods recognized are be displayed here.
+
+# PffFront.UnmetDeps
+
+Dependency Errors
+
+# PffFront.MissingDep
+
+@HTML{Name} depends on {Missing}, but {Missing} is not available - {Origin} won't be loaded.<br/><b>Click to try to install {Missing}</b>
+
+# PffFront.DepOK
+
+All is well!
+
+# PffFront.NoneDetected
+
+No mods are present.
+
+# PffFront.InstallAll
+
+Try To Fix All
+
+# ServerList.Add
+
+Add Server
+
+# ServerList.AddNewServer.Title
+
+Add Server
+
+# ServerList.AddNewServer.Description
+
+After you add the server, you need to specify a core to launch.
+
+# ServerList.AddNewServer.SincereWarn
+
+IMPORTANT WARNING: Multiplayer is VERY DANGEROUS. You can encounter huge loss in both data and money! Again, DO NOT trust anyone unless you know what you are doing. If it really happened to you (hopefully not), please DO report the server to everyone you know.
+
+# ServerList.AddNewServer.Address
+
+Address
+
+# ServerList.AddNewServer.OK
+
+I Know What I'm Doing!
+
+# ServerList.AddNewServer.Cancel
+
+Wait, What?
+
+# ServerList.Online
+
+Online
+
+# ServerList.Offline
+
+Offline
+
+# ServerList.UseCore
+
+Select A Core To Launch
+
+# ServerList.Launch
+
+Revel In Launch Pad
+
+# ServerList.Remove
+
+Remove
+
+# ServerList.Connectable
+
+Connectable
+
+# ServerList.NoConnection
+
+Not Connectable
+
+# ServerList.Testing
+
+Testing
+
+# UtilitiesIndex.Description
+
+Welcome To Alicorn Utilities!
+
+# UtilitiesIndex.Item
+
+@HTML<b>{Name}</b>, Version {Version} by {Author}
+
+# UtilitiesIndex.Open
+
+Enter
+
+# Utilities.NetCheck.Title
+
+NetCheck
+
+# Utilities.NetCheck.Description
+
+By Sparklight\nCheck network connection to some Minecraft related websites.
+
+# Utilities.NetCheck.SiteName.MCBBS
+
+MCBBS
+
+# Utilities.NetCheck.SiteDesc.MCBBS
+
+The largest forum about Minecraft in China.
+
+# Utilities.NetCheck.SiteName.MCBBSDownload
+
+MCBBS Mirror
+
+# Utilities.NetCheck.SiteDesc.MCBBSDownload
+
+Should always be available, no matter where you are.
+
+# Utilities.NetCheck.SiteName.BMCLAPI
+
+BMCLAPI
+
+# Utilities.NetCheck.SiteDesc.BMCLAPI
+
+Should always be available too, no matter where you are.
+
+# Utilities.NetCheck.SiteName.Modrinth
+
+Modrinth API
+
+# Utilities.NetCheck.SiteDesc.Modrinth
+
+Pff highly depends on this.
+
+# Utilities.NetCheck.SiteName.MojangAuth
+
+Mojang Authenticate Server
+
+# Utilities.NetCheck.SiteDesc.MojangAuth
+
+You need it to auth your Yggdrasil account (Mojang).
+
+# Utilities.NetCheck.SiteName.MSAuth
+
+Microsoft Authenticate Server
+
+# Utilities.NetCheck.SiteDesc.MSAuth
+
+You need it to auth your Microsoft account.
+
+# Utilities.NetCheck.SiteName.AlicornUpdate
+
+Alicorn Updates
+
+# Utilities.NetCheck.SiteDesc.AlicornUpdate
+
+I need it to update myself.
+
+# Utilities.CutieConnect.EdgeFailure
+
+Edge Failure: {Reason}
+
+# Utilities.CutieConnect.InstallingTAP
+
+This is the first time you use CutieConnect and we need to install a TAP device.\n(Already installed? Then just close it!)
+
+# Utilities.CutieConnect.Title
+
+CutieConnect
+
+# Utilities.CutieConnect.Description
+
+By Ntop and Sparklight\nEnable you to play with your friends through NATs! This features use the magic of friendship entirely! Oh, and also the fresh air everywhere.
+
+# Utilities.CutieConnect.JoinWithCode
+
+Hoofoff Code
+
+# Utilities.CutieConnect.EnterCode
+
+Enter the code
+
+# Utilities.CutieConnect.Activate
+
+Active
+
+# Utilities.CutieConnect.FailedToQuery
+
+Active failed: invalid code or server failure
+
+# Utilities.CutieConnect.GameMeta
+
+@HTMLMinecraft Version {BaseVersion}. <b>{IsPremium}</b>.\nThe creator said: \n\n&nbsp;&nbsp;&nbsp;&nbsp;<b>"</b>{Message}<b>"</b>\n\nPlease bear in mind that <b>this world might not be safe!</b>\n\nConnections will be made in 5 seconds.
+
+# Utilities.CutieConnect.AllDone
+
+Connections made! I'll bring you to LaunchPad in 10 seconds.\n(You can also launch later, the connection can last for a while.)
+
+# Utilities.CutieConnet.Premium
+
+Premium required
+
+# Utilities.CutieConnet.NonPremium
+
+Not necessarily premium
+
+# Utilities.CutieConnect.CodeDesc
+
+Use the code from your friends to launch directly.
+
+# Utilities.CutieConnect.Advanced
+
+Advanced (Manually)
+
+# Utilities.CutieConnect.Games
+
+Games in this network
+
+# Utilities.CutieConnect.Connect
+
+Join
+
+# Utilities.CutieConnect.Disconnect
+
+Leave
+
+# Utilities.CutieConnect.Community
+
+The Name Of Cutie LAN
+
+# Utilities.CutieConnect.CommunityIsInternet
+
+!! This is public !!
+
+# Utilities.CutieConnect.Password
+
+Password Of Cutie LAN
+
+# Utilities.CutieConnect.NoPassword
+
+No Passwords For Public LAN~
+
+# Utilities.CutieConnect.IP
+
+Virtual IP Address
+
+# Utilities.CutieConnect.InvalidIP
+
+IPv4 Address
+
+# Utilities.CutieConnect.Supernode
+
+Central Server (Host And Port)
+
+# Utilities.CutieConnect.WorldName
+
+World Name (Arbitrary)
+
+# Utilities.CutieConnect.Port
+
+Port (Shown In Minecraft)
+
+# Utilities.CutieConnect.InvalidPort
+
+Invalid Port!
+
+# Utilities.CutieConnect.DescWorld
+
+Description
+
+# Utilities.CutieConnect.InvalidSupernode
+
+Enter a full address!
+
+# Utilities.CutieConnect.QuickHint
+
+@HTML<ul><li>Virtual IP is not necessary when, and only when you are joining.</li><li>Privileges are required.</li><li><b>DO NOT</b> use reserved IP addresses(e.g., 127.0.0.1)! IPs like <span style="user-select: text;">{RandIP}</span> will be fine.</li><li><b>Attention! Network named <span style="user-select: text;">internet</span> is opened to public</b> without password.</li><li>Leave before you join another! (Stamp my hooves)</li></ul>
+
+# Utilities.CutieConnect.Connected
+
+Command sent, wait for some seconds and then you can join.
+
+# Utilities.CutieConnect.Disconnected
+
+Disconnect command sent.
+
+# Utilities.CutieConnect.PublishPrecheckFailed
+
+Minecraft not found on {Host}.
+
+# Utilities.CutieConnect.PublishOK
+
+{WorldName} opened to {Community}. (Remember to close it!)
+
+# Utilities.CutieConnect.RemoveOK
+
+{WorldName} is no longer public.
+
+# Utilities.CutieConnect.NetworkSearch
+
+Search
+
+# Utilities.CutieConnect.PublishToMap
+
+Open My Game To Public
+
+# Utilities.CutieConnect.Unpublish
+
+Close My Game From Public
+
+# Utilities.CutieConnect.NoResult
+
+No public worlds were found.
+
+# Utilities.CutieConnect.Result
+
+Cool! There are {Count} games!
+
+# Utilities.CutieConnect.GoBack
+
+Back to control panel
+
+# Utilities.CutieConnect.ClickToJoin
+
+@HTML<b>You can join these worlds when, and only when you've already in the network.</b>\nPurple is online and gray is offline.\n<b><span style="color: red;">Any content here or in the game is not provided by us and you should know that you are responsible for all your actions.</span></b>
+
+# Utilities.CutieConnect.Error
+
+Yuck! Failed to contact server: {Message}
+
+# Utilities.CutieConnect.AvailableWorldName
+
+Ponyville
+Canterlot
+Everfree Forest
+Appleloosa
+Cloudsdale
+Crystal Empire
+World
+New World
+
+# Utilities.CutieConnect.AvailableDesc
+
+Equestria our home
+The place where we belong
+Everypony come and play!
+Everything's gonna be just fine
+Home to everyone
+A new adventure waits for us
+What a strange new world
+Join in our utopia
+
+
+# Utilities.CutieConnect.AvailablePrefix
+
+cutie-connect-
+alicorn-game-
+starlight-
+love-al-
+support-fsf-
+noble-node-
+fabric-good-
+hello-world-
+ethernet-
+equestria-
+pony-up-
+kirin-tale-
+pvpin-reborn-
+
+# Utilities.CutieConnect.AvailablePassword
+
+i-am-pony-
+best-friends-
+my-little-pony-girls-
+foo-bar-
+free-software-
+gnu-gpl-
+twilighting-
+cutie-map-
+guix-
+sparklight-filly-
+earth-ponies-
+shutterfly-
+sudo-rm-rf-
+qwerty-uiop-
+var-let-const-
+tar-zxvf-
+lorem-ipsum-
+hippopotomonstrosesquippedaliophobia-
+honorificabilitudinitatibus-
+floccinaucinihilipipification-
+supercalifragilisticexpiadocious-
+
+# Utilities.BuildUp.Title
+
+BuildUp
+
+# Utilities.BuildUp.Description
+
+By Sparklight\nBuild your own modpack!
+
+# Utilities.BuildUp.Meta.Name
+
+Display Name
+
+# Utilities.BuildUp.Meta.Desc
+
+Description
+
+# Utilities.BuildUp.Meta.Author
+
+Authro
+
+# Utilities.BuildUp.Meta.Version
+
+Version
+
+# Utilities.BuildUp.BaseContainer
+
+Select The Container To Build From
+
+# Utilities.BuildUp.Asset
+
+Available Assets - Click To Add To Left
+
+# Utilities.BuildUp.SelectedAsset
+
+Selected Asseys
+
+# Utilities.BuildUp.Asset.OptionFile
+
+OPTN
+
+# Utilities.BuildUp.Asset.Config
+
+CONF
+
+# Utilities.BuildUp.Asset.ResourcePack
+
+RESP
+
+# Utilities.BuildUp.Asset.ShaderPack
+
+SHDP
+
+# Utilities.BuildUp.Asset.PffMod
+
+MODP
+
+# Utilities.BuildUp.Asset.ModFile
+
+MODF
+
+# Utilities.BuildUp.Asset.World
+
+SAVE
+
+# Utilities.BuildUp.Asset.ModLoader
+
+MLDR
+
+# Utilities.BuildUp.Asset.Game
+
+CORE
+
+# Utilities.BuildUp.Scan
+
+Scan
+
+# Utilities.BuildUp.ScanResult
+
+{Count} assets in {Container}
+
+# Utilities.BuildUp.SelectContainer
+
+Select And Scan
+
+# Utilities.BuildUp.SelectAssets
+
+Select And Pack
+
+# Utilities.BuildUp.FillInfo
+
+Fill Information
+
+# Utilities.BuildUp.Asset.ClickToAdd
+
+Click to select or remove an asset
+
+# Utilities.BuildUp.Build
+
+Build!
+
+# Utilities.BuildUp.Show
+
+Show Build Output
+
+# Utilities.BuildUp.Asset.SelectAll
+
+Select All
+
+# Utilities.BuildUp.Asset.SelectMods
+
+Select All Mods
+
+# Utilities.BuildUp.Resolving
+
+Parsing...
+
+# Utilities.BuildUp.Indexing
+
+Indexing...
+
+# Utilities.BuildUp.Compressing
+
+Compressing...
+
+# Utilities.BuildUp.Done
+
+All done! Have fun!
+
+# Utilities.PffVisual.Title
+
+Pff Visual
+
+# Utilities.PffVisual.Description
+
+By Sparklight\nUnified mods search.
+
+# Utilities.PffVisual.Search
+
+Search
+
+# Utilities.PffVisual.Modpack
+
+Search For Modpacks
+
+# Utilities.PffVisual.MultiSelect
+
+Multiselect
+
+# Utilities.PffVisual.Provider
+
+From: {Name}
+
+# Utilities.PffVisual.VersionRange
+
+Supports: 
+
+# Utilities.PffVisual.Copied
+
+Copied!
+
+# Utilities.PffVisual.CouldNotCopy
+
+Failed to copy.
+
+# Utilities.PffVisual.Hint
+
+@HTMLSearh mod here, copy id and install it in Pff (not in Pff Visual!).
+
+# Utilities.PffVisual.Slug
+
+Search By Name...
+
+# Utilities.CarouselBoutique.Title
+
+Carousel Boutique
+
+# Utilities.CarouselBoutique.Description
+
+By Sparklight\nOffline Skins And Online Skin Changing
+
+# Utilities.CarouselBoutique.Tabs.LocalSkin
+
+Offline Skins
+
+# Utilities.CarouselBoutique.Tabs.Change
+
+Change Online Skin
+
+# Utilities.CarouselBoutique.Hint
+
+@HTMLSelect a picture and set it for any specified player name or just set as default for every local account!\nLocal skin won't show in multiplayer servers, thought you should know...
+
+# Utilities.CarouselBoutique.HintChangeSkin
+
+@HTMLChange the skin of your Microsoft account! Image and URL are both supported.
+
+# Utilities.CarouselBoutique.SelectSkinFile
+
+Select File
+
+# Utilities.CarouselBoutique.Uploading
+
+Uploading...
+
+# Utilities.CarouselBoutique.TokenFailure
+
+Account has expired! To continue, launch any core once (using Microsoft account) and retry here.
+
+# Utilities.CarouselBoutique.UploadSkin
+
+Upload/Change
+
+# Utilities.CarouselBoutique.UploadOK
+
+Request Completed!
+
+# Utilities.CarouselBoutique.UploadFailed
+
+Failed: {Reason}
+
+# Utilities.CarouselBoutique.RemoveSkin
+
+Clear Skin
+
+# Utilities.CarouselBoutique.RemoveCape
+
+Clear Cape
+
+# Utilities.CarouselBoutique.AddAsSkin
+
+Set As Skin
+
+# Utilities.CarouselBoutique.AddAsCape
+
+Set As Cape
+
+# Utilities.CarouselBoutique.SetAsDefaultSkin
+
+Set As Default Skin
+
+# Utilities.CarouselBoutique.SetAsDefaultCape
+
+Set As Default Cape
+
+# Utilities.CarouselBoutique.SetSuccessful
+
+Skin/Cape set!
+
+# Utilities.CarouselBoutique.PlayerName
+
+Player Name
+
+# Utilities.CarouselBoutique.FileName
+
+Select File
+
+# Utilities.CarouselBoutique.Model.Default
+
+Steve (Default)
+
+# Utilities.CarouselBoutique.Model.Alex
+
+Alex (Slim)
+
+# FirstRun.Default
+
+Minecraft Container
+
+# Statistics.Click
+
+You've clicked me {Value} times...
+
+# Statistics.Click.As
+
+...
+
+# Statistics.Crash
+
+The game has crashed for {Value} times...
+
+# Statistics.Crash.As
+
+...
+
+# Statistics.Launch
+
+{Value} launches...
+
+# Statistics.Launch.As
+
+...
+
+# Statistics.Keyboard
+
+{Value} keys are pressed...
+
+# Statistics.Keyboard.As
+
+...Developing?
+
+# FirstRun.JavaConfigured
+
+Java info upgraded.
+
+# FirstRun.Preparing
+
+This is thr first time you use Alicorn. We're doing some initialize works...
+
+# FirstRun.FetchingJava
+
+Fetching Java...
+
+# FirstRun.ConfiguringJava
+
+Configuring Java...
+
+# FirstRun.JavaInstalled
+
+Yeah! Java installed!
+
+# FirstRun.FailedJava
+
+Failed to install Java. You might want to manually install one at JavaSelector.
+
+# Instruction.Welcome.-1
+
+END
+
+# Instruction.Welcome.0
+
+Welcome to Alicorn Launcher! I'm the AI of <ThatRarityEG>, the developer.
+
+# Instruction.Welcome.1
+ 
+I'll show you some <basic operations>. Move your mouse and let's complete this. (Or <right click> to skip.)
+
+# Instruction.Welcome.2
+
+Here is the <Toolbar> and those buttons represent their functionalities.@37.15
+
+# Instruction.Welcome.3
+
+Left to the title is the <Navigator>. Click it to show all pages.
+
+# Instruction.Welcome.4
+
+This is <Quick Access Area> and you can access the most popular features.@20.60@@MainMenuQuickAccess
+
+# Instruction.Welcome.5
+
+Use <Install Cores> to install one or more Minecraft releases/snapshots (i.e., cores).@@@MainMenuInstallCore
+
+# Instruction.Welcome.6
+
+END
+
+# Instruction.JavaSelector.-1
+
+END
+
+# Instruction.JavaSelector.0
+
+This is <Java Selector>. You can configure default Java here or add new ones.
+
+# Instruction.JavaSelector.1
+
+You can select <default Java> here. If not present, use <search> to search for more.@5.35@@JavaSelectorSelect
+
+# Instruction.JavaSelector.2
+
+If you believe that you've already installed, then you can <choose manually>.@5.45@@JavaSelectorManual
+
+# Instruction.JavaSelector.3
+
+Minecraft 1.18 or later requires <Java 17>, 1.17 requires <Java 16> (or later), while some earlier versions requires <Java 8>... That's sooo complicated!
+
+# Instruction.JavaSelector.4
+
+That's why I'm here. You can <quick install> with this button and no conflicts wll ever happen.@@@JavaSelectorInstall
+
+# Instruction.JavaSelector.5
+
+Good luck and have fun with Java!
+
+# Instruction.JavaSelector.6
+
+END
+
+# Instruction.NoJava.-1
+
+END
+
+# Instruction.NoJava.0
+
+Almost... But there are still one thing,
+
+# Instruction.NoJava.1
+
+I can't find <Java> on this PC. Minecraft won't launch.
+
+# Instruction.NoJava.2
+
+...It's OK. I'll install it for you.
+
+# Instruction.NoJava.3
+
+After I've finished, you can enjoy the game. Good luck and have fun playing Minecraft!@@@MainMenuInstallCore
+
+# Instruction.NoJava.4
+
+END
+
+# Instruction.HavePack.-1
+
+END
+
+# Instruction.HavePack.0
+
+...Sorry, I forgot your <modpack>.
+
+# Instruction.HavePack.1
+
+That's because I've got used to modpacks <dropped into my window>, rather than a launcher bundled.
+
+# Instruction.HavePack.2
+
+...Never mind, I'll do it for you this time.
+
+# Instruction.HavePack.3
+
+END
+
+# Instruction.JavaOK.-1
+
+END
+
+# Instruction.JavaOK.0
+
+OK, everything is right! Now it's time to go to <Install Cores> to install your  preferred versions~@@@MainMenuInstallCore
+
+# Instruction.JavaOK.1
+
+I'll see you there!@@@MainMenuInstallCore
+
+# Instruction.JavaOK.2
+
+END
+
+# Instruction.InstallCore.-1
+
+END
+
+# Instruction.InstallCore.0
+
+Welcome to Cores Installer! You can <install or retrofit> cores here!
+
+# Instruction.InstallCore.1
+
+The first tab is for Minecraft cores.@5.40
+
+# Instruction.InstallCore.2
+
+Select <version> and <container>, then you can install one!
+
+# Instruction.InstallCore.3
+
+You need to <retrofit> cores before playing mods. Use the second or the third tab to do it.@5.30
+
+# Instruction.InstallCore.4
+
+Fabric is different from Forge and they are not compatible! Fabric mods are only for Fabric, same as Forge.@5.30
+
+# Instruction.InstallCore.5
+
+Here are <Iris> too. For Fabric cores.@5.30
+
+# Instruction.InstallCore.6
+
+<Give me some chances> if install failed. (Practice makes perfect~)
+
+# Instruction.InstallCore.7
+
+OK, OK, it's your time now!
+
+# Instruction.InstallCore.8
+
+END
+
+# Instruction.LaunchPad.-1
+
+END
+
+# Instruction.LaunchPad.0
+
+Welcome to <Launch Pad>!
+
+# Instruction.LaunchPad.1
+
+Click <the core card> can launch it.
+
+# Instruction.LaunchPad.2
+
+Click <the icon of the core> can install mods - if compatible.
+
+# Instruction.LaunchPad.3
+
+Easy, right? Time for you to try.
+
+# Instruction.LaunchPad.4
+
+END
+
+# Instruction.ReadyToLaunch.-1
+
+END
+
+# Instruction.ReadyToLaunch.0
+
+This might be the easiest one. Simply click <the launch button>.
+
+# Instruction.ReadyToLaunch.1
+
+<Some files will be downloaded> if necessary, that won't take long, though.
+
+# Instruction.ReadyToLaunch.2
+
+Good luck and have fun playing Minecraft!
+
+# Instruction.ReadyToLaunch.3
+
+END
+
+# Cadance.InstallOK
+
+Cadance installed!
+
+# Cadance.Desc
+
+Cadance (not Cadence) allows me to hear you. However, only limited languages are supported.
+
+# Cadance.NotCompatible
+
+32-bit Windows is not supported.
+
+# Cadance.Disabled
+
+Cadance is installed, but not enabled.
+
+# Cadance.NotInstalled
+
+Cadance is not installed.
+
+# Cadance.Enabled
+
+Cadance is running.
+
+# Cadance.Install
+
+Install Cadance
+
+# Cadance.Installing
+
+Installing... It won't take long.
+
+# Cadance.FailedToInstall
+
+Failed to install Cadance. Try again?
+
+# Cadance.Enable
+
+Enable Cadance
+
+# Cadance.Disable
+
+Disable Cadance
+
+# Cadance.VoiceTest
+
+If you wish to test your microphone, please connect it and say...
+
+# Cadance.Voice
+
+Recognized: {Voice}
+
+# Cadance.TestWord
+
+I Can Eat Glass.
+
+# Cadance.VoiceTestHint
+
+Tip: Not 100% accurate, but I can understand you.
+
+# Cadance.Encoding
+
+Encoding
+
+# Cadance.EncodingDesc
+
+In some platforms encodings cannot be configured automatically. In this case you need to specify one.
+
+# Boticorn.Desc
+
+Boticorn (the assistant of Alicorn) can do some really cool things! ...In the future, though. However, You can try some of its features now.
+
+# Boticorn.Enabled
+
+Boticorn enabled.
+
+# Boticorn.Disabled
+
+Boticorn is installed, but not enabled.
+
+# Boticorn.NotInstalled
+
+Boticorn is not installed.
+
+# Boticorn.InstallOK
+
+Boticorn installed!
+
+# Boticorn.FailedToInstall
+
+Failed to install Boticorn. Try again?
+
+# Boticorn.Installing
+
+Installing Boticorn, this won't take long...
+
+# Boticorn.Enable
+
+Enable Boticorn
+
+# Boticorn.Disable
+
+Disable Boticorn
+
+# Boticorn.Install
+
+Install Boticorn
+
+# Boticorn.Hint
+
+Hint: Boticorn is only available through Cadance. More interfaces will be available soon.
+
+# EOE.Thanks
+
+Special Thanks
+
+# EOE.ThanksDesc
+
+We'd like to thank...
+
+# EOE.Packages
+
+... These NPM packages:
+
+# EOE.And
+
+... These projects or websites:
+
+# EOE.Orgs
+
+Free Software Foundation\nGitHub\nStack Overflow\nNode.js\nTypeScript\nMinecraft Wiki\nMaterial UI\nwiki.vg\nElectron\nWebpack\nBMCLAPI\nundici\nFabricMC\nIris Shaders\njsDelivr\nAdobe Source Hans Sans and Ubuntu Mono\nAuthlib Injector\nMLPVector\nVSCodium\nMDN Web Docs\n\nAnd more...
+
+# EOE.StoryTitle
+
+???
+
+# EOE.Story
+
+?????????????????
+
+# EOE.EndPoem
+
+Blowin' in the Wind —— Bob Dylan
+
+# EOE.EndPoemContent
+
+How many roads must a man walk down\nBefore they call him a man?\nHow many seas must a white dove sail\nBefore she sleeps in the sand?\nHow many times must the cannon-balls fly\nBefore they're forever banned?\nThe answer, my friend, is blowin' in the wind\nThe answer is blowin' in the wind.\n\nHow many years must a mountain exist\nBefore it is washed to the sea?\nHow many years can some people exist\nBefore they're allowed to be free?\nHow many times can a man turn his head\nPretend that he just doesn't see?\nThe answer my friend is blowin' in the wind\nThe answer is blowin' in the wind.\n\nHow many times must a man look up\nBefore he can see the sky?\nHow many ears must one man have\nBefore he can hear people cry?\nHow many deaths will it take\nTill he knows that too many people have died?\nThe answer, my friend, is blowin' in the wind\nThe answer is blowin'in the wind.
+
+# TipsOfToday.Disable
+
+Don't Show Again
+
+# TipsOfToday.More
+
+Learn More
+
+# TipsOfToday.Next
+
+Next
+
+# TipsOfToday.Close
+
+Close
+
+# TipsOfToday.Desc
+
+Alicorn Tips Of Today!
+
+# DMCenter.Hint
+
+Drop Display Manager into Alicorn to add it to thus list.\nDO NOT add a DM you do not trust! This can be very DANGEROUS!
+
+# DMCenter.Active
+
+Active
+
+# Echo.Title
+
+Echo
+
+# Echo.Hint
+
+Write something...\n(Unfortunately, currently no ASCII characters are allowed.)
+
+# Echo.PlaceHolder
+
+I Can Eat Glass
+
+# Echo.Send
+
+Send
+
+# Echo.Format
+
+{Text} -- Alicorn Echo
