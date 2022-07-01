@@ -286,7 +286,7 @@ function SingleCoreDisplay(props: {
       <Card
         sx={{ backgroundColor: "primary.main" }}
         color={"primary"}
-        raised
+        raised={showBtn}
         onMouseOver={() => {
           setShowBtn(true);
         }}
