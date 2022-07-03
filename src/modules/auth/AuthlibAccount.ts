@@ -10,6 +10,7 @@ import {
   validateToken,
 } from "./Account";
 import { AccountType } from "./AccountUtil";
+import { authAddrCorrect } from "./AJHelper";
 
 // Account using Authlib Injector
 export class AuthlibAccount extends Account {
@@ -25,6 +26,7 @@ export class AuthlibAccount extends Account {
 
   // Get a new token
   async flushToken(): Promise<boolean> {
+    this.authServer = await authAddrCorrect(this.authServer);
     const p = await refreshToken(
       this.lastUsedAccessToken,
       this.authServer + "/authserver",
@@ -39,6 +41,7 @@ export class AuthlibAccount extends Account {
   }
 
   async isAccessTokenValid(): Promise<boolean> {
+    this.authServer = await authAddrCorrect(this.authServer);
     return await validateToken(
       this.lastUsedAccessToken,
       this.authServer + "/authserver"
@@ -46,6 +49,7 @@ export class AuthlibAccount extends Account {
   }
 
   async performAuth(password: string): Promise<boolean> {
+    this.authServer = await authAddrCorrect(this.authServer);
     const st = await authenticate(
       this.accountName,
       password,

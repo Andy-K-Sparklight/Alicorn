@@ -36,3 +36,20 @@ export async function prefetchData(authServer: string): Promise<string> {
     return "";
   }
 }
+
+export async function authAddrCorrect(source: string): Promise<string> {
+  try {
+    const res = await fetch(source);
+    if (res.ok) {
+      const ali =
+        res.headers.get("x-authlib-injector-api-location") ||
+        res.headers.get("X-Authlib-Injector-API-Location");
+      if (ali) {
+        return ali;
+      }
+    }
+    return source;
+  } catch (e) {
+    return source;
+  }
+}
