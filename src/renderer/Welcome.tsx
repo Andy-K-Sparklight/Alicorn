@@ -17,37 +17,113 @@ import { LAST_SUCCESSFUL_GAME_KEY } from "./ReadyToLaunch";
 import { useTextStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
 
+// -------- Welcome --------
+
+const rootSX = {
+  textAlign: "center",
+  marginTop: "8%",
+};
+
+const quoteSX = {
+  color: "primary.main",
+  fontSize: "larger",
+};
+
+const mainBoxSX = {
+  textAlign: "center",
+  display: "flex",
+  justifyContent: "center",
+};
+
 export function Welcome(): JSX.Element {
   const classes = useTextStyles();
-  const [refreshBit, setRefresh] = useState(false);
+  const [_refreshBit, setRefresh] = useState(false);
   const [lastGameAvailable, setLastGameAvailable] = useState(false);
   const [tip, setTip] = useState<string | null>(null);
   const [lastGameProfile, setLastGameProfile] = useState<SimplifiedCoreInfo>();
 
-  useEffect(() => {
-    const i = setInterval(() => {
-      setRefresh(!refreshBit);
-      if (getBoolean("features.echo")) {
-        const echos = getEchos();
-        if (Math.random() > 0.6) {
-          if (echos.length > 0) {
-            setTip(
-              tr(
-                "Echo.Format",
-                `Text=${echos[Math.floor(Math.random() * echos.length)]}`
-              )
-            );
-            return;
-          }
-        }
-      }
-      setTip(null);
-    }, 5000);
-    return () => {
-      clearInterval(i);
-    };
-  });
-  useEffect(() => {
+  useEffect(subscribeEcho(setRefresh, setTip), []);
+  useEffect(detectLastLaunch(setLastGameProfile, setLastGameAvailable), []);
+
+  return (
+    <Box sx={rootSX} className={classes.root}>
+      <br />
+      <Typography
+        color={"primary"}
+        variant={"h6"}
+        className={classes.firstText}
+        gutterBottom
+      >
+        {randsl("Welcome.Suggest.Part1")}
+      </Typography>
+      <br />
+      <Box
+        onClick={() => {
+          setRefresh((o) => !o);
+        }}
+      >
+        <Typography
+          color={"secondary"}
+          className={classes.secondText}
+          gutterBottom
+        >
+          <b style={quoteSX}>{"> "}</b>
+          {tip === null ? (
+            <>
+              {randsl("Welcome.TipName")}
+              {randsl("Welcome.Tips")}
+            </>
+          ) : (
+            tip
+          )}
+
+          <b style={quoteSX}>{" <"}</b>
+        </Typography>
+      </Box>
+      <br />
+      <Box sx={mainBoxSX}>
+        <ShiftEle name={"MainMenuQuickAccess"}>
+          <>
+            <ShiftEle name={"MainMenuInstallCore"}>
+              <RoundBtn
+                disabled={false}
+                onClick={handleInstallCoreClick}
+                icon={<GetApp />}
+                short={tr("Welcome.Short.Install")}
+              />
+            </ShiftEle>
+            <RoundBtn
+              disabled={!lastGameAvailable}
+              onClick={handleLastLaunchClickFactory(lastGameProfile)}
+              highlight
+              icon={<History />}
+              short={tr("Welcome.Short.LastLaunch")}
+            />
+            <ShiftEle name={"MainMenuLaunchPad"}>
+              <RoundBtn
+                disabled={false}
+                onClick={handleLaunchPadClick}
+                icon={<FlightTakeoff />}
+                short={tr("Welcome.Short.LaunchPad")}
+              />
+            </ShiftEle>
+          </>
+        </ShiftEle>
+      </Box>
+      <Box sx={{ marginTop: "10%" }}>
+        <SpecialKnowledge />
+      </Box>
+    </Box>
+  );
+}
+
+function detectLastLaunch(
+  setLastGameProfile: React.Dispatch<
+    React.SetStateAction<SimplifiedCoreInfo | undefined>
+  >,
+  setLastGameAvailable: React.Dispatch<React.SetStateAction<boolean>>
+) {
+  return () => {
     void (async () => {
       const l = localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY);
       if (l) {
@@ -75,120 +151,71 @@ export function Welcome(): JSX.Element {
         }
       }
     })();
-  }, []);
-
-  return (
-    <Box
-      sx={{
-        textAlign: "center",
-        marginTop: "8%",
-      }}
-      className={classes.root}
-    >
-      <br />
-      <Typography
-        color={"primary"}
-        variant={"h6"}
-        className={classes.firstText}
-        gutterBottom
-      >
-        {randsl("Welcome.Suggest.Part1")}
-      </Typography>
-      <br />
-      <Box
-        onClick={() => {
-          setRefresh(!refreshBit);
-        }}
-      >
-        <Typography
-          color={"secondary"}
-          className={classes.secondText}
-          gutterBottom
-        >
-          <b
-            style={{
-              color: "primary.main",
-              fontSize: "larger",
-            }}
-          >
-            {"> "}
-          </b>
-          {tip === null ? (
-            <>
-              {randsl("Welcome.TipName")}
-              {randsl("Welcome.Tips")}
-            </>
-          ) : (
-            tip
-          )}
-
-          <b
-            style={{
-              color: "primary.main",
-              fontSize: "larger",
-            }}
-          >
-            {" <"}
-          </b>
-        </Typography>
-      </Box>
-      <br />
-      <Box
-        sx={{
-          textAlign: "center",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <ShiftEle name={"MainMenuQuickAccess"}>
-          <>
-            <ShiftEle name={"MainMenuInstallCore"}>
-              <RoundBtn
-                disabled={false}
-                onClick={() => {
-                  jumpTo("/InstallCore");
-                  triggerSetPage("InstallCore");
-                }}
-                icon={<GetApp />}
-                short={tr("Welcome.Short.Install")}
-              />
-            </ShiftEle>
-            <RoundBtn
-              disabled={!lastGameAvailable}
-              onClick={() => {
-                const hash = objectHash(lastGameProfile || {});
-                markUsed(hash);
-                markTime(hash);
-                jumpTo(
-                  localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ||
-                    "/ReadyToLaunch/undefined/undefined"
-                );
-                triggerSetPage("ReadyToLaunch");
-              }}
-              highlight
-              icon={<History />}
-              short={tr("Welcome.Short.LastLaunch")}
-            />
-            <ShiftEle name={"MainMenuLaunchPad"}>
-              <RoundBtn
-                disabled={false}
-                onClick={() => {
-                  jumpTo("/LaunchPad");
-                  triggerSetPage("LaunchPad");
-                }}
-                icon={<FlightTakeoff />}
-                short={tr("Welcome.Short.LaunchPad")}
-              />
-            </ShiftEle>
-          </>
-        </ShiftEle>
-      </Box>
-      <Box sx={{ marginTop: "10%" }}>
-        <SpecialKnowledge />
-      </Box>
-    </Box>
-  );
+  };
 }
+
+function subscribeEcho(
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>,
+  setTip: React.Dispatch<React.SetStateAction<string | null>>
+) {
+  return () => {
+    const i = setInterval(() => {
+      setRefresh((o) => !o);
+      if (getBoolean("features.echo")) {
+        const echos = getEchos();
+        if (Math.random() > 0.6) {
+          if (echos.length > 0) {
+            setTip(
+              tr(
+                "Echo.Format",
+                `Text=${echos[Math.floor(Math.random() * echos.length)]}`
+              )
+            );
+            return;
+          }
+        }
+      }
+      setTip(null);
+    }, 5000);
+    return () => {
+      clearInterval(i);
+    };
+  };
+}
+
+function handleInstallCoreClick() {
+  jumpTo("/InstallCore");
+  triggerSetPage("InstallCore");
+}
+
+function handleLaunchPadClick() {
+  jumpTo("/LaunchPad");
+  triggerSetPage("LaunchPad");
+}
+
+function handleLastLaunchClickFactory(
+  lastGameProfile: SimplifiedCoreInfo | undefined
+) {
+  return () => {
+    const hash = objectHash(lastGameProfile || {});
+    markUsed(hash);
+    markTime(hash);
+    jumpTo(
+      localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ||
+        "/ReadyToLaunch/undefined/undefined"
+    );
+    triggerSetPage("ReadyToLaunch");
+  };
+}
+
+// -------- RoundBtn --------
+
+const btnSX = {
+  display: "inline",
+  marginLeft: "0.5rem",
+};
+
+const shortSX = { marginLeft: "0.3125rem" };
 
 function RoundBtn(props: {
   disabled: boolean;
@@ -198,12 +225,7 @@ function RoundBtn(props: {
   highlight?: boolean;
 }): JSX.Element {
   return (
-    <Box
-      sx={{
-        display: "inline",
-        marginLeft: "0.5rem",
-      }}
-    >
+    <Box sx={btnSX}>
       <Fab
         variant={"extended"}
         size={"medium"}
@@ -212,18 +234,77 @@ function RoundBtn(props: {
         onClick={props.onClick}
       >
         {props.icon}
-        {<span style={{ marginLeft: "0.3125rem" }}>{props.short}</span>}
+        {<span style={shortSX}>{props.short}</span>}
       </Fab>
     </Box>
   );
 }
+
+// -------- Wiki --------
+
+const wikiSX: React.CSSProperties = {
+  fontSize: "small",
+  maxWidth: "80%",
+  marginLeft: "0.75rem",
+  textAlign: "left",
+};
+
+const wikiBoxSX = {
+  color: "primary.main",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  lineBreak: "auto",
+  overflow: "hidden",
+  maxWidth: "90%",
+  marginLeft: "5%",
+};
+
+const wikiLeftSX = { fontSize: "x-large", marginRight: "0.75rem" };
+
+const wikiSepSX = { fontSize: "xxx-large" };
 
 export function SpecialKnowledge(): JSX.Element {
   const [currentItem, setCurrentItem] = useState<string>(
     randsl("Welcome.Knowledges")
   );
   const timer = useRef<NodeJS.Timeout>();
-  useEffect(() => {
+
+  useEffect(updateMiniWiki(timer, setCurrentItem), []);
+
+  if (!getBoolean("features.miniwiki")) {
+    return <></>;
+  }
+  const [a, b] = currentItem.split("|");
+  return (
+    <Box sx={wikiBoxSX} onClick={switchWikiFactory(timer, setCurrentItem)}>
+      <span style={wikiLeftSX} dangerouslySetInnerHTML={{ __html: a }} />
+      <span style={wikiSepSX}>|</span>
+      <span style={wikiSX} dangerouslySetInnerHTML={{ __html: b }} />
+    </Box>
+  );
+}
+
+function switchWikiFactory(
+  timer: React.MutableRefObject<NodeJS.Timer | undefined>,
+  setCurrentItem: React.Dispatch<React.SetStateAction<string>>
+) {
+  return () => {
+    setCurrentItem(randsl("Welcome.Knowledges"));
+    if (timer.current) {
+      clearInterval(timer.current);
+    }
+    timer.current = setInterval(() => {
+      setCurrentItem(randsl("Welcome.Knowledges"));
+    }, 10000);
+  };
+}
+
+function updateMiniWiki(
+  timer: React.MutableRefObject<NodeJS.Timer | undefined>,
+  setCurrentItem: React.Dispatch<React.SetStateAction<string>>
+) {
+  return () => {
     timer.current = setInterval(() => {
       setCurrentItem(randsl("Welcome.Knowledges"));
     }, 10000);
@@ -232,47 +313,5 @@ export function SpecialKnowledge(): JSX.Element {
         clearInterval(timer.current);
       }
     };
-  }, []);
-  if (!getBoolean("features.miniwiki")) {
-    return <></>;
-  }
-  const [a, b] = currentItem.split("|");
-  return (
-    <Box
-      sx={{
-        color: "primary.main",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        lineBreak: "auto",
-        overflow: "hidden",
-        maxWidth: "90%",
-        marginLeft: "5%",
-      }}
-      onClick={() => {
-        setCurrentItem(randsl("Welcome.Knowledges"));
-        if (timer.current) {
-          clearInterval(timer.current);
-        }
-        timer.current = setInterval(() => {
-          setCurrentItem(randsl("Welcome.Knowledges"));
-        }, 10000);
-      }}
-    >
-      <span
-        style={{ fontSize: "x-large", marginRight: "0.75rem" }}
-        dangerouslySetInnerHTML={{ __html: a }}
-      />
-      <span style={{ fontSize: "xxx-large" }}>|</span>
-      <span
-        style={{
-          fontSize: "small",
-          maxWidth: "80%",
-          marginLeft: "0.75rem",
-          textAlign: "left",
-        }}
-        dangerouslySetInnerHTML={{ __html: b }}
-      />
-    </Box>
-  );
+  };
 }

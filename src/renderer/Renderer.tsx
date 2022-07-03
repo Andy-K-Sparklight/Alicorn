@@ -4,7 +4,7 @@ import { ipcRenderer, shell } from "electron";
 import { emptyDir } from "fs-extra";
 import path from "path";
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 import pkg from "../../package.json";
 import { reloadAccounts } from "../modules/auth/AccountUtil";
@@ -161,7 +161,11 @@ try {
     printScreen("Flushing theme colors...");
     flushColors();
     try {
-      ReactDOM.render(<RendererBootstrap />, document.getElementById("root"));
+      const r = document.getElementById("root");
+      if (r) {
+        const root = createRoot(r);
+        root.render(<RendererBootstrap />);
+      }
     } catch (e) {
       printScreen("ERR! " + String(e));
       throw e;

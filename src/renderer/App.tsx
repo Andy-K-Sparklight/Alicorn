@@ -27,6 +27,7 @@ import {
   Box,
   Button,
   Chip,
+  ClassNameMap,
   Container,
   Dialog,
   DialogActions,
@@ -141,7 +142,7 @@ const useStyles = makeStyles((theme: AlicornTheme) => ({
 export function App(): JSX.Element {
   const classes = useStyles();
   const [page, setPage] = useState(getString("startup-page.name", "Tutor"));
-  const [openNotice, setNoticeOpen] = useState(false);
+  const [openErr, setErrOpen] = useState(false);
   const [openWarn, setWarnOpen] = useState(false);
   const [openChangePageWarn, setOpenChangePageWarn] = useState(false);
   const [pageTarget, setPageTarget] = useState("");
@@ -153,51 +154,163 @@ export function App(): JSX.Element {
   const [openInfo, setInfoOpen] = useState(false);
   const [openSucc, setSuccOpen] = useState(false);
   const [succ, setSucc] = useState("");
-  const [refreshBit, setRefreshBit] = useState(false);
+  const [_refreshBit, setRefreshBit] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [openTips, setOpenTips] = useState(
-    getBoolean("features.tips-of-today")
-  );
   const sessionID = useRef(0);
   const clearSnacks = () => {
     setInfoOpen(false);
     setSuccOpen(false);
     setWarnOpen(false);
-    setNoticeOpen(false);
+    setErrOpen(false);
     sessionID.current++;
   };
-  useEffect(() => {
-    if (window.location.hash === "#/") {
-      jumpTo(getString("startup-page.url", "/Welcome"));
-      triggerSetPage(getString("startup-page.name", "Welcome"));
-    }
-  }, [window.location.hash]);
-  useEffect(() => {
-    if (getBoolean("interactive.assistant?")) {
-      if (page.length > 0 && !isInstBusy()) {
-        if (localStorage.getItem("Instruction.Read." + page) !== "1") {
-          const k = `Instruction.${page}.0`;
-          if (tr(k) !== k) {
-            startInst(page);
-            void (async (p) => {
-              await waitInstDone();
-              localStorage.setItem("Instruction.Read." + p, "1");
-            })(page);
-          }
-        }
+  useEffect(gotoMainIfEmpty, [window.location.hash]);
+  useEffect(popupInstruction(page), [page]);
+  useEffect(bindRefreshListener(setRefreshBit), []);
+  useEffect(
+    bindChangePageWarn(
+      setOpenChangePageWarn,
+      setHaveHistory,
+      setJumpPageTarget,
+      setPageTarget
+    ),
+    []
+  );
+  useEffect(bindChangePage(setPageTarget, setPage), []);
+  useEffect(answerOnQuit, []);
+  useEffect(timelySave, []);
+  useEffect(
+    bindMsgTips(
+      setErr,
+      setWarn,
+      setInfo,
+      setSucc,
+      setErrOpen,
+      setWarnOpen,
+      setInfoOpen,
+      setSuccOpen,
+      clearSnacks
+    ),
+    []
+  );
+
+  clearBootStage();
+
+  return (
+    <Box
+      className={classes.root}
+      onDrop={handleDrop}
+      onDragOver={(e) => {
+        e.preventDefault();
+      }}
+      onDragEnter={(e) => {
+        e.dataTransfer.dropEffect = "copy";
+      }}
+    >
+      <AppTopBar page={page} setOpenDrawer={setOpenDrawer} classes={classes} />
+      <Box className={classes.content + " yggdrasil_droppable"} id={"app_main"}>
+        <>
+          <Routes />
+          <Instruction />
+        </>
+      </Box>
+      <PagesDrawer
+        open={openDrawer}
+        onClose={() => {
+          setOpenDrawer(false);
+        }}
+      />
+      <YNDialog2
+        onClose={() => {
+          setOpenChangePageWarn(false);
+        }}
+        open={openChangePageWarn}
+        onAccept={() => {
+          setChangePageWarn(false);
+          jumpTo(jumpPageTarget, haveHistory);
+          triggerSetPage(pageTarget, haveHistory);
+        }}
+        title={tr("System.JumpPageWarn.Title")}
+        content={tr("System.JumpPageWarn.Description")}
+        yes={tr("System.JumpPageWarn.Yes")}
+        no={tr("System.JumpPageWarn.No")}
+      />
+      <TipsOfToday />
+      <Echo />
+      <Snackbar
+        open={openErr}
+        autoHideDuration={10000}
+        onClose={handleSnackCloseFactory(sessionID, setErrOpen)}
+      >
+        <Alert severity={"error"}>{err}</Alert>
+      </Snackbar>
+      <Snackbar
+        open={openSucc}
+        autoHideDuration={5000}
+        onClose={handleSnackCloseFactory(sessionID, setSuccOpen)}
+      >
+        <Alert severity={"success"}>{succ}</Alert>
+      </Snackbar>
+      <Snackbar
+        open={openWarn}
+        autoHideDuration={8000}
+        onClose={handleSnackCloseFactory(sessionID, setWarnOpen)}
+      >
+        <Alert severity={"warning"}>{warn}</Alert>
+      </Snackbar>
+      <Snackbar
+        open={openInfo}
+        autoHideDuration={5000}
+        onClose={handleSnackCloseFactory(sessionID, setInfoOpen)}
+      >
+        <Alert severity={"info"}>{info}</Alert>
+      </Snackbar>
+    </Box>
+  );
+}
+
+function timelySave() {
+  const id = setInterval(async () => {
+    await intervalSaveData();
+  }, 300000);
+  return () => {
+    clearInterval(id);
+  };
+}
+
+function bindChangePage(
+  setPageTarget: React.Dispatch<React.SetStateAction<string>>,
+  setPage: React.Dispatch<React.SetStateAction<string>>
+) {
+  return () => {
+    const f = (e: Event) => {
+      // @ts-ignore
+      if (window[CHANGE_PAGE_WARN]) {
+        setPageTarget(String(safeGet(e, ["detail"], "Welcome")));
+        return;
       }
-    }
-  }, [page]);
-  useEffect(() => {
-    const fun = (_e: Event) => {
-      setRefreshBit(!refreshBit);
+      setPage(String(safeGet(e, ["detail"], "Welcome")));
     };
-    window.addEventListener("refreshApp", fun);
+    document.addEventListener("setPage", f);
     return () => {
-      window.removeEventListener("refreshApp", fun);
+      document.removeEventListener("setPage", f);
     };
+  };
+}
+
+function answerOnQuit() {
+  ipcRenderer.once("YouAreGoingToBeKilled", () => {
+    void exitApp();
   });
-  useEffect(() => {
+}
+
+function bindChangePageWarn(
+  setOpenChangePageWarn: React.Dispatch<React.SetStateAction<boolean>>,
+  setHaveHistory: React.Dispatch<React.SetStateAction<boolean>>,
+  setJumpPageTarget: React.Dispatch<React.SetStateAction<string>>,
+  setPageTarget: React.Dispatch<React.SetStateAction<string>>
+) {
+  return () => {
     const f1 = (e: Event) => {
       setOpenChangePageWarn(true);
       const s = safeGet(e, ["detail"], {});
@@ -217,39 +330,107 @@ export function App(): JSX.Element {
       window.removeEventListener("changePageWarn", f1);
       window.removeEventListener("changePageWarnTitle", f);
     };
-  }, []);
-  useEffect(() => {
-    const f = (e: Event) => {
-      // @ts-ignore
-      if (window[CHANGE_PAGE_WARN]) {
-        setPageTarget(String(safeGet(e, ["detail"], "Welcome")));
-        return;
+  };
+}
+
+function bindRefreshListener(
+  setRefreshBit: React.Dispatch<React.SetStateAction<boolean>>
+) {
+  return () => {
+    const fun = (_e: Event) => {
+      setRefreshBit((o) => !o);
+    };
+    window.addEventListener("refreshApp", fun);
+    return () => {
+      window.removeEventListener("refreshApp", fun);
+    };
+  };
+}
+
+function popupInstruction(page: string) {
+  return () => {
+    if (getBoolean("interactive.assistant?")) {
+      if (page.length > 0 && !isInstBusy()) {
+        if (localStorage.getItem("Instruction.Read." + page) !== "1") {
+          const k = `Instruction.${page}.0`;
+          if (tr(k) !== k) {
+            startInst(page);
+            void (async (p) => {
+              await waitInstDone();
+              localStorage.setItem("Instruction.Read." + p, "1");
+            })(page);
+          }
+        }
       }
-      setPage(String(safeGet(e, ["detail"], "Welcome")));
-    };
-    document.addEventListener("setPage", f);
-    return () => {
-      document.removeEventListener("setPage", f);
-    };
-  }, []);
-  useEffect(() => {
-    ipcRenderer.once("YouAreGoingToBeKilled", () => {
-      void exitApp();
-    });
-  }, []);
-  useEffect(() => {
-    const id = setInterval(async () => {
-      await intervalSaveData();
-    }, 300000);
-    return () => {
-      clearInterval(id);
-    };
-  }, []);
-  useEffect(() => {
+    }
+  };
+}
+
+function handleSnackCloseFactory(
+  sessionID: React.MutableRefObject<number>,
+  op: React.Dispatch<React.SetStateAction<boolean>>
+) {
+  const s = sessionID.current;
+  return () => {
+    if (sessionID.current === s) {
+      op(false);
+    }
+  };
+}
+
+function clearBootStage() {
+  const bs = document.getElementById("boot_stages");
+  if (bs) {
+    bs.style.display = "none";
+  }
+  // @ts-ignore
+  window.clearLogScreen();
+}
+
+function handleDrop(e: React.DragEvent<HTMLElement>) {
+  e.preventDefault();
+  const data = e.dataTransfer.getData("text/plain");
+  if (data.toString().includes("authlib-injector")) {
+    const server = data
+      .toString()
+      .split("authlib-injector:yggdrasil-server:")[1];
+
+    jumpTo("/AccountManager/1/" + encodeURIComponent(server));
+    triggerSetPage("AccountManager");
+
+    window.dispatchEvent(
+      new CustomEvent("YggdrasilAccountInfoDropped", {
+        detail: decodeURIComponent(server),
+      })
+    );
+    return;
+  }
+  void handleDnD(e);
+}
+
+function gotoMainIfEmpty() {
+  if (window.location.hash === "#/") {
+    jumpTo(getString("startup-page.url", "/Welcome"));
+    triggerSetPage(getString("startup-page.name", "Welcome"));
+  }
+}
+
+function bindMsgTips(
+  setErr: React.Dispatch<React.SetStateAction<string>>,
+  setWarn: React.Dispatch<React.SetStateAction<string>>,
+  setInfo: React.Dispatch<React.SetStateAction<string>>,
+  setSucc: React.Dispatch<React.SetStateAction<string>>,
+  setErrOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  setWarnOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  setInfoOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  setSuccOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  clearSnacks: () => void
+) {
+  return () => {
     const f3 = (e: Event) => {
       setErr(String(safeGet(e, ["detail"], "Unknown Error")));
       clearSnacks();
-      setNoticeOpen(true);
+      setErrOpen(true);
     };
     window.addEventListener("sysError", f3);
     const f1 = (e: Event) => {
@@ -278,403 +459,274 @@ export function App(): JSX.Element {
       window.removeEventListener("sysInfo", f0);
       window.removeEventListener("sysWarn", f1);
     };
-  }, []);
+  };
+}
 
+// -------- Routes --------
+
+function Routes(): JSX.Element {
   return (
-    <Box
-      className={classes.root}
-      onDrop={(e) => {
-        e.preventDefault();
-        const data = e.dataTransfer.getData("text/plain");
-        if (data.toString().includes("authlib-injector")) {
-          const server = data
-            .toString()
-            .split("authlib-injector:yggdrasil-server:")[1];
-
-          jumpTo("/AccountManager/1/" + encodeURIComponent(server));
-          triggerSetPage("AccountManager");
-
-          window.dispatchEvent(
-            new CustomEvent("YggdrasilAccountInfoDropped", {
-              detail: decodeURIComponent(server),
-            })
-          );
-          return;
+    <Container>
+      <Route path={"/LaunchPad/:server?"} component={LaunchPad} />
+      <Route path={"/InstallCore"} component={InstallCore} />
+      <Route
+        path={"/ReadyToLaunch/:container/:id/:server?"}
+        component={ReadyToLaunch}
+      />
+      <Route path={"/Version"} component={VersionView} />
+      <Route
+        path={"/ContainerManager/:modpack?/:togo?"}
+        component={ContainerManager}
+      />
+      <Route
+        path={"/AccountManager/:adding?/:server?"}
+        component={YggdrasilAccountManager}
+      />
+      <Route path={"/Cadance"} component={CadanceControlPanel} />
+      <Route path={"/Boticorn"} component={Boticorn} />
+      <Route path={"/JavaSelector"} component={JavaSelector} />
+      <Route path={"/Options"} component={OptionsPage} />
+      <Route path={"/DMCenter"} component={DMCenter} />
+      <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
+      <Route
+        path={
+          "/PffFront/:container/:version/:loader/:root/:name?/:autostart?" // root: Ask Pff to Re-Assign mods root as this. Pass core id will be fine. Only for some ancient isolated cores. 0 to disable.
         }
-        void handleDnD(e);
-      }}
-      onDragOver={(e) => {
-        e.preventDefault();
-      }}
-      onDragEnter={(e) => {
-        e.dataTransfer.dropEffect = "copy";
-      }}
-    >
-      <AppBar enableColorOnDark>
-        <Toolbar>
-          <IconButton
-            sx={{
-              marginRight: "0.3rem",
-            }}
-            color={"inherit"}
-            onClick={() => {
-              setOpenDrawer(true);
-            }}
-          >
-            <Menu />
-          </IconButton>
-          <Box className={classes.title}>
-            <Typography
-              variant={"h6"}
-              className={
-                getString("frame.drag-impl") === "Webkit" ? " window-drag" : ""
-              }
-              onMouseDown={
-                getString("frame.drag-impl") === "Delta"
-                  ? onMouseDown
-                  : undefined
-              }
-            >
-              {tr(page)}
-            </Typography>
-          </Box>
-          <Box
-            style={
-              window.location.hash.includes("QuickSetup")
-                ? { display: "none" }
-                : {}
+        component={PffFront}
+      />
+      <Route path={"/Welcome"} component={Welcome} />
+      <Route path={"/ServerList"} component={ServerList} />
+      <Route path={"/UtilitiesIndex"} component={UtilitiesIndex} />
+      <Route path={"/Utilities/NetCheck"} component={NetCheck} />
+      <Route path={"/Utilities/CutieConnect"} component={CutieConnet} />
+      <Route path={"/Utilities/BuildUp"} component={BuildUp} />
+      <Route path={"/Utilities/PffVisual"} component={PffVisual} />
+      <Route
+        path={"/Utilities/CarouselBoutique"}
+        component={CarouselBoutique}
+      />
+      <Route path={"/Statistics"} component={Statistics} />
+      <Route path={"/TheEndingOfTheEnd"} component={TheEndingOfTheEnd} />
+    </Container>
+  );
+}
+
+// -------- AppBar --------
+function AppTopBar(props: {
+  page: string;
+  classes: ClassNameMap<string>;
+  setOpenDrawer: (o: boolean) => void;
+}): JSX.Element {
+  const classes = props.classes;
+  return (
+    <AppBar enableColorOnDark>
+      <Toolbar>
+        <IconButton
+          sx={{
+            marginRight: "0.3rem",
+          }}
+          color={"inherit"}
+          onClick={() => {
+            props.setOpenDrawer(true);
+          }}
+        >
+          <Menu />
+        </IconButton>
+        <Box className={classes.title}>
+          <Typography
+            variant={"h6"}
+            className={
+              getString("frame.drag-impl") === "Webkit" ? " window-drag" : ""
+            }
+            onMouseDown={
+              getString("frame.drag-impl") === "Delta" ? onMouseDown : undefined
             }
           >
-            {canGoBack() ? (
-              <Tooltip
-                title={
-                  <Typography className={"smtxt"}>
-                    {tr("MainMenu.GoBack")}
-                  </Typography>
-                }
+            {tr(props.page)}
+          </Typography>
+        </Box>
+        <Box
+          style={
+            window.location.hash.includes("QuickSetup")
+              ? { display: "none" }
+              : {}
+          }
+        >
+          {canGoBack() ? (
+            <Tooltip
+              title={
+                <Typography className={"smtxt"}>
+                  {tr("MainMenu.GoBack")}
+                </Typography>
+              }
+            >
+              <IconButton
+                color={"inherit"}
+                className={classes.floatButton}
+                onClick={() => {
+                  goBack();
+                }}
               >
-                <IconButton
-                  color={"inherit"}
-                  className={classes.floatButton}
-                  onClick={() => {
-                    goBack();
-                  }}
-                >
-                  <ArrowBack />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              ""
-            )}
-            {getBoolean("dev") ? (
-              <Tooltip
-                title={
-                  <Typography className={"smtxt"}>
-                    {tr("MainMenu.Reload")}
-                  </Typography>
-                }
+                <ArrowBack />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            ""
+          )}
+          {getBoolean("dev") ? (
+            <Tooltip
+              title={
+                <Typography className={"smtxt"}>
+                  {tr("MainMenu.Reload")}
+                </Typography>
+              }
+            >
+              <IconButton
+                color={"inherit"}
+                className={classes.floatButton}
+                onClick={() => {
+                  remoteHideWindow();
+                  terminateCadanceProc();
+                  waitUpdateFinished(() => {
+                    intervalSaveData()
+                      .then(() => {
+                        ipcRenderer.send("readyToClose");
+                        ipcRenderer.send("reload");
+                      })
+                      .catch(() => {});
+                  });
+                }}
               >
-                <IconButton
-                  color={"inherit"}
-                  className={classes.floatButton}
-                  onClick={() => {
-                    remoteHideWindow();
-                    terminateCadanceProc();
-                    waitUpdateFinished(() => {
-                      intervalSaveData()
-                        .then(() => {
-                          ipcRenderer.send("readyToClose");
-                          ipcRenderer.send("reload");
-                        })
-                        .catch(() => {});
-                    });
-                  }}
-                >
-                  <Refresh />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              ""
-            )}
-            {getBoolean("dev") ? (
-              <Tooltip
-                title={
-                  <Typography className={"smtxt"}>
-                    {tr("MainMenu.OpenDevToolsFormal")}
-                  </Typography>
-                }
+                <Refresh />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            ""
+          )}
+          {getBoolean("dev") ? (
+            <Tooltip
+              title={
+                <Typography className={"smtxt"}>
+                  {tr("MainMenu.OpenDevToolsFormal")}
+                </Typography>
+              }
+            >
+              <IconButton
+                color={"inherit"}
+                className={classes.floatButton}
+                onClick={() => {
+                  remoteOpenDevTools();
+                }}
               >
-                <IconButton
-                  color={"inherit"}
-                  className={classes.floatButton}
-                  onClick={() => {
-                    remoteOpenDevTools();
-                  }}
-                >
-                  <Code />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              ""
-            )}
+                <Code />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            ""
+          )}
 
-            <Tooltip
-              title={
-                <Typography className={"smtxt"}>
-                  {tr("MainMenu.UtilitiesIndex")}
-                </Typography>
-              }
-            >
-              <IconButton
-                color={"inherit"}
-                className={classes.floatButton}
-                onClick={() => {
-                  jumpTo("/UtilitiesIndex");
-                  triggerSetPage("UtilitiesIndex");
-                }}
-              >
-                <Handyman />
-              </IconButton>
-            </Tooltip>
-            <Tooltip
-              title={
-                <Typography className={"smtxt"}>
-                  {tr("MainMenu.QuickManageAccount")}
-                </Typography>
-              }
-            >
-              <IconButton
-                className={classes.floatButton}
-                onClick={() => {
-                  jumpTo("/AccountManager");
-                  triggerSetPage("AccountManager");
-                }}
-                color={"inherit"}
-              >
-                <ManageAccounts />
-              </IconButton>
-            </Tooltip>
-            <Tooltip
-              title={
-                <Typography className={"smtxt"}>
-                  {tr("MainMenu.QuickManageContainer")}
-                </Typography>
-              }
-            >
-              <IconButton
-                className={classes.floatButton}
-                onClick={() => {
-                  jumpTo("/ContainerManager");
-                  triggerSetPage("ContainerManager");
-                }}
-                color={"inherit"}
-              >
-                <AllInbox />
-              </IconButton>
-            </Tooltip>
-            <Tooltip
-              title={
-                <Typography className={"smtxt"}>
-                  {tr("MainMenu.QuickInstallCore")}
-                </Typography>
-              }
-            >
-              <IconButton
-                className={classes.floatButton}
-                onClick={() => {
-                  jumpTo("/InstallCore");
-                  triggerSetPage("InstallCore");
-                }}
-                color={"inherit"}
-              >
-                <GetApp />
-              </IconButton>
-            </Tooltip>
-            <Fab
-              color={"secondary"}
-              variant={"extended"}
-              size={"medium"}
-              className={classes.floatMore}
+          <Tooltip
+            title={
+              <Typography className={"smtxt"}>
+                {tr("MainMenu.UtilitiesIndex")}
+              </Typography>
+            }
+          >
+            <IconButton
+              color={"inherit"}
+              className={classes.floatButton}
               onClick={() => {
-                jumpTo("/LaunchPad");
-                triggerSetPage("LaunchPad");
+                jumpTo("/UtilitiesIndex");
+                triggerSetPage("UtilitiesIndex");
               }}
             >
-              <FlightTakeoff className={classes.buttonText} />
-              {tr("LaunchPad")}
-            </Fab>
-            <Tooltip
-              title={
-                <Typography className={"smtxt"}>
-                  {tr("MainMenu.Exit")}
-                </Typography>
-              }
+              <Handyman />
+            </IconButton>
+          </Tooltip>
+          <Tooltip
+            title={
+              <Typography className={"smtxt"}>
+                {tr("MainMenu.QuickManageAccount")}
+              </Typography>
+            }
+          >
+            <IconButton
+              className={classes.floatButton}
+              onClick={() => {
+                jumpTo("/AccountManager");
+                triggerSetPage("AccountManager");
+              }}
+              color={"inherit"}
             >
-              <IconButton
-                id={"hotbar_exit"}
-                className={classes.exitButton}
-                onClick={exitApp}
-                color={"inherit"}
-              >
-                <PowerSettingsNew />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <Box className={classes.content + " yggdrasil_droppable"} id={"app_main"}>
-        {(() => {
-          const bs = document.getElementById("boot_stages");
-          if (bs) {
-            bs.style.display = "none";
-          }
-          // @ts-ignore
-          window.clearLogScreen();
-        })()}
-        <Instruction />
-        <Container>
-          <Route path={"/LaunchPad/:server?"} component={LaunchPad} />
-          <Route path={"/InstallCore"} component={InstallCore} />
-          <Route
-            path={"/ReadyToLaunch/:container/:id/:server?"}
-            component={ReadyToLaunch}
-          />
-          <Route path={"/Version"} component={VersionView} />
-          <Route
-            path={"/ContainerManager/:modpack?/:togo?"}
-            component={ContainerManager}
-          />
-          <Route
-            path={"/AccountManager/:adding?/:server?"}
-            component={YggdrasilAccountManager}
-          />
-          <Route path={"/Cadance"} component={CadanceControlPanel} />
-          <Route path={"/Boticorn"} component={Boticorn} />
-          <Route path={"/JavaSelector"} component={JavaSelector} />
-          <Route path={"/Options"} component={OptionsPage} />
-          <Route path={"/DMCenter"} component={DMCenter} />
-          <Route path={"/CrashReportDisplay"} component={CrashReportDisplay} />
-          <Route
-            path={
-              "/PffFront/:container/:version/:loader/:root/:name?/:autostart?" // root: Ask Pff to Re-Assign mods root as this. Pass core id will be fine. Only for some ancient isolated cores. 0 to disable.
+              <ManageAccounts />
+            </IconButton>
+          </Tooltip>
+          <Tooltip
+            title={
+              <Typography className={"smtxt"}>
+                {tr("MainMenu.QuickManageContainer")}
+              </Typography>
             }
-            component={PffFront}
-          />
-          <Route path={"/Welcome"} component={Welcome} />
-          <Route path={"/ServerList"} component={ServerList} />
-          <Route path={"/UtilitiesIndex"} component={UtilitiesIndex} />
-          <Route path={"/Utilities/NetCheck"} component={NetCheck} />
-          <Route path={"/Utilities/CutieConnect"} component={CutieConnet} />
-          <Route path={"/Utilities/BuildUp"} component={BuildUp} />
-          <Route path={"/Utilities/PffVisual"} component={PffVisual} />
-          <Route
-            path={"/Utilities/CarouselBoutique"}
-            component={CarouselBoutique}
-          />
-          <Route path={"/Statistics"} component={Statistics} />
-          <Route path={"/TheEndingOfTheEnd"} component={TheEndingOfTheEnd} />
-        </Container>
-      </Box>
-      <PagesDrawer
-        open={openDrawer}
-        onClose={() => {
-          setOpenDrawer(false);
-        }}
-      />
-      <YNDialog2
-        onClose={() => {
-          setOpenChangePageWarn(false);
-        }}
-        open={openChangePageWarn}
-        onAccept={() => {
-          setChangePageWarn(false);
-          jumpTo(jumpPageTarget, haveHistory);
-          triggerSetPage(pageTarget, haveHistory);
-        }}
-        title={tr("System.JumpPageWarn.Title")}
-        content={tr("System.JumpPageWarn.Description")}
-        yes={tr("System.JumpPageWarn.Yes")}
-        no={tr("System.JumpPageWarn.No")}
-      />
-      <TipsOfToday
-        onClose={() => {
-          setOpenTips(false);
-        }}
-        open={openTips}
-      />
-      <Echo />
-      <Snackbar
-        open={openNotice}
-        sx={{
-          width: "90%",
-        }}
-        autoHideDuration={5000}
-        onClose={(() => {
-          const s = sessionID.current;
-          return () => {
-            if (sessionID.current === s) {
-              setNoticeOpen(false);
+          >
+            <IconButton
+              className={classes.floatButton}
+              onClick={() => {
+                jumpTo("/ContainerManager");
+                triggerSetPage("ContainerManager");
+              }}
+              color={"inherit"}
+            >
+              <AllInbox />
+            </IconButton>
+          </Tooltip>
+          <Tooltip
+            title={
+              <Typography className={"smtxt"}>
+                {tr("MainMenu.QuickInstallCore")}
+              </Typography>
             }
-          };
-        })()}
-      >
-        <Alert severity={"error"}>{err}</Alert>
-      </Snackbar>
-      <Snackbar
-        open={openSucc}
-        sx={{
-          width: "90%",
-          zIndex: 999,
-        }}
-        autoHideDuration={5000}
-        onClose={(() => {
-          const s = sessionID.current;
-          return () => {
-            if (sessionID.current === s) {
-              setSuccOpen(false);
+          >
+            <IconButton
+              className={classes.floatButton}
+              onClick={() => {
+                jumpTo("/InstallCore");
+                triggerSetPage("InstallCore");
+              }}
+              color={"inherit"}
+            >
+              <GetApp />
+            </IconButton>
+          </Tooltip>
+          <Fab
+            color={"secondary"}
+            variant={"extended"}
+            size={"medium"}
+            className={classes.floatMore}
+            onClick={() => {
+              jumpTo("/LaunchPad");
+              triggerSetPage("LaunchPad");
+            }}
+          >
+            <FlightTakeoff className={classes.buttonText} />
+            {tr("LaunchPad")}
+          </Fab>
+          <Tooltip
+            title={
+              <Typography className={"smtxt"}>{tr("MainMenu.Exit")}</Typography>
             }
-          };
-        })()}
-      >
-        <Alert severity={"success"}>{succ}</Alert>
-      </Snackbar>
-      <Snackbar
-        open={openWarn}
-        sx={{
-          width: "90%",
-          zIndex: 999,
-        }}
-        autoHideDuration={5000}
-        onClose={(() => {
-          const s = sessionID.current;
-          return () => {
-            if (sessionID.current === s) {
-              setWarnOpen(false);
-            }
-          };
-        })()}
-      >
-        <Alert severity={"warning"}>{warn}</Alert>
-      </Snackbar>
-      <Snackbar
-        open={openInfo}
-        sx={{
-          width: "90%",
-          zIndex: 999,
-        }}
-        autoHideDuration={5000}
-        onClose={(() => {
-          const s = sessionID.current;
-          return () => {
-            if (sessionID.current === s) {
-              setInfoOpen(false);
-            }
-          };
-        })()}
-      >
-        <Alert severity={"info"}>{info}</Alert>
-      </Snackbar>
-    </Box>
+          >
+            <IconButton
+              id={"hotbar_exit"}
+              className={classes.exitButton}
+              onClick={exitApp}
+              color={"inherit"}
+            >
+              <PowerSettingsNew />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 }
 
