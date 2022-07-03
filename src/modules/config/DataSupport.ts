@@ -36,10 +36,13 @@ export async function saveData(
 // Hint: DO NOT use 'fs.copyFile' here!
 // 'No permission', I don't know why, but we have to do this manually
 
-export async function saveDefaultData(dfPath: string): Promise<void> {
+export async function saveDefaultData(
+  dfPath: string,
+  force?: boolean
+): Promise<void> {
   try {
     const dest = getActualDataPath(dfPath);
-    if (await isFileExist(dest)) {
+    if (!force && (await isFileExist(dest))) {
       return;
     }
     await copyFileStream(path.join(DEFAULTS_ROOT, dfPath), dest);
