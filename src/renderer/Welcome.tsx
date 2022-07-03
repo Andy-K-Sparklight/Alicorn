@@ -1,12 +1,18 @@
 import { FlightTakeoff, GetApp, History } from "@mui/icons-material";
 import { Box, Fab, Typography } from "@mui/material";
+import objectHash from "object-hash";
 import React, { useEffect, useRef, useState } from "react";
 import { getBoolean } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
-import { loadProfile } from "../modules/profile/ProfileLoader";
+import {
+  isProfileIsolated,
+  loadProfile,
+} from "../modules/profile/ProfileLoader";
+import { whatProfile } from "../modules/profile/WhatProfile";
 import { getEchos } from "../modules/selfupdate/Echo";
 import { jumpTo, triggerSetPage } from "./GoTo";
 import { ShiftEle } from "./Instruction";
+import { markTime, markUsed, SimplifiedCoreInfo } from "./LaunchPad";
 import { LAST_SUCCESSFUL_GAME_KEY } from "./ReadyToLaunch";
 import { useTextStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
@@ -16,6 +22,7 @@ export function Welcome(): JSX.Element {
   const [refreshBit, setRefresh] = useState(false);
   const [lastGameAvailable, setLastGameAvailable] = useState(false);
   const [tip, setTip] = useState<string | null>(null);
+  const [lastGameProfile, setLastGameProfile] = useState<SimplifiedCoreInfo>();
 
   useEffect(() => {
     const i = setInterval(() => {
@@ -51,7 +58,17 @@ export function Welcome(): JSX.Element {
         if (c) {
           if (i) {
             try {
-              await loadProfile(i, getContainer(c), true);
+              const ct = getContainer(c);
+              const p = await loadProfile(i, ct, true);
+              setLastGameProfile({
+                id: p.id,
+                baseVersion: p.baseVersion,
+                location: ct.id + "/" + i,
+                versionType: whatProfile(i),
+                corrupted: false,
+                container: ct.id,
+                isolated: await isProfileIsolated(ct, i),
+              });
               setLastGameAvailable(true);
             } catch {}
           }
@@ -139,6 +156,9 @@ export function Welcome(): JSX.Element {
             <RoundBtn
               disabled={!lastGameAvailable}
               onClick={() => {
+                const hash = objectHash(lastGameProfile || {});
+                markUsed(hash);
+                markTime(hash);
                 jumpTo(
                   localStorage.getItem(LAST_SUCCESSFUL_GAME_KEY) ||
                     "/ReadyToLaunch/undefined/undefined"

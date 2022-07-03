@@ -35,7 +35,7 @@ import { addStatistics } from "./Statistics";
 import { useCardStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
 
-interface SimplifiedCoreInfo {
+export interface SimplifiedCoreInfo {
   location: string;
   container: string;
   id: string;
@@ -560,7 +560,7 @@ function getMarkTime(hash: string): Date {
   return new Date(localStorage.getItem(PIN_TIME_KEY + hash) || "0");
 }
 
-function markTime(hash: string, clear = false): void {
+export function markTime(hash: string, clear = false): void {
   if (clear) {
     localStorage.removeItem(PIN_TIME_KEY + hash);
     return;
@@ -572,7 +572,7 @@ function getUsed(hash: string): number {
   return parseInt(localStorage.getItem(PIN_NUMBER_KEY + hash) || "0") || 0;
 }
 
-function markUsed(hash: string, set?: number): void {
+export function markUsed(hash: string, set?: number): void {
   if (set !== undefined) {
     localStorage.setItem(PIN_NUMBER_KEY + hash, set.toString());
     return;
