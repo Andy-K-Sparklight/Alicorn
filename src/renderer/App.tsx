@@ -53,6 +53,7 @@ import { ipcRenderer } from "electron";
 import hotkeys from "hotkeys-js";
 import React, { useEffect, useRef, useState } from "react";
 import { Route } from "react-router-dom";
+import pkg from "../../package.json";
 import { expose } from "../modules/boticorn/FTable";
 import { safeGet } from "../modules/commons/Null";
 import {
@@ -100,6 +101,7 @@ import { AlicornTheme } from "./Stylex";
 import { TheEndingOfTheEnd } from "./TheEndingOfTheEnd";
 import { TipsOfToday } from "./TipsOfToday";
 import { tr } from "./Translator";
+import { UpdateHint } from "./UpdateHint";
 import { BuildUp } from "./utilities/BuildUp";
 import { CarouselBoutique } from "./utilities/CarouselBoutique";
 import { CutieConnet } from "./utilities/CutieConnect";
@@ -178,6 +180,7 @@ export function App(): JSX.Element {
   );
   useEffect(bindChangePage(setPageTarget, setPage), []);
   useEffect(answerOnQuit, []);
+  useEffect(showUpdate, []);
   useEffect(timelySave, []);
   useEffect(
     bindMsgTips(
@@ -415,6 +418,16 @@ function gotoMainIfEmpty() {
   }
 }
 
+function showUpdate() {
+  const o = parseInt(window.localStorage.getItem("LastVersion") || "");
+  if (!isNaN(o)) {
+    if (o < pkg.updatorVersion) {
+      jumpTo("/UpdateHint");
+      triggerSetPage("UpdateHint");
+    }
+  }
+}
+
 function bindMsgTips(
   setErr: React.Dispatch<React.SetStateAction<string>>,
   setWarn: React.Dispatch<React.SetStateAction<string>>,
@@ -507,6 +520,7 @@ function Routes(): JSX.Element {
       />
       <Route path={"/Statistics"} component={Statistics} />
       <Route path={"/TheEndingOfTheEnd"} component={TheEndingOfTheEnd} />
+      <Route path={"/UpdateHint"} component={UpdateHint} />
     </Container>
   );
 }
@@ -801,6 +815,7 @@ export function remoteHideWindow(): void {
 
 function remoteCloseWindow(): void {
   console.log("Closing!");
+  window.localStorage.setItem("LastVersion", pkg.updatorVersion.toString());
   terminateCadanceProc();
   intervalSaveData()
     .then(() => {
