@@ -1,7 +1,7 @@
 import { load } from "cheerio";
 import os from "os";
 
-const JDK_BASE_URL = "https://mirror.tuna.tsinghua.edu.cn/AdoptOpenJDK/";
+const JDK_BASE_URL = "https://mirror.tuna.tsinghua.edu.cn/Adoptium/";
 const OLD_JAVA = "8";
 const NEW_JAVA = "17";
 
