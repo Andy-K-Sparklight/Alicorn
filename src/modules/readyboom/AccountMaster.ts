@@ -11,15 +11,16 @@ export function setupMSAccountRefreshService(): void {
     return;
   }
   let lock = true;
-  setInterval(async () => {
+  setInterval(() => {
     if (lock) {
       return;
     }
     lock = true;
     PROM = keepMSAccountLowPriority();
-    await PROM;
-    PROM = null;
-    lock = false;
+    PROM.then(() => {
+      lock = false;
+      PROM = null;
+    }).catch(() => {});
   }, 1800000); // 30 minutes
   PROM = keepMSAccountLowPriority();
   PROM.then(() => {
@@ -53,6 +54,7 @@ function isMSAccountValid(): boolean {
 }
 
 async function keepMSAccountLowPriority(): Promise<boolean> {
+  /*
   const refreshedAt = new Date(
     localStorage.getItem(ACCOUNT_LAST_REFRESHED_KEY) || 0
   );
@@ -62,21 +64,26 @@ async function keepMSAccountLowPriority(): Promise<boolean> {
   const validTo = new Date(refreshedAt.getTime() + expires);
   if (new Date().getTime() < validTo.getTime()) {
     return true;
-  }
+  } */
+  // Above code are commented as we design it to keep, which means more refresh actions.
   const account = new MicrosoftAccount("");
   if (account.lastUsedUUID.trim().length === 0) {
     return false; // Not using MS account
   }
-  console.log("[ReadyBoom] MS account has expired! Refreshing.");
-  // Just refresh time
+  console.log("[ReadyBoom] Starting MS account flush!");
   if (!(await account.flushToken())) {
-    console.log("[ReadyBoom] Flush failed! Reauthing quietly.");
+    console.log(
+      "[ReadyBoom] Flush failed! Fine, we'll just do that during launch..."
+    );
+    return false;
+    /*
     if (!(await account.performAuth("", true))) {
       console.log("[ReadyBoom] Auth failed! Skipped this turn.");
       return false; // Failed to auth
     } else {
       console.log("[ReadyBoom] Auth successful!");
-    }
+    }*/
+    // Magic operations
   } else {
     console.log("[ReadyBoom] Token flushed successfully, finished.");
   }
