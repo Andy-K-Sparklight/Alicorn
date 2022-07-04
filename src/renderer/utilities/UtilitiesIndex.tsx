@@ -77,7 +77,7 @@ function SimpleUtil(props: {
       <Card
         color={"primary"}
         className={accClasses.acc1}
-        raised={true}
+        raised={isHover}
         sx={{ backgroundColor: "primary.main" }}
       >
         <CardContent>

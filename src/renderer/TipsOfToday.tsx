@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { ipcRenderer, shell } from "electron";
 import React, { useEffect, useState } from "react";
-import { set } from "../modules/config/ConfigSupport";
+import { getBoolean, set } from "../modules/config/ConfigSupport";
 import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
@@ -18,14 +18,12 @@ import {
 } from "./Renderer";
 import { getTip, tr } from "./Translator";
 
-export function TipsOfToday(props: {
-  open: boolean;
-  onClose: () => unknown;
-}): JSX.Element {
+export function TipsOfToday(_props: object): JSX.Element {
   const [tip, setTip] = useState(getTip());
+  const [open, setOpen] = useState(getBoolean("features.tips-of-today"));
   useEffect(() => {
     const fun = () => {
-      props.onClose();
+      setOpen(false);
     };
     window.addEventListener("closeTips", fun);
     return () => {
@@ -39,9 +37,9 @@ export function TipsOfToday(props: {
       }
     >
       <Dialog
-        open={props.open}
+        open={open}
         onClose={() => {
-          props.onClose();
+          setOpen(false);
         }}
         maxWidth={"sm"}
       >
@@ -79,7 +77,7 @@ export function TipsOfToday(props: {
             color={"primary"}
             onClick={() => {
               set("features.tips-of-today", false);
-              props.onClose();
+              setOpen(false);
             }}
           >
             {tr("TipsOfToday.Disable")}
@@ -87,7 +85,7 @@ export function TipsOfToday(props: {
           <Button
             color={"primary"}
             onClick={() => {
-              props.onClose();
+              setOpen(false);
             }}
           >
             {tr("TipsOfToday.Close")}

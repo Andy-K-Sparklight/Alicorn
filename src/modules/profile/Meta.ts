@@ -131,6 +131,20 @@ export class LibraryMeta {
         );
       }
     }
+    for (const n of ["natives-linux", "natives-windows", "natives-macos"]) {
+      if (String(obj["name"]).includes(n)) {
+        // Guess in 1.19
+        isNative = true;
+        classifiers = new ClassifiersMeta(
+          ArtifactMeta.emptyArtifactMeta(),
+          artifact, // Just set them to the same will be fine.
+          artifact,
+          artifact,
+          ArtifactMeta.emptyArtifactMeta()
+        );
+        break;
+      }
+    }
 
     if (obj["rules"] instanceof Array) {
       // Simply parse

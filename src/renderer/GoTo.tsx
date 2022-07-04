@@ -52,7 +52,7 @@ function ifLeavingConfigThenReload(): void {
   if (sessionStorage.getItem("Options.Reload") === "1") {
     sessionStorage.removeItem("Options.Reload");
     remoteHideWindow();
-  terminateCadanceProc();
+    terminateCadanceProc();
     waitUpdateFinished(() => {
       intervalSaveData()
         .then(() => {

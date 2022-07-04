@@ -7,7 +7,7 @@ export class Nide8Account extends AuthlibAccount {
   constructor(accountName: string, serverId: string) {
     super(
       accountName,
-      `https://auth2.nide8.com:233/${serverId}`,
+      `https://auth.mc-user.com:233/${serverId}`,
       AccountType.NIDE8
     );
     this.serverId = serverId;

@@ -261,7 +261,7 @@ function SingleContainerDisplay(props: {
         sx={{
           backgroundColor: props.isMounted ? "primary.main" : "primary.light",
         }}
-        raised={true}
+        raised={showBtn}
         color={"primary"}
         className={props.isMounted ? classes.card : classes.uCard}
         onMouseOver={() => {

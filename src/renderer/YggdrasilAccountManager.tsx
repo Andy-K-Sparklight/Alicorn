@@ -182,6 +182,7 @@ function SingleAccountDisplay(props: {
   const usingAccount = useRef<Account>(accountCopy);
   const [isAsking, setIsAsking] = useState(false);
   const [skinUrl, setSkinUrl] = useState("");
+  const [isActive, setActive] = useState(false);
   useEffect(() => {
     void (async () => {
       const u = await querySkinFor(props.account);
@@ -231,7 +232,13 @@ function SingleAccountDisplay(props: {
       <Card
         color={"primary"}
         className={classes.card}
-        raised={true}
+        raised={isActive}
+        onMouseOver={() => {
+          setActive(true);
+        }}
+        onMouseLeave={() => {
+          setActive(false);
+        }}
         sx={{ backgroundColor: "primary.main" }}
       >
         <CardContent>

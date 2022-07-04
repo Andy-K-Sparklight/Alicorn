@@ -64,7 +64,7 @@ export function applyMirror(url: string, mirror = mirrorMap): string {
 export async function loadMirror(): Promise<void> {
   await Promise.allSettled(
     MIRROR_FILES.map(async (f) => {
-      await saveDefaultData(f);
+      await saveDefaultData(f, true);
     })
   );
   const mf = getString("download.mirror", "none").toLowerCase().trim();
@@ -78,7 +78,7 @@ export async function loadAllMirrors(): Promise<void> {
   mirrors.push(mirrorMap); // First choice, once more
   const rets = await Promise.allSettled(
     MIRROR_FILES.map(async (f) => {
-      await saveDefaultData(f);
+      await saveDefaultData(f, true);
       return parseMap(await loadData(f)) as Map<string, string>;
     })
   );

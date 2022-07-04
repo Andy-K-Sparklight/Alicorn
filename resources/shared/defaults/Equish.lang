@@ -70,6 +70,10 @@ Utilities
 
 The Ending Of The End
 
+# UpdateHint
+
+A Brand New Me!
+
 # Cadance
 
 STT Control Panel
@@ -3474,3 +3478,7 @@ Send
 # Echo.Format
 
 {Text} -- Alicorn Echo
+
+# UpdateHint.Desc
+
+Alicorn has updated to the latest version.\n"One step closer to your victory!"\nA new adventure starts from here!\nThank you for choosing Alicorn!
