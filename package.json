@@ -24,8 +24,8 @@
     "launch-dev": "cd dist&&npx electron .",
     "launch-release": "cd dist&&cd release&&npx electron .",
     "make": "yarn clean&&yarn release-full&&yarn windows&&yarn linux&&yarn compress",
-    "github-unix": "yarn clean&&yarn release-full&&yarn linux&&yarn compress",
-    "github-windows": "yarn clean&&yarn release-full&&yarn windows&&yarn compress",
+    "github-unix": "yarn rmx&&yarn clean&&yarn release-full&&yarn linux&&yarn compress",
+    "github-windows": "yarn rmx&&yarn clean&&yarn release-full&&yarn windows&&yarn compress",
     "rmx": "rm -rf node_modules/@types/react-router/node_modules node_modules/@types/react-transition-group/node_modules node_modules/@types/react-dom/node_modules node_modules/@types/react-router-dom/node_modules node_modules/@types/react-is/node_modules"
   },
   "devDependencies": {
