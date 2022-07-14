@@ -198,8 +198,11 @@ export const LAST_CRASH_KEY = "ReadyToLaunch.LastCrash";
 export function ReadyToLaunch(): JSX.Element {
   const [coreProfile, setProfile] = useState(new GameProfile({}));
   const [profileLoadedBit, setLoaded] = useState(0);
-  let { id, container, server } =
-    useParams<{ id: string; container: string; server?: string }>();
+  let { id, container, server } = useParams<{
+    id: string;
+    container: string;
+    server?: string;
+  }>();
   id = decodeURIComponent(id);
   container = decodeURIComponent(container);
   server = server ? decodeURIComponent(server) : undefined;
@@ -845,6 +848,7 @@ async function startBoot(
             console.log("Token valid, skipped auth.");
           }
         } else {
+          account = new MicrosoftAccount(""); // Use the latest data
           console.log(
             "MS account auth job has been done by ReadyBoom. Skipped."
           );
