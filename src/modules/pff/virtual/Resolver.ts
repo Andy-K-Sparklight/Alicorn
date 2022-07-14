@@ -30,12 +30,9 @@ export interface ModResolver {
   searchMods(num: number): Promise<ModMeta[]>;
   getArtifactFor(
     gameVersion: string,
-    modLoader: "Fabric" | "Forge"
+    modLoader: ModLoaderType
   ): Promise<ModArtifact>;
-  canSupport(
-    gameVersion: string,
-    modLoader: "Fabric" | "Forge"
-  ): Promise<boolean>;
+  canSupport(gameVersion: string, modLoader: ModLoaderType): Promise<boolean>;
   setSelected(
     mainId: string | undefined,
     artifactId: string | undefined
@@ -64,11 +61,11 @@ export abstract class AbstractModResolver implements ModResolver {
   abstract searchMods(num: number): Promise<ModMeta[]>;
   abstract getArtifactFor(
     gameVersion: string,
-    modLoader: "Fabric" | "Forge"
+    modLoader: ModLoaderType
   ): Promise<ModArtifact>;
   abstract canSupport(
     gameVersion: string,
-    modLoader: "Fabric" | "Forge"
+    modLoader: ModLoaderType
   ): Promise<boolean>;
   abstract setSelected(
     mainId: string | undefined,
@@ -133,7 +130,7 @@ export class CurseforgeModResolver extends AbstractModResolver {
   }
   async getArtifactFor(
     gameVersion: string,
-    modLoader: "Fabric" | "Forge"
+    modLoader: ModLoaderType
   ): Promise<ModArtifact> {
     if (this.cachedArtifact) {
       return this.cachedArtifact;
@@ -168,10 +165,7 @@ export class CurseforgeModResolver extends AbstractModResolver {
     }
     throw "Failed to lookup artifact!";
   }
-  canSupport(
-    gameVersion: string,
-    modLoader: "Fabric" | "Forge"
-  ): Promise<boolean> {
+  canSupport(gameVersion: string, modLoader: ModLoaderType): Promise<boolean> {
     if (!this.insideCachedAddonInfo) {
       throw "Must resolve first!";
     }
@@ -241,7 +235,7 @@ export class CursePlusPlusModResolver extends AbstractModResolver {
   }
   async getArtifactFor(
     gameVersion: string,
-    modLoader: "Fabric" | "Forge"
+    modLoader: ModLoaderType
   ): Promise<ModArtifact> {
     if (this.cachedArtifact) {
       return this.cachedArtifact;
@@ -262,10 +256,7 @@ export class CursePlusPlusModResolver extends AbstractModResolver {
     }
     throw "Check compatibility first!";
   }
-  canSupport(
-    gameVersion: string,
-    modLoader: "Fabric" | "Forge"
-  ): Promise<boolean> {
+  canSupport(gameVersion: string, modLoader: ModLoaderType): Promise<boolean> {
     if (this.cachedArtifactGroup === null) {
       throw "Must resolve first!";
     }
@@ -329,7 +320,7 @@ export class ModrinthModResolver extends AbstractModResolver {
   }
   async getArtifactFor(
     gameVersion: string,
-    modLoader: "Fabric" | "Forge"
+    modLoader: ModLoaderType
   ): Promise<ModArtifact> {
     if (this.cachedArtifact) {
       return this.cachedArtifact;
@@ -357,7 +348,7 @@ export class ModrinthModResolver extends AbstractModResolver {
   }
   async canSupport(
     gameVersion: string,
-    modLoader: "Fabric" | "Forge"
+    modLoader: ModLoaderType
   ): Promise<boolean> {
     if (!this.mainId) {
       throw "Must resolve first!";
@@ -410,7 +401,12 @@ function transformAddonInfoToMeta(aInfo: AddonInfo): ModMeta {
   };
 }
 
-export function modLoaderOf(type: number): "Forge" | "Fabric" {
+export type ModLoaderType = "Forge" | "Fabric" | "Quilt";
+
+export function modLoaderOf(type: number): ModLoaderType {
+  if (type === 8) {
+    return "Quilt";
+  }
   if (type === 4) {
     return "Fabric";
   }
@@ -419,7 +415,7 @@ export function modLoaderOf(type: number): "Forge" | "Fabric" {
 
 function transformFileInfoToArtifact(
   file: File,
-  modLoader: "Fabric" | "Forge"
+  modLoader: ModLoaderType
 ): ModArtifact {
   return {
     downloadUrl: file.downloadUrl,

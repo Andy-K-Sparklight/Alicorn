@@ -278,6 +278,10 @@ Alicorn 无法读/写 {Target}，请检查此目录的权限，相关操作已�
 
 此核心可以加载 Fabric Mod
 
+# CoreInfo.Introduction.Quilt
+
+此核心可以加载 Quilt Mod
+
 # CoreInfo.Introduction.Installer
 
 这不是核心，这是一个整合包安装器
@@ -1047,6 +1051,10 @@ Pff 正安装 Mod……
 
 安装 Fabric API 失败，许多 Fabric Mod 需要它。\n前往 Pff，输入 fabric-api 重新进行安装。
 
+# InstallCore.Fabric.FabricAPIFailed
+
+安装 Quilt API 失败，许多 Quilt Mod 需要它。\n前往 Pff，输入 qsl 重新进行安装。
+
 # InstallCore.Progress.CouldNotExecute
 
 没能执行安装程序……
@@ -1089,7 +1097,7 @@ Pff 正安装 Mod……
 
 # InstallCore.InstallMinecraft
 
-添加新的核心
+添加核心
 
 # InstallCore.InstallMinecraftInstr
 
@@ -1097,7 +1105,7 @@ Pff 正安装 Mod……
 
 # InstallCore.InstallForge
 
-改装已有核心（Forge）
+改装核心（Forge）
 
 # InstallCore.InstallForgeInstr
 
@@ -1105,7 +1113,7 @@ Pff 正安装 Mod……
 
 # InstallCore.InstallFabric
 
-改装已有核心（Fabric）
+改装核心（Fabric）
 
 # InstallCore.InstallFabricInstr
 
@@ -1122,6 +1130,18 @@ Pff 正安装 Mod……
 # InstallCore.IrisBaseVersion
 
 安装到此 Fabric 上
+
+# InstallCore.InstallQuilt
+
+改装核心（Quilt）
+
+# InstallCore.InstallQuiltInstr
+
+@HTML为已有的 Minecraft 核心进行改装并安装 Quilt，它可以支持部分 Fabric Mod 和 Forge Mod。\n<span style="color:#ff8400;">注意：你必须安装了对应版本的 Minecraft 核心才可以进行改装！</span>\n<span style="color:#ff8400;">Quilt 尚在开发中，请注意可能存在的风险及漏洞！</span>
+
+# InstallCore.QuiltBaseVersion
+
+目标 Minecraft 版本号
 
 # InstallCore.TargetContainer
 
@@ -3408,7 +3428,7 @@ END
 
 # Instruction.InstallCore.1
 
-使用 <添加新的核心> 来安装新的 Minecraft 原版核心。@5.40
+使用 <添加核心> 来安装新的 Minecraft 原版核心。@5.40
 
 # Instruction.InstallCore.2
 

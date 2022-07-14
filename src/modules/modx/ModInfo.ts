@@ -27,6 +27,7 @@ export interface ModInfo {
 enum ModLoader {
   FORGE = "Forge",
   FABRIC = "Fabric",
+  QUILT = "Quilt",
   UNKNOWN = "Unknown",
 }
 

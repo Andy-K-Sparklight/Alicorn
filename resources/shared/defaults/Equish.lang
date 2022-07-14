@@ -266,6 +266,10 @@ Forge Mods are supported.
 
 Fabric Mods are supported.
 
+# CoreInfo.Introduction.Quilt
+
+Quilt Mods are supported.
+
 # CoreInfo.Introduction.Installer
 
 It's a modpack installer!
@@ -1014,7 +1018,7 @@ Retrofit (Fabric)
 
 # InstallCore.InstallFabricInstr
 
-@HTMLRetrofit an installed Minecraft core to a Fabric core. Both of then will be available. With this you can play Fabric mods.
+@HTMLRetrofit an installed Minecraft core to a Fabric core. Both of them will be available. With this you can play Fabric mods.
 
 # InstallCore.InstallIris
 
@@ -1025,6 +1029,18 @@ Install Iris
 @HTMLUse Iris to have a better support for shaderpacks. A Fabric core is required for install.
 
 # InstallCore.IrisBaseVersion
+
+Install To
+
+# InstallCore.InstallQuilt
+
+Retrofit (Quilt)
+
+# InstallCore.InstallQuiltInstr
+
+@HTMLRetrofit an installed Minecraft core to a Quilt core. Both of them will be available. With this you can play Quilt mods.
+
+# InstallCore.QuiltBaseVersion
 
 Install To
 

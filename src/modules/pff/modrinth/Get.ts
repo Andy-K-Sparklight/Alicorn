@@ -1,6 +1,7 @@
 import { isNull, safeGet } from "../../commons/Null";
 import { pgot } from "../../download/GotWrapper";
 import { ModArtifact, ModMeta } from "../virtual/ModDefine";
+import { ModLoaderType } from "../virtual/Resolver";
 
 export async function searchMetaBySlug(
   slug: string,
@@ -71,12 +72,11 @@ export async function lookupModMetaInfo(
     const rs = (await pgot(ACCESS_URL, timeout)) as any; // For other values
     const slug = String(rs["slug"]);
     const t = await getModMetaBySlug(slug, apiBase, timeout); // Only for support versions
-    if (t === undefined) {
-      return t;
-    }
+    const sv = t ? t.supportVersions : []; // Empty means everything
+    // Sometimes Modrinth return null for its existed names...
     return {
       id: String(rs["id"]),
-      supportVersions: t.supportVersions,
+      supportVersions: sv,
       thumbNail: String(rs["icon_url"] || ""),
       slug: slug,
       provider: "Modrinth",
@@ -107,7 +107,11 @@ export async function getVersionListForMod(
         return;
       }
       let m = 0;
+      if (l.includes("quilt")) {
+        m += 8;
+      }
       if (l.includes("fabric")) {
+        // Also accept quilt
         m += 1;
       }
       if (l.includes("forge")) {
@@ -125,7 +129,7 @@ export async function getVersionListForMod(
       }
       p.push({
         id: String(c["id"]),
-        modLoader: m === 1 ? "Fabric" : "Forge", // 3 is preserved, currently we haven't found a Forge and Fabric compatible mod
+        modLoader: m === 1 ? "Fabric" : m === 8 ? "Quilt" : "Forge",
         gameVersion: c["game_versions"] || [],
         fileName: f[0]["filename"],
         hash: safeGet(f[0], ["hashes", "sha1"], undefined) as
@@ -144,7 +148,7 @@ export async function getVersionListForMod(
 export function findCompatibleArtifact(
   versions: ModArtifact[],
   gameVersion: string,
-  modLoader: "Fabric" | "Forge"
+  modLoader: ModLoaderType
 ): ModArtifact | undefined {
   for (const a of versions) {
     if (a.modLoader === modLoader && a.gameVersion.includes(gameVersion)) {

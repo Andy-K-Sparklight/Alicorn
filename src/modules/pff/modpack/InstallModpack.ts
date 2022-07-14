@@ -28,6 +28,7 @@ import { fetchSelectedMod, setPffFlag } from "../virtual/PffWrapper";
 import {
   AbstractModResolver,
   CurseforgeModResolver,
+  ModLoaderType,
   ModrinthModResolver,
 } from "../virtual/Resolver";
 import { ModpackModel, SimpleFile, transformManifest5 } from "./CFModpackModel";
@@ -243,7 +244,7 @@ async function installSingleMod(
   fid: string | number,
   container: MinecraftContainer,
   gameVersion: string,
-  modLoader: "Fabric" | "Forge"
+  modLoader: ModLoaderType
 ): Promise<void> {
   let mr: AbstractModResolver;
   if (typeof aid === "number" || typeof fid === "number") {

@@ -12,7 +12,7 @@ import {
   Tab,
   Tabs,
   ThemeProvider,
-  Typography
+  Typography,
 } from "@mui/material";
 import { EventEmitter } from "events";
 import React, { useEffect, useRef, useState } from "react";
@@ -22,32 +22,33 @@ import { isNull } from "../modules/commons/Null";
 import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
 import {
   getAllMounted,
-  getContainer
+  getContainer,
 } from "../modules/container/ContainerUtil";
 import {
   clearDoing,
   getDoing,
   subscribeDoing,
-  unsubscribeDoing
+  unsubscribeDoing,
 } from "../modules/download/DownloadWrapper";
 import { getDefaultJavaHome, getJavaRunnable } from "../modules/java/JavaInfo";
 import {
   canSupportGame,
   getFabricInstaller,
   getLatestFabricInstallerAndLoader,
-  removeFabricInstaller
+  removeFabricInstaller,
 } from "../modules/pff/get/FabricGet";
 import {
   generateForgeInstallerName,
   getForgeInstaller,
   getForgeVersionByMojang,
-  removeForgeInstaller
+  removeForgeInstaller,
 } from "../modules/pff/get/ForgeGet";
 import {
   downloadProfile,
   getAllMojangCores,
-  getProfileURLById
+  getProfileURLById,
 } from "../modules/pff/get/MojangCore";
+import { getQuiltProfile } from "../modules/pff/get/QuiltGet";
 import { performFabricInstall } from "../modules/pff/install/FabricInstall";
 import { performForgeInstall } from "../modules/pff/install/ForgeInstall";
 import { loadProfile } from "../modules/profile/ProfileLoader";
@@ -61,7 +62,7 @@ import { pffInstall } from "./PffFront";
 import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
-  isBgDark
+  isBgDark,
 } from "./Renderer";
 import { useFormStyles } from "./Stylex";
 import { tr } from "./Translator";
@@ -98,6 +99,9 @@ export function InstallCore(): JSX.Element {
   const [updateFabricCoresBit, updateFabricCores] = useState(false);
   const [selectedIrisBase, setSelectedIrisBase] = useState("");
   const [selectedIrisContainer, setSelectedIrisContainer] = useState("");
+  const [selectedQuiltContainer, setQuiltContainer] = useState("");
+  const [baseMojangVersionQuilt, setBaseMojangVersionQuilt] =
+    useState<string>("");
   function setProgressMsg(msg: string): void {
     // Binding
     if (mounted.current) {
@@ -153,7 +157,6 @@ export function InstallCore(): JSX.Element {
       }
     })();
   }, [baseMojangVersionFabric]);
-
   useEffect(() => {
     void (async () => {
       const aCores = await filterFabricCores();
@@ -233,7 +236,6 @@ export function InstallCore(): JSX.Element {
                 </Grid>
               }
             />
-
             <Tab
               label={
                 <Grid container direction="row" alignItems="center">
@@ -265,6 +267,24 @@ export function InstallCore(): JSX.Element {
                   <Grid item>
                     <Typography color={"primary"} sx={{ marginLeft: "0.3rem" }}>
                       {tr("InstallCore.InstallIris")}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              }
+            />
+            <Tab
+              label={
+                <Grid container direction="row" alignItems="center">
+                  <Grid item>
+                    <Avatar
+                      variant={"square"}
+                      sx={{ width: "2rem", height: "2rem" }}
+                      src={Icons.PROFILE_QUILT}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Typography color={"primary"} sx={{ marginLeft: "0.3rem" }}>
+                      {tr("InstallCore.InstallQuilt")}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -784,6 +804,116 @@ export function InstallCore(): JSX.Element {
                     }
                   } catch (e) {
                     submitWarn(String(e));
+                  }
+                }}
+              >
+                {tr("InstallCore.Start")}
+              </Button>
+            </FormControl>
+          </TabPanel>
+          {/* Quilt */}
+          <TabPanel value={tabValue} index={4}>
+            <FormControl fullWidth>
+              <Typography className={classes.instr}>
+                {tr("InstallCore.InstallQuiltInstr")}
+              </Typography>
+              <br />
+              <FormControl variant={"outlined"} className={classes.formControl}>
+                <InputLabel
+                  id={"CoreInstall-Quilt-SelectBase"}
+                  className={classes.label}
+                >
+                  {tr("InstallCore.QuiltBaseVersion")}
+                </InputLabel>
+                <Select
+                  sx={{ color: "primary.main" }}
+                  startAdornment={<Inventory2 />}
+                  label={tr("InstallCore.QuiltBaseVersion")}
+                  variant={"outlined"}
+                  labelId={"CoreInstall-Quilt-SelectBase"}
+                  color={"primary"}
+                  onChange={(e) => {
+                    const s = String(e.target.value).split(ALICORN_SEPARATOR);
+                    if (s.length >= 2) {
+                      const c = String(s.shift());
+                      const i = String(s.shift());
+                      setBaseMojangVersionQuilt(i);
+                      setQuiltContainer(c);
+                    }
+                  }}
+                  value={
+                    selectedQuiltContainer && baseMojangVersionQuilt
+                      ? selectedQuiltContainer +
+                        ALICORN_SEPARATOR +
+                        baseMojangVersionQuilt
+                      : ""
+                  }
+                >
+                  {patchableCores.map((r) => {
+                    return (
+                      <MenuItem
+                        key={r.container + "/" + r.id}
+                        value={r.container + ALICORN_SEPARATOR + r.id}
+                      >
+                        {`${r.container}/${r.id}`}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+              <br />
+              <Button
+                size={"large"}
+                className={classes.btn}
+                variant={"contained"}
+                color={"primary"}
+                disabled={isNull(selectedQuiltContainer)}
+                onClick={async () => {
+                  clearDoing();
+                  setChangePageWarn(true);
+                  setOperating(true);
+                  setFailed(false);
+                  const mcv = baseMojangVersionQuilt;
+                  const ct = getContainer(selectedQuiltContainer);
+
+                  const [stat2, qtapi] = await Promise.allSettled([
+                    (async () => {
+                      setProgressMsg(
+                        tr(
+                          "InstallCore.Progress.Fetching",
+                          `Loader=Quilt`,
+                          `MCV=${mcv}`
+                        )
+                      );
+                      return await getQuiltProfile(mcv, ct);
+                    })(),
+                    pffInstall(
+                      "@Modrinth:qvIfYCYJ",
+                      ct,
+                      mcv,
+                      new EventEmitter(),
+                      8 // If only Quilt works as it says
+                    ),
+                  ]);
+
+                  if (!stat2) {
+                    if (mounted.current) {
+                      setOperating(false);
+                      setChangePageWarn(false);
+                      setFailed(true);
+                      setFailedMsg(tr("InstallCore.Progress.CouldNotExecute"));
+                    }
+                    return;
+                  } else if (!qtapi) {
+                    submitWarn(tr("InstallCore.Quilt.QuiltAPIFailed"));
+                  }
+                  updateFabricCores(!updateFabricCoresBit);
+                  setProgressMsg("Done! Cleaning up files...");
+                  if (mounted.current) {
+                    setOperating(false);
+                    setChangePageWarn(false);
+                    setFailed(false);
+                    submitSucc(tr("InstallCore.Success"));
                   }
                 }}
               >

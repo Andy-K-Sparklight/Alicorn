@@ -91,6 +91,10 @@ export class MinecraftContainer {
     return path.resolve(this.getVersionRoot(id), id + ".json");
   }
 
+  getClientPath(id: string): string {
+    return path.resolve(this.getVersionRoot(id), id + ".jar");
+  }
+
   getLibraryPath(libPath: string): string {
     return path.resolve(this.librariesBase, libPath);
   }

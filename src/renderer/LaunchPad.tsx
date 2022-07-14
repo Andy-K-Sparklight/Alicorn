@@ -591,6 +591,8 @@ function getDescriptionFor(type: string): string {
       return tr("CoreInfo.Introduction.Installer");
     case "FABRIC":
       return tr("CoreInfo.Introduction.Fabric");
+    case "QUILT":
+      return tr("CoreInfo.Introduction.Quilt");
     default:
       return "";
   }
@@ -622,6 +624,8 @@ function getIconForProfile(p: SimplifiedCoreInfo): string {
       return Icons.PROFILE_FABRIC;
     case "Installer":
       return Icons.PROFILE_INSTALLER;
+    case "Quilt":
+      return Icons.PROFILE_QUILT;
     case "Universal":
     default:
       return Icons.PROFILE_UNKNOWN;

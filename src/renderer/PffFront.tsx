@@ -63,7 +63,6 @@ export function PffFront(): JSX.Element {
   name = name ? decodeURIComponent(name) : undefined;
   loader = decodeURIComponent(loader);
   autostart = autostart ? decodeURIComponent(autostart) : undefined;
-
   const [isRunning, setRunning] = useState(autostart === "1");
   const [val, setVal] = useState(0);
   const [info, setInfo] = useState("");
@@ -148,7 +147,7 @@ export function PffFront(): JSX.Element {
                 getContainer(container),
                 version,
                 emitter.current,
-                loader === "Forge" ? 1 : 4
+                loader === "Forge" ? 1 : loader === "Quilt" ? 8 : 4
               );
             }
           })
@@ -174,7 +173,7 @@ export function PffFront(): JSX.Element {
               getContainer(container),
               version,
               emitter.current,
-              loader === "Forge" ? 1 : 4
+              loader === "Forge" ? 1 : loader === "Quilt" ? 8 : 4
             );
           }
         })
@@ -388,6 +387,8 @@ export function PffFront(): JSX.Element {
                           ? ModLoader.FORGE
                           : loader === "Fabric"
                           ? ModLoader.FABRIC
+                          : loader === "Quilt"
+                          ? ModLoader.QUILT
                           : ModLoader.UNKNOWN
                       }
                       mcversion={version}
@@ -634,6 +635,7 @@ export async function pffInstall(
     name = name.slice(0, -1);
   }
   const ml = modLoaderOf(modLoader);
+
   const idx = `[${name}] `;
   if (!ml) {
     if (!optional) {
