@@ -637,13 +637,8 @@ export async function pffInstall(
   const ml = modLoaderOf(modLoader);
 
   const idx = `[${name}] `;
-  if (!ml) {
-    if (!optional) {
-      emitter.emit(
-        PFF_MSG_GATE,
-        `[${name}] ` + tr("PffFront.UnsupportedLoader")
-      );
-    }
+  if (!optional) {
+    emitter.emit(PFF_MSG_GATE, `[${name}] ` + tr("PffFront.UnsupportedLoader"));
   }
   setPffFlag("1");
   emitter.emit(PFF_MSG_GATE, idx + tr("PffFront.Loading"));
