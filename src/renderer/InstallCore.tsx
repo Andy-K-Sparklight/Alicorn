@@ -261,12 +261,12 @@ export function InstallCore(): JSX.Element {
                     <Avatar
                       variant={"square"}
                       sx={{ width: "2rem", height: "2rem" }}
-                      src={Icons.PROFILE_IRIS}
+                      src={Icons.PROFILE_QUILT}
                     />
                   </Grid>
                   <Grid item>
                     <Typography color={"primary"} sx={{ marginLeft: "0.3rem" }}>
-                      {tr("InstallCore.InstallIris")}
+                      {tr("InstallCore.InstallQuilt")}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -279,12 +279,12 @@ export function InstallCore(): JSX.Element {
                     <Avatar
                       variant={"square"}
                       sx={{ width: "2rem", height: "2rem" }}
-                      src={Icons.PROFILE_QUILT}
+                      src={Icons.PROFILE_IRIS}
                     />
                   </Grid>
                   <Grid item>
                     <Typography color={"primary"} sx={{ marginLeft: "0.3rem" }}>
-                      {tr("InstallCore.InstallQuilt")}
+                      {tr("InstallCore.InstallIris")}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -726,93 +726,8 @@ export function InstallCore(): JSX.Element {
               </Button>
             </FormControl>
           </TabPanel>
-          {/* Iris */}
-          <TabPanel value={tabValue} index={3}>
-            <FormControl fullWidth>
-              <Typography className={classes.instr}>
-                {tr("InstallCore.InstallIrisInstr")}
-              </Typography>
-              <br />
-              <FormControl variant={"outlined"} className={classes.formControl}>
-                <InputLabel
-                  id={"CoreInstall-Iris-SelectBase"}
-                  className={classes.label}
-                >
-                  {tr("InstallCore.IrisBaseVersion")}
-                </InputLabel>
-                <Select
-                  startAdornment={<Inventory2 />}
-                  sx={{ color: "primary.main" }}
-                  label={tr("InstallCore.IrisBaseVersion")}
-                  variant={"outlined"}
-                  labelId={"CoreInstall-Iris-SelectBase"}
-                  color={"primary"}
-                  onChange={(e) => {
-                    const s = String(e.target.value).split(ALICORN_SEPARATOR);
-                    if (s.length >= 2) {
-                      const c = String(s.shift());
-                      const i = String(s.shift());
-                      setSelectedIrisBase(i);
-                      setSelectedIrisContainer(c);
-                    }
-                  }}
-                  value={
-                    selectedIrisContainer && selectedIrisBase
-                      ? selectedIrisContainer +
-                        ALICORN_SEPARATOR +
-                        selectedIrisBase
-                      : ""
-                  }
-                >
-                  {fabricCores.map((r) => {
-                    return (
-                      <MenuItem
-                        key={r.container + "/" + r.id}
-                        value={r.container + ALICORN_SEPARATOR + r.id}
-                      >
-                        {`${r.container}/${r.id}`}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-              <br />
-              <Button
-                size={"large"}
-                className={classes.btn}
-                variant={"contained"}
-                color={"primary"}
-                disabled={isNull(selectedIrisContainer)}
-                onClick={async () => {
-                  try {
-                    const prof = await loadProfile(
-                      selectedIrisBase,
-                      getContainer(selectedIrisContainer),
-                      true
-                    );
-                    if (!isNull(prof.baseVersion)) {
-                      jumpTo(
-                        `/PffFront/${encodeURIComponent(
-                          selectedIrisContainer
-                        )}/${encodeURIComponent(
-                          prof.baseVersion
-                        )}/Fabric/0/${encodeURIComponent(
-                          "@Modrinth:YL57xq9U @Modrinth:AANobbMI?"
-                        )}/1`
-                      );
-                      triggerSetPage("PffFront");
-                    }
-                  } catch (e) {
-                    submitWarn(String(e));
-                  }
-                }}
-              >
-                {tr("InstallCore.Start")}
-              </Button>
-            </FormControl>
-          </TabPanel>
           {/* Quilt */}
-          <TabPanel value={tabValue} index={4}>
+          <TabPanel value={tabValue} index={3}>
             <FormControl fullWidth>
               <Typography className={classes.instr}>
                 {tr("InstallCore.InstallQuiltInstr")}
@@ -914,6 +829,91 @@ export function InstallCore(): JSX.Element {
                     setChangePageWarn(false);
                     setFailed(false);
                     submitSucc(tr("InstallCore.Success"));
+                  }
+                }}
+              >
+                {tr("InstallCore.Start")}
+              </Button>
+            </FormControl>
+          </TabPanel>
+          {/* Iris */}
+          <TabPanel value={tabValue} index={4}>
+            <FormControl fullWidth>
+              <Typography className={classes.instr}>
+                {tr("InstallCore.InstallIrisInstr")}
+              </Typography>
+              <br />
+              <FormControl variant={"outlined"} className={classes.formControl}>
+                <InputLabel
+                  id={"CoreInstall-Iris-SelectBase"}
+                  className={classes.label}
+                >
+                  {tr("InstallCore.IrisBaseVersion")}
+                </InputLabel>
+                <Select
+                  startAdornment={<Inventory2 />}
+                  sx={{ color: "primary.main" }}
+                  label={tr("InstallCore.IrisBaseVersion")}
+                  variant={"outlined"}
+                  labelId={"CoreInstall-Iris-SelectBase"}
+                  color={"primary"}
+                  onChange={(e) => {
+                    const s = String(e.target.value).split(ALICORN_SEPARATOR);
+                    if (s.length >= 2) {
+                      const c = String(s.shift());
+                      const i = String(s.shift());
+                      setSelectedIrisBase(i);
+                      setSelectedIrisContainer(c);
+                    }
+                  }}
+                  value={
+                    selectedIrisContainer && selectedIrisBase
+                      ? selectedIrisContainer +
+                        ALICORN_SEPARATOR +
+                        selectedIrisBase
+                      : ""
+                  }
+                >
+                  {fabricCores.map((r) => {
+                    return (
+                      <MenuItem
+                        key={r.container + "/" + r.id}
+                        value={r.container + ALICORN_SEPARATOR + r.id}
+                      >
+                        {`${r.container}/${r.id}`}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+              <br />
+              <Button
+                size={"large"}
+                className={classes.btn}
+                variant={"contained"}
+                color={"primary"}
+                disabled={isNull(selectedIrisContainer)}
+                onClick={async () => {
+                  try {
+                    const prof = await loadProfile(
+                      selectedIrisBase,
+                      getContainer(selectedIrisContainer),
+                      true
+                    );
+                    if (!isNull(prof.baseVersion)) {
+                      jumpTo(
+                        `/PffFront/${encodeURIComponent(
+                          selectedIrisContainer
+                        )}/${encodeURIComponent(
+                          prof.baseVersion
+                        )}/Fabric/0/${encodeURIComponent(
+                          "@Modrinth:YL57xq9U @Modrinth:AANobbMI?"
+                        )}/1`
+                      );
+                      triggerSetPage("PffFront");
+                    }
+                  } catch (e) {
+                    submitWarn(String(e));
                   }
                 }}
               >
