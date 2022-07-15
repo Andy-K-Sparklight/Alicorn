@@ -1,5 +1,7 @@
 import { isNull, safeGet } from "../../commons/Null";
 import { pgot } from "../../download/GotWrapper";
+import { chkModLoader } from "../../modx/ModDynLoad";
+import { modLoaderOfStr } from "../../modx/ModInfo";
 import { ModArtifact, ModMeta } from "../virtual/ModDefine";
 import { ModLoaderType } from "../virtual/Resolver";
 
@@ -151,8 +153,12 @@ export function findCompatibleArtifact(
   modLoader: ModLoaderType
 ): ModArtifact | undefined {
   for (const a of versions) {
-    if (a.modLoader === modLoader && a.gameVersion.includes(gameVersion)) {
+    if (
+      chkModLoader(modLoaderOfStr(a.modLoader), modLoaderOfStr(modLoader)) &&
+      a.gameVersion.includes(gameVersion)
+    ) {
       return a;
     }
   }
+  return undefined;
 }

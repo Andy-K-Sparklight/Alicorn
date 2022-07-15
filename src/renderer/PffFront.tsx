@@ -29,8 +29,8 @@ import { getBoolean } from "../modules/config/ConfigSupport";
 import { getContainer as _getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { configureModDepChain, UnmetDepUnit } from "../modules/modx/ModDeps";
-import { loadMetas } from "../modules/modx/ModDynLoad";
-import { ModInfo, ModLoader } from "../modules/modx/ModInfo";
+import { chkModLoader, loadMetas } from "../modules/modx/ModDynLoad";
+import { ModInfo, ModLoader, modLoaderOfStr } from "../modules/modx/ModInfo";
 import { canModVersionApply } from "../modules/modx/ModVersionUtil";
 import {
   loadLockfile,
@@ -467,8 +467,12 @@ function SinglePffModDisplay(props: {
 }): JSX.Element {
   const [showDesc, setShowDesc] = useState(false);
   const isCompatible =
-    props.meta.selectedArtifact.gameVersion.includes(props.version) &&
-    props.loader === props.meta.selectedArtifact.modLoader;
+    (props.meta.selectedArtifact.gameVersion.length === 0 ||
+      props.meta.selectedArtifact.gameVersion.includes(props.version)) &&
+    chkModLoader(
+      modLoaderOfStr(props.loader),
+      modLoaderOfStr(props.meta.selectedArtifact.modLoader)
+    );
   return (
     <ListItem
       alignItems={"flex-start"}
@@ -540,7 +544,7 @@ function SingleModDisplay(props: {
 }): JSX.Element {
   const modmcv = props.m.mcversion || "*";
   const compatible =
-    (props.m.loader === props.loader ||
+    (chkModLoader(props.m.loader, props.loader) ||
       (props.m.loader === ModLoader.UNKNOWN &&
         getBoolean("modx.ignore-non-standard-mods"))) &&
     canModVersionApply(

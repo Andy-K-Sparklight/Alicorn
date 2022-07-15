@@ -24,14 +24,26 @@ export interface ModInfo {
   description?: string;
 }
 
-enum ModLoader {
+export enum ModLoader {
   FORGE = "Forge",
   FABRIC = "Fabric",
   QUILT = "Quilt",
   UNKNOWN = "Unknown",
 }
 
-export { ModLoader };
+export function modLoaderOfStr(org: string): ModLoader {
+  if (org === "Quilt") {
+    return ModLoader.QUILT;
+  }
+  if (org === "Fabric") {
+    return ModLoader.FABRIC;
+  }
+  if (org === "Forge") {
+    return ModLoader.FORGE;
+  }
+  return ModLoader.UNKNOWN;
+}
+
 // Load mod info
 export async function loadModInfo(
   modJar: string,
