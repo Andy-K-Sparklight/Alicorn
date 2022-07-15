@@ -470,9 +470,10 @@ function SinglePffModDisplay(props: {
     (props.meta.selectedArtifact.gameVersion.length === 0 ||
       props.meta.selectedArtifact.gameVersion.includes(props.version)) &&
     chkModLoader(
-      modLoaderOfStr(props.loader),
-      modLoaderOfStr(props.meta.selectedArtifact.modLoader)
+      modLoaderOfStr(props.meta.selectedArtifact.modLoader),
+      modLoaderOfStr(props.loader)
     );
+
   return (
     <ListItem
       alignItems={"flex-start"}
