@@ -17,7 +17,12 @@ import {
 import { EventEmitter } from "events";
 import React, { useEffect, useRef, useState } from "react";
 import { throttle } from "throttle-debounce";
-import { ALICORN_SEPARATOR, ReleaseType } from "../modules/commons/Constants";
+import {
+  ALICORN_SEPARATOR,
+  FABRIC_META_ROOT,
+  QUILT_META_ROOT,
+  ReleaseType,
+} from "../modules/commons/Constants";
 import { isNull } from "../modules/commons/Null";
 import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
 import {
@@ -31,12 +36,7 @@ import {
   unsubscribeDoing,
 } from "../modules/download/DownloadWrapper";
 import { getDefaultJavaHome, getJavaRunnable } from "../modules/java/JavaInfo";
-import {
-  canSupportGame,
-  getFabricInstaller,
-  getLatestFabricInstallerAndLoader,
-  removeFabricInstaller,
-} from "../modules/pff/get/FabricGet";
+import { getFabricLikeProfile } from "../modules/pff/get/FabricLikeGet";
 import {
   generateForgeInstallerName,
   getForgeInstaller,
@@ -48,8 +48,6 @@ import {
   getAllMojangCores,
   getProfileURLById,
 } from "../modules/pff/get/MojangCore";
-import { getQuiltProfile } from "../modules/pff/get/QuiltGet";
-import { performFabricInstall } from "../modules/pff/install/FabricInstall";
 import { performForgeInstall } from "../modules/pff/install/ForgeInstall";
 import { loadProfile } from "../modules/profile/ProfileLoader";
 import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
@@ -86,8 +84,6 @@ export function InstallCore(): JSX.Element {
   const [baseMojangVersionFabric, setBaseMojangVersionFabric] =
     useState<string>("");
   const [detectedForgeVersion, setDetectedForgeVersion] = useState("");
-  const [detectedFabricVersion, setDetectedFabricVersion] =
-    useState<string>("");
   const [selectedMojangContainer, setMojangContainer] = useState("");
   const [selectedForgeContainer, setForgeContainer] = useState("");
   const [selectedFabricContainer, setFabricContainer] = useState("");
@@ -143,20 +139,6 @@ export function InstallCore(): JSX.Element {
       }
     })();
   }, [baseMojangVersionForge]);
-  useEffect(() => {
-    void (async () => {
-      if (!(await canSupportGame(baseMojangVersionFabric))) {
-        if (mounted.current) {
-          setDetectedFabricVersion("");
-        }
-        return;
-      }
-      const d = (await getLatestFabricInstallerAndLoader()).getSecondValue();
-      if (mounted.current) {
-        setDetectedFabricVersion(d);
-      }
-    })();
-  }, [baseMojangVersionFabric]);
   useEffect(() => {
     void (async () => {
       const aCores = await filterFabricCores();
@@ -584,11 +566,6 @@ export function InstallCore(): JSX.Element {
               <Typography className={classes.instr}>
                 {tr("InstallCore.InstallFabricInstr")}
               </Typography>
-              <Typography className={classes.text} color={"secondary"}>
-                {tr("InstallCore.FabricVersion") +
-                  " " +
-                  (detectedFabricVersion || tr("InstallCore.Unknown"))}
-              </Typography>
               <br />
               <FormControl variant={"outlined"} className={classes.formControl}>
                 <InputLabel
@@ -639,35 +616,16 @@ export function InstallCore(): JSX.Element {
                 className={classes.btn}
                 variant={"contained"}
                 color={"primary"}
-                disabled={
-                  isNull(selectedFabricContainer) ||
-                  isNull(detectedFabricVersion)
-                }
+                disabled={isNull(selectedFabricContainer)}
                 onClick={async () => {
                   clearDoing();
                   setChangePageWarn(true);
                   setOperating(true);
                   setFailed(false);
-                  setProgressMsg(
-                    "Resloving Fabric installer and loader info..."
-                  );
-                  const u = (
-                    await getLatestFabricInstallerAndLoader()
-                  ).getFirstValue();
-                  const fbv = detectedFabricVersion;
                   const mcv = baseMojangVersionFabric;
                   const ct = getContainer(selectedFabricContainer);
-                  if (isNull(u)) {
-                    if (mounted.current) {
-                      setFailedMsg("Invalid Fabric info received.");
-                      setOperating(false);
-                      setChangePageWarn(false);
-                      setFailed(true);
-                    }
-                    return;
-                  }
 
-                  const [stat2, fbapi] = await Promise.allSettled([
+                  const [stat2, qtapi] = await Promise.allSettled([
                     (async () => {
                       setProgressMsg(
                         tr(
@@ -676,21 +634,12 @@ export function InstallCore(): JSX.Element {
                           `MCV=${mcv}`
                         )
                       );
-                      if (!(await getFabricInstaller(u, ct))) {
-                        return false;
-                      }
-                      setProgressMsg(
-                        tr("InstallCore.Progress.ExecutingFabric")
-                      );
-                      const s0 = await performFabricInstall(
-                        await getJavaRunnable(getDefaultJavaHome()),
-                        u,
-                        fbv,
+                      return await getFabricLikeProfile(
+                        FABRIC_META_ROOT,
+                        "fabric-loader",
                         mcv,
                         ct
                       );
-                      await removeFabricInstaller(u, ct);
-                      return s0;
                     })(),
                     pffInstall(
                       "@Modrinth:P7dR8mSH",
@@ -709,8 +658,8 @@ export function InstallCore(): JSX.Element {
                       setFailedMsg(tr("InstallCore.Progress.CouldNotExecute"));
                     }
                     return;
-                  } else if (!fbapi) {
-                    submitWarn(tr("InstallCore.Fabric.FabricAPIFailed"));
+                  } else if (!qtapi) {
+                    submitWarn(tr("InstallCore.Quilt.QuiltAPIFailed"));
                   }
                   updateFabricCores(!updateFabricCoresBit);
                   setProgressMsg("Done! Cleaning up files...");
@@ -800,7 +749,12 @@ export function InstallCore(): JSX.Element {
                           `MCV=${mcv}`
                         )
                       );
-                      return await getQuiltProfile(mcv, ct);
+                      return await getFabricLikeProfile(
+                        QUILT_META_ROOT,
+                        "quilt-loader",
+                        mcv,
+                        ct
+                      );
                     })(),
                     pffInstall(
                       "@Modrinth:qvIfYCYJ",

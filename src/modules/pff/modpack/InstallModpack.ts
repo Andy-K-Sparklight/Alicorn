@@ -4,17 +4,14 @@ import path from "path";
 import { tr } from "../../../renderer/Translator";
 import { basicHash } from "../../commons/BasicHash";
 import { Pair } from "../../commons/Collections";
+import { FABRIC_META_ROOT } from "../../commons/Constants";
 import { isFileExist } from "../../commons/FileUtil";
-import { isNull, safeGet } from "../../commons/Null";
+import { safeGet } from "../../commons/Null";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { addDoing } from "../../download/DownloadWrapper";
 import { getDefaultJavaHome, getJavaRunnable } from "../../java/JavaInfo";
 import { ProfileType } from "../../profile/WhatProfile";
-import {
-  getFabricInstaller,
-  getLatestFabricInstallerAndLoader,
-  removeFabricInstaller,
-} from "../get/FabricGet";
+import { getFabricLikeProfile } from "../get/FabricLikeGet";
 import {
   generateForgeInstallerName,
   getForgeInstaller,
@@ -22,7 +19,6 @@ import {
   removeForgeInstaller,
 } from "../get/ForgeGet";
 import { downloadProfile, getProfileURLById } from "../get/MojangCore";
-import { performFabricInstall } from "../install/FabricInstall";
 import { performForgeInstall } from "../install/ForgeInstall";
 import { fetchSelectedMod, setPffFlag } from "../virtual/PffWrapper";
 import {
@@ -184,31 +180,19 @@ export async function deployModLoader(
     }
     case ProfileType.FABRIC:
     default: {
-      const u = (await getLatestFabricInstallerAndLoader()).getFirstValue();
-      if (isNull(u)) {
-        throw "Could not fetch installer: No such installer!";
-      }
-      if (!(await getFabricInstaller(u, container))) {
-        await removeFabricInstaller(u, container);
-        throw "Failed to fetch installer!";
-      }
-      const jr = await getJavaRunnable(getDefaultJavaHome());
       await Promise.allSettled(
         mcVersions.map((mcVersion) => {
           return (async () => {
             if (
-              !(await performFabricInstall(
-                jr,
-                u,
-                version,
+              !(await getFabricLikeProfile(
+                FABRIC_META_ROOT,
+                "fabric-loader",
                 mcVersion,
                 container
               ))
             ) {
-              await removeFabricInstaller(u, container);
               throw "Could not perform install!";
             }
-            await removeFabricInstaller(u, container);
           })();
         })
       );

@@ -26,7 +26,6 @@ import { initConcurrentDownloader } from "../modules/download/Concurrent";
 import { initDownloadWrapper } from "../modules/download/DownloadWrapper";
 import { loadAllMirrors, loadMirror } from "../modules/download/Mirror";
 import { loadJDT, preCacheJavaInfo } from "../modules/java/JavaInfo";
-import { prefetchFabricManifest } from "../modules/pff/get/FabricGet";
 import { prefetchForgeManifest } from "../modules/pff/get/ForgeGet";
 import { prefetchMojangVersions } from "../modules/pff/get/MojangCore";
 import { initForgeInstallModule } from "../modules/pff/install/ForgeInstall";
@@ -274,7 +273,6 @@ try {
     await Promise.allSettled([
       updPm,
       prefetchForgeManifest(),
-      prefetchFabricManifest(),
       prefetchMojangVersions(),
     ]);
     const t4 = new Date();
