@@ -69,5 +69,6 @@
   "pff.upgrade-mode": "Override",
   "cx.shared-root": "",
   "interactive.cadance": false,
-  "interactive.boticorn": false
+  "interactive.boticorn": false,
+  "bosskey": ""
 }

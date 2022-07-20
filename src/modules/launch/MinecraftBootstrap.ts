@@ -142,3 +142,9 @@ export function runMinecraft(
 export function stopMinecraft(runID: string): void {
   POOL.get(runID)?.kill();
 }
+
+export function stopAllMinecraft(): void {
+  for (const v of POOL.values()) {
+    v.kill();
+  }
+}

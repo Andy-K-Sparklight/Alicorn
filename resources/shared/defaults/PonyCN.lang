@@ -2223,6 +2223,14 @@ Mod 动态加载
 
 不使用 Mojang 提供的 Log4j 配置文件以在启动疑难解答中获得更清晰的日志 - 副作用是输出到文件的日志会很混乱
 
+# Options.bosskey.title
+
+老板键 ^
+
+# Options.bosskey.desc
+
+我们一直在努力为每个人争取正当、公平的玩游戏的权利，不受任何监管或制约。\n尽管如此，仍然有些人听不进去，所以这是留给你的小礼物～\n在此设置一个快捷键，此后按下它可随时隐藏 Alicorn，终止 Minecraft。\n（快捷键格式类似 Ctrl+B+S 或者 F6）
+
 # CrashReportDisplay.BaseInfo
 
 基本信息

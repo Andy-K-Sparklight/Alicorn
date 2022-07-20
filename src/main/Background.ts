@@ -2,6 +2,7 @@ import {
   app,
   BrowserWindow,
   dialog,
+  globalShortcut,
   ipcMain,
   safeStorage,
   screen,
@@ -306,6 +307,14 @@ export function registerBackgroundListeners(): void {
       });
     }
   );
+  ipcMain.on("toggleWindow", () => {
+    const win = getMainWindow();
+    if (win?.isVisible()) {
+      win.hide();
+    } else {
+      win?.show();
+    }
+  });
   ipcMain.on("hideWindow", () => {
     getMainWindow()?.hide();
   });
@@ -363,5 +372,10 @@ export function registerBackgroundListeners(): void {
     } catch {
       e.returnValue = "";
     }
+  });
+  ipcMain.on("registerHotKey", (e, k) => {
+    globalShortcut.register(k, () => {
+      getMainWindow()?.webContents.send("HotKey-" + k);
+    });
   });
 }

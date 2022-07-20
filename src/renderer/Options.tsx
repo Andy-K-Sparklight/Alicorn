@@ -30,6 +30,7 @@ import {
   InsertPhoto,
   Inventory2,
   Iso,
+  Keyboard,
   LockOpen,
   LockReset,
   Memory,
@@ -228,6 +229,12 @@ export function OptionsPage(): JSX.Element {
             icon={<Chat />}
             type={ConfigType.BOOL}
             bindConfig={"interactive.assistant?"}
+            reload
+          />
+          <InputItem
+            icon={<Keyboard />}
+            type={ConfigType.STR}
+            bindConfig={"bosskey"}
             reload
           />
           <InputItem

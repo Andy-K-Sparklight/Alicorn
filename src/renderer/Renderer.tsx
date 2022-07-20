@@ -7,6 +7,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 import pkg from "../../package.json";
+import { registerBossKey } from "../modules/access/BossKey";
 import { reloadAccounts } from "../modules/auth/AccountUtil";
 import { prepareAJ } from "../modules/auth/AJHelper";
 import { prepareND } from "../modules/auth/NDHelper";
@@ -217,7 +218,7 @@ try {
     void todayPing();
     void startCadanceProc();
     void initBoticorn();
-
+    registerBossKey();
     // Heavy works and minor works
     await Promise.allSettled([initVF(), preCacheJavaInfo()]);
     const t2 = new Date();
