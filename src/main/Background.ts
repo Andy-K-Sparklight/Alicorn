@@ -203,7 +203,11 @@ export function registerBackgroundListeners(): void {
           });
         } */
         setTimeout(() => {
-          if (!loginWindow?.isVisible()) {
+          if (
+            loginWindow &&
+            !loginWindow?.isDestroyed() &&
+            !loginWindow?.isVisible()
+          ) {
             loginWindow?.show();
           }
         }, 5000); // Easy everyone, don't get panic!
@@ -226,7 +230,7 @@ export function registerBackgroundListeners(): void {
                 sCode = decodeURIComponent(
                   (url.match(CODE_REGEX) || [])[0] || ""
                 );
-                loginWindow?.close();
+                loginWindow?.destroy();
                 loginWindow = null;
                 if (t) {
                   clearTimeout(t);
@@ -248,7 +252,7 @@ export function registerBackgroundListeners(): void {
                 );
               }
               console.log("Error occurred. Closing login window.");
-              loginWindow?.close();
+              loginWindow?.destroy();
               loginWindow = null;
               if (t) {
                 clearTimeout(t);
@@ -260,7 +264,7 @@ export function registerBackgroundListeners(): void {
                   "Not a callback URL, but quiet required, resolving."
                 );
                 resolve("");
-                loginWindow?.close();
+                loginWindow?.destroy();
                 loginWindow = null;
                 return;
               }
@@ -277,7 +281,6 @@ export function registerBackgroundListeners(): void {
                   if (res.response === 1) {
                     sCode = "USER PROVIDE";
                     try {
-                      loginWindow?.close();
                       loginWindow?.destroy();
                     } catch {}
                     loginWindow = null;
