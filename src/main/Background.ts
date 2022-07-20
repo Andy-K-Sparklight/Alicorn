@@ -202,6 +202,11 @@ export function registerBackgroundListeners(): void {
             mode: "system",
           });
         } */
+        setTimeout(() => {
+          if (!loginWindow?.isVisible()) {
+            loginWindow?.show();
+          }
+        }, 5000); // Easy everyone, don't get panic!
         await loginWindow.loadURL(LOGIN_START);
         return new Promise<string>((resolve) => {
           loginWindow?.on("close", () => {
