@@ -184,7 +184,7 @@ function saveAccessToken(v: string): void {
 // Only in remote!
 async function browserGetCode(quiet = false): Promise<string> {
   const LOGIN_WINDOW_KEY =
-    window.localStorage.getItem("MS.LoginWindowKey") ||
+    // window.localStorage.getItem("MS.LoginWindowKey") ||
     "alicorn_ms_login_initial";
   console.log("Building login window...");
   const r = await ipcRenderer.invoke(

@@ -20,10 +20,14 @@ import { getMainWindow, getMainWindowUATrimmed } from "./Bootstrap";
 import { closeDM, getDMWindow } from "./DisplayManager";
 const LOGIN_START =
   "https://login.live.com/oauth20_authorize.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf";
+const LOGOUT_START =
+  "https://login.live.com/oauth20_logout.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf";
 let loginWindow: BrowserWindow | null = null;
+let logoutWindow: BrowserWindow | null = null;
 const CODE_REGEX = /(?<=\?code=)[^&]+/gi;
 const ERROR_REGEX = /(?<=\?error=)[^&]+/gi;
 const ERROR_DESCRIPTION = /(?<=&error_description=)[^&]+/gi;
+const LOGOUT_OK_HEAD = "https://login.live.com/oauth20_desktop.srf";
 
 export function registerBackgroundListeners(): void {
   bindCurseListeners();
@@ -386,4 +390,46 @@ export function registerBackgroundListeners(): void {
       getMainWindow()?.webContents.send("HotKey-" + k);
     });
   });
+  ipcMain.handle(
+    "msLogout",
+    async (_e, proxy: string, key = "alicorn_ms_login_initial") => {
+      return new Promise<void>((res, rej) => {
+        try {
+          void (async () => {
+            const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+            logoutWindow =
+              logoutWindow ||
+              new BrowserWindow({
+                frame: false,
+                width: Math.floor(width * 0.6),
+                height: Math.floor(height * 0.6),
+                show: false,
+                backgroundColor: "#fff",
+                webPreferences: {
+                  partition: "persist:" + key,
+                  spellcheck: false,
+                },
+              });
+            logoutWindow.webContents.setUserAgent(getMainWindowUATrimmed());
+            if (proxy.trim().length > 0) {
+              await logoutWindow.webContents.session.setProxy({
+                proxyRules: proxy,
+              });
+            }
+            await logoutWindow.loadURL(LOGOUT_START);
+            logoutWindow.webContents.on("did-navigate", () => {
+              if (
+                logoutWindow?.webContents.getURL().startsWith(LOGOUT_OK_HEAD)
+              ) {
+                logoutWindow.destroy();
+                res();
+              }
+            });
+          })();
+        } catch {
+          rej();
+        }
+      });
+    }
+  );
 }

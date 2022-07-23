@@ -43,6 +43,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import copy from "copy-to-clipboard";
+import { ipcRenderer } from "electron";
 import EventEmitter from "events";
 import os from "os";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -1345,22 +1346,23 @@ function AccountChoose(props: {
                 className={btnClasses.btn}
                 disabled={msLogout === "ReadyToLaunch.MSLogoutRunning"}
                 onClick={() => {
-                  void (() => {
+                  void (async () => {
                     // @ts-ignore
                     window[SESSION_ACCESSDATA_CACHED_KEY] = false;
                     setMSLogout("ReadyToLaunch.MSLogoutRunning");
-                    window.localStorage.setItem(
+                    /* window.localStorage.setItem(
                       "MS.LoginWindowKey",
                       "alicorn_ms_login_" + new Date().getTime()
-                    );
+                    ); */
                     dropAccountPromise();
-                    localStorage.setItem(MS_LAST_USED_REFRESH_KEY, "");
-                    localStorage.setItem(MS_LAST_USED_ACTOKEN_KEY, "");
-                    localStorage.setItem(MS_LAST_USED_UUID_KEY, "");
-                    localStorage.setItem(MS_LAST_USED_USERNAME_KEY, "");
-                    localStorage.setItem(MS_LAST_USED_XUID_KEY, "");
+                    localStorage.removeItem(MS_LAST_USED_REFRESH_KEY);
+                    localStorage.removeItem(MS_LAST_USED_ACTOKEN_KEY);
+                    localStorage.removeItem(MS_LAST_USED_UUID_KEY);
+                    localStorage.removeItem(MS_LAST_USED_USERNAME_KEY);
+                    localStorage.removeItem(MS_LAST_USED_XUID_KEY);
                     localStorage.removeItem(ACCOUNT_EXPIRES_KEY); // Reset time
                     localStorage.removeItem(ACCOUNT_LAST_REFRESHED_KEY);
+                    await ipcRenderer.invoke("msLogout");
                     if (mounted.current) {
                       setMSLogout("ReadyToLaunch.MSLogoutDone");
                     }
