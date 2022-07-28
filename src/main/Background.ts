@@ -307,7 +307,7 @@ export function registerBackgroundListeners(): void {
     console.log("Config reloaded.");
   });
   ipcMain.on("getLocale", (e) => {
-    e.returnValue = app.getLocale();
+    e.returnValue = app.getLocale().toLowerCase();
   });
   ipcMain.handle(
     "isReachable",
