@@ -31,7 +31,7 @@ export function UpdateHint(): JSX.Element {
               >
                 {">>"}
               </Typography>
-            </Grid>{" "}
+            </Grid>
             <Grid item>
               <Typography sx={{ fontSize: "6rem", color: "primary.main" }}>
                 {pkg.updatorVersion}

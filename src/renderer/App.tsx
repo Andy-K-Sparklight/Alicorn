@@ -50,7 +50,6 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { ipcRenderer } from "electron";
-import hotkeys from "hotkeys-js";
 import React, { useEffect, useRef, useState } from "react";
 import { Route } from "react-router-dom";
 import pkg from "../../package.json";
@@ -891,16 +890,9 @@ function Echo(): JSX.Element {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   useEffect(() => {
-    if (getBoolean("features.echo")) {
-      hotkeys("t", () => {
-        if (!open) {
-          setOpen(true);
-        }
-      });
+    if (!open) {
+      setOpen(true);
     }
-    return () => {
-      hotkeys.unbind("t");
-    };
   }, []);
 
   return (
