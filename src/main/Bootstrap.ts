@@ -7,6 +7,7 @@ import {
   getNumber,
   getString,
   loadConfigSync,
+  movOldConfigFolderSync,
 } from "../modules/config/ConfigSupport";
 import { setBeacon } from "../modules/selfupdate/Beacon";
 import { registerBackgroundListeners } from "./Background";
@@ -173,6 +174,7 @@ async function whenAppReady() {
 
 function main() {
   console.log("Loading config...");
+  movOldConfigFolderSync();
   loadConfigSync();
   if (!getBoolean("hardware-acc") && !getBoolean("features.skin-view-3d")) {
     // If 3D enabled then we should use hardware acc

@@ -4,7 +4,7 @@ import path from "path";
 import { copyFileStream, isFileExist } from "../commons/FileUtil";
 import { getBasePath } from "./PathSolve";
 
-const DATA_ROOT = path.resolve(os.homedir(), "alicorn");
+const DATA_ROOT = path.resolve(os.homedir(), ".alicorn");
 export const DEFAULTS_ROOT = path.resolve(getBasePath(), "defaults");
 
 export async function loadData(dataPath: string): Promise<string> {

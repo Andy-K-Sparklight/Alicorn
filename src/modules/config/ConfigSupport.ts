@@ -1,5 +1,12 @@
 import { ipcRenderer } from "electron";
-import fs from "fs-extra";
+import fs, {
+  move,
+  moveSync,
+  remove,
+  removeSync,
+  stat,
+  statSync,
+} from "fs-extra";
 import os from "os";
 import path from "path";
 import { DEFAULTS_ROOT } from "./DataSupport";
@@ -7,7 +14,7 @@ import { getBasePath } from "./PathSolve";
 
 const CONFIG_FILE = path.resolve(
   os.homedir(),
-  "alicorn",
+  ".alicorn",
   "alicorn.config.json"
 );
 
@@ -146,4 +153,24 @@ export function parseNum(val: unknown, def = 0): number {
 export async function saveAndReloadMain(): Promise<void> {
   await saveConfig();
   ipcRenderer.send("reloadConfig");
+}
+
+export function movOldConfigFolderSync(): void {
+  const oldDir = path.resolve(os.homedir(), "alicorn");
+  const newDir = path.resolve(os.homedir(), ".alicorn");
+  try {
+    const sto = statSync(oldDir);
+    try {
+      const stn = statSync(newDir);
+      if (stn.isDirectory()) {
+        // Already exists
+        return;
+      }
+    } catch {}
+    if (sto.isDirectory()) {
+      removeSync(newDir);
+      moveSync(oldDir, newDir);
+      console.log("Old config path detected, moved to new path.");
+    }
+  } catch {}
 }
