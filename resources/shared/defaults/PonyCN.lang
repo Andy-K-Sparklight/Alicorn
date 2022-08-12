@@ -2231,6 +2231,14 @@ Mod 动态加载
 
 我们一直在努力为每个人争取正当、公平的玩游戏的权利，不受任何监管或制约。\n尽管如此，仍然有些人听不进去，所以这是留给你的小礼物～\n在此设置一个快捷键，此后按下它可随时隐藏 Alicorn，终止 Minecraft。\n（快捷键格式类似 Ctrl+B+S 或者 F6）
 
+# Options.nvidia-prime.title
+
+启用 NVIDIA Prime
+
+# Options.nvidia-prime.desc
+
+在主要显卡上运行 Minecraft。\n仅适用于双显卡计算机，且当前输出显卡不是 NVIDIA 显卡。
+
 # CrashReportDisplay.BaseInfo
 
 基本信息

@@ -2124,6 +2124,22 @@ Disable Log4j Configuration
 
 Disable Log4j configuration provided by Mojang. 
 
+# Options.bosskey.title
+
+Boss Key ^
+
+# Options.bosskey.desc
+
+Set a keyboard shortcut here. When your boss is around, press this to hide Alicorn and quit Minecraft.\n(Format e.g. Alt+B)
+
+# Options.nvidia-prime.title
+
+NVIDIA Prime
+
+# Options.nvidia-prime.desc
+
+Run Minecraft on NVIDIA dGPU.\nIt only works with dual graphics cards when NVIDIA is not the output card.
+
 # CrashReportDisplay.BaseInfo
 
 Base Information

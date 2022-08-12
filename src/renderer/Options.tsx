@@ -25,6 +25,7 @@ import {
   ExtensionOff,
   Favorite,
   FirstPage,
+  GraphicEq,
   Home,
   Inbox,
   InsertPhoto,
@@ -37,6 +38,7 @@ import {
   MonitorHeart,
   Mouse,
   Numbers,
+  Output,
   Palette,
   PermContactCalendar,
   Public,
@@ -425,6 +427,12 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.RADIO}
             bindConfig={"para-gc"}
             choices={["pure", "g1", "z", "aggressive", "sd"]}
+          />
+          <InputItem
+            icon={<Output />}
+            type={ConfigType.BOOL}
+            bindConfig={"nvidia-prime"}
+            onlyOn={"linux"}
           />
           <InputItem
             icon={<WebAsset />}

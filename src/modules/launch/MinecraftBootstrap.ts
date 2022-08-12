@@ -2,6 +2,7 @@ import { ChildProcess, exec, spawn } from "child_process";
 import EventEmitter from "events";
 import os from "os";
 import { PROCESS_END_GATE, PROCESS_LOG_GATE } from "../commons/Constants";
+import { getBoolean } from "../config/ConfigSupport";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { restoreMods } from "../modx/ModDynLoad";
 
@@ -41,6 +42,14 @@ class RunningMinecraft {
       this.process = spawn(this.executable, this.args, {
         cwd: this.isolateRoot || this.container.rootDir,
         detached: true, // Won't close after launcher closed
+        env: getBoolean("nvidia-prime")
+          ? {
+              ...process.env,
+              __NV_PRIME_RENDER_OFFLOAD: "1",
+              __VK_LAYER_NV_optimus: "NVIDIA_only",
+              __GLX_VENDOR_LIBRARY_NAME: "nvidia",
+            }
+          : undefined,
       });
     } catch (e) {
       console.log(e);

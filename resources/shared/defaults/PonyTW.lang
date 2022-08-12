@@ -2219,6 +2219,22 @@ Mod 動態加載
 
 不使用 Mojang 提供的 Log4j 配置文件以在啟動疑難解答中獲得更清晰的日誌 - 副作用是輸出到文件的日誌會很混亂
 
+# Options.bosskey.title
+
+老闆鍵 ^
+
+# Options.bosskey.desc
+
+我們一直在努力為每個人爭取正當、公平的玩遊戲的權利，不受任何監管或製約。 \n儘管如此，仍然有些人聽不進去，所以這是留給你的小禮物～\n在此設置一個快捷鍵，此後按下它可隨時隱藏 Alicorn，終止 Minecraft。 \n（快捷鍵格式類似 Ctrl+B+S 或者 F6）
+
+# Options.nvidia-prime.title
+
+啟用 NVIDIA Prime
+
+# Options.nvidia-prime.desc
+
+在主要顯卡上運行 Minecraft。 \n僅適用於雙顯卡計算機，且當前輸出顯卡不是 NVIDIA 顯卡。
+
 # CrashReportDisplay.BaseInfo
 
 基本信息

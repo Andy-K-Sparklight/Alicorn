@@ -70,5 +70,6 @@
   "cx.shared-root": "",
   "interactive.cadance": false,
   "interactive.boticorn": false,
-  "bosskey": ""
+  "bosskey": "",
+  "nvidia-prime": true
 }
