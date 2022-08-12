@@ -6,10 +6,9 @@ import { getBoolean } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import {
   isProfileIsolated,
-  loadProfile,
+  loadProfile
 } from "../modules/profile/ProfileLoader";
 import { whatProfile } from "../modules/profile/WhatProfile";
-import { getEchos } from "../modules/selfupdate/Echo";
 import { jumpTo, triggerSetPage } from "./GoTo";
 import { ShiftEle } from "./Instruction";
 import { markTime, markUsed, SimplifiedCoreInfo } from "./LaunchPad";
@@ -161,20 +160,6 @@ function subscribeEcho(
   return () => {
     const i = setInterval(() => {
       setRefresh((o) => !o);
-      if (getBoolean("features.echo")) {
-        const echos = getEchos();
-        if (Math.random() > 0.6) {
-          if (echos.length > 0) {
-            setTip(
-              tr(
-                "Echo.Format",
-                `Text=${echos[Math.floor(Math.random() * echos.length)]}`
-              )
-            );
-            return;
-          }
-        }
-      }
       setTip(null);
     }, 5000);
     return () => {

@@ -10,7 +10,7 @@ import {
   Person,
   RssFeed,
   SportsScore,
-  ViewModule,
+  ViewModule
 } from "@mui/icons-material";
 import {
   Box,
@@ -39,7 +39,7 @@ import {
   TextField,
   ThemeProvider,
   Tooltip,
-  Typography,
+  Typography
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import copy from "copy-to-clipboard";
@@ -52,7 +52,7 @@ import { Account } from "../modules/auth/Account";
 import {
   AccountType,
   getPresentAccounts,
-  querySkinFor,
+  querySkinFor
 } from "../modules/auth/AccountUtil";
 import { prefetchData } from "../modules/auth/AJHelper";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
@@ -65,7 +65,7 @@ import {
   MS_LAST_USED_REFRESH_KEY,
   MS_LAST_USED_USERNAME_KEY,
   MS_LAST_USED_UUID_KEY,
-  MS_LAST_USED_XUID_KEY,
+  MS_LAST_USED_XUID_KEY
 } from "../modules/auth/MicrosoftAccount";
 import { Nide8Account } from "../modules/auth/Nide8Account";
 import { uniqueHash } from "../modules/commons/BasicHash";
@@ -73,13 +73,13 @@ import { Pair } from "../modules/commons/Collections";
 import {
   PROCESS_END_GATE,
   PROCESS_LOG_GATE,
-  ReleaseType,
+  ReleaseType
 } from "../modules/commons/Constants";
 import { isNull } from "../modules/commons/Null";
 import {
   getBoolean,
   getNumber,
-  getString,
+  getString
 } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
@@ -87,7 +87,7 @@ import { killEdge, runEdge } from "../modules/cutie/BootEdge";
 import { acquireCode, deactiveCode } from "../modules/cutie/Hoofoff";
 import {
   getWrapperStatus,
-  WrapperStatus,
+  WrapperStatus
 } from "../modules/download/DownloadWrapper";
 import {
   getAllJava,
@@ -97,7 +97,7 @@ import {
   getLegacyJDK,
   getNewJDK,
   parseJavaInfo,
-  parseJavaInfoRaw,
+  parseJavaInfoRaw
 } from "../modules/java/JavaInfo";
 import { autoMemory } from "../modules/launch/ArgsGenerator";
 import {
@@ -106,12 +106,12 @@ import {
   ensureClient,
   ensureLibraries,
   ensureLog4jFile,
-  ensureNatives,
+  ensureNatives
 } from "../modules/launch/Ensurance";
 import {
   launchProfile,
   markSafeLaunch,
-  shouldSafeLaunch,
+  shouldSafeLaunch
 } from "../modules/launch/LaunchTool";
 import { LaunchTracker } from "../modules/launch/LaunchTracker";
 import { stopMinecraft } from "../modules/launch/MinecraftBootstrap";
@@ -119,22 +119,21 @@ import { prepareModsCheckFor } from "../modules/modx/ModDynLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
 import {
   isProfileIsolated,
-  loadProfile,
+  loadProfile
 } from "../modules/profile/ProfileLoader";
 import {
   dropAccountPromise,
-  waitMSAccountReady,
+  waitMSAccountReady
 } from "../modules/readyboom/AccountMaster";
 import {
   setLastUsed,
-  waitProfileReady,
+  waitProfileReady
 } from "../modules/readyboom/PrepareProfile";
 import { getMachineUniqueID } from "../modules/security/Unique";
-import { getEchos } from "../modules/selfupdate/Echo";
 import {
   initLocalYggdrasilServer,
   ROOT_YG_URL,
-  skinTypeFor,
+  skinTypeFor
 } from "../modules/skin/LocalYggdrasilServer";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { Icons } from "./Icons";
@@ -144,7 +143,7 @@ import { YNDialog } from "./OperatingHint";
 import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
-  isBgDark,
+  isBgDark
 } from "./Renderer";
 import { SkinDisplay2D, SkinDisplay3D } from "./SkinDisplay";
 import { addStatistics } from "./Statistics";
@@ -152,13 +151,13 @@ import {
   AlicornTheme,
   fullWidth,
   useFormStyles,
-  useInputStyles,
+  useInputStyles
 } from "./Stylex";
 import { randsl, tr } from "./Translator";
 import {
   HOOFOFF_CENTRAL,
   NETWORK_PORT,
-  QUERY_PORT,
+  QUERY_PORT
 } from "./utilities/CutieConnect";
 import { SpecialKnowledge } from "./Welcome";
 import { toReadableType, YggdrasilForm } from "./YggdrasilAccountManager";
@@ -1876,20 +1875,6 @@ function WaitingText(): JSX.Element {
   const [hint, setHint] = useState(randsl("ReadyToLaunch.WaitingText"));
   useEffect(() => {
     const timer = setInterval(() => {
-      if (getBoolean("features.echo")) {
-        const echos = getEchos();
-        if (Math.random() > 0.6) {
-          if (echos.length > 0) {
-            setHint(
-              tr(
-                "Echo.Format",
-                `Text=${echos[Math.floor(Math.random() * echos.length)]}`
-              )
-            );
-            return;
-          }
-        }
-      }
       setHint(randsl("ReadyToLaunch.WaitingText"));
     }, 5000);
     return () => {

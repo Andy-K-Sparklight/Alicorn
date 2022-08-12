@@ -17,7 +17,7 @@ import {
   getNumber,
   getString,
   loadConfig,
-  saveDefaultConfig,
+  saveDefaultConfig
 } from "../modules/config/ConfigSupport";
 import { getActualDataPath } from "../modules/config/DataSupport";
 import { loadGDT } from "../modules/container/ContainerUtil";
@@ -34,7 +34,6 @@ import { setupMSAccountRefreshService } from "../modules/readyboom/AccountMaster
 import { setupHotProfilesService } from "../modules/readyboom/PrepareProfile";
 import { initEncrypt } from "../modules/security/Encrypt";
 import { getMachineUniqueID } from "../modules/security/Unique";
-import { updateWebEchos } from "../modules/selfupdate/Echo";
 import { todayPing } from "../modules/selfupdate/Ping";
 import { checkUpdate, initUpdator } from "../modules/selfupdate/Updator";
 import { loadServers } from "../modules/server/ServerFiles";
@@ -264,13 +263,6 @@ try {
         console.log("Skipped update checking due to user settings.");
       }
     })();
-
-    if (getBoolean("features.echo")) {
-      setInterval(() => {
-        void updateWebEchos();
-      }, 600000);
-      void updateWebEchos();
-    }
     await Promise.allSettled([
       updPm,
       prefetchForgeManifest(),

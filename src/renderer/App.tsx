@@ -64,7 +64,6 @@ import { saveGDT } from "../modules/container/ContainerUtil";
 import { saveVF } from "../modules/container/ValidateRecord";
 import { handleDnD } from "../modules/dnd/DnDCenter";
 import { saveJDT } from "../modules/java/JavaInfo";
-import { sendEcho } from "../modules/selfupdate/Echo";
 import { waitUpdateFinished } from "../modules/selfupdate/Updator";
 import { saveServers } from "../modules/server/ServerFiles";
 import { ContainerManager } from "./ContainerManager";
@@ -238,7 +237,6 @@ export function App(): JSX.Element {
         no={tr("System.JumpPageWarn.No")}
       />
       <TipsOfToday />
-      <Echo />
       <Snackbar
         open={openErr}
         autoHideDuration={10000}
@@ -883,55 +881,5 @@ function BetaTag(): JSX.Element {
         variant={"outlined"}
       />
     </>
-  );
-}
-
-function Echo(): JSX.Element {
-  const [open, setOpen] = useState(false);
-  const [input, setInput] = useState("");
-  useEffect(() => {
-    if (!open) {
-      setOpen(true);
-    }
-  }, []);
-
-  return (
-    <ThemeProvider
-      theme={
-        isBgDark() ? ALICORN_DEFAULT_THEME_DARK : ALICORN_DEFAULT_THEME_LIGHT
-      }
-    >
-      <Dialog
-        open={open}
-        onClose={() => {
-          setOpen(false);
-        }}
-      >
-        <DialogContent>
-          <DialogTitle>{tr("Echo.Title")}</DialogTitle>
-          <DialogContentText>{tr("Echo.Hint")}</DialogContentText>
-          <TextField
-            value={input}
-            fullWidth
-            placeholder={tr("Echo.PlaceHolder")}
-            onChange={(e) => {
-              setInput(e.target.value);
-            }}
-          />
-          <DialogActions>
-            <Button
-              disabled={input.trim().length <= 0}
-              onClick={() => {
-                setOpen(false);
-                setInput("");
-                sendEcho(input);
-              }}
-            >
-              {tr("Echo.Send")}
-            </Button>
-          </DialogActions>
-        </DialogContent>
-      </Dialog>
-    </ThemeProvider>
   );
 }
