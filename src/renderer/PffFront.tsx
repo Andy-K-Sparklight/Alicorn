@@ -29,8 +29,8 @@ import { getBoolean } from "../modules/config/ConfigSupport";
 import { getContainer as _getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { configureModDepChain, UnmetDepUnit } from "../modules/modx/ModDeps";
-import { loadMetas } from "../modules/modx/ModDynLoad";
-import { ModInfo, ModLoader } from "../modules/modx/ModInfo";
+import { chkModLoader, loadMetas } from "../modules/modx/ModDynLoad";
+import { ModInfo, ModLoader, modLoaderOfStr } from "../modules/modx/ModInfo";
 import { canModVersionApply } from "../modules/modx/ModVersionUtil";
 import {
   loadLockfile,
@@ -63,7 +63,6 @@ export function PffFront(): JSX.Element {
   name = name ? decodeURIComponent(name) : undefined;
   loader = decodeURIComponent(loader);
   autostart = autostart ? decodeURIComponent(autostart) : undefined;
-
   const [isRunning, setRunning] = useState(autostart === "1");
   const [val, setVal] = useState(0);
   const [info, setInfo] = useState("");
@@ -148,7 +147,7 @@ export function PffFront(): JSX.Element {
                 getContainer(container),
                 version,
                 emitter.current,
-                loader === "Forge" ? 1 : 4
+                loader === "Forge" ? 1 : loader === "Quilt" ? 8 : 4
               );
             }
           })
@@ -174,7 +173,7 @@ export function PffFront(): JSX.Element {
               getContainer(container),
               version,
               emitter.current,
-              loader === "Forge" ? 1 : 4
+              loader === "Forge" ? 1 : loader === "Quilt" ? 8 : 4
             );
           }
         })
@@ -388,6 +387,8 @@ export function PffFront(): JSX.Element {
                           ? ModLoader.FORGE
                           : loader === "Fabric"
                           ? ModLoader.FABRIC
+                          : loader === "Quilt"
+                          ? ModLoader.QUILT
                           : ModLoader.UNKNOWN
                       }
                       mcversion={version}
@@ -466,8 +467,13 @@ function SinglePffModDisplay(props: {
 }): JSX.Element {
   const [showDesc, setShowDesc] = useState(false);
   const isCompatible =
-    props.meta.selectedArtifact.gameVersion.includes(props.version) &&
-    props.loader === props.meta.selectedArtifact.modLoader;
+    (props.meta.selectedArtifact.gameVersion.length === 0 ||
+      props.meta.selectedArtifact.gameVersion.includes(props.version)) &&
+    chkModLoader(
+      modLoaderOfStr(props.meta.selectedArtifact.modLoader),
+      modLoaderOfStr(props.loader)
+    );
+
   return (
     <ListItem
       alignItems={"flex-start"}
@@ -539,7 +545,7 @@ function SingleModDisplay(props: {
 }): JSX.Element {
   const modmcv = props.m.mcversion || "*";
   const compatible =
-    (props.m.loader === props.loader ||
+    (chkModLoader(props.m.loader, props.loader) ||
       (props.m.loader === ModLoader.UNKNOWN &&
         getBoolean("modx.ignore-non-standard-mods"))) &&
     canModVersionApply(
@@ -634,14 +640,10 @@ export async function pffInstall(
     name = name.slice(0, -1);
   }
   const ml = modLoaderOf(modLoader);
+
   const idx = `[${name}] `;
-  if (!ml) {
-    if (!optional) {
-      emitter.emit(
-        PFF_MSG_GATE,
-        `[${name}] ` + tr("PffFront.UnsupportedLoader")
-      );
-    }
+  if (!optional) {
+    emitter.emit(PFF_MSG_GATE, `[${name}] ` + tr("PffFront.UnsupportedLoader"));
   }
   setPffFlag("1");
   emitter.emit(PFF_MSG_GATE, idx + tr("PffFront.Loading"));

@@ -25,17 +25,20 @@ import {
   ExtensionOff,
   Favorite,
   FirstPage,
+  GraphicEq,
   Home,
   Inbox,
   InsertPhoto,
   Inventory2,
   Iso,
+  Keyboard,
   LockOpen,
   LockReset,
   Memory,
   MonitorHeart,
   Mouse,
   Numbers,
+  Output,
   Palette,
   PermContactCalendar,
   Public,
@@ -231,6 +234,12 @@ export function OptionsPage(): JSX.Element {
             reload
           />
           <InputItem
+            icon={<Keyboard />}
+            type={ConfigType.STR}
+            bindConfig={"bosskey"}
+            reload
+          />
+          <InputItem
             icon={<CloudDone />}
             type={ConfigType.BOOL}
             bindConfig={"alicorn-ping"}
@@ -418,6 +427,12 @@ export function OptionsPage(): JSX.Element {
             type={ConfigType.RADIO}
             bindConfig={"para-gc"}
             choices={["pure", "g1", "z", "aggressive", "sd"]}
+          />
+          <InputItem
+            icon={<Output />}
+            type={ConfigType.BOOL}
+            bindConfig={"nvidia-prime"}
+            onlyOn={"linux"}
           />
           <InputItem
             icon={<WebAsset />}

@@ -9,6 +9,7 @@ import {
   AbstractModResolver,
   CurseforgeModResolver,
   CursePlusPlusModResolver,
+  ModLoaderType,
   ModResolver,
   ModrinthModResolver,
 } from "./Resolver";
@@ -18,7 +19,7 @@ const SLUG_SCOPE_REGEX = /(?<=@)(curseforge|modrinth|curseplusplus)(?=:.+?)/i;
 export async function fetchModByName(
   slug: string,
   gameVersion: string,
-  modLoader: "Fabric" | "Forge",
+  modLoader: ModLoaderType,
   container: MinecraftContainer
 ): Promise<boolean> {
   // slug can be '@Provider:Slug'
@@ -53,6 +54,10 @@ export async function fetchModByName(
         await c.setSelected(sid, undefined); // Set id
       }
       await c.resolveMod();
+      if (c.cachedMeta?.id === sid) {
+        sx = c;
+        break;
+      }
       if (!sx) {
         sx = c; // Find the first as the best
       }
@@ -98,7 +103,7 @@ export async function fetchModByName(
 export async function fetchSelectedMod(
   rsv: ModResolver,
   gameVersion: string,
-  modLoader: "Fabric" | "Forge",
+  modLoader: ModLoaderType,
   container: MinecraftContainer
 ): Promise<boolean> {
   const lf = await loadLockfile(container);

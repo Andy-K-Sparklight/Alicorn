@@ -2,6 +2,7 @@ import { isNull } from "../commons/Null";
 
 const FABRIC_NAME = /fabric/i;
 const FORGE_NAME = /forge/i;
+const QUILT_NAME = /quilt/i;
 const MOJANG_NAME_RELEASE = /^[0-9]+?\.[0-9]+?(\.)?[0-9]*$/i;
 const MOJANG_NAME_SNAPSHOT = /^[0-9]+?w[0-9]+?[a-z]+$/i;
 const LEGACY_VERSIONS = /^1\.([0-9]|1[0-2])([-.a-z].*?)?$/i;
@@ -29,6 +30,9 @@ export function whatProfile(id: string): ProfileType {
   if (FORGE_NAME.test(id)) {
     return ProfileType.FORGE;
   }
+  if (QUILT_NAME.test(id)) {
+    return ProfileType.QUILT;
+  }
   if (INSTALLER.test(id)) {
     return ProfileType.INSTALLER;
   }
@@ -41,6 +45,7 @@ export enum ProfileType {
   FABRIC = "Fabric",
   UNIVERSAL = "Universal",
   INSTALLER = "Installer",
+  QUILT = "Quilt",
 }
 
 export function isLegacy(obj: Record<string, unknown>): boolean {

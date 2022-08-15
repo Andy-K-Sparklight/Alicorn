@@ -1,3 +1,5 @@
+import { ModLoaderType } from "./Resolver";
+
 export interface ModMeta {
   provider: "Modrinth" | "Curseforge" | "CursePlusPlus";
   // ...CPP stands for a browser-based Curseforge API
@@ -9,7 +11,7 @@ export interface ModMeta {
 }
 
 export interface ModArtifact {
-  modLoader: "Fabric" | "Forge";
+  modLoader: ModLoaderType;
   id: string;
   gameVersion: string[];
   downloadUrl: string;

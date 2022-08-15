@@ -1,8 +1,8 @@
 {
   "private": true,
-  "appVersion": "Harmony",
+  "appVersion": "Sunset",
   "version": "1.0.0",
-  "updatorVersion": 49,
+  "updatorVersion": 50,
   "scripts": {
     "lc": "yarn lcd",
     "df": "yarn dev-full",
@@ -73,7 +73,6 @@
     "copy-to-clipboard": "^3.3.1",
     "crypto-js": "^4.1.1",
     "fs-extra": "^10.1.0",
-    "hotkeys-js": "^3.9.4",
     "iconv-lite": "^0.6.3",
     "is-reachable": "^5.2.1",
     "js-base64": "^3.7.2",
@@ -91,7 +90,7 @@
     "sudo-prompt": "^9.2.1",
     "throttle-debounce": "^5.0.0",
     "toml": "^3.0.0",
-    "undici": "^5.6.0",
+    "undici": "^5.8.0",
     "uuid": "^8.3.2",
     "ws": "^8.8.0"
   }

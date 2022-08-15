@@ -90,7 +90,11 @@ function InstructionInside(props: {
             borderStyle: "solid",
           }}
         >
-          <img src={tr("Avatar")} width={"auto"} height={"100%"} />
+          <img
+            src={new URL(tr("Avatar")).toString()}
+            width={"auto"}
+            height={"100%"}
+          />
         </Box>
         <Box
           sx={{

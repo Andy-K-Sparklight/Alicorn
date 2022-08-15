@@ -6,7 +6,7 @@ import { FileOperateReport, LaunchTracker } from "../launch/LaunchTracker";
 import { JAR_SUFFIX } from "../launch/NativesLint";
 import { GameProfile } from "../profile/GameProfile";
 import { ProfileType } from "../profile/WhatProfile";
-import { loadModInfo, ModInfo, ModLoader } from "./ModInfo";
+import { loadModInfo, ModInfo, ModLoader, modLoaderOfStr } from "./ModInfo";
 import { canModVersionApply, gatherVersionInfo } from "./ModVersionUtil";
 // How we manage mods:
 // Before launch:
@@ -71,11 +71,11 @@ async function moveModsTo(
       }
       mi.mcversion = mi.mcversion || "*"; // Fallback
       if (
-        mi.loader?.toString() !== type.toString() ||
+        !chkModLoader(mi.loader, modLoaderOfStr(type)) ||
         !canModVersionApply(
           mi.mcversion || "",
           mcVersion,
-          mi.loader === ModLoader.FABRIC
+          mi.loader !== ModLoader.FORGE
         )
       ) {
         toProcess.push(mi);
@@ -196,4 +196,17 @@ async function scanModsList(
   } finally {
     tracker.mods(tFile);
   }
+}
+
+export function chkModLoader(
+  mod: ModLoader | undefined,
+  loader: ModLoader | undefined
+): boolean {
+  if (mod === loader) {
+    return true;
+  }
+  if (mod === ModLoader.FABRIC && loader === ModLoader.QUILT) {
+    return true;
+  }
+  return false;
 }
