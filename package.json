@@ -1,8 +1,8 @@
 {
   "private": true,
-  "appVersion": "Harmony",
+  "appVersion": "Sunset",
   "version": "1.0.0",
-  "updatorVersion": 49,
+  "updatorVersion": 50,
   "scripts": {
     "lc": "yarn lcd",
     "df": "yarn dev-full",
