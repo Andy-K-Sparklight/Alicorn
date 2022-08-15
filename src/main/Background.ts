@@ -209,10 +209,10 @@ export function registerBackgroundListeners(): void {
         setTimeout(() => {
           if (
             loginWindow &&
-            !loginWindow?.isDestroyed() &&
-            !loginWindow?.isVisible()
+            !loginWindow.isDestroyed() &&
+            !loginWindow.isVisible()
           ) {
-            loginWindow?.show();
+            loginWindow.show();
           }
         }, 5000); // Easy everyone, don't get panic!
         await loginWindow.loadURL(LOGIN_START);

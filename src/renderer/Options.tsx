@@ -24,9 +24,7 @@ import {
   EmojiEmotions,
   ExtensionOff,
   Favorite,
-  FirstPage,
-  GraphicEq,
-  Home,
+  FirstPage, Home,
   Inbox,
   InsertPhoto,
   Inventory2,
@@ -59,7 +57,7 @@ import {
   ViewInAr,
   WebAsset,
   YoutubeSearchedFor,
-  ZoomOutMap,
+  ZoomOutMap
 } from "@mui/icons-material";
 import {
   Box,
@@ -75,7 +73,7 @@ import {
   Tabs,
   TextField,
   ThemeProvider,
-  Typography,
+  Typography
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { ipcRenderer, webFrame } from "electron";
@@ -89,7 +87,7 @@ import {
   getNumber,
   getString,
   parseNum,
-  set,
+  set
 } from "../modules/config/ConfigSupport";
 import { getActualDataPath } from "../modules/config/DataSupport";
 import { loadMirror } from "../modules/download/Mirror";
@@ -97,7 +95,7 @@ import { remoteSelectDir } from "./ContainerManager";
 import {
   ALICORN_DEFAULT_THEME_DARK,
   ALICORN_DEFAULT_THEME_LIGHT,
-  isBgDark,
+  isBgDark
 } from "./Renderer";
 import { AlicornTheme, useInputStyles } from "./Stylex";
 import { AL_THEMES } from "./ThemeColors";

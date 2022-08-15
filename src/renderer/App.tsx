@@ -19,34 +19,23 @@ import {
   Refresh,
   Settings,
   ShowChart,
-  ViewModule,
+  ViewModule
 } from "@mui/icons-material";
 import {
   Alert,
   AppBar,
-  Box,
-  Button,
-  Chip,
+  Box, Chip,
   ClassNameMap,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Drawer,
+  Container, Drawer,
   Fab,
   IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Snackbar,
-  TextField,
-  ThemeProvider,
-  Toolbar,
+  Snackbar, Toolbar,
   Tooltip,
-  Typography,
+  Typography
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { ipcRenderer } from "electron";
@@ -58,7 +47,7 @@ import { safeGet } from "../modules/commons/Null";
 import {
   getBoolean,
   getString,
-  saveConfig,
+  saveConfig
 } from "../modules/config/ConfigSupport";
 import { saveGDT } from "../modules/container/ContainerUtil";
 import { saveVF } from "../modules/container/ValidateRecord";
@@ -76,7 +65,7 @@ import {
   goBack,
   jumpTo,
   setChangePageWarn,
-  triggerSetPage,
+  triggerSetPage
 } from "./GoTo";
 import { InstallCore } from "./InstallCore";
 import { Instruction, isInstBusy, startInst } from "./Instruction";
@@ -88,11 +77,6 @@ import { YNDialog2 } from "./OperatingHint";
 import { OptionsPage } from "./Options";
 import { PffFront } from "./PffFront";
 import { ReadyToLaunch } from "./ReadyToLaunch";
-import {
-  ALICORN_DEFAULT_THEME_DARK,
-  ALICORN_DEFAULT_THEME_LIGHT,
-  isBgDark,
-} from "./Renderer";
 import { ServerList } from "./ServerList";
 import { saveStatistics, Statistics } from "./Statistics";
 import { AlicornTheme } from "./Stylex";
