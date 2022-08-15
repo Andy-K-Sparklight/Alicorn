@@ -1,22 +1,12 @@
 import { ipcRenderer } from "electron";
-import fs, {
-  move,
-  moveSync,
-  remove,
-  removeSync,
-  stat,
-  statSync,
-} from "fs-extra";
+import fs, { moveSync, removeSync, statSync } from "fs-extra";
 import os from "os";
 import path from "path";
 import { DEFAULTS_ROOT } from "./DataSupport";
+import { getOSSpecificDataDir } from "./OSDirSupport";
 import { getBasePath } from "./PathSolve";
 
-const CONFIG_FILE = path.resolve(
-  os.homedir(),
-  ".alicorn",
-  "alicorn.config.json"
-);
+const CONFIG_FILE = path.resolve(getOSSpecificDataDir(), "alicorn.config.json");
 
 const DEFAULT_CONFIG_FILE = path.resolve(
   getBasePath(),
@@ -157,7 +147,7 @@ export async function saveAndReloadMain(): Promise<void> {
 
 export function movOldConfigFolderSync(): void {
   const oldDir = path.resolve(os.homedir(), "alicorn");
-  const newDir = path.resolve(os.homedir(), ".alicorn");
+  const newDir = path.resolve(getOSSpecificDataDir());
   try {
     const sto = statSync(oldDir);
     try {

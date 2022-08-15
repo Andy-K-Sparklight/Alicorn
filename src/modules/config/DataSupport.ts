@@ -1,10 +1,10 @@
 import fs from "fs-extra";
-import os from "os";
 import path from "path";
 import { copyFileStream, isFileExist } from "../commons/FileUtil";
+import { getOSSpecificDataDir } from "./OSDirSupport";
 import { getBasePath } from "./PathSolve";
 
-const DATA_ROOT = path.resolve(os.homedir(), ".alicorn");
+const DATA_ROOT = path.resolve(getOSSpecificDataDir());
 export const DEFAULTS_ROOT = path.resolve(getBasePath(), "defaults");
 
 export async function loadData(dataPath: string): Promise<string> {
