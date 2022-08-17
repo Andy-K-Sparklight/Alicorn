@@ -2385,63 +2385,23 @@ Mojang 版本
 
 # Welcome.Suggest.Part1
 
-['{Config:interactive.i-have-a-crush-on-al}'=='false']今天是 {Date}，欢迎你使用 Alicorn Launcher，{UserName}！
+这个世界还值得你留念？那我会陪着你的。
 
-[new Date().getHours()>=18]好上晚！哦，我刚刚在练习古小马语……
+Alicorn 感谢你的陪伴，至少与你一同见证过斗转星移。
 
-[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]好困……这个时候叫我……？
+[new Date().getHours()>=18]黑夜令群星更闪耀，暮色使落日更辉煌。
 
-[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]哈……好困，不行，我先去休息了，你自己玩吧（不悦）
+[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]时间若能在此静止，结局倒还不算太坏。
 
-[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]保证充足睡眠有助于抵御病毒哦！
+[(()=>{const hours=new Date().getHours();return hours>=7&&hours<=11;})()]上午好，你依然如此有精神？真意外。
 
-[(()=>{const hours=new Date().getHours();return hours>=7&&hours<=11;})()]上午好！今天的天气真不错……什么？我猜错了？这不能怪我，要不你来预测天气试试？
+[new Date().getHours()==12]正午，是开始的结束，还是结束的开始？
 
-[new Date().getHours()==12]正午到！六分仪已经就绪，出发！
-
-[(()=>{const hours=new Date().getHours();return hours>=7&&hours<=9;})()]早上好！来一杯牛奶……？
-
-无论什么时候你需要我，我都在这里的啦……
-
-嗯呐……什么事？
-
-戴口罩，多通风，少聚集，玩玩 MC 就很好～
-
-['{Config:interactive.i-have-a-crush-on-al}'=='true']你这是什么眼神……唔？唔唔唔！放开我！
-
-['{Config:interactive.i-have-a-crush-on-al}'=='true']这两只小马耳朵？很可爱？想摸摸吗？
-
-['{Config:interactive.i-have-a-crush-on-al}'=='true']我可是会飞的哦～看着！（张开翅膀）
-
-['{Config:updator.use-update}'=='false']不要担心升级！更新后的我就像暮光公主变成坎特拉女孩一样，虽然样子不同，但我不会忘了你的！
+能在这里见到你真是太好了。
 
 拒绝 Mod 平台的广告。使用 Modrinth 而拒绝 Curseforge，就是在为大家贡献力量。
 
-['{Config:dev.experimental}'=='true']不要一边驾驶飞机，一边测试飞机的引擎……
-
-['{Config:theme.background}'=='ACG']看多了 ACG 图片，会不会就不喜欢我了呢……
-
-['{Config:updator.url}'!=='']订阅其它源的更新 URL 不一定可信，要小心哦！
-
-['{Config:readyboom}'=='false']没有 ReadyBoom，你都不知道我的速度有多快！
-
-['{Config:dev.experimental}'=='true']听说实验室容易爆炸，实验功能也是一样……
-
-我相信每个人都有一颗小马般的心～
-
-[(()=>{const hours=new Date().getHours();return hours>=18&&hours<=21;})()]虽然我还小，但我觉得在这个浪漫的晚上，似乎也可以小酌一杯苹果酒～
-
-['{Config:interactive.i-have-a-crush-on-al}'=='true']嗯……不行，不能抱我……
-
-['{Config:interactive.i-have-a-crush-on-al}'=='true']来一起跳支舞……？
-
-['{Config:interactive.i-have-a-crush-on-al}'=='true']这不是水，这是苹果酒，提神用的……要来一杯吗？
-
-['{Config:interactive.i-have-a-crush-on-al}'=='true']我可是书虫！不然我怎么对付 Forge 的安装器呢？
-
-['{Config:interactive.i-have-a-crush-on-al}'=='true']在你玩游戏的时候，我可没有偷懒，我在默默地看着你呢～
-
-['{Config:interactive.i-have-a-crush-on-al}'=='false']您还记得我吗？我？我记得每一位用户……
+我？我的存储模块还挺可靠，我不会忘记你。
 
 # Welcome.TipName
 
@@ -3660,6 +3620,7 @@ MCBBS（Minecraft 中文论坛）……这里是热爱 MC 群体的天堂。\nFr
 
 这是 Alicorn 的前世今生的全部时间线。我知道不会有多少人会想了解我，但这不重要，这相当于我的自传吧……\n\n\
 至今 - 你现在看到的 Alicorn。\n\
+2022 年 8 月 17 日 - Alicorn 正式停止主要功能更新，ThatRarityEG 表示将离开 Minecraft 社区。
 2022 年 1 月 15 日 - 这对于 Alicorn 来说是一个重要的夜晚，继触觉之后，Alicorn 拥有了听觉。\n\
 2021 年 8 月 20 日 - Alicorn 在 MCBBS 发布，从此走上新的旅程。\n\
 2021 年 8 月 ?? 日 - Alicorn 结束了最后的测试，并发布了第一个核心，从那时至今，几乎每周都会发布一个新版本。\n\
