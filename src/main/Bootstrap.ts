@@ -116,10 +116,14 @@ async function whenAppReady() {
         },
       };
     });
-    const menu = Menu.buildFromTemplate(subMenus);
+
     if (os.platform() == "darwin") {
+      const menu = Menu.buildFromTemplate([
+        { label: "Alicorn", submenu: [{ role: "quit" }, ...subMenus] },
+      ]);
       Menu.setApplicationMenu(menu);
     } else {
+      const menu = Menu.buildFromTemplate(subMenus);
       mainWindow.setMenu(menu);
     }
   } else {
