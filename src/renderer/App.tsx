@@ -19,23 +19,26 @@ import {
   Refresh,
   Settings,
   ShowChart,
-  ViewModule
+  ViewModule,
 } from "@mui/icons-material";
 import {
   Alert,
   AppBar,
-  Box, Chip,
+  Box,
+  Chip,
   ClassNameMap,
-  Container, Drawer,
+  Container,
+  Drawer,
   Fab,
   IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Snackbar, Toolbar,
+  Snackbar,
+  Toolbar,
   Tooltip,
-  Typography
+  Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { ipcRenderer } from "electron";
@@ -47,7 +50,7 @@ import { safeGet } from "../modules/commons/Null";
 import {
   getBoolean,
   getString,
-  saveConfig
+  saveConfig,
 } from "../modules/config/ConfigSupport";
 import { saveGDT } from "../modules/container/ContainerUtil";
 import { saveVF } from "../modules/container/ValidateRecord";
@@ -65,7 +68,7 @@ import {
   goBack,
   jumpTo,
   setChangePageWarn,
-  triggerSetPage
+  triggerSetPage,
 } from "./GoTo";
 import { InstallCore } from "./InstallCore";
 import { Instruction, isInstBusy, startInst } from "./Instruction";
@@ -151,6 +154,12 @@ export function App(): JSX.Element {
   useEffect(gotoMainIfEmpty, [window.location.hash]);
   useEffect(popupInstruction(page), [page]);
   useEffect(bindRefreshListener(setRefreshBit), []);
+  useEffect(() => {
+    ipcRenderer.addListener("menu-click", (_e, lb) => {
+      jumpTo("/" + lb);
+      triggerSetPage(lb);
+    });
+  }, []);
   useEffect(
     bindChangePageWarn(
       setOpenChangePageWarn,
@@ -513,6 +522,9 @@ function AppTopBar(props: {
   setOpenDrawer: (o: boolean) => void;
 }): JSX.Element {
   const classes = props.classes;
+  if (getString("frame.drag-impl") === "TitleBar") {
+    return <></>;
+  }
   return (
     <AppBar enableColorOnDark>
       <Toolbar>
