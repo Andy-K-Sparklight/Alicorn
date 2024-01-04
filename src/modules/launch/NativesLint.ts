@@ -25,16 +25,12 @@ const NATIVES_LOCK_FILE = "natives.lock.ald";
 // We should validate hash, but it's unnecessary
 export async function checkExtractTrimNativeLocal(
   container: MinecraftContainer,
+  id: string,
   nativeArtifact: ArtifactMeta
 ): Promise<void> {
   try {
     const srcFile = container.getLibraryPath(nativeArtifact.path);
-    const dest = container.getLibraryPath(
-      path.join(
-        path.dirname(nativeArtifact.path),
-        path.basename(nativeArtifact.path, JAR_SUFFIX)
-      )
-    );
+    const dest = container.getNativesLocation(id);
     await fs.ensureDir(dest);
     if (await checkLockFile(dest)) {
       return;
