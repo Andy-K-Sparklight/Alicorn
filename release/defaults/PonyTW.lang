@@ -1,0 +1,3740 @@
+# Avatar
+
+https://attachment.mcbbs.net/uc_server/data/avatar/003/28/10/25_avatar_big.jpg
+
+# PrefTheme
+
+Twikie
+
+# LaunchPad
+
+啟動遊戲
+
+# InstallCore
+
+安裝核心
+
+# ContainerManager
+
+管理容器
+
+# QuickSetup
+
+快速自動設置
+
+# ReadyToLaunch
+
+出發吧!
+
+# Version
+
+啟動器信息
+
+# AccountManager
+
+帳戶管理器
+
+# JavaSelector
+
+Java 選擇器
+
+# Statistics
+
+Alicorn 回憶錄
+
+# Options
+
+選項
+
+# CrashReportDisplay
+
+啟動疑難解答
+
+# PffFront
+
+Pff 軟件安裝器
+
+# Welcome
+
+歡迎回來
+
+# ServerList
+
+服務器列表
+
+# UtilitiesIndex
+
+實用工具
+
+# TheEndingOfTheEnd
+
+終末之末
+
+# UpdateHint
+
+全新的我！
+
+# Cadance
+
+語音控制面板
+
+# Boticorn
+
+Alicorn 助理
+
+# DMCenter
+
+界面管理器
+
+# System.EPERM
+
+Alicorn 無法讀/寫 {Target}，請檢查此目錄的權限，相關操作已經中止。
+
+# System.Offline
+
+似乎已斷開與互聯網的連接……
+
+# System.DnDProcessing
+
+處理這些文件中……請稍候，我將儘快完成。
+
+# System.DnDOK
+
+我已經幫你處理好了剛剛遞給我的文件哦～
+
+# System.WakeUp
+
+嗨！你叫我嗎？
+
+# System.JumpPageWarn.Title
+
+要離開當前頁面嗎？
+
+# System.JumpPageWarn.Description
+
+你不應該在此時切換頁面，這可能導致操作中斷或丟失你的修改。\n仍要切換嗎？
+
+# System.JumpPageWarn.Yes
+
+仍然切換
+
+# System.JumpPageWarn.No
+
+留在當前頁面
+
+# System.HasUpdate
+
+發現了一個新版本，請稍等，我們正在更新……
+
+# System.UpdateOK
+
+耶！我現在已經是全新的我了！
+
+# System.UpdateFailed
+
+更新失敗……不過別擔心！你的文件絲毫不受影響。
+
+# System.DevToolsWarn1
+
+等一下！
+
+# System.DevToolsWarn2
+
+如果有人告訴你要在這裡輸入一些東西，110% 你被騙了。
+
+# System.DevToolsWarn3
+
+在這裡輸入任何內容都將使你的電腦面臨嚴重風險！
+
+# Beta
+
+實驗特性
+
+# MainMenu.UtilitiesIndex
+
+打開實用工具
+
+# MainMenu.GoBack
+
+上一頁
+
+# MainMenu.Reload
+
+重新加載
+
+# MainMenu.QuickManageAccount
+
+管理帳戶
+
+# MainMenu.Exit
+
+退出
+
+# MainMenu.OpenDevToolsFormal
+
+調試頁面
+
+# MainMenu.QuickInstallCore
+
+安裝核心
+
+# MainMenu.QuickLaunchPad
+
+啟動遊戲
+
+# MainMenu.QuickManageContainer
+
+管理容器
+
+# Operating.ClickToDebug
+
+如果希望向他人尋求幫助，請單擊我（如果你會用 Devtools 的話）。
+
+# Operating.PleaseWait
+
+請稍等
+
+# Operating.Failed
+
+操作失敗……
+
+# Operating.FailedConfirm
+
+好
+
+# Operating.FailedInfo
+
+別擔心！你的文件應該沒有受到影響。\n問題的原因如下：\n{Reason}
+
+# Operating.FailedSayings
+
+為什麼會變成這樣呢？
+
+嗯……你能給我半分鐘嗎？讓我冷靜下……謝謝！
+
+幸虧我們在出現重大事故前阻止了操作。
+
+就差了那麼一點點……
+
+別慌，只是一點小麻煩……唔？
+
+問題不大！嗯……但願如此。
+
+對不起對不起！我剛剛睡著了……
+
+沒有哪只小馬是完美無缺的，你……能理解嗎？
+
+再試試？或許這只是一場噩夢而已……
+
+['{Platform}'==='win32'||'{Platform}'==='darwin']（跺蹄蹄）這就是使用專有軟件帶來的後果！
+
+['{Platform}'==='win32'||'{Platform}'==='darwin']為什麼不試試使用 GNU/Linux 呢？Alicorn 的功能在那裡都進行過測試！
+
+# Operating.PleaseWaitDetail
+
+正在進行操作……這可能需要幾分鐘。
+
+# CoreInfo.Isolated
+
+已檢測到版本隔離
+
+# CoreInfo.Sorting.HL
+
+按版本從高到低
+
+# CoreInfo.Sorting.LH
+
+按版本從低到高
+
+# CoreInfo.Sorting.USE
+
+按使用次數
+
+# CoreInfo.Sorting.TIME
+
+按最後訪問時間
+
+# CoreInfo.IgnoreCorrupted
+
+不顯示損壞核心
+
+# CoreInfo.CannotDestroy
+
+還有其它核心需要此核心，不能摧毀它。
+
+# CoreInfo.StillLoading
+
+加載尚不完全時結果可能不完整或順序不正確。
+
+# CoreInfo.Used
+
+此核心被你訪問過 {Count} 次
+
+# CoreInfo.Introduction.Forge
+
+此核心可以加載 Forge Mod
+
+# CoreInfo.Introduction.Fabric
+
+此核心可以加載 Fabric Mod
+
+# CoreInfo.Introduction.Quilt
+
+此核心可以加載 Quilt Mod
+
+# CoreInfo.Introduction.Installer
+
+這不是核心，這是一個整合包安裝器
+
+# CoreInfo.CorruptedWarning
+
+無法讀取 - 啟動引導文件若非遺失，即為無效
+
+# CoreInfo.Reload
+
+重新加載
+
+# CoreInfo.Destroy
+
+摧毀檔案
+
+# CoreInfo.Destroy.Yes
+
+是的，摧毀它
+
+# CoreInfo.Destroy.No
+
+不，不要這樣做
+
+# CoreInfo.Destroy.Title
+
+要摧毀核心檔案 {Name} 嗎？
+
+# CoreInfo.Destroy.Content
+
+@HTML摧毀 {Name} 會刪除對應的檔案，統計信息也會一併移除，<b>該操作不可撤銷</b>！\n要摧毀該核心檔案嗎？
+
+# CoreInfo.ClearUse
+
+清除訪問統計
+
+# CoreInfo.At
+
+核心 {ID} 位於容器 {Container} 上
+
+# CoreInfo.Pff
+
+查看或安裝 Mod
+
+# ReadyToLaunch.IsLoginOK
+
+你是否遇到了問題？
+
+# ReadyToLaunch.LoginInstruction
+
+你的登錄過程用時過長，你遇到什麼問題了嗎？\n\n如果無法登錄，你可以單擊「幫助我登錄！」來通過其它的方式登錄 Microsoft 帳號。
+
+# ReadyToLaunch.ContinueLogin
+
+沒有問題，讓我繼續
+
+# ReadyToLaunch.HelpMeLogin
+
+幫助我登錄！
+
+# ReadyToLaunch.LoginStepTitle
+
+繼續完成你的登錄
+
+# ReadyToLaunch.LoginStep
+
+我們已經在你的瀏覽器中打開了登錄鏈接，請：\n\n1. 在瀏覽器中完成登錄，然後……\n2. 待登錄完成，頁面顯示空白時，複製地址欄的 URL，並粘貼到這裡。
+
+# ReadyToLaunch.AcceptLogin
+
+好
+
+# ReadyToLaunch.URLEnter
+
+輸入登錄完成後瀏覽器地址欄的 URL……
+
+# ReadyToLaunch.CPU
+
+{Load}/{Total} CPU
+
+# ReadyToLaunch.RAM
+
+{InUse}/{Total} GiB
+
+# ReadyToLaunch.NoJava
+
+沒有設置 Java 運行時（JRE）！遊戲將無法啟動！
+
+# ReadyToLaunch.InvalidJava
+
+無法讀取此 JRE 的信息，無法啟動遊戲。請嘗試重新設置。
+
+# ReadyToLaunch.CouldNotLoad
+
+無法加載 - 該核心可能已經被移動或損毀\n如果你是通過除啟動台之外的地方進入這裡，那麼原始鏈接的指向可能已經失效
+
+# ReadyToLaunch.Hint
+
+正在啟動位於容器 {Container} 上的核心 {ID}
+
+# ReadyToLaunch.HintServer
+
+正在啟動位於容器 {Container} 上的核心 {ID} 並加入 {Server}
+
+# ReadyToLaunch.Progress
+
+正在部署 {Pending} 個文件（併發：{Current}/{BufferMax}）
+
+# ReadyToLaunch.Getting
+
+獲取：{Url}
+
+# ReadyToLaunch.Validated
+
+命中：{Url}
+
+# ReadyToLaunch.Linked
+
+連接：{Url}
+
+# ReadyToLaunch.Retry
+
+重試：{Url}
+
+# ReadyToLaunch.Ignored
+
+忽略：{Url}
+
+# ReadyToLaunch.Got
+
+成功：{Url}
+
+# ReadyToLaunch.Failed
+
+錯誤：{Url}
+
+# ReadyToLaunch.StartAuthTitle
+
+確保那是你
+
+# ReadyToLaunch.StartAuthMsg
+
+選擇一個方式驗證你的身份
+
+# ReadyToLaunch.UseMZ
+
+Microsoft 帳戶
+
+# ReadyToLaunch.UseYG
+
+Yggdrasil 帳戶
+
+# ReadyToLaunch.UseAL
+
+本地帳戶
+
+# ReadyToLaunch.UseDM
+
+演示模式
+
+# ReadyToLaunch.DemoDescription
+
+如果尚未購買 Minecraft，使用本模式可以體驗遊戲。
+
+# ReadyToLaunch.Next
+
+繼續
+
+# ReadyToLaunch.UseALName
+
+玩家名
+
+# ReadyToLaunch.UseYGChoose
+
+使用該帳戶
+
+# ReadyToLaunch.FailedToAuth
+
+驗證帳戶失敗，不過我能嘗試繼續啟動……
+
+# ReadyToLaunch.DefaultJava
+
+默認（嘗試自動選擇）
+
+# ReadyToLaunch.Status.Short.Pending
+
+開始
+
+# ReadyToLaunch.OpenGameToLan
+
+生成友誼接力代碼
+
+# ReadyToLaunch.Start
+
+啟動
+
+# ReadyToLaunch.Kill
+
+強制退出
+
+# ReadyToLaunch.MSLogout
+
+退出 Microsoft 帳戶
+
+# ReadyToLaunch.MSLogoutRunning
+
+正在退出，請稍等……
+
+# ReadyToLaunch.MSLogoutDone
+
+已退出
+
+# ReadyToLaunch.JCheck.TooDANGEROUS
+
+@HTML<b style="color: red;">警告 - 此 JRE 不安全！（CVE-2021-44228）<br/>不要使用它進行多人遊戲！</b>
+
+# ReadyToLaunch.JCheck.TooOLD
+
+警告 - 該 JRE 太舊啦！啟動可能出現問題！
+
+# ReadyToLaunch.JCheck.TooNEW
+
+警告 - 該 JRE 太新啦！啟動可能出現問題！
+
+# ReadyToLaunch.WarnError.Title
+
+Minecraft 似乎未正常運行……
+
+# ReadyToLaunch.WarnError.Yes
+
+是的，為我分析問題
+
+# ReadyToLaunch.WarnError.No
+
+不必，遊戲已正常運行
+
+# ReadyToLaunch.WarnError.Description
+
+Minecraft 實例（看上去）沒有正常退出，你想要對本次啟動進行故障排除嗎？
+
+# ReadyToLaunch.Status.Short.CheckingFiles
+
+檢查遊戲文件
+
+# ReadyToLaunch.Status.Short.PerformingAuth
+
+驗證帳戶
+
+# ReadyToLaunch.Status.Short.PreparingMods
+
+準備 Mod
+
+# ReadyToLaunch.Status.Short.GeneratingArgs
+
+生成啟動指令
+
+# ReadyToLaunch.Status.Short.Finished
+
+完畢
+
+# ReadyToLaunch.DryLaunch
+
+模擬啟動
+
+# ReadyToLaunch.SecureLaunch
+
+安全啟動
+
+# ReadyToLaunch.SelectAccount
+
+選擇帳戶
+
+# ReadyToLaunch.NoValidate
+
+禁用校驗
+
+# ReadyToLaunch.NoValidateDesc
+
+某些特殊客戶端需要這樣做
+
+# ReadyToLaunch.SelectAccountDesc
+
+更改已選的帳戶
+
+# ReadyToLaunch.SecureLaunchDesc
+
+快速啟動失敗時可以嘗試
+
+# ReadyToLaunch.DryLaunchDesc
+
+用於測試核心配置或比較性能
+
+# ReadyToLaunch.GenerateLink
+
+你正在進行局域網聯機
+
+# ReadyToLaunch.GenerateLinkDesc
+
+@HTML使用下面的設置<b>生成代碼</b>，將其提供給你的好友，他（她）就能夠在「友誼接力」中使用它加入你的世界！\n代碼將於你退出遊戲后自動銷毀。
+
+# ReadyToLaunch.Expires
+
+有效期
+
+# ReadyToLaunch.10Min
+
+10 分鐘
+
+# ReadyToLaunch.30Min
+
+30 分鐘
+
+# ReadyToLaunch.1Hour
+
+1 小時
+
+# ReadyToLaunch.3Hour
+
+3 小時
+
+# ReadyToLaunch.CanUse
+
+使用次數
+
+# ReadyToLaunch.Once
+
+一次性
+
+# ReadyToLaunch.FiveTimes
+
+5 次
+
+# ReadyToLaunch.TwentyTimes
+
+20 次
+
+# ReadyToLaunch.Unlimited
+
+無限（真的很多！）
+
+# ReadyToLaunch.Message
+
+可以在這裡留言，加入你的世界的玩家會看到這條信息：
+
+# ReadyToLaunch.Count
+
+最大使用次數
+
+# ReadyToLaunch.GetLink
+
+公開並生成代碼
+
+# ReadyToLaunch.Errors.AcquireFailed
+
+接力服務器似乎無法連接，沒能獲取代碼。
+
+# ReadyToLaunch.GoBack
+
+關閉
+
+# ReadyToLaunch.CodeDeactivated
+
+你退出了世界，因此我為你吊銷了對應的代碼。
+
+# ReadyToLaunch.HoofoffCodeRaw
+
+你的代碼：{Code}，快去邀請你的好友吧！
+
+# ReadyToLaunch.HoofoffCode
+
+@HTML你的代碼：<b>{Code}</b>，它已經被複制到剪貼板。
+
+# ReadyToLaunch.RequirePremium
+
+我沒有關閉正版驗證
+
+# ReadyToLaunch.RequirePremiumDesc
+
+如果沒有在 Minecraft 中使用 Mod 關閉正版驗證，則此選項可以通知好友
+
+# ReadyToLaunch.WaitingText
+
+貼心提示古來多，其中有用又幾條？
+
+用木炭燒木頭，獲得更多木炭。
+
+有些寶石山必須挖穿，有些傳送們總得走過。
+
+人類不喜歡親手撰寫，總是想着複製粘貼。
+
+不是什麼都能通過重啟解決，觀察者也不能看透每個世界。
+
+本小馬會一直陪着你的……只要你不卸掉 Alicorn 的話！
+
+天上的飛機只與你相隔十千米，出門訪一位舊友，不如抬頭望一眼陌生人。
+
+我一個倒立，誰能說我沒有舉起地球？
+
+費儘力氣扇動翅膀，不如索性推動大地。
+
+暴風雨的來臨需要醞釀，新冒險的開始需要準備。
+
+這可能需要一段時間，不過只有你第一次玩某個版本時會這樣。
+
+星璇正在趕來的路上……
+
+你知道嗎？他們依舊在移除 HIM。
+
+你知道嗎？之前這些工作是由玩家手工完成的。
+
+你知道嗎？Fabric 在高版本中的表現更好。
+
+你知道 Microsoft 帳戶背後的驗證過程嗎？大致有五步。
+
+你知道嗎？Mojang 又名 Bugjump……哦，當然，我是開玩笑的啦～
+
+{UserName} 可愛，我和 {UserName} 貼貼～
+
+Alicorn 是自由軟件！你完全可以將她用於任何用途！
+
+我？我不過是個有點思想的 Shell，只能傳達你的命令而已啦。
+
+感謝 Node.js，現在驗證你的資源文件又快又準確。
+
+就算你把併發數提升到 1000 個併發，Alicorn 也沒有絲毫壓力 —— 有壓力的是你的電腦
+
+請說出新人常用的啟動器。不太確定？你確定嗎？
+
+eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee —— 這被稱作詠 e
+
+別催了別催了，森林蝙蝠已經準備好加速了。
+
+Minecraft 和我的世界不是一個東西嗎？
+
+Minecraft 和我的世界真的不是一個東西！
+
+為了防止世界被破壞，為了守護世界的和平。
+
+即使世界只剩最後一個方塊，我們依然為之拼盡全力。
+
+這條消息永遠不會顯示在啟動頁面上，是不是很神奇呢？
+
+正在為重生錨充能……
+
+我們的目標是讓木板發光。
+
+可以，但沒必要。
+
+哪裡有什麼奇技淫巧，蒼穹木曾經也是樹苗。
+
+用鑽石挖鑽石，獲得更多鑽石。
+
+手持兩把錕斤拷，口中直呼燙燙燙。
+
+上次看到這條 Tips 還是在上次～
+
+18 次遊戲崩潰會產生什麼？可不是 18 份崩潰報告哦！
+
+總有人想着改變世界，卻少有人想着改變自己。
+
+為了 Mod 的未來，使用 Modrinth，拒絕 Curseforge。
+
+61096da20861084f1e6a442d939717a8（這是啥？）
+
+我們在飛馬的頭上粘了一隻角！
+
+有 3587 種熱帶魚！
+
+Alicorn 每周都有新版本！
+
+「能用 JS 改寫的，終將用 JS 改寫」—— Jeff Atwood
+
+「我看見你的心，在無數跌倒中成長」—— Rainbow
+
+「你所尋求的光明就在你心中」—— Minecraft
+
+「你所鬥爭的黑暗就在你心中」—— Minecraft
+
+「新的冒險才剛剛開始」—— We'll Make Our Mark
+
+「和你共處的時光，就是我快樂的源泉」—— Perfect Day for Fun
+
+「我們要把天空，塗上五顏六色」—— Equestria Girls Forever
+
+「不畏懼風雨，或漫漫時光」—— The Magic of Friendship Grows
+
+「這能行，我知道這能行」—— It's Gonna Work
+
+你若有顆不屈的靈魂，蹄上便有把堅實的鐵鎬。
+
+不薄之謂厚，不白之謂黑。
+
+「我們會逃避，會找借口，但正是缺點讓我們進步」—— Flawless
+
+「我知道這不對，可那又如何」—— I'll Fly
+
+「你終將成為不朽的傳奇」—— Legend You Are Meant To Be
+
+「只需勇敢做自己，你將收穫所有人的微笑」—— Life Is a Runway
+
+「生活少不了衝突和麻煩，但歌聲和歡笑將與我們作伴」—— The Heart Carol
+
+「若要遠離夢魘，最好永不入眠」—— In Our Town
+
+「希望有一天，不需要呼救，就有人幫忙」—— 混亂
+
+我希望你們人類和我們小馬一起努力，讓所有的軟件都自由。\n這既有利於你，也有利於地球。
+
+正在拋出末影珍珠……
+
+友誼就是魔法！！！（真的是這樣！）
+
+讓黛茜飛一會……
+
+正在回收三叉戟……
+
+正在釀造迅捷藥水……
+
+# VersionView.Name
+
+Alicorn Launcher: JE {AppVersion} #{UpdatorVersion}
+
+# VersionView.Modules
+
+具有 {List}
+
+# VersionView.Electron.Fetching
+
+正在獲取……
+
+# VersionView.EcVersion
+
+此版本是針對 Electron {Build} 構建的，你當前正在使用 Electron {Current}
+
+# VersionView.Electron.Perfect
+
+這個 Electron 經過蹄工測試，可以與當前版本的 Alicorn 完全兼容，現在就開始暢玩吧！
+
+# VersionView.Electron.OK
+
+這個 Electron 和編譯版本很接近，應當與當前版本的 Alicorn 兼容，通常不會有影響運行的問題。
+
+# VersionView.Electron.Attention
+
+@HTML這個 Electron 太舊啦！Alicorn <b>可能無法正常運行</b>，非常建議重新下載 Alicorn，你的設置和數據會保留。
+
+# VersionView.Description
+
+@HTML<b>歡迎使用 Alicorn 啟動器！</b> <a href="javascript:ashow('https://alc.pages.dev')">前往官方網站</a> <a href="javascript:ashow('https://github.com/Andy-K-Sparklight/Alicorn')">查看源代碼</a> <a href="javascript:ashow('https://www.gnu.org/licenses/gpl-3.0.html')">查看 GPL 3.0 許可證</a>
+
+# VersionView.ClickToSeeNext
+
+單擊來查看更多……
+
+# VersionView.Copyright
+
+以下內容為著作權聲明的簡體中文翻譯，不可被視為原文本的替代。Alicorn 的開發人員擁有最終解釋權。\n\nAlicorn 啟動器是自由軟件，複製、修改和重新分發等行為應遵循 GNU GENERAL PUBLIC LICENSE Version 3.0 許可證（或以後的版本）。\nCopyright (C) 2021-2022 Annie K Rarity Sparklight\n\n該程序是自由軟件：你可以根據自由軟件基金會發布的 GNU 通用公共許可證（第三版或以後）的條款重新分發和/或修改它。\n分發此程序是希望它有用，但不作任何保證；甚至沒有對適銷性或針對特定目的的適用性的暗示保證。有關更多詳細信息，請參閱 GNU 通用公共許可證（第三版或以後）原文。\nAlicorn 中所引用的 Minecraft 相關圖片等內容不是 Alicorn 的一部分，它們來自 Minecraft Wiki 並以 知識共享 署名-非商業性使用-相同方式分享 3.0（CC BY-NC-SA 3.0）協議授權，不適用 Alicorn 的 GNU 通用公共許可證（第三版或以後）。
+
+# VersionView.Privacy
+
+@HTML有關隱私，Alicorn 的處理方法滿足：<b><ul><li>我們始終會詢問你的意見，除非我們認為這是在干擾你的使用</li><li>數據只保存在本地，除身份驗證等必需的信息外均不上傳</li><li>可以隨時通過重置 Alicorn 來清除已保存的數據</li><li>不保存你的密碼，也不向你詢問有關你個人的真實信息</li></ul></b>
+
+# VersionView.Credit
+
+@HTMLAlicorn 的創建離不開超過 500 個 NPM 可重用軟件包，其中包括 Material UI、React、Electron 這些框架軟件包，undici、crypto-js、ajv 這些效用軟件包，Webpack、TypeScript 這些構建用軟件包，以及許多許多被大量依賴的基礎軟件包。\nAlicorn 還要感謝包括 VSCodium 和 Vim 在內的開發工具，因為有它們，Alicorn 的開發效率成倍地提升。\n\n你是否想支持 Alicorn？或者只是想了解更多內容？歡迎訪問 <a href="javascript:ashow('https://alc.pages.dev')">Alicorn Launcher 官方網站</a>
+
+# VersionView.FreeSoftwareClaim
+
+我們提倡軟件自由，Alicorn 不會依賴非自由的軟件包，因此，如果你發現我們沒有支持某些常見的功能，請先查看用於實現它們的相關組件的許可。
+
+# VersionView.SuperCowPower
+
+本 Alicorn 具有超級牛力。
+
+# ContainerManager.Size
+
+已使用 {Size} MiB 存儲空間
+
+# ContainerManager.DiscountASC
+
+ASC 節約 {Rate}%
+
+# ContainerManager.Calculating
+
+正在計算容器大小
+
+# ContainerManager.RootDir
+
+起始於
+
+# ContainerManager.OpenInDir
+
+打開所在文件夾
+
+# ContainerManager.Add
+
+添加 Minecraft 容器
+
+# ContainerManager.AddDescription
+
+選擇一個文件夾並給它起一個名字！
+
+# ContainerManager.EnterName
+
+Minecraft 容器名
+
+# ContainerManager.Dir
+
+目標文件夾
+
+# ContainerManager.InstallOK
+
+容器創建成功～
+
+# ContainerManager.Fork
+
+複製該容器
+
+# ContainerManager.Forked
+
+成功複製了容器～
+
+# ContainerManager.FailedToFork
+
+複製失敗：{Reason}
+
+# ContainerManager.ForkName
+
+{Original} 的副本
+複製的 {Original}
+{Original} 的複製品
+{Original} 的拷貝
+
+# ContainerManager.FetchingModpack
+
+正在獲取整合包……
+
+# ContainerManager.FailedToFetch
+
+沒能獲取整合包，請檢查網絡環境……
+
+# ContainerManager.Select
+
+選擇目標文件夾
+
+# ContainerManager.InvalidName
+
+無效容器名
+
+# ContainerManager.InvalidDir
+
+無效的目標文件夾
+
+# ContainerManager.Type.Physical
+
+MCX 擴展物理宗卷
+
+# ContainerManager.Type.Shared
+
+ASC 文件共享宗卷
+
+# ContainerManager.ASCCacheNotSet
+
+不能創建 - 你需要在選項中設置「ASC 共享文件存儲路徑」
+
+# ContainerManager.CreateModpack
+
+使用安裝包創建這個容器
+
+# ContainerManager.ModpackWarn
+
+@HTML安裝包（亦即整合包）可以提供超酷的遊戲體驗，但有的安裝包中<b style="color: red">包含潛在的病毒或惡意軟件</b>！這些風險我沒有辦法為你發現，如果你是從一個不可信的來源（如服務器）獲得該安裝包的，那麼請務必小心！\n如果你繼續，我會在創建容器後為你自動安裝它。
+
+# ContainerManager.ModpackPath
+
+安裝包路徑
+
+# ContainerManager.InvalidModpackPath
+
+無效的安裝包路徑
+
+# ContainerManager.ParsingModpack
+
+正解析安裝包……
+
+# ContainerManager.DeployingProfile
+
+正部署啟動檔案……
+
+# ContainerManager.DeployingMods
+
+Pff 正安裝 Mod……
+
+# ContainerManager.DeployingModLoader
+
+正部署 Mod 加載器……
+
+# ContainerManager.DeployingDeltas
+
+正計算和部署差異……
+
+# ContainerManager.CleaningUp
+
+正在清理……
+
+# ContainerManager.ChooseModpack
+
+選擇安裝包
+
+# ContainerManager.Remove
+
+解除鏈接
+
+# ContainerManager.Mount
+
+裝載該容器
+
+# ContainerManager.Unmount
+
+卸載該容器
+
+# ContainerManager.Clear
+
+摧毀該容器
+
+# ContainerManager.Cores
+
+{Count} 個核心
+
+# ContainerManager.CoresLoading
+
+清點核心中
+
+# ContainerManager.AskRemove
+
+解除鏈接此容器？
+
+# ContainerManager.AskRemoveDetail
+
+這不會修改容器中的任何文件，你可以稍後重新添加該容器。
+
+# ContainerManager.AskClear
+
+摧毀此 Minecraft 容器？該操作不可撤銷！
+
+# ContainerManager.AskClearDetail
+
+這將刪除 {ID} 中的一切內容，此操作不可撤銷！確定要這樣做，{UserName}？\n{ID} 將永遠失去（真的很久）！
+
+# ContainerManager.Yes
+
+是的，我要這樣做
+
+# ContainerManager.No
+
+不，不要這樣做
+
+# ContainerManager.Continue
+
+繼續
+
+# ContainerManager.Cancel
+
+取消
+
+# InstallCore.Fabric.FabricAPIFailed
+
+安裝 Fabric API 失敗，許多 Fabric Mod 需要它。\n前往 Pff，輸入 fabric-api 重新進行安裝。
+
+# InstallCore.Progress.CouldNotExecute
+
+沒能執行安裝程序……
+
+# InstallCore.Progress.FailedToInstallProfile
+
+安裝失敗，目的目錄是否存在？你是否有權限寫入它？
+
+# InstallCore.Progress.InvalidProfile
+
+無效的啟動檔案，下載源是否出現故障？
+
+# InstallCore.Progress.DownloadingProfile
+
+正下載啟動檔案……
+
+# InstallCore.Progress.FailedToFetchProfile
+
+獲取啟動檔案失敗
+
+# InstallCore.Progress.FetchingProfile
+
+正獲取啟動檔案……
+
+# InstallCore.Progress.Fetching
+
+正獲取 {Loader} 的安裝程序，適用於 Minecraft {MCV}……
+
+# InstallCore.Progress.FailedToDownload
+
+沒有能夠下載 {Loader} 的安裝程序
+
+# InstallCore.Progress.ExecutingForge
+
+正運行 Forge 安裝程序……
+
+# InstallCore.Progress.ExecutingFabric
+
+正運行 Fabric 安裝程序……
+
+# InstallCore.InstallMinecraft
+
+添加核心
+
+# InstallCore.InstallMinecraftInstr
+
+在此安裝新的 Minecraft 原版核心，它是一切改裝的基礎，同時可以直接遊玩。\n原版模組（數據包、資源包、地圖等）只需要安裝原版核心。
+
+# InstallCore.InstallForge
+
+改裝核心（Forge）
+
+# InstallCore.InstallForgeInstr
+
+@HTML為已有的 Minecraft 核心進行改裝並安裝 Forge，Forge Mod 需要進行此改裝后才可用。\n<span style="color:#ff8400;">注意：你必須安裝了對應版本的 Minecraft 核心才可以進行改裝！</span>\n\n<b>注意：</b>有些版本（例如 1.7.10）的 Forge 安裝<b>不能使用</b> MCBBS 或 BMCLAPI 鏡像，它們的文件尚未更新，直接安裝將<b>引發錯誤</b>。\n
+
+# InstallCore.InstallFabric
+
+改裝核心（Fabric）
+
+# InstallCore.InstallFabricInstr
+
+@HTML為已有的 Minecraft 核心進行改裝並安裝 Fabric，Fabric Mod 需要進行此改裝后才可用。\n<span style="color:#ff8400;">注意：你必須安裝了對應版本的 Minecraft 核心才可以進行改裝！</span>
+
+# InstallCore.InstallIris
+
+安裝高清修復
+
+# InstallCore.InstallIrisInstr
+
+@HTML<b>高清修復</b>是指對着色器……算了，說那麼多也沒什麼用，總之，會讓你的 Minecraft 看上去非常漂亮！\nAlicorn 為你準備了 Iris，不僅支持絕大多數頂級光影，還與幾乎所有的 Mod 兼容（包括 Sodium）！\n你需要<b>先改裝一個已有的核心為 Fabric</b>，隨後便可在這裡選擇並安裝。
+
+# InstallCore.IrisBaseVersion
+
+安裝到此 Fabric 上
+
+# InstallCore.InstallQuilt
+
+改裝核心（Quilt）
+
+# InstallCore.InstallQuiltInstr
+
+@HTML為已有的 Minecraft 核心進行改裝並安裝 Quilt，它可以支持部分 Fabric Mod 和 Forge Mod。 \n<span style="color:#ff8400;">注意：你必須安裝了對應版本的 Minecraft 核心才可以進行改裝！ </span>\n<span style="color:#ff8400;">Quilt 尚在開發中，請注意可能存在的風險及漏洞！ </span>
+
+# InstallCore.QuiltBaseVersion
+
+目標 Minecraft 版本號
+
+# InstallCore.TargetContainer
+
+目標容器
+
+# InstallCore.Unknown
+
+等待選擇或未能確定
+
+# InstallCore.Release
+
+Minecraft 穩定版
+
+# InstallCore.Snapshot
+
+Minecraft 快照
+
+# InstallCore.OldAlpha
+
+早期 Alpha 版
+
+# InstallCore.OldBeta
+
+早期 Beta 版
+
+# InstallCore.MinecraftArch
+
+Minecraft 類型
+
+# InstallCore.Start
+
+安裝
+
+# InstallCore.MinecraftVersion
+
+Minecraft 版本號
+
+# InstallCore.ForgeVersion
+
+將安裝的 Forge 版本：
+
+# InstallCore.ForgeBaseVersion
+
+目標 Minecraft 版本號
+
+# InstallCore.FabricVersion
+
+將安裝的 Fabric 版本：
+
+# InstallCore.FabricBaseVersion
+
+目標 Minecraft 版本號
+
+# InstallCore.Success
+
+成功安裝了核心
+
+# AccountManager.EnterPassword
+
+輸入密碼
+
+# AccountManager.Password
+
+你的密碼
+
+# AccountManager.EnterPasswordHint
+
+為你的帳戶輸入密碼（我不會看的！）
+
+# AccountManager.Failed
+
+驗證失敗 - 我們無法驗證你的帳戶，請檢查密碼與網絡連接，或稍後再試
+
+# AccountManager.Validate
+
+驗證
+
+# AccountManager.SkinView3D
+
+正在使用 3D 皮膚渲染（按住左鍵拖動以旋轉）
+
+# AccountManager.SkinView3DShort
+
+3D 預覽
+
+# AccountManager.SkinView2D
+
+正在使用 2D 皮膚渲染
+
+# AccountManager.SkinView2DShort
+
+2D 預覽
+
+# AccountManager.DeleteTitle
+
+移除帳戶？
+
+# AccountManager.DeleteMsg
+
+下次使用此帳戶時，你需要重新添加和登錄它。
+
+# AccountManager.Yes
+
+移除
+
+# AccountManager.No
+
+取消
+
+# AccountManager.AddTitle
+
+添加 Yggdrasil 帳戶
+
+# AccountManager.AddMsg
+
+輸入你的帳戶
+
+# AccountManager.Email
+
+帳戶名稱或郵箱
+
+# AccountManager.Host
+
+驗證服務器
+
+# AccountManager.UseCustomHost
+
+使用第三方驗證服務器
+
+# AccountManager.UseNide8
+
+使用統一通行證
+
+# AccountManager.Warn
+
+永遠不要在第三方驗證服務器輸入你的 Microsoft 帳戶密碼！
+
+# AccountManager.Next
+
+下一步
+
+# AccountManager.Reload
+
+重新加載
+
+# AccountManager.AddYggdrasil
+
+添加 Yggdrasil 帳戶
+
+# AccountManager.Note
+
+@HTML如果你使用 Microsoft 帳戶或本地帳戶，則無需在此配置，請<b>直接啟動遊戲</b>，當啟動時將（如果必要）詢問你相關的信息。\n「將此按鈕拖動至啟動器」已受支持，將按鈕拖向啟動器的任意位置並松蹄就好。
+
+# JavaSelector.FailedToInstall
+
+獲取 Java 失敗，請檢查網絡連接或目錄權限。\n……或者手動安裝 Java 並重新掃描。
+
+# JavaSelector.CustomAdd
+
+讓我手動定位一個 Java 運行時
+
+# JavaSelector.SelectJava
+
+選擇 Java 運行時
+
+# JavaSelector.CannotLoad
+
+讀取中
+
+# JavaSelector.CannotLoadDetail
+
+正在讀取該 Java 運行時 - 如果這條消息一直沒有消失，那麼該 Java 運行時可能已經損壞
+
+# JavaSelector.Loading
+
+請稍等，正在你的設備上查找所有可用的 Java 運行時……
+
+# JavaSelector.Reload
+
+重新查找 Java 運行時
+
+# JavaSelector.BuiltIn
+
+快速安裝 Java 並自動設置
+
+# JavaSelector.HintBuiltIn
+
+如果你尚未安裝 Java 或者 Java 版本不對，並且想要現在重新安裝 Java，可以使用下面的按鈕。
+
+# JavaSelector.Warn32
+
+Minecraft 在 32 位 Java VM 上可能無法發揮出最好性能，在 64 位操作系統上，建議安裝帶有 64 位 Java VM 的 JRE。
+
+# JavaSelector.WarnClient
+
+Minecraft 在 Client Java VM 上可能無法發揮出最好性能，建議安裝帶有 Server Java VM 的 JRE。
+
+# JavaSelector.WarnNonFree
+
+這個 JRE 存在許可問題！Alicorn 建議你使用自由的 OpenJDK 運行時以獲得更好的性能，同時避免潛在的惡意軟件。
+
+# Options.Select
+
+選擇目錄/文件
+
+# Options.AutoSave
+
+你的修改會自動保存。
+
+# Options.Hint
+
+@HTML<b>不要胡亂設置</b> - Alicorn 的默認值即是建議值，如果你不明確知道一個設置項的作用，請<b>不要</b>修改它。\n帶 ^ 的項目在重新加載啟動器后才能生效。帶 * 的項目是開發人員選項，隨意更改可能導致重大問題。
+
+# Options.Enabled
+
+已啟用
+
+# Options.Disabled
+
+已禁用
+
+# Options.NotOn
+
+此選項與當前平台不兼容或者對當前平台無效
+
+# Options.Page.IAndAL
+
+你與 AL
+
+# Options.Page.FeaturesConfigure
+
+功能開關
+
+# Options.Page.Features
+
+AL 特殊能力
+
+# Options.Page.Game
+
+遊戲和性能
+
+# Options.Page.Network
+
+網絡和軟件包
+
+# Options.Page.Advanced
+
+高級和重置
+
+# Options.theme.zoom-factor.title
+
+縮放比例
+
+# Options.theme.zoom-factor.desc
+
+如果顯示不正常，可於此修改 Alicorn 內容的縮放比例
+
+# Options.download.tls.keep-alive.title
+
+TLS 連接保持時間
+
+# Options.download.tls.keep-alive.desc
+
+關閉一個 TLS 連接之前，等待多長時間，單位毫秒
+
+# Options.download.tls.pipeline.title
+
+HTTP/1.1 管線
+
+# Options.download.tls.pipeline.desc
+
+在一個 TLS 連接上同時進行多少個 HTTP 請求 - 某些環境或許不支持此功能，如果是這樣，請將此項設置為 1
+
+# Options.download.lib.title
+
+下載支援庫
+
+# Options.download.lib.desc
+
+選擇用於下載資源的支援庫 - Undici 速度快，但對代理等的支持有限；Fetch 使用 Electron 的原生方法，但速度有所降低。僅對文件下載有效，帳戶驗證等不受影響。
+
+# Options.download.lib.Undici
+
+Undici（適合很少使用國外資源的玩家，且速度較快）
+
+# Options.download.lib.Fetch
+
+Fetch（適合大量下載國外資源的玩家，但速度較慢）
+
+# Options.readyboom.cores.title
+
+ReadyBoom 預熱核心數 ^
+
+# Options.readyboom.cores.desc
+
+ReadyBoom 要預熱多少個核心？
+
+# Options.readyboom.title
+
+ReadyBoom 預熱 ^
+
+# Options.readyboom.desc
+
+自動準備你經常遊玩的核心所需要的資源，大幅提升啟動速度
+
+# Options.alicorn-ping.title
+
+Alicorn Ping ^
+
+# Options.alicorn-ping.desc
+
+這種匿名的 Ping 可以讓 ThatRarityEG 估計活躍用戶數
+
+# Options.features.echo.title
+
+漂流瓶
+
+# Options.features.echo.desc
+
+發送和收取來自 Alicorn 的漂流瓶，看看世界上的另個你在做些什麼～\n如果事情看上去不對，請關閉此功能並向我們提供反饋。這既有利於你，也有利於地球。
+
+# Options.features.local-skin.title
+
+本地皮膚支持
+
+# Options.features.local-skin.desc
+
+使用本地帳戶時，支持本地皮膚的設置，若不使用此功能，關閉它將有利於提升啟動速度（雖然也就幾十毫秒吧（
+
+# Options.pff.cursepp2.title
+
+Curseforge ++
+
+# Options.pff.cursepp2.desc
+
+使用 Alicorn Magic 回到過去調用 Curseforge 的 API，這樣 Alicorn 就不用修改代碼，只需要建造時間機器（認真
+
+# Options.pff.cursepp-cluster-size.title
+
+Curseforge ++ 併發量
+
+# Options.pff.cursepp-cluster-size.desc
+
+Curseforge ++ 同時進行幾個任務？請不要將它設置得太高，每台時間機器的消耗和一個瀏覽器相當！
+
+# Options.features.tips-of-today.title
+
+Alicorn 使用技巧
+
+# Options.features.tips-of-today.desc
+
+啟動 Alicorn 時顯示一條使用技巧提示
+
+# Options.features.sword.title
+
+粉紅劍指針
+
+# Options.features.sword.desc
+
+心心念念的指針回來啦！
+
+# Options.features.skin-view-3d.title
+
+Skin View 3D 皮膚顯示
+
+# Options.features.skin-view-3d.desc
+
+使用 3D 皮膚渲染（基於 WebGL）- 若關閉此功能，將使用 2D 皮膚渲染（基於 CSS）。\n3D 皮膚渲染功能由來自 Blessing Skin 社區的 Skin View 3D 為你呈現。\n若開啟此設置，將覆蓋硬件加速設置並強制開啟它。
+
+# Options.auto-launch.title
+
+登錄時啟動 ^
+
+# Options.auto-launch.desc
+
+在電腦啟動時，省下幾次點擊，讓 Alicorn 主動和你打聲招呼
+
+# Options.theme.background.title
+
+主題背景圖片 ^
+
+# Options.theme.background.desc
+
+選取 Alicorn 背景圖片，或禁用它。\n圖片服務不是由 Alicorn 提供，因此 Alicorn 無法預知或檢查不合適內容。
+
+# Options.theme.background.ACG
+
+ACG 二次元圖片
+
+# Options.theme.background.Bing
+
+Bing 每日背景圖
+
+# Options.theme.background.Disabled
+
+關閉（無）
+
+# Options.theme.background.custom.title
+
+自定義背景圖片 ^
+
+# Options.theme.background.custom.desc
+
+選擇一張你喜歡的圖片，或者輸入一個 URL 來顯示吧！
+
+# Options.theme.background.opacity.title
+
+背景顏色透明度 ^
+
+# Options.theme.background.opacity.desc
+
+背景顏色的透明程度，0 為完全透明，100 為不透明 - 過高的值可能導致操作不便，可別說我沒告訴過你哦！
+
+# Options.theme.title
+
+主題 ^
+
+# Options.theme.desc
+
+修改主題配色 - 帶 * 的不利於視覺健康，請謹慎使用，另請注意部分深色主題可能不利於操作。
+
+# Options.theme.Default
+
+助理默認
+
+# Options.theme.PurpleDark
+
+暗夜紫
+
+# Options.theme.Winter
+
+雪花藍
+
+# Options.theme.Cherry
+
+櫻花粉
+
+# Options.theme.SweetieBelle
+
+甜貝粉
+
+# Options.theme.Starlight
+
+星光紫
+
+# Options.theme.SheepGreen
+
+綿羊綠
+
+# Options.theme.Azure
+
+碧海藍
+
+# Options.theme.Twikie
+
+暮光紫/萍琪粉
+
+# Options.theme.Maud
+
+石灰紫
+
+# Options.theme.66CCFF
+
+天依藍 *
+
+# Options.theme.UNIXDark
+
+終端綠 *
+
+# Options.theme.Apple
+
+蘋果橙 *
+
+# Options.theme.Mint
+
+薄荷綠
+
+# Options.theme.Grass
+
+青草綠
+
+# Options.theme.FadeGray
+
+褪色灰（安全顏色）
+
+# Options.theme.NightLightDark
+
+黑夜光
+
+# Options.theme.Classic
+
+經典藍
+
+# Options.theme.ClassicDark
+
+深邃藍
+
+# Options.theme.OldPink
+
+灰色粉
+
+# Options.theme.PinkDark
+
+粉色灰
+
+# Options.theme.WhatGreenDark
+
+概念綠
+
+# Options.theme.GoldDark
+
+黃金礦 *
+
+# Options.theme.Random
+
+隨機生成配色 *（是不是瘋了？）
+
+# Options.theme.Rarity
+
+珍奇紫
+
+# Options.hoofoff.central.title
+
+接力服務器
+
+# Options.hoofoff.central.desc
+
+設定接力服務器地址，它用於溝通不同計算機上的 Alicorn
+
+# Options.features.detect-lan.title
+
+檢測局域網遊戲
+
+# Options.features.detect-lan.desc
+
+在遊戲運行時檢測局域網遊戲的開啟，並允許你和好友聯機
+
+# Options.features.saying.title
+
+小貼士
+
+# Options.features.saying.desc
+
+位於啟動遊戲界面啟動按鈕上方的小貼士
+
+# Options.features.miniwiki.title
+
+迷你 Wiki
+
+# Options.features.miniwiki.desc
+
+位於主頁和啟動遊戲界面底部的小型條目
+
+# Options.interactive.assistant?.title
+
+助理交互 ^
+
+# Options.interactive.assistant?.desc
+
+使用交互式的助理來告訴你一些重要信息 - 你會需要的！
+
+# Options.first-run?.title
+
+標記為首次運行 ^
+
+# Options.first-run?.desc
+
+下一次啟動時，清除 Alicorn 的運行記錄標誌，重新運行初始化程序。
+
+# Options.download.proxy-bypass.title
+
+以下站點不使用代理 ^
+
+# Options.download.proxy-bypass.desc
+
+當訪問以下站點時直接連接，不使用代理服務器，僅對下載器有效 - 請小心，Alicorn 沒有驗證這裡的輸入，錯誤的設置將可能導致無法連接！
+
+# Options.download.skip-validate.title
+
+不進行文件校驗
+
+# Options.download.skip-validate.desc
+
+在下載時不對文件進行完整性檢驗 - 能夠提升 UI 響應速度，讓你「感覺上快了很多」，在 CPU 性能不佳的計算機上效果很顯著
+
+# Options.updator.url.title
+
+更新來源
+
+# Options.updator.url.desc
+
+下一次 Alicorn 會從這裡開始下載更新 - 這適合用於在不同的 Alicorn 發行版之間切換
+
+# Options.frame.drag-impl.title
+
+窗口拖拽模式 ^
+
+# Options.frame.drag-impl.desc
+
+設置拖拽窗口的模式 - 不同的模式在不同的操作系統上表現不同
+
+# Options.frame.drag-impl.Webkit
+
+Webkit 拖拽區域（僅頁面標題）
+
+# Options.frame.drag-impl.Delta
+
+模擬拖拽（整個快捷欄）
+
+# Options.frame.drag-impl.TitleBar
+
+操作系統託管（使用標題欄）
+
+# Options.hardware-acc.title
+
+硬件加速 ^
+
+# Options.hardware-acc.desc
+
+使用圖形卡進行動畫繪製 - 請注意這不同於硬件解碼，效果並沒有你想象的那麼好
+
+# Options.show-downloading-item.title
+
+顯示獲取進度
+
+# Options.show-downloading-item.desc
+
+在啟動監控頁面顯示正在獲取和已經獲取的內容 - 對性能有較大影響，請謹慎使用
+
+# Options.goto.animate.title
+
+平滑頁面切換
+
+# Options.goto.animate.desc
+
+切換頁面時使用淡入淡齣動畫，而不是簡單地導航
+
+# Options.assistant.title
+
+助理（語言） Assistant (Language) ^
+
+# Options.assistant.desc
+
+選擇你的助理和你喜歡的語言風格\nSelect your assistant and your preferred style
+
+# Options.assistant.PonyCN
+
+Alicorn 默认（小马语/中国）
+
+# Options.assistant.PonyTW
+
+Alicorn 默認（繁體中文/中國）
+
+# Options.assistant.Maud
+
+Maud 2（小马语/中国）
+
+# Options.assistant.66CCFF
+
+66ccff（中文/中国）
+
+# Options.assistant.Equish
+
+Alicorn i18n (Equish/Equestria)
+
+# Options.jvm.extra-args.title
+
+JVM 附加運行參數
+
+# Options.jvm.extra-args.desc
+
+@HTML在啟動 Minecraft 時，也為 JVM 添加如下參數\n請盡量只追加參數，若非必要，請<b>不要移除這裡已有的參數</b>！它們保證 Minecraft 的正常運行。
+
+# Options.main-gc.title
+
+首選 GC 方案
+
+# Options.main-gc.desc
+
+JVM 首選的垃圾回收器方案，Alicorn 將永遠優先嘗試用它啟動 JVM
+
+# Options.main-gc.pure
+
+默認（不指定）
+
+# Options.main-gc.g1
+
+垃圾優先（G1GC）
+
+# Options.main-gc.z
+
+Z（ZGC）
+
+# Options.main-gc.sd
+
+Shenandoah（Shenandoah GC）
+
+# Options.main-gc.aggressive
+
+最大利用（AggressiveHeap）
+
+# Options.para-gc.title
+
+備選 GC 方案
+
+# Options.para-gc.desc
+
+JVM 備選的垃圾回收器方案，當首選方案失敗時，Alicorn 將使用此方案
+
+# Options.para-gc.pure
+
+默認（不指定）
+
+# Options.para-gc.g1
+
+垃圾優先（G1GC）
+
+# Options.para-gc.sd
+
+Shenandoah（Shenandoah GC）
+
+# Options.para-gc.z
+
+Z（ZGC）
+
+# Options.para-gc.aggressive
+
+最大利用（AggressiveHeap）
+
+# Options.memory.title
+
+最大內存大小
+
+# Options.memory.desc
+
+設置最大內存大小，單位 MB - 設置為 0 以讓 Alicorn 選擇
+
+# Options.gw-size.title
+
+遊戲窗口大小
+
+# Options.gw-size.desc
+
+設置遊戲窗口的大小，如 960x540，前寬后高，單位是像素 - 即使不設置，也可以在遊戲開始後手動縮放窗口
+
+# Options.launch.fast-reboot.title
+
+快速重啟
+
+# Options.launch.fast-reboot.desc
+
+在一次會話中，除第一次成功啟動外，啟動遊戲時將跳過支援庫和遊戲資源的檢查 - 如果你不經常更改文件，建議啟用，但如果啟動失敗，將無法給出支援庫和遊戲資源的信息
+
+# Options.clean-storage.title
+
+恢復如初 ^
+
+# Options.clean-storage.desc
+
+摧毀 Alicorn 存儲的一切數據，包括設置、效用緩存和使用記錄 - 幾乎相當於重新安裝
+
+# Options.cx.shared-root.title
+
+ASC 共享文件存儲路徑
+
+# Options.cx.shared-root.desc
+
+ASC 允許在多個容器間共享相同的文件，那麼這些文件應當存儲在哪裡 - 請留出足夠的空間以存儲文件
+
+# Options.startup-page.url.title
+
+主頁路徑
+
+# Options.startup-page.url.desc
+
+選擇進入啟動器時主頁的路徑 - 用於實際切換頁面
+
+# Options.startup-page.name.title
+
+主頁名稱
+
+# Options.startup-page.name.desc
+
+選擇進入啟動器時主頁的名稱 - 用於顯示標題
+
+# Options.theme.primary.main.title
+
+基本顏色（主要）^
+
+# Options.theme.primary.main.desc
+
+菜單欄和標題文本將使用此顏色
+
+# Options.theme.primary.light.title
+
+基本顏色（亮色）^
+
+# Options.theme.primary.light.desc
+
+部分高亮文本使用此顏色
+
+# Options.theme.secondary.main.title
+
+次要顏色（主要）^
+
+# Options.theme.secondary.main.desc
+
+普通文本使用此顏色
+
+# Options.theme.secondary.light.title
+
+次要顏色（亮色）^
+
+# Options.theme.secondary.light.desc
+
+背景等位置使用此顏色
+
+# Options.dev.experimental.title
+
+實驗特性
+
+# Options.dev.experimental.desc
+
+開啟 Alicorn 默認沒有開啟的特性 - 通常來說，某個特性默認不被開啟肯定有其合理的原因，開啟將可能造成各種功能不穩定甚至崩潰！但如果你想試試嘛……
+
+# Options.interactive.i-have-a-crush-on-al.title
+
+Alicorn 的小秘密
+
+# Options.interactive.i-have-a-crush-on-al.desc
+
+如果你真的想要聽的話……那好吧，不過先說好，不許告訴別人哦！
+
+# Options.download.global-proxy.title
+
+下載代理 ^
+
+# Options.download.global-proxy.desc
+
+訪問網絡時所使用的代理服務器，應當以 <協議>://<主機名>:<端口> 的格式設置，如 http://localhost:1080，所有網絡請求都將從此服務器轉發，瀏覽器不受此設置影響 - 如果你不知道你在做什麼，請留空，不要胡亂設置！
+
+# Options.download.mirror-tries.title
+
+鏡像重試
+
+# Options.download.mirror-tries.desc
+
+在降級到原始 URL 之前，每個下載鏡像的重試次數 - 如果設置太高，可能會出問題哦！
+
+# Options.download.mirror.title
+
+下載源鏡像
+
+# Options.download.mirror.desc
+
+@HTML選擇一個用於加快下載速度的鏡像 - 請注意你的數據安全\nAlicorn 輕鬆訪問鏡像<b>不包含庫文件與資源文件</b>！\nMCBBS 鏡像與 BMCLAPI 鏡像是由 BMCLAPI 和 MCBBS 共同為你提供的，用於加快某些訪問源站較慢區域的下載速度。
+
+# Options.download.mirror.alicorn-bmclapi-nonfree
+
+Alicorn/BMCLAPI 鏡像組（合併的記錄，非自由）
+
+# Options.download.mirror.alicorn
+
+Alicorn 輕鬆訪問鏡像
+
+# Options.download.mirror.alicorn-mcbbs-nonfree
+
+Alicorn/MCBBS 鏡像組（合併的記錄，非自由）
+
+# Options.download.mirror.none
+
+不使用鏡像
+
+# Options.dev.title
+
+開發人員模式 *
+
+# Options.dev.desc
+
+打開開發人員模式，然後再次看看那些之前讓你感到迷惑的標籤 - 它們只會對開發人員顯示正確的內容
+
+# Options.reset.title
+
+一忘皆空 ^
+
+# Options.reset.desc
+
+在下次啟動時將設置重置為當前版本的默認內容 - 當你覺得你玩脫了的時候很有用，但所有改動都將丟失
+
+# Options.pff.upgrade-mode.title
+
+Pff Mod 更新模式
+
+# Options.pff.upgrade-mode.desc
+
+當 Pff 嘗試安裝 Mod 時，如果要安裝的 Mod 已經存在一個舊版本，那麼它應該……？
+
+# Options.pff.upgrade-mode.Override
+
+更新和覆蓋
+
+# Options.pff.upgrade-mode.Keep
+
+保留兩者
+
+# Options.pff.cache-root.title
+
+Pff 文件緩存位置
+
+# Options.pff.cache-root.desc
+
+設置 Pff 的文件緩存目錄 - 有助於加快軟件包的二次安裝速度，若留空，你會失去 Mod 安裝加速的機會
+
+# Options.pff.page-size.title
+
+Pff 查詢分頁大小
+
+# Options.pff.page-size.desc
+
+進行模糊查詢時請求的的分頁大小 - 這項設置可能並不很有用，但如果 Pff 不能正確查找你的 Mod，可以擴大該值
+
+# Options.java.search-depth.title
+
+JRE 搜索深度
+
+# Options.java.search-depth.desc
+
+僅從軟件根目錄（Program Files 或者 /usr）搜索一定深度，不要搜索整台計算機 - 設置為 0 以不限制
+
+# Options.java.simple-search.title
+
+JRE 快速搜索
+
+# Options.java.simple-search.desc
+
+僅使用命令和環境變量尋找 JRE，不要搜索整台計算機 - 如果你知道如何設置，這可以非常快
+
+# Options.user.name.title
+
+你的昵稱
+
+# Options.user.name.desc
+
+Alicorn 會用這個名字親切地稱呼你 - 嗯……可愛~
+
+# Options.doh-server.title
+
+基於 HTTPS 的 DNS（DoH）^
+
+# Options.doh-server.desc
+
+配置首選的 DNS 解析裝置用於解析 URL，以提升下載穩定性等 - 無法預知各個 DNS 服務器的效果，可能需要試幾次
+
+# Options.doh-server.Native
+
+系統（不使用）
+
+# Options.doh-server.iQDNS
+
+iQDNS
+
+# Options.doh-server.Cloudflare
+
+Cloudflare
+
+# Options.doh-server.RubyFish
+
+紅魚
+
+# Options.doh-server.OpenDNS
+
+OpenDNS
+
+# Options.doh-server.AdGuard
+
+AdGuard
+
+# Options.web.global-proxy.title
+
+瀏覽器 HTTP 代理
+
+# Options.web.global-proxy.desc
+
+設置用於 Alicorn 附屬瀏覽器的代理，包括 Microsoft 帳戶登錄 - 所有流量都將通過代理服務器轉發，下載器不受此設置影響
+
+# Options.updator.use-update.title
+
+自動更新 ^
+
+# Options.updator.use-update.desc
+
+啟用來自 Alicorn 的自動更新，以及時獲取新功能
+
+# Options.download.primary-downloader.title
+
+下載方案
+
+# Options.download.primary-downloader.desc
+
+優先使用何種方案進行下載：「分段」有助於提高較大文件的下載速度，但不穩定，會加大 CPU 負載，且其效果很大程度上依賴於相關參數的設置；「線性」使用常規的下載方案 - 無論選擇哪個，「線性」總會作為後備方案
+
+# Options.download.primary-downloader.Concurrent
+
+分段
+
+# Options.download.primary-downloader.Serial
+
+線性
+
+# Options.download.concurrent.chunk-size.title
+
+併發下載區塊大小
+
+# Options.download.concurrent.chunk-size.desc
+
+進行併發分段下載時每個文件段的大小，單位 KB - 調太低了對你的處理器是一種折磨
+
+# Options.download.pff.chunk-size.title
+
+Pff 併發下載區塊大小
+
+# Options.download.pff.chunk-size.desc
+
+Pff 的併發下載區塊大小，由於下載 Mod 和下載遊戲資源網絡環境不同，需要單獨的設置
+
+# Options.download.concurrent.timeout.title
+
+請求等待時間
+
+# Options.download.concurrent.timeout.desc
+
+在提交錯誤前最長允許的服務器響應時間，單位毫秒 - 該值過高或過低都可能導致部分文件下載失敗
+
+# Options.download.pff.timeout.title
+
+Pff 請求等待時間
+
+# Options.download.pff.timeout.desc
+
+Pff 的請求等待時間，由於下載 Mod 和下載遊戲資源網絡環境不同，需要單獨的設置
+
+# Options.download.concurrent.tries-per-chunk.title
+
+重試次數
+
+# Options.download.concurrent.tries-per-chunk.desc
+
+在放棄某個文件的下載前最多的重試次數 - 輕微的改動也會有很大的影響，請謹慎修改 
+
+# Options.download.concurrent.max-tasks.title
+
+併發下載任務數
+
+# Options.download.concurrent.max-tasks.desc
+
+允許下載器同時進行的最多下載任務數，一個文件的多個分段視為一個任務 - 如果計算機性能較差，可以將該值調低
+
+# Options.modx.global-dynamic-load-mods.title
+
+Mod 動態加載
+
+# Options.modx.global-dynamic-load-mods.desc
+
+在啟動時根據啟動的核心自動移動無法加載的 Mod - 如果這項功能導致你的 Mod 出現問題，請關閉它
+
+# Options.modx.ignore-non-standard-mods.title
+
+忽略無法讀取的 Mod
+
+# Options.modx.ignore-non-standard-mods.desc
+
+動態加載 Mod 時遇到無法讀取的 Mod 信息時，不要移動，將其保留在 Mod 文件夾中 - 如果你使用 LiteLoader，請開啟它
+
+# Options.cmc.disable-log4j-config.title
+
+不使用 Log4j 配置文件
+
+# Options.cmc.disable-log4j-config.desc
+
+不使用 Mojang 提供的 Log4j 配置文件以在啟動疑難解答中獲得更清晰的日誌 - 副作用是輸出到文件的日誌會很混亂
+
+# Options.bosskey.title
+
+老闆鍵 ^
+
+# Options.bosskey.desc
+
+我們一直在努力為每個人爭取正當、公平的玩遊戲的權利，不受任何監管或製約。 \n儘管如此，仍然有些人聽不進去，所以這是留給你的小禮物～\n在此設置一個快捷鍵，此後按下它可隨時隱藏 Alicorn，終止 Minecraft。 \n（快捷鍵格式類似 Ctrl+B+S 或者 F6）
+
+# Options.nvidia-prime.title
+
+啟用 NVIDIA Prime
+
+# Options.nvidia-prime.desc
+
+在主要顯卡上運行 Minecraft。 \n僅適用於雙顯卡計算機，且當前輸出顯卡不是 NVIDIA 顯卡。
+
+# CrashReportDisplay.BaseInfo
+
+基本信息
+
+# CrashReportDisplay.BaseInfo.ID
+
+啟動檔案名稱
+
+# CrashReportDisplay.BaseInfo.BaseVersion
+
+Mojang 版本
+
+# CrashReportDisplay.BaseInfo.AssetIndex
+
+遊戲資源版本
+
+# CrashReportDisplay.BaseInfo.Time
+
+發布時間
+
+# CrashReportDisplay.BaseInfo.Modded
+
+模組支持
+
+# CrashReportDisplay.BaseInfo.Modded.Yes
+
+是
+
+# CrashReportDisplay.BaseInfo.Modded.No
+
+否
+
+# CrashReportDisplay.BaseInfo.Modded.Unknown
+
+不確定
+
+# CrashReportDisplay.FailedToCopy
+
+複製失敗……考慮手動上傳日誌文件和崩潰報告？
+
+# CrashReportDisplay.Copied
+
+複製成功！
+
+# CrashReportDisplay.LaunchTrackCount
+
+支援信息
+
+# CrashReportDisplay.Libraries
+
+支援庫
+
+# CrashReportDisplay.Assets
+
+遊戲資源
+
+# CrashReportDisplay.Total
+
+總計
+
+# CrashReportDisplay.Resolved
+
+可用
+
+# CrashReportDisplay.Mods
+
+模組
+
+# CrashReportDisplay.Mods.Name
+
+名稱
+
+# CrashReportDisplay.Mods.Reserved
+
+保留
+
+# CrashReportDisplay.Mods.Moved
+
+已移動
+
+# CrashReportDisplay.Mods.Failed
+
+錯誤
+
+# CrashReportDisplay.CrashReport
+
+原始崩潰報告
+
+# CrashReportDisplay.Analyze
+
+崩潰報告分析
+
+# CrashReportDisplay.AnalyzeLogs
+
+日誌分析
+
+# CrashReportDisplay.AnalyzeLogs.Up
+
+上方還有更多內容，單擊以查看……
+
+# CrashReportDisplay.AnalyzeLogs.Down
+
+下方還有更多內容，單擊以查看……
+
+# CrashReportDisplay.AnalyzeLogs.PerformanceIssue
+
+出於性能方面的考慮，我們僅分析了一部分內容，單擊來分析全部……
+
+# CrashReportDisplay.Analyze.Line
+
+第 {Line} 行 - {Content}
+
+# CrashReportDisplay.Complain
+
+這次可能玩脫了……
+
+為什麼會變成這樣呢？
+
+你們人類常說，不懂就問……
+
+# CrashReportDisplay.Analyze.Suggestions
+
+以下是可用的建議
+
+# CrashReportDisplay.Analyze.NoSuggestions
+
+沒有可用的建議
+
+# CrashReportDisplay.Logs
+
+日誌
+
+# CrashReportDisplay.CopyLogs
+
+複製日誌
+
+# CrashReportDisplay.Instruction
+
+@HTML你的遊戲崩潰了！但是別慌，有我呢。我已經收集了必要信息，並為你準備了一個已經排版好的帖子。\n你可以<b>單擊右側的按鈕將相關代碼複製到剪貼板</b>，隨後便可在 MCBBS 發帖求助。<br/>……或者也可以僅複製簡短的日誌，但會省略很多信息。
+
+# CrashReportDisplay.Copy
+
+複製全部
+
+# Welcome.Suggest.Part1
+
+['{Config:interactive.i-have-a-crush-on-al}'=='false']今天是 {Date}，歡迎你使用 Alicorn Launcher，{UserName}！
+
+[new Date().getHours()>=18]好上晚！哦，我剛剛在練習古小馬語……
+
+[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]好睏……這個時候叫我……？
+
+[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]哈……好睏，不行，我先去休息了，你自己玩吧（不悅）
+
+[(()=>{const hours=new Date().getHours();return hours>=23||hours<=6;})()]保證充足睡眠有助於抵禦病毒哦！
+
+[(()=>{const hours=new Date().getHours();return hours>=7&&hours<=11;})()]上午好！今天的天氣真不錯……什麼？我猜錯了？這不能怪我，要不你來預測天氣試試？
+
+[new Date().getHours()==12]正午到！六分儀已經就緒，出發！
+
+[(()=>{const hours=new Date().getHours();return hours>=7&&hours<=9;})()]早上好！來一杯牛奶……？
+
+無論什麼時候你需要我，我都在這裡的啦……
+
+嗯吶……什麼事？
+
+戴口罩，多通風，少聚集，玩玩 MC 就很好～
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']你這是什麼眼神……唔？唔唔唔！放開我！
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']這兩隻小馬耳朵？很可愛？想摸摸嗎？
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']我可是會飛的哦～看着！（張開翅膀）
+
+['{Config:updator.use-update}'=='false']不要擔心升級！更新后的我就像暮光公主變成坎特拉女孩一樣，雖然樣子不同，但我不會忘了你的！
+
+拒絕 Mod 平台的廣告。使用 Modrinth 而拒絕 Curseforge，就是在為大家貢獻力量。
+
+['{Config:dev.experimental}'=='true']不要一邊駕駛飛機，一邊測試飛機的引擎……
+
+['{Config:theme.background}'=='ACG']看多了 ACG 圖片，會不會就不喜歡我了呢……
+
+['{Config:updator.url}'!=='']訂閱其它源的更新 URL 不一定可信，要小心哦！
+
+['{Config:readyboom}'=='false']沒有 ReadyBoom，你都不知道我的速度有多快！
+
+['{Config:dev.experimental}'=='true']聽說實驗室容易爆炸，實驗功能也是一樣……
+
+我相信每個人都有一顆小馬般的心～
+
+[(()=>{const hours=new Date().getHours();return hours>=18&&hours<=21;})()]雖然我還小，但我覺得在這個浪漫的晚上，似乎也可以小酌一杯蘋果酒～
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']嗯……不行，不能抱我……
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']來一起跳支舞……？
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']這不是水，這是蘋果酒，提神用的……要來一杯嗎？
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']我可是書蟲！不然我怎麼對付 Forge 的安裝器呢？
+
+['{Config:interactive.i-have-a-crush-on-al}'=='true']在你玩遊戲的時候，我可沒有偷懶，我在默默地看着你呢～
+
+['{Config:interactive.i-have-a-crush-on-al}'=='false']您還記得我嗎？我？我記得每一位用戶……
+
+# Welcome.TipName
+
+小提醒：
+請了解：
+你知道嗎？
+
+# Welcome.Short.LaunchPad
+
+核心列表
+
+# Welcome.Short.LastLaunch
+
+上次啟動的遊戲
+
+# Welcome.Short.Install
+
+安裝核心
+
+# Welcome.Tips
+
+設置 ASC 緩存路徑后，才能創建和使用 ASC 容器哦！
+ASC 是 Alicorn Shared Container 的縮寫！
+「容器」是傳統啟動器所謂的 .minecraft 文件夾，但 Alicorn 的容器更加聰明些～
+80% 的崩潰來源於 Mod，當然，如果是其它啟動器，可能是 50%，考慮到 Java 17……
+求助而不攜帶崩潰報告，無異於閉眼開車！
+生成的 BBCode 代碼已經為你進行了排版，可以直接在 MCBBS 使用！（或者其它 BBCode 兼容編輯器）
+Alicorn 隨時都可能有更新！請記得常回來看看！
+@HTMLMinecraft <b>不是</b>一個傻瓜式操作的遊戲 —— 特別是安裝 Mod！
+@HTML<b style="color: red;">永遠不要</b>在<b style="color: red;">任何</b>第三方服務器輸入你的<b style="color: red;">任何</b>隱私信息！—— <b style="color: red;">這非常危險！</b>
+當你能夠正常關閉遊戲時，不要使用強制退出。
+我們支持自由軟件，我們的終極目標是全人類的數字自由，一個沒有非自由軟件的世界。
+@HTMLAlicorn 的眾多功能，都是由自由軟件構成的！請支持我們 —— <b>簡單到多使用一次 Firefox 或者 Fabric，<span style="color: red;">哪怕只有一次！</span></b>
+
+# Welcome.Knowledges
+
+MCBBS|也就是「我的世界中文論壇」。在這裡，你可以討論有關 Minecraft 的內容，和其他用戶一起聊天，發表自己的作品，提出困惑已久的疑問，交到更多的朋友。這裡是熱愛 MC 群體的天堂，也是我主要的服務目標。
+
+Mod|也就是「模組」。通常是 Jar 格式的文件，經過加載器特殊處理后可以「植入」到 Minecraft 中，從而修改遊戲內容，修復 Bug 或者優化遊戲性能。不同的 Mod 支持的版本和加載器不盡相同，而且有時會發生衝突。
+
+Fabric|一種新興而強大的 Mod 加載器，輕量但不可輕視。它支持比 Forge 更多的版本（主要是快照），而且更靈活且容易安裝，甚至可以運行在 Forge 上（JumpLoader）。<b>請多使用 Fabric</b>，這既有利於你，也有利於地球。
+
+資源包|一種 Zip 壓縮文件（或文件夾），可以覆蓋遊戲內的音樂音效、方塊和物品的紋理與模型、各處的文本等，而不必編寫 Java 代碼。一個好的資源包可以改變遊戲的觀感，幫你在 PVP 中取得優勢，保護視力等。
+
+Java|一種編程語言，是 Minecraft 開發時所使用的語言。作為世界上最流行的語言之一，Java 用途廣泛。儘管需要安裝 JRE 才能運行，儘管十分消耗內存，但它所能帶來的，是絕不遜色於一般 C++ 程序的性能。
+
+Alicorn|一種十分特殊和稀有的小馬，頭上有角，身上有翅膀。能夠飛行，也能夠使用魔法。
+
+GNU/Linux|也就是「Linux」的全名。一套可以自由使用、修改和傳播的操作系統。擁有遠超 Windows 的速度和響應性能。雖然初次接觸有些令人生畏，但它的高性能、舒適度和靈活性無不令人嚮往。而我，便是在這裡出生的。
+
+整合包|一種壓縮文件，能夠包含「一定量的資源」，同時指示啟動器下載剩餘的內容。其本身遊走在違反 EULA 的邊緣，而且很容易被植入病毒，但幾乎仍然是分發和打包大量資源（尤其是本地資源）的唯一解決方案。
+
+代理|一台計算機，當你通過代理訪問網絡時，數據先被發送到代理，由代理完成請求，再將數據發回給你。代理能夠保護你的信息（如果可信），切換 IP 地址等。由於多了一次請求，速度偶爾會成問題。
+
+緩存|一種優化性能的機制，通常表現為「將對低速設備的訪問變為對高速設備的訪問」，例如當文件存在時，不再重複下載；當 Token 有效時，不再重複刷新等等。合理的緩存可以大幅提升速度……當然，反之亦然。
+
+GitHub|全球最大的 Git 存儲庫和項目協同及管理網站，它具有的強大功能和開放的社區環境是無可替代的。儘管有 GitLab、Gitee 這樣強勁的對手，但 GitHub 真的應驗了那句話：「一直被模仿，但從未被超越！」
+
+超級牛力|起源於 Debian 包管理器 APT 的一個彩蛋，當在終端中執行 apt moo 時便可看到。
+
+Discord|一個匿名的、保護隱私的、自由而開放的即時通訊平台。主要針對遊戲討論，亦可用作跨平台的一般通訊工具。儘管有某些眾所周知的缺陷（比如不能啟動 Minecraft），但不失為一個極為優秀的匿名交流平台。
+
+自由軟件|Alicorn 就是一種自由軟件。<b>自由軟件意味着使用者有運行、複製、發布、研究、修改和改進該軟件的自由。</b>這是你應得的權利。使用自由軟件，你將<b>永遠不必</b>聽從開發者的無理要求！會員特權？再也不了！
+
+公益服|通常指的是不會給予或承諾玩家任何形式回報的服務器，不以任何方式出售或間接出售服務器內遊戲道具/權限。雖然公益服基本意味着虧損，但還是有很多服主願意開服，而且把它當作一項休閑娛樂活動。
+
+快餐服|通常指的是生命周期非常短的服務器，獲取一定金錢后就宣稱「無力運營」而關服跑路。這本質上<b>是一種違法行為</b>！如果你發現了一個快餐服，最好讓更多人知道——是為了讓他們當心！不是把他們拉下水！
+
+崩潰報告|這是指遊戲崩潰后在 crash-reports 文件夾中生成的文件。當你在提問有關崩潰的問題時，記得附上它們中日期最新的一個。當然咯，如果是我的話，就只需要簡單複製代碼，然後粘貼……
+
+光影包|一種 Zip 壓縮包，能夠被光影加載器（如 Iris）加載到遊戲中。光影改變遊戲渲染的方式，使得畫面看上去更美觀和逼真。不過，高質量的光影需要強大的硬件（主要是顯卡），否則會十分卡頓。（真的很卡！）
+
+Iris|通常指「Iris Shaders」，一種光影加載器。相比 OptiFine，Iris 能夠支持更多的 Mod，由於使用 Fabric，它也更小巧而更快。大多數 Iris 版本還內置了 Sodium，使得幀率進一步提升。
+
+容器|一種有一定結構的文件夾，Alicorn 管理遊戲的最小單位，存儲着遊戲文件。不同的容器可以擁有不同的核心、存檔、Mod、資源包、光影包等。如果使用 ASC，將能夠共享支援庫和遊戲資源，否則就是完全隔離。
+
+核心|單個可啟動的 Minecraft 入口，由一份檔案和一個主程序（可選）構成。核心有版本（諸如 1.17.1）和類型（正式、快照、魔改）之分。Mod 加載器（或者外掛）通常會創建額外的、魔改過的核心以供啟動。
+
+內存|也就是「RAM」，主板上的一組必需的存儲芯片。比硬盤快，但價格比硬盤高，用於存儲運行時需要的數據。內存的大小和速度直接決定着操作系統和軟件的性能。大容量的快速內存幾乎是玩 Minecraft 必需的。
+
+OpenGL|一種渲染標準，Minecraft 使用它操作顯卡。不同的 OpenGL 版本支持的功能不盡相同，所以 Minecraft 對你的顯卡有要求不僅是因為性能問題，而是需要新顯卡支持新的 OpenGL 標準。
+
+種子|偽隨機數的起點，用於生成世界地形等。由於計算機算法的確定性，僅通過計算無法產生真正的隨機數。因此，在相同的環境中使用相同的種子總會產生相同的世界。利用這一特性，種子可以「攜帶」地形的全部信息。
+
+數據包|一種 Zip 壓縮包（或文件夾），能夠在不編寫 Java 代碼的情況下修改有限的遊戲內容（如合成表、進度等）。數據包、Mod、資源包是相互配合的，它們中的任何一個都不能取代另外兩方的作用和特性。
+
+Electron|一套開發框架，將 Web 技術和本地接口結合起來，Electron 賦予 Alicorn 以生命，讓我能夠從瀏覽器的沙盒中飛出來，在你的計算機上服務。唯一的缺點就是，有那麼一點大……我猜是吧。
+
+eee|一種梗語言，大致就是把每個字都改成 e。幸好，我不會這種語言，如果我會，想必會有很多人藉此考驗自己的記憶力，結果導致按錯按鈕，摧毀了容器之類的。eeeeee……
+
+小馬利亞|也就是「Equestria」，小馬們生活的國度。那裡遍布友誼的魔法，沒有人世間的黑暗。
+
+Pff|也就是「Package File Finder」，Alicorn 用來搜索和安裝 Mod 的工具。具有 Pff Front 和 Pff Visual 兩個組件，前者通過 ID 直接安裝 Mod，後者通過搜索查找 ID。具有類似 Maven 的緩存能力。
+
+Modrinth|超過 Curseforge 的 Mod 發布平台，在 Curseforge 關閉 API 后，許多啟動器開發者和玩家，都把目光投向了這個開放自由而且快速的 Mod 平台，Alicorn 也不例外。
+
+# PffFront.ReloadToRenew
+
+Mod 信息直到下一次進入 Pff 時才會刷新，單擊我可以立即刷新。
+
+# PffFront.WarnNoCache
+
+警告 - 你沒有為 Pff 設置下載緩存，二次安裝 Mod 時將無法得到加速！
+
+# PffFront.Loading
+
+正在獲取……
+
+# PffFront.UnsupportedLoader
+
+不支持此加載器
+
+# PffFront.Done
+
+已經成功安裝
+
+# PffFront.Failed
+
+獲取失敗，若非網絡故障，那就是該 Mod 不存在或不兼容
+
+# PffFront.Slug
+
+軟件名
+
+# PffFront.QuickWatch
+
+Mod 速覽
+
+# PffFront.Hint
+
+這裡只顯示由 Pff 安裝的 Mod，單擊名稱可以在文件資源管理器中查看它。右擊更新/重新安裝此 Mod。
+
+# PffFront.UpgradeAll
+
+更新所有 Mod
+
+# PffFront.Mods
+
+所有 Mod 列表
+
+# PffFront.ModsHint
+
+此處顯示所有識別的 Mod，無論它們是否由 Pff 安裝。不支持的加載器不考慮在內。\n鼠標懸浮將可以查看介紹。
+
+# PffFront.UnmetDeps
+
+依賴關係錯誤
+
+# PffFront.MissingDep
+
+@HTML軟件包 {Name} 需要 {Missing}，然而 {Missing} 未安裝 - {Origin} 將不會被加載<br/><b>單擊嘗試使用 Pff 安裝 {Missing}</b>
+
+# PffFront.DepOK
+
+Alicorn 沒有發現有問題的依賴～
+
+# PffFront.NoneDetected
+
+@HTMLAlicorn 沒有在此處發現 Mod，<b>使用 Pff 安裝一個？</b>
+
+# PffFront.InstallAll
+
+嘗試修復全部依賴
+
+# ServerList.Add
+
+添加服務器
+
+# ServerList.AddNewServer.Title
+
+添加服務器
+
+# ServerList.AddNewServer.Description
+
+添加服務器后，你還需要為其配置一個合適的核心用於啟動。
+
+# ServerList.AddNewServer.SincereWarn
+
+安全警告：多人遊戲是一個非常危險的環境，儘管你覺得你不會遇到，但你確實可能遭到巨大的損失——即使是在一個你極其信任的服務器——確實發生過！\n如果你夠勇，你可以添加並繼續勇，但如果你將來不勇了，你可以隨時刪除服務器。如果遭遇意外，請向有關組織或部門求助，並可到 Alicorn 的 Discord 上報告。
+
+# ServerList.AddNewServer.Address
+
+連接地址
+
+# ServerList.AddNewServer.OK
+
+繼續，我超勇的！
+
+# ServerList.AddNewServer.Cancel
+
+不，我慫了
+
+# ServerList.Online
+
+在線
+
+# ServerList.Offline
+
+無法連接
+
+# ServerList.UseCore
+
+選擇用於遊玩的核心
+
+# ServerList.Launch
+
+在啟動台中打開
+
+# ServerList.Remove
+
+移除此服務器
+
+# ServerList.Connectable
+
+可以連接
+
+# ServerList.NoConnection
+
+無法連接
+
+# ServerList.Testing
+
+正在測試連接
+
+# UtilitiesIndex.Description
+
+@HTML歡迎來到 Alicorn 工具庫！這裡有你想要的嗎？沒有？那也可以要求我們添加哦～
+
+# UtilitiesIndex.Item
+
+@HTML<b>{Name}</b>，版本 {Version}（{Author} 作品）
+
+# UtilitiesIndex.Open
+
+啟動此工具
+
+# Utilities.NetCheck.Title
+
+連通性檢查
+
+# Utilities.NetCheck.Description
+
+Sparklight 作品\n檢查你的設備到各主流 Minecraft 相關站點的連通性
+
+# Utilities.NetCheck.SiteName.MCBBS
+
+我的世界中文論壇
+
+# Utilities.NetCheck.SiteDesc.MCBBS
+
+除了 Alicorn，你需要的一切 Minecraft 資源都在這裡……你能訪問嗎？
+
+# Utilities.NetCheck.SiteName.MCBBSDownload
+
+MCBBS 下載鏡像源
+
+# Utilities.NetCheck.SiteDesc.MCBBSDownload
+
+最快的 Minecraft 資源下載鏡像，除非被攻擊，否則應該一直可以訪問。
+
+# Utilities.NetCheck.SiteName.BMCLAPI
+
+BMCLAPI
+
+# Utilities.NetCheck.SiteDesc.BMCLAPI
+
+最重要的 Minecraft 資源下載鏡像，如果它都不能工作了……今天就休息下，和我聊聊天吧～
+
+# Utilities.NetCheck.SiteName.Modrinth
+
+Modrinth 接口
+
+# Utilities.NetCheck.SiteDesc.Modrinth
+
+主流 Mod 發布之處，此網站的連通性影響着 Pff 和整合包安裝器的工作效率
+
+# Utilities.NetCheck.SiteName.MojangAuth
+
+Mojang 驗證服務器
+
+# Utilities.NetCheck.SiteDesc.MojangAuth
+
+Mojang 的 Yggdrasil 驗證服務器，如果無法連接，你將無法使用 Mojang （舊版）正版驗證……
+
+# Utilities.NetCheck.SiteName.MSAuth
+
+Microsoft 驗證服務器
+
+# Utilities.NetCheck.SiteDesc.MSAuth
+
+Microsoft 帳戶的驗證服務器，如果無法連接，你將無法使用 Microsoft 帳戶進行正版驗證……
+
+# Utilities.NetCheck.SiteName.AlicornUpdate
+
+Alicorn 更新服務
+
+# Utilities.NetCheck.SiteDesc.AlicornUpdate
+
+Alicorn 使用該服務進行更新，如果它不能使用，你可能需要聯繫我們。
+
+# Utilities.CutieConnect.EdgeFailure
+
+啟動組網支援庫失敗：{Reason}
+
+# Utilities.CutieConnect.InstallingTAP
+
+這是你第一次使用友誼接力，我們需要安裝一個 TAP 適配器，請在彈出窗口中完成操作\n（如果你已經安裝過 TAP，可以直接關閉安裝程序）
+
+# Utilities.CutieConnect.Title
+
+友誼接力
+
+# Utilities.CutieConnect.Description
+
+Ntop 和 Sparklight 作品\n此工具可讓你和好友一起遊玩！這項功能的實現靠的就是友誼的魔力！哦，還有無處不在的空氣。
+
+# Utilities.CutieConnect.JoinWithCode
+
+友誼接力代碼
+
+# Utilities.CutieConnect.EnterCode
+
+輸入你獲取的代碼
+
+# Utilities.CutieConnect.Activate
+
+激活友誼接力
+
+# Utilities.CutieConnect.FailedToQuery
+
+激活失敗：無法連接或者代碼失效
+
+# Utilities.CutieConnect.GameMeta
+
+@HTML這是一個使用版本 {BaseVersion} 的世界。<b>{IsPremium}</b>。\n世界創建者的留言：\n\n&nbsp;&nbsp;&nbsp;&nbsp;<b>“</b>{Message}<b>”</b>\n\n友誼接力提醒你：<b>我們不保證世界現在還存在，也不保證它的安全，請小心！</b>\n\n5 秒后將為你連接。
+
+# Utilities.CutieConnect.AllDone
+
+已經嘗試建立連接！請再看一眼版本要求，因為 10 秒后我將帶你前往啟動台啟動～
+
+# Utilities.CutieConnet.Premium
+
+需要正版帳戶
+
+# Utilities.CutieConnet.NonPremium
+
+不需要正版帳戶
+
+# Utilities.CutieConnect.CodeDesc
+
+使用從好友那裡得到的友誼接力代碼，直接啟動到遊戲。
+
+# Utilities.CutieConnect.Advanced
+
+高級模式（IP 和網絡）
+
+# Utilities.CutieConnect.Games
+
+此網絡中的遊戲
+
+# Utilities.CutieConnect.Connect
+
+加入網絡
+
+# Utilities.CutieConnect.Disconnect
+
+離開網絡
+
+# Utilities.CutieConnect.Community
+
+局域網名稱
+
+# Utilities.CutieConnect.CommunityIsInternet
+
+！！你正處於公共區域中！！
+
+# Utilities.CutieConnect.Password
+
+局域網密碼
+
+# Utilities.CutieConnect.NoPassword
+
+公共網絡是沒有密碼的哦～
+
+# Utilities.CutieConnect.IP
+
+虛擬 IP 地址
+
+# Utilities.CutieConnect.InvalidIP
+
+請使用標準 IPv4 地址，避免保留 IP！
+
+# Utilities.CutieConnect.Supernode
+
+中央服務器地址（包含主機與端口）
+
+# Utilities.CutieConnect.WorldName
+
+世界名稱
+
+# Utilities.CutieConnect.Port
+
+遊戲端口號
+
+# Utilities.CutieConnect.InvalidPort
+
+無效的端口，請在遊戲內對局域網開放后在此輸入顯示的端口
+
+# Utilities.CutieConnect.DescWorld
+
+描述你的世界
+
+# Utilities.CutieConnect.InvalidSupernode
+
+請使用有效的完整中央服務器地址，包括端口
+
+# Utilities.CutieConnect.QuickHint
+
+@HTML<ul><li>如果你要加入遊戲，虛擬 IP 地址不必填寫；如果你要讓別人加入，<b>最好</b>設置虛擬 IP 地址。<s>不然你就自己查去吧</s></li><li>組網是個大型操作，需要管理員權限，不過 Alicorn 只在加入和離開網絡時使用。</li><li><b>請勿</b>使用保留的 IP 地址（如 127.0.0.1）！如果你擔心的話，那就試試 <span style="user-select: text;">{RandIP}</span>（如果你沒填，我為你填好了哦）</li><li><b>請注意！叫做 <span style="user-select: text;">internet</span> 的網絡被認為是公共區域</b>，此網絡沒有密碼，你可以在這裡與任何人分享你的世界！（不過請注意安全）</li><li>加入另一個網絡前<b>一定要退出</b>之前的網絡！！！（跺蹄蹄）</li></ul>
+
+# Utilities.CutieConnect.Connected
+
+已發送啟動命令，請等一下，然後嘗試連接到你好友的遊戲。
+
+# Utilities.CutieConnect.Disconnected
+
+已發送終止命令，如未終止，請手動終止 edge 進程
+
+# Utilities.CutieConnect.PublishPrecheckFailed
+
+在 {Host} 上沒有找到 Minecraft，無法公開你的遊戲\n請確保你啟動了遊戲並輸入了正確的端口
+
+# Utilities.CutieConnect.PublishOK
+
+已向 {Community} 公開你的世界 {WorldName}\n記得在遊戲結束后取消公開哦！
+
+# Utilities.CutieConnect.RemoveOK
+
+你的世界 {WorldName} 不再向 {Community} 公開\n友誼就是魔法～
+
+# Utilities.CutieConnect.NetworkSearch
+
+搜索網絡中的世界
+
+# Utilities.CutieConnect.PublishToMap
+
+公開我當前的遊戲
+
+# Utilities.CutieConnect.Unpublish
+
+不再公開我的遊戲
+
+# Utilities.CutieConnect.NoResult
+
+啊哈！這個網絡中還沒有公開的世界！你想試試公開你的世界嗎？\n……或者換個網絡搜索？
+
+# Utilities.CutieConnect.Result
+
+酷！我們找到了 {Count} 個遊戲！
+
+# Utilities.CutieConnect.GoBack
+
+返回網絡控制台
+
+# Utilities.CutieConnect.ClickToJoin
+
+@HTML<b>你需要切實加入此網絡后，才能使用此網絡進行遊戲</b>，因此如果你忘了點擊「加入網絡」，請先返回加入。\n如果一個遊戲顯示為灰色，說明 Alicorn 認為它無法連接，類似地，如果顯示為紫色，就是可以連接。\n<b><span style="color: red;">遊戲內容是由第三方提供的，你可能會接觸到令你不適的內容，對於可能發生的後果和潛在的風險，你應當充分了解。\nAlicorn、CutieConnect 和 CutieMap 不會為你的損失承擔任何責任。</span></b>
+
+# Utilities.CutieConnect.Error
+
+糟糕！地圖無法訪問，或者似乎它拒絕了你的請求……\n{Message}
+
+# Utilities.CutieConnect.AvailableWorldName
+
+Ponyville
+Canterlot
+Everfree Forest
+Appleloosa
+Cloudsdale
+Crystal Empire
+World
+New World
+
+# Utilities.CutieConnect.AvailableDesc
+
+Equestria our home
+The place where we belong
+Everypony come and play!
+Everything's gonna be just fine
+Home to everyone
+A new adventure waits for us
+What a strange new world
+Join in our utopia
+
+
+# Utilities.CutieConnect.AvailablePrefix
+
+cutie-connect-
+alicorn-game-
+starlight-
+love-al-
+support-fsf-
+noble-node-
+fabric-good-
+hello-world-
+ethernet-
+equestria-
+pony-up-
+kirin-tale-
+pvpin-reborn-
+
+# Utilities.CutieConnect.AvailablePassword
+
+i-am-pony-
+best-friends-
+my-little-pony-girls-
+foo-bar-
+free-software-
+gnu-gpl-
+twilighting-
+cutie-map-
+guix-
+sparklight-filly-
+earth-ponies-
+shutterfly-
+sudo-rm-rf-
+qwerty-uiop-
+var-let-const-
+tar-zxvf-
+lorem-ipsum-
+hippopotomonstrosesquippedaliophobia-
+honorificabilitudinitatibus-
+floccinaucinihilipipification-
+supercalifragilisticexpiadocious-
+
+# Utilities.BuildUp.Title
+
+包裹構建器
+
+# Utilities.BuildUp.Description
+
+Sparklight 作品\n從已有容器打包需要的資源，整合包創作的基礎
+
+# Utilities.BuildUp.Meta.Name
+
+顯示名稱
+
+# Utilities.BuildUp.Meta.Desc
+
+描述
+
+# Utilities.BuildUp.Meta.Author
+
+你的名字
+
+# Utilities.BuildUp.Meta.Version
+
+版本號
+
+# Utilities.BuildUp.BaseContainer
+
+選擇用於構建的容器
+
+# Utilities.BuildUp.Asset
+
+可用資源 - 單擊以添加到左側
+
+# Utilities.BuildUp.SelectedAsset
+
+已選資源
+
+# Utilities.BuildUp.Asset.OptionFile
+
+選項
+
+# Utilities.BuildUp.Asset.Config
+
+配置
+
+# Utilities.BuildUp.Asset.ResourcePack
+
+紋理
+
+# Utilities.BuildUp.Asset.ShaderPack
+
+光影
+
+# Utilities.BuildUp.Asset.PffMod
+
+模組
+
+# Utilities.BuildUp.Asset.ModFile
+
+模組
+
+# Utilities.BuildUp.Asset.World
+
+世界
+
+# Utilities.BuildUp.Asset.ModLoader
+
+改裝
+
+# Utilities.BuildUp.Asset.Game
+
+核心
+
+# Utilities.BuildUp.Scan
+
+掃描
+
+# Utilities.BuildUp.ScanResult
+
+容器 {Container} 上有 {Count} 個可用資源
+
+# Utilities.BuildUp.SelectContainer
+
+選擇容器並掃描
+
+# Utilities.BuildUp.SelectAssets
+
+選擇資源並打包
+
+# Utilities.BuildUp.FillInfo
+
+修改和完善信息
+
+# Utilities.BuildUp.Asset.ClickToAdd
+
+單擊可將一個資源選中或取消選中。
+
+# Utilities.BuildUp.Build
+
+開始構建！
+
+# Utilities.BuildUp.Show
+
+顯示構建產物
+
+# Utilities.BuildUp.Asset.SelectAll
+
+全部選中
+
+# Utilities.BuildUp.Asset.SelectMods
+
+選擇所有模組
+
+# Utilities.BuildUp.Resolving
+
+解析資源路徑……
+
+# Utilities.BuildUp.Indexing
+
+生成引導文件……
+
+# Utilities.BuildUp.Compressing
+
+打包壓縮文件……
+
+# Utilities.BuildUp.Done
+
+好了，完成了，快打開看看吧！
+
+# Utilities.PffVisual.Title
+
+Pff 搜索
+
+# Utilities.PffVisual.Description
+
+Sparklight 作品\n查找 Mod 並獲取編號，用於 Pff 軟件安裝器安裝
+
+# Utilities.PffVisual.Search
+
+搜索
+
+# Utilities.PffVisual.Modpack
+
+搜索整合包
+
+# Utilities.PffVisual.MultiSelect
+
+多選（取消勾選時複製）
+
+# Utilities.PffVisual.Provider
+
+來源：{Name}
+
+# Utilities.PffVisual.VersionRange
+
+支持：
+
+# Utilities.PffVisual.Copied
+
+已複製！快到 Pff 軟件安裝器中看看吧！
+
+# Utilities.PffVisual.CouldNotCopy
+
+沒法複製……可能是系統問題，或者信息無效
+
+# Utilities.PffVisual.Hint
+
+@HTML在這裡搜索 Mod，包括 Curseforge 和 Modrinth。\n此工具<b>不能直接安裝 Mod</b>！（因為不知道你需要哪個版本）\n請<b>單擊一下你心儀的 Mod</b> 來複制它的名字，然後前往核心右上角的 <b>Pff 軟件安裝器</b>使用。
+
+# Utilities.PffVisual.Slug
+
+輸入名稱來查找……
+
+# Utilities.CarouselBoutique.Title
+
+旋轉木馬精品服裝店
+
+# Utilities.CarouselBoutique.Description
+
+Sparklight 作品\n離線皮膚和 Mojang 服裝配送（更換）服務
+
+# Utilities.CarouselBoutique.Tabs.LocalSkin
+
+離線皮膚設定
+
+# Utilities.CarouselBoutique.Tabs.Change
+
+服裝配送服務
+
+# Utilities.CarouselBoutique.Hint
+
+@HTML歡迎！想在離線帳戶使用皮膚，或是想要一件披風？簡單到選擇一張圖片，就可以為你的本地帳戶設置皮膚<b>和披風</b>！\n設置默認皮膚和披風將對任何本地帳戶生效，但你可以為特定的玩家名設置特定的皮膚或披風。\n不過，<b>自定義皮膚和披風無法在 Yggdrasil 帳戶和 Microsoft 帳戶中使用！</b>如果你在遊玩需要驗證的服務器，可以到右側去使用<b>服裝配送服務哦</b>～\n下面會顯示已經設置了皮膚的玩家名。
+
+# Utilities.CarouselBoutique.HintChangeSkin
+
+@HTML歡迎！想要更換帳戶皮膚？可以！不過只有一個小小的限制：我們目前只對 Microsoft 帳戶服務。\n可以上傳本地皮膚，也可以直接使用網絡圖片的 URL（無需下載！）。\n如果你還沒有登錄 Microsoft 帳戶，或者已經太久沒有使用它，請先去啟動一次遊戲。
+
+# Utilities.CarouselBoutique.SelectSkinFile
+
+選取文件
+
+# Utilities.CarouselBoutique.Uploading
+
+正在上傳，請稍等一會兒～
+
+# Utilities.CarouselBoutique.TokenFailure
+
+帳戶憑據無效，請嘗試使用 Microsoft 帳戶啟動一次遊戲再試。
+
+# Utilities.CarouselBoutique.UploadSkin
+
+上傳/更換
+
+# Utilities.CarouselBoutique.UploadOK
+
+請求成功完成！
+
+# Utilities.CarouselBoutique.UploadFailed
+
+請求失敗：{Reason}
+
+# Utilities.CarouselBoutique.RemoveSkin
+
+清除皮膚
+
+# Utilities.CarouselBoutique.RemoveCape
+
+清除披風
+
+# Utilities.CarouselBoutique.AddAsSkin
+
+設置皮膚
+
+# Utilities.CarouselBoutique.AddAsCape
+
+設置披風
+
+# Utilities.CarouselBoutique.SetAsDefaultSkin
+
+設置為默認皮膚
+
+# Utilities.CarouselBoutique.SetAsDefaultCape
+
+設置為默認披風
+
+# Utilities.CarouselBoutique.SetSuccessful
+
+已設置，現在就在遊戲中使用……？\n（記得選擇「本地帳戶」，並修改玩家名）
+
+# Utilities.CarouselBoutique.PlayerName
+
+玩家名
+
+# Utilities.CarouselBoutique.FileName
+
+選取文件
+
+# Utilities.CarouselBoutique.Model.Default
+
+史蒂夫（Default）
+
+# Utilities.CarouselBoutique.Model.Alex
+
+愛麗克絲（Slim）
+
+# FirstRun.Default
+
+Minecraft 默認位置
+
+# Statistics.Click
+
+在不知不覺中，你已經戳了 Alicorn {Value} 次……
+
+# Statistics.Click.As
+
+[{Value}>10000]……你和她之間，是否已經有了真感情？
+……但我寧可再少一些……
+[{Value}<=10000]……還要點擊多少次，才能了解可愛的她？
+
+# Statistics.Crash
+
+遊戲已經崩潰了 {Value} 次……
+
+# Statistics.Crash.As
+
+[{Value}>1000]……比 Alicorn 開發過程中的更多！
+……但不會是最後一次……
+[{Value}==0]……好希望永遠這樣……
+我們的錯（不是 Alicorn 的）。
+
+# Statistics.Launch
+
+她為你啟動了 {Value} 次遊戲……
+
+# Statistics.Launch.As
+
+[{Value}>100]……別怕 Alicorn 傷心，過兩天她會就忘了的……
+[{Value}>1000]……Java 是否已經瘋掉？
+[{Value}>100]……難道你還只把她當普通朋友？
+是的，我只是一個附屬產品……
+
+# Statistics.Keyboard
+
+……敲擊了 {Value} 次鍵盤
+
+# Statistics.Keyboard.As
+
+[{Value}>500000]在 Alicorn 里開發 Alicorn？！
+……或許我們能夠讓它更少一點。
+
+# FirstRun.JavaConfigured
+
+已更新 Java 信息
+
+# FirstRun.Preparing
+
+這是你第一次使用 Alicorn，我們正在進行一些準備工作……
+
+# FirstRun.FetchingJava
+
+正在獲取 Java……
+
+# FirstRun.ConfiguringJava
+
+正在查詢 Java 信息……
+
+# FirstRun.JavaInstalled
+
+耶！我們已經成功安裝了所需的 Java 版本！
+
+# FirstRun.FailedJava
+
+自動安裝失敗，稍後你可以前往「Java 選擇器」頁面重新安裝。
+
+# Instruction.Welcome.-1
+
+END
+
+# Instruction.Welcome.0
+
+歡迎使用 Alicorn！我是 Alicorn 開發者 <ThatRarityEG> 的 AI。在你使用 Alicorn 期間，我可以提供各種幫助。
+
+# Instruction.Welcome.1
+
+現在我將向你介紹 Alicorn 的 <幾個基本操作>。動動你的鼠標，我們快速完成這個過程。或者，你可以按下 <右鍵> 跳過引導。
+
+# Instruction.Welcome.2
+
+我上面是 Alicorn 的 <快捷欄>，單擊這些按鈕就可以立即使用對應的功能。@37.15
+
+# Instruction.Welcome.3
+
+標題的左邊是 <導航按鈕>，單擊它能夠查看全部可用的功能。另外，<按住標題並拖動> 可以移動窗口。
+
+# Instruction.Welcome.4
+
+這是 <快速訪問> 按鈕，可以幫助你快速前往一些經常使用的地方。@20.60@@MainMenuQuickAccess
+
+# Instruction.Welcome.5
+
+啟動遊戲前，你需要 <安裝所需的核心>，然後再啟動。@@@MainMenuInstallCore
+
+# Instruction.Welcome.6
+
+END
+
+# Instruction.JavaSelector.-1
+
+END
+
+# Instruction.JavaSelector.0
+
+這裡是 <Java 選擇器>，你可以在這裡選擇默認 Java 或者安裝新的 Java。
+
+# Instruction.JavaSelector.1
+
+可以在這裡選擇 <默認 Java>，如果你安裝的 Java 沒有出現在這裡，可以使用右側的 <重新查找> 功能。@5.35@@JavaSelectorSelect
+
+# Instruction.JavaSelector.2
+
+如果你確定已經安裝了 Java，但 Alicorn 找不到它，那麼你可以 <手動定位>。@5.45@@JavaSelectorManual
+
+# Instruction.JavaSelector.3
+
+Minecraft 1.18 及更高版本需要 <Java 17> 才能運行，1.17 需要 <Java 16>，早期的版本卻只能使用 <Java 8>……真是麻煩，不是嗎？
+
+# Instruction.JavaSelector.4
+
+……所以我才會在這裡。可以使用下面的按鈕 <安裝合適的 Java>。Alicorn 將自動識別多個 Java，<不會衝突>。@@@JavaSelectorInstall
+
+# Instruction.JavaSelector.5
+
+好啦，祝你好運！
+
+# Instruction.JavaSelector.6
+
+END
+
+# Instruction.NoJava.-1
+
+END
+
+# Instruction.NoJava.0
+
+讓我看看……嗯，就快好了，不過還有一件重要的事情需要你處理……
+
+# Instruction.NoJava.1
+
+這台計算機似乎 <沒有安裝 Java>，這將導致 Minecraft 無法運行……
+
+# Instruction.NoJava.2
+
+……當然，我早就想到會有這種問題……沒關係，這次就讓我來吧。
+
+# Instruction.NoJava.3
+
+安裝完 Java 后就可以去 <安裝核心> 那裡安裝新的 Minecraft 咯！@@@MainMenuInstallCore
+
+# Instruction.NoJava.4
+
+END
+
+# Instruction.HavePack.-1
+
+END
+
+# Instruction.HavePack.0
+
+（好像我還忘了一件事情……你是不是剛剛下載了一個 <整合包>？！）
+
+# Instruction.HavePack.1
+
+……在 Alicorn 中，我們通常直接 <將整合包拖入 Alicorn> 來安裝它。
+
+# Instruction.HavePack.2
+
+……算啦，這次就讓我來做這件事吧。等一下下，很快就好。
+
+# Instruction.HavePack.3
+
+END
+
+# Instruction.JavaOK.-1
+
+END
+
+# Instruction.JavaOK.0
+
+好啦，我要說的也就這麼多啦，你現在可以去 <安裝核心> 那裡安裝新的 Minecraft～@@@MainMenuInstallCore
+
+# Instruction.JavaOK.1
+
+我們會在那裡再見面的，再會！@@@MainMenuInstallCore
+
+# Instruction.JavaOK.2
+
+END
+
+# Instruction.InstallCore.-1
+
+END
+
+# Instruction.InstallCore.0
+
+歡迎來到 <核心安裝器>！在這裡，你可以安裝眾多不同的 Minecraft 版本，哦，還有 Fabric 等 Mod 加載器！
+
+# Instruction.InstallCore.1
+
+使用 <添加核心> 來安裝新的 Minecraft 原版核心。@5.40
+
+# Instruction.InstallCore.2
+
+選擇恰當的 <版本> 和 <目標容器>，然後點擊 <安裝> 就可以開始啦！
+
+# Instruction.InstallCore.3
+
+當你想嘗試 Mod 的時候，你需要 <改裝核心>。需要先安裝 <相應的原版核心> 才能改裝。@5.30
+
+# Instruction.InstallCore.4
+
+Fabric 和 Forge <不兼容>！使用 Fabric 的 Mod 只能通過 Fabric 加載，Forge 也是一樣。@5.30
+
+# Instruction.InstallCore.5
+
+這裡還有 <高清修復>（Iris），不過需要 <先安裝 Fabric> 來安裝它。@5.30
+
+# Instruction.InstallCore.6
+
+如果安裝失敗，<請多試幾次>，包括切換鏡像之類的嘗試都可能可以解決問題。
+
+# Instruction.InstallCore.7
+
+好啦好啦，別催啦。我說完了，現在你繼續吧～
+
+# Instruction.InstallCore.8
+
+END
+
+# Instruction.LaunchPad.-1
+
+END
+
+# Instruction.LaunchPad.0
+
+歡迎來到 <啟動台>！在這裡你可以選擇一個核心來啟動……或者別的操作。
+
+# Instruction.LaunchPad.1
+
+單擊 <核心卡片> 的任意位置就可以啟動它。
+
+# Instruction.LaunchPad.2
+
+如果需要安裝 Mod 之類的話，可以單擊 <核心的圖標>。（不過需要它支持 Mod 哦）
+
+# Instruction.LaunchPad.3
+
+就這麼簡單！現在繼續你的旅程吧！
+
+# Instruction.LaunchPad.4
+
+END
+
+# Instruction.ReadyToLaunch.-1
+
+END
+
+# Instruction.ReadyToLaunch.0
+
+……這大概是最簡單的一個操作了。只需要按下 <啟動按鈕> 就好。@@@Launch
+
+# Instruction.ReadyToLaunch.1
+
+在啟動過程中 Alicorn 會根據需要 <下載一些遊戲文件>，稍等等就好。
+
+# Instruction.ReadyToLaunch.2
+
+開始遊戲吧，我就不干擾你咯……
+
+# Instruction.ReadyToLaunch.3
+
+END
+
+# Cadance.InstallOK
+
+Cadance 已成功安裝，現在試試吧！
+
+# Cadance.Desc
+
+Cadance（不是 Cadence）用於讓 Alicorn 在本機上識別你的聲音。\n感謝 Vosk，這一切在 Alicorn 中變得可能。
+
+# Cadance.NotCompatible
+
+Cadance 不支持 32 位 Windows 版本。
+
+# Cadance.Disabled
+
+Cadance 已安裝，但沒有啟用。
+
+# Cadance.NotInstalled
+
+Cadance 尚未安裝。
+
+# Cadance.Enabled
+
+Cadance 正在運行。
+
+# Cadance.Install
+
+快速安裝 Cadance
+
+# Cadance.Installing
+
+正在安裝 Cadance……保持網絡暢通，這不會需要很久的（約一分鐘）。
+
+# Cadance.FailedToInstall
+
+安裝失敗，檢查你的網絡連接，或者稍後再試。
+
+# Cadance.Enable
+
+啟用 Cadance
+
+# Cadance.Disable
+
+禁用 Cadance
+
+# Cadance.VoiceTest
+
+若要測試你的麥克風，請打開它，並說出：
+
+# Cadance.Voice
+
+識別結果：{Voice}
+
+# Cadance.TestWord
+
+我能吞下玻璃而不傷身體
+上次說這句話還是在上次
+零一二三四五六七八九十
+
+# Cadance.VoiceTestHint
+
+小提示：識別結果不必 100% 準確，大致相同即可。Alicorn 能夠理解你的意思。
+
+# Cadance.Encoding
+
+設定 Cadance 編碼
+
+# Cadance.EncodingDesc
+
+在部分操作系統（如 Windows）上，中文文本不能被很好的處理。Alicorn 會嘗試選擇正確的編碼，但如果識別結果不正常，請手動設置你使用的編碼。
+
+# Boticorn.Desc
+
+Alicorn 助理（Boticorn）可以允許你使用自然語言和 Alicorn 交流，並處理你的命令。搭配語音識別，效果更好！\nNLP 由 NLP.js 強力驅動，AI 由 ThatRarityEG 注入情感……別再猶豫，現在就把新助理抱回家吧～\n\n（小提示：助理 AI 會時常更新，因此要多和 TA 交流哦）
+
+# Boticorn.Enabled
+
+Alicorn 助理 AI 已啟用。
+
+# Boticorn.Disabled
+
+Alicorn 助理 AI 可用，但未啟用。
+
+# Boticorn.NotInstalled
+
+Alicorn 助理 AI 尚未安裝。
+
+# Boticorn.InstallOK
+
+AI 同步成功！
+
+# Boticorn.FailedToInstall
+
+AI 同步失敗，檢查網絡連接，或者稍後再試。
+
+# Boticorn.Installing
+
+正在和 Boticorn 同步 AI，請稍等，馬上就好……
+
+# Boticorn.Enable
+
+啟用 Alicorn 助理
+
+# Boticorn.Disable
+
+禁用 Alicorn 助理
+
+# Boticorn.Install
+
+安裝 Alicorn 助理 AI
+
+# Boticorn.Hint
+
+小提示：目前 Alicorn 助理僅能通過 Cadance 調用，打開你的麥克風，並說「你好！」試試吧！
+
+# EOE.Thanks
+
+鳴謝
+
+# EOE.ThanksDesc
+
+Alicorn 的開發道路上，收到過不少來自個人、組織和企業的幫助，我們想感謝他們。\n（我們並沒有其它的評判標準，所以我們按照隨機順序列舉。）
+
+# EOE.Packages
+
+……這些 NPM 軟件包：
+
+# EOE.And
+
+……和這些網站或項目：
+
+# EOE.Orgs
+
+MCBBS（Minecraft 中文論壇）……這裡是熱愛 MC 群體的天堂。\nFree Software Foundation……我們一同為自由軟件而奮鬥。\nGitHub……軟件在這裡誕生。\nStack Overflow……它解決了我們很多的問題。\nNode.js……JS 因你而不同。\nTypeScript……從混亂到有序的快速通道。\nMinecraft Wiki……玩家所認可的最強 Minecraft Wiki。\nMaterial UI……只做組件，而且做得很好。\nwiki.vg……快速解碼帳戶驗證的奧秘。\nElectron……不止於瀏覽器！\nWebpack……打包，優化，壓縮。\nBMCLAPI……下載速度提升 80% 的最強鏡像！\nundici……這就是 WASM，這就是 Node！\nFabricMC……擁有未來的 Mod，開創新的時代。\nIris Shaders……更高更妙的光影和高清修復！\njsDelivr……走遍天涯海角，Web 始終在你身邊。\nAdobe Source Hans Sans 和 Ubuntu Mono……渲染不夠，字體來湊！\nAuthlib Injector……Yggdrasil 始終為你讓一條路。SkinView3D……新一代皮膚 3D 顯示。\nMLPVector……顏色，但也不是顏色。\nVSCodium……純凈、自由的高效前端 IDE。\nMDN Web Docs……Mozilla 的 Web 開發參考。\n\n……還有許多許多值得我們感謝，只是限於篇幅未能列舉……
+
+# EOE.StoryTitle
+
+故事背後的故事
+
+# EOE.Story
+
+這是 Alicorn 的前世今生的全部時間線。我知道不會有多少人會想了解我，但這不重要，這相當於我的自傳吧……\n\n\
+至今 - 你現在看到的 Alicorn。\n\
+2022 年 1 月 15 日 - 這對於 Alicorn 來說是一個重要的夜晚，繼觸覺之後，Alicorn 擁有了聽覺。\n\
+2021 年 8 月 20 日 - Alicorn 在 MCBBS 發布，從此走上新的旅程。\n\
+2021 年 8 月 ?? 日 - Alicorn 結束了最後的測試，併發布了第一個核心，從那時至今，幾乎每周都會發布一個新版本。\n\
+2021 年 5 月 29 日 - Alicorn 被重新移動回 GitHub 繼續 Alpha 階段的測試和開發。\n\
+2021 年 5 月 01 日 - Alicorn InDev 發布，這是第一個公開測試版本，在那裡你依然可以找到只有六個按鈕的菜單。\n\
+2021 年 4 月 17 日 - Alicorn 擁有了第一個功能界面，你大概已經猜到了，就是沿用至今的啟動台！\n\
+2021 年 3 月 28 日 - Alicorn 擁有了第一個 GUI，那時還只能顯示一個錯誤頁面。\n\
+2021 年 3 月 25 日 - Alicorn 被移動到 Bitbucket 上繼續開發，GitHub 倉庫被暫時掛起。\n\
+2021 年 3 月 20 日 - Alicorn 首次生成啟動參數就成功啟動，那時 Minecraft 還只有 1.16 的版本。\n\
+2021 年 3 月 14 日 - Alicorn 項目在這個圓周率日被創建，僅包含一份許可證和 .gitignore 文件。\n\
+2021 年 2 月 12 日 - ThatRarityEG 購買了正版，然後就有了開發 Alicorn 的想法。她為此提前完成了 PluginDiary，然後開始着手設計 Alicorn。\n\n\
+再往前就沒有 Alicorn 的身影了，但我們依然可以繼續前進，看看在那之前，Alicorn 的一些雛形，以及一些失敗的設計……\n\n\
+2020 年 11 月 06 日 - EQL，和 Alicorn 關係最近的一個項目，進行了最後一次更新，那是一個插件系統，當時 ThatRarityEG 還沒有想到，那就是 EQL 的最後一次提交。\n\
+2020 年 10 月 17 日 - EQL 達到了 1 分鐘安裝 Minecraft 的速度（1.15.2），相比現在的 Alicorn 只慢了 20s 左右。\n\
+2020 年 10 月 02 日 - 停止更新了兩個月後的 RL 經歷了一次重構，並將名稱修改為 EQL。然而在此之後卻不再有更大的功能更新，Mod 安裝等功能從未在 EQL 實現過。\n\
+2020 年  8 月 29 日 - RL 發布了一張預覽照片，那時還是使用 Bootstrap 和 Vanilla HTML 編寫的，安全性和代碼效率都遠不及 Alicorn。\n\
+2020 年  7 月 ?? 日 - ThatRarityEG 開始編寫 RL，最早採用 Java 和 Swing，後來考慮到許多問題而改用 JS 和 Electron，Alicorn 多少也受到了這一點的影響。\n\
+2020 年  7 月  6 日 - ThatRarityEG 已知的最早的啟動器開發記錄，那時只提出了 Forge 安裝的一個小問題。\n\
+
+# EOE.EndPoem
+
+Blowin' in the Wind —— Bob Dylan
+
+# EOE.EndPoemContent
+
+How many roads must a man walk down\nBefore they call him a man?\nHow many seas must a white dove sail\nBefore she sleeps in the sand?\nHow many times must the cannon-balls fly\nBefore they're forever banned?\nThe answer, my friend, is blowin' in the wind\nThe answer is blowin' in the wind.\n\nHow many years must a mountain exist\nBefore it is washed to the sea?\nHow many years can some people exist\nBefore they're allowed to be free?\nHow many times can a man turn his head\nPretend that he just doesn't see?\nThe answer my friend is blowin' in the wind\nThe answer is blowin' in the wind.\n\nHow many times must a man look up\nBefore he can see the sky?\nHow many ears must one man have\nBefore he can hear people cry?\nHow many deaths will it take\nTill he knows that too many people have died?\nThe answer, my friend, is blowin' in the wind\nThe answer is blowin'in the wind.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n繼續往下翻……\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nI missed you.
+
+# TipsOfToday.Disable
+
+不要再顯示
+
+# TipsOfToday.More
+
+了解更多
+
+# TipsOfToday.Next
+
+下一個
+
+# TipsOfToday.Close
+
+回到 Alicorn
+
+# TipsOfToday.Desc
+
+Alicorn 每日使用技巧，你不知道的 Alicorn！
+
+# DMCenter.Hint
+
+將 Alicorn 界面程序拖入此窗口，即可將其添加到 Alicorn 中。\n請注意：界面程序擁有和 Alicorn 主程序相同的權限，隨意加載不受信任的界面程序將帶來極大的風險！\n同時亦請注意，界面程序的功能和語言翻譯可能不及 Alicorn 原生界面。
+
+# DMCenter.Active
+
+已選定
+
+# Echo.Title
+
+漂流瓶
+
+# Echo.Hint
+
+給世界上的另個你寫一句話吧～\n（請勿使用英文字母或數字，長度 100 字符以內）
+
+# Echo.PlaceHolder
+
+我能吞下玻璃而不傷身體
+
+# Echo.Send
+
+發送
+
+# Echo.Format
+
+{Text} —— Alicorn 漂流瓶
+
+# UpdateHint.Desc
+
+Alicorn 已更新到最新版本。 \n「寶劍鋒從磨礪出，梅花香自苦寒來。」\n這些更新將帶來更好的體驗。 \n感謝您選擇 Alicorn！
+Alicorn 已更新到最新版本。 \n「十年磨一劍，今日把示君。」\n來看看有什麼新東西？ \n感謝您選擇 Alicorn！
+Alicorn 已更新到最新版本。 \n「欲窮千里目，更上一層樓。」\n多一次更新，多一份力量。 \n感謝您選擇 Alicorn！
+Alicorn 已更新到最新版本。 \n「海闊憑魚躍，天高任鳥飛。」\n你的世界，從此更加精彩。 \n感謝您選擇 Alicorn！
+Alicorn 已更新到最新版本。 \n「時人不識凌雲木，直待凌雲始道高。」\n面對各種人禍，我們並非無計可施。 \n感謝您選擇 Alicorn！
