@@ -25,15 +25,9 @@ import {
   Alert,
   AppBar,
   Box,
-  Button,
   Chip,
   ClassNameMap,
   Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Drawer,
   Fab,
   IconButton,
@@ -42,8 +36,6 @@ import {
   ListItemIcon,
   ListItemText,
   Snackbar,
-  TextField,
-  ThemeProvider,
   Toolbar,
   Tooltip,
   Typography,
@@ -88,11 +80,6 @@ import { YNDialog2 } from "./OperatingHint";
 import { OptionsPage } from "./Options";
 import { PffFront } from "./PffFront";
 import { ReadyToLaunch } from "./ReadyToLaunch";
-import {
-  ALICORN_DEFAULT_THEME_DARK,
-  ALICORN_DEFAULT_THEME_LIGHT,
-  isBgDark,
-} from "./Renderer";
 import { ServerList } from "./ServerList";
 import { saveStatistics, Statistics } from "./Statistics";
 import { AlicornTheme } from "./Stylex";
@@ -167,6 +154,12 @@ export function App(): JSX.Element {
   useEffect(gotoMainIfEmpty, [window.location.hash]);
   useEffect(popupInstruction(page), [page]);
   useEffect(bindRefreshListener(setRefreshBit), []);
+  useEffect(() => {
+    ipcRenderer.addListener("menu-click", (_e, lb) => {
+      jumpTo("/" + lb);
+      triggerSetPage(lb);
+    });
+  }, []);
   useEffect(
     bindChangePageWarn(
       setOpenChangePageWarn,
@@ -529,6 +522,9 @@ function AppTopBar(props: {
   setOpenDrawer: (o: boolean) => void;
 }): JSX.Element {
   const classes = props.classes;
+  if (getString("frame.drag-impl") === "TitleBar") {
+    return <></>;
+  }
   return (
     <AppBar enableColorOnDark>
       <Toolbar>

@@ -20,6 +20,10 @@ export class MinecraftContainer {
     return path.resolve(this.getModsRoot(), modJar);
   }
 
+  getNativesLocation(id: string): string {
+    return path.resolve(this.rootDir, "versions", id, "natives");
+  }
+
   getVersionBase(): string {
     return path.resolve(this.versionsBase);
   }

@@ -2,7 +2,7 @@
   "private": true,
   "appVersion": "Sunset",
   "version": "1.0.0",
-  "updatorVersion": 50,
+  "updatorVersion": 51,
   "scripts": {
     "lc": "yarn lcd",
     "df": "yarn dev-full",

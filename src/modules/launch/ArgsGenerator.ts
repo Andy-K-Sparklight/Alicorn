@@ -90,7 +90,7 @@ export function generateVMArgs(
     );
   }*/
   // All natives directories put together
-  vMap.set("natives_directory", nativesLibs.join(FILE_SEPARATOR));
+  vMap.set("natives_directory", container.getNativesLocation(profile.id));
   // 1.17
   vMap.set("library_directory", container.getLibrariesRoot());
   // Attention! Use base version!

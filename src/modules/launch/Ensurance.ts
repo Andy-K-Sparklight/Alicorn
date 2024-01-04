@@ -38,7 +38,7 @@ export async function ensureNatives(
       for (const s of toEnsureLibraries) {
         allPromises.push(
           new Promise<void>((resolve) => {
-            void checkExtractTrimNativeLocal(container, s).then(() => {
+            void checkExtractTrimNativeLocal(container, profile.id, s).then(() => {
               resolve();
             });
           })
