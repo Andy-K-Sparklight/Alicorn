@@ -85,7 +85,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^5.3.3",
-    "semver": "^7.3.7",
+    "semver": "^7.5.2",
     "sha": "^3.0.0",
     "sudo-prompt": "^9.2.1",
     "throttle-debounce": "^5.0.0",
