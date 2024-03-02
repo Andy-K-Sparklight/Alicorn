@@ -13,11 +13,6 @@ export function NetCheck(): JSX.Element {
         }
         name={"AlicornUpdate"}
       />
-      <TestReachable site={"https://www.mcbbs.net/portal.php"} name={"MCBBS"} />
-      <TestReachable
-        site={"https://download.mcbbs.net/mc/game/version_manifest.json"}
-        name={"MCBBSDownload"}
-      />
       <TestReachable
         site={"https://bmclapi2.bangbang93.com/mc/game/version_manifest.json"}
         name={"BMCLAPI"}

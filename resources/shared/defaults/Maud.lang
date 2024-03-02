@@ -758,7 +758,7 @@ Maud 2 不支持此功能，但其他助理可能支持。
 
 # Options.download.mirror.desc
 
-@HTML选择一个用于加快下载速度的镜像 - MCBBS 镜像与 BMCLAPI 镜像是由 BMCLAPI 和 MCBBS 共同为你提供的。
+@HTML选择一个用于加快下载速度的镜像
 
 # Options.dev.desc
 

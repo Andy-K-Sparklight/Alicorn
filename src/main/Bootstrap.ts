@@ -222,8 +222,6 @@ function main() {
     } catch {}
   }
   const CONNECTION_UNLIMITED_DOMAINS = [
-    "mcbbs.net",
-    "download.mcbbs.net",
     "bangbang93.com",
     "bmclapi2.bangbang93.com",
     "forgecdn.net",
@@ -308,7 +306,7 @@ export async function initProxy(session?: Session): Promise<void> {
     proxyRules: proc,
     proxyBypassRules: getString(
       "download.proxy-bypass",
-      "<local>,.cn,.mcbbs.net,.bangbang93.com,.littleservice.cn"
+      "<local>,.cn,.bangbang93.com,.littleservice.cn"
     ),
   });
   console.log("Proxy set.");

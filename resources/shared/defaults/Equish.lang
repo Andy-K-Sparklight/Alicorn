@@ -1,6 +1,6 @@
 # Avatar
 
-https://attachment.mcbbs.net/uc_server/data/avatar/003/28/10/25_avatar_big.jpg
+https://avatars.githubusercontent.com/u/60839302?v=4
 
 # PrefTheme
 
@@ -1898,7 +1898,7 @@ Download Mirror
 
 # Options.download.mirror.desc
 
-@HTMLSelect a mirror for downloading.\nMCBBS Mirror and BMCLAPI Mirror is provided by BMCLAPI and MCBBS together.
+@HTMLSelect a mirror for downloading.
 
 # Options.download.mirror.alicorn-bmclapi-nonfree
 
@@ -1907,10 +1907,6 @@ Alicorn/BMCLAPI Mirror Group
 # Options.download.mirror.alicorn
 
 Alicorn Mirror (Manifests Only)
-
-# Options.download.mirror.alicorn-mcbbs-nonfree
-
-Alicorn/MCBBS Mirror Group
 
 # Options.download.mirror.none
 
@@ -2491,22 +2487,6 @@ NetCheck
 # Utilities.NetCheck.Description
 
 By Sparklight\nCheck network connection to some Minecraft related websites.
-
-# Utilities.NetCheck.SiteName.MCBBS
-
-MCBBS
-
-# Utilities.NetCheck.SiteDesc.MCBBS
-
-The largest forum about Minecraft in China.
-
-# Utilities.NetCheck.SiteName.MCBBSDownload
-
-MCBBS Mirror
-
-# Utilities.NetCheck.SiteDesc.MCBBSDownload
-
-Should always be available, no matter where you are.
 
 # Utilities.NetCheck.SiteName.BMCLAPI
 

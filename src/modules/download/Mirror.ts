@@ -9,7 +9,6 @@ import { loadData, saveDefaultData } from "../config/DataSupport";
 const BLACKLIST_URL: Set<string> = new Set();
 const SKIPPED_URL_MAP: Map<string, number> = new Map();
 const MIRROR_FILES = [
-  "alicorn-mcbbs-nonfree.ald",
   "alicorn-bmclapi-nonfree.ald",
   "alicorn.ald",
 ];

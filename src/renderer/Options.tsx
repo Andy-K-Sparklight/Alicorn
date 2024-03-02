@@ -445,7 +445,6 @@ export function OptionsPage(): JSX.Element {
             choices={[
               "none",
               "alicorn",
-              "alicorn-mcbbs-nonfree",
               "alicorn-bmclapi-nonfree",
             ]}
             bindConfig={"download.mirror"}

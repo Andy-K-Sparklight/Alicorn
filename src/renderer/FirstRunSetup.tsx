@@ -140,8 +140,6 @@ async function configureDefaultDirs(): Promise<void> {
 
 async function decideMirror(): Promise<void> {
   const URLS = {
-    "alicorn-mcbbs-nonfree":
-      "https://download.mcbbs.net/mc/game/version_manifest.json",
     "alicorn-bmclapi-nonfree":
       "https://bmclapi2.bangbang93.com/mc/game/version_manifest.json",
     none: "https://piston-meta.mojang.com/mc/game/version_manifest.json",

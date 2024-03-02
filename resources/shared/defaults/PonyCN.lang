@@ -1,6 +1,6 @@
 # Avatar
 
-https://attachment.mcbbs.net/uc_server/data/avatar/003/28/10/25_avatar_big.jpg
+https://avatars.githubusercontent.com/u/60839302?v=4
 
 # PrefTheme
 
@@ -664,6 +664,8 @@ Minecraft 实例（看上去）没有正常退出，你想要对本次启动进�
 
 # ReadyToLaunch.WaitingText
 
+纵使冰寒刺骨，终将春暖花开，待到风暴平静，再约漫游银河。
+
 贴心提示古来多，其中有用又几条？
 
 用木炭烧木头，获得更多木炭。
@@ -1109,7 +1111,7 @@ Pff 正安装 Mod……
 
 # InstallCore.InstallForgeInstr
 
-@HTML为已有的 Minecraft 核心进行改装并安装 Forge，Forge Mod 需要进行此改装后才可用。\n<span style="color:#ff8400;">注意：你必须安装了对应版本的 Minecraft 核心才可以进行改装！</span>\n\n<b>注意：</b>有些版本（例如 1.7.10）的 Forge 安装<b>不能使用</b> MCBBS 或 BMCLAPI 镜像，它们的文件尚未更新，直接安装将<b>引发错误</b>。\n
+@HTML为已有的 Minecraft 核心进行改装并安装 Forge，Forge Mod 需要进行此改装后才可用。\n<span style="color:#ff8400;">注意：你必须安装了对应版本的 Minecraft 核心才可以进行改装！</span>\n\n<b>注意：</b>有些版本（例如 1.7.10）的 Forge 安装<b>不能使用</b> BMCLAPI 镜像，它们的文件尚未更新，直接安装将<b>引发错误</b>。\n
 
 # InstallCore.InstallFabric
 
@@ -1997,7 +1999,7 @@ Alicorn 的小秘密
 
 # Options.download.mirror.desc
 
-@HTML选择一个用于加快下载速度的镜像 - 请注意你的数据安全\nAlicorn 轻松访问镜像<b>不包含库文件与资源文件</b>！\nMCBBS 镜像与 BMCLAPI 镜像是由 BMCLAPI 和 MCBBS 共同为你提供的，用于加快某些访问源站较慢区域的下载速度。
+@HTML选择一个用于加快下载速度的镜像 - 请注意你的数据安全\nAlicorn 轻松访问镜像<b>不包含库文件与资源文件</b>！\n
 
 # Options.download.mirror.alicorn-bmclapi-nonfree
 
@@ -2006,10 +2008,6 @@ Alicorn/BMCLAPI 镜像组（合并的记录，非自由）
 # Options.download.mirror.alicorn
 
 Alicorn 轻松访问镜像
-
-# Options.download.mirror.alicorn-mcbbs-nonfree
-
-Alicorn/MCBBS 镜像组（合并的记录，非自由）
 
 # Options.download.mirror.none
 
@@ -2438,8 +2436,6 @@ Alicorn 随时都可能有更新！请记得常回来看看！
 
 # Welcome.Knowledges
 
-MCBBS|也就是「我的世界中文论坛」。在这里，你可以讨论有关 Minecraft 的内容，和其他用户一起聊天，发表自己的作品，提出困惑已久的疑问，交到更多的朋友。这里是热爱 MC 群体的天堂，也是我主要的服务目标。
-
 Mod|也就是「模组」。通常是 Jar 格式的文件，经过加载器特殊处理后可以「植入」到 Minecraft 中，从而修改游戏内容，修复 Bug 或者优化游戏性能。不同的 Mod 支持的版本和加载器不尽相同，而且有时会发生冲突。
 
 Fabric|一种新兴而强大的 Mod 加载器，轻量但不可轻视。它支持比 Forge 更多的版本（主要是快照），而且更灵活且容易安装，甚至可以运行在 Forge 上（JumpLoader）。<b>请多使用 Fabric</b>，这既有利于你，也有利于地球。
@@ -2645,22 +2641,6 @@ Alicorn 没有发现有问题的依赖～
 # Utilities.NetCheck.Description
 
 Sparklight 作品\n检查你的设备到各主流 Minecraft 相关站点的连通性
-
-# Utilities.NetCheck.SiteName.MCBBS
-
-我的世界中文论坛
-
-# Utilities.NetCheck.SiteDesc.MCBBS
-
-除了 Alicorn，你需要的一切 Minecraft 资源都在这里……你能访问吗？
-
-# Utilities.NetCheck.SiteName.MCBBSDownload
-
-MCBBS 下载镜像源
-
-# Utilities.NetCheck.SiteDesc.MCBBSDownload
-
-最快的 Minecraft 资源下载镜像，除非被攻击，否则应该一直可以访问。
 
 # Utilities.NetCheck.SiteName.BMCLAPI
 

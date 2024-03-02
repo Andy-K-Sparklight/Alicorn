@@ -1,6 +1,6 @@
 # Avatar
 
-https://attachment.mcbbs.net/uc_server/data/avatar/003/28/10/25_avatar_big.jpg
+https://avatars.githubusercontent.com/u/60839302?v=4
 
 # PrefTheme
 
@@ -1105,7 +1105,7 @@ Pff 正安裝 Mod……
 
 # InstallCore.InstallForgeInstr
 
-@HTML為已有的 Minecraft 核心進行改裝並安裝 Forge，Forge Mod 需要進行此改裝后才可用。\n<span style="color:#ff8400;">注意：你必須安裝了對應版本的 Minecraft 核心才可以進行改裝！</span>\n\n<b>注意：</b>有些版本（例如 1.7.10）的 Forge 安裝<b>不能使用</b> MCBBS 或 BMCLAPI 鏡像，它們的文件尚未更新，直接安裝將<b>引發錯誤</b>。\n
+@HTML為已有的 Minecraft 核心進行改裝並安裝 Forge，Forge Mod 需要進行此改裝后才可用。\n<span style="color:#ff8400;">注意：你必須安裝了對應版本的 Minecraft 核心才可以進行改裝！</span>\n\n<b>注意：</b>有些版本（例如 1.7.10）的 Forge 安裝<b>不能使用</b> BMCLAPI 鏡像，它們的文件尚未更新，直接安裝將<b>引發錯誤</b>。\n
 
 # InstallCore.InstallFabric
 
@@ -1993,7 +1993,7 @@ Alicorn 的小秘密
 
 # Options.download.mirror.desc
 
-@HTML選擇一個用於加快下載速度的鏡像 - 請注意你的數據安全\nAlicorn 輕鬆訪問鏡像<b>不包含庫文件與資源文件</b>！\nMCBBS 鏡像與 BMCLAPI 鏡像是由 BMCLAPI 和 MCBBS 共同為你提供的，用於加快某些訪問源站較慢區域的下載速度。
+@HTML選擇一個用於加快下載速度的鏡像 - 請注意你的數據安全\nAlicorn 輕鬆訪問鏡像<b>不包含庫文件與資源文件</b>！\n
 
 # Options.download.mirror.alicorn-bmclapi-nonfree
 
@@ -2002,10 +2002,6 @@ Alicorn/BMCLAPI 鏡像組（合併的記錄，非自由）
 # Options.download.mirror.alicorn
 
 Alicorn 輕鬆訪問鏡像
-
-# Options.download.mirror.alicorn-mcbbs-nonfree
-
-Alicorn/MCBBS 鏡像組（合併的記錄，非自由）
 
 # Options.download.mirror.none
 
@@ -2681,22 +2677,6 @@ Alicorn 沒有發現有問題的依賴～
 # Utilities.NetCheck.Description
 
 Sparklight 作品\n檢查你的設備到各主流 Minecraft 相關站點的連通性
-
-# Utilities.NetCheck.SiteName.MCBBS
-
-我的世界中文論壇
-
-# Utilities.NetCheck.SiteDesc.MCBBS
-
-除了 Alicorn，你需要的一切 Minecraft 資源都在這裡……你能訪問嗎？
-
-# Utilities.NetCheck.SiteName.MCBBSDownload
-
-MCBBS 下載鏡像源
-
-# Utilities.NetCheck.SiteDesc.MCBBSDownload
-
-最快的 Minecraft 資源下載鏡像，除非被攻擊，否則應該一直可以訪問。
 
 # Utilities.NetCheck.SiteName.BMCLAPI
 
