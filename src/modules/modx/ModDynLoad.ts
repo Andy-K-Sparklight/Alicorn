@@ -19,194 +19,194 @@ import { canModVersionApply, gatherVersionInfo } from "./ModVersionUtil";
 // 3. Cleaning: delete 'alicorn-mods-dyn'
 
 export async function loadMetas(
-  container: MinecraftContainer
+    container: MinecraftContainer
 ): Promise<ModInfo[]> {
-  try {
-    const allFiles = await fs.readdir(container.getModsRoot());
-    const allMods: string[] = [];
-    for (const x of allFiles) {
-      if (x.endsWith(JAR_SUFFIX)) {
-        allMods.push(x);
-      }
+    try {
+        const allFiles = await fs.readdir(container.getModsRoot());
+        const allMods: string[] = [];
+        for (const x of allFiles) {
+            if (x.endsWith(JAR_SUFFIX)) {
+                allMods.push(x);
+            }
+        }
+        return (
+            (
+                await Promise.allSettled(
+                    allMods.map(async (m) => {
+                        const d = await loadModInfo(m, container);
+                        d.fileName = d.fileName || container.getModJar(m);
+                        return d;
+                    })
+                )
+            )
+                .filter((v) => v.status === "fulfilled")
+                // @ts-ignore
+                .map((v) => v.value)
+        );
+    } catch {
+        return [];
     }
-    return (
-      (
-        await Promise.allSettled(
-          allMods.map(async (m) => {
-            const d = await loadModInfo(m, container);
-            d.fileName = d.fileName || container.getModJar(m);
-            return d;
-          })
-        )
-      )
-        .filter((v) => v.status === "fulfilled")
-        // @ts-ignore
-        .map((v) => v.value)
-    );
-  } catch {
-    return [];
-  }
 }
 
 async function moveModsTo(
-  mods: ModInfo[],
-  container: MinecraftContainer,
-  mcVersion: string,
-  type: ProfileType,
-  tFile: FileOperateReport
+    mods: ModInfo[],
+    container: MinecraftContainer,
+    mcVersion: string,
+    type: ProfileType,
+    tFile: FileOperateReport
 ): Promise<void> {
-  const toProcess: ModInfo[] = [];
-  try {
-    tFile.total = mods.length;
-    for (const mi of mods) {
-      if (
-        getBoolean("modx.ignore-non-standard-mods") &&
-        mi.loader === ModLoader.UNKNOWN
-      ) {
-        tFile.operateRecord.push({
-          file: `${mi.displayName} (${mi.fileName})`,
-          operation: "SKIPPED",
-        });
-        continue;
-      }
-      mi.mcversion = mi.mcversion || "*"; // Fallback
-      if (
-        !chkModLoader(mi.loader, modLoaderOfStr(type)) ||
-        !canModVersionApply(
-          mi.mcversion || "",
-          mcVersion,
-          mi.loader !== ModLoader.FORGE
-        )
-      ) {
-        toProcess.push(mi);
-      } else {
-        tFile.operateRecord.push({
-          file: `${mi.displayName} (${mi.fileName})`,
-          operation: "SKIPPED",
-        });
-      }
-    }
-    tFile.resolved = toProcess.length;
-    await fs.emptydir(container.getDynamicModsRoot());
-    await Promise.all(
-      toProcess.map((m) => {
-        const mf = m.fileName;
-        const mi = Object.assign({}, m);
-        return new Promise<void>((resolve) => {
-          if (mf !== undefined) {
-            const pt = path.resolve(mf);
-            fs.copyFile(
-              pt,
-              container.getDynamicModJar(path.basename(mf)),
-              (e) => {
-                if (!e) {
-                  fs.remove(pt, (e) => {
-                    if (e) {
-                      tFile.resolved--;
-                      tFile.operateRecord.push({
-                        file: `${mi.displayName} (${mi.fileName})`,
-                        operation: "FAILED",
-                      });
-                    } else {
-                      tFile.operateRecord.push({
-                        file: `${mi.displayName} (${mi.fileName})`,
-                        operation: "OPERATED",
-                      });
-                    }
-                    resolve();
-                  });
-                } else {
-                  tFile.operateRecord.push({
+    const toProcess: ModInfo[] = [];
+    try {
+        tFile.total = mods.length;
+        for (const mi of mods) {
+            if (
+                getBoolean("modx.ignore-non-standard-mods") &&
+                mi.loader === ModLoader.UNKNOWN
+            ) {
+                tFile.operateRecord.push({
                     file: `${mi.displayName} (${mi.fileName})`,
-                    operation: "FAILED",
-                  });
-                  tFile.resolved--;
-                  resolve();
-                }
-              }
-            );
-          } else {
-            resolve();
-          }
-        });
-      })
-    );
-  } catch {}
+                    operation: "SKIPPED"
+                });
+                continue;
+            }
+            mi.mcversion = mi.mcversion || "*"; // Fallback
+            if (
+                !chkModLoader(mi.loader, modLoaderOfStr(type)) ||
+                !canModVersionApply(
+                    mi.mcversion || "",
+                    mcVersion,
+                    mi.loader !== ModLoader.FORGE
+                )
+            ) {
+                toProcess.push(mi);
+            } else {
+                tFile.operateRecord.push({
+                    file: `${mi.displayName} (${mi.fileName})`,
+                    operation: "SKIPPED"
+                });
+            }
+        }
+        tFile.resolved = toProcess.length;
+        await fs.emptydir(container.getDynamicModsRoot());
+        await Promise.all(
+            toProcess.map((m) => {
+                const mf = m.fileName;
+                const mi = Object.assign({}, m);
+                return new Promise<void>((resolve) => {
+                    if (mf !== undefined) {
+                        const pt = path.resolve(mf);
+                        fs.copyFile(
+                            pt,
+                            container.getDynamicModJar(path.basename(mf)),
+                            (e) => {
+                                if (!e) {
+                                    fs.remove(pt, (e) => {
+                                        if (e) {
+                                            tFile.resolved--;
+                                            tFile.operateRecord.push({
+                                                file: `${mi.displayName} (${mi.fileName})`,
+                                                operation: "FAILED"
+                                            });
+                                        } else {
+                                            tFile.operateRecord.push({
+                                                file: `${mi.displayName} (${mi.fileName})`,
+                                                operation: "OPERATED"
+                                            });
+                                        }
+                                        resolve();
+                                    });
+                                } else {
+                                    tFile.operateRecord.push({
+                                        file: `${mi.displayName} (${mi.fileName})`,
+                                        operation: "FAILED"
+                                    });
+                                    tFile.resolved--;
+                                    resolve();
+                                }
+                            }
+                        );
+                    } else {
+                        resolve();
+                    }
+                });
+            })
+        );
+    } catch {}
 }
 
 export async function restoreMods(
-  container: MinecraftContainer
+    container: MinecraftContainer
 ): Promise<void> {
-  if (!getBoolean("modx.global-dynamic-load-mods")) {
-    return;
-  }
-  try {
-    const all = await fs.readdir(container.getDynamicModsRoot());
-    await Promise.all(
-      all.map((f) => {
-        return new Promise<void>((resolve) => {
-          fs.copyFile(
-            container.getDynamicModJar(f),
-            container.getModJar(f),
-            () => {
-              resolve();
-            }
-          );
-        });
-      })
-    );
-    await fs.remove(container.getDynamicModsRoot());
-  } catch {}
+    if (!getBoolean("modx.global-dynamic-load-mods")) {
+        return;
+    }
+    try {
+        const all = await fs.readdir(container.getDynamicModsRoot());
+        await Promise.all(
+            all.map((f) => {
+                return new Promise<void>((resolve) => {
+                    fs.copyFile(
+                        container.getDynamicModJar(f),
+                        container.getModJar(f),
+                        () => {
+                            resolve();
+                        }
+                    );
+                });
+            })
+        );
+        await fs.remove(container.getDynamicModsRoot());
+    } catch {}
 }
 
 export async function prepareModsCheckFor(
-  profile: GameProfile,
-  container: MinecraftContainer,
-  tracker?: LaunchTracker
+    profile: GameProfile,
+    container: MinecraftContainer,
+    tracker?: LaunchTracker
 ): Promise<void> {
-  if (!getBoolean("modx.global-dynamic-load-mods") && tracker) {
-    await scanModsList(container, tracker);
-    return;
-  }
-  const tFile: FileOperateReport = { total: 0, resolved: 0, operateRecord: [] };
-  try {
-    const stat = gatherVersionInfo(profile);
-    await moveModsTo(
-      await loadMetas(container),
-      container,
-      profile.baseVersion,
-      stat.type,
-      tFile
-    );
-    tracker?.mods(tFile);
-  } catch {}
+    if (!getBoolean("modx.global-dynamic-load-mods") && tracker) {
+        await scanModsList(container, tracker);
+        return;
+    }
+    const tFile: FileOperateReport = {total: 0, resolved: 0, operateRecord: []};
+    try {
+        const stat = gatherVersionInfo(profile);
+        await moveModsTo(
+            await loadMetas(container),
+            container,
+            profile.baseVersion,
+            stat.type,
+            tFile
+        );
+        tracker?.mods(tFile);
+    } catch {}
 }
 
 async function scanModsList(
-  container: MinecraftContainer,
-  tracker: LaunchTracker
+    container: MinecraftContainer,
+    tracker: LaunchTracker
 ): Promise<void> {
-  const tFile: FileOperateReport = { total: 0, resolved: 0, operateRecord: [] };
-  try {
-    const fDir = await fs.readdir(container.getModsRoot());
-    fDir.map((m) => {
-      tFile.operateRecord.push({ operation: "SKIPPED", file: m });
-    });
-  } catch {
-  } finally {
-    tracker.mods(tFile);
-  }
+    const tFile: FileOperateReport = {total: 0, resolved: 0, operateRecord: []};
+    try {
+        const fDir = await fs.readdir(container.getModsRoot());
+        fDir.map((m) => {
+            tFile.operateRecord.push({operation: "SKIPPED", file: m});
+        });
+    } catch {
+    } finally {
+        tracker.mods(tFile);
+    }
 }
 
 export function chkModLoader(
-  mod: ModLoader | undefined,
-  loader: ModLoader | undefined
+    mod: ModLoader | undefined,
+    loader: ModLoader | undefined
 ): boolean {
-  if (mod === loader) {
-    return true;
-  }
-  if (mod === ModLoader.FABRIC && loader === ModLoader.QUILT) {
-    return true;
-  }
-  return false;
+    if (mod === loader) {
+        return true;
+    }
+    if (mod === ModLoader.FABRIC && loader === ModLoader.QUILT) {
+        return true;
+    }
+    return false;
 }

@@ -2005,6 +2005,10 @@ Alicorn 的小秘密
 
 Alicorn/BMCLAPI 镜像组（合并的记录，非自由）
 
+# Options.download.mirror.alicorn-aliyun
+
+仅镜像 Maven 仓库
+
 # Options.download.mirror.alicorn
 
 Alicorn 轻松访问镜像

@@ -109,5 +109,6 @@ dist
 # Build output
 out
 
-# VSCode
+# IDEs
 .vscode/settings.json
+.idea

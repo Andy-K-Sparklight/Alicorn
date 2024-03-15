@@ -14,5 +14,8 @@
       }
     }
   },
-  "required": ["date", "files"]
+  "required": [
+    "date",
+    "files"
+  ]
 }

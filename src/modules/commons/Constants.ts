@@ -20,11 +20,11 @@ export const ALICORN_DATA_SUFFIX = ".ald";
 export const ALICORN_ENCRYPTED_DATA_SUFFIX = ".alpp";
 
 export const MOJANG_VERSIONS_MANIFEST =
-  "https://piston-meta.mojang.com/mc/game/version_manifest.json";
+    "https://piston-meta.mojang.com/mc/game/version_manifest.json";
 
 export const FORGE_MAVEN_ROOT = "https://maven.minecraftforge.net";
 export const FORGE_VERSIONS_MANIFEST =
-  "https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json";
+    "https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json";
 
 export const FABRIC_META_ROOT = "https://meta.fabricmc.net/v2";
 export const QUILT_META_ROOT = "https://meta.quiltmc.org/v3";
@@ -32,19 +32,19 @@ export const QUILT_META_ROOT = "https://meta.quiltmc.org/v3";
 export const CODE_32_SPECIAL = "61096da20861084f1e6a442d939717a8";
 
 export enum ReleaseType {
-  RELEASE = "release",
-  SNAPSHOT = "snapshot",
-  OLD_ALPHA = "old_alpha",
-  OLD_BETA = "old_beta",
-  MODIFIED = "modified", // Nonofficial profiles
+    RELEASE = "release",
+    SNAPSHOT = "snapshot",
+    OLD_ALPHA = "old_alpha",
+    OLD_BETA = "old_beta",
+    MODIFIED = "modified", // Nonofficial profiles
 }
 
 export const PLACE_HOLDER = "#//!?PH>>";
 
 export const DOH_CONFIGURE: Record<string, string> = {
-  iQDNS: "https://a.passcloud.xyz/dns-query",
-  Cloudflare: "https://cloudflare-dns.com/dns-query",
-  RubyFish: "https://rubyfish.cn/dns-query",
-  AdGuard: "https://dns.adguard.com/dns-query",
-  OpenDNS: "https://doh.opendns.com/dns-query",
+    iQDNS: "https://a.passcloud.xyz/dns-query",
+    Cloudflare: "https://cloudflare-dns.com/dns-query",
+    RubyFish: "https://rubyfish.cn/dns-query",
+    AdGuard: "https://dns.adguard.com/dns-query",
+    OpenDNS: "https://doh.opendns.com/dns-query"
 };

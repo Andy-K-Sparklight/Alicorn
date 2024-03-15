@@ -1,13 +1,16 @@
 export function submitError(msg: string): void {
-  console.log(msg);
-  window.dispatchEvent(new CustomEvent("sysError", { detail: msg }));
+    console.log(msg);
+    window.dispatchEvent(new CustomEvent("sysError", {detail: msg}));
 }
+
 export function submitWarn(msg: string): void {
-  window.dispatchEvent(new CustomEvent("sysWarn", { detail: msg }));
+    window.dispatchEvent(new CustomEvent("sysWarn", {detail: msg}));
 }
+
 export function submitInfo(msg: string): void {
-  window.dispatchEvent(new CustomEvent("sysInfo", { detail: msg }));
+    window.dispatchEvent(new CustomEvent("sysInfo", {detail: msg}));
 }
+
 export function submitSucc(msg: string): void {
-  window.dispatchEvent(new CustomEvent("sysSucc", { detail: msg }));
+    window.dispatchEvent(new CustomEvent("sysSucc", {detail: msg}));
 }
