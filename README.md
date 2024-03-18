@@ -2,13 +2,25 @@
 
 [中文 README](./README_ZH.md)
 
+## Collaborator's Note
+
+This is skjsjhb, a user of the Alicorn launcher.
+
+It's 2024.03 now. Years have passed since the release of Alicorn, and this project has been staled since early 2023, after the original maintainer has left the community. MCBBS is also downed, together with the mirror. Quilt has been adopted widely, while Forge has become NeoForged. Things changed a lot.
+
+I'm not in the development team (I wasn't invited, sadly), which means I'm not an official maintainer of Alicorn. However, I decide to continue to add necessary patches. As I do not own the token of most platforms Alicorn was using, I might re-create certain content (e.g. actions) with my keys. Also, my code (and design) style is different as Sparklight, making breaking changes quite possible.
+
+Thanks for supporting Alicorn. Also thanks for loving the block game. Welcome to the age of Sakura (1.20.x). We don't have more ponies, but luckily we're still here.
+
 ## IMPORTANT
 
-As I, the developer, decided not to contribute to the Minecraft communities, this project **won't receive major updates** since Core 50 (that's why I call it Sunset).
+This was posted by the original maintainer and is now outdated.
 
-If servere security vulnerbilities are found in the future, patches might still be available. However, generally, this project is now discontinued.
-
-It doesn't mean you have to switch to another launcher, but if you wish to, we recommand [HMCL](https://github.com/huanghongxun/HMCL), it's a free software (as in freedom) and is still being actively maintained.
+> As I, the developer, decided not to contribute to the Minecraft communities, this project **won't receive major updates** since Core 50 (that's why I call it Sunset).
+>
+> If servere security vulnerbilities are found in the future, patches might still be available. However, generally, this project is now discontinued.
+>
+> It doesn't mean you have to switch to another launcher, but if you wish to, we recommand [HMCL](https://github.com/huanghongxun/HMCL), it's a free software (as in freedom) and is still being actively maintained.
 
 ---
 
