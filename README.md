@@ -10,6 +10,8 @@ It's 2024.03 now. Years have passed since the release of Alicorn, and this proje
 
 I'm not in the development team (I wasn't invited, sadly), which means I'm not an official maintainer of Alicorn. However, I decide to continue to add necessary patches. As I do not own the token of most platforms Alicorn was using, I might re-create certain content (e.g. actions) with my keys. Also, my code (and design) style is different as Sparklight, making breaking changes quite possible.
 
+Most updates will be backed by my Kotlin-based launcher (I won't put a link here to avoid annoying people). The features will be tested and backported to Alicorn. See the repository of the new launcher for details.
+
 Thanks for supporting Alicorn. Also thanks for loving the block game. Welcome to the age of Sakura (1.20.x). We don't have more ponies, but luckily we're still here.
 
 ## IMPORTANT
