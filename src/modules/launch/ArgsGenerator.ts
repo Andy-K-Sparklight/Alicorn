@@ -14,6 +14,7 @@ import { MinecraftContainer } from "../container/MinecraftContainer";
 import { GameProfile } from "../profile/GameProfile";
 import { makePath } from "../profile/LibrariesConvert";
 import { JAR_SUFFIX } from "./NativesLint";
+import { readFileSync } from "original-fs";
 
 // Generate game arguments
 export function generateGameArgs(
@@ -30,6 +31,11 @@ export function generateGameArgs(
         isolated ? container.getVersionRoot(profile.id) : container.rootDir
     );
     const [playerName, acToken, uuid, xuid] = authData;
+
+    // A patch to get asset index content
+    const assetIndex = JSON.parse(readFileSync(container.getAssetsIndexPath(profile.assetIndex.id)).toString())
+    const mapToResources = !!assetIndex["map_to_resources"]
+
     vMap.set("auth_player_name", playerName || "Player");
     vMap.set("assets_root", container.getAssetsRoot());
     vMap.set("assets_index_name", profile.assetIndex.id);
@@ -41,7 +47,7 @@ export function generateGameArgs(
     vMap.set("auth_xuid", xuid || "0");
     vMap.set("auth_access_token", acToken || "0");
     vMap.set("user_properties", "[]"); // Currently we don't support twitch
-    vMap.set("game_assets", container.getAssetsRootLegacy()); // Pre 1.6
+    vMap.set("game_assets", mapToResources ? container.getAssetsRootMapped() : container.getAssetsRootLegacy()); // Pre 1.6
     const args = profile.gameArgs.concat();
     if (demo) {
         args.push("--demo");

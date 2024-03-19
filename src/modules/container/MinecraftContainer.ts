@@ -29,7 +29,7 @@ export class MinecraftContainer {
     }
 
     getAssetsRootLegacy(): string {
-        return path.resolve(this.assetsRoot, "legacy");
+        return path.resolve(this.assetsRoot, "virtual", "legacy");
     }
 
     getPff2LockFile(): string {
@@ -61,7 +61,11 @@ export class MinecraftContainer {
     }
 
     getAssetPathLegacy(name: string): string {
-        return path.resolve(this.assetsRoot, "legacy", name);
+        return path.resolve(this.assetsRoot, "virtual", "legacy", name);
+    }
+
+    getAssetPathMapped(name: string): string {
+        return path.resolve(this.rootDir, "resources", name)
     }
 
     getAssetPath(hash: string): string {
@@ -87,6 +91,10 @@ export class MinecraftContainer {
 
     getAssetsRoot(): string {
         return this.assetsRoot;
+    }
+
+    getAssetsRootMapped(): string {
+        return path.resolve(this.rootDir, "resources")
     }
 
     getVersionRoot(id: string): string {

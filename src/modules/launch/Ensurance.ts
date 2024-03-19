@@ -163,14 +163,15 @@ export async function ensureAllAssets(
         const obj = await fs.readJSON(
             container.getAssetsIndexPath(profile.assetIndex.id)
         );
-        const il = profile.assetIndex.id.toLowerCase() === "legacy";
-        const assetIndexFileMeta = AssetIndexFileMeta.fromObject(obj, il);
+        const isLegacy = profile.assetIndex.id.toLowerCase() === "legacy";
+        const mapToResources = !!obj["map_to_resources"]
+        const assetIndexFileMeta = AssetIndexFileMeta.fromObject(obj, isLegacy);
         const allObjects = assetIndexFileMeta.objects.concat();
         tFile.total = allObjects.length;
         const allStatus = await Promise.all(
             allObjects.map((o) => {
                 return new Promise<boolean>((resolve) => {
-                    void ensureAsset(o, container, il, containerIsShared).then((b) => {
+                    void ensureAsset(o, container, isLegacy, mapToResources, containerIsShared).then((b) => {
                         if (b) {
                             tFile.operateRecord.push({
                                 file: o.hash,
@@ -207,13 +208,15 @@ async function ensureAsset(
     assetMeta: AssetMeta,
     container: MinecraftContainer,
     isLegacy: boolean,
+    mapToResources: boolean,
     containerShared: boolean
 ): Promise<boolean> {
     const meta = new DownloadMeta(
         generateAssetURL(assetMeta),
+        mapToResources ? container.getAssetPathMapped(assetMeta.path) :
         isLegacy
             ? container.getAssetPathLegacy(assetMeta.path)
-            : container.getAssetPath(assetMeta.hash),
+                : container.getAssetPath(assetMeta.hash),
         assetMeta.hash,
         assetMeta.size
     );
