@@ -13,7 +13,6 @@ import {
     setDefaultJavaHome
 } from "../modules/java/JavaInfo";
 import { whereJava } from "../modules/java/WhereJava";
-import { fetchARMPackage } from "../modules/launch/ARMChair";
 import { isInstBusy, startInst } from "./Instruction";
 import { checkToGoAndDecideJump, loadToGoHook } from "./linkage/AlicornToGo";
 import { submitInfo, submitWarn } from "./Message";
@@ -53,7 +52,6 @@ export async function completeFirstRun(): Promise<void> {
     );
     await decideMirror();
     await setupFirstJavaCheckAndCheckToGo();
-    await fetchARMPackage(); // This is selective
     set("first-run?", false);
 }
 
