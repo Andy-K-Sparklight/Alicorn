@@ -1,0 +1,12 @@
+{
+    "private": true,
+    "devDependencies": {
+        "@neutralinojs/neu": "^11.0.1",
+        "@types/path-browserify": "^1.0.2",
+        "esbuild": "^0.21.2",
+        "typescript": "^5.4.5"
+    },
+    "dependencies": {
+        "path-browserify": "^1.0.1"
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "applicationId": "skjsjhb.a2.neko",
+    "url": "/",
+    "defaultMode": "window",
+    "enableServer": true,
+    "enableNativeAPI": true,
+    "tokenSecurity": "one-time",
+    "logging": {
+        "enabled": true,
+        "writeToLogFile": false
+    },
+    "modes": {
+        "window": {
+            "title": "Alicorn NRT",
+            "width": 1280,
+            "height": 720,
+            "center": true,
+            "enableInspector": true,
+            "exitProcessOnClose": false,
+            "borderless": true
+        }
+    },
+    "cli": {
+        "resourcesPath": "/"
+    }
+}

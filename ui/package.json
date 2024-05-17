@@ -1,0 +1,14 @@
+{
+    "private": true,
+    "devDependencies": {
+        "esbuild": "^0.21.2",
+        "esbuild-plugin-copy": "^2.1.1",
+        "typescript": "^5.4.5"
+    },
+    "dependencies": {
+        "@shoelace-style/shoelace": "^2.15.0",
+        "preact": "^10.22.0",
+        "react": "npm:@preact/compat",
+        "react-dom": "npm:@preact/compat"
+    }
+}

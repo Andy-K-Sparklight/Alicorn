@@ -107,8 +107,16 @@ dist
 .vercel
 
 # Build output
+build
 out
 
+# Gradle
+.gradle
+
 # IDEs
-.vscode/settings.json
-.idea
+.vscode/
+.idea/
+
+# Panda
+styled-system
+styled-system-studio
