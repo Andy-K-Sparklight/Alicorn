@@ -1,12 +1,9 @@
-import { once } from "events";
 import fs from "fs-extra";
 import path from "path";
-import { pipeline } from "stream/promises";
-import { getBoolean, getString } from "../config/ConfigSupport";
+import { getBoolean } from "../config/ConfigSupport";
 import { AbstractDownloader, DownloadMeta, DownloadStatus } from "./AbstractDownloader";
-import { getPool } from "./Connections";
-import { getConfigOptn, getPffFlag } from "./DownloadWrapper";
-import { getFileWriteStream, getGuardStream, getTimeoutController } from "./RainbowFetch";
+import { getConfigOptn } from "./DownloadWrapper";
+import { getFileWriteStream, getTimeoutController } from "./RainbowFetch";
 import { getHash } from "./Validate";
 
 export class Serial extends AbstractDownloader {
@@ -35,77 +32,33 @@ export class Serial extends AbstractDownloader {
                     const [ac, sti] = getTimeoutController(
                         noTimeout ? 0 : getConfigOptn("timeout", 3000)
                     );
-                    if (
-                        fetchRequire ||
-                        getPffFlag() === "1" ||
-                        getString("download.lib").toLowerCase() === "fetch" ||
-                        !["direct://", ""].includes(
-                            getString("download.global-proxy").trim()
-                        )
-                    ) {
-                        const r = await fetch(meta.url, {
-                            method: "GET",
-                            signal: ac.signal,
-                            keepalive: true,
-                            credentials: "omit"
-                        });
+                    const r = await fetch(meta.url, {
+                        method: "GET",
+                        signal: ac.signal,
+                        keepalive: true,
+                        credentials: "omit"
+                    });
 
-                        if (!r.ok) {
-                            return DownloadStatus.RETRY; // Mark as bad
-                        }
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        let f: WritableStream<any>;
-                        try {
-                            f = getFileWriteStream(
-                                meta.savePath,
-                                sti,
-                                () => {
-                                    resolve(DownloadStatus.TIMEOUT); // Break in advance
-                                },
-                                noTimeout ? 0 : getConfigOptn("timeout", 3000)
-                            ); // Require first byte
-                        } catch {
-                            return DownloadStatus.FATAL;
-                        }
-                        if (r.body) {
-                            try {
-                                await r.body.pipeTo(f);
-                            } catch (e) {
-                                try {
-                                    await fs.remove(meta.savePath);
-                                } catch {}
-                                console.log(e);
-                                throw e;
-                            }
-                        } else {
-                            sti();
-                            throw "Body is empty!";
-                        }
-                    } else {
-                        const p = getPool(meta.url);
-                        if (!p) {
-                            throw "Invalid URL! " + meta.url;
-                        }
-                        const u = new URL(meta.url);
-                        const res = await p.request({
-                            path: u.pathname,
-                            method: "GET",
-                            signal: ac.signal,
-                            maxRedirections: 20
-                        });
-                        sti();
-                        if (res.statusCode < 200 || res.statusCode >= 300) {
-                            return DownloadStatus.RETRY;
-                        }
-                        const f = fs.createWriteStream(meta.savePath, {mode: 0o777});
-                        const gs = getGuardStream(
-                            res.body,
-                            f,
+                    if (!r.ok) {
+                        return DownloadStatus.RETRY; // Mark as bad
+                    }
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    let f: WritableStream;
+                    try {
+                        f = getFileWriteStream(
+                            meta.savePath,
+                            sti,
+                            () => {
+                                resolve(DownloadStatus.TIMEOUT); // Break in advance
+                            },
                             noTimeout ? 0 : getConfigOptn("timeout", 3000)
-                        );
-                        const p1 = once(f, "close");
+                        ); // Require first byte
+                    } catch {
+                        return DownloadStatus.FATAL;
+                    }
+                    if (r.body) {
                         try {
-                            await Promise.all([pipeline(res.body, gs, f), p1]);
+                            await r.body.pipeTo(f);
                         } catch (e) {
                             try {
                                 await fs.remove(meta.savePath);
@@ -113,6 +66,9 @@ export class Serial extends AbstractDownloader {
                             console.log(e);
                             throw e;
                         }
+                    } else {
+                        sti();
+                        throw "Body is empty!";
                     }
                     if (meta.sha1 === "" || getBoolean("download.skip-validate")) {
                         return DownloadStatus.RESOLVED;
@@ -130,14 +86,12 @@ export class Serial extends AbstractDownloader {
                     // Oops, probably timeout
                     return DownloadStatus.TIMEOUT;
                 }
-            })()
-                .then((b) => {
-                    resolve(b);
-                })
-                .catch((e) => {
-                    console.log(e);
-                    reject(e);
-                });
+            })().then((b) => {
+                resolve(b);
+            }).catch((e) => {
+                console.log(e);
+                reject(e);
+            });
         });
     }
 }

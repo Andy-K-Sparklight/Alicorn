@@ -115,6 +115,6 @@ function buildDepList(): [string, string][] {
     const o: [string, string][] = [];
     o.push(["React", pkg.dependencies.react.slice(1)]);
     o.push(["Material UI", pkg.dependencies["@mui/material"].slice(1)]);
-    o.push(["Undici", pkg.dependencies.undici.slice(1)]);
+    // o.push(["Undici", pkg.dependencies.undici.slice(1)]);
     return o;
 }

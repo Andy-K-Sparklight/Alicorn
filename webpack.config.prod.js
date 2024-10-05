@@ -29,48 +29,48 @@ const Main = {
     },
     plugins: [
         new BuildInfoPlugin("MainBuild.json", Version),
-        new CopyWebpackPlugin({
-            patterns: [
-                {
-                    from: path.resolve(__dirname, "resources", "shared"),
-                    to: path.resolve(__dirname, "dist", "release")
-                },
-                {
-                    from: path.resolve(
-                        __dirname,
-                        "node_modules",
-                        "undici",
-                        "lib",
-                        "llhttp",
-                        "llhttp.wasm"
-                    ),
-                    to: path.resolve(
-                        __dirname,
-                        "dist",
-                        "release",
-                        "llhttp",
-                        "llhttp.wasm"
-                    )
-                },
-                {
-                    from: path.resolve(
-                        __dirname,
-                        "node_modules",
-                        "undici",
-                        "lib",
-                        "llhttp",
-                        "llhttp_simd.wasm"
-                    ),
-                    to: path.resolve(
-                        __dirname,
-                        "dist",
-                        "release",
-                        "llhttp",
-                        "llhttp_simd.wasm"
-                    )
-                }
-            ]
-        }),
+        // new CopyWebpackPlugin({
+        //     patterns: [
+        //         {
+        //             from: path.resolve(__dirname, "resources", "shared"),
+        //             to: path.resolve(__dirname, "dist", "release")
+        //         },
+        //         {
+        //             from: path.resolve(
+        //                 __dirname,
+        //                 "node_modules",
+        //                 "undici",
+        //                 "lib",
+        //                 "llhttp",
+        //                 "llhttp.wasm"
+        //             ),
+        //             to: path.resolve(
+        //                 __dirname,
+        //                 "dist",
+        //                 "release",
+        //                 "llhttp",
+        //                 "llhttp.wasm"
+        //             )
+        //         },
+        //         {
+        //             from: path.resolve(
+        //                 __dirname,
+        //                 "node_modules",
+        //                 "undici",
+        //                 "lib",
+        //                 "llhttp",
+        //                 "llhttp_simd.wasm"
+        //             ),
+        //             to: path.resolve(
+        //                 __dirname,
+        //                 "dist",
+        //                 "release",
+        //                 "llhttp",
+        //                 "llhttp_simd.wasm"
+        //             )
+        //         }
+        //     ]
+        // }),
         new ContextReplacementPlugin(/keyv/),
         new BannerPlugin({
             banner:

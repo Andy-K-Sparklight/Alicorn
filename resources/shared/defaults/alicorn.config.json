@@ -14,7 +14,6 @@
   "download.pff.timeout": 300000,
   "download.skip-validate": true,
   "download.mirror-tries": 1,
-  "download.lib": "Undici",
   "show-downloading-item": false,
   "modx.ignore-non-standard-mods": true,
   "modx.global-dynamic-load-mods": true,

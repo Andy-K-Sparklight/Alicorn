@@ -87,8 +87,8 @@
     "sudo-prompt": "^9.2.1",
     "throttle-debounce": "^5.0.0",
     "toml": "^3.0.0",
-    "undici": "^5.28.3",
     "uuid": "^8.3.2",
     "ws": "^8.8.0"
-  }
+  },
+  "packageManager": "yarn@4.5.0+sha512.837566d24eec14ec0f5f1411adb544e892b3454255e61fdef8fd05f3429480102806bac7446bc9daff3896b01ae4b62d00096c7e989f1596f2af10b927532f39"
 }

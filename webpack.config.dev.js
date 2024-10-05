@@ -36,37 +36,7 @@ const MainDev = {
     },
     plugins: [
         new BuildInfoPlugin("MainBuild.json", Version),
-        new ContextReplacementPlugin(/keyv/),
-        new CopyWebpackPlugin({
-            patterns: [
-                {
-                    from: path.resolve(__dirname, "resources", "shared"),
-                    to: path.resolve(__dirname, "dist")
-                },
-                {
-                    from: path.resolve(
-                        __dirname,
-                        "node_modules",
-                        "undici",
-                        "lib",
-                        "llhttp",
-                        "llhttp.wasm"
-                    ),
-                    to: path.resolve(__dirname, "dist", "llhttp", "llhttp.wasm")
-                },
-                {
-                    from: path.resolve(
-                        __dirname,
-                        "node_modules",
-                        "undici",
-                        "lib",
-                        "llhttp",
-                        "llhttp_simd.wasm"
-                    ),
-                    to: path.resolve(__dirname, "dist", "llhttp", "llhttp_simd.wasm")
-                }
-            ]
-        })
+        new ContextReplacementPlugin(/keyv/)
     ],
     devtool: "eval-source-map",
     mode: "development",

@@ -24,7 +24,8 @@ import {
     EmojiEmotions,
     ExtensionOff,
     Favorite,
-    FirstPage, Home,
+    FirstPage,
+    Home,
     Inbox,
     InsertPhoto,
     Inventory2,
@@ -81,22 +82,11 @@ import { copy } from "fs-extra";
 import os from "os";
 import React, { useRef, useState } from "react";
 import { DOH_CONFIGURE } from "../modules/commons/Constants";
-import {
-    get,
-    getBoolean,
-    getNumber,
-    getString,
-    parseNum,
-    set
-} from "../modules/config/ConfigSupport";
+import { get, getBoolean, getNumber, getString, parseNum, set } from "../modules/config/ConfigSupport";
 import { getActualDataPath } from "../modules/config/DataSupport";
 import { loadMirror } from "../modules/download/Mirror";
 import { remoteSelectDir } from "./ContainerManager";
-import {
-    ALICORN_DEFAULT_THEME_DARK,
-    ALICORN_DEFAULT_THEME_LIGHT,
-    isBgDark
-} from "./Renderer";
+import { ALICORN_DEFAULT_THEME_DARK, ALICORN_DEFAULT_THEME_LIGHT, isBgDark } from "./Renderer";
 import { AlicornTheme, useInputStyles } from "./Stylex";
 import { AL_THEMES } from "./ThemeColors";
 import { ALL_ASSISTANTS, tr } from "./Translator";
@@ -474,12 +464,12 @@ export function OptionsPage(): JSX.Element {
                         bindConfig={"download.primary-downloader"}
                         choices={["Concurrent", "Serial"]}
                     />
-                    <InputItem
-                        icon={<Downloading/>}
-                        type={ConfigType.RADIO}
-                        bindConfig={"download.lib"}
-                        choices={["Undici", "Fetch"]}
-                    />
+                    {/*<InputItem*/}
+                    {/*    icon={<Downloading/>}*/}
+                    {/*    type={ConfigType.RADIO}*/}
+                    {/*    bindConfig={"download.lib"}*/}
+                    {/*    choices={["Undici", "Fetch"]}*/}
+                    {/*/>*/}
                     <InputItem
                         type={ConfigType.NUM}
                         icon={<AccessTime/>}
@@ -685,14 +675,14 @@ function InputItem(props: {
     return (
         <Container>
             <Grid container direction="row" alignItems="center">
-                <Grid item sx={{color: "primary.main"}}>
+                <Grid item sx={{ color: "primary.main" }}>
                     {props.icon || <Settings/>}
                 </Grid>
                 <Grid item>
                     <Typography
                         color={"primary"}
                         variant={"h6"}
-                        sx={{marginLeft: "0.25rem"}}
+                        sx={{ marginLeft: "0.25rem" }}
                         className={classes.title}
                     >
                         {tr(`Options.${props.bindConfig}.title`)}
@@ -888,7 +878,7 @@ function TabPanel(props: {
     index: string | number;
     value: string | number;
 }): JSX.Element {
-    const {children, value, index} = props;
+    const { children, value, index } = props;
     return (
         <Box hidden={value !== index}>
             {value === index ? <Box p={3}>{children}</Box> : ""}
