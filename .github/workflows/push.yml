@@ -5,25 +5,30 @@ name: Create Production
 
 on:
   push:
-    branches: [user]
+    branches: [ user ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 16
+      - name: Use Node.js 22
         uses: actions/setup-node@v2
         with:
-          node-version: "16"
-      - run: yarn
-      - run: yarn release-full
-      - run: git init
-      - run: ls -A | grep -v dist | xargs rm -rf
-      - run: mv dist/release release
-      - run: rm -rf dist
-      - run: git init
-      - run: |
+          node-version: "22"
+      - name: Enable Corepack
+        run: |
+          corepack enable
+      - name: Build
+        run: |
+          yarn
+          yarn release-full
+      - name: Create Production Files
+        run: |
+          git init
+          ls -A | grep -v dist | xargs rm -rf
+          mv dist/release release
+          rm -rf dist
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add .
