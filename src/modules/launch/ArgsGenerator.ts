@@ -12,7 +12,7 @@ import { isNull } from "../commons/Null";
 import { getBoolean, getString } from "../config/ConfigSupport";
 import { MinecraftContainer } from "../container/MinecraftContainer";
 import { GameProfile } from "../profile/GameProfile";
-import { makePath } from "../profile/LibrariesConvert";
+import { getLibraryPathByName } from "../profile/LibrariesConvert";
 import { JAR_SUFFIX } from "./NativesLint";
 import { readFileSync } from "original-fs";
 
@@ -33,8 +33,8 @@ export function generateGameArgs(
     const [playerName, acToken, uuid, xuid] = authData;
 
     // A patch to get asset index content
-    const assetIndex = JSON.parse(readFileSync(container.getAssetsIndexPath(profile.assetIndex.id)).toString())
-    const mapToResources = !!assetIndex["map_to_resources"]
+    const assetIndex = JSON.parse(readFileSync(container.getAssetsIndexPath(profile.assetIndex.id)).toString());
+    const mapToResources = !!assetIndex["map_to_resources"];
 
     vMap.set("auth_player_name", playerName || "Player");
     vMap.set("assets_root", container.getAssetsRoot());
@@ -67,10 +67,13 @@ export function generateVMArgs(
     const usingLibs: string[] = [];
     const nativesLibs: string[] = [];
     for (const l of profile.libraries) {
+        console.log(`Configuring library ${l.name}`);
         if (!l.canApply()) {
+            console.log(`Rejected - not applicable`);
             continue;
         }
-        const tPath = makePath(l.name).trim();
+        const tPath = getLibraryPathByName(l.name).trim();
+        console.log(`Target path: ${tPath}`);
         if (tPath !== "") {
             const lb = container.getLibraryPath(tPath);
             if (!usingLibs.includes(lb)) {
