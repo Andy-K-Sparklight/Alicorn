@@ -42,14 +42,14 @@ export async function configureModDepChain(
                             case ModLoader.FABRIC:
                                 collection.push(
                                     ...(await unfoldFabricJar(cur)).map((c) => {
-                                        return {...c, origin: cur, loader: ModLoader.FABRIC};
+                                        return { ...c, origin: cur, loader: ModLoader.FABRIC };
                                     })
                                 );
                                 break;
                             case ModLoader.FORGE:
                                 collection.push(
                                     ...(await unfoldForgeTomlJar(cur)).map((c) => {
-                                        return {...c, origin: cur, loader: ModLoader.FABRIC};
+                                        return { ...c, origin: cur, loader: ModLoader.FABRIC };
                                     })
                                 );
                         }
@@ -69,7 +69,7 @@ export async function configureModDepChain(
         for (const x of collection) {
             for (const d of x.depends) {
                 if (!allProvided.has(d)) {
-                    o.push({name: x.name, origin: x.origin, missing: d});
+                    o.push({ name: x.name, origin: x.origin, missing: d });
                 }
             }
         }
@@ -81,7 +81,7 @@ export async function configureModDepChain(
 
 async function getModType(mod: string): Promise<ModLoader> {
     try {
-        const zip = new StreamZip.async({file: mod});
+        const zip = new StreamZip.async({ file: mod });
         const entries = await zip.entries();
         for (const e of Object.keys(entries)) {
             try {
@@ -102,7 +102,7 @@ async function getModType(mod: string): Promise<ModLoader> {
 // Support for mcmod.info has been dropped
 
 async function unfoldForgeTomlJar(source: string): Promise<ShortModDepUnit[]> {
-    const zip = new StreamZip.async({file: source});
+    const zip = new StreamZip.async({ file: source });
     const entries = await zip.entries();
     const o: ShortModDepUnit[] = [];
     for (const f of Object.keys(entries)) {
@@ -122,7 +122,7 @@ async function unfoldForgeTomlJar(source: string): Promise<ShortModDepUnit[]> {
                                 }
                             }
                         }
-                        o.push({name: String(m.modId), depends: o0});
+                        o.push({ name: String(m.modId), depends: o0 });
                     }
                 }
             }
@@ -205,7 +205,7 @@ function unfoldFabricJar(source: Buffer | string): Promise<ShortModDepUnit[]> {
                 await Promise.allSettled(waitingProms); // Make sure all buffers has been read
                 depends = depends || {};
                 if (name) {
-                    ret0.push({name: name, depends: Object.keys(depends)});
+                    ret0.push({ name: name, depends: Object.keys(depends) });
                 }
 
                 // Solve deps

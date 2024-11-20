@@ -34,7 +34,7 @@ import fs from "fs-extra";
 import os from "os";
 import path from "path";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { throttle } from "throttle-debounce";
 import { abortableBasicHash, basicHash } from "../modules/commons/BasicHash";
 import { chkPermissions, isFileExist } from "../modules/commons/FileUtil";

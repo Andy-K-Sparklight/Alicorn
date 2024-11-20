@@ -29,6 +29,14 @@ const Main = {
     },
     plugins: [
         new BuildInfoPlugin("MainBuild.json", Version),
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname, "resources", "shared"),
+                    to: path.resolve(__dirname, "dist", "release")
+                }
+            ]
+        }),
         // new CopyWebpackPlugin({
         //     patterns: [
         //         {

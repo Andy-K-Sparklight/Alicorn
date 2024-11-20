@@ -36,7 +36,15 @@ const MainDev = {
     },
     plugins: [
         new BuildInfoPlugin("MainBuild.json", Version),
-        new ContextReplacementPlugin(/keyv/)
+        new ContextReplacementPlugin(/keyv/),
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname, "resources", "shared"),
+                    to: path.resolve(__dirname, "dist")
+                }
+            ]
+        })
     ],
     devtool: "eval-source-map",
     mode: "development",

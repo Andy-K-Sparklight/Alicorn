@@ -24,7 +24,7 @@ import { shell } from "electron";
 import EventEmitter from "events";
 import path from "path";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { getBoolean } from "../modules/config/ConfigSupport";
 import { getContainer as _getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";

@@ -4,10 +4,7 @@ import objectHash from "object-hash";
 import React, { useEffect, useRef, useState } from "react";
 import { getBoolean } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
-import {
-    isProfileIsolated,
-    loadProfile
-} from "../modules/profile/ProfileLoader";
+import { isProfileIsolated, loadProfile } from "../modules/profile/ProfileLoader";
 import { whatProfile } from "../modules/profile/WhatProfile";
 import { jumpTo, triggerSetPage } from "./GoTo";
 import { ShiftEle } from "./Instruction";
@@ -109,7 +106,7 @@ export function Welcome(): JSX.Element {
                     </>
                 </ShiftEle>
             </Box>
-            <Box sx={{marginTop: "10%"}}>
+            <Box sx={{ marginTop: "10%" }}>
                 <SpecialKnowledge/>
             </Box>
         </Box>
@@ -200,7 +197,7 @@ const btnSX = {
     marginLeft: "0.5rem"
 };
 
-const shortSX = {marginLeft: "0.3125rem"};
+const shortSX = { marginLeft: "0.3125rem" };
 
 function RoundBtn(props: {
     disabled: boolean;
@@ -245,15 +242,15 @@ const wikiBoxSX = {
     marginLeft: "5%"
 };
 
-const wikiLeftSX = {fontSize: "x-large", marginRight: "0.75rem"};
+const wikiLeftSX = { fontSize: "x-large", marginRight: "0.75rem" };
 
-const wikiSepSX = {fontSize: "xxx-large"};
+const wikiSepSX = { fontSize: "xxx-large" };
 
 export function SpecialKnowledge(): JSX.Element {
     const [currentItem, setCurrentItem] = useState<string>(
         randsl("Welcome.Knowledges")
     );
-    const timer = useRef<NodeJS.Timeout>();
+    const timer = useRef<number>();
 
     useEffect(updateMiniWiki(timer, setCurrentItem), []);
 
@@ -263,15 +260,15 @@ export function SpecialKnowledge(): JSX.Element {
     const [a, b] = currentItem.split("|");
     return (
         <Box sx={wikiBoxSX} onClick={switchWikiFactory(timer, setCurrentItem)}>
-            <span style={wikiLeftSX} dangerouslySetInnerHTML={{__html: a}}/>
+            <span style={wikiLeftSX} dangerouslySetInnerHTML={{ __html: a }}/>
             <span style={wikiSepSX}>|</span>
-            <span style={wikiSX} dangerouslySetInnerHTML={{__html: b}}/>
+            <span style={wikiSX} dangerouslySetInnerHTML={{ __html: b }}/>
         </Box>
     );
 }
 
 function switchWikiFactory(
-    timer: React.MutableRefObject<NodeJS.Timer | undefined>,
+    timer: React.MutableRefObject<number | undefined>,
     setCurrentItem: React.Dispatch<React.SetStateAction<string>>
 ) {
     return () => {
@@ -279,18 +276,18 @@ function switchWikiFactory(
         if (timer.current) {
             clearInterval(timer.current);
         }
-        timer.current = setInterval(() => {
+        timer.current = window.setInterval(() => {
             setCurrentItem(randsl("Welcome.Knowledges"));
         }, 10000);
     };
 }
 
 function updateMiniWiki(
-    timer: React.MutableRefObject<NodeJS.Timer | undefined>,
+    timer: React.MutableRefObject<number | undefined>,
     setCurrentItem: React.Dispatch<React.SetStateAction<string>>
 ) {
     return () => {
-        timer.current = setInterval(() => {
+        timer.current = window.setInterval(() => {
             setCurrentItem(randsl("Welcome.Knowledges"));
         }, 10000);
         return () => {

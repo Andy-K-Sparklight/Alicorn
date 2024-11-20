@@ -23,8 +23,8 @@ jobs:
           corepack enable
       - name: Build
         run: |
-          yarn
-          yarn github-windows
+          pnpm i
+          pnpm github-windows
       - name: Create Checksum
         run: |
           sha1sum out/compressed/Alicorn-linux-x64.tar.gz
@@ -45,8 +45,8 @@ jobs:
           corepack enable
       - name: Build
         run: |
-          yarn
-          yarn github-windows
+          pnpm i
+          pnpm github-windows
       - name: Create Checksum
         run: |
           sha1sum out/compressed/Alicorn-win32-x64.zip

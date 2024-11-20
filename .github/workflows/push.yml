@@ -21,8 +21,8 @@ jobs:
           corepack enable
       - name: Build
         run: |
-          yarn
-          yarn release-full
+          pnpm
+          pnpm release-full
       - name: Create Production Files
         run: |
           git init
