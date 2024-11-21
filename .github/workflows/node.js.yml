@@ -24,13 +24,7 @@ jobs:
       - name: Build
         run: |
           pnpm i
-          pnpm github-windows
-      - name: Create Checksum
-        run: |
-          sha1sum out/compressed/Alicorn-linux-x64.tar.gz
-          md5sum out/compressed/Alicorn-linux-x64.tar.gz
-          sha1sum out/compressed/Alicorn-linux-arm64.tar.gz
-          md5sum out/compressed/Alicorn-linux-arm64.tar.gz
+          pnpm release-full
 
   package-windows:
     runs-on: windows-latest
@@ -46,10 +40,4 @@ jobs:
       - name: Build
         run: |
           pnpm i
-          pnpm github-windows
-      - name: Create Checksum
-        run: |
-          sha1sum out/compressed/Alicorn-win32-x64.zip
-          md5sum out/compressed/Alicorn-win32-x64.zip
-          sha1sum out/compressed/Alicorn-win32-ia32.zip
-          md5sum out/compressed/Alicorn-win32-ia32.zip
+          pnpm release-full
