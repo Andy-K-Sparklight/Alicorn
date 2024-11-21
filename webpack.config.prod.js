@@ -7,7 +7,7 @@ const { BannerPlugin } = require("webpack");
 const { DefinePlugin } = require("webpack");
 
 const defines = {
-    "process.env.ALICORN_DEV": JSON.stringify(false)
+    "import.meta.env.ALICORN_DEV": JSON.stringify(false)
 };
 
 const Main = {

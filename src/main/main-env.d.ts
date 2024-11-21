@@ -1,10 +1,11 @@
 declare global {
-    namespace NodeJS {
-        interface ProcessEnv {
+    interface ImportMeta {
+        env: {
             ALICORN_DEV: boolean;
             ALICORN_DEV_SERVER: string;
-        }
+        };
     }
 }
+
 
 export {};

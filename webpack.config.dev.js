@@ -6,7 +6,7 @@ const Version = require("./package.json").appVersion;
 const { DefinePlugin } = require("webpack");
 
 const defines = {
-    "process.env.ALICORN_DEV": JSON.stringify(true)
+    "import.meta.env.ALICORN_DEV": JSON.stringify(true)
 };
 
 const MainDev = {

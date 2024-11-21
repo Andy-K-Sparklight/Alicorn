@@ -202,9 +202,9 @@ async function whenAppReady() {
     );
     console.log("Preparing window!");
 
-    if (process.env.ALICORN_DEV && process.env.ALICORN_DEV_SERVER) {
-        console.log(`Picked up dev server URL: ${process.env.ALICORN_DEV_SERVER}`);
-        await mainWindow.loadURL(process.env.ALICORN_DEV_SERVER);
+    if (import.meta.env.ALICORN_DEV && import.meta.env.ALICORN_DEV_SERVER) {
+        console.log(`Picked up dev server URL: ${import.meta.env.ALICORN_DEV_SERVER}`);
+        await mainWindow.loadURL(import.meta.env.ALICORN_DEV_SERVER);
     } else {
         await mainWindow.loadFile(path.resolve(appPath, "Renderer.html"));
     }
