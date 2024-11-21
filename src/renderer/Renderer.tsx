@@ -1,5 +1,4 @@
 import { Box, createTheme, ThemeProvider, Typography } from "@mui/material";
-import { Theme } from "@mui/system";
 import { ipcRenderer, shell } from "electron";
 import { emptyDir } from "fs-extra";
 import path from "path";
@@ -39,6 +38,8 @@ import { initStatistics } from "./Statistics";
 import { AL_THEMES } from "./ThemeColors";
 import { initTranslator, loadTips, tr } from "./Translator";
 import { initValueEventsFromMain } from "./ValueCenter";
+import { NextUIProvider } from "@nextui-org/react";
+import "./global.css";
 
 try {
     console.log("Renderer first log.");
@@ -70,7 +71,7 @@ try {
         console.log(e);
         printScreen(e.reason);
         showLogs();
-        window.dispatchEvent(new CustomEvent("sysError", {detail: e.reason}));
+        window.dispatchEvent(new CustomEvent("sysError", { detail: e.reason }));
     });
 
     window.addEventListener("error", (e) => {
@@ -78,7 +79,7 @@ try {
         console.log(e);
         printScreen(e.message);
         showLogs();
-        window.dispatchEvent(new CustomEvent("sysError", {detail: e.message}));
+        window.dispatchEvent(new CustomEvent("sysError", { detail: e.message }));
     });
     const e1 = document.getElementById("boot_1");
     if (e1) {
@@ -428,8 +429,8 @@ function setThemeParams(
     });
 }
 
-export let ALICORN_DEFAULT_THEME_DARK: Theme;
-export let ALICORN_DEFAULT_THEME_LIGHT: Theme;
+export let ALICORN_DEFAULT_THEME_DARK: any;
+export let ALICORN_DEFAULT_THEME_LIGHT: any;
 
 const BACKGROUND_URLS: Record<string, string> = {
     ACG: "https://api.ixiaowai.cn/api/api.php",
@@ -459,9 +460,11 @@ function RendererBootstrap(): JSX.Element {
         >
             <InstructionProvider>
                 <ThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
-                    <HashRouter>
-                        <App/>
-                    </HashRouter>
+                    <NextUIProvider>
+                        <HashRouter>
+                            <App/>
+                        </HashRouter>
+                    </NextUIProvider>
                     {getString("theme") === "Random" ? (
                         <Typography
                             sx={{

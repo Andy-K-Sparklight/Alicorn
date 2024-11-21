@@ -3,6 +3,11 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { ContextReplacementPlugin } = require("webpack");
 const BuildInfoPlugin = require("./BuildInfoPlugin");
 const Version = require("./package.json").appVersion;
+const { DefinePlugin } = require("webpack");
+
+const defines = {
+    "process.env.ALICORN_DEV": JSON.stringify(true)
+};
 
 const MainDev = {
     entry: "./src/main/Bootstrap.ts",
@@ -44,7 +49,8 @@ const MainDev = {
                     to: path.resolve(__dirname, "dist")
                 }
             ]
-        })
+        }),
+        new DefinePlugin(defines)
     ],
     devtool: "eval-source-map",
     mode: "development",
@@ -81,6 +87,14 @@ const RendererDev = {
                     }
                 },
                 exclude: /node_modules/
+            },
+            {
+                test: /\.css$/i,
+                use: [
+                    { loader: "style-loader" },
+                    { loader: "css-loader" },
+                    { loader: "postcss-loader" }
+                ]
             }
         ]
     },
@@ -89,7 +103,8 @@ const RendererDev = {
     },
     plugins: [
         new BuildInfoPlugin("RendererBuild.json", Version),
-        new ContextReplacementPlugin(/keyv/)
+        new ContextReplacementPlugin(/keyv/),
+        new DefinePlugin(defines)
     ],
     devtool: "eval-source-map",
     mode: "development",
@@ -97,7 +112,16 @@ const RendererDev = {
     watchOptions: {
         ignored: ["**/node_modules", "**/dist"]
     },
-    externals: { "util/types": "commonjs util/types" }
+    externals: { "util/types": "commonjs util/types" },
+    devServer: {
+        static: {
+            directory: path.resolve(__dirname, "dist")
+        },
+        compress: true,
+        port: 9000,
+        hot: true
+    }
+
 };
 
 module.exports = [MainDev, RendererDev];

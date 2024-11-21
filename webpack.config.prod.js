@@ -3,7 +3,12 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { ContextReplacementPlugin } = require("webpack");
 const BuildInfoPlugin = require("./BuildInfoPlugin");
 const Version = require("./package.json").appVersion;
-const BannerPlugin = require("webpack").BannerPlugin;
+const { BannerPlugin } = require("webpack");
+const { DefinePlugin } = require("webpack");
+
+const defines = {
+    "process.env.ALICORN_DEV": JSON.stringify(false)
+};
 
 const Main = {
     entry: "./src/main/Bootstrap.ts",
@@ -37,6 +42,7 @@ const Main = {
                 }
             ]
         }),
+        new DefinePlugin(defines),
         // new CopyWebpackPlugin({
         //     patterns: [
         //         {
@@ -110,6 +116,14 @@ const Renderer = {
                 test: /\.tsx?$/,
                 use: "ts-loader",
                 exclude: /node_modules/
+            },
+            {
+                test: /\.css$/i,
+                use: [
+                    { loader: "style-loader" },
+                    { loader: "css-loader" },
+                    { loader: "postcss-loader" }
+                ]
             }
         ]
     },
@@ -119,6 +133,7 @@ const Renderer = {
     plugins: [
         new BuildInfoPlugin("RendererBuild.json", Version),
         new ContextReplacementPlugin(/keyv/),
+        new DefinePlugin(defines),
         new BannerPlugin({
             banner:
                 "@license\nCopyright (C) 2021-2022 Andy K Rarity Sparklight\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\nYou should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.",

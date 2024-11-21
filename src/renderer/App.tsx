@@ -533,7 +533,7 @@ function AppTopBar(props: {
                 <Box
                     style={
                         window.location.hash.includes("QuickSetup")
-                            ? {display: "none"}
+                            ? { display: "none" }
                             : {}
                     }
                 >
@@ -835,7 +835,7 @@ function onMouseUp(e: MouseEvent) {
 }
 
 function moveWindow() {
-    ipcRenderer.send("windowMoving", {mouseX, mouseY});
+    ipcRenderer.send("windowMoving", { mouseX, mouseY });
     animationId = requestAnimationFrame(moveWindow);
 }
 

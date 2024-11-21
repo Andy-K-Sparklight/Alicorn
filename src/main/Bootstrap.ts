@@ -68,7 +68,7 @@ async function whenAppReady() {
     );
     const appPath = app.getAppPath();
     console.log("App is ready, preparing window...");
-    const {height} = screen.getPrimaryDisplay().workAreaSize;
+    const { height } = screen.getPrimaryDisplay().workAreaSize;
     const calH = Math.floor(height * 0.55);
     mainWindow = new BrowserWindow({
         width: Math.floor((calH * 48) / 25),
@@ -117,7 +117,7 @@ async function whenAppReady() {
 
         if (os.platform() == "darwin") {
             const menu = Menu.buildFromTemplate([
-                {label: "Alicorn", submenu: [{role: "quit"}, ...subMenus]}
+                { label: "Alicorn", submenu: [{ role: "quit" }, ...subMenus] }
             ]);
             Menu.setApplicationMenu(menu);
         } else {
@@ -195,11 +195,17 @@ async function whenAppReady() {
                     }
                 }
             }
-            callback({responseHeaders: details.responseHeaders});
+            callback({ responseHeaders: details.responseHeaders });
         }
     );
     console.log("Preparing window!");
-    await mainWindow.loadFile(path.resolve(appPath, "Renderer.html"));
+
+    if (process.env.ALICORN_DEV && process.env.ALICORN_DEV_SERVER) {
+        console.log(`Picked up dev server URL: ${process.env.ALICORN_DEV_SERVER}`);
+        await mainWindow.loadURL(process.env.ALICORN_DEV_SERVER);
+    } else {
+        await mainWindow.loadFile(path.resolve(appPath, "Renderer.html"));
+    }
     mainWindow?.webContents.setZoomLevel(0);
 }
 
