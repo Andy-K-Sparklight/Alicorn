@@ -165,7 +165,7 @@ export function registerBackgroundListeners(): void {
             let t: number | null = null;
             try {
                 let sCode = "";
-                const {width, height} = screen.getPrimaryDisplay().workAreaSize;
+                const { width, height } = screen.getPrimaryDisplay().workAreaSize;
                 loginWindow =
                     loginWindow ||
                     new BrowserWindow({
@@ -336,8 +336,8 @@ export function registerBackgroundListeners(): void {
         }
         mw?.setPosition(w, h);
     });
-    ipcMain.on("windowMoving", (_e, {mouseX, mouseY}) => {
-        const {x, y} = screen.getCursorScreenPoint();
+    ipcMain.on("windowMoving", (_e, { mouseX, mouseY }) => {
+        const { x, y } = screen.getCursorScreenPoint();
         getMainWindow()?.setPosition(x - mouseX, y - mouseY);
     });
 
@@ -379,7 +379,7 @@ export function registerBackgroundListeners(): void {
             return new Promise<void>((res, rej) => {
                 try {
                     void (async () => {
-                        const {width, height} = screen.getPrimaryDisplay().workAreaSize;
+                        const { width, height } = screen.getPrimaryDisplay().workAreaSize;
                         logoutWindow =
                             logoutWindow ||
                             new BrowserWindow({
@@ -415,4 +415,10 @@ export function registerBackgroundListeners(): void {
             });
         }
     );
+
+
+    // New listeners for the new UI
+    ipcMain.on("ping", () => {
+        console.log("Renderer ping received.");
+    });
 }

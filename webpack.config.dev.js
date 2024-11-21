@@ -10,9 +10,12 @@ const defines = {
 };
 
 const MainDev = {
-    entry: "./src/main/Bootstrap.ts",
+    entry: {
+        Bootstrap: "./src/main/Bootstrap.ts",
+        preload: "./src/preload/preload.ts"
+    },
     output: {
-        filename: "Bootstrap.js",
+        filename: "[name].js",
         path: path.resolve(__dirname, "dist"),
         pathinfo: false
     },

@@ -82,7 +82,8 @@ async function whenAppReady() {
             spellcheck: false,
             zoomFactor: getNumber("theme.zoom-factor", 1.0),
             defaultEncoding: "UTF-8",
-            backgroundThrottling: false
+            backgroundThrottling: false,
+            preload: path.join(appPath, "preload.js")
         },
         frame: getString("frame.drag-impl") === "TitleBar",
         show: false,
@@ -137,6 +138,7 @@ async function whenAppReady() {
         mainWindow?.webContents.setZoomLevel(0);
     });
     console.log("Loading resources...");
+
     console.log("Registering event listeners...");
     registerBackgroundListeners();
     let readyToClose = false;

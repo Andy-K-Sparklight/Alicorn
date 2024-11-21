@@ -40,6 +40,7 @@ import { initTranslator, loadTips, tr } from "./Translator";
 import { initValueEventsFromMain } from "./ValueCenter";
 import { NextUIProvider } from "@nextui-org/react";
 import "./global.css";
+import { i18n } from "./i18n/i18n";
 
 try {
     console.log("Renderer first log.");
@@ -113,11 +114,16 @@ try {
         e2.innerHTML = e2.innerHTML + "Done.";
     }
     initValueEventsFromMain();
+
+    // Native setup routine
+    native.sys.ping();
+
     ipcRenderer.send("allowShowWindow"); // STI
     void (async () => {
         printScreen("Loading lang, config, gdt, jdt...");
         await Promise.allSettled([
             initTranslator(),
+            i18n.init(),
             loadTips(),
             loadConfig(),
             loadGDT(),
