@@ -22,19 +22,3 @@ export class WatchDog {
         clearTimeout(this.timer);
     }
 }
-
-export class IntervalChecker {
-    timer: NodeJS.Timer;
-
-    constructor(interval: number, checker: () => unknown, action: () => unknown) {
-        this.timer = setInterval(() => {
-            if (!checker()) {
-                action();
-            }
-        }, interval);
-    }
-
-    kill(): void {
-        clearInterval(this.timer);
-    }
-}
