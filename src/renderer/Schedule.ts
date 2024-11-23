@@ -26,7 +26,7 @@ export function schedulePromiseTask<T>(
                     resolve(t);
                 }
             },
-            timeout ? {timeout: timeout} : undefined
+            timeout ? { timeout: timeout } : undefined
         );
     });
 }
@@ -43,7 +43,7 @@ export async function initWorker(): Promise<void> {
         }
     };
     WORKER.addEventListener("message", fun);
-    console.log("Checking worker. Friendship is...");
+    console.log("Checking worker. Nothing stays the same for long...");
     await invokeWorker("POST");
     WORKER.onerror = (e) => {
         submitError(e.message);

@@ -2,9 +2,9 @@ import { app, BrowserWindow, dialog, globalShortcut, ipcMain, safeStorage, scree
 import isReachable from "is-reachable";
 import os from "os";
 import path from "path";
-import { getNumber, loadConfig } from "../modules/config/ConfigSupport";
-import { bindCurseListeners, closeCurseWindow } from "../modules/pff/curseforge/CurseController";
-import { getMainWindow, getMainWindowUATrimmed } from "./Bootstrap";
+import { getNumber, loadConfig } from "@/modules/config/ConfigSupport";
+import { bindCurseListeners, closeCurseWindow } from "@/modules/pff/curseforge/CurseController";
+import { getMainWindow, getMainWindowUATrimmed } from "./main";
 
 const LOGIN_START =
     "https://login.live.com/oauth20_authorize.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf";
@@ -68,20 +68,6 @@ export function registerBackgroundListeners(): void {
     });
     ipcMain.on("openDevTools", () => {
         getMainWindow()?.webContents.openDevTools();
-    });
-    ipcMain.on("askInject", (e) => {
-        if (process.env.ALICORN_REACT_DEVTOOLS) {
-            const mw = getMainWindow();
-            if (mw) {
-                const allow = dialog.showMessageBoxSync(mw, {
-                    type: "warning",
-                    buttons: ["No, reject it", "It's fine, just continue"],
-                    message:
-                        "ALICORN_REACT_DEVTOOLS has been set and external scripts will be injected, which should only happen during the development.\nIf you are NOT DEVELOPNING Alicorn, this might be an XSS attack.\n\nContinue and accept external scripts to inject?"
-                });
-                e.returnValue = allow === 1;
-            }
-        }
     });
     ipcMain.handle("selectDir", async () => {
         const r = await dialog.showOpenDialog({
@@ -310,12 +296,6 @@ export function registerBackgroundListeners(): void {
             win?.show();
         }
     });
-    ipcMain.on("hideWindow", () => {
-        getMainWindow()?.hide();
-    });
-    ipcMain.on("showWindow", () => {
-        getMainWindow()?.show();
-    });
     ipcMain.on("changeDir", (_e, d: string) => {
         process.chdir(d);
     });
@@ -415,10 +395,4 @@ export function registerBackgroundListeners(): void {
             });
         }
     );
-
-
-    // New listeners for the new UI
-    ipcMain.on("ping", () => {
-        console.log("Renderer ping received.");
-    });
 }

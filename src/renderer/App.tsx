@@ -245,7 +245,7 @@ export function App(): JSX.Element {
 
 function timelySave() {
     const id = setInterval(async () => {
-        await intervalSaveData();
+        await commitChanges();
     }, 300000);
     return () => {
         clearInterval(id);
@@ -273,9 +273,7 @@ function bindChangePage(
 }
 
 function answerOnQuit() {
-    ipcRenderer.once("YouAreGoingToBeKilled", () => {
-        void exitApp();
-    });
+    native.bwctl.onCloseRequest(() => void exitApp());
 }
 
 function bindChangePageWarn(
@@ -572,7 +570,7 @@ function AppTopBar(props: {
                                 onClick={() => {
                                     remoteHideWindow();
                                     waitUpdateFinished(() => {
-                                        intervalSaveData()
+                                        commitChanges()
                                             .then(() => {
                                                 ipcRenderer.send("readyToClose");
                                                 ipcRenderer.send("reload");
@@ -777,16 +775,15 @@ function PagesDrawer(props: {
 
 export function remoteHideWindow(): void {
     console.log("Preparing to exit!");
-    ipcRenderer.send("hideWindow");
+    native.bwctl.hide();
 }
 
 function remoteCloseWindow(): void {
     console.log("Closing!");
     window.localStorage.setItem("LastVersion", pkg.updatorVersion.toString());
-    intervalSaveData()
+    commitChanges()
         .then(() => {
-            ipcRenderer.send("readyToClose");
-            ipcRenderer.send("closeWindow");
+            native.bwctl.close(); // TODO do not close on osx
         })
         .catch(() => {});
 }
@@ -801,7 +798,7 @@ function remoteOpenDevTools(): void {
     console.log("%c" + tr("System.DevToolsWarn3"), "font-size:2rem;color:red;");
 }
 
-export async function intervalSaveData(): Promise<void> {
+export async function commitChanges(): Promise<void> {
     console.log("Saving data...");
     await saveConfig();
     await saveGDT();

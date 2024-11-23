@@ -87,7 +87,7 @@ try {
         e1.innerHTML = e1.innerHTML + "Done.";
     }
     printScreen("Log system enabled.");
-    console.log(`Alicorn ${pkg.appVersion} Renderer Process`);
+    console.log(`Alicorn ${pkg.family} Renderer Process`);
     console.log("%c❤ From Annie K Rarity Sparklight", "color:#df307f;");
     console.log(
         "%cSparklight is a girl - a filly, to be accurate.",
@@ -100,8 +100,12 @@ try {
     );
     console.log("%cDedicated to Linus Torvalds and FSF.", "font-weight:bold;");
     console.log(
-        "Alicorn Launcher Copyright (C) 2021-2022 Annie K Rarity Sparklight"
+        "Copyright (C) 2021-2022 Annie K Rarity Sparklight"
     );
+    console.log(
+        "Copyright (C) 2024 Ted \"skjsjhb\" Gao"
+    );
+
     console.log(
         "This program comes with ABSOLUTELY NO WARRANTY; for details, please see 'resources/app/LICENSE'."
     );
@@ -116,9 +120,14 @@ try {
     initValueEventsFromMain();
 
     // Native setup routine
-    native.sys.ping();
+    const serial = Math.floor(Math.random() * 100);
+    if (await native.ping(serial) != serial + 1) {
+        throw "Unable to connect to background API services";
+    }
+    console.log("Connected to background.");
 
-    ipcRenderer.send("allowShowWindow"); // STI
+    native.bwctl.show(); // Show the window
+
     void (async () => {
         printScreen("Loading lang, config, gdt, jdt...");
         await Promise.allSettled([
@@ -175,13 +184,10 @@ try {
         window["ashow"] = (a: string) => {
             void shell.openExternal(a);
         }; // Binding
-        if (gc) {
-            console.log("GC Enabled.");
-        } else {
-            console.log("GC Disabled.");
-        }
+
         console.log("This Alicorn has super cow powers.");
         bindSuperCowPower();
+
         console.log(
             "Render complete, time elapsed: " +
             (new Date().getTime() - t0.getTime()) / 1000 +
@@ -496,7 +502,7 @@ function RendererBootstrap(): JSX.Element {
                         }}
                         color={"primary"}
                     >
-                        {"Alicorn JE " + pkg.appVersion + " #" + pkg.updatorVersion}
+                        {"Alicorn JE " + pkg.family + " #" + pkg.updatorVersion}
                     </Typography>
                     <div
                         style={{

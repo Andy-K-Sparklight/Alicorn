@@ -2,8 +2,9 @@ const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { ContextReplacementPlugin } = require("webpack");
 const BuildInfoPlugin = require("./BuildInfoPlugin");
-const Version = require("./package.json").appVersion;
+const Version = require("./package.json").family;
 const { DefinePlugin } = require("webpack");
+const TsConfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 const defines = {
     "import.meta.env.ALICORN_DEV": JSON.stringify(true)
@@ -11,7 +12,7 @@ const defines = {
 
 const MainDev = {
     entry: {
-        Bootstrap: "./src/main/Bootstrap.ts",
+        main: "./src/main/main.ts",
         preload: "./src/preload/preload.ts"
     },
     output: {
@@ -40,7 +41,10 @@ const MainDev = {
         extensions: [".ts", ".js"],
         alias: {
             ws: path.resolve("./node_modules/ws/index.js")
-        }
+        },
+        plugins: [
+            new TsConfigPathsPlugin({})
+        ]
     },
     plugins: [
         new BuildInfoPlugin("MainBuild.json", Version),
@@ -102,12 +106,16 @@ const RendererDev = {
         ]
     },
     resolve: {
-        extensions: [".tsx", ".ts", ".js"]
+        extensions: [".tsx", ".ts", ".js"],
+        plugins: [
+            new TsConfigPathsPlugin({})
+        ]
     },
     plugins: [
         new BuildInfoPlugin("RendererBuild.json", Version),
         new ContextReplacementPlugin(/keyv/),
         new DefinePlugin(defines)
+
     ],
     devtool: "eval-source-map",
     mode: "development",

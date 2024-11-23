@@ -2,9 +2,10 @@ const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { ContextReplacementPlugin } = require("webpack");
 const BuildInfoPlugin = require("./BuildInfoPlugin");
-const Version = require("./package.json").appVersion;
+const Version = require("./package.json").family;
 const { BannerPlugin } = require("webpack");
 const { DefinePlugin } = require("webpack");
+const TsConfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 const defines = {
     "import.meta.env.ALICORN_DEV": JSON.stringify(false)
@@ -12,7 +13,7 @@ const defines = {
 
 const Main = {
     entry: {
-        Bootstrap: "./src/main/Bootstrap.ts",
+        main: "./src/main/main.ts",
         preload: "./src/preload/preload.ts"
     },
     output: {
@@ -33,7 +34,10 @@ const Main = {
         extensions: [".ts", ".js"],
         alias: {
             ws: path.resolve("./node_modules/ws/index.js")
-        }
+        },
+        plugins: [
+            new TsConfigPathsPlugin({})
+        ]
     },
     plugins: [
         new BuildInfoPlugin("MainBuild.json", Version),
@@ -46,48 +50,7 @@ const Main = {
             ]
         }),
         new DefinePlugin(defines),
-        // new CopyWebpackPlugin({
-        //     patterns: [
-        //         {
-        //             from: path.resolve(__dirname, "resources", "shared"),
-        //             to: path.resolve(__dirname, "dist", "release")
-        //         },
-        //         {
-        //             from: path.resolve(
-        //                 __dirname,
-        //                 "node_modules",
-        //                 "undici",
-        //                 "lib",
-        //                 "llhttp",
-        //                 "llhttp.wasm"
-        //             ),
-        //             to: path.resolve(
-        //                 __dirname,
-        //                 "dist",
-        //                 "release",
-        //                 "llhttp",
-        //                 "llhttp.wasm"
-        //             )
-        //         },
-        //         {
-        //             from: path.resolve(
-        //                 __dirname,
-        //                 "node_modules",
-        //                 "undici",
-        //                 "lib",
-        //                 "llhttp",
-        //                 "llhttp_simd.wasm"
-        //             ),
-        //             to: path.resolve(
-        //                 __dirname,
-        //                 "dist",
-        //                 "release",
-        //                 "llhttp",
-        //                 "llhttp_simd.wasm"
-        //             )
-        //         }
-        //     ]
-        // }),
+        new TsConfigPathsPlugin({}),
         new ContextReplacementPlugin(/keyv/),
         new BannerPlugin({
             banner:
@@ -131,7 +94,10 @@ const Renderer = {
         ]
     },
     resolve: {
-        extensions: [".tsx", ".ts", ".js"]
+        extensions: [".tsx", ".ts", ".js"],
+        plugins: [
+            new TsConfigPathsPlugin({})
+        ]
     },
     plugins: [
         new BuildInfoPlugin("RendererBuild.json", Version),

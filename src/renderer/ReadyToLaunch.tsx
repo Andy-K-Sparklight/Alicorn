@@ -49,11 +49,7 @@ import os from "os";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Account } from "../modules/auth/Account";
-import {
-    AccountType,
-    getPresentAccounts,
-    querySkinFor
-} from "../modules/auth/AccountUtil";
+import { AccountType, getPresentAccounts, querySkinFor } from "../modules/auth/AccountUtil";
 import { prefetchData } from "../modules/auth/AJHelper";
 import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
 import { LocalAccount } from "../modules/auth/LocalAccount";
@@ -70,25 +66,14 @@ import {
 import { Nide8Account } from "../modules/auth/Nide8Account";
 import { uniqueHash } from "../modules/commons/BasicHash";
 import { Pair } from "../modules/commons/Collections";
-import {
-    PROCESS_END_GATE,
-    PROCESS_LOG_GATE,
-    ReleaseType
-} from "../modules/commons/Constants";
+import { PROCESS_END_GATE, PROCESS_LOG_GATE, ReleaseType } from "../modules/commons/Constants";
 import { isNull } from "../modules/commons/Null";
-import {
-    getBoolean,
-    getNumber,
-    getString
-} from "../modules/config/ConfigSupport";
+import { getBoolean, getNumber, getString } from "../modules/config/ConfigSupport";
 import { getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
 import { killEdge, runEdge } from "../modules/cutie/BootEdge";
 import { acquireCode, deactiveCode } from "../modules/cutie/Hoofoff";
-import {
-    getWrapperStatus,
-    WrapperStatus
-} from "../modules/download/DownloadWrapper";
+import { getWrapperStatus, WrapperStatus } from "../modules/download/DownloadWrapper";
 import {
     getAllJava,
     getDefaultJavaHome,
@@ -108,57 +93,27 @@ import {
     ensureLog4jFile,
     ensureNatives
 } from "../modules/launch/Ensurance";
-import {
-    launchProfile,
-    markSafeLaunch,
-    shouldSafeLaunch
-} from "../modules/launch/LaunchTool";
+import { launchProfile, markSafeLaunch, shouldSafeLaunch } from "../modules/launch/LaunchTool";
 import { LaunchTracker } from "../modules/launch/LaunchTracker";
 import { stopMinecraft } from "../modules/launch/MinecraftBootstrap";
 import { prepareModsCheckFor } from "../modules/modx/ModDynLoad";
 import { GameProfile } from "../modules/profile/GameProfile";
-import {
-    isProfileIsolated,
-    loadProfile
-} from "../modules/profile/ProfileLoader";
-import {
-    dropAccountPromise,
-    waitMSAccountReady
-} from "../modules/readyboom/AccountMaster";
-import {
-    setLastUsed,
-    waitProfileReady
-} from "../modules/readyboom/PrepareProfile";
+import { isProfileIsolated, loadProfile } from "../modules/profile/ProfileLoader";
+import { dropAccountPromise, waitMSAccountReady } from "../modules/readyboom/AccountMaster";
+import { setLastUsed, waitProfileReady } from "../modules/readyboom/PrepareProfile";
 import { getMachineUniqueID } from "../modules/security/Unique";
-import {
-    initLocalYggdrasilServer,
-    ROOT_YG_URL,
-    skinTypeFor
-} from "../modules/skin/LocalYggdrasilServer";
+import { initLocalYggdrasilServer, ROOT_YG_URL, skinTypeFor } from "../modules/skin/LocalYggdrasilServer";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { Icons } from "./Icons";
 import { ShiftEle } from "./Instruction";
 import { submitError, submitSucc, submitWarn } from "./Message";
 import { YNDialog } from "./OperatingHint";
-import {
-    ALICORN_DEFAULT_THEME_DARK,
-    ALICORN_DEFAULT_THEME_LIGHT,
-    isBgDark
-} from "./Renderer";
+import { ALICORN_DEFAULT_THEME_DARK, ALICORN_DEFAULT_THEME_LIGHT, isBgDark } from "./Renderer";
 import { SkinDisplay2D, SkinDisplay3D } from "./SkinDisplay";
 import { addStatistics } from "./Statistics";
-import {
-    AlicornTheme,
-    fullWidth,
-    useFormStyles,
-    useInputStyles
-} from "./Stylex";
+import { AlicornTheme, fullWidth, useFormStyles, useInputStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
-import {
-    HOOFOFF_CENTRAL,
-    NETWORK_PORT,
-    QUERY_PORT
-} from "./utilities/CutieConnect";
+import { HOOFOFF_CENTRAL, NETWORK_PORT, QUERY_PORT } from "./utilities/CutieConnect";
 import { SpecialKnowledge } from "./Welcome";
 import { toReadableType, YggdrasilForm } from "./YggdrasilAccountManager";
 
@@ -199,7 +154,7 @@ export const LAST_CRASH_KEY = "ReadyToLaunch.LastCrash";
 export function ReadyToLaunch(): JSX.Element {
     const [coreProfile, setProfile] = useState(new GameProfile({}));
     const [profileLoadedBit, setLoaded] = useState(0);
-    let {id, container, server} = useParams<{
+    let { id, container, server } = useParams<{
         id: string;
         container: string;
         server?: string;
@@ -243,7 +198,7 @@ export function ReadyToLaunch(): JSX.Element {
                     />
                 ) : profileLoadedBit === 2 ? (
                     <Typography
-                        style={{fontSize: "medium", color: "#ff8400"}}
+                        style={{ fontSize: "medium", color: "#ff8400" }}
                         gutterBottom
                     >
                         {tr("ReadyToLaunch.CouldNotLoad")}
@@ -251,7 +206,7 @@ export function ReadyToLaunch(): JSX.Element {
                 ) : (
                     <LinearProgress
                         color={"secondary"}
-                        sx={{width: "80%"}}
+                        sx={{ width: "80%" }}
                         className={fullWidthProgress.progress}
                     />
                 )}
@@ -313,7 +268,7 @@ function LaunchStepIconRoot(props: {
             {props.completed ? (
                 <Check fontSize={"small"}/>
             ) : props.active && props.loading ? (
-                <CircularProgress size={"1rem"} sx={{color: "secondary.light"}}/>
+                <CircularProgress size={"1rem"} sx={{ color: "secondary.light" }}/>
             ) : (
                 props.children
             )}
@@ -322,7 +277,7 @@ function LaunchStepIconRoot(props: {
 }
 
 function LaunchStepIcon(props: StepIconProps): JSX.Element {
-    const {active, completed} = props;
+    const { active, completed } = props;
     const i = String(props.icon);
     return (
         <LaunchStepIconRoot
@@ -951,7 +906,7 @@ async function startBoot(
                 GLOBAL_LAUNCH_TRACKER.library({
                     total: 1,
                     resolved: 1,
-                    operateRecord: [{file: "ReadyBoom Proxied", operation: "OPERATED"}]
+                    operateRecord: [{ file: "ReadyBoom Proxied", operation: "OPERATED" }]
                 });
             }
             if (getBoolean("launch.fast-reboot")) {
@@ -963,7 +918,7 @@ async function startBoot(
                 total: 1,
                 resolved: 1,
                 operateRecord: [
-                    {file: "Quick Restart Proxied", operation: "OPERATED"}
+                    { file: "Quick Restart Proxied", operation: "OPERATED" }
                 ]
             });
         }
@@ -1021,7 +976,7 @@ async function startBoot(
                             const px = parseInt(p.trim());
                             if (!isNaN(px)) {
                                 window.dispatchEvent(
-                                    new CustomEvent("WorldServing", {detail: px})
+                                    new CustomEvent("WorldServing", { detail: px })
                                 );
                             }
                         }
@@ -1069,9 +1024,6 @@ async function startBoot(
             console.log(`Remove ${container.id}/${profile.id} from safe mode.`);
             // @ts-ignore
             window[LAST_LOGS_KEY] = [];
-            if (gc) {
-                gc();
-            }
         }
         console.log("Done!");
     });
@@ -1235,7 +1187,7 @@ function AccountChoose(props: {
                     props.closeFunc();
                 }}
             >
-                <DialogContent style={{overflow: "visible"}}>
+                <DialogContent style={{ overflow: "visible" }}>
                     <DialogTitle>{tr("ReadyToLaunch.StartAuthTitle")}</DialogTitle>
                     <DialogContentText>
                         {tr("ReadyToLaunch.StartAuthMsg")}
@@ -1253,7 +1205,7 @@ function AccountChoose(props: {
                                 }}
                             >
                                 <SkinDisplay3D skin={skinUrl} width={100} height={150}/>
-                                <Typography style={{color: "gray", marginTop: "-0.25rem"}}>
+                                <Typography style={{ color: "gray", marginTop: "-0.25rem" }}>
                                     {tr("AccountManager.SkinView3DShort")}
                                 </Typography>
                             </Box>
@@ -1270,7 +1222,7 @@ function AccountChoose(props: {
                                 <SkinDisplay2D skin={skinUrl}/>
                                 <br/>
                                 <br/>
-                                <Typography style={{color: "gray", marginTop: "2.625rem"}}>
+                                <Typography style={{ color: "gray", marginTop: "2.625rem" }}>
                                     {tr("AccountManager.SkinView2DShort")}
                                 </Typography>
                             </Box>
@@ -1386,7 +1338,7 @@ function AccountChoose(props: {
                                 <Select
                                     label={tr("ReadyToLaunch.UseYGChoose")}
                                     variant={"outlined"}
-                                    sx={{minWidth: "50%", color: "primary.main"}}
+                                    sx={{ minWidth: "50%", color: "primary.main" }}
                                     fullWidth
                                     labelId={"Select-Account"}
                                     onChange={(e) => {
@@ -1539,7 +1491,7 @@ function MiniJavaSelector(props: {
                         label={tr("JavaSelector.SelectJava")}
                         variant={"outlined"}
                         labelId={"Select-JRE"}
-                        sx={{color: "primary.main", height: "2.5rem"}}
+                        sx={{ color: "primary.main", height: "2.5rem" }}
                         color={"primary"}
                         onChange={(e) => {
                             const sj = String(e.target.value);
@@ -1707,7 +1659,7 @@ function OpenWorldDialog(props: {
                 {code ? (
                     <>
                         <br/>
-                        <DialogContentText sx={{color: "primary.main"}}>
+                        <DialogContentText sx={{ color: "primary.main" }}>
                             {tr("ReadyToLaunch.HoofoffCode", `Code=${code}`)}
                         </DialogContentText>
                         <br/>
@@ -1800,7 +1752,7 @@ function OpenWorldDialog(props: {
                     value={message}
                 />
                 {err ? (
-                    <DialogContentText style={{color: "#ff8400"}}>
+                    <DialogContentText style={{ color: "#ff8400" }}>
                         {tr("ReadyToLaunch.Errors." + err)}
                     </DialogContentText>
                 ) : (
@@ -1851,7 +1803,7 @@ function OpenWorldDialog(props: {
                             );
                             if (c.length === 6) {
                                 setCode(c);
-                                copy(c, {format: "text/plain"});
+                                copy(c, { format: "text/plain" });
                                 sessionStorage.setItem(CODE_KEY + props.port, c);
                                 submitSucc(tr("ReadyToLaunch.HoofoffCodeRaw", `Code=${c}`));
                                 setErr("");
@@ -1956,7 +1908,7 @@ function AskURLDialog(): JSX.Element {
                         disabled={!CODE_REGEX.test(url)}
                         onClick={() => {
                             window.dispatchEvent(
-                                new CustomEvent("UrlAsked", {detail: url})
+                                new CustomEvent("UrlAsked", { detail: url })
                             );
                             setUrl("");
                             setOpen(false);
@@ -1989,7 +1941,7 @@ function SystemUsage(): JSX.Element {
     return (
         <>
             <Box
-                sx={{display: "flex", flexDirection: "row", alignItems: "baseline"}}
+                sx={{ display: "flex", flexDirection: "row", alignItems: "baseline" }}
             >
                 <Box
                     sx={{
@@ -2001,7 +1953,7 @@ function SystemUsage(): JSX.Element {
                 />
                 <Typography
                     color={"primary"}
-                    sx={{fontSize: "0.8rem", whiteSpace: "nowrap"}}
+                    sx={{ fontSize: "0.8rem", whiteSpace: "nowrap" }}
                 >
                     &nbsp;
                     {tr(
@@ -2012,7 +1964,7 @@ function SystemUsage(): JSX.Element {
                 </Typography>
             </Box>
             <Box
-                sx={{display: "flex", flexDirection: "row", alignItems: "baseline"}}
+                sx={{ display: "flex", flexDirection: "row", alignItems: "baseline" }}
             >
                 <Box
                     sx={{
@@ -2023,7 +1975,7 @@ function SystemUsage(): JSX.Element {
                 />
                 <Typography
                     color={"secondary"}
-                    sx={{fontSize: "0.8rem", whiteSpace: "nowrap"}}
+                    sx={{ fontSize: "0.8rem", whiteSpace: "nowrap" }}
                 >
                     &nbsp;
                     {tr("ReadyToLaunch.CPU", `Total=${cpus}`, `Load=${loadAverage}`)}

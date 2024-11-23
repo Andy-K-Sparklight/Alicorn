@@ -2,7 +2,7 @@ import { ipcRenderer } from "electron";
 import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
 import { loadMirror } from "../modules/download/Mirror";
 import { waitUpdateFinished } from "../modules/selfupdate/Updator";
-import { intervalSaveData, remoteHideWindow } from "./App";
+import { commitChanges, remoteHideWindow } from "./App";
 import { setContainerListDirty } from "./ContainerManager";
 import { isInstBusy } from "./Instruction";
 
@@ -17,7 +17,7 @@ export function jumpTo(target: string, keepHistory = true): void {
     if (window[CHANGE_PAGE_WARN]) {
         window.dispatchEvent(
             new CustomEvent("changePageWarn", {
-                detail: {target: target, history: keepHistory}
+                detail: { target: target, history: keepHistory }
             })
         );
         return;
@@ -31,7 +31,7 @@ export function jumpTo(target: string, keepHistory = true): void {
         const ANIMATION_TIME = 250;
         fadeOut(e);
         setTimeout(() => {
-            window.scrollTo({top: 0});
+            window.scrollTo({ top: 0 });
             setContainerListDirty();
             window.location.hash = target;
             setTimeout(() => {
@@ -39,7 +39,7 @@ export function jumpTo(target: string, keepHistory = true): void {
             }, ANIMATION_TIME);
         }, ANIMATION_TIME);
     } else {
-        window.scrollTo({top: 0});
+        window.scrollTo({ top: 0 });
         setContainerListDirty();
         window.location.hash = target;
     }
@@ -50,7 +50,7 @@ function ifLeavingConfigThenReload(): void {
         sessionStorage.removeItem("Options.Reload");
         remoteHideWindow();
         waitUpdateFinished(() => {
-            intervalSaveData()
+            commitChanges()
                 .then(() => {
                     ipcRenderer.send("reload");
                 })
@@ -69,7 +69,7 @@ export function triggerSetPage(page: string, _keepHistory = true): void {
     // @ts-ignore
     if (window[CHANGE_PAGE_WARN]) {
         window.dispatchEvent(
-            new CustomEvent("changePageWarnTitle", {detail: page})
+            new CustomEvent("changePageWarnTitle", { detail: page })
         );
         return;
     }
@@ -78,10 +78,10 @@ export function triggerSetPage(page: string, _keepHistory = true): void {
     //}
     if (getBoolean("goto.animate")) {
         setTimeout(() => {
-            document.dispatchEvent(new CustomEvent("setPage", {detail: page}));
+            document.dispatchEvent(new CustomEvent("setPage", { detail: page }));
         }, 230); // Smaller than 250 to avoid init set change page warn
     } else {
-        document.dispatchEvent(new CustomEvent("setPage", {detail: page}));
+        document.dispatchEvent(new CustomEvent("setPage", { detail: page }));
     }
 }
 

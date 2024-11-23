@@ -1,92 +1,101 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8"/>
     <title>Alicorn</title>
     <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <link rel="preload" as="script" href="./Renderer.js" />
-    <link rel="preload" as="font" href="./SourceHanSansCN-Regular.otf" />
-    <link rel="preload" as="font" href="./UbuntuMono-Latin.woff2" />
-    <link rel="preload" as="script" href="./SkinView3D.js" />
+    <link rel="preload" as="script" href="./Renderer.js"/>
+    <link rel="preload" as="font" href="./SourceHanSansCN-Regular.otf"/>
+    <link rel="preload" as="font" href="./UbuntuMono-Latin.woff2"/>
+    <link rel="preload" as="script" href="./SkinView3D.js"/>
     <style>
-      .window-drag,
-      .window-drag > * {
-        -webkit-app-region: drag;
-      }
-      .window-no-drag,
-      .window-no-drag > * {
-        -webkit-app-region: no-drag;
-      }
-      @font-face {
-        font-family: "Source Hans Sans";
-        src: url(SourceHanSansCN-Regular.otf);
-      }
-      @font-face {
-        font-family: "Ubuntu Mono";
-        font-style: normal;
-        font-weight: 400;
-        src: url(UbuntuMono-Latin.woff2) format("woff2");
-        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
-          U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193,
-          U+2212, U+2215, U+FEFF, U+FFFD;
-      }
-      ::-webkit-scrollbar {
-        display: none;
-      }
-      html {
-        height: 100%;
-        background-color: #ffe0f0;
-        white-space: pre-line;
-        user-select: none;
-        -webkit-font-smoothing: antialiased;
-      }
-      body {
-        height: 100%;
-        font-family: "Ubuntu Mono", Consolas, "Courier New", Courier,
-          "Source Hans Sans", "Roboto Medium", "Microsoft YaHei", "Segoe UI",
-          SimHei, Tahoma, Geneva, Verdana, sans-serif !important;
-      }
-      * {
-        z-index: inherit;
-      }
-      .app_fade_in {
-        transition: opacity 200ms;
-        opacity: 100;
-      }
-      .app_fade_out {
-        transition: opacity 200ms;
-        opacity: 0;
-      }
-      .yggdrasil_droppable {
-        min-height: 100vh; /* Easy to drop */
-      }
-      div[role="dialog"] {
-        overflow: visible;
-      }
+        .window-drag,
+        .window-drag > * {
+            -webkit-app-region: drag;
+        }
+
+        .window-no-drag,
+        .window-no-drag > * {
+            -webkit-app-region: no-drag;
+        }
+
+        @font-face {
+            font-family: "Source Hans Sans";
+            src: url(SourceHanSansCN-Regular.otf);
+        }
+
+        @font-face {
+            font-family: "Ubuntu Mono";
+            font-style: normal;
+            font-weight: 400;
+            src: url(UbuntuMono-Latin.woff2) format("woff2");
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+            U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193,
+            U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        html {
+            height: 100%;
+            background-color: #ffe0f0;
+            white-space: pre-line;
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            height: 100%;
+            font-family: "Ubuntu Mono", Consolas, "Courier New", Courier,
+            "Source Hans Sans", "Roboto Medium", "Microsoft YaHei", "Segoe UI",
+            SimHei, Tahoma, Geneva, Verdana, sans-serif !important;
+        }
+
+        * {
+            z-index: inherit;
+        }
+
+        .app_fade_in {
+            transition: opacity 200ms;
+            opacity: 100;
+        }
+
+        .app_fade_out {
+            transition: opacity 200ms;
+            opacity: 0;
+        }
+
+        .yggdrasil_droppable {
+            min-height: 100vh; /* Easy to drop */
+        }
+
+        div[role="dialog"] {
+            overflow: visible;
+        }
     </style>
-  </head>
-  <body>
-    <div
-      id="boot_stages"
-      style="position: fixed; left: auto; top: auto"
-      onclick="this.style.display='none'"
-    >
-      <p>
-        Alicorn Renderer (JE) has been loaded, and it's initializing.<br />
+</head>
+<body>
+<div id="boot_stages"
+     style="position: fixed; left: auto; top: auto"
+     onclick="this.style.display='none'"
+>
+    <p>
+        Alicorn Renderer (JE) has been loaded, and it's initializing.<br/>
         If this text won't disappear in a few seconds, considering fix or
-        reinstall Alicorn. <br />
+        reinstall Alicorn. <br/>
         Or click to hide me if Alicorn runs well.
-      </p>
-      <h3 id="boot_1">Boot Stage 1: Renderer First Show...</h3>
-      <h3 id="boot_2">Boot Stage 2: Renderer Script Load...</h3>
-      <h3 id="boot_3">Boot Stage 3: Pre Render...</h3>
-    </div>
-    <div id="root">
-      <div
-        style="
+    </p>
+    <h3 id="boot_1">Boot Stage 1: Renderer First Show...</h3>
+    <h3 id="boot_2">Boot Stage 2: Renderer Script Load...</h3>
+    <h3 id="boot_3">Boot Stage 3: Pre Render...</h3>
+</div>
+<div id="root">
+    <div style="
           position: fixed;
           background-color: #5d2391;
           left: 0;
@@ -94,41 +103,30 @@
           top: 0;
           height: 64px;
         "
-      ></div>
-    </div>
-    <p
-      id="preboot_log"
-      style="font-family: 'Ubuntu Mono', 'Courier New', Courier, monospace"
-    ></p>
-    <script>
-      if (process.env.ALICORN_REACT_DEVTOOLS) {
-        let { ipcRenderer } = require("electron");
-        if (ipcRenderer.sendSync("askInject")) {
-          let dev = document.createElement("script");
-          dev.src = "http://localhost:8097";
-          document.head.appendChild(dev);
-          dev = null;
-        }
-      }
-    </script>
-    <script>
-      window.logToScreen = (msg) => {
+    ></div>
+</div>
+<p
+        id="preboot_log"
+        style="font-family: 'Ubuntu Mono', 'Courier New', Courier, monospace"
+></p>
+<script>
+    window.logToScreen = (msg) => {
         let e = document.getElementById("preboot_log");
         if (e) {
-          e.innerHTML = e.innerHTML + msg;
+            e.innerHTML = e.innerHTML + msg;
         }
-      };
-      window.clearLogScreen = () => {
+    };
+    window.clearLogScreen = () => {
         document.getElementById("preboot_log").style.display = "none";
-      };
-      window.showLogScreen = () => {
+    };
+    window.showLogScreen = () => {
         document.getElementById("preboot_log").style.display = "none";
-      };
-      window.oncontextmenu = (e) => {
+    };
+    window.oncontextmenu = (e) => {
         e.preventDefault();
-      };
-    </script>
-    <script src="Renderer.js" async></script>
-    <script src="SkinView3D.js" defer></script>
-  </body>
+    };
+</script>
+<script src="Renderer.js" async></script>
+<script src="SkinView3D.js" defer></script>
+</body>
 </html>

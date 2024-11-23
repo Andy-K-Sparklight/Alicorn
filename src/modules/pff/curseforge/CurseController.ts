@@ -1,6 +1,6 @@
 import { load } from "cheerio";
 import { BrowserWindow, dialog, ipcMain } from "electron";
-import { getMainWindowUATrimmed } from "../../../main/Bootstrap";
+import { getMainWindowUATrimmed } from "../../../main/main";
 import { Cluster } from "../../commons/Cluster";
 import { getNumber } from "../../config/ConfigSupport";
 import { ModArtifact, ModMeta } from "../virtual/ModDefine";
@@ -209,7 +209,7 @@ function ensureCurseWindow(): void {
                     details.url.includes("jquery") &&
                     u.hostname === "www.curseforge.com"
                 ) {
-                    callback({cancel: true});
+                    callback({ cancel: true });
                     return;
                 }
                 if (
@@ -217,19 +217,19 @@ function ensureCurseWindow(): void {
                     (u.hostname === "www.curseforge.com" ||
                         u.hostname.includes("forgecdn.net"))
                 ) {
-                    callback({cancel: true});
+                    callback({ cancel: true });
                     return;
                 }
                 if (details.url.includes("game-cover")) {
-                    callback({cancel: true});
+                    callback({ cancel: true });
                     return;
                 }
                 if (details.url.includes("media.forgecdn.net")) {
-                    callback({cancel: true});
+                    callback({ cancel: true });
                     return;
                 }
                 if (details.url.includes("recaptcha")) {
-                    callback({cancel: true});
+                    callback({ cancel: true });
                     return;
                 }
                 if (
@@ -238,7 +238,7 @@ function ensureCurseWindow(): void {
                         details.url.includes("captcha")
                     )
                 ) {
-                    callback({cancel: true}); // Block unknown domain
+                    callback({ cancel: true }); // Block unknown domain
                     return;
                 }
                 callback({}); // Accept

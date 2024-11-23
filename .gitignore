@@ -115,3 +115,9 @@ out
 
 # Yarn
 .yarn
+
+# Test Env
+emulated
+
+# Coverage
+coverage

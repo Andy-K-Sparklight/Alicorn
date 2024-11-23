@@ -1,6 +1,5 @@
-import { readFile } from "fs-extra";
+import fs, { readFile } from "fs-extra";
 import leven from "js-levenshtein";
-import fs from "fs-extra";
 import path from "path";
 import mdiff from "mdiff";
 import sha from "sha";
@@ -26,7 +25,7 @@ onmessage = (e) => {
 };
 
 addHandler("POST", () => {
-    console.log("...Magic! Hello from worker. I'm ready!");
+    console.log("...But when it change it doesn't mean it's gone. Worker reporting.");
 });
 
 addHandler("Close", () => {
@@ -185,10 +184,10 @@ function diveSearch(
                     })
                 );
                 res();
-                return;
+
             } catch {
                 res();
-                return;
+
             }
         })();
     });
