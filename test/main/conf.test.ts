@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import path from "path";
-import { conf } from "@/main/conf/conf.ts";
+import { conf } from "@/main/conf/conf";
 import fs from "fs-extra";
 
 const cfgPath = path.resolve("emulated", "config.v2.json");

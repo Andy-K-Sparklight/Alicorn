@@ -3,7 +3,7 @@
  */
 
 import { type BrowserWindow, ipcMain } from "electron";
-import { Channels } from "@/main/ipc/channels.ts";
+import { Channels } from "@/main/ipc/channels";
 
 const allowedWindows = new Set<BrowserWindow>();
 

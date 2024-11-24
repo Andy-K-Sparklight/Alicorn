@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs-extra";
 import rfdc from "rfdc";
 import { ipcMain } from "electron";
-import { Channels } from "@/main/ipc/channels.ts";
+import { Channels } from "@/main/ipc/channels";
 
 /**
  * The config (v2) module which has enhanced type support.

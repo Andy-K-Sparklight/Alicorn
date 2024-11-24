@@ -7,10 +7,10 @@ import { getBoolean, getNumber, getString, loadConfigSync } from "@/modules/conf
 import { setBeacon } from "@/modules/selfupdate/Beacon";
 import { registerBackgroundListeners } from "./Background";
 import pkg from "~/package.json";
-import { ping } from "@/main/dev/ping.ts";
-import { conf } from "@/main/conf/conf.ts";
-import { bwctl } from "@/main/sys/bwctl.ts";
-import { paths } from "@/main/fs/paths.ts";
+import { ping } from "@/main/dev/ping";
+import { conf } from "@/main/conf/conf";
+import { bwctl } from "@/main/sys/bwctl";
+import { paths } from "@/main/fs/paths";
 
 void main();
 

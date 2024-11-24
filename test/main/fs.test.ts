@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import path from "path";
-import { paths } from "@/main/fs/paths.ts";
+import { paths } from "@/main/fs/paths";
 
 test("Path Resolution", () => {
     paths.setup({

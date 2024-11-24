@@ -3,7 +3,7 @@
  */
 import path from "node:path";
 import os from "node:os";
-import { conf } from "@/main/conf/conf.ts";
+import { conf } from "@/main/conf/conf";
 import { app } from "electron";
 
 interface PathResolver {

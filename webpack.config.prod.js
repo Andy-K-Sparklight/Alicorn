@@ -50,7 +50,6 @@ const Main = {
             ]
         }),
         new DefinePlugin(defines),
-        new TsConfigPathsPlugin({}),
         new ContextReplacementPlugin(/keyv/),
         new BannerPlugin({
             banner:
