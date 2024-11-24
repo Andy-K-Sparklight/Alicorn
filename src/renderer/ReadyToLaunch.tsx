@@ -47,7 +47,7 @@ import { ipcRenderer } from "electron";
 import EventEmitter from "events";
 import os from "os";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "wouter";
 import { Account } from "../modules/auth/Account";
 import { AccountType, getPresentAccounts, querySkinFor } from "../modules/auth/AccountUtil";
 import { prefetchData } from "../modules/auth/AJHelper";

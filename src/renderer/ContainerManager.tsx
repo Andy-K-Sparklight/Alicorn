@@ -1,12 +1,4 @@
-import {
-    Add,
-    CopyAll,
-    Eject,
-    FolderOpen,
-    Input,
-    LayersClear,
-    LinkOff
-} from "@mui/icons-material";
+import { Add, CopyAll, Eject, FolderOpen, Input, LayersClear, LinkOff } from "@mui/icons-material";
 import {
     Box,
     Button,
@@ -34,7 +26,7 @@ import fs from "fs-extra";
 import os from "os";
 import path from "path";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "wouter";
 import { throttle } from "throttle-debounce";
 import { abortableBasicHash, basicHash } from "../modules/commons/BasicHash";
 import { chkPermissions, isFileExist } from "../modules/commons/FileUtil";
@@ -72,17 +64,9 @@ import { wrappedInstallModpack } from "../modules/pff/modpack/InstallModpack";
 import { setChangePageWarn } from "./GoTo";
 import { Icons } from "./Icons";
 import { submitSucc, submitWarn } from "./Message";
-import {
-    FailedHint,
-    OperatingHint,
-    OperatingHintCustom
-} from "./OperatingHint";
+import { FailedHint, OperatingHint, OperatingHintCustom } from "./OperatingHint";
 import { hasEdited } from "./Options";
-import {
-    ALICORN_DEFAULT_THEME_DARK,
-    ALICORN_DEFAULT_THEME_LIGHT,
-    isBgDark
-} from "./Renderer";
+import { ALICORN_DEFAULT_THEME_DARK, ALICORN_DEFAULT_THEME_LIGHT, isBgDark } from "./Renderer";
 import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
 
@@ -92,7 +76,7 @@ export function setContainerListDirty(): void {
 
 export function ContainerManager(): JSX.Element {
     // eslint-disable-next-line prefer-const
-    let {modpack, togo} = useParams<{ modpack?: string; togo?: string }>();
+    let { modpack, togo } = useParams<{ modpack?: string; togo?: string }>();
     modpack = modpack ? decodeURIComponent(modpack) : undefined;
     const hasToGo = togo === "1";
     const isEleMounted = useRef<boolean>();
@@ -162,7 +146,7 @@ export function ContainerManager(): JSX.Element {
                     setCreating(false);
                 }}
             />
-            <Box sx={{textAlign: "right"}}>
+            <Box sx={{ textAlign: "right" }}>
                 <Tooltip
                     title={
                         <Typography className={"smtxt"}>
@@ -283,10 +267,10 @@ function SingleContainerDisplay(props: {
                 }}
             >
                 <CardContent>
-                    <Box sx={{float: "right"}}>
+                    <Box sx={{ float: "right" }}>
                         <Fade in={showBtn}>
                             <Grid container direction={"row"}>
-                                <Grid container direction={"column"} sx={{width: "auto"}}>
+                                <Grid container direction={"column"} sx={{ width: "auto" }}>
                                     <Grid container direction={"row"}>
                                         <Tooltip
                                             title={
@@ -506,13 +490,13 @@ function SingleContainerDisplay(props: {
                     </ThemeProvider>
                     <Typography
                         variant={"h6"}
-                        sx={{color: isBgDark() ? "secondary.light" : undefined}}
+                        sx={{ color: isBgDark() ? "secondary.light" : undefined }}
                         gutterBottom
                     >
                         {props.container.id}
                     </Typography>
                     <Typography
-                        sx={{color: isBgDark() ? "secondary.light" : undefined}}
+                        sx={{ color: isBgDark() ? "secondary.light" : undefined }}
                         className={classes.text}
                         gutterBottom
                     >
@@ -521,7 +505,7 @@ function SingleContainerDisplay(props: {
                     {props.isMounted ? (
                         <>
                             <Typography
-                                sx={{color: isBgDark() ? "secondary.light" : undefined}}
+                                sx={{ color: isBgDark() ? "secondary.light" : undefined }}
                                 className={classes.text}
                                 gutterBottom
                             >
@@ -536,7 +520,7 @@ function SingleContainerDisplay(props: {
                                     )}
                             </Typography>
                             <Typography
-                                sx={{color: isBgDark() ? "secondary.light" : undefined}}
+                                sx={{ color: isBgDark() ? "secondary.light" : undefined }}
                                 className={classes.text}
                                 gutterBottom
                             >

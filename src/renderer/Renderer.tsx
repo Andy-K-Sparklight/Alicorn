@@ -4,7 +4,6 @@ import { emptyDir } from "fs-extra";
 import path from "path";
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { HashRouter } from "react-router-dom";
 import pkg from "../../package.json";
 import { registerBossKey } from "../modules/access/BossKey";
 import { reloadAccounts } from "../modules/auth/AccountUtil";
@@ -41,6 +40,8 @@ import { initValueEventsFromMain } from "./ValueCenter";
 import { NextUIProvider } from "@nextui-org/react";
 import "./global.css";
 import { i18n } from "./i18n/i18n";
+import { Router } from "wouter";
+import { useHashLocation } from "wouter/use-hash-location";
 
 try {
     console.log("Renderer first log.");
@@ -473,9 +474,9 @@ function RendererBootstrap(): JSX.Element {
             <InstructionProvider>
                 <ThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
                     <NextUIProvider>
-                        <HashRouter>
+                        <Router hook={useHashLocation}>
                             <App/>
-                        </HashRouter>
+                        </Router>
                     </NextUIProvider>
                     {getString("theme") === "Random" ? (
                         <Typography

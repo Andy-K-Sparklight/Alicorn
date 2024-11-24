@@ -16,14 +16,10 @@ import {
 import { remove } from "fs-extra";
 import objectHash from "object-hash";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "wouter";
 import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
 import { getContainer } from "../modules/container/ContainerUtil";
-import {
-    isProfileIsolated,
-    isStillNeeded,
-    loadProfile
-} from "../modules/profile/ProfileLoader";
+import { isProfileIsolated, isStillNeeded, loadProfile } from "../modules/profile/ProfileLoader";
 import { whatProfile } from "../modules/profile/WhatProfile";
 import { setDirtyProfile } from "../modules/readyboom/PrepareProfile";
 import { jumpTo, triggerSetPage } from "./GoTo";
@@ -47,7 +43,7 @@ export interface SimplifiedCoreInfo {
 
 export function LaunchPad(): JSX.Element {
     const classes = usePadStyles();
-    let {server} = useParams<{ server?: string }>();
+    let { server } = useParams<{ server?: string }>();
     server = server ? decodeURIComponent(server) : undefined;
     return (
         <Box className={classes.para}>
@@ -165,11 +161,11 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
 
     return (
         <>
-            <Box sx={{textAlign: "right"}}>
+            <Box sx={{ textAlign: "right" }}>
                 <ButtonGroup
                     variant={"contained"}
                     color={"primary"}
-                    sx={{marginRight: "1rem"}}
+                    sx={{ marginRight: "1rem" }}
                 >
                     <Button
                         onClick={() => {
@@ -203,7 +199,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            sx={{color: "primary.main"}}
+                            sx={{ color: "primary.main" }}
                             color={"primary"}
                             disabled={isLoading}
                             checked={ignoreCorrupted.current}
@@ -242,7 +238,7 @@ function CoresDisplay(props: { server?: string }): JSX.Element {
                 <>
                     <LinearProgress color={"secondary"}/>
                     <Typography
-                        sx={{fontSize: "medium", color: "#ff8400"}}
+                        sx={{ fontSize: "medium", color: "#ff8400" }}
                         gutterBottom
                     >
                         {tr("CoreInfo.StillLoading")}
@@ -284,7 +280,7 @@ function SingleCoreDisplay(props: {
     return (
         <>
             <Card
-                sx={{backgroundColor: "primary.main"}}
+                sx={{ backgroundColor: "primary.main" }}
                 color={"primary"}
                 raised={showBtn}
                 onMouseOver={() => {
@@ -314,7 +310,7 @@ function SingleCoreDisplay(props: {
                     {props.profile.corrupted ? (
                         ""
                     ) : (
-                        <Box sx={{float: "right", display: "flex", flexDirection: "row"}}>
+                        <Box sx={{ float: "right", display: "flex", flexDirection: "row" }}>
                             <Fade in={showBtn}>
                                 <Box>
                                     <Tooltip
@@ -462,21 +458,21 @@ function SingleCoreDisplay(props: {
                     )}
                     <Typography
                         className={classes.text}
-                        sx={{color: isBgDark() ? "secondary.light" : undefined}}
+                        sx={{ color: isBgDark() ? "secondary.light" : undefined }}
                         gutterBottom
                     >
                         {props.profile.versionType}
                     </Typography>
                     <Typography
                         variant={"h6"}
-                        sx={{color: isBgDark() ? "secondary.light" : undefined}}
+                        sx={{ color: isBgDark() ? "secondary.light" : undefined }}
                         gutterBottom
                     >
                         {props.profile.baseVersion}
                     </Typography>
                     <Typography
                         className={classes.text}
-                        sx={{color: isBgDark() ? "secondary.light" : undefined}}
+                        sx={{ color: isBgDark() ? "secondary.light" : undefined }}
                         gutterBottom
                     >
                         {tr(
@@ -488,7 +484,7 @@ function SingleCoreDisplay(props: {
                     {used > 0 ? (
                         <Typography
                             className={classes.text}
-                            sx={{color: isBgDark() ? "secondary.light" : undefined}}
+                            sx={{ color: isBgDark() ? "secondary.light" : undefined }}
                         >
                             {tr("CoreInfo.Used", `Count=${used}`)}
                         </Typography>
@@ -500,7 +496,7 @@ function SingleCoreDisplay(props: {
                     ) : (
                         <Typography
                             className={classes.text}
-                            sx={{color: isBgDark() ? "secondary.light" : undefined}}
+                            sx={{ color: isBgDark() ? "secondary.light" : undefined }}
                         >
                             {getDescriptionFor(props.profile.versionType)}
                         </Typography>
@@ -508,7 +504,7 @@ function SingleCoreDisplay(props: {
                     {props.profile.isolated ? (
                         <Typography
                             className={classes.text}
-                            sx={{color: isBgDark() ? "secondary.light" : undefined}}
+                            sx={{ color: isBgDark() ? "secondary.light" : undefined }}
                         >
                             {tr("CoreInfo.Isolated")}
                         </Typography>

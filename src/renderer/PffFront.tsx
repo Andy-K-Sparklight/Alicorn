@@ -24,7 +24,7 @@ import { shell } from "electron";
 import EventEmitter from "events";
 import path from "path";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "wouter";
 import { getBoolean } from "../modules/config/ConfigSupport";
 import { getContainer as _getContainer } from "../modules/container/ContainerUtil";
 import { MinecraftContainer } from "../modules/container/MinecraftContainer";
@@ -32,11 +32,7 @@ import { configureModDepChain, UnmetDepUnit } from "../modules/modx/ModDeps";
 import { chkModLoader, loadMetas } from "../modules/modx/ModDynLoad";
 import { ModInfo, ModLoader, modLoaderOfStr } from "../modules/modx/ModInfo";
 import { canModVersionApply } from "../modules/modx/ModVersionUtil";
-import {
-    loadLockfile,
-    Lockfile2,
-    LockfileModMeta
-} from "../modules/pff/virtual/Lockfile";
+import { loadLockfile, Lockfile2, LockfileModMeta } from "../modules/pff/virtual/Lockfile";
 import { fetchModByName, setPffFlag } from "../modules/pff/virtual/PffWrapper";
 import { modLoaderOf } from "../modules/pff/virtual/Resolver";
 import { setChangePageWarn } from "./GoTo";
@@ -50,7 +46,7 @@ const PFF_MSG_GATE = "message";
 
 export function PffFront(): JSX.Element {
     const emitter = useRef(new EventEmitter());
-    let {container, version, name, loader, autostart, root} = useParams<{
+    let { container, version, name, loader, autostart, root } = useParams<{
         container: string;
         version: string;
         name?: string;
@@ -673,7 +669,7 @@ function TabPanel(props: {
     index: string | number;
     value: string | number;
 }): JSX.Element {
-    const {children, value, index} = props;
+    const { children, value, index } = props;
     return (
         <Box hidden={value !== index}>{value === index ? <>{children}</> : ""}</Box>
     );

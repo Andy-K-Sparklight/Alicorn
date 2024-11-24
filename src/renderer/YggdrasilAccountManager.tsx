@@ -19,7 +19,7 @@ import {
     Typography
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "wouter";
 import { Account } from "../modules/auth/Account";
 import {
     AccountType,
@@ -36,11 +36,7 @@ import { Nide8Account } from "../modules/auth/Nide8Account";
 import { ALICORN_ENCRYPTED_DATA_SUFFIX } from "../modules/commons/Constants";
 import { getBoolean } from "../modules/config/ConfigSupport";
 import { YNDialog } from "./OperatingHint";
-import {
-    ALICORN_DEFAULT_THEME_DARK,
-    ALICORN_DEFAULT_THEME_LIGHT,
-    isBgDark
-} from "./Renderer";
+import { ALICORN_DEFAULT_THEME_DARK, ALICORN_DEFAULT_THEME_LIGHT, isBgDark } from "./Renderer";
 import { SkinDisplay2D, SkinDisplay3D } from "./SkinDisplay";
 import { useCardStyles, useInputStyles, usePadStyles } from "./Stylex";
 import { tr } from "./Translator";
@@ -53,7 +49,7 @@ export function YggdrasilAccountManager(): JSX.Element {
     const mountedBit = useRef(true);
     const accountsLoaded = useRef(false);
     const [accounts, setAccounts] = useState<Set<Account>>(new Set<Account>());
-    let {adding, server} = useParams<{ adding?: string; server?: string }>();
+    let { adding, server } = useParams<{ adding?: string; server?: string }>();
     server = server ? decodeURIComponent(server) : undefined;
     adding = adding ? decodeURIComponent(adding) : undefined;
     const [isAdding, setAdding] = useState(String(adding) === "1");
@@ -94,7 +90,7 @@ export function YggdrasilAccountManager(): JSX.Element {
             <Typography className={classes.smallText} color={"secondary"}>
                 {tr("AccountManager.Note")}
             </Typography>
-            <Box sx={{textAlign: "right"}}>
+            <Box sx={{ textAlign: "right" }}>
                 <Tooltip
                     title={
                         <Typography className={"smtxt"}>
@@ -239,10 +235,10 @@ function SingleAccountDisplay(props: {
                 onMouseLeave={() => {
                     setActive(false);
                 }}
-                sx={{backgroundColor: "primary.main"}}
+                sx={{ backgroundColor: "primary.main" }}
             >
                 <CardContent>
-                    <Box sx={{float: "right"}}>
+                    <Box sx={{ float: "right" }}>
                         {skinUrl ? (
                             getBoolean("features.skin-view-3d") ? (
                                 <SkinDisplay3D skin={skinUrl} width={100} height={150}/>
@@ -293,7 +289,7 @@ function SingleAccountDisplay(props: {
                     </Typography>
                     <Typography
                         variant={"h6"}
-                        sx={{color: isBgDark() ? "secondary.light" : undefined}}
+                        sx={{ color: isBgDark() ? "secondary.light" : undefined }}
                         gutterBottom
                     >
                         {props.account.accountName}
@@ -322,7 +318,7 @@ function SingleAccountDisplay(props: {
                     )}
                     <LinearProgress
                         color={"secondary"}
-                        style={isOperating ? {} : {display: "none"}}
+                        style={isOperating ? {} : { display: "none" }}
                     />
                 </CardContent>
             </Card>
