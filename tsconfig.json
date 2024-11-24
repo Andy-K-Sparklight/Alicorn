@@ -6,7 +6,6 @@
     "jsx": "react-jsx",
     "sourceMap": true,
     "removeComments": true,
-    "noEmit": true,
     "strict": true,
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
