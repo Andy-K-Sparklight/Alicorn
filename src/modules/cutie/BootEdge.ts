@@ -3,8 +3,8 @@ import { readFile } from "fs-extra";
 import NBT from "mcnbt";
 import os from "os";
 import sudo from "sudo-prompt";
-import { submitInfo, submitWarn } from "../../renderer/Message";
-import { tr } from "../../renderer/Translator";
+import { submitInfo, submitWarn } from "@/renderer/Message";
+import { tr } from "@/renderer/Translator";
 import { uniqueHash } from "../commons/BasicHash";
 import { isFileExist } from "../commons/FileUtil";
 import { getActualDataPath, saveDefaultDataAs } from "../config/DataSupport";
@@ -309,8 +309,8 @@ function buildNBT(): NBT {
     servers.value = [];
     const root = new NBT.Tags.TAGCompound();
     root.id = "";
-    root.value = {servers: servers};
+    root.value = { servers: servers };
     // @ts-ignore
-    nbt.root = {"": root};
+    nbt.root = { "": root };
     return nbt;
 }

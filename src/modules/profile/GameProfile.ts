@@ -1,4 +1,4 @@
-import { schedulePromiseTask } from "../../renderer/Schedule";
+import { schedulePromiseTask } from "@/renderer/Schedule";
 import { ReleaseType } from "../commons/Constants";
 import { isNull, safeGet } from "../commons/Null";
 import { ArtifactMeta, AssetIndexArtifactMeta, LibraryMeta, OptionalArgument } from "./Meta";

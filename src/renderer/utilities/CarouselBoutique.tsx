@@ -16,28 +16,16 @@ import {
 import { ipcRenderer } from "electron";
 import path from "path";
 import React, { useEffect, useState } from "react";
-import { LocalAccount } from "../../modules/auth/LocalAccount";
-import { MicrosoftAccount } from "../../modules/auth/MicrosoftAccount";
-import { ALICORN_SEPARATOR } from "../../modules/commons/Constants";
-import { getBoolean } from "../../modules/config/ConfigSupport";
-import { waitMSAccountReady } from "../../modules/readyboom/AccountMaster";
-import {
-    configureDefaultSkin,
-    configureSkin,
-    removeSkin,
-    skinTypeFor
-} from "../../modules/skin/LocalYggdrasilServer";
-import {
-    setPremiumSkinFromURL,
-    uploadPremiumSkin
-} from "../../modules/skin/SkinUploader";
+import { LocalAccount } from "@/modules/auth/LocalAccount";
+import { MicrosoftAccount } from "@/modules/auth/MicrosoftAccount";
+import { ALICORN_SEPARATOR } from "@/modules/commons/Constants";
+import { getBoolean } from "@/modules/config/ConfigSupport";
+import { waitMSAccountReady } from "@/modules/readyboom/AccountMaster";
+import { configureDefaultSkin, configureSkin, removeSkin, skinTypeFor } from "@/modules/skin/LocalYggdrasilServer";
+import { setPremiumSkinFromURL, uploadPremiumSkin } from "@/modules/skin/SkinUploader";
 import { setChangePageWarn } from "../GoTo";
 import { submitInfo, submitSucc, submitWarn } from "../Message";
-import {
-    ALICORN_DEFAULT_THEME_DARK,
-    ALICORN_DEFAULT_THEME_LIGHT,
-    isBgDark
-} from "../Renderer";
+import { ALICORN_DEFAULT_THEME_DARK, ALICORN_DEFAULT_THEME_LIGHT, isBgDark } from "../Renderer";
 import { SkinDisplay2D, SkinDisplay3D } from "../SkinDisplay";
 import { useTextStyles } from "../Stylex";
 import { tr } from "../Translator";
@@ -49,7 +37,7 @@ function TabPanel(props: {
     index: string | number;
     value: string | number;
 }): JSX.Element {
-    const {children, value, index} = props;
+    const { children, value, index } = props;
     return (
         <Container hidden={value !== index}>
             <br/>
@@ -225,7 +213,7 @@ function CarouselBoutiqueLocalSkin(): JSX.Element {
                 disabled={
                     playerName.trim().length === 0 || selectedFile.trim().length === 0
                 }
-                sx={{marginLeft: "0.25rem"}}
+                sx={{ marginLeft: "0.25rem" }}
                 color={"primary"}
                 variant={"contained"}
                 onClick={async () => {
@@ -242,7 +230,7 @@ function CarouselBoutiqueLocalSkin(): JSX.Element {
             </Button>
             <Button
                 disabled={playerName.trim().length === 0}
-                sx={{marginLeft: "0.25rem"}}
+                sx={{ marginLeft: "0.25rem" }}
                 color={"primary"}
                 variant={"contained"}
                 onClick={async () => {
@@ -260,7 +248,7 @@ function CarouselBoutiqueLocalSkin(): JSX.Element {
             </Button>
             <Button
                 disabled={playerName.trim().length === 0}
-                sx={{marginLeft: "0.25rem"}}
+                sx={{ marginLeft: "0.25rem" }}
                 color={"primary"}
                 variant={"contained"}
                 onClick={async () => {
@@ -271,7 +259,7 @@ function CarouselBoutiqueLocalSkin(): JSX.Element {
             </Button>
             <Button
                 disabled={selectedFile.trim().length === 0}
-                sx={{marginLeft: "0.25rem"}}
+                sx={{ marginLeft: "0.25rem" }}
                 color={"primary"}
                 variant={"contained"}
                 onClick={async () => {
@@ -287,7 +275,7 @@ function CarouselBoutiqueLocalSkin(): JSX.Element {
             </Button>
             <Button
                 disabled={selectedFile.trim().length === 0}
-                sx={{marginLeft: "0.25rem"}}
+                sx={{ marginLeft: "0.25rem" }}
                 color={"primary"}
                 variant={"contained"}
                 onClick={async () => {
@@ -403,7 +391,7 @@ function CarouselBoutiqueSkinUploader(): JSX.Element {
                     </FormControl>
                 </Grid>
                 {skinUrl.length > 0 ? (
-                    <Grid item sx={{marginLeft: "2rem"}}>
+                    <Grid item sx={{ marginLeft: "2rem" }}>
                         {getBoolean("features.skin-view-3d") ? (
                             <SkinDisplay3D skin={skinUrl} width={150} height={225}/>
                         ) : (

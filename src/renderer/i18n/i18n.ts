@@ -3,7 +3,7 @@ import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import fsBackend from "i18next-fs-backend";
 import path from "path";
-import { getBasePath } from "../../modules/config/PathSolve";
+import { getBasePath } from "@/modules/config/PathSolve.js";
 
 /**
  * Initializes i18n module.

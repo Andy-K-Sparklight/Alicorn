@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { tr } from "../../renderer/Translator";
+import { tr } from "@/renderer/Translator";
 import { isNull, safeGet } from "../commons/Null";
 import { getString } from "../config/ConfigSupport";
 import { decrypt2, encrypt2 } from "../security/Encrypt";
@@ -276,7 +276,7 @@ async function tokenRequest(
         }
 
         if (isNull(accessToken) || isNull(refreshToken)) {
-            return {success: false};
+            return { success: false };
         }
         return {
             success: true,
@@ -324,7 +324,7 @@ async function getXBLToken(
         const token = safeGet(response, ["Token"]);
         const uhs = safeGet(response, ["DisplayClaims", "xui", 0, "uhs"]);
         if (isNull(token) || isNull(uhs)) {
-            return {success: false};
+            return { success: false };
         }
         return {
             success: true,
@@ -332,7 +332,7 @@ async function getXBLToken(
             uhs: String(uhs)
         };
     } catch {
-        return {success: false};
+        return { success: false };
     }
 }
 
@@ -362,7 +362,7 @@ async function getXSTSToken(
         ).json();
         const token = safeGet(response, ["Token"]);
         if (isNull(token)) {
-            return {success: false};
+            return { success: false };
         }
         return {
             success: true,
@@ -370,7 +370,7 @@ async function getXSTSToken(
             uhs: undefined
         };
     } catch {
-        return {success: false};
+        return { success: false };
     }
 }
 
@@ -429,7 +429,7 @@ async function getUUIDAndUserName(
         const uuid = safeGet(response, ["id"]);
         const name = safeGet(response, ["name"]);
         if (isNull(uuid) || isNull(name)) {
-            return {success: false};
+            return { success: false };
         }
         return {
             success: true,
@@ -437,6 +437,6 @@ async function getUUIDAndUserName(
             name: String(name)
         };
     } catch {
-        return {success: false};
+        return { success: false };
     }
 }

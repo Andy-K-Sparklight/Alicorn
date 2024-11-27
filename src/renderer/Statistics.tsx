@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
-import { buildMap, parseMap } from "../modules/commons/MapUtil";
+import { buildMap, parseMap } from "@/modules/commons/MapUtil";
 import { useTextStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
 
@@ -15,7 +15,7 @@ export function Statistics(): JSX.Element {
                 const s = getStatistics(v);
                 return (
                     <Box key={v}>
-                        <Box sx={{display: "flex"}}>
+                        <Box sx={{ display: "flex" }}>
                             <Typography className={classes.mediumText}>
                                 {
                                     tr(
@@ -26,7 +26,7 @@ export function Statistics(): JSX.Element {
                             </Typography>
                             <Typography
                                 className={classes.secondText}
-                                sx={{marginLeft: "auto"}}
+                                sx={{ marginLeft: "auto" }}
                             >
                                 {randsl("Statistics." + v + ".As", `Value=${s}`)}
                             </Typography>

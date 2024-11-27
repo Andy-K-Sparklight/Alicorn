@@ -1,18 +1,18 @@
 import os from "os";
 import path from "path";
-import { alterPath } from "../modules/commons/FileUtil";
-import { getBoolean, set } from "../modules/config/ConfigSupport";
-import { createNewContainer } from "../modules/container/ContainerWrapper";
-import { getTimeoutController } from "../modules/download/RainbowFetch";
-import { installBothJDKs } from "../modules/java/BuiltInJDK";
+import { alterPath } from "@/modules/commons/FileUtil";
+import { getBoolean, set } from "@/modules/config/ConfigSupport";
+import { createNewContainer } from "@/modules/container/ContainerWrapper";
+import { getTimeoutController } from "@/modules/download/RainbowFetch";
+import { installBothJDKs } from "@/modules/java/BuiltInJDK";
 import {
     getAllJava,
     getJavaInfoRaw,
     parseJavaInfo,
     parseJavaInfoRaw,
     setDefaultJavaHome
-} from "../modules/java/JavaInfo";
-import { whereJava } from "../modules/java/WhereJava";
+} from "@/modules/java/JavaInfo";
+import { whereJava } from "@/modules/java/WhereJava";
 import { isInstBusy, startInst } from "./Instruction";
 import { checkToGoAndDecideJump, loadToGoHook } from "./linkage/AlicornToGo";
 import { submitInfo, submitWarn } from "./Message";
@@ -34,10 +34,8 @@ export function waitInstDone(): Promise<void> {
 
 async function waitJavaSearch(): Promise<boolean> {
     const r = await whereJava(true, true);
-    if (r.length > 0) {
-        return true;
-    }
-    return false;
+    return r.length > 0;
+
 }
 
 export async function completeFirstRun(): Promise<void> {
@@ -150,7 +148,7 @@ async function decideMirror(): Promise<void> {
         try {
             const d0 = new Date();
             const [ac, sti] = getTimeoutController(3000);
-            const r = await fetch(u, {signal: ac.signal});
+            const r = await fetch(u, { signal: ac.signal });
             sti();
             const d1 = new Date();
             if (r.ok) {

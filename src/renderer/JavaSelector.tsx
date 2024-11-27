@@ -15,7 +15,7 @@ import {
 import { ipcRenderer } from "electron";
 import path from "path";
 import React, { useEffect, useRef, useState } from "react";
-import { installBothJDKs, setBuiltInJava } from "../modules/java/BuiltInJDK";
+import { installBothJDKs, setBuiltInJava } from "@/modules/java/BuiltInJDK";
 import {
     getAllJava,
     getDefaultJavaHome,
@@ -25,16 +25,12 @@ import {
     parseJavaInfoRaw,
     resetJavaList,
     setDefaultJavaHome
-} from "../modules/java/JavaInfo";
-import { whereJava } from "../modules/java/WhereJava";
+} from "@/modules/java/JavaInfo";
+import { whereJava } from "@/modules/java/WhereJava";
 import { setChangePageWarn } from "./GoTo";
 import { ShiftEle } from "./Instruction";
 import { submitInfo, submitSucc, submitWarn } from "./Message";
-import {
-    ALICORN_DEFAULT_THEME_DARK,
-    ALICORN_DEFAULT_THEME_LIGHT,
-    isBgDark
-} from "./Renderer";
+import { ALICORN_DEFAULT_THEME_DARK, ALICORN_DEFAULT_THEME_LIGHT, isBgDark } from "./Renderer";
 import { useFormStyles } from "./Stylex";
 import { tr } from "./Translator";
 
@@ -222,7 +218,7 @@ export function JavaSelector(): JSX.Element {
                 >
                     <IconButton
                         color={"primary"}
-                        sx={{marginLeft: "1rem"}}
+                        sx={{ marginLeft: "1rem" }}
                         onClick={() => {
                             setLoaded(false);
                         }}

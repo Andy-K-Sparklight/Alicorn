@@ -1,5 +1,5 @@
 import { stat } from "fs-extra";
-import { invokeWorker } from "../../renderer/Schedule";
+import { invokeWorker } from "@/renderer/Schedule";
 import { getBoolean } from "../config/ConfigSupport";
 
 export async function validate(
@@ -11,10 +11,8 @@ export async function validate(
         return await sizeValidate(file, size);
     }
     const actual = await getHash(file);
-    if (actual.trim().toLowerCase() === expected.trim().toLowerCase()) {
-        return true;
-    }
-    return false;
+    return actual.trim().toLowerCase() === expected.trim().toLowerCase();
+
 }
 
 export async function getHash(f: string): Promise<string> {

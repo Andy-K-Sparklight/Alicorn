@@ -1,6 +1,5 @@
 import { zip } from "compressing";
 import fs from "fs-extra";
-import os from "os";
 import path from "path";
 import { isFileExist } from "../commons/FileUtil";
 import { buildMap, parseMap } from "../commons/MapUtil";
@@ -131,5 +130,5 @@ async function saveLockFile(dir: string): Promise<void> {
             });
         })
     );
-    await fs.outputFile(lPath, buildMap(fMap), {mode: 0o777});
+    await fs.outputFile(lPath, buildMap(fMap), { mode: 0o777 });
 }

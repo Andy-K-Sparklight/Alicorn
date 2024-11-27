@@ -19,17 +19,11 @@ import objectHash from "object-hash";
 import os from "os";
 import path from "path";
 import React, { useEffect, useState } from "react";
-import { getString } from "../../modules/config/ConfigSupport";
-import {
-    getAllMounted,
-    getContainer
-} from "../../modules/container/ContainerUtil";
-import {
-    scanContainerAssets,
-    UnifiedAsset
-} from "../../modules/pff/modpack/AssetScanner";
-import { sealPackCommon } from "../../modules/pff/modpack/MakeModpack";
-import { createBaseCommonModel } from "../../modules/pff/modpack/ModpackBuilder";
+import { getString } from "@/modules/config/ConfigSupport";
+import { getAllMounted, getContainer } from "@/modules/container/ContainerUtil";
+import { scanContainerAssets, UnifiedAsset } from "@/modules/pff/modpack/AssetScanner";
+import { sealPackCommon } from "@/modules/pff/modpack/MakeModpack";
+import { createBaseCommonModel } from "@/modules/pff/modpack/ModpackBuilder";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "../Renderer";
 import { useFormStyles } from "../Stylex";
 import { tr } from "../Translator";
@@ -166,7 +160,7 @@ function TabPanel(props: {
     index: string | number;
     value: string | number;
 }): JSX.Element {
-    const {children, value, index} = props;
+    const { children, value, index } = props;
     return (
         <Box hidden={value !== index}>{value === index ? <>{children}</> : ""}</Box>
     );
@@ -295,7 +289,7 @@ function SelectAssets(props: {
             </Button>
             <Button
                 type={"button"}
-                sx={{marginLeft: "0.25rem"}}
+                sx={{ marginLeft: "0.25rem" }}
                 color={"primary"}
                 variant={"contained"}
                 onClick={() => {
@@ -315,7 +309,7 @@ function SelectAssets(props: {
                     buttonState !== "Utilities.BuildUp.Build" || selectedAssets.size === 0
                 }
                 type={"button"}
-                sx={{marginLeft: "0.25rem"}}
+                sx={{ marginLeft: "0.25rem" }}
                 color={"primary"}
                 variant={"contained"}
                 onClick={() => {
@@ -346,7 +340,7 @@ function SelectAssets(props: {
             <Button
                 type={"button"}
                 color={"primary"}
-                sx={{marginLeft: "0.25rem"}}
+                sx={{ marginLeft: "0.25rem" }}
                 variant={"contained"}
                 onClick={() => {
                     void shell.showItemInFolder(
@@ -358,8 +352,8 @@ function SelectAssets(props: {
             >
                 {tr("Utilities.BuildUp.Show")}
             </Button>
-            <Box sx={{display: "flex", flexDirection: "row"}}>
-                <List sx={{width: "50%", display: "inline"}}>
+            <Box sx={{ display: "flex", flexDirection: "row" }}>
+                <List sx={{ width: "50%", display: "inline" }}>
                     <ListItem>
                         <Typography color={"secondary"}>
                             {tr("Utilities.BuildUp.SelectedAsset")}
@@ -378,7 +372,7 @@ function SelectAssets(props: {
                                 {
                                     <Typography color={"primary"}>
                     <span
-                        dangerouslySetInnerHTML={{__html: toAssetString(asset)}}
+                        dangerouslySetInnerHTML={{ __html: toAssetString(asset) }}
                     />
                                     </Typography>
                                 }
@@ -386,7 +380,7 @@ function SelectAssets(props: {
                         );
                     })}
                 </List>
-                <List sx={{width: "50%", display: "inline"}}>
+                <List sx={{ width: "50%", display: "inline" }}>
                     <ListItem>
                         <Typography color={"secondary"}>
                             {tr("Utilities.BuildUp.Asset")}
@@ -405,7 +399,7 @@ function SelectAssets(props: {
                                 {
                                     <Typography color={"primary"}>
                     <span
-                        dangerouslySetInnerHTML={{__html: toAssetString(asset)}}
+                        dangerouslySetInnerHTML={{ __html: toAssetString(asset) }}
                     />
                                     </Typography>
                                 }

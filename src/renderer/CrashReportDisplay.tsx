@@ -20,13 +20,10 @@ import {
 import { makeStyles } from "@mui/styles";
 import copy from "copy-to-clipboard";
 import React, { useEffect, useRef, useState } from "react";
-import { generateCrashAnalytics } from "../modules/crhelper/CrashAnalyticsGenerator";
-import {
-    analyzeCrashReport,
-    CrashReportMap
-} from "../modules/crhelper/CrashLoader";
-import { LaunchTracker } from "../modules/launch/LaunchTracker";
-import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
+import { generateCrashAnalytics } from "@/modules/crhelper/CrashAnalyticsGenerator";
+import { analyzeCrashReport, CrashReportMap } from "@/modules/crhelper/CrashLoader";
+import { LaunchTracker } from "@/modules/launch/LaunchTracker";
+import { ProfileType, whatProfile } from "@/modules/profile/WhatProfile";
 import { submitSucc, submitWarn } from "./Message";
 import {
     LAST_CRASH_KEY,
@@ -187,7 +184,7 @@ export function CrashReportDisplay(): JSX.Element {
 function BaseInfoDisplay(props: { info: MCFailureInfo }): JSX.Element {
     const classes = useAccStyles();
     return (
-        <Accordion color={"primary"} sx={{backgroundColor: "primary.main"}}>
+        <Accordion color={"primary"} sx={{ backgroundColor: "primary.main" }}>
             <AccordionSummary
                 className={classes.acc1}
                 color={"primary"}
@@ -245,7 +242,7 @@ function BaseInfoDisplay(props: { info: MCFailureInfo }): JSX.Element {
 function LaunchTrackCount(props: { tracker: LaunchTracker }): JSX.Element {
     const classes = useAccStyles();
     return (
-        <Accordion color={"primary"} sx={{backgroundColor: "primary.main"}}>
+        <Accordion color={"primary"} sx={{ backgroundColor: "primary.main" }}>
             <AccordionSummary
                 color={"primary"}
                 className={classes.acc1}
@@ -286,7 +283,7 @@ function LaunchTrackCount(props: { tracker: LaunchTracker }): JSX.Element {
 function ModList(props: { tracker: LaunchTracker }): JSX.Element {
     const classes = useAccStyles();
     return props.tracker.mods().total > 0 ? (
-        <Accordion color={"primary"} sx={{backgroundColor: "primary.main"}}>
+        <Accordion color={"primary"} sx={{ backgroundColor: "primary.main" }}>
             <AccordionSummary
                 color={"primary"}
                 className={classes.acc1}
@@ -335,7 +332,7 @@ function Analyze(props: {
         }
     }
     return (
-        <Accordion color={"primary"} sx={{backgroundColor: "primary.main"}}>
+        <Accordion color={"primary"} sx={{ backgroundColor: "primary.main" }}>
             <AccordionSummary
                 color={"primary"}
                 className={classes.acc1}
@@ -368,8 +365,7 @@ function Analyze(props: {
                 )}
                 <List>
                     {(() => {
-                        const li = analyzeList;
-                        return li.map((n) => {
+                        return analyzeList.map((n) => {
                             const cr = props.analyze.get(n);
                             if (cr?.report.length === 0) {
                                 return "";
@@ -378,11 +374,11 @@ function Analyze(props: {
                                 <ListItem key={n}>
                                     <Accordion
                                         color={"primary"}
-                                        sx={{backgroundColor: "primary.dark"}}
+                                        sx={{ backgroundColor: "primary.dark" }}
                                     >
                                         <AccordionSummary
                                             color={"primary"}
-                                            sx={{backgroundColor: "primary.dark"}}
+                                            sx={{ backgroundColor: "primary.dark" }}
                                             className={classes.acc2}
                                             expandIcon={<ExpandMore/>}
                                         >
@@ -404,7 +400,7 @@ function Analyze(props: {
                                                         <ListItem key={r.by + r.reason}>
                                                             <Accordion
                                                                 color={"primary"}
-                                                                sx={{backgroundColor: "primary.main"}}
+                                                                sx={{ backgroundColor: "primary.main" }}
                                                             >
                                                                 <AccordionSummary
                                                                     color={"primary"}
@@ -477,7 +473,7 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
     }
     const oLogs = cLogs.slice(startIndex, endIndex + 1);
     return (
-        <Accordion sx={{backgroundColor: "primary.main"}} color={"primary"}>
+        <Accordion sx={{ backgroundColor: "primary.main" }} color={"primary"}>
             <AccordionSummary
                 color={"primary"}
                 className={classes.acc1}
@@ -525,7 +521,7 @@ function LogsDisplay(props: { logs: string[]; title: string }): JSX.Element {
                                             : "gray",
                                     backgroundColor: isException(l) ? "white" : "inherit"
                                 }}
-                                dangerouslySetInnerHTML={{__html: tab2Space(l)}}
+                                dangerouslySetInnerHTML={{ __html: tab2Space(l) }}
                             />
                         );
                     })}
@@ -590,10 +586,10 @@ function BBCodeDisplay(props: {
                 {tr("CrashReportDisplay.Instruction")}
             </Typography>
             <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
-                <FormControl sx={{display: "inline", marginLeft: "auto"}}>
+                <FormControl sx={{ display: "inline", marginLeft: "auto" }}>
                     <Button
                         onClick={() => {
-                            if (!copy(code, {format: "text/plain"})) {
+                            if (!copy(code, { format: "text/plain" })) {
                                 submitWarn(tr("CrashReportDisplay.FailedToCopy"));
                             } else {
                                 submitSucc(tr("CrashReportDisplay.Copied"));
@@ -619,7 +615,7 @@ function BBCodeDisplay(props: {
                                             .slice(-10000) // Safe Limit
                                             .join("\n") || "Alicorn: Logs Not Found"
                                     }[/code][/spoiler]`,
-                                    {format: "text/plain"}
+                                    { format: "text/plain" }
                                 )
                             ) {
                                 submitWarn(tr("CrashReportDisplay.FailedToCopy"));

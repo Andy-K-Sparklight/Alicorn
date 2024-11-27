@@ -28,9 +28,9 @@ import path from "path";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "wouter";
 import { throttle } from "throttle-debounce";
-import { abortableBasicHash, basicHash } from "../modules/commons/BasicHash";
-import { chkPermissions, isFileExist } from "../modules/commons/FileUtil";
-import { scanCoresIn } from "../modules/container/ContainerScanner";
+import { abortableBasicHash, basicHash } from "@/modules/commons/BasicHash";
+import { chkPermissions, isFileExist } from "@/modules/commons/FileUtil";
+import { scanCoresIn } from "@/modules/container/ContainerScanner";
 import {
     getAllContainerPaths,
     getAllContainers,
@@ -41,26 +41,26 @@ import {
     isMounted,
     mount,
     unmount
-} from "../modules/container/ContainerUtil";
+} from "@/modules/container/ContainerUtil";
 import {
     clearContainer,
     createNewContainer,
     forkContainer,
     unlinkContainer
-} from "../modules/container/ContainerWrapper";
-import { MinecraftContainer } from "../modules/container/MinecraftContainer";
-import { isSharedContainer } from "../modules/container/SharedFiles";
-import { DownloadMeta } from "../modules/download/AbstractDownloader";
+} from "@/modules/container/ContainerWrapper";
+import { MinecraftContainer } from "@/modules/container/MinecraftContainer";
+import { isSharedContainer } from "@/modules/container/SharedFiles";
+import { DownloadMeta } from "@/modules/download/AbstractDownloader";
 import {
     addDoing,
     getDoing,
     subscribeDoing,
     unsubscribeDoing,
     wrappedDownloadFile
-} from "../modules/download/DownloadWrapper";
-import { isWebFileExist } from "../modules/download/RainbowFetch";
-import { deployIJPack } from "../modules/pff/modpack/InstallIJModpack";
-import { wrappedInstallModpack } from "../modules/pff/modpack/InstallModpack";
+} from "@/modules/download/DownloadWrapper";
+import { isWebFileExist } from "@/modules/download/RainbowFetch";
+import { deployIJPack } from "@/modules/pff/modpack/InstallIJModpack";
+import { wrappedInstallModpack } from "@/modules/pff/modpack/InstallModpack";
 import { setChangePageWarn } from "./GoTo";
 import { Icons } from "./Icons";
 import { submitSucc, submitWarn } from "./Message";

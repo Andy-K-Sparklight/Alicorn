@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "wouter";
-import { Account } from "../modules/auth/Account";
+import { Account } from "@/modules/auth/Account";
 import {
     AccountType,
     copyAccount,
@@ -29,12 +29,12 @@ import {
     querySkinFor,
     removeAccount,
     saveAccount
-} from "../modules/auth/AccountUtil";
-import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
-import { MojangAccount } from "../modules/auth/MojangAccount";
-import { Nide8Account } from "../modules/auth/Nide8Account";
-import { ALICORN_ENCRYPTED_DATA_SUFFIX } from "../modules/commons/Constants";
-import { getBoolean } from "../modules/config/ConfigSupport";
+} from "@/modules/auth/AccountUtil";
+import { AuthlibAccount } from "@/modules/auth/AuthlibAccount";
+import { MojangAccount } from "@/modules/auth/MojangAccount";
+import { Nide8Account } from "@/modules/auth/Nide8Account";
+import { ALICORN_ENCRYPTED_DATA_SUFFIX } from "@/modules/commons/Constants";
+import { getBoolean } from "@/modules/config/ConfigSupport";
 import { YNDialog } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_DARK, ALICORN_DEFAULT_THEME_LIGHT, isBgDark } from "./Renderer";
 import { SkinDisplay2D, SkinDisplay3D } from "./SkinDisplay";

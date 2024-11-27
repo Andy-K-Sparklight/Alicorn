@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import { PassThrough, Readable } from "stream";
-import { submitWarn } from "../../renderer/Message";
-import { tr } from "../../renderer/Translator";
+import { submitWarn } from "@/renderer/Message";
+import { tr } from "@/renderer/Translator";
 import { WatchDog } from "../commons/WatchDog";
 import { getNumber } from "../config/ConfigSupport";
 import { MirrorChain } from "./Mirror";
@@ -47,7 +47,7 @@ export function getFileWriteStream(
     let dog: WatchDog | null = null;
     let f: fs.WriteStream;
     try {
-        f = fs.createWriteStream(pt, {mode: 0o777});
+        f = fs.createWriteStream(pt, { mode: 0o777 });
     } catch (e) {
         submitWarn(tr("System.EPERM"));
         throw e;
@@ -145,7 +145,7 @@ export async function isWebFileExist(u: string): Promise<string> {
     const [controller, sti] = getTimeoutController(
         getNumber("download.concurrent.timeout", 5000)
     );
-    const r = await fetch(u, {signal: controller.signal, credentials: "omit"});
+    const r = await fetch(u, { signal: controller.signal, credentials: "omit" });
     sti();
     if (r.ok) {
         return u;

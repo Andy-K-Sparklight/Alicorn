@@ -1,5 +1,5 @@
 import pkg from "../../../package.json";
-import { randsl } from "../../renderer/Translator";
+import { randsl } from "@/renderer/Translator";
 import { Box, CodeComponent, ComponentsGroup, Spoiler, StyleComponent } from "../bbcode/BBCode";
 import { LaunchTracker } from "../launch/LaunchTracker";
 import { CrashReportMap } from "./CrashLoader";

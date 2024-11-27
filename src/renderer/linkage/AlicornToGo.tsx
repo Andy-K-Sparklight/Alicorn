@@ -3,11 +3,7 @@
 import { readdir, readFile, remove } from "fs-extra";
 import os from "os";
 import path from "path";
-import {
-    MANIFEST_FILE,
-    MMC_PACK,
-    PACK_META
-} from "../../modules/pff/modpack/InstallModpack";
+import { MANIFEST_FILE, MMC_PACK, PACK_META } from "@/modules/pff/modpack/InstallModpack";
 import { jumpTo, triggerSetPage } from "../GoTo";
 // ToGo will place a hook file at ~/alicorn-to-go-hook
 const HOOK_NAME = "alicorn-to-go-hook";

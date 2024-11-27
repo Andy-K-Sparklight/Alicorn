@@ -1,6 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
-import { randsl } from "../../renderer/Translator";
+import { randsl } from "@/renderer/Translator";
 import { isFileExist } from "../commons/FileUtil";
 import { getBasePath } from "../config/PathSolve";
 import { getAllContainers, getContainer, registerContainer, unregisterContainer } from "./ContainerUtil";

@@ -31,25 +31,11 @@ import {
 import { makeStyles } from "@mui/styles";
 import { ipcRenderer } from "electron";
 import React, { useEffect, useRef, useState } from "react";
-import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
-import {
-    addServer,
-    getServerList,
-    removeServer,
-    trimServerAddress
-} from "../modules/server/ServerFiles";
+import { scanCoresInAllMountedContainers } from "@/modules/container/ContainerScanner";
+import { addServer, getServerList, removeServer, trimServerAddress } from "@/modules/server/ServerFiles";
 import { jumpTo, triggerSetPage } from "./GoTo";
-import {
-    ALICORN_DEFAULT_THEME_DARK,
-    ALICORN_DEFAULT_THEME_LIGHT,
-    isBgDark
-} from "./Renderer";
-import {
-    AlicornTheme,
-    fullWidth,
-    useFormStyles,
-    useInputStyles
-} from "./Stylex";
+import { ALICORN_DEFAULT_THEME_DARK, ALICORN_DEFAULT_THEME_LIGHT, isBgDark } from "./Renderer";
+import { AlicornTheme, fullWidth, useFormStyles, useInputStyles } from "./Stylex";
 import { tr } from "./Translator";
 
 export function ServerList(): JSX.Element {
@@ -71,7 +57,7 @@ export function ServerList(): JSX.Element {
     }, []);
     return (
         <>
-            <Box sx={{textAlign: "right", marginRight: "5%"}}>
+            <Box sx={{ textAlign: "right", marginRight: "5%" }}>
                 <Tooltip
                     title={
                         <Typography className={"smtxt"}>{tr("ServerList.Add")}</Typography>
@@ -223,7 +209,7 @@ function SingleServerDisplay(props: {
     return (
         <Accordion
             className={classes.acc1}
-            style={isDeleted ? {display: "none"} : {}}
+            style={isDeleted ? { display: "none" } : {}}
         >
             <AccordionSummary
                 className={classes.acc1}

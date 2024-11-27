@@ -1,7 +1,7 @@
 import { ipcRenderer } from "electron";
-import { getBoolean, saveAndReloadMain } from "../modules/config/ConfigSupport";
-import { loadMirror } from "../modules/download/Mirror";
-import { waitUpdateFinished } from "../modules/selfupdate/Updator";
+import { getBoolean, saveAndReloadMain } from "@/modules/config/ConfigSupport";
+import { loadMirror } from "@/modules/download/Mirror";
+import { waitUpdateFinished } from "@/modules/selfupdate/Updator";
 import { commitChanges, remoteHideWindow } from "./App";
 import { setContainerListDirty } from "./ContainerManager";
 import { isInstBusy } from "./Instruction";

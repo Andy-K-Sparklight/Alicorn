@@ -3,8 +3,8 @@ import { copy, createWriteStream, ensureDir, outputFile, readdir, remove, stat }
 import path from "path";
 import { pipeline } from "stream";
 import { promisify } from "util";
-import { submitInfo } from "../../../renderer/Message";
-import { tr } from "../../../renderer/Translator";
+import { submitInfo } from "@/renderer/Message";
+import { tr } from "@/renderer/Translator";
 import { basicHash } from "../../commons/BasicHash";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { getHash } from "../../download/Validate";
@@ -34,7 +34,7 @@ async function compressPack(
     });
     const target = createWriteStream(
         path.join(outputDir, name.toLowerCase() + ".prod.zip"),
-        {mode: 0o777}
+        { mode: 0o777 }
     );
     await pipe(zipStream, target);
 }
@@ -74,7 +74,7 @@ export async function sealPackCommon(
                     const pt = path.relative(container.rootDir, a.v1);
                     const tpt = path.join(VIRTUAL_MC_ROOT, pt);
                     await ensureDir(path.dirname(tpt));
-                    await copy(a.v1, tpt, {dereference: true});
+                    await copy(a.v1, tpt, { dereference: true });
                     // Register
                     addOverride(pt, container, model, a.v2, true);
                 }
@@ -84,7 +84,7 @@ export async function sealPackCommon(
     const j = buildCommonModpackJSON(model);
     const j2 = buildCFModpackJSON(convertCommonToCF(model));
     setState("Compressing");
-    await outputFile(path.join(MODPACK_WORK_DIR, PACK_META), j, {mode: 0o777});
+    await outputFile(path.join(MODPACK_WORK_DIR, PACK_META), j, { mode: 0o777 });
     await outputFile(path.join(MODPACK_WORK_DIR, MANIFEST_FILE), j2, {
         mode: 0o777
     });

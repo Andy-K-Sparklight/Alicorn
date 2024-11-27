@@ -1,5 +1,5 @@
 import CryptoJS from "crypto-js";
-import { invokeWorker } from "../../renderer/Schedule";
+import { invokeWorker } from "@/renderer/Schedule";
 
 export function basicHash(
     obj: string | number | Record<string, unknown>

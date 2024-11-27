@@ -1,7 +1,7 @@
 import { zip } from "compressing";
 import fs, { copy, readJSON } from "fs-extra";
 import path from "path";
-import { tr } from "../../../renderer/Translator";
+import { tr } from "@/renderer/Translator";
 import { basicHash } from "../../commons/BasicHash";
 import { Pair } from "../../commons/Collections";
 import { FABRIC_META_ROOT } from "../../commons/Constants";

@@ -1,4 +1,4 @@
-import { invokeWorker, schedulePromiseTask } from "../../renderer/Schedule";
+import { invokeWorker, schedulePromiseTask } from "@/renderer/Schedule";
 import { ALICORN_DATA_SUFFIX } from "../commons/Constants";
 import { buildMap, parseMap } from "../commons/MapUtil";
 import { loadData, saveData } from "../config/DataSupport";

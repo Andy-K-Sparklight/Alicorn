@@ -17,51 +17,30 @@ import {
 import { EventEmitter } from "events";
 import React, { useEffect, useRef, useState } from "react";
 import { throttle } from "throttle-debounce";
-import {
-    ALICORN_SEPARATOR,
-    FABRIC_META_ROOT,
-    QUILT_META_ROOT,
-    ReleaseType
-} from "../modules/commons/Constants";
-import { isNull } from "../modules/commons/Null";
-import { scanCoresInAllMountedContainers } from "../modules/container/ContainerScanner";
-import {
-    getAllMounted,
-    getContainer
-} from "../modules/container/ContainerUtil";
-import {
-    clearDoing,
-    getDoing,
-    subscribeDoing,
-    unsubscribeDoing
-} from "../modules/download/DownloadWrapper";
-import { getDefaultJavaHome, getJavaRunnable } from "../modules/java/JavaInfo";
-import { getFabricLikeProfile } from "../modules/pff/get/FabricLikeGet";
+import { ALICORN_SEPARATOR, FABRIC_META_ROOT, QUILT_META_ROOT, ReleaseType } from "@/modules/commons/Constants";
+import { isNull } from "@/modules/commons/Null";
+import { scanCoresInAllMountedContainers } from "@/modules/container/ContainerScanner";
+import { getAllMounted, getContainer } from "@/modules/container/ContainerUtil";
+import { clearDoing, getDoing, subscribeDoing, unsubscribeDoing } from "@/modules/download/DownloadWrapper";
+import { getDefaultJavaHome, getJavaRunnable } from "@/modules/java/JavaInfo";
+import { getFabricLikeProfile } from "@/modules/pff/get/FabricLikeGet";
 import {
     generateForgeInstallerName,
     getForgeInstaller,
     getForgeVersionByMojang,
     removeForgeInstaller
-} from "../modules/pff/get/ForgeGet";
-import {
-    downloadProfile,
-    getAllMojangCores,
-    getProfileURLById
-} from "../modules/pff/get/MojangCore";
-import { performForgeInstall } from "../modules/pff/install/ForgeInstall";
-import { loadProfile } from "../modules/profile/ProfileLoader";
-import { ProfileType, whatProfile } from "../modules/profile/WhatProfile";
+} from "@/modules/pff/get/ForgeGet";
+import { downloadProfile, getAllMojangCores, getProfileURLById } from "@/modules/pff/get/MojangCore";
+import { performForgeInstall } from "@/modules/pff/install/ForgeInstall";
+import { loadProfile } from "@/modules/profile/ProfileLoader";
+import { ProfileType, whatProfile } from "@/modules/profile/WhatProfile";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { Icons } from "./Icons";
 import { ShiftEle } from "./Instruction";
 import { submitSucc, submitWarn } from "./Message";
 import { FailedHint, OperatingHintCustom } from "./OperatingHint";
 import { pffInstall } from "./PffFront";
-import {
-    ALICORN_DEFAULT_THEME_DARK,
-    ALICORN_DEFAULT_THEME_LIGHT,
-    isBgDark
-} from "./Renderer";
+import { ALICORN_DEFAULT_THEME_DARK, ALICORN_DEFAULT_THEME_LIGHT, isBgDark } from "./Renderer";
 import { useFormStyles } from "./Stylex";
 import { tr } from "./Translator";
 
@@ -190,12 +169,12 @@ export function InstallCore(): JSX.Element {
                                     <Grid item>
                                         <Avatar
                                             variant={"square"}
-                                            sx={{width: "2rem", height: "2rem"}}
+                                            sx={{ width: "2rem", height: "2rem" }}
                                             src={Icons.PROFILE_MOJANG}
                                         />
                                     </Grid>
                                     <Grid item>
-                                        <Typography color={"primary"} sx={{marginLeft: "0.3rem"}}>
+                                        <Typography color={"primary"} sx={{ marginLeft: "0.3rem" }}>
                                             {tr("InstallCore.InstallMinecraft")}
                                         </Typography>
                                     </Grid>
@@ -208,12 +187,12 @@ export function InstallCore(): JSX.Element {
                                     <Grid item>
                                         <Avatar
                                             variant={"square"}
-                                            sx={{width: "2rem", height: "2rem"}}
+                                            sx={{ width: "2rem", height: "2rem" }}
                                             src={Icons.PROFILE_FORGE}
                                         />
                                     </Grid>
                                     <Grid item>
-                                        <Typography color={"primary"} sx={{marginLeft: "0.3rem"}}>
+                                        <Typography color={"primary"} sx={{ marginLeft: "0.3rem" }}>
                                             {tr("InstallCore.InstallForge")}
                                         </Typography>
                                     </Grid>
@@ -226,12 +205,12 @@ export function InstallCore(): JSX.Element {
                                     <Grid item>
                                         <Avatar
                                             variant={"square"}
-                                            sx={{width: "2rem", height: "2rem"}}
+                                            sx={{ width: "2rem", height: "2rem" }}
                                             src={Icons.PROFILE_FABRIC}
                                         />
                                     </Grid>
                                     <Grid item>
-                                        <Typography color={"primary"} sx={{marginLeft: "0.3rem"}}>
+                                        <Typography color={"primary"} sx={{ marginLeft: "0.3rem" }}>
                                             {tr("InstallCore.InstallFabric")}
                                         </Typography>
                                     </Grid>
@@ -244,12 +223,12 @@ export function InstallCore(): JSX.Element {
                                     <Grid item>
                                         <Avatar
                                             variant={"square"}
-                                            sx={{width: "2rem", height: "2rem"}}
+                                            sx={{ width: "2rem", height: "2rem" }}
                                             src={Icons.PROFILE_QUILT}
                                         />
                                     </Grid>
                                     <Grid item>
-                                        <Typography color={"primary"} sx={{marginLeft: "0.3rem"}}>
+                                        <Typography color={"primary"} sx={{ marginLeft: "0.3rem" }}>
                                             {tr("InstallCore.InstallQuilt")}
                                         </Typography>
                                     </Grid>
@@ -262,12 +241,12 @@ export function InstallCore(): JSX.Element {
                                     <Grid item>
                                         <Avatar
                                             variant={"square"}
-                                            sx={{width: "2rem", height: "2rem"}}
+                                            sx={{ width: "2rem", height: "2rem" }}
                                             src={Icons.PROFILE_IRIS}
                                         />
                                     </Grid>
                                     <Grid item>
-                                        <Typography color={"primary"} sx={{marginLeft: "0.3rem"}}>
+                                        <Typography color={"primary"} sx={{ marginLeft: "0.3rem" }}>
                                             {tr("InstallCore.InstallIris")}
                                         </Typography>
                                     </Grid>
@@ -292,7 +271,7 @@ export function InstallCore(): JSX.Element {
                                 <ShiftEle name={"InstallCoreMinecraft"} bgfill>
                                     <Select
                                         startAdornment={<MergeType/>}
-                                        sx={{color: "primary.main"}}
+                                        sx={{ color: "primary.main" }}
                                         variant={"outlined"}
                                         labelId={"CoreInstall-Mojang-SelectArch"}
                                         color={"primary"}
@@ -330,7 +309,7 @@ export function InstallCore(): JSX.Element {
                                 <ShiftEle name={"InstallCoreMinecraft"} bgfill>
                                     <Select
                                         startAdornment={<Numbers/>}
-                                        sx={{color: "primary.main"}}
+                                        sx={{ color: "primary.main" }}
                                         variant={"outlined"}
                                         labelId={"CoreInstall-Mojang-SelectVersion"}
                                         color={"primary"}
@@ -361,7 +340,7 @@ export function InstallCore(): JSX.Element {
                                 <ShiftEle name={"InstallCoreMinecraft"} bgfill>
                                     <Select
                                         startAdornment={<AllInbox/>}
-                                        sx={{color: "primary.main"}}
+                                        sx={{ color: "primary.main" }}
                                         label={tr("InstallCore.TargetContainer")}
                                         variant={"outlined"}
                                         labelId={"CoreInstall-Mojang-TargetContainer"}
@@ -459,7 +438,7 @@ export function InstallCore(): JSX.Element {
                                     {tr("InstallCore.ForgeBaseVersion")}
                                 </InputLabel>
                                 <Select
-                                    sx={{color: "primary.main"}}
+                                    sx={{ color: "primary.main" }}
                                     startAdornment={<Inventory2/>}
                                     label={tr("InstallCore.ForgeBaseVersion")}
                                     variant={"outlined"}
@@ -577,7 +556,7 @@ export function InstallCore(): JSX.Element {
                                     {tr("InstallCore.FabricBaseVersion")}
                                 </InputLabel>
                                 <Select
-                                    sx={{color: "primary.main"}}
+                                    sx={{ color: "primary.main" }}
                                     startAdornment={<Inventory2/>}
                                     label={tr("InstallCore.FabricBaseVersion")}
                                     variant={"outlined"}
@@ -692,7 +671,7 @@ export function InstallCore(): JSX.Element {
                                     {tr("InstallCore.QuiltBaseVersion")}
                                 </InputLabel>
                                 <Select
-                                    sx={{color: "primary.main"}}
+                                    sx={{ color: "primary.main" }}
                                     startAdornment={<Inventory2/>}
                                     label={tr("InstallCore.QuiltBaseVersion")}
                                     variant={"outlined"}
@@ -808,7 +787,7 @@ export function InstallCore(): JSX.Element {
                                 </InputLabel>
                                 <Select
                                     startAdornment={<Inventory2/>}
-                                    sx={{color: "primary.main"}}
+                                    sx={{ color: "primary.main" }}
                                     label={tr("InstallCore.IrisBaseVersion")}
                                     variant={"outlined"}
                                     labelId={"CoreInstall-Iris-SelectBase"}
@@ -888,7 +867,7 @@ function TabPanel(props: {
     index: string | number;
     value: string | number;
 }): JSX.Element {
-    const {children, value, index} = props;
+    const { children, value, index } = props;
     return (
         <Container hidden={value !== index}>
             {value === index ? <Box p={3}>{children}</Box> : ""}
@@ -907,7 +886,7 @@ async function filterMojangCores(): Promise<PatchableCore[]> {
     for (const [c, ids] of cores) {
         for (const i of ids) {
             if (whatProfile(i) === ProfileType.MOJANG) {
-                b.push({id: i, container: c.id});
+                b.push({ id: i, container: c.id });
             }
         }
     }
@@ -920,7 +899,7 @@ async function filterFabricCores(): Promise<PatchableCore[]> {
     for (const [c, ids] of cores) {
         for (const i of ids) {
             if (whatProfile(i) === ProfileType.FABRIC) {
-                b.push({id: i, container: c.id});
+                b.push({ id: i, container: c.id });
             }
         }
     }

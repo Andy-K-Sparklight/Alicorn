@@ -48,11 +48,11 @@ import EventEmitter from "events";
 import os from "os";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "wouter";
-import { Account } from "../modules/auth/Account";
-import { AccountType, getPresentAccounts, querySkinFor } from "../modules/auth/AccountUtil";
-import { prefetchData } from "../modules/auth/AJHelper";
-import { AuthlibAccount } from "../modules/auth/AuthlibAccount";
-import { LocalAccount } from "../modules/auth/LocalAccount";
+import { Account } from "@/modules/auth/Account";
+import { AccountType, getPresentAccounts, querySkinFor } from "@/modules/auth/AccountUtil";
+import { prefetchData } from "@/modules/auth/AJHelper";
+import { AuthlibAccount } from "@/modules/auth/AuthlibAccount";
+import { LocalAccount } from "@/modules/auth/LocalAccount";
 import {
     ACCOUNT_EXPIRES_KEY,
     ACCOUNT_LAST_REFRESHED_KEY,
@@ -62,18 +62,18 @@ import {
     MS_LAST_USED_USERNAME_KEY,
     MS_LAST_USED_UUID_KEY,
     MS_LAST_USED_XUID_KEY
-} from "../modules/auth/MicrosoftAccount";
-import { Nide8Account } from "../modules/auth/Nide8Account";
-import { uniqueHash } from "../modules/commons/BasicHash";
-import { Pair } from "../modules/commons/Collections";
-import { PROCESS_END_GATE, PROCESS_LOG_GATE, ReleaseType } from "../modules/commons/Constants";
-import { isNull } from "../modules/commons/Null";
-import { getBoolean, getNumber, getString } from "../modules/config/ConfigSupport";
-import { getContainer } from "../modules/container/ContainerUtil";
-import { MinecraftContainer } from "../modules/container/MinecraftContainer";
-import { killEdge, runEdge } from "../modules/cutie/BootEdge";
-import { acquireCode, deactiveCode } from "../modules/cutie/Hoofoff";
-import { getWrapperStatus, WrapperStatus } from "../modules/download/DownloadWrapper";
+} from "@/modules/auth/MicrosoftAccount";
+import { Nide8Account } from "@/modules/auth/Nide8Account";
+import { uniqueHash } from "@/modules/commons/BasicHash";
+import { Pair } from "@/modules/commons/Collections";
+import { PROCESS_END_GATE, PROCESS_LOG_GATE, ReleaseType } from "@/modules/commons/Constants";
+import { isNull } from "@/modules/commons/Null";
+import { getBoolean, getNumber, getString } from "@/modules/config/ConfigSupport";
+import { getContainer } from "@/modules/container/ContainerUtil";
+import { MinecraftContainer } from "@/modules/container/MinecraftContainer";
+import { killEdge, runEdge } from "@/modules/cutie/BootEdge";
+import { acquireCode, deactiveCode } from "@/modules/cutie/Hoofoff";
+import { getWrapperStatus, WrapperStatus } from "@/modules/download/DownloadWrapper";
 import {
     getAllJava,
     getDefaultJavaHome,
@@ -83,8 +83,8 @@ import {
     getNewJDK,
     parseJavaInfo,
     parseJavaInfoRaw
-} from "../modules/java/JavaInfo";
-import { autoMemory } from "../modules/launch/ArgsGenerator";
+} from "@/modules/java/JavaInfo";
+import { autoMemory } from "@/modules/launch/ArgsGenerator";
 import {
     ensureAllAssets,
     ensureAssetsIndex,
@@ -92,16 +92,16 @@ import {
     ensureLibraries,
     ensureLog4jFile,
     ensureNatives
-} from "../modules/launch/Ensurance";
-import { launchProfile, markSafeLaunch, shouldSafeLaunch } from "../modules/launch/LaunchTool";
-import { LaunchTracker } from "../modules/launch/LaunchTracker";
-import { stopMinecraft } from "../modules/launch/MinecraftBootstrap";
-import { prepareModsCheckFor } from "../modules/modx/ModDynLoad";
-import { isProfileIsolated, loadProfile } from "../modules/profile/ProfileLoader";
-import { dropAccountPromise, waitMSAccountReady } from "../modules/readyboom/AccountMaster";
-import { setLastUsed, waitProfileReady } from "../modules/readyboom/PrepareProfile";
-import { getMachineUniqueID } from "../modules/security/Unique";
-import { initLocalYggdrasilServer, ROOT_YG_URL, skinTypeFor } from "../modules/skin/LocalYggdrasilServer";
+} from "@/modules/launch/Ensurance";
+import { launchProfile, markSafeLaunch, shouldSafeLaunch } from "@/modules/launch/LaunchTool";
+import { LaunchTracker } from "@/modules/launch/LaunchTracker";
+import { stopMinecraft } from "@/modules/launch/MinecraftBootstrap";
+import { prepareModsCheckFor } from "@/modules/modx/ModDynLoad";
+import { isProfileIsolated, loadProfile } from "@/modules/profile/ProfileLoader";
+import { dropAccountPromise, waitMSAccountReady } from "@/modules/readyboom/AccountMaster";
+import { setLastUsed, waitProfileReady } from "@/modules/readyboom/PrepareProfile";
+import { getMachineUniqueID } from "@/modules/security/Unique";
+import { initLocalYggdrasilServer, ROOT_YG_URL, skinTypeFor } from "@/modules/skin/LocalYggdrasilServer";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { Icons } from "./Icons";
 import { ShiftEle } from "./Instruction";
@@ -785,7 +785,7 @@ async function startBoot(
         profile: profile
     };
     setStatus(LaunchingStatus.ACCOUNT_AUTHING);
-    let acData: [string, string, string, string] = ["", "", "", ""];
+    let acData: [string, string, string, string];
     if (account !== null) {
         if (account.type === AccountType.MICROSOFT) {
             // @ts-ignore

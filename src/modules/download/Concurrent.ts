@@ -1,8 +1,8 @@
 import fs from "fs-extra";
 import os from "os";
 import path from "path";
-import { submitWarn } from "../../renderer/Message";
-import { tr } from "../../renderer/Translator";
+import { submitWarn } from "@/renderer/Message";
+import { tr } from "@/renderer/Translator";
 import { basicHash } from "../commons/BasicHash";
 import { alterPath } from "../commons/FileUtil";
 import { getBoolean, getString } from "../config/ConfigSupport";
@@ -78,7 +78,7 @@ async function sealAndVerify(
 ) {
     let wStream: fs.WriteStream;
     try {
-        wStream = fs.createWriteStream(savePath, {mode: 0o777});
+        wStream = fs.createWriteStream(savePath, { mode: 0o777 });
     } catch (e) {
         submitWarn(tr("System.EPERM"));
         throw e;
@@ -90,7 +90,7 @@ async function sealAndVerify(
         );
         await new Promise<void>((resolve, reject) => {
             const rStream = fs.createReadStream(pt);
-            rStream.pipe(wStream, {end: false});
+            rStream.pipe(wStream, { end: false });
             rStream.on("end", () => {
                 resolve();
             });
@@ -122,14 +122,14 @@ async function getSize(url: string): Promise<number> {
         const [ac, sti] = getTimeoutController(getConfigOptn("timeout", 5000));
         const response = await fetch(url, {
             method: "GET",
-            headers: {Range: "bytes=0-1"},
+            headers: { Range: "bytes=0-1" },
             signal: ac.signal,
             keepalive: true,
             credentials: "omit"
         });
         sti();
         const rangeString = response.headers.get("content-range");
-        if (typeof rangeString !== "string") {
+        if (!rangeString) {
             return 0;
         }
         // Content-Range format: "bytes=s-e/total"
@@ -191,7 +191,7 @@ function downloadSingleChunk(
             const r = await fetch(url, {
                 signal: ac.signal,
                 method: "GET",
-                headers: {Range: `bytes=${chunk.start}-${chunk.end}`},
+                headers: { Range: `bytes=${chunk.start}-${chunk.end}` },
                 keepalive: true,
                 credentials: "omit"
             });

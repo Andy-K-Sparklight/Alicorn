@@ -2,8 +2,8 @@ import { ipcRenderer } from "electron";
 import { readFile } from "fs-extra";
 import os from "os";
 import React from "react";
-import { getString, set } from "../modules/config/ConfigSupport";
-import { getPathInDefaults } from "../modules/config/DataSupport";
+import { getString, set } from "@/modules/config/ConfigSupport";
+import { getPathInDefaults } from "@/modules/config/DataSupport";
 
 export const ALL_ASSISTANTS = ["PonyCN", "Equish", "PonyTW", "Maud", "66CCFF"];
 
@@ -39,7 +39,7 @@ const TEMP_CHANGE_TR_ACTION_KEY = "Translator.UseLocale";
 export function tr(key: string, ...values: string[]): string {
     const lc = sessionStorage.getItem(TEMP_CHANGE_TR_ACTION_KEY);
     let lang;
-    if (typeof lc === "string") {
+    if (lc) {
         lang = localesMap.get(lc);
     } else {
         lang = localesMap.get(currentLocale());
@@ -71,7 +71,7 @@ export function tr(key: string, ...values: string[]): string {
 export function randsl(key: string, ...values: string[]): string {
     const lc = sessionStorage.getItem(TEMP_CHANGE_TR_ACTION_KEY);
     let lang;
-    if (typeof lc === "string") {
+    if (lc) {
         lang = localesMap.get(lc);
     } else {
         lang = localesMap.get(currentLocale());
@@ -220,7 +220,7 @@ function trimControlCode(origin: string[], rules: string[]): string[] {
                         s = s.slice(5);
                         output.push(
                             React.createElement("span", {
-                                dangerouslySetInnerHTML: {__html: s}
+                                dangerouslySetInnerHTML: { __html: s }
                             }) as unknown as string
                         );
                         return;
@@ -235,7 +235,7 @@ function trimControlCode(origin: string[], rules: string[]): string[] {
                 tr = tr.slice(5);
                 output.push(
                     React.createElement("span", {
-                        dangerouslySetInnerHTML: {__html: tr}
+                        dangerouslySetInnerHTML: { __html: tr }
                     }) as unknown as string
                 );
                 return;
@@ -257,10 +257,9 @@ let TIPS: Tip[] = [];
 
 export async function loadTips(): Promise<void> {
     try {
-        const f = JSON.parse(
+        TIPS = JSON.parse(
             (await readFile(getPathInDefaults("tips.json"))).toString()
         );
-        TIPS = f;
     } catch {}
 }
 

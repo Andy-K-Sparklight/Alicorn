@@ -1,4 +1,4 @@
-import { schedulePromiseTask } from "../../renderer/Schedule";
+import { schedulePromiseTask } from "@/renderer/Schedule";
 import { CMC_CRASH_LOADER } from "./CutieMCCrashLoader";
 
 // Not only for crash reports, but also logs

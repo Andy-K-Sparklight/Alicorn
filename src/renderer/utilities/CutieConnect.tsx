@@ -1,22 +1,9 @@
-import {
-    Box,
-    Button,
-    FormControl,
-    Tab,
-    Tabs,
-    TextField,
-    ThemeProvider,
-    Typography
-} from "@mui/material";
+import { Box, Button, FormControl, Tab, Tabs, TextField, ThemeProvider, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { getBoolean, getString } from "../../modules/config/ConfigSupport";
-import {
-    killEdge,
-    prepareServerDat,
-    runEdge
-} from "../../modules/cutie/BootEdge";
-import { applyCode, OnlineGameInfo } from "../../modules/cutie/Hoofoff";
-import { generateWorldAnyUniqueId } from "../../modules/security/Unique";
+import { getBoolean, getString } from "@/modules/config/ConfigSupport";
+import { killEdge, prepareServerDat, runEdge } from "@/modules/cutie/BootEdge";
+import { applyCode, OnlineGameInfo } from "@/modules/cutie/Hoofoff";
+import { generateWorldAnyUniqueId } from "@/modules/security/Unique";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "../GoTo";
 import { submitInfo, submitSucc, submitWarn } from "../Message";
 import { ALICORN_DEFAULT_THEME_LIGHT } from "../Renderer";
@@ -87,7 +74,7 @@ export function CutieConnet(): JSX.Element {
                 <ThemeProvider theme={ALICORN_DEFAULT_THEME_LIGHT}>
                     <br/>
                     <br/>
-                    <FormControl sx={{width: "100%"}}>
+                    <FormControl sx={{ width: "100%" }}>
                         <TextField
                             autoFocus
                             color={"primary"}
@@ -303,7 +290,7 @@ export function CutieConnet(): JSX.Element {
                             {tr("Utilities.CutieConnect.Connect")}
                         </Button>
                         <Button
-                            sx={{marginLeft: "0.25rem"}}
+                            sx={{ marginLeft: "0.25rem" }}
                             color={"primary"}
                             variant={"contained"}
                             onClick={async () => {
@@ -379,10 +366,8 @@ function checkHost(h: string): boolean {
     if (validateIP(host)) {
         return true;
     }
-    if (DOMAIN_REGEX.test(host)) {
-        return true;
-    }
-    return false;
+    return DOMAIN_REGEX.test(host);
+
 }
 
 function TabPanel(props: {
@@ -390,7 +375,7 @@ function TabPanel(props: {
     index: string | number;
     value: string | number;
 }): JSX.Element {
-    const {children, value, index} = props;
+    const { children, value, index } = props;
     return (
         <Box hidden={value !== index}>{value === index ? <>{children}</> : ""}</Box>
     );

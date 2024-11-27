@@ -168,7 +168,7 @@ export async function prepareModsCheckFor(
         await scanModsList(container, tracker);
         return;
     }
-    const tFile: FileOperateReport = {total: 0, resolved: 0, operateRecord: []};
+    const tFile: FileOperateReport = { total: 0, resolved: 0, operateRecord: [] };
     try {
         const stat = gatherVersionInfo(profile);
         await moveModsTo(
@@ -186,11 +186,11 @@ async function scanModsList(
     container: MinecraftContainer,
     tracker: LaunchTracker
 ): Promise<void> {
-    const tFile: FileOperateReport = {total: 0, resolved: 0, operateRecord: []};
+    const tFile: FileOperateReport = { total: 0, resolved: 0, operateRecord: [] };
     try {
         const fDir = await fs.readdir(container.getModsRoot());
         fDir.map((m) => {
-            tFile.operateRecord.push({operation: "SKIPPED", file: m});
+            tFile.operateRecord.push({ operation: "SKIPPED", file: m });
         });
     } catch {
     } finally {
@@ -205,8 +205,5 @@ export function chkModLoader(
     if (mod === loader) {
         return true;
     }
-    if (mod === ModLoader.FABRIC && loader === ModLoader.QUILT) {
-        return true;
-    }
-    return false;
+    return mod === ModLoader.FABRIC && loader === ModLoader.QUILT;
 }

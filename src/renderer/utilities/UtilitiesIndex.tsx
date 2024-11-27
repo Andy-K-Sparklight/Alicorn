@@ -1,14 +1,8 @@
-import {
-    Archive,
-    NetworkCell,
-    NextWeek,
-    SettingsEthernet,
-    ShoppingCart
-} from "@mui/icons-material";
+import { Archive, NetworkCell, NextWeek, SettingsEthernet, ShoppingCart } from "@mui/icons-material";
 import { Box, Card, CardContent, Fade, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
-import { getBoolean } from "../../modules/config/ConfigSupport";
+import { getBoolean } from "@/modules/config/ConfigSupport";
 import { jumpTo, triggerSetPage } from "../GoTo";
 import { isBgDark } from "../Renderer";
 import { AlicornTheme, useCardStyles, useTextStyles } from "../Stylex";
@@ -33,7 +27,7 @@ const useAccStyles = makeStyles((theme: AlicornTheme) => ({
 
 export function UtilitiesIndex(): JSX.Element {
     const classes = useTextStyles();
-    const sx = {color: isBgDark() ? "secondary.light" : undefined};
+    const sx = { color: isBgDark() ? "secondary.light" : undefined };
     return (
         <>
             <Typography className={classes.secondText} gutterBottom>
@@ -78,7 +72,7 @@ function SimpleUtil(props: {
                 color={"primary"}
                 className={accClasses.acc1}
                 raised={isHover}
-                sx={{backgroundColor: "primary.main"}}
+                sx={{ backgroundColor: "primary.main" }}
             >
                 <CardContent>
                     <Grid container direction="row" alignItems="center">
@@ -98,7 +92,7 @@ function SimpleUtil(props: {
                     <Fade in={isHover}>
                         <Typography
                             className={classes.text2}
-                            sx={{display: isHover ? undefined : "none"}}
+                            sx={{ display: isHover ? undefined : "none" }}
                         >
                             {tr(`Utilities.${props.name}.Description`)}
                         </Typography>

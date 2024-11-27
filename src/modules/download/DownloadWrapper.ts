@@ -1,6 +1,6 @@
 import EventEmitter from "events";
-import { schedulePromiseTask } from "../../renderer/Schedule";
-import { tr } from "../../renderer/Translator";
+import { schedulePromiseTask } from "@/renderer/Schedule";
+import { tr } from "@/renderer/Translator";
 import { getModifiedDate, isFileExist } from "../commons/FileUtil";
 import { getNumber } from "../config/ConfigSupport";
 import { getAllContainers, getContainer } from "../container/ContainerUtil";

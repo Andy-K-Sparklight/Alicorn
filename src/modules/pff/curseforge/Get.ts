@@ -1,4 +1,4 @@
-import { invokeWorker } from "../../../renderer/Schedule";
+import { invokeWorker } from "@/renderer/Schedule";
 import { safeGet } from "../../commons/Null";
 import { pgot } from "../../download/GotWrapper";
 

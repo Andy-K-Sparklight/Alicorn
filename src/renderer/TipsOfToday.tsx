@@ -10,12 +10,8 @@ import {
 } from "@mui/material";
 import { ipcRenderer, shell } from "electron";
 import React, { useEffect, useState } from "react";
-import { getBoolean, set } from "../modules/config/ConfigSupport";
-import {
-    ALICORN_DEFAULT_THEME_DARK,
-    ALICORN_DEFAULT_THEME_LIGHT,
-    isBgDark
-} from "./Renderer";
+import { getBoolean, set } from "@/modules/config/ConfigSupport";
+import { ALICORN_DEFAULT_THEME_DARK, ALICORN_DEFAULT_THEME_LIGHT, isBgDark } from "./Renderer";
 import { getTip, tr } from "./Translator";
 
 export function TipsOfToday(_props: object): JSX.Element {
@@ -47,10 +43,10 @@ export function TipsOfToday(_props: object): JSX.Element {
                 <DialogContent>
                     <DialogContentText>{i18nTip(tip.text)}</DialogContentText>
                     <br/>
-                    <img style={{width: "100%", height: "auto"}} src={tip.img}/>
+                    <img style={{ width: "100%", height: "auto" }} src={tip.img}/>
                 </DialogContent>
                 <DialogActions>
-                    <Typography color={"secondary"} sx={{fontSize: "smaller"}}>
+                    <Typography color={"secondary"} sx={{ fontSize: "smaller" }}>
                         {tr("TipsOfToday.Desc")}
                     </Typography>
                     {tip.rel ? (

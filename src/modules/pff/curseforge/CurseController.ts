@@ -1,6 +1,6 @@
 import { load } from "cheerio";
 import { BrowserWindow, dialog, ipcMain } from "electron";
-import { getMainWindowUATrimmed } from "../../../main/main";
+import { getMainWindowUATrimmed } from "@/main/main";
 import { Cluster } from "../../commons/Cluster";
 import { getNumber } from "../../config/ConfigSupport";
 import { ModArtifact, ModMeta } from "../virtual/ModDefine";

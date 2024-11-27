@@ -16,14 +16,11 @@ import {
 } from "@mui/material";
 import copy from "copy-to-clipboard";
 import React, { useEffect, useRef, useState } from "react";
-import { getNumber } from "../../modules/config/ConfigSupport";
-import {
-    ExtraAddonInfo,
-    moreAddonInfoBySlug
-} from "../../modules/pff/curseforge/Get";
-import { ModMeta } from "../../modules/pff/virtual/ModDefine";
-import { getResolvers } from "../../modules/pff/virtual/PffWrapper";
-import { CursePlusPlusModResolver } from "../../modules/pff/virtual/Resolver";
+import { getNumber } from "@/modules/config/ConfigSupport";
+import { ExtraAddonInfo, moreAddonInfoBySlug } from "@/modules/pff/curseforge/Get";
+import { ModMeta } from "@/modules/pff/virtual/ModDefine";
+import { getResolvers } from "@/modules/pff/virtual/PffWrapper";
+import { CursePlusPlusModResolver } from "@/modules/pff/virtual/Resolver";
 import { jumpTo, triggerSetPage } from "../GoTo";
 import { submitInfo, submitSucc, submitWarn } from "../Message";
 import { ALICORN_DEFAULT_THEME_LIGHT, isBgDark } from "../Renderer";
@@ -53,7 +50,7 @@ export function PffVisual(): JSX.Element {
         <>
             <Typography
                 color={"secondary"}
-                sx={{marginLeft: 0}}
+                sx={{ marginLeft: 0 }}
                 className={classes.smallText}
             >
                 {tr("Utilities.PffVisual.Hint")}
@@ -153,7 +150,7 @@ export function PffVisual(): JSX.Element {
                                         if (!e.target.checked) {
                                             if (selections.size > 0) {
                                                 const s = Array.from(selections).join(" ");
-                                                if (copy(s, {format: "text/plain"})) {
+                                                if (copy(s, { format: "text/plain" })) {
                                                     submitSucc(tr("Utilities.PffVisual.Copied"));
                                                 } else {
                                                     submitWarn("Utilities.PffVisual.CouldNotCopy");
@@ -249,11 +246,11 @@ function SingleAddonDisplay(props: {
     const classes = useCardStyles();
     const a = props.info?.supportVersions || [];
     return (
-        <Box sx={{textAlign: "left"}}>
+        <Box sx={{ textAlign: "left" }}>
             <Card
                 color={"primary"}
                 raised={true}
-                sx={{backgroundColor: "primary.main"}}
+                sx={{ backgroundColor: "primary.main" }}
                 className={props.isSelected ? classes.card2 : classes.card}
                 onClick={() => {
                     if (props.info) {
@@ -289,7 +286,7 @@ function SingleAddonDisplay(props: {
                         </Typography>
                         <Typography
                             variant={"h6"}
-                            sx={{color: isBgDark() ? "secondary.light" : undefined}}
+                            sx={{ color: isBgDark() ? "secondary.light" : undefined }}
                         >
                             {props.info?.displayName || props.modpack?.name}
                         </Typography>
