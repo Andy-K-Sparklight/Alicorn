@@ -827,6 +827,9 @@ async function startBoot(
             }
         }
         acData = await account.buildAccessData();
+    } else {
+        // Recent versions no longer accept '0' as UUID, we need to create one for the demo mode.
+        acData = await new LocalAccount("Player").buildAccessData();
     }
     let useAj = false;
     let ajHost = "";
