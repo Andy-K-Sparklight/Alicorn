@@ -1,12 +1,6 @@
 import path from "path";
 import { isNull, safeGet } from "../commons/Null";
 
-const JAR_SUFFIX = ".jar";
-const SPOILER = ":";
-const U_SEPARATOR = "/";
-const LINKER = "-";
-const DOT = /\./g;
-
 export function convertLibsByName(
     obj: Record<string, unknown>
 ): Record<string, unknown> {
@@ -97,17 +91,18 @@ function getLibraryURLByName(name: string, urlBase: string) {
             }
         }
     } catch {}
-    if (!urlBase.endsWith(U_SEPARATOR)) {
-        urlBase += U_SEPARATOR;
+    if (!urlBase.endsWith("/")) {
+        urlBase += "/";
     }
     return urlBase + getLibraryPathByName(name);
 }
 
 export function getLibraryPathByName(name: string): string {
-    const [group, artifact, version, classifier] = name.split(":");
+    const [main, ext] = name.split("@");
+    const [group, artifact, version, classifier] = main.split(":");
     let jarName = `${artifact}-${version}`;
     if (classifier) {
         jarName += `-${classifier}`;
     }
-    return `${group.replaceAll(".", "/")}/${artifact}/${version}/${jarName}.jar`;
+    return `${group.replaceAll(".", "/")}/${artifact}/${version}/${jarName}.${ext || "jar"}`;
 }
