@@ -1,6 +1,7 @@
 import path from "path";
-import { getNativeArtifact, JAR_SUFFIX } from "../launch/NativesLint";
-import { LibraryMeta } from "../profile/Meta";
+import { JAR_SUFFIX } from "../launch/NativesLint";
+import type { Library } from "@/main/profile/version-profile";
+import { getNativeArtifactPath } from "@/main/profile/native-lib";
 
 export class MinecraftContainer {
     id = "";
@@ -40,8 +41,8 @@ export class MinecraftContainer {
         return path.resolve(this.tempFileRoot, relativePath);
     }
 
-    getNativeLibraryExtractedRoot(library: LibraryMeta): string {
-        const nativeLibraryPath = getNativeArtifact(library).path;
+    getNativeLibraryExtractedRoot(library: Library): string {
+        const nativeLibraryPath = getNativeArtifactPath(library);
         return path.resolve(
             this.getLibraryPath(
                 path.join(
@@ -65,7 +66,7 @@ export class MinecraftContainer {
     }
 
     getAssetPathMapped(name: string): string {
-        return path.resolve(this.rootDir, "resources", name)
+        return path.resolve(this.rootDir, "resources", name);
     }
 
     getAssetPath(hash: string): string {
@@ -94,7 +95,7 @@ export class MinecraftContainer {
     }
 
     getAssetsRootMapped(): string {
-        return path.resolve(this.rootDir, "resources")
+        return path.resolve(this.rootDir, "resources");
     }
 
     getVersionRoot(id: string): string {

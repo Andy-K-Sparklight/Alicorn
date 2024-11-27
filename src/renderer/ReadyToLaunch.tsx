@@ -97,7 +97,6 @@ import { launchProfile, markSafeLaunch, shouldSafeLaunch } from "../modules/laun
 import { LaunchTracker } from "../modules/launch/LaunchTracker";
 import { stopMinecraft } from "../modules/launch/MinecraftBootstrap";
 import { prepareModsCheckFor } from "../modules/modx/ModDynLoad";
-import { GameProfile } from "../modules/profile/GameProfile";
 import { isProfileIsolated, loadProfile } from "../modules/profile/ProfileLoader";
 import { dropAccountPromise, waitMSAccountReady } from "../modules/readyboom/AccountMaster";
 import { setLastUsed, waitProfileReady } from "../modules/readyboom/PrepareProfile";
@@ -116,6 +115,9 @@ import { randsl, tr } from "./Translator";
 import { HOOFOFF_CENTRAL, NETWORK_PORT, QUERY_PORT } from "./utilities/CutieConnect";
 import { SpecialKnowledge } from "./Welcome";
 import { toReadableType, YggdrasilForm } from "./YggdrasilAccountManager";
+import { GameProfile } from "@/modules/profile/GameProfile";
+import { linkProfile } from "@/main/profile/linker";
+import fs from "fs-extra";
 
 const SESSION_ACCESSDATA_CACHED_KEY = "ReadyToLaunch.SessionAccessData"; // Microsoft account only
 export const LAST_SUCCESSFUL_GAME_KEY = "ReadyToLaunch.LastSuccessfulGame";
@@ -1029,7 +1031,13 @@ async function startBoot(
     });
     let runID = "0";
     if (!dry) {
-        runID = launchProfile(profile, container, jRunnable, acData, em, {
+        // TODO This is a workaround to reload the profile in order to use the new profile system, remove after migration
+        const versionProfile = await linkProfile(profile.id, async (id) => {
+            const p = container.getProfilePath(id);
+            return await fs.readJSON(p);
+        });
+
+        runID = launchProfile(versionProfile, container, jRunnable, acData, em, {
             useAj: useAj,
             ajHost: ajHost,
             ajPrefetch: prefetch,

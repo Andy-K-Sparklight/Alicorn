@@ -11,14 +11,16 @@ import {
 import { isNull } from "../commons/Null";
 import { getBoolean, getString } from "../config/ConfigSupport";
 import { MinecraftContainer } from "../container/MinecraftContainer";
-import { GameProfile } from "../profile/GameProfile";
 import { getLibraryPathByName } from "../profile/LibrariesConvert";
 import { JAR_SUFFIX } from "./NativesLint";
 import { readFileSync } from "original-fs";
+import { type VersionProfile } from "@/main/profile/version-profile";
+import { filterRules } from "@/main/profile/rules";
+import { isNativeLibrary } from "@/main/profile/native-lib";
 
 // Generate game arguments
 export function generateGameArgs(
-    profile: GameProfile,
+    profile: VersionProfile,
     container: MinecraftContainer,
     authData: [string, string, string, string],
     demo: boolean,
@@ -48,16 +50,22 @@ export function generateGameArgs(
     vMap.set("auth_access_token", acToken || "0");
     vMap.set("user_properties", "[]"); // Currently we don't support twitch
     vMap.set("game_assets", mapToResources ? container.getAssetsRootMapped() : container.getAssetsRootLegacy()); // Pre 1.6
-    const args = profile.gameArgs.concat();
+
+    const features = new Set<string>();
     if (demo) {
-        args.push("--demo");
+        features.add("is_demo_user"); // TODO this is a workaround, use full feature set after refactor
     }
+
+    const args = profile.arguments.game.concat()
+        .filter(it => typeof it === "string" || filterRules(it.rules, features))
+        .flatMap(it => typeof it === "string" ? it : it.value);
+    
     return applyVars(vMap, args);
 }
 
 // Generate vm arguments, not for GCs or anything else
 export function generateVMArgs(
-    profile: GameProfile,
+    profile: VersionProfile,
     container: MinecraftContainer
 ): string[] {
     const vMap = new Map<string, string>();
@@ -67,20 +75,17 @@ export function generateVMArgs(
     const usingLibs: string[] = [];
     const nativesLibs: string[] = [];
     for (const l of profile.libraries) {
-        console.log(`Configuring library ${l.name}`);
-        if (!l.canApply()) {
-            console.log(`Rejected - not applicable`);
+        if (!filterRules(l.rules, new Set())) { // TODO add feature set
             continue;
         }
         const tPath = getLibraryPathByName(l.name).trim();
-        console.log(`Target path: ${tPath}`);
         if (tPath !== "") {
             const lb = container.getLibraryPath(tPath);
             if (!usingLibs.includes(lb)) {
                 usingLibs.push(lb);
             }
         }
-        if (l.isNative) {
+        if (isNativeLibrary(l)) {
             const nlb = container.getNativeLibraryExtractedRoot(l);
             if (!nativesLibs.includes(nlb)) {
                 nativesLibs.push(nlb);
@@ -103,28 +108,30 @@ export function generateVMArgs(
     vMap.set("natives_directory", container.getNativesLocation(profile.id));
     // 1.17
     vMap.set("library_directory", container.getLibrariesRoot());
-    // Attention! Use base version!
-    // BAD FORGE CAUSED ALL THIS - I WASTED 2 HOURS WHICH COULD HAVE BE SPENT WITH MY PONY FRIENDS
-    vMap.set("version_name", profile.id); // This SHOULD WORK NOW ??????? Ye servey dog!
+    vMap.set("version_name", profile.version);
     vMap.set("classpath_separator", FILE_SEPARATOR);
     // All class paths put together
     vMap.set("classpath", usingLibs.join(FILE_SEPARATOR));
-    // Log4j argument
-    vMap.set("path", container.getLog4j2FilePath(profile.logFile.path));
 
     let staticArgs: string[] = [];
-    for (const a of profile.jvmArgs) {
-        if (a.rules.judge()) {
-            staticArgs = staticArgs.concat(a.value);
+    for (const a of profile.arguments.jvm) {
+        if (typeof a === "string") {
+            staticArgs.push(a);
+        } else if (filterRules(a.rules, new Set())) { // TODO add feature set
+            if (typeof a.value === "string") {
+                staticArgs.push(a.value);
+            } else {
+                staticArgs.push(...a.value);
+            }
         }
     }
     const logArgs: string[] = [];
     logArgs.push("-Dlog4j2.formatMsgNoLookups=true"); // #72
     logArgs.push("-Dcom.sun.jndi.rmi.object.trustURLCodebase=false");
     logArgs.push("-Dcom.sun.jndi.cosnaming.object.trustURLCodebase=false");
-    const tArg = profile.logArg.trim();
-    if (!isNull(tArg) && !getBoolean("cmc.disable-log4j-config")) {
-        logArgs.push(tArg);
+    if (profile.logging && !getBoolean("cmc.disable-log4j-config")) {
+        const logConfig = container.getLog4j2FilePath(profile.logging?.client.file.id);
+        logArgs.push(profile.logging.client.argument.replaceAll("${path}", logConfig));
     }
 
     staticArgs = getString("jvm.extra-args")

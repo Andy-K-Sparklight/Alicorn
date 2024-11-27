@@ -5,7 +5,6 @@ import { whereND } from "../auth/NDHelper";
 import { Pair } from "../commons/Collections";
 import { isNull } from "../commons/Null";
 import { MinecraftContainer } from "../container/MinecraftContainer";
-import { GameProfile } from "../profile/GameProfile";
 import { setDirtyProfile } from "../readyboom/PrepareProfile";
 import {
     applyAJ,
@@ -18,10 +17,11 @@ import {
     generateVMArgs
 } from "./ArgsGenerator";
 import { runMinecraft } from "./MinecraftBootstrap";
+import type { VersionProfile } from "@/main/profile/version-profile";
 
 // Launch and return ID
 export function launchProfile(
-    profile: GameProfile,
+    profile: VersionProfile,
     container: MinecraftContainer,
     jExecutable: string,
     authData: [string, string, string, string],

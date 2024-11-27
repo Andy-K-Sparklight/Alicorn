@@ -1,0 +1,31 @@
+{
+  "vmArgs": [
+    {
+      "rules": [
+        {
+          "action": "allow",
+          "os": {
+            "name": "osx"
+          }
+        }
+      ],
+      "value": [
+        "-XstartOnFirstThread"
+      ]
+    },
+    {
+      "rules": [
+        {
+          "action": "allow",
+          "os": {
+            "arch": "x86"
+          }
+        }
+      ],
+      "value": "-Xss1M"
+    },
+    "-Djava.library.path=${natives_directory}",
+    "-cp",
+    "${classpath}"
+  ]
+}

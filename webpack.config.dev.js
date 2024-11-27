@@ -26,13 +26,7 @@ const MainDev = {
             {
                 test: /\.tsx?$/,
                 include: path.resolve(__dirname, "src"),
-                use: {
-                    loader: "ts-loader",
-                    options: {
-                        transpileOnly: true,
-                        experimentalWatchApi: true
-                    }
-                },
+                loader: "ts-loader",
                 exclude: /node_modules/
             }
         ]
@@ -86,13 +80,7 @@ const RendererDev = {
         rules: [
             {
                 test: /\.[tj]sx?$/,
-                use: {
-                    loader: "ts-loader",
-                    options: {
-                        transpileOnly: true,
-                        experimentalWatchApi: true
-                    }
-                },
+                loader: "ts-loader",
                 exclude: /node_modules/
             },
             {
@@ -115,7 +103,6 @@ const RendererDev = {
         new BuildInfoPlugin("RendererBuild.json", Version),
         new ContextReplacementPlugin(/keyv/),
         new DefinePlugin(defines)
-
     ],
     devtool: "eval-source-map",
     mode: "development",

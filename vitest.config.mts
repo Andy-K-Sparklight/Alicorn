@@ -1,5 +1,6 @@
 import { defineConfig } from "vitest/config";
 import tsConfigPaths from "vite-tsconfig-paths";
+import TypiaPlugin from "@ryoppippi/unplugin-typia/vite";
 
 export default defineConfig({
     root: ".",
@@ -9,6 +10,7 @@ export default defineConfig({
         ]
     },
     plugins: [
-        tsConfigPaths()
+        tsConfigPaths(),
+        TypiaPlugin()
     ]
 });
