@@ -213,11 +213,14 @@ function checkSingleInstance() {
         console.log("I won't create a new instance when another Alicorn is running.");
         app.quit();
     } else {
-        // TODO migrate to messaging v2
-        app.on("second-instance", () => {
+        const reopenWindow = () => {
+            mainWindow?.show();
             mainWindow?.restore();
-            mainWindow?.webContents.send("CallFromSleep");
-        });
+        };
+        app.on("second-instance", reopenWindow);
+
+        // macOS open action handler
+        app.on("activate", reopenWindow);
     }
 }
 
