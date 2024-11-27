@@ -31,7 +31,7 @@ import { loadServers } from "@/modules/server/ServerFiles";
 import { App } from "./App";
 import { completeFirstRun } from "./FirstRunSetup";
 import { InstructionProvider } from "./Instruction";
-import { submitError, submitInfo, submitWarn } from "./Message";
+import { submitError, submitWarn } from "./Message";
 import { initWorker } from "./Schedule";
 import { initStatistics } from "./Statistics";
 import { AL_THEMES } from "./ThemeColors";
@@ -197,9 +197,6 @@ try {
         console.log("Initializing modules...");
         const t1 = new Date();
         await initWorker();
-        ipcRenderer.on("CallFromSleep", () => {
-            submitInfo(tr("System.WakeUp"));
-        });
         // Essential works and light works
         await Promise.allSettled([initEncrypt()]);
         initDownloadWrapper();
@@ -375,7 +372,7 @@ function flushColors(): void {
     e.innerText =
         `html {background-color:${
             getString("theme.secondary.light") || "#" + getTheme()[3]
-        }; font-family:${FONT_FAMILY};} a {color:${
+        } !important; font-family:${FONT_FAMILY};} a {color:${
             getString("theme.primary.main") || "#" + getTheme()[0]
         } !important;} ` +
         (isBgDark()
