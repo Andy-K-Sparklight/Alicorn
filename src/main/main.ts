@@ -135,8 +135,9 @@ async function main() {
 
     // Load renderer from dev server (dev) or file (prod).
     if (import.meta.env.ALICORN_DEV && process.env.ALICORN_DEV_SERVER) {
-        console.log(`Picked up dev server URL: ${process.env.ALICORN_DEV_SERVER}`);
-        await mainWindow.loadURL(process.env.ALICORN_DEV_SERVER);
+        const devServerURL = `http://localhost:${import.meta.env.ALICORN_DEV_SERVER_PORT}/Renderer.html`;
+        console.log(`Picked up dev server URL: ${devServerURL}`);
+        await mainWindow.loadURL(devServerURL);
     } else {
         await mainWindow.loadFile(path.resolve(appPath, "Renderer.html"));
     }

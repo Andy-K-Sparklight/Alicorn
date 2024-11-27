@@ -1,4 +1,5 @@
 import { Box, createTheme, ThemeProvider, Typography } from "@mui/material";
+import { NextUIProvider } from "@nextui-org/react";
 import { ipcRenderer, shell } from "electron";
 import { emptyDir } from "fs-extra";
 import path from "path";
@@ -37,11 +38,10 @@ import { initStatistics } from "./Statistics";
 import { AL_THEMES } from "./ThemeColors";
 import { initTranslator, loadTips, tr } from "./Translator";
 import { initValueEventsFromMain } from "./ValueCenter";
-import { NextUIProvider } from "@nextui-org/react";
-import "./global.css";
 import { i18n } from "./i18n/i18n";
 import { Router } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
+import "./global.css";
 
 try {
     console.log("Renderer first log.");
