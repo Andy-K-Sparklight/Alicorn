@@ -169,6 +169,7 @@ export function InstallCore(): JSX.Element {
                                     <Grid item>
                                         <Avatar
                                             variant={"square"}
+                                            draggable={false}
                                             sx={{ width: "2rem", height: "2rem" }}
                                             src={Icons.PROFILE_MOJANG}
                                         />
