@@ -2,7 +2,7 @@ import esbuild, { type BuildOptions } from "esbuild";
 import typiaPlugin from "@ryoppippi/unplugin-typia/esbuild";
 import { TsconfigPathsPlugin } from "@esbuild-plugins/tsconfig-paths";
 import fs, { copy, ensureDir } from "fs-extra";
-import { DEV_SERVER_PORT } from "~/build-config";
+import { buildDefines } from "~/build-config";
 import path from "path";
 import consola from "consola";
 
@@ -25,10 +25,7 @@ const buildOptions: BuildOptions = {
     platform: "node",
     external: ["electron", "original-fs"],
     outdir: outputDir,
-    define: {
-        "import.meta.env.ALICORN_DEV": JSON.stringify(isDev),
-        "import.meta.env.ALICORN_DEV_SERVER_PORT": JSON.stringify(DEV_SERVER_PORT)
-    },
+    define: buildDefines,
     metafile: true
 };
 

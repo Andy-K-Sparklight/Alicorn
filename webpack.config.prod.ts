@@ -1,7 +1,9 @@
 import path from "node:path";
-import { BannerPlugin, Configuration, ContextReplacementPlugin } from "webpack";
-import { COPYRIGHT_NOTICE } from "~/build-config";
+import { BannerPlugin, Configuration, ContextReplacementPlugin, DefinePlugin } from "webpack";
+import { buildDefines, COPYRIGHT_NOTICE } from "~/build-config";
 import TsConfigPathsPlugin from "tsconfig-paths-webpack-plugin";
+import esbuild from "esbuild";
+import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 
 export default {
     entry: {
@@ -16,8 +18,12 @@ export default {
         unknownContextCritical: false,
         rules: [
             {
-                test: /\.tsx?$/,
-                use: "ts-loader",
+                test: /\.[jt]sx?$/,
+                loader: "esbuild-loader",
+                options: {
+                    target: "ESNext",
+                    implementation: esbuild
+                },
                 exclude: /node_modules/
             },
             {
@@ -42,7 +48,9 @@ export default {
             banner: COPYRIGHT_NOTICE,
             entryOnly: true,
             include: ["Renderer", "LibWorker"]
-        })
+        }),
+        new DefinePlugin(buildDefines),
+        new ForkTsCheckerWebpackPlugin()
     ],
     externals: { "util/types": "commonjs util/types" },
     mode: "production",

@@ -19,3 +19,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 `;
 
 export const DEV_SERVER_PORT = 9000;
+
+const isDev = !process.env.NODE_ENV?.includes("prod");
+
+export const buildDefines = {
+    "import.meta.env.ALICORN_DEV": JSON.stringify(isDev),
+    "import.meta.env.ALICORN_DEV_SERVER_PORT": JSON.stringify(DEV_SERVER_PORT)
+};

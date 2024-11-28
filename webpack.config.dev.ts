@@ -1,7 +1,10 @@
 import path from "node:path";
-import { type Configuration, ContextReplacementPlugin } from "webpack";
+import { type Configuration, ContextReplacementPlugin, DefinePlugin } from "webpack";
 import TsConfigPathsPlugin from "tsconfig-paths-webpack-plugin";
 import "webpack-dev-server";
+import { buildDefines } from "~/build-config";
+import esbuild from "esbuild";
+import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 
 export default {
     entry: {
@@ -17,8 +20,12 @@ export default {
         unknownContextCritical: false,
         rules: [
             {
-                test: /\.tsx?$/,
-                loader: "ts-loader",
+                test: /\.[jt]sx?$/,
+                loader: "esbuild-loader",
+                options: {
+                    target: "ESNext",
+                    implementation: esbuild
+                },
                 exclude: /node_modules/
             },
             {
@@ -38,13 +45,18 @@ export default {
         ]
     },
     plugins: [
-        new ContextReplacementPlugin(/keyv/)
+        new ContextReplacementPlugin(/keyv/),
+        new DefinePlugin(buildDefines),
+        new ForkTsCheckerWebpackPlugin()
     ],
     devtool: "eval-source-map",
     mode: "development",
     target: "electron-renderer",
     watchOptions: {
         ignored: ["**/node_modules", "**/dist"]
+    },
+    cache: {
+        type: "filesystem"
     },
     externals: { "util/types": "commonjs util/types" },
     devServer: {
