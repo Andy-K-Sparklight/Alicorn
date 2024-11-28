@@ -1,5 +1,5 @@
 import { Box, createTheme, ThemeProvider, Typography } from "@mui/material";
-import { Chip, NextUIProvider } from "@nextui-org/react";
+import { NextUIProvider } from "@nextui-org/react";
 import { ipcRenderer, shell } from "electron";
 import { emptyDir } from "fs-extra";
 import path from "path";
@@ -472,7 +472,6 @@ function RendererBootstrap(): JSX.Element {
                 <ThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
                     <NextUIProvider>
                         <Router hook={useHashLocation}>
-                            <Chip variant="solid" color="danger">NextUI Inside</Chip>
                             <App/>
                         </Router>
                     </NextUIProvider>
