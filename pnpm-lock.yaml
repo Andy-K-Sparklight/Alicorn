@@ -71,9 +71,6 @@ importers:
       js-levenshtein:
         specifier: ^1.1.6
         version: 1.1.6
-      mcnbt:
-        specifier: ^2.0.3
-        version: 2.0.3
       mdiff:
         specifier: ^1.4.2
         version: 1.4.2
@@ -110,9 +107,6 @@ importers:
       sha:
         specifier: ^3.0.0
         version: 3.0.0
-      sudo-prompt:
-        specifier: ^9.2.1
-        version: 9.2.1
       throttle-debounce:
         specifier: ^5.0.2
         version: 5.0.2
@@ -3931,9 +3925,6 @@ packages:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}
     engines: {node: '>=10'}
 
-  long@4.0.0:
-    resolution: {integrity: sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==}
-
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
     hasBin: true
@@ -3967,9 +3958,6 @@ packages:
   matcher@3.0.0:
     resolution: {integrity: sha512-OkeDaAZ/bQCxeFAozM55PKcKU0yJMPGifLwV4Qgjitu+5MoAfSQN4lsLJeXZ1b8w0x+/Emda6MZgXS1jvsapng==}
     engines: {node: '>=10'}
-
-  mcnbt@2.0.3:
-    resolution: {integrity: sha512-D5TI+QFOktq441n1aWRZGwhbV122nbUUpiEOpJXnFC6cc0aaruwvIKKWWgreOudwN4xmEbpX183xzFGbvhngIw==}
 
   mdiff@1.4.2:
     resolution: {integrity: sha512-rVOanprkFBxAW+HFT36h22J0j7cEk6OGUfwRRjrydcaY4HGKCrcH4NbRt7XTwoSwxVtcxxuxrmZuiaD6kwjqhA==}
@@ -4864,9 +4852,6 @@ packages:
     resolution: {integrity: sha512-8EbVDiu9iN/nESwxeSxDKe0dunta1GOlHufmSSXxMD2z2/tMZpDMpvXQGsc+ajGo8y2uYUmixaSRUc/QPoQ0GA==}
     engines: {node: '>=16 || 14 >=14.17'}
     hasBin: true
-
-  sudo-prompt@9.2.1:
-    resolution: {integrity: sha512-Mu7R0g4ig9TUuGSxJavny5Rv0egCEtpZRNMrZaYS1vxkiIxGiGUwoezU3LazIQ+KE04hTrTfNPgxU5gzi7F5Pw==}
 
   sumchecker@3.0.1:
     resolution: {integrity: sha512-MvjXzkz/BOfyVDkG0oFOtBxHX2u3gKbMHIF/dXblZsgD3BWOFLmHovIpZY7BykJdAjcqRCBi1WYBNdEC9yI7vg==}
@@ -10050,8 +10035,6 @@ snapshots:
       chalk: 4.1.2
       is-unicode-supported: 0.1.0
 
-  long@4.0.0: {}
-
   loose-envify@1.4.0:
     dependencies:
       js-tokens: 4.0.0
@@ -10087,10 +10070,6 @@ snapshots:
     dependencies:
       escape-string-regexp: 4.0.0
     optional: true
-
-  mcnbt@2.0.3:
-    dependencies:
-      long: 4.0.0
 
   mdiff@1.4.2: {}
 
@@ -10956,8 +10935,6 @@ snapshots:
       mz: 2.7.0
       pirates: 4.0.6
       ts-interface-checker: 0.1.13
-
-  sudo-prompt@9.2.1: {}
 
   sumchecker@3.0.1:
     dependencies:

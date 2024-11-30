@@ -72,7 +72,6 @@ import { tr } from "./Translator";
 import { UpdateHint } from "./UpdateHint";
 import { BuildUp } from "./utilities/BuildUp";
 import { CarouselBoutique } from "./utilities/CarouselBoutique";
-import { CutieConnet } from "./utilities/CutieConnect";
 import { NetCheck } from "./utilities/NetCheck";
 import { PffVisual } from "./utilities/PffVisual";
 import { UtilitiesIndex } from "./utilities/UtilitiesIndex";
@@ -478,7 +477,6 @@ function Routes(): JSX.Element {
                 <Route path={"/ServerList"} component={ServerList}/>
                 <Route path={"/UtilitiesIndex"} component={UtilitiesIndex}/>
                 <Route path={"/Utilities/NetCheck"} component={NetCheck}/>
-                <Route path={"/Utilities/CutieConnect"} component={CutieConnet}/>
                 <Route path={"/Utilities/BuildUp"} component={BuildUp}/>
                 <Route path={"/Utilities/PffVisual"} component={PffVisual}/>
                 <Route

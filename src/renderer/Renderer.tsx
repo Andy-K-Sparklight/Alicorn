@@ -14,7 +14,6 @@ import { getBoolean, getNumber, getString, loadConfig, saveDefaultConfig } from 
 import { getActualDataPath } from "@/modules/config/DataSupport";
 import { loadGDT } from "@/modules/container/ContainerUtil";
 import { initVF } from "@/modules/container/ValidateRecord";
-import { prepareEdgeExecutable } from "@/modules/cutie/BootEdge";
 import { initConcurrentDownloader } from "@/modules/download/Concurrent";
 import { initDownloadWrapper } from "@/modules/download/DownloadWrapper";
 import { loadAllMirrors, loadMirror } from "@/modules/download/Mirror";
@@ -212,7 +211,6 @@ try {
             initConcurrentDownloader(),
             prepareAJ(),
             prepareND(),
-            prepareEdgeExecutable(),
             loadServers(),
             getMachineUniqueID() // Cache
         ]);

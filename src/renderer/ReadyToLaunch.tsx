@@ -8,7 +8,6 @@ import {
     FlightLand,
     FlightTakeoff,
     Person,
-    RssFeed,
     SportsScore,
     ViewModule
 } from "@mui/icons-material";
@@ -42,7 +41,6 @@ import {
     Typography
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import copy from "copy-to-clipboard";
 import { ipcRenderer } from "electron";
 import EventEmitter from "events";
 import os from "os";
@@ -64,15 +62,12 @@ import {
     MS_LAST_USED_XUID_KEY
 } from "@/modules/auth/MicrosoftAccount";
 import { Nide8Account } from "@/modules/auth/Nide8Account";
-import { uniqueHash } from "@/modules/commons/BasicHash";
 import { Pair } from "@/modules/commons/Collections";
 import { PROCESS_END_GATE, PROCESS_LOG_GATE, ReleaseType } from "@/modules/commons/Constants";
 import { isNull } from "@/modules/commons/Null";
 import { getBoolean, getNumber, getString } from "@/modules/config/ConfigSupport";
 import { getContainer } from "@/modules/container/ContainerUtil";
 import { MinecraftContainer } from "@/modules/container/MinecraftContainer";
-import { killEdge, runEdge } from "@/modules/cutie/BootEdge";
-import { acquireCode, deactiveCode } from "@/modules/cutie/Hoofoff";
 import { getWrapperStatus, WrapperStatus } from "@/modules/download/DownloadWrapper";
 import {
     getAllJava,
@@ -100,19 +95,17 @@ import { prepareModsCheckFor } from "@/modules/modx/ModDynLoad";
 import { isProfileIsolated, loadProfile } from "@/modules/profile/ProfileLoader";
 import { dropAccountPromise, waitMSAccountReady } from "@/modules/readyboom/AccountMaster";
 import { setLastUsed, waitProfileReady } from "@/modules/readyboom/PrepareProfile";
-import { getMachineUniqueID } from "@/modules/security/Unique";
 import { initLocalYggdrasilServer, ROOT_YG_URL, skinTypeFor } from "@/modules/skin/LocalYggdrasilServer";
 import { jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { Icons } from "./Icons";
 import { ShiftEle } from "./Instruction";
-import { submitError, submitSucc, submitWarn } from "./Message";
+import { submitError, submitWarn } from "./Message";
 import { YNDialog } from "./OperatingHint";
 import { ALICORN_DEFAULT_THEME_DARK, ALICORN_DEFAULT_THEME_LIGHT, isBgDark } from "./Renderer";
 import { SkinDisplay2D, SkinDisplay3D } from "./SkinDisplay";
 import { addStatistics } from "./Statistics";
 import { AlicornTheme, fullWidth, useFormStyles, useInputStyles } from "./Stylex";
 import { randsl, tr } from "./Translator";
-import { HOOFOFF_CENTRAL, NETWORK_PORT, QUERY_PORT } from "./utilities/CutieConnect";
 import { SpecialKnowledge } from "./Welcome";
 import { toReadableType, YggdrasilForm } from "./YggdrasilAccountManager";
 import { GameProfile } from "@/modules/profile/GameProfile";
@@ -315,9 +308,6 @@ function Launching(props: {
     let [selectedAccount, setSelectedAccount] = useState<Account>();
     const [selecting, setSelecting] = useState<boolean>(false);
     const [ws, setWrapperStatus] = useState<WrapperStatus>(getWrapperStatus());
-    const [lanPort, setLanPort] = useState(0);
-    const [openLanWindow, setOpenLanWindow] = useState(false);
-    const [openLanButtonEnabled, setOpenLanButtonEnabled] = useState(false);
     const currentEM = useRef<EventEmitter>();
     const [dry, setDry] = useState(false);
     const [secure, setSecure] = useState(false);
@@ -343,65 +333,14 @@ function Launching(props: {
             clearInterval(subscribe);
         };
     }, []);
-    useEffect(() => {
-        const fun = (e: Event) => {
-            if (e instanceof CustomEvent) {
-                if (typeof e.detail === "number" && !isNaN(e.detail)) {
-                    setLanPort(e.detail);
-                    setOpenLanButtonEnabled(true);
-                    setOpenLanWindow(true);
-                }
-            }
-        };
-        window.addEventListener("WorldServing", fun);
-        return () => {
-            window.removeEventListener("WorldServing", fun);
-        };
-    }, []);
-    useEffect(() => {
-        const fun = async () => {
-            setLanPort(0);
-            setOpenLanButtonEnabled(false);
-            setOpenLanWindow(false);
-            const m = sessionStorage.getItem(CODE_KEY + lanPort);
-            if (m) {
-                await deactiveCode(
-                    m,
-                    getString("hoofoff.central", HOOFOFF_CENTRAL, true) + ":" + QUERY_PORT
-                );
-                sessionStorage.removeItem(CODE_KEY + lanPort);
-                submitSucc(tr("ReadyToLaunch.CodeDeactivated"));
-            }
-        };
-        window.addEventListener("WorldStoppedServing", fun);
-        return () => {
-            window.removeEventListener("WorldStoppedServing", fun);
-        };
-    });
-    useEffect(() => {
-        const fun = async () => {
-            let ke = false;
-            if (lanPort > 0) {
-                ke = true;
-            }
-            setLanPort(0);
-            setOpenLanWindow(false);
-            setOpenLanButtonEnabled(false);
-            if (ke) {
-                await killEdge();
-            }
-        };
-        window.addEventListener("MinecraftExitCleanUp", fun);
-        return () => {
-            window.removeEventListener("MinecraftExitCleanUp", fun);
-        };
-    }, []);
+
     useEffect(() => {
         mountedBit.current = true;
         return () => {
             mountedBit.current = false;
         };
     }, []);
+
     useEffect(() => {
         const fun = () => {
             setWarning(true);
@@ -549,9 +488,7 @@ function Launching(props: {
                 title={
                     <Typography className={"smtxt"}>
                         {status === LaunchingStatus.FINISHED
-                            ? openLanButtonEnabled
-                                ? tr("ReadyToLaunch.OpenGameToLan")
-                                : tr("ReadyToLaunch.Kill")
+                            ? tr("ReadyToLaunch.Kill")
                             : tr("ReadyToLaunch.Start")}
                     </Typography>
                 }
@@ -628,10 +565,6 @@ function Launching(props: {
                                         setSelecting(true);
                                     }
                                 } else if (status === LaunchingStatus.FINISHED) {
-                                    if (openLanButtonEnabled) {
-                                        setOpenLanWindow(true);
-                                        return;
-                                    }
                                     const i = getProfileRelatedID(profileHash.current);
                                     if (i) {
                                         console.log(`Forcefully stopping instance ${i}!`);
@@ -646,8 +579,6 @@ function Launching(props: {
                                 ) : (
                                     <FlightTakeoff/>
                                 )
-                            ) : openLanButtonEnabled ? (
-                                <RssFeed/>
                             ) : (
                                 <FlightLand/>
                             )}
@@ -736,14 +667,6 @@ function Launching(props: {
             <br/>
             <SpecialKnowledge/>
             <SystemUsage/>
-            <OpenWorldDialog
-                open={openLanWindow}
-                baseVersion={props.profile.baseVersion}
-                port={lanPort}
-                onClose={() => {
-                    setOpenLanWindow(false);
-                }}
-            />
         </Container>
     );
 }
@@ -1626,214 +1549,6 @@ function clearReboot(hash: string): void {
 
 function isReboot(hash: string): boolean {
     return sessionStorage.getItem(REBOOT_KEY_BASE + hash) === "1";
-}
-
-const CODE_KEY = "Hoofoff.Code";
-
-function OpenWorldDialog(props: {
-    open: boolean;
-    baseVersion: string;
-    port: number;
-    onClose: () => unknown;
-}): JSX.Element {
-    const [message, setMessage] = useState("Hi there!");
-    const [expires, setExpires] = useState(1); // in hours
-    const [count, setCount] = useState(5);
-    const [premium, setPremium] = useState(true);
-    const [code, setCode] = useState<string>();
-    const [isRunning, setRunning] = useState(false);
-    const [err, setErr] = useState<string>();
-    const [shouldClose, setShouldClose] = useState(false);
-    useEffect(() => {
-        const fun = () => {
-            setCode(undefined);
-            setRunning(false);
-            setErr(undefined);
-        };
-        window.addEventListener("MinecraftExitCleanUp", fun);
-        return () => {
-            window.removeEventListener("MinecraftExitCleanUp", fun);
-        };
-    }, []);
-    return (
-        <Dialog
-            open={props.open}
-            onClose={() => {
-                props.onClose();
-            }}
-        >
-            <DialogTitle>{tr("ReadyToLaunch.GenerateLink")}</DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    {tr("ReadyToLaunch.GenerateLinkDesc")}
-                </DialogContentText>
-                {code ? (
-                    <>
-                        <br/>
-                        <DialogContentText sx={{ color: "primary.main" }}>
-                            {tr("ReadyToLaunch.HoofoffCode", `Code=${code}`)}
-                        </DialogContentText>
-                        <br/>
-                    </>
-                ) : (
-                    ""
-                )}
-                <FormControl fullWidth variant={"outlined"}>
-                    <InputLabel id={"ReadyToLaunch-Expires"}>
-                        {tr("ReadyToLaunch.Expires")}
-                    </InputLabel>
-                    <Select
-                        label={tr("ReadyToLaunch.Expires")}
-                        variant={"outlined"}
-                        labelId={"ReadyToLaunch-Expires"}
-                        fullWidth
-                        color={"primary"}
-                        autoFocus
-                        margin={"dense"}
-                        value={expires}
-                        onChange={(e) => {
-                            setExpires(parseInt(String(e.target.value)));
-                        }}
-                    >
-                        <MenuItem value={1}>{tr("ReadyToLaunch.10Min")}</MenuItem>
-                        <MenuItem value={3}>{tr("ReadyToLaunch.30Min")}</MenuItem>
-                        <MenuItem value={6}>{tr("ReadyToLaunch.1Hour")}</MenuItem>
-                        <MenuItem value={18}>{tr("ReadyToLaunch.3Hour")}</MenuItem>
-                    </Select>
-                </FormControl>
-                <br/> <br/>
-                <FormControl fullWidth variant={"outlined"}>
-                    <InputLabel id={"ReadyToLaunch-Count"}>
-                        {tr("ReadyToLaunch.CanUse")}
-                    </InputLabel>
-                    <Select
-                        fullWidth
-                        label={tr("ReadyToLaunch.CanUse")}
-                        variant={"outlined"}
-                        labelId={"ReadyToLaunch-Count"}
-                        color={"primary"}
-                        margin={"dense"}
-                        value={count}
-                        onChange={(e) => {
-                            setCount(parseInt(String(e.target.value)));
-                        }}
-                    >
-                        <MenuItem value={1}>{tr("ReadyToLaunch.Once")}</MenuItem>
-                        <MenuItem value={5}>{tr("ReadyToLaunch.FiveTimes")}</MenuItem>
-                        <MenuItem value={20}>{tr("ReadyToLaunch.TwentyTimes")}</MenuItem>
-                        <MenuItem value={2147483647}>
-                            {tr("ReadyToLaunch.Unlimited")}
-                        </MenuItem>
-                    </Select>
-                </FormControl>
-                <br/>
-                <Tooltip
-                    title={
-                        <Typography className={"smtxt"}>
-                            {tr("ReadyToLaunch.RequirePremiumDesc")}
-                        </Typography>
-                    }
-                >
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                color={"primary"}
-                                checked={premium}
-                                onChange={(e) => {
-                                    setPremium(e.target.checked);
-                                }}
-                            />
-                        }
-                        label={tr("ReadyToLaunch.RequirePremium")}
-                    />
-                </Tooltip>
-                <DialogContentText>{tr("ReadyToLaunch.Message")}</DialogContentText>
-                <TextField
-                    autoFocus
-                    margin={"dense"}
-                    onChange={(e) => {
-                        setMessage(e.target.value);
-                    }}
-                    type={"text"}
-                    spellCheck={false}
-                    color={"primary"}
-                    disabled={isRunning}
-                    fullWidth
-                    variant={"outlined"}
-                    value={message}
-                />
-                {err ? (
-                    <DialogContentText style={{ color: "#ff8400" }}>
-                        {tr("ReadyToLaunch.Errors." + err)}
-                    </DialogContentText>
-                ) : (
-                    ""
-                )}
-            </DialogContent>
-            <DialogActions>
-                <Button
-                    disabled={isRunning}
-                    onClick={async () => {
-                        if (shouldClose) {
-                            setShouldClose(false);
-                            setErr(undefined);
-                            props.onClose();
-                            return;
-                        }
-                        setRunning(true);
-                        const gPort = props.port;
-                        const n = uniqueHash(await getMachineUniqueID());
-                        const p = uniqueHash(Math.random().toString());
-                        try {
-                            await killEdge();
-                            await runEdge(
-                                n,
-                                p,
-                                "10.16.32.128",
-                                getString("hoofoff.central", HOOFOFF_CENTRAL, true) +
-                                ":" +
-                                NETWORK_PORT
-                            );
-
-                            const c = await acquireCode(
-                                {
-                                    message: message,
-                                    ip: "10.16.32.128",
-                                    port: gPort,
-                                    network: n,
-                                    password: p,
-                                    premium: premium,
-                                    baseVersion: props.baseVersion,
-                                    nextIP: 0 // This is not necessary
-                                },
-                                expires * 600000,
-                                count,
-                                getString("hoofoff.central", HOOFOFF_CENTRAL, true) +
-                                ":" +
-                                QUERY_PORT
-                            );
-                            if (c.length === 6) {
-                                setCode(c);
-                                copy(c, { format: "text/plain" });
-                                sessionStorage.setItem(CODE_KEY + props.port, c);
-                                submitSucc(tr("ReadyToLaunch.HoofoffCodeRaw", `Code=${c}`));
-                                setErr("");
-                                setShouldClose(true);
-                                setRunning(false);
-                            }
-                        } catch {
-                            setErr("AcquireFailed");
-                            setRunning(false);
-                        }
-                    }}
-                >
-                    {shouldClose
-                        ? tr("ReadyToLaunch.GoBack")
-                        : tr("ReadyToLaunch.GetLink")}
-                </Button>
-            </DialogActions>
-        </Dialog>
-    );
 }
 
 function WaitingText(): JSX.Element {
