@@ -3,7 +3,6 @@ import {
     AllInbox,
     ArrowBack,
     Code,
-    DisplaySettings,
     Dns,
     FlightTakeoff,
     GetApp,
@@ -730,7 +729,6 @@ const PAGES_ICONS_MAP: Record<string, JSX.Element> = {
     UtilitiesIndex: <Handyman/>,
     Statistics: <ShowChart/>,
     Options: <Settings/>,
-    DMCenter: <DisplaySettings/>,
     ServerList: <Dns/>,
     Version: <Info/>,
     TheEndingOfTheEnd: <ImportContacts/>
