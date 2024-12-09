@@ -22,7 +22,13 @@ export const DEV_SERVER_PORT = 9000;
 
 const isDev = !process.env.NODE_ENV?.includes("prod");
 
+// BMCLAPI provides mirrors to speed up resources delivering in some regions.
+// As a non-free third-party service, it's not enabled by default.
+// By changing the option to 'true' you agree the terms and conditions listed at <https://bmclapi2.bangbang93.com>.
+const enableBMCLAPI = false;
+
 export const buildDefines = {
-    "import.meta.env.ALICORN_DEV": JSON.stringify(isDev),
-    "import.meta.env.ALICORN_DEV_SERVER_PORT": JSON.stringify(DEV_SERVER_PORT)
+    "import.meta.env.AL_DEV": JSON.stringify(isDev),
+    "import.meta.env.AL_ENABLE_BMCLAPI": JSON.stringify(enableBMCLAPI),
+    "import.meta.env.AL_DEV_SERVER_PORT": JSON.stringify(DEV_SERVER_PORT)
 };

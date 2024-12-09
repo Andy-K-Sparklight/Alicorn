@@ -1,8 +1,9 @@
 declare global {
     interface ImportMeta {
         env: {
-            ALICORN_DEV: boolean;
-            ALICORN_DEV_SERVER_PORT: number;
+            AL_DEV: boolean;
+            AL_DEV_SERVER_PORT: number;
+            AL_ENABLE_BMCLAPI: boolean;
         };
     }
 

@@ -1,17 +1,16 @@
 import { copyFile, remove } from "fs-extra";
-import { getBoolean, getString } from "../../config/ConfigSupport";
+import { getString } from "../../config/ConfigSupport";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { DownloadMeta } from "../../download/AbstractDownloader";
 import { wrappedDownloadFile } from "../../download/DownloadWrapper";
 import { getCachedMod, saveModFileAsCache } from "./Cache";
 import { loadLockfile, saveLockfile } from "./Lockfile";
 import {
-  AbstractModResolver,
-  CurseforgeModResolver,
-  CursePlusPlusModResolver,
-  ModLoaderType,
-  ModResolver,
-  ModrinthModResolver
+    AbstractModResolver,
+    CurseforgeModResolver,
+    ModLoaderType,
+    ModResolver,
+    ModrinthModResolver
 } from "./Resolver";
 
 const SLUG_SCOPE_REGEX = /(?<=@)(curseforge|modrinth|curseplusplus)(?=:.+?)/i;
@@ -197,23 +196,13 @@ export function getResolvers(
         scope = scope.toLowerCase();
     }
     if (scope === "curseforge") {
-        if (getBoolean("pff.cursepp2")) {
-            return [new CursePlusPlusModResolver(slug)];
-        } else {
-            return [new CurseforgeModResolver(slug)];
-        }
-    }
-    if (scope === "curseplusplus") {
-        return [new CursePlusPlusModResolver(slug)];
+
+        return [new CurseforgeModResolver(slug)];
     }
     if (scope === "modrinth") {
         return [new ModrinthModResolver(slug)];
     }
-    if (getBoolean("pff.cursepp2")) {
-        return [new ModrinthModResolver(slug), new CursePlusPlusModResolver(slug)];
-    } else {
-        return [new ModrinthModResolver(slug), new CurseforgeModResolver(slug)];
-    }
+    return [new ModrinthModResolver(slug), new CurseforgeModResolver(slug)];
 }
 
 const PFF_FLAG = "Downloader.IsPff";

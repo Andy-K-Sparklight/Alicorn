@@ -1,9 +1,7 @@
 import { app, BrowserWindow, dialog, globalShortcut, ipcMain, safeStorage, screen, shell } from "electron";
-import isReachable from "is-reachable";
 import os from "os";
 import path from "path";
-import { getNumber, loadConfig } from "@/modules/config/ConfigSupport";
-import { bindCurseListeners, closeCurseWindow } from "@/modules/pff/curseforge/CurseController";
+import { loadConfig } from "@/modules/config/ConfigSupport";
 import { getMainWindow, getMainWindowUATrimmed } from "./main";
 
 const LOGIN_START =
@@ -18,7 +16,6 @@ const ERROR_DESCRIPTION = /(?<=&error_description=)[^&]+/gi;
 const LOGOUT_OK_HEAD = "https://login.live.com/oauth20_desktop.srf";
 
 export function registerBackgroundListeners(): void {
-    bindCurseListeners();
     ipcMain.on("reload", () => {
         getMainWindow()?.webContents.removeAllListeners();
         app.relaunch();
@@ -39,9 +36,6 @@ export function registerBackgroundListeners(): void {
         } catch {}
         try {
             loginWindow?.destroy();
-        } catch {}
-        try {
-            closeCurseWindow();
         } catch {}
 
         console.log("All windows are closed.");
@@ -278,16 +272,6 @@ export function registerBackgroundListeners(): void {
     ipcMain.on("getLocale", (e) => {
         e.returnValue = app.getLocale().toLowerCase();
     });
-    ipcMain.handle(
-        "isReachable",
-        async (_e, address: string, timeout?: number) => {
-            return await isReachable(address, {
-                timeout: timeout
-                    ? timeout
-                    : getNumber("starlight.join-server.timeout", 2000)
-            });
-        }
-    );
     ipcMain.on("toggleWindow", () => {
         const win = getMainWindow();
         if (win?.isVisible()) {

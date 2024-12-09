@@ -3,7 +3,6 @@ import {
     AllInbox,
     ArrowBack,
     Code,
-    Dns,
     FlightTakeoff,
     GetApp,
     Handyman,
@@ -62,18 +61,12 @@ import { YNDialog2 } from "./OperatingHint";
 import { OptionsPage } from "./Options";
 import { PffFront } from "./PffFront";
 import { ReadyToLaunch } from "./ReadyToLaunch";
-import { ServerList } from "./ServerList";
-import { saveStatistics, Statistics } from "./Statistics";
+import { saveStatistics } from "./Statistics";
 import { AlicornTheme } from "./Stylex";
 import { TheEndingOfTheEnd } from "./TheEndingOfTheEnd";
 import { TipsOfToday } from "./TipsOfToday";
 import { tr } from "./Translator";
 import { UpdateHint } from "./UpdateHint";
-import { BuildUp } from "./utilities/BuildUp";
-import { CarouselBoutique } from "./utilities/CarouselBoutique";
-import { NetCheck } from "./utilities/NetCheck";
-import { PffVisual } from "./utilities/PffVisual";
-import { UtilitiesIndex } from "./utilities/UtilitiesIndex";
 import { VersionView } from "./VersionView";
 import { Welcome } from "./Welcome";
 import { YggdrasilAccountManager } from "./YggdrasilAccountManager";
@@ -131,7 +124,7 @@ export function App(): JSX.Element {
         sessionID.current++;
     };
     useEffect(gotoMainIfEmpty, [window.location.hash]);
-    useEffect(popupInstruction(page), [page]);
+    // useEffect(popupInstruction(page), [page]);
     useEffect(bindRefreshListener(setRefreshBit), []);
     useEffect(() => {
         ipcRenderer.addListener("menu-click", (_e, lb) => {
@@ -473,16 +466,6 @@ function Routes(): JSX.Element {
                     component={PffFront}
                 />
                 <Route path={"/Welcome"} component={Welcome}/>
-                <Route path={"/ServerList"} component={ServerList}/>
-                <Route path={"/UtilitiesIndex"} component={UtilitiesIndex}/>
-                <Route path={"/Utilities/NetCheck"} component={NetCheck}/>
-                <Route path={"/Utilities/BuildUp"} component={BuildUp}/>
-                <Route path={"/Utilities/PffVisual"} component={PffVisual}/>
-                <Route
-                    path={"/Utilities/CarouselBoutique"}
-                    component={CarouselBoutique}
-                />
-                <Route path={"/Statistics"} component={Statistics}/>
                 <Route path={"/TheEndingOfTheEnd"} component={TheEndingOfTheEnd}/>
                 <Route path={"/UpdateHint"} component={UpdateHint}/>
             </Switch>
@@ -574,7 +557,8 @@ function AppTopBar(props: {
                                                 ipcRenderer.send("readyToClose");
                                                 ipcRenderer.send("reload");
                                             })
-                                            .catch(() => {});
+                                            .catch(() => {
+                                            });
                                     });
                                 }}
                             >
@@ -729,7 +713,6 @@ const PAGES_ICONS_MAP: Record<string, JSX.Element> = {
     UtilitiesIndex: <Handyman/>,
     Statistics: <ShowChart/>,
     Options: <Settings/>,
-    ServerList: <Dns/>,
     Version: <Info/>,
     TheEndingOfTheEnd: <ImportContacts/>
 };
@@ -783,7 +766,8 @@ function remoteCloseWindow(): void {
         .then(() => {
             native.bwctl.close(); // TODO do not close on osx
         })
-        .catch(() => {});
+        .catch(() => {
+        });
 }
 
 function remoteOpenDevTools(): void {

@@ -1,7 +1,7 @@
 import { ModLoaderType } from "./Resolver";
 
 export interface ModMeta {
-    provider: "Modrinth" | "Curseforge" | "CursePlusPlus";
+    provider: "Modrinth" | "Curseforge";
     // ...CPP stands for a browser-based Curseforge API
     id: string;
     slug: string;

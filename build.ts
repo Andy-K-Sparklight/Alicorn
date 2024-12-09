@@ -19,7 +19,7 @@ const buildOptions: BuildOptions = {
         typiaPlugin({ cache: true, log: false }),
         TsconfigPathsPlugin({ tsconfig: "./tsconfig.json" })
     ],
-    sourcemap: isDev && "inline",
+    sourcemap: isDev && "linked",
     minify: !isDev,
     bundle: true,
     platform: "node",

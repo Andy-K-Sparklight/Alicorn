@@ -22,6 +22,51 @@ const DEFAULT_CONFIG = {
          * Path to the store root.
          */
         store: ""
+    },
+
+    /**
+     * Network related options,
+     */
+    net: {
+        /**
+         * Options for the next downloader.
+         */
+        next: {
+            /**
+             * Maximum tries for each download task.
+             */
+            tries: 3,
+
+            /**
+             * Maximum wait time (ms) before aborting a request. 0 or negative value indicates infinite wait time.
+             */
+            requestTimeout: 2000,
+
+            /**
+             * Minimum acceptable transfer speed when downloading files.
+             */
+            minSpeed: 64 * 1024,
+
+            /**
+             * Maximum number of tasks dispatched concurrently.
+             */
+            concurrency: 64,
+
+            /**
+             * Whether to validate the integrity of the downloaded file.
+             */
+            validate: true
+        },
+
+        /**
+         * Mirror related operations.
+         */
+        mirror: {
+            /**
+             * Whether to apply mirror rules for speeding download.
+             */
+            enable: true
+        }
     }
 };
 

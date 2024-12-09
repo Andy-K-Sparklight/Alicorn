@@ -1,7 +1,6 @@
 import { outputFile, readFile } from "fs-extra";
 import { basicHash } from "../../commons/BasicHash";
 import { isFileExist } from "../../commons/FileUtil";
-import { getBoolean } from "../../config/ConfigSupport";
 import { MinecraftContainer } from "../../container/MinecraftContainer";
 import { ModArtifact, ModMeta } from "./ModDefine";
 
@@ -23,11 +22,11 @@ export async function loadLockfile(
                 await fixLockfile(l, container);
                 return l;
             } catch {
-                await outputFile(lockPath, "{}", {mode: 0o777});
+                await outputFile(lockPath, "{}", { mode: 0o777 });
                 return {};
             }
         } else {
-            await outputFile(lockPath, "{}", {mode: 0o777});
+            await outputFile(lockPath, "{}", { mode: 0o777 });
             return {};
         }
     } catch {
@@ -39,7 +38,6 @@ async function fixLockfile(
     lockfile: Lockfile2,
     container: MinecraftContainer
 ): Promise<void> {
-    transformCursePlusPlus(lockfile);
     await Promise.allSettled(
         Object.keys(lockfile).map(async (name) => {
             if (
@@ -61,7 +59,7 @@ export async function saveLockfile(
         await outputFile(
             container.getPff2LockFile(),
             JSON.stringify(lockfile, null, 2),
-            {mode: 0o777}
+            { mode: 0o777 }
         );
     } catch {}
 }
@@ -77,18 +75,4 @@ export function addToLockfile(
         selectedArtifact: artifact,
         insallDate: new Date().getTime()
     };
-}
-
-function transformCursePlusPlus(lockfile: Lockfile2): void {
-    if (getBoolean("pff.cursepp2")) {
-        for (const [name, obj] of Object.entries(lockfile)) {
-            if (obj.provider === "Curseforge") {
-                obj.provider = "CursePlusPlus";
-                obj.id = obj.slug;
-                const newName = basicHash(obj.id) + "#" + basicHash(obj.id);
-                delete lockfile[name];
-                lockfile[newName] = obj;
-            }
-        }
-    }
 }

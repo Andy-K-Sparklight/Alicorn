@@ -4,7 +4,6 @@ import { alterPath } from "@/modules/commons/FileUtil";
 import { getBoolean, set } from "@/modules/config/ConfigSupport";
 import { createNewContainer } from "@/modules/container/ContainerWrapper";
 import { getTimeoutController } from "@/modules/download/RainbowFetch";
-import { installBothJDKs } from "@/modules/java/BuiltInJDK";
 import {
     getAllJava,
     getJavaInfoRaw,
@@ -14,8 +13,7 @@ import {
 } from "@/modules/java/JavaInfo";
 import { whereJava } from "@/modules/java/WhereJava";
 import { isInstBusy, startInst } from "./Instruction";
-import { checkToGoAndDecideJump, loadToGoHook } from "./linkage/AlicornToGo";
-import { submitInfo, submitWarn } from "./Message";
+import { submitInfo } from "./Message";
 import { tr } from "./Translator";
 
 export function waitInstDone(): Promise<void> {
@@ -40,7 +38,6 @@ async function waitJavaSearch(): Promise<boolean> {
 
 export async function completeFirstRun(): Promise<void> {
     if (!getBoolean("first-run?")) {
-        await checkToGoAndDecideJump();
         return;
     }
     await configureDefaultDirs();
@@ -88,12 +85,6 @@ async function setupFirstJavaCheckAndCheckToGo(): Promise<void> {
     if (!s) {
         startInst("NoJava");
         await waitInstDone();
-        submitInfo(tr("FirstRun.FetchingJava"));
-        if (await installBothJDKs()) {
-            submitInfo(tr("FirstRun.JavaInstalled"));
-        } else {
-            submitWarn(tr("FirstRun.JavaFailed"));
-        }
     } else {
         startInst("JavaOK");
     }
@@ -113,13 +104,9 @@ async function setupFirstJavaCheckAndCheckToGo(): Promise<void> {
             setDefaultJavaHome(a || getAllJava()[0] || "");
             submitInfo(tr("FirstRun.JavaConfigured"));
         })
-        .catch(() => {});
+        .catch(() => {
+        });
     await waitInstDone();
-    if (await loadToGoHook()) {
-        startInst("HavePack");
-        await waitInstDone();
-        await checkToGoAndDecideJump();
-    }
 }
 
 async function configureDefaultDirs(): Promise<void> {
@@ -158,7 +145,8 @@ async function decideMirror(): Promise<void> {
                     rtt = dt;
                 }
             }
-        } catch {}
+        } catch {
+        }
     }
     set("download.mirror", sl);
 }

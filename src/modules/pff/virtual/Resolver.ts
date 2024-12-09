@@ -1,5 +1,4 @@
 import { getNumber } from "../../config/ConfigSupport";
-import { deicdeFullInformation, queryModByName, queryModInfoBySlug } from "../curseforge/CurseControllerFront";
 import {
     AddonInfo,
     File,
@@ -207,99 +206,6 @@ export class CurseforgeModResolver extends AbstractModResolver {
         this.insideCachedAddonInfo = undefined;
         this.cachedMeta = undefined;
         this.cachedArtifact = undefined;
-        return Promise.resolve();
-    }
-}
-
-export class CursePlusPlusModResolver extends AbstractModResolver {
-    protected cachedArtifactGroup: ModArtifact[] | null = null;
-
-    async resolveMod(): Promise<ModMeta> {
-        if (this.cachedMeta) {
-            return this.cachedMeta;
-        }
-        let b: ModMeta | null = null;
-        if (this.mainId) {
-            const bs = await queryModInfoBySlug(this.mainId);
-            if (bs) {
-                b = this.cachedMeta = bs[0];
-                this.cachedArtifactGroup = bs[1];
-            }
-        } else {
-            const n = await queryModByName(this.slug);
-            if (n) {
-                const bs = await queryModInfoBySlug(n);
-                if (bs) {
-                    b = this.cachedMeta = bs[0];
-                    this.mainId = b.id;
-                    this.cachedArtifactGroup = bs[1];
-                }
-            }
-        }
-        if (b) {
-            return b;
-        }
-        throw `Could not resolve ${this.slug}!`;
-    }
-
-    async searchMods(_num: number): Promise<ModMeta[]> {
-        const or = await queryModByName(this.slug);
-        if (or) {
-            const omet = await queryModInfoBySlug(or);
-            return [omet[0]];
-        } else {
-            return [];
-        }
-    }
-
-    async getArtifactFor(
-        gameVersion: string,
-        modLoader: ModLoaderType
-    ): Promise<ModArtifact> {
-        if (this.cachedArtifact) {
-            return this.cachedArtifact;
-        }
-        if (this.cachedArtifactGroup === null) {
-            throw "Must resolve first!";
-        }
-        const d = findCompatibleArtifact(
-            this.cachedArtifactGroup,
-            gameVersion,
-            modLoader
-        );
-        if (d) {
-            await deicdeFullInformation(d);
-            this.cachedArtifact = d;
-            this.artifactId = d.id;
-            return d;
-        }
-        throw "Check compatibility first!";
-    }
-
-    canSupport(gameVersion: string, modLoader: ModLoaderType): Promise<boolean> {
-        if (this.cachedArtifactGroup === null) {
-            throw "Must resolve first!";
-        }
-        return Promise.resolve(
-            !!findCompatibleArtifact(this.cachedArtifactGroup, gameVersion, modLoader)
-        );
-    }
-
-    setSelected(
-        mainId: string | undefined,
-        artifactId: string | undefined
-    ): Promise<void> {
-        this.mainId = mainId;
-        this.artifactId = artifactId;
-        return Promise.resolve();
-    }
-
-    clearCached(): Promise<void> {
-        this.mainId = undefined;
-        this.artifactId = undefined;
-        this.cachedArtifactGroup = null;
-        this.cachedArtifact = undefined;
-        this.cachedMeta = undefined;
         return Promise.resolve();
     }
 }

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, screen, Session } from "electron";
+import { app, BrowserWindow, Menu, screen } from "electron";
 import { btoa } from "js-base64";
 import os from "os";
 import path from "path";
@@ -9,6 +9,7 @@ import { ping } from "@/main/dev/ping";
 import { conf } from "@/main/conf/conf";
 import { bwctl } from "@/main/sys/bwctl";
 import { paths } from "@/main/fs/paths";
+import { mirror } from "@/main/net/mirrors";
 
 void main();
 
@@ -124,8 +125,8 @@ async function main() {
     console.log("Preparing window!");
 
     // Load renderer from dev server (dev) or file (prod).
-    if (import.meta.env.ALICORN_DEV && process.env.ALICORN_DEV_SERVER) {
-        const devServerURL = `http://localhost:${import.meta.env.ALICORN_DEV_SERVER_PORT}/Renderer.html`;
+    if (import.meta.env.AL_DEV && process.env.ALICORN_DEV_SERVER) {
+        const devServerURL = `http://localhost:${import.meta.env.AL_DEV_SERVER_PORT}/Renderer.html`;
         console.log(`Picked up dev server URL: ${devServerURL}`);
         await mainWindow.loadURL(devServerURL);
     } else {
@@ -133,6 +134,14 @@ async function main() {
     }
 
     mainWindow?.webContents.setZoomLevel(0);
+
+    // Legacy code ends here
+    console.log("Executing late init tasks...");
+
+    // Update mirrors
+    await mirror.bench();
+
+
 }
 
 /**
@@ -172,7 +181,6 @@ function createMenus(w: BrowserWindow) {
             "UtilitiesIndex",
             "Statistics",
             "Options",
-            "ServerList",
             "Version",
             "TheEndingOfTheEnd"
         ].map((lb) => {
@@ -264,47 +272,6 @@ function addErrorHandlers() {
 
 export function getMainWindow(): BrowserWindow | null {
     return mainWindow;
-}
-
-export async function initProxy(session?: Session): Promise<void> {
-    const proc = getString("download.global-proxy");
-    if (proc.trim().length === 0) {
-        /* await getMainWindow()?.webContents.session.setProxy({
-          mode: "auto_detect",
-        }); */
-        // Let Electron decide!
-        return;
-    }
-    await session?.setProxy({
-        proxyRules: proc,
-        proxyBypassRules: getString(
-            "download.proxy-bypass",
-            "<local>,.cn,.bangbang93.com,.littleservice.cn"
-        )
-    });
-    console.log("Proxy set.");
-}
-
-function applyDoHSettings(): void {
-    // @ts-ignore
-    if (app.configureHostResolver) {
-        // Compatibility
-        const dh = getString("doh-server", "Native");
-        const p = DOH_CONFIGURE[dh] || "";
-        const k = Object.values(DOH_CONFIGURE);
-        k.splice(k.indexOf(p), 1);
-        if (p.length > 0) {
-            console.log("Configuring DoH server as " + p);
-            app.configureHostResolver({
-                secureDnsMode: "secure",
-                secureDnsServers: [p, ...k] // Align the rest
-            });
-        }
-    } else {
-        console.log(
-            "Current Electron binary doesn't support DoH settings, skipped."
-        );
-    }
 }
 
 export function getMainWindowUATrimmed(): string {
