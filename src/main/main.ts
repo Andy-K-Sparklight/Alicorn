@@ -2,9 +2,7 @@ import { app, BrowserWindow, Menu, screen, Session } from "electron";
 import { btoa } from "js-base64";
 import os from "os";
 import path from "path";
-import { DOH_CONFIGURE } from "@/modules/commons/Constants";
 import { getBoolean, getNumber, getString, loadConfigSync } from "@/modules/config/ConfigSupport";
-import { setBeacon } from "@/modules/selfupdate/Beacon";
 import { registerBackgroundListeners } from "./Background";
 import pkg from "~/package.json";
 import { ping } from "@/main/dev/ping";
@@ -109,21 +107,13 @@ async function main() {
     registerBackgroundListeners();
 
     mainWindow.once("ready-to-show", async () => {
-        applyDoHSettings();
-        console.log("Setting up proxy!");
-        await initProxy(getMainWindow()?.webContents.session);
         mainWindow?.on("resize", () => {
             mainWindow?.webContents.send("mainWindowResized", mainWindow.getSize());
         });
         mainWindow?.on("move", () => {
             mainWindow?.webContents.send("mainWindowMoved", mainWindow.getPosition());
         });
-        console.log("Placing beacon!");
-        try {
-            await setBeacon();
-        } catch (e) {
-            console.log(e);
-        }
+
         console.log("All caught up! Alicorn is now initialized.");
         if (getBoolean("dev")) {
             console.log("Development mode detected, opening devtools...");
