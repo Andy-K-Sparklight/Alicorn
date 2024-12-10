@@ -1,9 +1,8 @@
-import fetch from "node-fetch";
 import fs from "fs-extra";
 import path from "path";
 
 async function fetchJSON(url: string): Promise<unknown> {
-    const res = await fetch(url);
+    const res = await fetch(url, { cache: "no-cache" });
     if (!res.ok) throw `Unable to fetch: ${url}`;
     return await res.json();
 }
