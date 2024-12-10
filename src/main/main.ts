@@ -10,6 +10,7 @@ import { conf } from "@/main/conf/conf";
 import { bwctl } from "@/main/sys/bwctl";
 import { paths } from "@/main/fs/paths";
 import { mirror } from "@/main/net/mirrors";
+import { i18nHost } from "@/main/i18n/host";
 
 void main();
 
@@ -48,7 +49,8 @@ async function main() {
         // If 3D enabled then we should use hardware acc
         try {
             app.disableHardwareAcceleration();
-        } catch {}
+        } catch {
+        }
     }
 
     addErrorHandlers();
@@ -61,6 +63,7 @@ async function main() {
     const appPath = app.getAppPath();
 
     paths.setup();
+    i18nHost.setup();
 
     mainWindow = new BrowserWindow({
         width, height,
@@ -257,7 +260,8 @@ function addErrorHandlers() {
             await mainWindow?.webContents.loadFile("Error.html", {
                 hash: btoa(encodeURIComponent(String(e.message)))
             });
-        } catch {}
+        } catch {
+        }
     });
 
     process.on("unhandledRejection", async (r) => {
@@ -266,7 +270,8 @@ function addErrorHandlers() {
             await mainWindow?.webContents.loadFile("Error.html", {
                 hash: btoa(encodeURI(String(r)))
             });
-        } catch {}
+        } catch {
+        }
     });
 }
 

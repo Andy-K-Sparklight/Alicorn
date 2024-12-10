@@ -53,9 +53,6 @@ importers:
       i18next-browser-languagedetector:
         specifier: ^8.0.0
         version: 8.0.0
-      i18next-fs-backend:
-        specifier: ^2.6.0
-        version: 2.6.0
       js-base64:
         specifier: ^3.7.7
         version: 3.7.7
@@ -122,6 +119,9 @@ importers:
       ws:
         specifier: ^8.18.0
         version: 8.18.0
+      yaml:
+        specifier: ^2.6.1
+        version: 2.6.1
       yauzl:
         specifier: ^3.2.0
         version: 3.2.0
@@ -3550,9 +3550,6 @@ packages:
 
   i18next-browser-languagedetector@8.0.0:
     resolution: {integrity: sha512-zhXdJXTTCoG39QsrOCiOabnWj2jecouOqbchu3EfhtSHxIB5Uugnm9JaizenOy39h7ne3+fLikIjeW88+rgszw==}
-
-  i18next-fs-backend@2.6.0:
-    resolution: {integrity: sha512-3ZlhNoF9yxnM8pa8bWp5120/Ob6t4lVl1l/tbLmkml/ei3ud8IWySCHt2lrY5xWRlSU5D9IV2sm5bEbGuTqwTw==}
 
   i18next@23.16.8:
     resolution: {integrity: sha512-06r/TitrM88Mg5FdUXAKL96dJMzgqLE5dv3ryBAra4KCwD9mJ4ndOTS95ZuymIGoE+2hzfdaMak2X11/es7ZWg==}
@@ -9535,8 +9532,6 @@ snapshots:
   i18next-browser-languagedetector@8.0.0:
     dependencies:
       '@babel/runtime': 7.26.0
-
-  i18next-fs-backend@2.6.0: {}
 
   i18next@23.16.8:
     dependencies:

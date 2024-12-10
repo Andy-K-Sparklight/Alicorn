@@ -47,6 +47,18 @@ const native = {
                 handler();
             });
         }
+    },
+
+    /**
+     * Internalization related operations.
+     */
+    i18n: {
+        /**
+         * Gets the language resource corresponding to the given language and namespace.
+         */
+        async getResource(lng: string, ns: string): Promise<unknown> {
+            return await ipcRenderer.invoke(Channels.LOAD_LANG_RESOURCE, lng, ns);
+        }
     }
 };
 

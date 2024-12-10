@@ -8,5 +8,7 @@ export enum Channels {
     HIDE_WINDOW = "hideWindow",
     CLOSE_WINDOW = "closeWindow",
 
-    REQUEST_CLOSE = "requestClose"
+    REQUEST_CLOSE = "requestClose",
+
+    LOAD_LANG_RESOURCE = "loadLangResource"
 }
