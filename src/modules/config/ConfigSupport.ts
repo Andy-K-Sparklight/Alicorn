@@ -114,7 +114,7 @@ export async function saveDefaultConfig(): Promise<void> {
     await fs.ensureDir(path.dirname(CONFIG_FILE));
     const stream = fs
         .createReadStream(DEFAULT_CONFIG_FILE)
-        .pipe(fs.createWriteStream(CONFIG_FILE, {mode: 0o777}));
+        .pipe(fs.createWriteStream(CONFIG_FILE, { mode: 0o777 }));
     return new Promise<void>((resolve, reject) => {
         stream.on("finish", () => {
             resolve();

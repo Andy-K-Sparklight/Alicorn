@@ -13,12 +13,12 @@ const gridSX = {
 
 export function UpdateHint(): JSX.Element {
     return (
-        <Container sx={{marginTop: "8rem"}}>
+        <Container sx={{ marginTop: "8rem" }}>
             <Grid container direction={"row"} sx={gridSX}>
-                <Grid item sx={{marginRight: "5rem"}}>
+                <Grid item sx={{ marginRight: "5rem" }}>
                     <Grid container direction={"row"} sx={gridSX}>
                         <Grid item>
-                            <Typography sx={{fontSize: "6rem", color: "gray"}}>
+                            <Typography sx={{ fontSize: "6rem", color: "gray" }}>
                                 {localStorage.getItem(LAST_VERSION_KEY)}
                             </Typography>
                         </Grid>
@@ -34,7 +34,7 @@ export function UpdateHint(): JSX.Element {
                             </Typography>
                         </Grid>
                         <Grid item>
-                            <Typography sx={{fontSize: "6rem", color: "primary.main"}}>
+                            <Typography sx={{ fontSize: "6rem", color: "primary.main" }}>
                                 {pkg.updatorVersion}
                             </Typography>
                         </Grid>
@@ -43,10 +43,10 @@ export function UpdateHint(): JSX.Element {
                 <Divider
                     orientation={"vertical"}
                     flexItem
-                    sx={{margin: "1rem", backgroundColor: "primary.main"}}
+                    sx={{ margin: "1rem", backgroundColor: "primary.main" }}
                 />
-                <Grid item sx={{marginLeft: "5rem"}}>
-                    <Typography sx={{fontSize: "large", color: "secondary.main"}}>
+                <Grid item sx={{ marginLeft: "5rem" }}>
+                    <Typography sx={{ fontSize: "large", color: "secondary.main" }}>
                         {randsl("UpdateHint.Desc")}
                     </Typography>
                 </Grid>

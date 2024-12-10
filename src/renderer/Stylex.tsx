@@ -22,7 +22,7 @@ export const useCardStyles = makeStyles((theme: AlicornTheme) => ({
         fontSize: sessionStorage.getItem("smallFontSize") || "1rem",
         color: theme.palette.secondary.light
     },
-    text2: {fontSize: "medium", color: theme.palette.secondary.light},
+    text2: { fontSize: "medium", color: theme.palette.secondary.light },
     card: {
         backgroundColor: theme.palette.primary.main
         // width: "80%",

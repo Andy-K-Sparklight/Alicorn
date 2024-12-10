@@ -86,5 +86,5 @@ export function gatherVersionInfo(profile: GameProfile): {
     type: ProfileType;
     version: string;
 } {
-    return {type: whatProfile(profile.id), version: profile.baseVersion};
+    return { type: whatProfile(profile.id), version: profile.baseVersion };
 }

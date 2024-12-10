@@ -59,7 +59,7 @@ export function generateGameArgs(
     const args = profile.arguments.game.concat()
         .filter(it => typeof it === "string" || filterRules(it.rules, features))
         .flatMap(it => typeof it === "string" ? it : it.value);
-    
+
     return applyVars(vMap, args);
 }
 

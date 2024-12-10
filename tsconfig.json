@@ -1,40 +1,40 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "allowJs": true,
-    "jsx": "react-jsx",
-    "sourceMap": true,
-    "removeComments": true,
-    "strict": true,
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
-    "baseUrl": "./",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "~/*": [
-        "./*"
-      ]
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "allowJs": true,
+        "jsx": "react-jsx",
+        "sourceMap": true,
+        "removeComments": true,
+        "strict": true,
+        "moduleResolution": "Bundler",
+        "resolveJsonModule": true,
+        "baseUrl": "./",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ],
+            "~/*": [
+                "./*"
+            ]
+        },
+        "plugins": [
+            {
+                "transform": "typia/lib/transform"
+            }
+        ],
+        "strictNullChecks": true
     },
-    "plugins": [
-      {
-        "transform": "typia/lib/transform"
-      }
+    "include": [
+        "./**/*.ts",
+        "./**/*.tsx"
     ],
-    "strictNullChecks": true
-  },
-  "include": [
-    "./**/*.ts",
-    "./**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
 }

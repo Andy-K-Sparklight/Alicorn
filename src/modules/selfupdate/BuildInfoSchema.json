@@ -1,21 +1,21 @@
 {
-  "type": "object",
-  "properties": {
-    "date": {
-      "type": "string"
+    "type": "object",
+    "properties": {
+        "date": {
+            "type": "string"
+        },
+        "family": {
+            "type": "string"
+        },
+        "files": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
     },
-    "family": {
-      "type": "string"
-    },
-    "files": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    }
-  },
-  "required": [
-    "date",
-    "files"
-  ]
+    "required": [
+        "date",
+        "files"
+    ]
 }

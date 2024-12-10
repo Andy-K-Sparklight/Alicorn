@@ -164,7 +164,7 @@ export async function ensureAllAssets(
             container.getAssetsIndexPath(profile.assetIndex.id)
         );
         const isLegacy = profile.assetIndex.id.toLowerCase() === "legacy";
-        const mapToResources = !!obj["map_to_resources"]
+        const mapToResources = !!obj["map_to_resources"];
         const assetIndexFileMeta = AssetIndexFileMeta.fromObject(obj, isLegacy);
         const allObjects = assetIndexFileMeta.objects.concat();
         tFile.total = allObjects.length;
@@ -214,8 +214,8 @@ async function ensureAsset(
     const meta = new DownloadMeta(
         generateAssetURL(assetMeta),
         mapToResources ? container.getAssetPathMapped(assetMeta.path) :
-        isLegacy
-            ? container.getAssetPathLegacy(assetMeta.path)
+            isLegacy
+                ? container.getAssetPathLegacy(assetMeta.path)
                 : container.getAssetPath(assetMeta.hash),
         assetMeta.hash,
         assetMeta.size

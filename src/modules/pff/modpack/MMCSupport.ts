@@ -18,13 +18,13 @@ export function mmc2common(mmc: MMCModpackMeta): CommonModpackModel {
         url: "",
         addons: mmc.components.map((c) => {
             if (c.uid.toLowerCase() === "net.minecraft") {
-                return {id: "game", version: c.version};
+                return { id: "game", version: c.version };
             } else if (c.uid.toLowerCase() === "net.minecraftforge") {
-                return {id: "forge", version: c.version};
+                return { id: "forge", version: c.version };
             } else if (c.uid.toLowerCase() === "net.fabricmc") {
-                return {id: "fabric", version: c.version};
+                return { id: "fabric", version: c.version };
             } else {
-                return {id: c.uid, version: c.version};
+                return { id: c.uid, version: c.version };
             }
         }),
         overrideSourceDir: ".minecraft",

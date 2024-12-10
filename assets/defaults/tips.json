@@ -1,113 +1,146 @@
 [
-  {
-    "name": {
-      "zh": "自动 Fabric/Forge 版本选择",
-      "en": "Auto Fabric/Forge Version Choose"
+    {
+        "name": {
+            "zh": "自动 Fabric/Forge 版本选择",
+            "en": "Auto Fabric/Forge Version Choose"
+        },
+        "text": {
+            "zh": "无须担心版本错误，Alicorn 能为你搞定这些！",
+            "en": "No need to worry about version! I'll do it!"
+        },
+        "img": "https://img.gejiba.com/images/e8e64aa83759da961d9fe72d7723fefe.png",
+        "rel": ""
     },
-    "text": {
-      "zh": "无须担心版本错误，Alicorn 能为你搞定这些！",
-      "en": "No need to worry about version! I'll do it!"
+    {
+        "name": {
+            "zh": "看看实用工具",
+            "en": "Take A Look At The Utilities"
+        },
+        "text": {
+            "zh": "它们真的很实用！（换皮肤，制作整合包，联机……）",
+            "en": "They are really useful! Skins, modpacks..."
+        },
+        "img": "https://img.gejiba.com/images/c3bbb9f45902c12889f758d85b87e70d.png",
+        "rel": ""
     },
-    "img": "https://img.gejiba.com/images/e8e64aa83759da961d9fe72d7723fefe.png",
-    "rel": ""
-  },
-  {
-    "name": { "zh": "看看实用工具", "en": "Take A Look At The Utilities" },
-    "text": {
-      "zh": "它们真的很实用！（换皮肤，制作整合包，联机……）",
-      "en": "They are really useful! Skins, modpacks..."
+    {
+        "name": {
+            "zh": "加入好友的游戏",
+            "en": "Join The World Of Your Friends"
+        },
+        "text": {
+            "zh": "前往「实用工具」，并看看「友谊接力」？",
+            "en": "Go to Utilities and see CutieConnect!"
+        },
+        "img": "https://img.gejiba.com/images/44ca3fe3f4a7f521f486b3f38744433b.png",
+        "rel": ""
     },
-    "img": "https://img.gejiba.com/images/c3bbb9f45902c12889f758d85b87e70d.png",
-    "rel": ""
-  },
-  {
-    "name": { "zh": "加入好友的游戏", "en": "Join The World Of Your Friends" },
-    "text": {
-      "zh": "前往「实用工具」，并看看「友谊接力」？",
-      "en": "Go to Utilities and see CutieConnect!"
+    {
+        "name": {
+            "zh": "原始而又全新的联机方式",
+            "en": "Play With Your Friends"
+        },
+        "text": {
+            "zh": "打开 Minecraft 并单击「对局域网开放」，然后再去看看 Alicorn 吧！",
+            "en": "Simply open your world to LAN and something magical will happen!"
+        },
+        "img": "https://img.gejiba.com/images/74b3eee6fcfa8d4e9dd94c267aebe03e.png",
+        "rel": ""
     },
-    "img": "https://img.gejiba.com/images/44ca3fe3f4a7f521f486b3f38744433b.png",
-    "rel": ""
-  },
-  {
-    "name": { "zh": "原始而又全新的联机方式", "en": "Play With Your Friends" },
-    "text": {
-      "zh": "打开 Minecraft 并单击「对局域网开放」，然后再去看看 Alicorn 吧！",
-      "en": "Simply open your world to LAN and something magical will happen!"
+    {
+        "name": {
+            "zh": "高清修复与光影",
+            "en": "Let's Play With Shaders"
+        },
+        "text": {
+            "zh": "使用 Iris 和 Fabric，你不需要什么 OptiFine！",
+            "en": "Come on, it's not hard to admit it: You know you love Iris and Fabric!"
+        },
+        "img": "https://img.gejiba.com/images/c8b3f418d17bd3fcdca4398b4987b8bf.png",
+        "rel": ""
     },
-    "img": "https://img.gejiba.com/images/74b3eee6fcfa8d4e9dd94c267aebe03e.png",
-    "rel": ""
-  },
-  {
-    "name": { "zh": "高清修复与光影", "en": "Let's Play With Shaders" },
-    "text": {
-      "zh": "使用 Iris 和 Fabric，你不需要什么 OptiFine！",
-      "en": "Come on, it's not hard to admit it: You know you love Iris and Fabric!"
+    {
+        "name": {
+            "zh": "改装核心",
+            "en": "Retrofit Cores"
+        },
+        "text": {
+            "zh": "安装原版核心后，可将它「改装」为 Fabric 或 Forge！",
+            "en": "Retrofit Minecraft cores to Fabric or Forge!"
+        },
+        "img": "https://img.gejiba.com/images/5e39911cd57f742f011b7a4d8dbc37a2.png",
+        "rel": ""
     },
-    "img": "https://img.gejiba.com/images/c8b3f418d17bd3fcdca4398b4987b8bf.png",
-    "rel": ""
-  },
-  {
-    "name": { "zh": "改装核心", "en": "Retrofit Cores" },
-    "text": {
-      "zh": "安装原版核心后，可将它「改装」为 Fabric 或 Forge！",
-      "en": "Retrofit Minecraft cores to Fabric or Forge!"
+    {
+        "name": {
+            "zh": "自动 Java 选择",
+            "en": "Auto Java Select"
+        },
+        "text": {
+            "zh": "不必手动选取 Java，Alicorn 将自动选择。",
+            "en": "No Java problem any more! Let me choose it for you."
+        },
+        "img": "https://img.gejiba.com/images/0d5a1796c9a83738eda8cef5bee3a15e.png",
+        "rel": ""
     },
-    "img": "https://img.gejiba.com/images/5e39911cd57f742f011b7a4d8dbc37a2.png",
-    "rel": ""
-  },
-  {
-    "name": { "zh": "自动 Java 选择", "en": "Auto Java Select" },
-    "text": {
-      "zh": "不必手动选取 Java，Alicorn 将自动选择。",
-      "en": "No Java problem any more! Let me choose it for you."
+    {
+        "name": {
+            "zh": "登录 Microsoft 帐户",
+            "en": "Use Microsoft Account"
+        },
+        "text": {
+            "zh": "只需在启动时选择「Microsoft 帐户」，无需创建档案！",
+            "en": "On demand login. Just launch the game directly. No more configuring!"
+        },
+        "img": "https://img.gejiba.com/images/431348787e067073d403f9805090b910.png",
+        "rel": ""
     },
-    "img": "https://img.gejiba.com/images/0d5a1796c9a83738eda8cef5bee3a15e.png",
-    "rel": ""
-  },
-  {
-    "name": { "zh": "登录 Microsoft 帐户", "en": "Use Microsoft Account" },
-    "text": {
-      "zh": "只需在启动时选择「Microsoft 帐户」，无需创建档案！",
-      "en": "On demand login. Just launch the game directly. No more configuring!"
+    {
+        "name": {
+            "zh": "使用整合包",
+            "en": "Use Modpack"
+        },
+        "text": {
+            "zh": "将整合包丢进 Alicorn 试试？（Alicorn 会自动为你填写信息哦！）",
+            "en": "Try dropping a modpack into Alicorn?"
+        },
+        "img": "https://img.gejiba.com/images/963679a29650d876a87ff0042f84031d.png",
+        "rel": ""
     },
-    "img": "https://img.gejiba.com/images/431348787e067073d403f9805090b910.png",
-    "rel": ""
-  },
-  {
-    "name": { "zh": "使用整合包", "en": "Use Modpack" },
-    "text": {
-      "zh": "将整合包丢进 Alicorn 试试？（Alicorn 会自动为你填写信息哦！）",
-      "en": "Try dropping a modpack into Alicorn?"
+    {
+        "name": {
+            "zh": "安装和查看 Mod",
+            "en": "View Or Install Mods"
+        },
+        "text": {
+            "zh": "单击 Fabric 或者 Forge 的徽标，就可以查看和安装对应核心的 Mod！",
+            "en": "Click the icon and you can view or install mods!"
+        },
+        "img": "https://img.gejiba.com/images/9f0fb343b8b016013a7b6d1703242775.png",
+        "rel": ""
     },
-    "img": "https://img.gejiba.com/images/963679a29650d876a87ff0042f84031d.png",
-    "rel": ""
-  },
-  {
-    "name": { "zh": "安装和查看 Mod", "en": "View Or Install Mods" },
-    "text": {
-      "zh": "单击 Fabric 或者 Forge 的徽标，就可以查看和安装对应核心的 Mod！",
-      "en": "Click the icon and you can view or install mods!"
+    {
+        "name": {
+            "zh": "切换主题",
+            "en": "Change Theme"
+        },
+        "text": {
+            "zh": "在「选项」里给 Alicorn 重新喷漆！（现在加入了更多的颜色！）",
+            "en": "You know what? You can paint Alicorn different colors!"
+        },
+        "img": "https://img.gejiba.com/images/000dda277e6c2834edd75d2265a05199.png",
+        "rel": ""
     },
-    "img": "https://img.gejiba.com/images/9f0fb343b8b016013a7b6d1703242775.png",
-    "rel": ""
-  },
-  {
-    "name": { "zh": "切换主题", "en": "Change Theme" },
-    "text": {
-      "zh": "在「选项」里给 Alicorn 重新喷漆！（现在加入了更多的颜色！）",
-      "en": "You know what? You can paint Alicorn different colors!"
-    },
-    "img": "https://img.gejiba.com/images/000dda277e6c2834edd75d2265a05199.png",
-    "rel": ""
-  },
-  {
-    "name": { "zh": "所有功能", "en": "Navigator" },
-    "text": {
-      "zh": "标题左侧的按钮是用来打开侧边栏菜单的。",
-      "en": "The navigator is to the left of the title. Click to show all pages."
-    },
-    "img": "https://img.gejiba.com/images/f9b7d812b3fa4b45c38aaedd2a896c8f.png",
-    "rel": ""
-  }
+    {
+        "name": {
+            "zh": "所有功能",
+            "en": "Navigator"
+        },
+        "text": {
+            "zh": "标题左侧的按钮是用来打开侧边栏菜单的。",
+            "en": "The navigator is to the left of the title. Click to show all pages."
+        },
+        "img": "https://img.gejiba.com/images/f9b7d812b3fa4b45c38aaedd2a896c8f.png",
+        "rel": ""
+    }
 ]

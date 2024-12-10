@@ -211,8 +211,8 @@ export class CurseforgeModResolver extends AbstractModResolver {
 }
 
 export class ModrinthModResolver extends AbstractModResolver {
-    protected insideCachedArtifactList: ModArtifact[] | undefined;
     protected static MR_BASE_URL = "https://api.modrinth.com";
+    protected insideCachedArtifactList: ModArtifact[] | undefined;
 
     async resolveMod(): Promise<ModMeta> {
         if (this.cachedMeta) {

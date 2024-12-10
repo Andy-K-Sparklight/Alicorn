@@ -31,9 +31,9 @@ function InstructionInside(props: {
         }
         if (content === "END") {
             setInstBusy(false);
-            window.dispatchEvent(new CustomEvent("changeInstPage", {detail: ""}));
+            window.dispatchEvent(new CustomEvent("changeInstPage", { detail: "" }));
             window.dispatchEvent(
-                new CustomEvent("InstructionEnd", {detail: props.page})
+                new CustomEvent("InstructionEnd", { detail: props.page })
             ); // Hook dispatch
         }
         if (curInst === curInstKey) {
@@ -118,7 +118,7 @@ function InstructionInside(props: {
                     fontSize: fontSize,
                     color: "white"
                 }}
-                dangerouslySetInnerHTML={{__html: content}}
+                dangerouslySetInnerHTML={{ __html: content }}
             />
                     </Box>
                 </Box>
@@ -196,7 +196,7 @@ export function ShiftEle(props: {
 }): JSX.Element {
     return (
         <InstructionHighlight.Consumer>
-            {({target}) => {
+            {({ target }) => {
                 if (props.name && target === props.name) {
                     return (
                         <span
@@ -233,5 +233,5 @@ export function isInstBusy(): boolean {
 
 export function startInst(s: string): void {
     setInstBusy(true);
-    window.dispatchEvent(new CustomEvent("changeInstPage", {detail: s}));
+    window.dispatchEvent(new CustomEvent("changeInstPage", { detail: s }));
 }

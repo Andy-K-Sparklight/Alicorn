@@ -31,14 +31,7 @@ export const ACCOUNT_LAST_REFRESHED_KEY = "MS.AccountRefreshDate";
 export const ACCOUNT_EXPIRES_KEY = "MS.Expires";
 
 export class MicrosoftAccount extends Account {
-    buildAccessData(): Promise<[string, string, string, string]> {
-        return Promise.resolve([
-            this.lastUsedUsername,
-            this.lastUsedAccessToken,
-            this.lastUsedUUID,
-            this.lastUsedXuid
-        ]);
-    }
+    refreshToken = "";
 
     constructor(accountName: string) {
         super(accountName, AccountType.MICROSOFT);
@@ -52,6 +45,15 @@ export class MicrosoftAccount extends Account {
         this.refreshToken = decrypt2(
             localStorage.getItem(MS_LAST_USED_REFRESH_KEY) || ""
         );
+    }
+
+    buildAccessData(): Promise<[string, string, string, string]> {
+        return Promise.resolve([
+            this.lastUsedUsername,
+            this.lastUsedAccessToken,
+            this.lastUsedUUID,
+            this.lastUsedXuid
+        ]);
     }
 
     async flushToken(): Promise<boolean> {
@@ -156,8 +158,6 @@ export class MicrosoftAccount extends Account {
             lastUsedXuid: this.lastUsedXuid
         });
     }
-
-    refreshToken = "";
 }
 
 function saveRefreshToken(v: string): void {

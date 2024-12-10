@@ -123,7 +123,7 @@ export function initLocalYggdrasilServer(
                     ) {
                         try {
                             const d = createReadStream(fName);
-                            res.writeHead(200, "OK", {"Content-Type": "image/png"});
+                            res.writeHead(200, "OK", { "Content-Type": "image/png" });
                             const r = d.pipe(res);
                             r.on("finish", () => {
                                 d.close();
@@ -144,7 +144,7 @@ export function initLocalYggdrasilServer(
                     ) {
                         try {
                             const d = createReadStream(capeName);
-                            res.writeHead(200, "OK", {"Content-Type": "image/png"});
+                            res.writeHead(200, "OK", { "Content-Type": "image/png" });
                             const r = d.pipe(res);
                             r.on("finish", () => {
                                 d.close();

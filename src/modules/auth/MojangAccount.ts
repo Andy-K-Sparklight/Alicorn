@@ -11,6 +11,13 @@ const MJ_AUTH_SERVER_ROOT = "https://authserver.mojang.com";
 // Mojang Account
 // Simply forked from AuthlibAccount
 export class MojangAccount extends Account {
+    availableProfiles: RemoteUserProfile[] = [];
+    selectedProfile: RemoteUserProfile | undefined;
+
+    constructor(accountName: string) {
+        super(accountName, AccountType.MOJANG);
+    }
+
     buildAccessData(): Promise<[string, string, string, string]> {
         return Promise.resolve([
             this.lastUsedUsername,
@@ -53,13 +60,6 @@ export class MojangAccount extends Account {
             accountName: this.accountName,
             lastUsedUsername: this.lastUsedUsername
         });
-    }
-
-    availableProfiles: RemoteUserProfile[] = [];
-    selectedProfile: RemoteUserProfile | undefined;
-
-    constructor(accountName: string) {
-        super(accountName, AccountType.MOJANG);
     }
 }
 

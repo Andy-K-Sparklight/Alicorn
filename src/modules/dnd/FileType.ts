@@ -22,7 +22,7 @@ export async function justifyFileType(file: string): Promise<FileType> {
             file.toLowerCase().endsWith(".zip") ||
             file.toLowerCase().endsWith(".jar")
         ) {
-            const zip = new StreamZip.async({file: file});
+            const zip = new StreamZip.async({ file: file });
             const ent = await zip.entries();
             for (const f of Object.values(ent)) {
                 if (

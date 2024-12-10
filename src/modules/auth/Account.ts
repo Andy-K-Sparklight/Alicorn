@@ -7,6 +7,14 @@ import { MojangAccount } from "./MojangAccount";
 
 export abstract class Account {
     type: AccountType;
+    lastUsedUsername: string;
+    lastUsedUUID: string;
+    lastUsedAccessToken: string;
+    lastUsedXuid: string;
+    accountName: string;
+
+    // AccessData(or AuthData) is a Trio
+    // Username, AccessToken, UUID
 
     protected constructor(accountName: string, accountType: AccountType) {
         this.lastUsedUsername = "";
@@ -25,20 +33,11 @@ export abstract class Account {
 
     abstract buildAccessData(): Promise<[string, string, string, string]>;
 
-    // AccessData(or AuthData) is a Trio
-    // Username, AccessToken, UUID
-
     getAccountIdentifier(): string {
         return uniqueHash(this.accountName);
     }
 
     abstract serialize(): string;
-
-    lastUsedUsername: string;
-    lastUsedUUID: string;
-    lastUsedAccessToken: string;
-    lastUsedXuid: string;
-    accountName: string;
 }
 
 export async function refreshToken(
@@ -81,7 +80,7 @@ export async function refreshToken(
         };
     } catch (e) {
         console.log(e);
-        return {success: false, accessToken: "", availableProfiles: []};
+        return { success: false, accessToken: "", availableProfiles: [] };
     }
 }
 
@@ -115,7 +114,7 @@ export async function authenticate(
         const res = await ress.json();
         const accessToken = String(safeGet(res, ["accessToken"], "") || "");
         if (accessToken === "undefined" || accessToken.length === 0) {
-            return {success: false, accessToken: "", availableProfiles: []};
+            return { success: false, accessToken: "", availableProfiles: [] };
         }
         let selectedProfile: RemoteUserProfile | undefined = undefined;
         const sObj = safeGet(res, ["selectedProfile"], null);
@@ -196,7 +195,7 @@ export interface RemoteUserProfile {
 function toUserProfile(obj: unknown): RemoteUserProfile {
     const id = String(safeGet(obj, ["id"], ""));
     const name = String(safeGet(obj, ["name"], ""));
-    return {id, name};
+    return { id, name };
 }
 
 export function updateAccount(

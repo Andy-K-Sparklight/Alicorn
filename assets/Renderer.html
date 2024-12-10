@@ -4,13 +4,13 @@
     <meta charset="UTF-8"/>
     <title>Alicorn</title>
     <meta
-            name="viewport"
             content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+            name="viewport"
     />
-    <link rel="preload" as="script" href="./Renderer.js"/>
-    <link rel="preload" as="font" href="./SourceHanSansCN-Regular.otf"/>
-    <link rel="preload" as="font" href="./UbuntuMono-Latin.woff2"/>
-    <link rel="preload" as="script" href="./SkinView3D.js"/>
+    <link as="script" href="./Renderer.js" rel="preload"/>
+    <link as="font" href="./SourceHanSansCN-Regular.otf" rel="preload"/>
+    <link as="font" href="./UbuntuMono-Latin.woff2" rel="preload"/>
+    <link as="script" href="./SkinView3D.js" rel="preload"/>
     <style>
         .window-drag,
         .window-drag > * {
@@ -81,8 +81,8 @@
 </head>
 <body>
 <div id="boot_stages"
-     style="position: fixed; left: auto; top: auto"
      onclick="this.style.display='none'"
+     style="position: fixed; left: auto; top: auto"
 >
     <p>
         Alicorn Renderer (JE) has been loaded, and it's initializing.<br/>
@@ -126,7 +126,7 @@
         e.preventDefault();
     };
 </script>
-<script src="Renderer.js" async></script>
-<script src="SkinView3D.js" defer></script>
+<script async src="Renderer.js"></script>
+<script defer src="SkinView3D.js"></script>
 </body>
 </html>

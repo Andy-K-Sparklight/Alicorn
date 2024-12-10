@@ -36,7 +36,7 @@ export function addPffMod(
             }
         }
     }
-    model.files.push({projectID: aid, fileID: fid});
+    model.files.push({ projectID: aid, fileID: fid });
 }
 
 export function addOverride(
@@ -59,7 +59,7 @@ export function addOverride(
             }
         }
     }
-    model.files.push({path: pt, hash: hash, force: force});
+    model.files.push({ path: pt, hash: hash, force: force });
 }
 
 export function addCore(
@@ -108,11 +108,11 @@ function getModLoaders(model: CommonModpackModel): SimpleModLoaderInfo[] {
     model.addons.forEach((a) => {
         switch (a.id.toLowerCase()) {
             case "forge":
-                p.push({type: ProfileType.FORGE, version: a.version});
+                p.push({ type: ProfileType.FORGE, version: a.version });
                 break;
             case "fabric":
             default:
-                p.push({type: ProfileType.FABRIC, version: a.version}); // Fabric mcv will be discarded
+                p.push({ type: ProfileType.FABRIC, version: a.version }); // Fabric mcv will be discarded
         }
     });
     return p;
@@ -165,10 +165,10 @@ export function buildCommonModpackJSON(model: CommonModpackModel): string {
     for (let f of model.files) {
         // @ts-ignore
         if (!f["projectID"]) {
-            o.files.push(Object.assign({type: "addon"}, f));
+            o.files.push(Object.assign({ type: "addon" }, f));
         } else {
             f = f as SimpleFile;
-            o.files.push({projectID: f.projectID, fileID: f.fileID});
+            o.files.push({ projectID: f.projectID, fileID: f.fileID });
         }
     }
     o.settings = {

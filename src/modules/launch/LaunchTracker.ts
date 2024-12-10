@@ -1,5 +1,5 @@
 export class LaunchTracker {
-    javaReport: JavaReport = {runtime: "", version: 0};
+    javaReport: JavaReport = { runtime: "", version: 0 };
     libraryReport: FileOperateReport = {
         total: 0,
         resolved: 0,

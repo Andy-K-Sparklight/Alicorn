@@ -13,7 +13,7 @@ import { hashFile } from "hasha";
 import { nanoid } from "nanoid";
 import PQueue from "p-queue";
 import EventEmitter from "events";
-import type TypedEmitter from "typed-emitter/rxjs";
+import type TypedEmitter from "typed-emitter";
 
 /**
  * Events emitted when downloading.
@@ -152,18 +152,14 @@ class DownloadTaskImpl implements NextDownloadTask {
     id = nanoid();
     req;
     activeURL;
-    private notify = () => emitter.emit("change", this.id);
-    private _status: NextDownloadStatus = NextDownloadStatus.PENDING;
-    private _startTime = -1;
-    private _bytesTotal = -1;
-    private _bytesTransferred = -1;
-
 
     constructor(req: DownloadRequest) {
         if (req.urls.length === 0) throw "No URL specified";
         this.req = req;
         this.activeURL = req.urls[0];
     }
+
+    private _status: NextDownloadStatus = NextDownloadStatus.PENDING;
 
     get status() {
         return this._status;
@@ -174,6 +170,8 @@ class DownloadTaskImpl implements NextDownloadTask {
         this.notify();
     }
 
+    private _startTime = -1;
+
     get startTime(): number {
         return this._startTime;
     }
@@ -182,6 +180,8 @@ class DownloadTaskImpl implements NextDownloadTask {
         this._startTime = value;
         this.notify();
     }
+
+    private _bytesTotal = -1;
 
     get bytesTotal(): number {
         return this._bytesTotal;
@@ -192,6 +192,8 @@ class DownloadTaskImpl implements NextDownloadTask {
         this.notify();
     }
 
+    private _bytesTransferred = -1;
+
     get bytesTransferred(): number {
         return this._bytesTransferred;
     }
@@ -200,6 +202,8 @@ class DownloadTaskImpl implements NextDownloadTask {
         this._bytesTransferred = value;
         this.notify();
     }
+
+    private notify = () => emitter.emit("change", this.id);
 }
 
 /**

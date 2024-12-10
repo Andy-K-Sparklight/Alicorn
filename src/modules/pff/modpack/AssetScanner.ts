@@ -116,7 +116,7 @@ async function scanOptions(
 ): Promise<UnifiedAsset[]> {
     const t = path.join(container.rootDir, "options.txt");
     if (await isFileExist(t)) {
-        return [{type: "FILE", desc: "OptionFile", v1: t, v2: await getHash(t)}];
+        return [{ type: "FILE", desc: "OptionFile", v1: t, v2: await getHash(t) }];
     } else {
         return [];
     }

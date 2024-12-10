@@ -1,31 +1,31 @@
 {
-  "vmArgs": [
-    {
-      "rules": [
+    "vmArgs": [
         {
-          "action": "allow",
-          "os": {
-            "name": "osx"
-          }
-        }
-      ],
-      "value": [
-        "-XstartOnFirstThread"
-      ]
-    },
-    {
-      "rules": [
+            "rules": [
+                {
+                    "action": "allow",
+                    "os": {
+                        "name": "osx"
+                    }
+                }
+            ],
+            "value": [
+                "-XstartOnFirstThread"
+            ]
+        },
         {
-          "action": "allow",
-          "os": {
-            "arch": "x86"
-          }
-        }
-      ],
-      "value": "-Xss1M"
-    },
-    "-Djava.library.path=${natives_directory}",
-    "-cp",
-    "${classpath}"
-  ]
+            "rules": [
+                {
+                    "action": "allow",
+                    "os": {
+                        "arch": "x86"
+                    }
+                }
+            ],
+            "value": "-Xss1M"
+        },
+        "-Djava.library.path=${natives_directory}",
+        "-cp",
+        "${classpath}"
+    ]
 }

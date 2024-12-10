@@ -96,14 +96,14 @@ export class MirrorChain {
     url: string;
     cIndex = 0;
 
+    constructor(url: string) {
+        this.url = url;
+    }
+
     static origin(url: string): MirrorChain {
         const mc = new MirrorChain(url);
         mc.cIndex = mirrors.length - 1; // Set to last
         return mc;
-    }
-
-    constructor(url: string) {
-        this.url = url;
     }
 
     mirror(): string {

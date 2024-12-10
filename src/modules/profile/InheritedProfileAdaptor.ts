@@ -121,7 +121,7 @@ async function prepareClient(
             await copy(
                 path.join(container.getVersionRoot(sourceId), sourceId + JAR_SUFFIX),
                 t,
-                {dereference: true}
+                { dereference: true }
             );
         }
     } catch (e) {

@@ -4,11 +4,14 @@
 
 ## 重要信息
 
-我们并不想让故事就此结束，但是作为开发者，我对 Minecraft 社区已不再抱有太多的信心。因此，Alicorn 在未来将不会接收**主要更新**，也正是因此，核心版本 50 被叫做**落日**。
+我们并不想让故事就此结束，但是作为开发者，我对 Minecraft 社区已不再抱有太多的信心。因此，Alicorn 在未来将不会接收**主要更新
+**，也正是因此，核心版本 50 被叫做**落日**。
 
 如果将来发现了严重的安全漏洞，Alicorn 依然会得到安全性更新，但是总体上来说，这个项目将不会继续了。
 
-这并不意味着你必须要换一个启动器，在可预见的将来，Alicorn 应当依然能够启动未来的数个版本，但是如果你想要更好，我们推荐 [HMCL](https://github.com/huanghongxun/HMCL)，它是自由软件，性能和功能并重，并且现在依然在积极的维护中。
+这并不意味着你必须要换一个启动器，在可预见的将来，Alicorn
+应当依然能够启动未来的数个版本，但是如果你想要更好，我们推荐 [HMCL](https://github.com/huanghongxun/HMCL)
+，它是自由软件，性能和功能并重，并且现在依然在积极的维护中。
 
 ---
 
@@ -72,27 +75,29 @@
 - 一份好用的网络连接
 
 - 首先，克隆本仓库：
-  
+
   ```shell
   git clone https://github.com/Andy-K-Sparklight/Alicorn.git --depth=1
   ```
 
 - 安装依赖：
-  
+
   ```shell
   yarn
   ```
-  
-  Alicorn Launcher 有相当多的依赖，包含 Electron 及其构建工具，如果您的网络环境不好，请考虑设置一个镜像或者使用代理服务器，并为 Electron 进行额外的设置。
+
+  Alicorn Launcher 有相当多的依赖，包含 Electron 及其构建工具，如果您的网络环境不好，请考虑设置一个镜像或者使用代理服务器，并为
+  Electron 进行额外的设置。
 
 - 运行构建：
-  
+
   ```shell
   yarn make
   ```
-  
-  该命令构建所有的二进制文件并输出到 `out` 下：Windows x64，Windows ia32，GNU/Linux x64，GNU/Linux arm64 ~~以及 macOS x64~~。该命令同时会生成对应的压缩包。
-  
+
+  该命令构建所有的二进制文件并输出到 `out` 下：Windows x64，Windows ia32，GNU/Linux x64，GNU/Linux arm64 ~~以及 macOS x64~~
+  。该命令同时会生成对应的压缩包。
+
   _macOS 的支持已经正式告终，Alicorn 现在不再为 macOS 编写平台相关代码。已有模块仍然保留，但可能无法正常工作。_
-  
+
   请注意非 Windows 操作系统在构建 Windows 应用时需要 wine 的支持，可参考 electron-packager 的输出信息安装。
