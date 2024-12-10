@@ -14,6 +14,12 @@ importers:
       '@emotion/styled':
         specifier: ^11.14.0
         version: 11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
+      '@fontsource/noto-sans-sc':
+        specifier: ^5.1.0
+        version: 5.1.0
+      '@fontsource/ubuntu-mono':
+        specifier: ^5.1.0
+        version: 5.1.0
       '@mui/icons-material':
         specifier: ^6.1.10
         version: 6.1.10(@mui/material@6.1.10(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
@@ -845,6 +851,12 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@fontsource/noto-sans-sc@5.1.0':
+    resolution: {integrity: sha512-6Za/beXpkP0nStbyPRJPGRGwvjHwrlP0gbR/73bJKXWyjzsRQA+LF9990R5oPmgm+NmBDb0grad6Q9E7OEzLtw==}
+
+  '@fontsource/ubuntu-mono@5.1.0':
+    resolution: {integrity: sha512-sz2MEGFaT9pab73zBGatJDenDr0PFDxzchhINwIsDAH4/9YMIGXXMfngfClPAT2BXF0ZK5FEBCP/t4EEX/j5Jw==}
 
   '@formatjs/ecma402-abstract@2.3.1':
     resolution: {integrity: sha512-Ip9uV+/MpLXWRk03U/GzeJMuPeOXpJBSB5V1tjA6kJhvqssye5J5LoYLc7Z5IAHb7nR62sRoguzrFiVCP/hnzw==}
@@ -5617,6 +5629,10 @@ snapshots:
 
   '@esbuild/win32-x64@0.24.0':
     optional: true
+
+  '@fontsource/noto-sans-sc@5.1.0': {}
+
+  '@fontsource/ubuntu-mono@5.1.0': {}
 
   '@formatjs/ecma402-abstract@2.3.1':
     dependencies:

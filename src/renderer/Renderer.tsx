@@ -41,6 +41,8 @@ import { i18n } from "./i18n/i18n";
 import { Router } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
 import "./global.css";
+import "@fontsource/ubuntu-mono";
+import "@fontsource/noto-sans-sc";
 
 try {
     console.log("Renderer first log.");
