@@ -27,7 +27,6 @@ import { initEncrypt } from "@/modules/security/Encrypt";
 import { getMachineUniqueID } from "@/modules/security/Unique";
 import { todayPing } from "@/modules/selfupdate/Ping";
 import { checkUpdate, initUpdator } from "@/modules/selfupdate/Updator";
-import { loadServers } from "@/modules/server/ServerFiles";
 import { App } from "./App";
 import { completeFirstRun } from "./FirstRunSetup";
 import { InstructionProvider } from "./Instruction";
@@ -213,7 +212,6 @@ try {
             initConcurrentDownloader(),
             prepareAJ(),
             prepareND(),
-            loadServers(),
             getMachineUniqueID() // Cache
         ]);
         void completeFirstRun(); // Not blocking
@@ -394,7 +392,7 @@ function flushColors(): void {
 }
 
 const FONT_FAMILY =
-    "\"Ubuntu Mono\", Consolas, \"Courier New\", Courier, \"Source Hans Sans\", \"Roboto Medium\", \"Microsoft YaHei\", \"Segoe UI\", SimHei, Tahoma, Geneva, Verdana, sans-serif";
+    "\"Ubuntu Mono\", Consolas, \"Courier New\", Courier, \"Noto Sans SC\", \"Roboto Medium\", \"Microsoft YaHei\", \"Segoe UI\", SimHei, Tahoma, Geneva, Verdana, sans-serif";
 
 function setThemeParams(
     primaryMain: string,

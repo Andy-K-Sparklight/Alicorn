@@ -283,7 +283,7 @@ async function validate(task: NextDownloadTask): Promise<boolean> {
 
     try {
         if (task.req.sha1) {
-            const h = await hashFile(task.req.path);
+            const h = await hashFile(task.req.path, { algorithm: "sha1" });
             return task.req.sha1.toLowerCase() === h.toLowerCase();
         }
 

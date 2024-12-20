@@ -1,5 +1,4 @@
-import { app, BrowserWindow, Menu, screen } from "electron";
-import { btoa } from "js-base64";
+import { app, BrowserWindow, Menu } from "electron";
 import os from "os";
 import path from "path";
 import { getBoolean, getNumber, getString, loadConfigSync } from "@/modules/config/ConfigSupport";
@@ -11,6 +10,7 @@ import { bwctl } from "@/main/sys/bwctl";
 import { paths } from "@/main/fs/paths";
 import { mirror } from "@/main/net/mirrors";
 import { i18nHost } from "@/main/i18n/host";
+import { registry } from "@/main/registry/registry";
 
 void main();
 
@@ -53,12 +53,10 @@ async function main() {
         }
     }
 
-    addErrorHandlers();
-
     // Legacy code ends here
 
     console.log("Creating window...");
-    const [width, height] = optimalWindowSize();
+    const [width, height] = bwctl.optimalSize();
 
     const appPath = app.getAppPath();
 
@@ -93,6 +91,8 @@ async function main() {
         void shutdownApp();
     });
 
+    // Create an empty handler to prevent auto-closing when all windows are closed
+    app.on("window-all-closed", () => {});
 
     // TODO remove legacy code after refactor
     createMenus(mainWindow);
@@ -143,8 +143,6 @@ async function main() {
 
     // Update mirrors
     await mirror.bench();
-
-
 }
 
 /**
@@ -160,8 +158,10 @@ async function shutdownApp() {
     }, 30_000);
 
     await conf.store();
+    await registry.saveAll();
 
-    app.exit();
+    console.log("Exiting.");
+    app.quit();
 }
 
 /**
@@ -224,55 +224,6 @@ function checkSingleInstance() {
         // macOS open action handler
         app.on("activate", reopenWindow);
     }
-}
-
-/**
- * Gets an optimal window size for the main window.
- *
- * This function sizes the window based on the size of the primary display, with the fixed aspect ratio 16:10 and scale
- * factor 0.6.
- */
-function optimalWindowSize(): [number, number] {
-    let { width, height } = screen.getPrimaryDisplay().workAreaSize;
-    const ratio = width / height;
-    const expRatio = 16 / 10;
-    if (ratio > expRatio) {
-        width = height * expRatio;
-    } else {
-        height = width / expRatio;
-    }
-
-    const scaleFactor = 0.6;
-
-    return [width * scaleFactor, height * scaleFactor];
-}
-
-
-/**
- * Moves to the error page when an error occurred on the main process.
- *
- * @deprecated This negatively affects user experience
- */
-function addErrorHandlers() {
-    process.on("uncaughtException", async (e) => {
-        try {
-            console.log(e);
-            await mainWindow?.webContents.loadFile("Error.html", {
-                hash: btoa(encodeURIComponent(String(e.message)))
-            });
-        } catch {
-        }
-    });
-
-    process.on("unhandledRejection", async (r) => {
-        try {
-            console.log(String(r));
-            await mainWindow?.webContents.loadFile("Error.html", {
-                hash: btoa(encodeURI(String(r)))
-            });
-        } catch {
-        }
-    });
 }
 
 export function getMainWindow(): BrowserWindow | null {

@@ -14,7 +14,6 @@ import {
     PowerSettingsNew,
     Refresh,
     Settings,
-    ShowChart,
     ViewModule
 } from "@mui/icons-material";
 import {
@@ -45,21 +44,17 @@ import { safeGet } from "@/modules/commons/Null";
 import { getBoolean, getString, saveConfig } from "@/modules/config/ConfigSupport";
 import { saveGDT } from "@/modules/container/ContainerUtil";
 import { saveVF } from "@/modules/container/ValidateRecord";
-import { handleDnD } from "@/modules/dnd/DnDCenter";
 import { saveJDT } from "@/modules/java/JavaInfo";
 import { waitUpdateFinished } from "@/modules/selfupdate/Updator";
-import { saveServers } from "@/modules/server/ServerFiles";
 import { ContainerManager } from "./ContainerManager";
 import { CrashReportDisplay } from "./CrashReportDisplay";
-import { waitInstDone } from "./FirstRunSetup";
 import { canGoBack, CHANGE_PAGE_WARN, goBack, jumpTo, setChangePageWarn, triggerSetPage } from "./GoTo";
 import { InstallCore } from "./InstallCore";
-import { Instruction, isInstBusy, startInst } from "./Instruction";
+import { Instruction } from "./Instruction";
 import { JavaSelector } from "./JavaSelector";
 import { LaunchPad } from "./LaunchPad";
 import { YNDialog2 } from "./OperatingHint";
 import { OptionsPage } from "./Options";
-import { PffFront } from "./PffFront";
 import { ReadyToLaunch } from "./ReadyToLaunch";
 import { saveStatistics } from "./Statistics";
 import { AlicornTheme } from "./Stylex";
@@ -165,7 +160,6 @@ export function App(): JSX.Element {
     return (
         <Box
             className={classes.root}
-            onDrop={handleDrop}
             onDragOver={(e) => {
                 e.preventDefault();
             }}
@@ -310,25 +304,6 @@ function bindRefreshListener(
     };
 }
 
-function popupInstruction(page: string) {
-    return () => {
-        if (getBoolean("interactive.assistant?")) {
-            if (page.length > 0 && !isInstBusy()) {
-                if (localStorage.getItem("Instruction.Read." + page) !== "1") {
-                    const k = `Instruction.${page}.0`;
-                    if (tr(k) !== k) {
-                        startInst(page);
-                        void (async (p) => {
-                            await waitInstDone();
-                            localStorage.setItem("Instruction.Read." + p, "1");
-                        })(page);
-                    }
-                }
-            }
-        }
-    };
-}
-
 function handleSnackCloseFactory(
     sessionID: React.MutableRefObject<number>,
     op: React.Dispatch<React.SetStateAction<boolean>>
@@ -348,27 +323,6 @@ function clearBootStage() {
     }
     // @ts-ignore
     window.clearLogScreen();
-}
-
-function handleDrop(e: React.DragEvent<HTMLElement>) {
-    e.preventDefault();
-    const data = e.dataTransfer.getData("text/plain");
-    if (data.toString().includes("authlib-injector")) {
-        const server = data
-            .toString()
-            .split("authlib-injector:yggdrasil-server:")[1];
-
-        jumpTo("/AccountManager/1/" + encodeURIComponent(server));
-        triggerSetPage("AccountManager");
-
-        window.dispatchEvent(
-            new CustomEvent("YggdrasilAccountInfoDropped", {
-                detail: decodeURIComponent(server)
-            })
-        );
-        return;
-    }
-    void handleDnD(e);
 }
 
 function gotoMainIfEmpty() {
@@ -459,12 +413,6 @@ function Routes(): JSX.Element {
                 <Route path={"/JavaSelector"} component={JavaSelector}/>
                 <Route path={"/Options"} component={OptionsPage}/>
                 <Route path={"/CrashReportDisplay"} component={CrashReportDisplay}/>
-                <Route
-                    path={
-                        "/PffFront/:container/:version/:loader/:root/:name?/:autostart?" // root: Ask Pff to Re-Assign mods root as this. Pass core id will be fine. Only for some ancient isolated cores. 0 to disable.
-                    }
-                    component={PffFront}
-                />
                 <Route path={"/Welcome"} component={Welcome}/>
                 <Route path={"/TheEndingOfTheEnd"} component={TheEndingOfTheEnd}/>
                 <Route path={"/UpdateHint"} component={UpdateHint}/>
@@ -710,14 +658,11 @@ const PAGES_ICONS_MAP: Record<string, JSX.Element> = {
     ContainerManager: <AllInbox/>,
     JavaSelector: <ViewModule/>,
     AccountManager: <AccountCircle/>,
-    UtilitiesIndex: <Handyman/>,
-    Statistics: <ShowChart/>,
     Options: <Settings/>,
     Version: <Info/>,
     TheEndingOfTheEnd: <ImportContacts/>
 };
 
-const BETAS = ["ServerList"];
 
 function PagesDrawer(props: {
     open: boolean;
@@ -744,7 +689,6 @@ function PagesDrawer(props: {
                             <ListItemIcon>{i}</ListItemIcon>
                             <ListItemText>
                                 {tr(p)}
-                                {BETAS.includes(p) ? <BetaTag/> : ""}
                             </ListItemText>
                         </ListItemButton>
                     );
@@ -786,7 +730,6 @@ export async function commitChanges(): Promise<void> {
     await saveGDT();
     await saveJDT();
     await saveVF();
-    await saveServers();
     saveStatistics();
     console.log("All chunks are saved.");
 }

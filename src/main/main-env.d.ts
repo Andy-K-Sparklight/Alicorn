@@ -4,6 +4,7 @@ declare global {
             AL_DEV: boolean;
             AL_DEV_SERVER_PORT: number;
             AL_ENABLE_BMCLAPI: boolean;
+            AL_ENABLE_LOCAL_ACCOUNT: boolean;
         };
     }
 

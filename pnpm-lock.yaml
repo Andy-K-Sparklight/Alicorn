@@ -107,6 +107,9 @@ importers:
       sha:
         specifier: ^3.0.0
         version: 3.0.0
+      superserial:
+        specifier: ^0.3.5
+        version: 0.3.5
       throttle-debounce:
         specifier: ^5.0.2
         version: 5.0.2
@@ -4622,6 +4625,9 @@ packages:
   sumchecker@3.0.1:
     resolution: {integrity: sha512-MvjXzkz/BOfyVDkG0oFOtBxHX2u3gKbMHIF/dXblZsgD3BWOFLmHovIpZY7BykJdAjcqRCBi1WYBNdEC9yI7vg==}
     engines: {node: '>= 8.0'}
+
+  superserial@0.3.5:
+    resolution: {integrity: sha512-tVPAVriEP69bSOfa2pVqd+4pkrdGyvr8sE5MbgWdFT8StyWany+rZ2lz2G3qHAMtcu2CSHtZHeoSjH3+hg6yWQ==}
 
   supports-color@7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
@@ -10361,6 +10367,8 @@ snapshots:
       debug: 4.4.0
     transitivePeerDependencies:
       - supports-color
+
+  superserial@0.3.5: {}
 
   supports-color@7.2.0:
     dependencies:

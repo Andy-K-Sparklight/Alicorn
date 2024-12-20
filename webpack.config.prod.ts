@@ -33,6 +33,20 @@ export default {
                     { loader: "css-loader" },
                     { loader: "postcss-loader" }
                 ]
+            },
+            {
+                test: /\.(woff(2)?|eot|ttf|otf)$/i,
+                type: "asset",
+                generator: {
+                    filename: "fonts/[hash][ext][query]"
+                }
+            },
+            {
+                test: /\.(ico|gif|png|jpg|jpeg)$/i,
+                type: "asset",
+                generator: {
+                    filename: "img/[hash][ext][query]"
+                }
             }
         ]
     },

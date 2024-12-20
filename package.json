@@ -100,6 +100,7 @@
         "rfdc": "^1.4.1",
         "semver": "^7.6.3",
         "sha": "^3.0.0",
+        "superserial": "^0.3.5",
         "throttle-debounce": "^5.0.2",
         "toml": "^3.0.0",
         "typia": "^7.2.0",

@@ -15,7 +15,6 @@ import {
     IconButton,
     Radio,
     RadioGroup,
-    Switch,
     TextField,
     ThemeProvider,
     Tooltip,
@@ -26,9 +25,8 @@ import fs from "fs-extra";
 import os from "os";
 import path from "path";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "wouter";
 import { throttle } from "throttle-debounce";
-import { abortableBasicHash, basicHash } from "@/modules/commons/BasicHash";
+import { abortableBasicHash } from "@/modules/commons/BasicHash";
 import { chkPermissions, isFileExist } from "@/modules/commons/FileUtil";
 import { scanCoresIn } from "@/modules/container/ContainerScanner";
 import {
@@ -50,17 +48,7 @@ import {
 } from "@/modules/container/ContainerWrapper";
 import { MinecraftContainer } from "@/modules/container/MinecraftContainer";
 import { isSharedContainer } from "@/modules/container/SharedFiles";
-import { DownloadMeta } from "@/modules/download/AbstractDownloader";
-import {
-    addDoing,
-    getDoing,
-    subscribeDoing,
-    unsubscribeDoing,
-    wrappedDownloadFile
-} from "@/modules/download/DownloadWrapper";
-import { isWebFileExist } from "@/modules/download/RainbowFetch";
-import { deployIJPack } from "@/modules/pff/modpack/InstallIJModpack";
-import { wrappedInstallModpack } from "@/modules/pff/modpack/InstallModpack";
+import { getDoing, subscribeDoing, unsubscribeDoing } from "@/modules/download/DownloadWrapper";
 import { setChangePageWarn } from "./GoTo";
 import { Icons } from "./Icons";
 import { submitSucc, submitWarn } from "./Message";
@@ -75,10 +63,6 @@ export function setContainerListDirty(): void {
 }
 
 export function ContainerManager(): JSX.Element {
-    // eslint-disable-next-line prefer-const
-    let { modpack, togo } = useParams<{ modpack?: string; togo?: string }>();
-    modpack = modpack ? decodeURIComponent(modpack) : undefined;
-    const hasToGo = togo === "1";
     const isEleMounted = useRef<boolean>();
     const [refreshTrigger, triggerRefresh] = useState(true);
     const [operating, setOpen] = useState(false);
@@ -86,7 +70,7 @@ export function ContainerManager(): JSX.Element {
     const [doing, setDoing] = useState(getDoing());
     const [failedOpen, setFailedOpen] = useState(false);
     const [reason, setReason] = useState("Untracked Error");
-    const [opening, setCreating] = useState(!!modpack);
+    const [opening, setCreating] = useState(false);
     useEffect(() => {
         isEleMounted.current = true;
         const fun = () => {
@@ -129,8 +113,6 @@ export function ContainerManager(): JSX.Element {
                 />
             </ThemeProvider>
             <AddNewContainer
-                autoStart={hasToGo}
-                modpack={modpack}
                 setOperate={(s) => {
                     setOpen(s);
                 }}
@@ -609,38 +591,14 @@ function AddNewContainer(props: {
     setOperate: (s: boolean) => unknown;
     setFailed: (s: string) => unknown;
     refresh: () => unknown;
-    modpack?: string;
-    autoStart?: boolean;
 }): JSX.Element {
-    const [selectedDir, setSelected] = useState(
-        props.modpack
-            ? !isURL(props.modpack)
-                ? path.join(
-                    path.dirname(props.modpack),
-                    "Modpack-" + basicHash(props.modpack).slice(0, 6)
-                )
-                : path.join(
-                    os.homedir(),
-                    "OnlineModpack-" + basicHash(props.modpack).slice(0, 6)
-                )
-            : ""
-    );
-    const [usedName, setName] = useState(
-        props.modpack ? genContainerName(props.modpack) : ""
-    );
+    const [selectedDir, setSelected] = useState("");
+    const [usedName, setName] = useState("");
     const [nameError, setNameError] = useState(false);
     const [dirError, setDirError] = useState(false);
     const [modpackError, setModpackError] = useState(false);
     const [createASC, setCreateASC] = useState(true);
-    const [allowModpack, setAllowModpack] = useState(!!props.modpack);
-    const [modpackPath, setModpackPath] = useState(props.modpack || "");
     const classes = useInputStyles();
-    useEffect(() => {
-        if (props.autoStart) {
-            props.closeFunc();
-            void start(props);
-        }
-    }, []);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const start = async (props: any) => {
         props.closeFunc();
@@ -650,37 +608,9 @@ function AddNewContainer(props: {
         } catch (e) {
             props.setFailed(String(e));
         }
-        if (allowModpack) {
-            addDoing(tr("ContainerManager.FetchingModpack"));
-            let mp = await getTempStorePath(modpackPath);
-            if (!(await isFileExist(modpackPath))) {
-                if (
-                    (await wrappedDownloadFile(new DownloadMeta(modpackPath, mp))) !== 1
-                ) {
-                    props.setFailed(tr("ContainerManager.FailedToFetch"));
-                }
-            } else {
-                mp = modpackPath;
-            }
-
-            try {
-                const s = await fs.stat(mp);
-                if (mp.endsWith(".zip") || s.isDirectory()) {
-                    await wrappedInstallModpack(getContainer(usedName), mp);
-                }
-                if (mp.endsWith(".json")) {
-                    await deployIJPack(getContainer(usedName), mp);
-                }
-                props.refresh();
-            } catch (e) {
-                props.setFailed(String(e));
-            }
-        }
         setName("");
         setSelected("");
-        setAllowModpack(false);
         setCreateASC(hasEdited("cx.shared-root"));
-        setModpackPath("");
         props.setOperate(false);
         props.refresh();
         submitSucc(tr("ContainerManager.InstallOK"));
@@ -692,7 +622,7 @@ function AddNewContainer(props: {
             }
         >
             <Dialog
-                open={props.open && !props.autoStart}
+                open={props.open}
                 onClose={() => {
                     setName("");
                     setSelected("");
@@ -811,80 +741,6 @@ function AddNewContainer(props: {
                             />
                         </Tooltip>
                     </RadioGroup>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={allowModpack}
-                                onChange={(e) => {
-                                    setAllowModpack(e.target.checked);
-                                }}
-                            />
-                        }
-                        label={tr("ContainerManager.CreateModpack")}
-                    />
-                    {/* Choose Modpack */}
-                    <>
-                        <DialogContentText
-                            sx={{
-                                display: allowModpack ? "inherit" : "none"
-                            }}
-                        >
-                            {tr("ContainerManager.ModpackWarn")}
-                        </DialogContentText>
-                        <TextField
-                            error={modpackError}
-                            className={classes.input}
-                            color={"secondary"}
-                            autoFocus
-                            sx={{
-                                display: allowModpack ? "inherit" : "none"
-                            }}
-                            margin={"dense"}
-                            onChange={(e) => {
-                                setModpackPath(e.target.value);
-                                void isFileExist(e.target.value).then((b) => {
-                                    if (b) {
-                                        void isWebFileExist(e.target.value)
-                                            .then((b) => {
-                                                setModpackError(!b);
-                                            })
-                                            .catch(() => {
-                                                setModpackError(true);
-                                            });
-                                    }
-                                    setModpackError(!b);
-                                });
-                            }}
-                            label={
-                                modpackError
-                                    ? tr("ContainerManager.InvalidModpackPath")
-                                    : tr("ContainerManager.ModpackPath")
-                            }
-                            type={"text"}
-                            spellCheck={false}
-                            fullWidth
-                            variant={"outlined"}
-                            value={modpackPath}
-                        />
-
-                        <Button
-                            className={classes.inputDark}
-                            type={"button"}
-                            sx={{
-                                display: allowModpack ? "inherit" : "none"
-                            }}
-                            variant={"contained"}
-                            onClick={async () => {
-                                const d = await remoteSelectModpack();
-                                setModpackPath(d);
-                                void isFileExist(d).then((b) => {
-                                    setModpackError(!b);
-                                });
-                            }}
-                        >
-                            {tr("ContainerManager.ChooseModpack")}
-                        </Button>
-                    </>
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -892,9 +748,7 @@ function AddNewContainer(props: {
                             props.closeFunc();
                             setName("");
                             setSelected("");
-                            setAllowModpack(false);
                             setCreateASC(hasEdited("cx.shared-root"));
-                            setModpackPath("");
                             setDirError(false);
                             setModpackError(false);
                         }}
@@ -907,8 +761,7 @@ function AddNewContainer(props: {
                             dirError ||
                             modpackError ||
                             usedName.trim().length <= 0 ||
-                            selectedDir.trim().length <= 0 ||
-                            (allowModpack && modpackPath.trim().length <= 0)
+                            selectedDir.trim().length <= 0
                         }
                         onClick={() => {
                             void start(props);

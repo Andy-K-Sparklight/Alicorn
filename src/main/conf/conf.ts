@@ -4,6 +4,7 @@ import fs from "fs-extra";
 import rfdc from "rfdc";
 import { ipcMain } from "electron";
 import { Channels } from "@/main/ipc/channels";
+import * as uuid from "uuid";
 
 /**
  * The config (v2) module which has enhanced type support.
@@ -67,6 +68,36 @@ const DEFAULT_CONFIG = {
              */
             enable: true
         }
+    },
+
+    /**
+     * Launcher client properties.
+     */
+    client: {
+        /**
+         * The ID to identify the client.
+         */
+        id: uuid.v7().replaceAll("-", "")
+    },
+
+    /**
+     * Runtime properties.
+     */
+    runtime: {
+        /**
+         * Global additional arguments.
+         *
+         * Values are separated by line breaks.
+         */
+        args: {
+            vm: "",
+            game: ""
+        },
+
+        /**
+         * The maximum lines of logs to be kept in buffer for scrolling back.
+         */
+        logsLimit: 10000
     }
 };
 

@@ -14,7 +14,6 @@ import {
     ThemeProvider,
     Typography
 } from "@mui/material";
-import { EventEmitter } from "events";
 import React, { useEffect, useRef, useState } from "react";
 import { throttle } from "throttle-debounce";
 import { ALICORN_SEPARATOR, FABRIC_META_ROOT, QUILT_META_ROOT, ReleaseType } from "@/modules/commons/Constants";
@@ -39,7 +38,6 @@ import { Icons } from "./Icons";
 import { ShiftEle } from "./Instruction";
 import { submitSucc, submitWarn } from "./Message";
 import { FailedHint, OperatingHintCustom } from "./OperatingHint";
-import { pffInstall } from "./PffFront";
 import { ALICORN_DEFAULT_THEME_DARK, ALICORN_DEFAULT_THEME_LIGHT, isBgDark } from "./Renderer";
 import { useFormStyles } from "./Stylex";
 import { tr } from "./Translator";
@@ -607,7 +605,7 @@ export function InstallCore(): JSX.Element {
                                     const mcv = baseMojangVersionFabric;
                                     const ct = getContainer(selectedFabricContainer);
 
-                                    const [stat2, qtapi] = await Promise.allSettled([
+                                    const [stat2] = await Promise.allSettled([
                                         (async () => {
                                             setProgressMsg(
                                                 tr(
@@ -622,14 +620,7 @@ export function InstallCore(): JSX.Element {
                                                 mcv,
                                                 ct
                                             );
-                                        })(),
-                                        pffInstall(
-                                            "@Modrinth:P7dR8mSH",
-                                            ct,
-                                            mcv,
-                                            new EventEmitter(),
-                                            4
-                                        )
+                                        })()
                                     ]);
 
                                     if (!stat2) {
@@ -640,9 +631,8 @@ export function InstallCore(): JSX.Element {
                                             setFailedMsg(tr("InstallCore.Progress.CouldNotExecute"));
                                         }
                                         return;
-                                    } else if (!qtapi) {
-                                        submitWarn(tr("InstallCore.Quilt.QuiltAPIFailed"));
                                     }
+                                    submitWarn(tr("InstallCore.Quilt.QuiltAPIFailed"));
                                     updateFabricCores(!updateFabricCoresBit);
                                     setProgressMsg("Done! Cleaning up files...");
                                     if (mounted.current) {
@@ -722,7 +712,7 @@ export function InstallCore(): JSX.Element {
                                     const mcv = baseMojangVersionQuilt;
                                     const ct = getContainer(selectedQuiltContainer);
 
-                                    const [stat2, qtapi] = await Promise.allSettled([
+                                    const [stat2] = await Promise.allSettled([
                                         (async () => {
                                             setProgressMsg(
                                                 tr(
@@ -737,14 +727,7 @@ export function InstallCore(): JSX.Element {
                                                 mcv,
                                                 ct
                                             );
-                                        })(),
-                                        pffInstall(
-                                            "@Modrinth:qvIfYCYJ",
-                                            ct,
-                                            mcv,
-                                            new EventEmitter(),
-                                            8 // If only Quilt works as it says
-                                        )
+                                        })()
                                     ]);
 
                                     if (!stat2) {
@@ -755,9 +738,9 @@ export function InstallCore(): JSX.Element {
                                             setFailedMsg(tr("InstallCore.Progress.CouldNotExecute"));
                                         }
                                         return;
-                                    } else if (!qtapi) {
-                                        submitWarn(tr("InstallCore.Quilt.QuiltAPIFailed"));
                                     }
+                                    // FIXME A workaround warning no Fabric/Quilt API available
+                                    submitWarn(tr("InstallCore.Quilt.QuiltAPIFailed"));
                                     updateFabricCores(!updateFabricCoresBit);
                                     setProgressMsg("Done! Cleaning up files...");
                                     if (mounted.current) {

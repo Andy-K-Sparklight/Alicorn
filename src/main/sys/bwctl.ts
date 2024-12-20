@@ -2,7 +2,7 @@
  * Window management module.
  */
 
-import { type BrowserWindow, ipcMain } from "electron";
+import { type BrowserWindow, ipcMain, screen } from "electron";
 import { Channels } from "@/main/ipc/channels";
 
 const allowedWindows = new Set<BrowserWindow>();
@@ -67,4 +67,25 @@ function forWindow(w: BrowserWindow, opt?: Partial<ControlOptions>) {
     }
 }
 
-export const bwctl = { setup, forWindow };
+/**
+ * Gets an optimal window size for the main window.
+ *
+ * This function sizes the window based on the size of the primary display, with the fixed aspect ratio 16:10 and scale
+ * factor 0.6.
+ */
+function optimalSize(): [number, number] {
+    let { width, height } = screen.getPrimaryDisplay().workAreaSize;
+    const ratio = width / height;
+    const expRatio = 16 / 10;
+    if (ratio > expRatio) {
+        width = height * expRatio;
+    } else {
+        height = width / expRatio;
+    }
+
+    const scaleFactor = 0.6;
+
+    return [width * scaleFactor, height * scaleFactor];
+}
+
+export const bwctl = { setup, forWindow, optimalSize };
