@@ -1,5 +1,5 @@
 {
-    "name": "Alicorn",
+    "name": "alicorn-launcher",
     "author": "skjsjhb",
     "main": "loader.js",
     "type": "module",

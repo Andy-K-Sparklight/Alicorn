@@ -1,6 +1,6 @@
 import React, { type FC, useEffect, useState } from "react";
 import { Tab, Tabs } from "@nextui-org/react";
-import { type PageInfo, pages } from "@/renderer/pages/pages";
+import { type PageInfo, pages } from "@pages/pages";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "wouter";
 

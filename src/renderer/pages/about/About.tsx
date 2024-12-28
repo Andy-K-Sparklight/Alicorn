@@ -1,6 +1,6 @@
 import React, { type FC, useState } from "react";
 import { Pagination } from "@nextui-org/react";
-import { AppInfoPage } from "@/renderer/pages/about/AppInfo";
+import { AppInfoPage } from "@pages/about/AppInfo";
 
 /**
  * The about page.

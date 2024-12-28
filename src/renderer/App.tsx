@@ -4,10 +4,10 @@ import { i18n } from "@/renderer/i18n/i18n";
 import { Divider, NextUIProvider } from "@nextui-org/react";
 import { Route, Switch, useLocation } from "wouter";
 import { useTheme } from "@nextui-org/use-theme";
-import { Header } from "@/renderer/components/Header";
+import { Header } from "@components/Header";
 import pkg from "~/package.json";
-import { Sidebar } from "@/renderer/components/Sidebar";
-import { About } from "@/renderer/pages/about/About";
+import { Sidebar } from "@components/Sidebar";
+import { About } from "@pages/about/About";
 
 /**
  * App entry.

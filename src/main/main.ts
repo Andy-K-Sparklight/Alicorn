@@ -7,10 +7,11 @@ import { bwctl } from "@/main/sys/bwctl";
 import { paths } from "@/main/fs/paths";
 import { mirror } from "@/main/net/mirrors";
 import { registry } from "@/main/registry/registry";
-import { installExtension, REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
+
 import os from "node:os";
 import { getOSName } from "@/main/sys/os";
 import { ext } from "@/main/sys/ext";
+import { unwrapESM } from "@/main/util/module";
 
 void main();
 
@@ -50,6 +51,7 @@ async function main() {
 
     if (import.meta.env.AL_DEV) {
         console.log("Installing React DevTools for development...");
+        const { installExtension, REACT_DEVELOPER_TOOLS } = await unwrapESM(import("electron-devtools-installer"));
         await installExtension(REACT_DEVELOPER_TOOLS);
 
         // https://github.com/MarshallOfSound/electron-devtools-installer/issues/244

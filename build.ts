@@ -9,6 +9,8 @@ import consola from "consola";
 import { build, createServer } from "vite";
 import * as child_process from "node:child_process";
 
+process.chdir(import.meta.dirname);
+
 const isDev = !process.env.NODE_ENV?.includes("prod");
 
 const outputDir = path.resolve(import.meta.dirname, "dist", isDev ? "dev" : "prod");
@@ -38,6 +40,7 @@ const mainBuildOptions: BuildOptions = {
         typiaPlugin({ cache: true, log: false }),
         TsconfigPathsPlugin({ tsconfig: "./tsconfig.json" })
     ],
+    chunkNames: "[hash]",
     splitting: true,
     format: "esm",
     ...sharedOptions
@@ -57,8 +60,8 @@ const preloadBuildOptions: BuildOptions = {
 consola.start(`Creating output directory at ${outputDir}`);
 await fs.ensureDir(outputDir);
 
-consola.start("Copying assets...");
-await fs.copy("assets", outputDir);
+consola.start("Copying resources...");
+await fs.copy("resources", outputDir);
 
 consola.start("Copying native addons...");
 if (JSON.parse(buildDefines["import.meta.env.AL_ENABLE_NATIVE_LZMA"])) {

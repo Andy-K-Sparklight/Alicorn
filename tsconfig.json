@@ -18,6 +18,15 @@
             "@/*": [
                 "./src/*"
             ],
+            "@components/*": [
+                "./src/renderer/components/*"
+            ],
+            "@pages/*": [
+                "./src/renderer/pages/*"
+            ],
+            "@assets/*": [
+                "./assets/*"
+            ],
             "~/*": [
                 "./*"
             ]

@@ -65,7 +65,7 @@ import { UpdateHint } from "./UpdateHint";
 import { VersionView } from "./VersionView";
 import { Welcome } from "./Welcome";
 import { YggdrasilAccountManager } from "./YggdrasilAccountManager";
-import { Home } from "@/renderer/pages/Home";
+import { Home } from "@pages/Home";
 
 const useStyles = makeStyles((theme: AlicornTheme) => ({
     root: {

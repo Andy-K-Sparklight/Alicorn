@@ -1,9 +1,21 @@
-import i18next from "i18next";
+import i18next, { BackendModule } from "i18next";
 import { initReactI18next } from "react-i18next";
-import LanguageDetector from "i18next-browser-languagedetector";
-import { i18nLoader } from "@/renderer/i18n/loader";
+import languageDetector from "i18next-browser-languagedetector";
+import YAML from "yaml";
 
 const namespaces = ["common", "pages"];
+
+/**
+ * Loading language resources from YAML files.
+ */
+const i18nLoader: BackendModule = {
+    type: "backend",
+    init: () => {},
+    read: async (language, namespace) => {
+        const dat = await (await fetch(`i18n/${language}/${namespace}.yml`)).text();
+        return YAML.parse(dat);
+    }
+};
 
 /**
  * Initializes i18n module.
@@ -13,10 +25,10 @@ async function init(): Promise<void> {
     await i18next
         .use(initReactI18next)
         .use(i18nLoader)
-        .use(LanguageDetector)
+        .use(languageDetector)
         .init({
             ns: namespaces,
-            fallbackLng: "en",
+            fallbackLng: "zh-CN",
             interpolation: {
                 escapeValue: false
             }

@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import pkg from "~/package.json";
 import { Button, ButtonGroup, Card, CardBody, Image } from "@nextui-org/react";
 import { AlertIcon, FileBadgeIcon, MarkGithubIcon } from "@primer/octicons-react";
+import logo from "@assets/logo.png";
 
 export const AppInfoPage = () => {
     return <div className="m-auto flex flex-col justify-center items-center w-3/4 gap-4">
@@ -23,7 +24,7 @@ const VersionCard = () => {
                     removeWrapper
                     className="h-full"
                     alt="Alicorn Logo"
-                    src="logo.png"
+                    src={logo}
                 />
                 <div className="flex flex-col grow">
                     <p className="text-xl font-bold">{t("name")}</p>
