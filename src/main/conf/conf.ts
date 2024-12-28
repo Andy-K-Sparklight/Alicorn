@@ -22,7 +22,12 @@ const DEFAULT_CONFIG = {
         /**
          * Path to the store root.
          */
-        store: ""
+        store: "",
+
+        /**
+         * Path to the game containers.
+         */
+        game: ""
     },
 
     /**
@@ -98,6 +103,26 @@ const DEFAULT_CONFIG = {
          * The maximum lines of logs to be kept in buffer for scrolling back.
          */
         logsLimit: 10000
+    },
+
+    /**
+     * Application settings.
+     */
+    app: {
+        /**
+         * Window related controls.
+         */
+        window: {
+            /**
+             * Window size, e.g. "960,540"
+             */
+            size: "",
+
+            /**
+             * Window position, e.g. "0,0"
+             */
+            pos: ""
+        }
     }
 };
 

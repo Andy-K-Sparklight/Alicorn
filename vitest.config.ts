@@ -11,6 +11,6 @@ export default defineConfig({
     },
     plugins: [
         tsConfigPaths(),
-        TypiaPlugin()
+        TypiaPlugin({ cache: true, log: false })
     ]
 });

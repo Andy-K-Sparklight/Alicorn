@@ -27,7 +27,7 @@ import { initEncrypt } from "@/modules/security/Encrypt";
 import { getMachineUniqueID } from "@/modules/security/Unique";
 import { todayPing } from "@/modules/selfupdate/Ping";
 import { checkUpdate, initUpdator } from "@/modules/selfupdate/Updator";
-import { App } from "./App";
+import { AppLegacy } from "./AppLegacy";
 import { completeFirstRun } from "./FirstRunSetup";
 import { InstructionProvider } from "./Instruction";
 import { submitError, submitWarn } from "./Message";
@@ -46,26 +46,6 @@ import "@fontsource/noto-sans-sc";
 try {
     console.log("Renderer first log.");
     console.log("Configuring window...");
-    const windowPos = localStorage.getItem("System.WindowPos");
-    const windowSize = localStorage.getItem("System.WindowSize");
-    if (windowSize) {
-        const s = windowSize.split(",").map((r) => {
-            return parseInt(r);
-        });
-        ipcRenderer.send("configureWindowSize", ...s);
-    }
-    if (windowPos) {
-        const s = windowPos.split(",").map((r) => {
-            return parseInt(r);
-        });
-        ipcRenderer.send("configureWindowPos", ...s);
-    }
-    ipcRenderer.on("mainWindowMoved", (_e, pos: number[]) => {
-        localStorage.setItem("System.WindowPos", pos.join(","));
-    });
-    ipcRenderer.on("mainWindowResized", (_e, sz: number[]) => {
-        localStorage.setItem("System.WindowSize", sz.join(","));
-    });
     const t0 = new Date();
     printScreen("Setting up error pop system...");
     window.addEventListener("unhandledrejection", (e) => {
@@ -88,7 +68,7 @@ try {
         e1.innerHTML = e1.innerHTML + "Done.";
     }
     printScreen("Log system enabled.");
-    console.log(`Alicorn ${pkg.family} Renderer Process`);
+    console.log(`Alicorn ${pkg.codename} Renderer Process`);
     console.log("%c❤ From Annie K Rarity Sparklight", "color:#df307f;");
     console.log(
         "%cSparklight is a girl - a filly, to be accurate.",
@@ -122,7 +102,7 @@ try {
 
     // Native setup routine
     const serial = Math.floor(Math.random() * 100);
-    if (await native.ping(serial) != serial + 1) {
+    if (await native.dev.ping(serial) != serial + 1) {
         throw "Unable to connect to background API services";
     }
     console.log("Connected to background.");
@@ -470,7 +450,7 @@ function RendererBootstrap(): JSX.Element {
                 <ThemeProvider theme={ALICORN_DEFAULT_THEME_DARK}>
                     <NextUIProvider>
                         <Router hook={useHashLocation}>
-                            <App/>
+                            <AppLegacy/>
                         </Router>
                     </NextUIProvider>
                     {getString("theme") === "Random" ? (
@@ -498,7 +478,7 @@ function RendererBootstrap(): JSX.Element {
                         }}
                         color={"primary"}
                     >
-                        {"Alicorn JE " + pkg.family + " #" + pkg.updatorVersion}
+                        {"Alicorn JE " + pkg.codename + " #" + pkg.updatorVersion}
                     </Typography>
                     <div
                         style={{

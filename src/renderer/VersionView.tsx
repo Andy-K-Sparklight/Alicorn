@@ -33,7 +33,7 @@ export function VersionView(): JSX.Element {
             <Typography className={classes.title} gutterBottom>
                 {tr(
                     "VersionView.Name",
-                    `AppVersion=${pkg.family}`,
+                    `AppVersion=${pkg.codename}`,
                     `UpdatorVersion=${pkg.updatorVersion}`
                 )}
             </Typography>

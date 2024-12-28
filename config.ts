@@ -1,24 +1,3 @@
-export const COPYRIGHT_NOTICE = `
-@license
-
-Alicorn Launcher
-Copyright (C) 2021-2022 Andy K Rarity Sparklight ("ThatRarityEG")
-Copyright (C) 2024 Ted Gao ("skjsjhb")
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-`;
-
 export const DEV_SERVER_PORT = 9000;
 
 const isDev = !process.env.NODE_ENV?.includes("prod");
@@ -33,9 +12,15 @@ const enableBMCLAPI = false;
 // By changing the option to 'true' you are at your own risk of breaking the EULA.
 const enableLocalAccount = false;
 
+// Decompression of LZMA is handled by lzma-native by default, yet not available on all platforms.
+// Disabling this option enforces Alicorn to fall back to a pure JavaScript implementation.
+// JavaScript version can be slower and does not support streaming.
+const enableNativeLZMA = true;
+
 export const buildDefines = {
     "import.meta.env.AL_DEV": JSON.stringify(isDev),
     "import.meta.env.AL_ENABLE_BMCLAPI": JSON.stringify(enableBMCLAPI),
     "import.meta.env.AL_ENABLE_LOCAL_ACCOUNT": JSON.stringify(enableLocalAccount),
-    "import.meta.env.AL_DEV_SERVER_PORT": JSON.stringify(DEV_SERVER_PORT)
+    "import.meta.env.AL_DEV_SERVER_PORT": JSON.stringify(DEV_SERVER_PORT),
+    "import.meta.env.AL_ENABLE_NATIVE_LZMA": JSON.stringify(enableNativeLZMA)
 };

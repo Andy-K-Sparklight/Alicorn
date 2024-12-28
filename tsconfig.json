@@ -10,10 +10,10 @@
         "moduleResolution": "Bundler",
         "resolveJsonModule": true,
         "baseUrl": "./",
-        "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
+        "noEmit": true,
         "paths": {
             "@/*": [
                 "./src/*"
@@ -22,11 +22,6 @@
                 "./*"
             ]
         },
-        "plugins": [
-            {
-                "transform": "typia/lib/transform"
-            }
-        ],
         "strictNullChecks": true
     },
     "include": [

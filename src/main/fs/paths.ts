@@ -45,6 +45,13 @@ function optimalStoreRoot(): string {
 }
 
 /**
+ * Finds an optimal location for game files.
+ */
+function optimalGameRoot(): string {
+    return path.join(optimalStoreRoot(), "game");
+}
+
+/**
  * Init options for the paths module.
  */
 interface PathsInit {
@@ -52,10 +59,16 @@ interface PathsInit {
      * The root directory of the store (managed by Alicorn).
      */
     storeRoot: string;
+
+    /**
+     * The root directory of the game containers.
+     */
+    gameRoot: string;
 }
 
 let initPrompt: Partial<PathsInit> | null = null;
 let fallbackStoreRoot = "";
+let fallbackGameRoot = "";
 
 /**
  * Setup path resolvers with the given prompts.
@@ -66,6 +79,7 @@ function setup(init?: Partial<PathsInit>): void {
 
     initPrompt = init ?? null;
     fallbackStoreRoot = optimalStoreRoot();
+    fallbackGameRoot = optimalGameRoot();
 
     console.log(`Fallback store path: ${fallbackStoreRoot}`);
 }
@@ -75,6 +89,13 @@ function setup(init?: Partial<PathsInit>): void {
  */
 function getStoreRoot() {
     return process.env.ALICORN_STORE_PATH || initPrompt?.storeRoot || conf().paths.store || fallbackStoreRoot;
+}
+
+/**
+ * Gets the path to the game containers.
+ */
+function getGameRoot() {
+    return initPrompt?.gameRoot || conf().paths.game || fallbackGameRoot;
 }
 
 /**
@@ -90,6 +111,11 @@ export const paths = {
      * Stores support files and registries.
      */
     store: createResolver(() => getStoreRoot()),
+
+    /**
+     * Stores game files.
+     */
+    game: createResolver(() => getGameRoot()),
 
     /**
      * Stores app files.

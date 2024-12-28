@@ -1,6 +1,7 @@
 {
     "name": "Alicorn",
-    "author": "Annie K Rarity Sparklight",
-    "main": "main.js",
-    "version": "1.0.0"
+    "author": "skjsjhb",
+    "main": "loader.js",
+    "type": "module",
+    "version": "2.0.0"
 }

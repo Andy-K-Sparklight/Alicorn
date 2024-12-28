@@ -24,7 +24,7 @@ async function patchComplianceLevel(src: Record<string, unknown>) {
             version = src.id;
         }
         if (version) {
-            const { complianceLevels } = await import("@/refs/compliance-levels.json");
+            const { default: { complianceLevels } } = await import("@/refs/compliance-levels.json");
             if (version in complianceLevels) {
                 level = (complianceLevels as Record<string, number>)[version];
             }
@@ -45,7 +45,7 @@ async function transformLegacy(src: Record<string, unknown>): Promise<void> {
 
     if (src.complianceLevel === 0 && "minecraftArguments" in src) {
         const gameArgs = (typeof src["minecraftArguments"] === "string" ? src["minecraftArguments"] : "").split(" ");
-        const { vmArgs } = await import("@/refs/default-vm-args.json");
+        const { default: { vmArgs } } = await import("@/refs/default-vm-args.json");
         Object.defineProperty(src, "arguments", {
             value: {
                 game: gameArgs,

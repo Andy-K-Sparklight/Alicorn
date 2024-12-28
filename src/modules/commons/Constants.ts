@@ -8,7 +8,7 @@ import pkg from "../../../package.json";
 export const ALICORN_VERSION_TYPE = "Alicorn";
 export const MOJANG_USER_TYPE = "mojang";
 export const LAUNCHER_NAME = "Alicorn";
-export const LAUNCHER_VERSION = pkg.family;
+export const LAUNCHER_VERSION = pkg.codename;
 export const FILE_SEPARATOR = path.delimiter;
 export const SPACE = " ";
 export const ALICORN_SEPARATOR = "\u2764\u2764";

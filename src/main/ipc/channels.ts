@@ -7,8 +7,7 @@ export enum Channels {
     SHOW_WINDOW = "showWindow",
     HIDE_WINDOW = "hideWindow",
     CLOSE_WINDOW = "closeWindow",
+    MINIMIZE_WINDOW = "minimizeWindow",
 
-    REQUEST_CLOSE = "requestClose",
-
-    LOAD_LANG_RESOURCE = "loadLangResource"
+    OPEN_URL = "openUrl"
 }
