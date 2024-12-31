@@ -1,16 +1,17 @@
-import { app, BrowserWindow, Menu, screen } from "electron";
-import { btoa } from "js-base64";
-import os from "os";
+import { app, BrowserWindow, session } from "electron";
 import path from "path";
-import { getBoolean, getNumber, getString, loadConfigSync } from "@/modules/config/ConfigSupport";
-import { registerBackgroundListeners } from "./Background";
 import pkg from "~/package.json";
 import { ping } from "@/main/dev/ping";
 import { conf } from "@/main/conf/conf";
 import { bwctl } from "@/main/sys/bwctl";
 import { paths } from "@/main/fs/paths";
 import { mirror } from "@/main/net/mirrors";
-import { i18nHost } from "@/main/i18n/host";
+import { registry } from "@/main/registry/registry";
+
+import os from "node:os";
+import { getOSName } from "@/main/sys/os";
+import { ext } from "@/main/sys/ext";
+import { unwrapESM } from "@/main/util/module";
 
 void main();
 
@@ -23,12 +24,13 @@ let mainWindow: BrowserWindow | null = null;
  * Main entry point.
  */
 async function main() {
-    checkSingleInstance();
+    process.noAsar = true;
 
-    console.log(`Alicorn Launcher "${pkg.family}" ${pkg.version}`);
+    if (!checkSingleInstance()) return;
+
+    console.log(`Alicorn Launcher "${pkg.codename}" ${pkg.version}`);
 
     const { electron, node, chrome } = process.versions;
-
     console.log(`Electron ${electron} / Node.js ${node} / Chrome ${chrome}`);
 
     console.log("Loading config...");
@@ -37,55 +39,44 @@ async function main() {
     console.log("Setting up application...");
     await app.whenReady();
 
-    console.log("Executing regular initializers...");
+    // Create an empty handler to prevent auto-closing when all windows are closed
+    app.on("window-all-closed", () => {});
+
+    console.log("Initializing modules...");
     conf.setup();
-    ping.setup();
-
-    // TODO remove legacy code after refactor
-    console.log("Executing legacy tasks...");
-    loadConfigSync();
-
-    if (!getBoolean("hardware-acc") && !getBoolean("features.skin-view-3d")) {
-        // If 3D enabled then we should use hardware acc
-        try {
-            app.disableHardwareAcceleration();
-        } catch {
-        }
-    }
-
-    addErrorHandlers();
-
-    // Legacy code ends here
-
-    console.log("Creating window...");
-    const [width, height] = optimalWindowSize();
-
-    const appPath = app.getAppPath();
 
     paths.setup();
-    i18nHost.setup();
+    ping.setup();
+    ext.setup();
 
+    if (import.meta.env.AL_DEV) {
+        console.log("Installing React DevTools for development...");
+        const { installExtension, REACT_DEVELOPER_TOOLS } = await unwrapESM(import("electron-devtools-installer"));
+        await installExtension(REACT_DEVELOPER_TOOLS);
+
+        // https://github.com/MarshallOfSound/electron-devtools-installer/issues/244
+        // A reload is needed for the extensions to work
+        console.log("Reloading extensions...");
+        session.defaultSession.getAllExtensions().forEach(ex => session.defaultSession.loadExtension(ex.path));
+    }
+
+    console.log("Creating window...");
+    const [width, height] = bwctl.optimalSize(); // Initial size, will be changed by user settings later
     mainWindow = new BrowserWindow({
         width, height,
         webPreferences: {
-            webSecurity: false, // TODO disable after resolve CORS issues
-            nodeIntegration: true, // TODO disable after delegate node calls to background
-            nodeIntegrationInWorker: true, // TODO disable after worker refactor
-            contextIsolation: false, // TODO
-            sandbox: false, // TODO
             spellcheck: false,
-            zoomFactor: getNumber("theme.zoom-factor", 1.0),
             defaultEncoding: "UTF-8",
-            backgroundThrottling: false,
-            preload: paths.app.get("preload.js")
+            preload: paths.app.get("preload.js"),
+            devTools: import.meta.env.AL_DEV
         },
-        frame: getString("frame.drag-impl") === "TitleBar",
+        frame: false,
         show: false,
-        backgroundColor: "#fff"
+        icon: getIconPath()
     });
 
     bwctl.setup();
-    bwctl.forWindow(mainWindow, { forwardCloseEvent: true });
+    bwctl.forWindow(mainWindow, { isMain: true });
 
     // Exit app once main window closed
     mainWindow.once("closed", () => {
@@ -93,58 +84,48 @@ async function main() {
         void shutdownApp();
     });
 
-
-    // TODO remove legacy code after refactor
-    createMenus(mainWindow);
-
-    mainWindow.webContents.on("did-navigate-in-page", () => {
-        mainWindow?.webContents.setZoomLevel(0);
-    });
-    mainWindow.webContents.on("paint", () => {
-        mainWindow?.webContents.setZoomLevel(0);
-    });
-    mainWindow.webContents.on("did-finish-load", () => {
-        mainWindow?.webContents.setZoomLevel(0);
-    });
-
-    console.log("Registering event listeners...");
-    registerBackgroundListeners();
-
-    mainWindow.once("ready-to-show", async () => {
-        mainWindow?.on("resize", () => {
-            mainWindow?.webContents.send("mainWindowResized", mainWindow.getSize());
-        });
-        mainWindow?.on("move", () => {
-            mainWindow?.webContents.send("mainWindowMoved", mainWindow.getPosition());
-        });
-
-        console.log("All caught up! Alicorn is now initialized.");
-        if (getBoolean("dev")) {
-            console.log("Development mode detected, opening devtools...");
-            mainWindow?.webContents.openDevTools();
-        }
-    });
-
-    console.log("Preparing window!");
+    console.log("Loading window contents...");
 
     // Load renderer from dev server (dev) or file (prod).
     if (import.meta.env.AL_DEV && process.env.ALICORN_DEV_SERVER) {
-        const devServerURL = `http://localhost:${import.meta.env.AL_DEV_SERVER_PORT}/Renderer.html`;
+        const devServerURL = `http://localhost:${import.meta.env.AL_DEV_SERVER_PORT}/`;
         console.log(`Picked up dev server URL: ${devServerURL}`);
         await mainWindow.loadURL(devServerURL);
+
+        injectDevToolsStyles(mainWindow);
+        mainWindow.webContents.openDevTools();
     } else {
-        await mainWindow.loadFile(path.resolve(appPath, "Renderer.html"));
+        await mainWindow.loadFile(path.resolve(app.getAppPath(), "renderer", "index.html"));
     }
 
-    mainWindow?.webContents.setZoomLevel(0);
-
-    // Legacy code ends here
     console.log("Executing late init tasks...");
 
-    // Update mirrors
     await mirror.bench();
+}
 
+/**
+ * Fix Electron DevTools styles on Windows.
+ */
+function injectDevToolsStyles(w: BrowserWindow) {
+    if (os.platform() !== "win32") return;
 
+    w.webContents.on("devtools-opened", () => {
+        const css = `
+            :root {
+                --source-code-font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace !important;
+                --source-code-font-size: 14px !important;
+                --monospace-font-family: var(--source-code-font-family) !important;
+                --monospace-font-size: var(--source-code-font-size) !important;
+                --default-font-size: var(--source-code-font-size) !important;
+            }
+        `;
+        w.webContents.devToolsWebContents?.executeJavaScript(`
+            const overriddenStyle = document.createElement('style');
+            overriddenStyle.innerHTML = '${css.replaceAll("\n", " ").replaceAll("'", "\\'")}';
+            document.body.append(overriddenStyle);
+            document.querySelectorAll('.platform-windows').forEach(el => el.classList.remove('platform-windows'));
+        `);
+    });
 }
 
 /**
@@ -160,51 +141,10 @@ async function shutdownApp() {
     }, 30_000);
 
     await conf.store();
+    await registry.saveAll();
 
-    app.exit();
-}
-
-/**
- * Create menus.
- *
- * @param w Window to apply menus.
- * @deprecated The menus lack portability and will be replaced after UI re-layout
- */
-function createMenus(w: BrowserWindow) {
-    if (getString("frame.drag-impl") === "TitleBar") {
-        const subMenus = [
-            "LaunchPad",
-            "Welcome",
-            "InstallCore",
-            "ContainerManager",
-            "JavaSelector",
-            "AccountManager",
-            "Cadance",
-            "Boticorn",
-            "UtilitiesIndex",
-            "Statistics",
-            "Options",
-            "Version",
-            "TheEndingOfTheEnd"
-        ].map((lb) => {
-            return {
-                label: lb,
-                click: async () => mainWindow?.webContents.send("menu-click", lb)
-            };
-        });
-
-        if (os.platform() == "darwin") {
-            const menu = Menu.buildFromTemplate([
-                { label: "Alicorn", submenu: [{ role: "quit" }, ...subMenus] }
-            ]);
-            Menu.setApplicationMenu(menu);
-        } else {
-            const menu = Menu.buildFromTemplate(subMenus);
-            w.setMenu(menu);
-        }
-    } else {
-        w.setMenu(null);
-    }
+    console.log("Exiting.");
+    app.quit();
 }
 
 /**
@@ -214,6 +154,7 @@ function checkSingleInstance() {
     if (!app.requestSingleInstanceLock()) {
         console.log("I won't create a new instance when another Alicorn is running.");
         app.quit();
+        return false;
     } else {
         const reopenWindow = () => {
             mainWindow?.show();
@@ -223,56 +164,21 @@ function checkSingleInstance() {
 
         // macOS open action handler
         app.on("activate", reopenWindow);
+        return true;
     }
 }
 
 /**
- * Gets an optimal window size for the main window.
+ * Gets the path to the icon.
  *
- * This function sizes the window based on the size of the primary display, with the fixed aspect ratio 16:10 and scale
- * factor 0.6.
+ * This method has no effect on macOS.
  */
-function optimalWindowSize(): [number, number] {
-    let { width, height } = screen.getPrimaryDisplay().workAreaSize;
-    const ratio = width / height;
-    const expRatio = 16 / 10;
-    if (ratio > expRatio) {
-        width = height * expRatio;
-    } else {
-        height = width / expRatio;
+function getIconPath(): string {
+    let rel = "icon.png";
+    if (getOSName() === "windows") {
+        rel = "icon.ico";
     }
-
-    const scaleFactor = 0.6;
-
-    return [width * scaleFactor, height * scaleFactor];
-}
-
-
-/**
- * Moves to the error page when an error occurred on the main process.
- *
- * @deprecated This negatively affects user experience
- */
-function addErrorHandlers() {
-    process.on("uncaughtException", async (e) => {
-        try {
-            console.log(e);
-            await mainWindow?.webContents.loadFile("Error.html", {
-                hash: btoa(encodeURIComponent(String(e.message)))
-            });
-        } catch {
-        }
-    });
-
-    process.on("unhandledRejection", async (r) => {
-        try {
-            console.log(String(r));
-            await mainWindow?.webContents.loadFile("Error.html", {
-                hash: btoa(encodeURI(String(r)))
-            });
-        } catch {
-        }
-    });
+    return path.join(app.getAppPath(), "icons", rel);
 }
 
 export function getMainWindow(): BrowserWindow | null {

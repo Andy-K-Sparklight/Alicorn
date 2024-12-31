@@ -5,10 +5,6 @@ export class OptionalArgument {
     rules: RuleSet;
     value: string[];
 
-    clone(): OptionalArgument {
-        return new OptionalArgument(this.rules.clone(), this.value.concat());
-    }
-
     constructor(rules: RuleSet, value: string[]) {
         this.rules = rules;
         this.value = value;
@@ -29,18 +25,18 @@ export class OptionalArgument {
         }
         return new OptionalArgument(rs, values);
     }
+
+    clone(): OptionalArgument {
+        return new OptionalArgument(this.rules.clone(), this.value.concat());
+    }
 }
 
 export class ArtifactMeta {
+    private static readonly EMPTY_INSTANCE = new ArtifactMeta("", "", "", 0);
     url: string;
     sha1: string;
     path: string;
     size: number;
-    private static readonly EMPTY_INSTANCE = new ArtifactMeta("", "", "", 0);
-
-    static emptyArtifactMeta(): ArtifactMeta {
-        return ArtifactMeta.EMPTY_INSTANCE;
-    }
 
     constructor(url: string, sha1: string, path: string, size: number) {
         this.url = url;
@@ -49,8 +45,8 @@ export class ArtifactMeta {
         this.size = size;
     }
 
-    clone(): ArtifactMeta {
-        return new ArtifactMeta(this.url, this.sha1, this.path, this.size);
+    static emptyArtifactMeta(): ArtifactMeta {
+        return ArtifactMeta.EMPTY_INSTANCE;
     }
 
     static fromObject(obj: Record<string, unknown>): ArtifactMeta {
@@ -71,6 +67,10 @@ export class ArtifactMeta {
             sz as number
         );
     }
+
+    clone(): ArtifactMeta {
+        return new ArtifactMeta(this.url, this.sha1, this.path, this.size);
+    }
 }
 
 export class LibraryMeta {
@@ -79,16 +79,6 @@ export class LibraryMeta {
     isNative: boolean;
     rules: RuleSet;
     name: string;
-
-    clone(): LibraryMeta {
-        return new LibraryMeta(
-            this.artifact.clone(),
-            this.classifiers.clone(),
-            this.isNative,
-            this.rules.clone(),
-            this.name
-        );
-    }
 
     constructor(
         artifact: ArtifactMeta,
@@ -159,23 +149,28 @@ export class LibraryMeta {
         );
     }
 
+    clone(): LibraryMeta {
+        return new LibraryMeta(
+            this.artifact.clone(),
+            this.classifiers.clone(),
+            this.isNative,
+            this.rules.clone(),
+            this.name
+        );
+    }
+
     canApply(): boolean {
         return this.rules.judge();
     }
 }
 
 class RuleSet {
+    private static readonly EMPTY_RULESET = new RuleSet();
     private readonly rules: Rule[] = [];
 
-    clone(): RuleSet {
-        return new RuleSet(
-            this.rules.map((r) => {
-                return r.clone();
-            })
-        );
+    constructor(rules?: Rule[]) {
+        this.rules = rules || [];
     }
-
-    private static readonly EMPTY_RULESET = new RuleSet();
 
     static fromArray(obj: unknown): RuleSet {
         const tmpArr = [];
@@ -194,8 +189,12 @@ class RuleSet {
         return RuleSet.EMPTY_RULESET;
     }
 
-    constructor(rules?: Rule[]) {
-        this.rules = rules || [];
+    clone(): RuleSet {
+        return new RuleSet(
+            this.rules.map((r) => {
+                return r.clone();
+            })
+        );
     }
 
     judge(): boolean {
@@ -216,19 +215,22 @@ class RuleSet {
 // We don't (and can't) really judge those rules by parsing the JSON
 // Mojang only uses 'os.name' 'os.version' and 'os.arch' so far, though
 class Rule {
+    private static readonly DO_NOTHING_RULE = new Rule(true);
     isAllow: boolean;
     requireOSType: string;
     requireOSVersion: string;
     requireOSArch: string;
-    private static readonly DO_NOTHING_RULE = new Rule(true);
 
-    clone(): Rule {
-        return new Rule(
-            this.isAllow,
-            this.requireOSType,
-            this.requireOSVersion,
-            this.requireOSArch
-        );
+    constructor(
+        isAllow: boolean,
+        osType?: string,
+        osVer?: string,
+        osArch?: string
+    ) {
+        this.isAllow = isAllow;
+        this.requireOSType = osType || "";
+        this.requireOSVersion = osVer || "";
+        this.requireOSArch = osArch || "";
     }
 
     static nothingRule(): Rule {
@@ -255,16 +257,13 @@ class Rule {
         return new Rule(action, osName, osVer, osArch);
     }
 
-    constructor(
-        isAllow: boolean,
-        osType?: string,
-        osVer?: string,
-        osArch?: string
-    ) {
-        this.isAllow = isAllow;
-        this.requireOSType = osType || "";
-        this.requireOSVersion = osVer || "";
-        this.requireOSArch = osArch || "";
+    clone(): Rule {
+        return new Rule(
+            this.isAllow,
+            this.requireOSType,
+            this.requireOSVersion,
+            this.requireOSArch
+        );
     }
 
     shouldApply(): boolean {
@@ -305,12 +304,6 @@ export function getCurrentOSNameAsMojang(): string {
 }
 
 export class ClassifiersMeta {
-    javadoc: ArtifactMeta;
-    nativesLinux: ArtifactMeta;
-    nativesMacOS: ArtifactMeta;
-    nativesWindows: ArtifactMeta;
-    sources: ArtifactMeta;
-
     private static readonly EMPTY_INSTANCE = new ClassifiersMeta(
         ArtifactMeta.emptyArtifactMeta(),
         ArtifactMeta.emptyArtifactMeta(),
@@ -318,20 +311,11 @@ export class ClassifiersMeta {
         ArtifactMeta.emptyArtifactMeta(),
         ArtifactMeta.emptyArtifactMeta()
     );
-
-    clone(): ClassifiersMeta {
-        return new ClassifiersMeta(
-            this.javadoc.clone(),
-            this.nativesLinux.clone(),
-            this.nativesMacOS.clone(),
-            this.nativesWindows.clone(),
-            this.sources.clone()
-        );
-    }
-
-    static emptyClassifiersMeta(): ClassifiersMeta {
-        return ClassifiersMeta.EMPTY_INSTANCE;
-    }
+    javadoc: ArtifactMeta;
+    nativesLinux: ArtifactMeta;
+    nativesMacOS: ArtifactMeta;
+    nativesWindows: ArtifactMeta;
+    sources: ArtifactMeta;
 
     constructor(
         jd: ArtifactMeta,
@@ -345,6 +329,10 @@ export class ClassifiersMeta {
         this.nativesMacOS = nMacOS;
         this.nativesWindows = nWin;
         this.sources = src;
+    }
+
+    static emptyClassifiersMeta(): ClassifiersMeta {
+        return ClassifiersMeta.EMPTY_INSTANCE;
     }
 
     static fromObject(obj: Record<string, unknown>): ClassifiersMeta {
@@ -380,14 +368,19 @@ export class ClassifiersMeta {
 
         return new ClassifiersMeta(javadoc, nL, nM, nW, sources);
     }
+
+    clone(): ClassifiersMeta {
+        return new ClassifiersMeta(
+            this.javadoc.clone(),
+            this.nativesLinux.clone(),
+            this.nativesMacOS.clone(),
+            this.nativesWindows.clone(),
+            this.sources.clone()
+        );
+    }
 }
 
 export class AssetIndexArtifactMeta {
-    id: string;
-    sha1: string;
-    size: number;
-    totalSize: number;
-    url: string;
     private static readonly EMPTY_INSTANCE = new AssetIndexArtifactMeta(
         "",
         "",
@@ -395,20 +388,11 @@ export class AssetIndexArtifactMeta {
         0,
         ""
     );
-
-    clone(): AssetIndexArtifactMeta {
-        return new AssetIndexArtifactMeta(
-            this.id,
-            this.sha1,
-            this.size,
-            this.totalSize,
-            this.url
-        );
-    }
-
-    static emptyAssetIndexArtifactMeta(): AssetIndexArtifactMeta {
-        return AssetIndexArtifactMeta.EMPTY_INSTANCE;
-    }
+    id: string;
+    sha1: string;
+    size: number;
+    totalSize: number;
+    url: string;
 
     constructor(
         id: string,
@@ -422,6 +406,10 @@ export class AssetIndexArtifactMeta {
         this.size = size;
         this.totalSize = totalSize;
         this.url = url;
+    }
+
+    static emptyAssetIndexArtifactMeta(): AssetIndexArtifactMeta {
+        return AssetIndexArtifactMeta.EMPTY_INSTANCE;
     }
 
     static fromObject(obj: unknown): AssetIndexArtifactMeta {
@@ -451,20 +439,21 @@ export class AssetIndexArtifactMeta {
         }
         return AssetIndexArtifactMeta.emptyAssetIndexArtifactMeta();
     }
+
+    clone(): AssetIndexArtifactMeta {
+        return new AssetIndexArtifactMeta(
+            this.id,
+            this.sha1,
+            this.size,
+            this.totalSize,
+            this.url
+        );
+    }
 }
 
 export class AssetIndexFileMeta {
     objects: AssetMeta[];
     isLegacy: boolean;
-
-    clone(): AssetIndexFileMeta {
-        return new AssetIndexFileMeta(
-            this.objects.map((o) => {
-                return o.clone();
-            }),
-            this.isLegacy
-        );
-    }
 
     constructor(objects: AssetMeta[], isLegacy: boolean) {
         this.objects = objects;
@@ -483,16 +472,21 @@ export class AssetIndexFileMeta {
         }
         return new AssetIndexFileMeta(objs, isLegacy);
     }
+
+    clone(): AssetIndexFileMeta {
+        return new AssetIndexFileMeta(
+            this.objects.map((o) => {
+                return o.clone();
+            }),
+            this.isLegacy
+        );
+    }
 }
 
 export class AssetMeta {
     hash: string;
     size: number;
     path: string;
-
-    clone(): AssetMeta {
-        return new AssetMeta(this.hash, this.size, this.path);
-    }
 
     constructor(hash: string, size: number, path: string) {
         this.hash = hash;
@@ -524,5 +518,9 @@ export class AssetMeta {
             size = obj["size"];
         }
         return new AssetMeta(hash, size, path);
+    }
+
+    clone(): AssetMeta {
+        return new AssetMeta(this.hash, this.size, this.path);
     }
 }

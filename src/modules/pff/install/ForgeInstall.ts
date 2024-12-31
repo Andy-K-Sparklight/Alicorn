@@ -79,7 +79,7 @@ function bootForgeInstaller(
             PONY_KIND_MAIN_CLASS,
             container.resolvePath("")
         ],
-        {cwd: container.resolvePath()}
+        { cwd: container.resolvePath() }
     );
     return new Promise<void>((resolve, reject) => {
         rcp.on("close", (code) => {
@@ -209,14 +209,14 @@ export async function makeTempLP(container: MinecraftContainer): Promise<void> {
     try {
         const originLP = container.resolvePath(LAUNCHER_PROFILES);
         if (!(await isFileExist(originLP))) {
-            await fs.writeJSON(originLP, {profiles: {}});
+            await fs.writeJSON(originLP, { profiles: {} });
             return;
         }
         try {
             const f = await readJSON(originLP);
             if (typeof f.profiles !== "object") {
                 // Bad LP!
-                await fs.writeJSON(originLP, {profiles: {}});
+                await fs.writeJSON(originLP, { profiles: {} });
             }
         } catch {}
     } catch {}

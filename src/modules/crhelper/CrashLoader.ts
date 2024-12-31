@@ -23,11 +23,11 @@ export interface CrashLoaderReport {
 }
 
 export class CrashReportCursor {
-    private tmpValues: Map<string, string> = new Map();
     lines: string[] = [];
     currentLine = 0;
     lineMap: Map<number, { origin: string; report: CrashLoaderReport[] }> =
         new Map();
+    private tmpValues: Map<string, string> = new Map();
 
     constructor(content: string[]) {
         content = content.map((l) => {

@@ -16,7 +16,6 @@ import { JAR_SUFFIX } from "./NativesLint";
 import { readFileSync } from "original-fs";
 import { type VersionProfile } from "@/main/profile/version-profile";
 import { filterRules } from "@/main/profile/rules";
-import { isNativeLibrary } from "@/main/profile/native-lib";
 
 // Generate game arguments
 export function generateGameArgs(
@@ -59,7 +58,7 @@ export function generateGameArgs(
     const args = profile.arguments.game.concat()
         .filter(it => typeof it === "string" || filterRules(it.rules, features))
         .flatMap(it => typeof it === "string" ? it : it.value);
-    
+
     return applyVars(vMap, args);
 }
 
@@ -73,7 +72,6 @@ export function generateVMArgs(
     vMap.set("launcher_version", LAUNCHER_VERSION);
 
     const usingLibs: string[] = [];
-    const nativesLibs: string[] = [];
     for (const l of profile.libraries) {
         if (!filterRules(l.rules, new Set())) { // TODO add feature set
             continue;
@@ -83,12 +81,6 @@ export function generateVMArgs(
             const lb = container.getLibraryPath(tPath);
             if (!usingLibs.includes(lb)) {
                 usingLibs.push(lb);
-            }
-        }
-        if (isNativeLibrary(l)) {
-            const nlb = container.getNativeLibraryExtractedRoot(l);
-            if (!nativesLibs.includes(nlb)) {
-                nativesLibs.push(nlb);
             }
         }
     }

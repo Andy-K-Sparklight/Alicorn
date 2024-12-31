@@ -1,14 +1,19 @@
-import { ipcRenderer } from "electron";
+import { contextBridge, ipcRenderer } from "electron";
 import { Channels } from "@/main/ipc/channels";
 
 console.log("Enabling preload script.");
 
 const native = {
     /**
-     * Sends a ping message to main process.
+     * Development APIs.
      */
-    ping(serial: number): Promise<number> {
-        return ipcRenderer.invoke(Channels.PING, serial);
+    dev: {
+        /**
+         * Sends a ping message to main process.
+         */
+        ping(serial: number): Promise<number> {
+            return ipcRenderer.invoke(Channels.PING, serial);
+        }
     },
 
     /**
@@ -16,58 +21,48 @@ const native = {
      */
     bwctl: {
         /**
-         * Make the window visible.
+         * Makes the window visible.
          */
         show(): void {
             ipcRenderer.send(Channels.SHOW_WINDOW);
         },
 
         /**
-         * Make the window no longer visible.
+         * Makes the window no longer visible.
          */
         hide(): void {
             ipcRenderer.send(Channels.HIDE_WINDOW);
         },
 
         /**
-         * Close the window.
+         * Closes the window.
          */
         close(): void {
             ipcRenderer.send(Channels.CLOSE_WINDOW);
         },
 
         /**
-         * Gets notified when a user close request is forwarded from the main process.
-         * @param handler Event handler.
-         *
-         * @deprecated This is a workaround. The method will be removed once the frontend no longer contains losable changes.
+         * Minimizes the window.
          */
-        onCloseRequest(handler: () => void): void {
-            ipcRenderer.once(Channels.REQUEST_CLOSE, () => {
-                handler();
-            });
+        minimize(): void {
+            ipcRenderer.send(Channels.MINIMIZE_WINDOW);
         }
     },
 
     /**
-     * Internalization related operations.
+     * Misc operations.
      */
-    i18n: {
+    ext: {
         /**
-         * Gets the language resource corresponding to the given language and namespace.
+         * Opens a URL in external browser.
          */
-        async getResource(lng: string, ns: string): Promise<unknown> {
-            return await ipcRenderer.invoke(Channels.LOAD_LANG_RESOURCE, lng, ns);
+        openURL(url: string): void {
+            ipcRenderer.send(Channels.OPEN_URL, url);
         }
     }
 };
 
-// TODO: enable context isolation after migrated to backend invocation
-// contextBridge.exposeInMainWorld("native", native);
-
-// A temporary workaround to avoid breaking existing frontend native code
-// @ts-ignore
-window.native = native;
+contextBridge.exposeInMainWorld("native", native);
 
 console.log("Completed native API bindings.");
 

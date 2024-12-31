@@ -17,6 +17,21 @@ export class MinecraftContainer {
     private readonly tempFileRoot;
     private readonly dynamicModsRoot;
 
+    constructor(rootDir: string, id: string) {
+        this.id = id;
+        this.rootDir = rootDir;
+        this.assetsRoot = this.resolvePath("assets");
+        this.librariesBase = this.resolvePath("libraries");
+        this.versionsBase = this.resolvePath("versions");
+        this.modsRoot = this.resolvePath("mods");
+        this.resourcePacksRoot = this.resolvePath("resourcepacks");
+        this.shaderPacksRoot = this.resolvePath("shaderpacks");
+        this.savesRoot = this.resolvePath("saves");
+        this.log4j2Root = this.resolvePath("log4j2-xml");
+        this.tempFileRoot = this.resolvePath("alicorn-temp");
+        this.dynamicModsRoot = this.resolvePath("alicorn-mods-dyn");
+    }
+
     getModJar(modJar: string): string {
         return path.resolve(this.getModsRoot(), modJar);
     }
@@ -128,20 +143,5 @@ export class MinecraftContainer {
 
     getDynamicModJar(modJar: string): string {
         return path.resolve(this.getDynamicModsRoot(), modJar);
-    }
-
-    constructor(rootDir: string, id: string) {
-        this.id = id;
-        this.rootDir = rootDir;
-        this.assetsRoot = this.resolvePath("assets");
-        this.librariesBase = this.resolvePath("libraries");
-        this.versionsBase = this.resolvePath("versions");
-        this.modsRoot = this.resolvePath("mods");
-        this.resourcePacksRoot = this.resolvePath("resourcepacks");
-        this.shaderPacksRoot = this.resolvePath("shaderpacks");
-        this.savesRoot = this.resolvePath("saves");
-        this.log4j2Root = this.resolvePath("log4j2-xml");
-        this.tempFileRoot = this.resolvePath("alicorn-temp");
-        this.dynamicModsRoot = this.resolvePath("alicorn-mods-dyn");
     }
 }

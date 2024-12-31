@@ -24,6 +24,8 @@ export interface VersionProfile {
 
     assetIndex: AssetIndexArtifact;
     assets: string;
+    
+    complianceLevel: number;
 
     downloads: {
         /**
@@ -56,6 +58,8 @@ export interface VersionProfile {
     };
 
     mainClass: string;
+
+    type: string;
 }
 
 /**

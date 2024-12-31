@@ -1,0 +1,7 @@
+{
+    "name": "alicorn-launcher",
+    "author": "skjsjhb",
+    "main": "loader.js",
+    "type": "module",
+    "version": "2.0.0"
+}

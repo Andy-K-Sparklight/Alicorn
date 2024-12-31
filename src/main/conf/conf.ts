@@ -4,6 +4,7 @@ import fs from "fs-extra";
 import rfdc from "rfdc";
 import { ipcMain } from "electron";
 import { Channels } from "@/main/ipc/channels";
+import * as uuid from "uuid";
 
 /**
  * The config (v2) module which has enhanced type support.
@@ -21,7 +22,12 @@ const DEFAULT_CONFIG = {
         /**
          * Path to the store root.
          */
-        store: ""
+        store: "",
+
+        /**
+         * Path to the game containers.
+         */
+        game: ""
     },
 
     /**
@@ -66,6 +72,56 @@ const DEFAULT_CONFIG = {
              * Whether to apply mirror rules for speeding download.
              */
             enable: true
+        }
+    },
+
+    /**
+     * Launcher client properties.
+     */
+    client: {
+        /**
+         * The ID to identify the client.
+         */
+        id: uuid.v7().replaceAll("-", "")
+    },
+
+    /**
+     * Runtime properties.
+     */
+    runtime: {
+        /**
+         * Global additional arguments.
+         *
+         * Values are separated by line breaks.
+         */
+        args: {
+            vm: "",
+            game: ""
+        },
+
+        /**
+         * The maximum lines of logs to be kept in buffer for scrolling back.
+         */
+        logsLimit: 10000
+    },
+
+    /**
+     * Application settings.
+     */
+    app: {
+        /**
+         * Window related controls.
+         */
+        window: {
+            /**
+             * Window size, e.g. "960,540"
+             */
+            size: "",
+
+            /**
+             * Window position, e.g. "0,0"
+             */
+            pos: ""
         }
     }
 };

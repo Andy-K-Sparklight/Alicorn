@@ -1,4 +1,4 @@
-import fs, { readFile } from "fs-extra";
+import fs, {readFile} from "fs-extra";
 import leven from "js-levenshtein";
 import path from "path";
 import mdiff from "mdiff";

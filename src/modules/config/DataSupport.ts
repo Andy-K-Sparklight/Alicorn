@@ -29,7 +29,7 @@ export async function saveData(
 ): Promise<void> {
     try {
         const dest = getActualDataPath(relativePath);
-        await fs.outputFile(dest, data, {mode: 0o777});
+        await fs.outputFile(dest, data, { mode: 0o777 });
     } catch {}
 }
 

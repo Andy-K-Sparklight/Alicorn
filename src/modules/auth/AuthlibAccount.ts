@@ -7,6 +7,19 @@ import { authAddrCorrect } from "./AJHelper";
 
 // Account using Authlib Injector
 export class AuthlibAccount extends Account {
+    authServer: string;
+    availableProfiles: RemoteUserProfile[] = [];
+    selectedProfile: RemoteUserProfile | undefined;
+
+    constructor(
+        accountName: string,
+        authServer: string,
+        overrideType = AccountType.AUTHLIB_INJECTOR
+    ) {
+        super(accountName, overrideType);
+        this.authServer = authServer;
+    }
+
     // Only gather information, this function doesn't do any authentication!
     buildAccessData(): Promise<[string, string, string, string]> {
         return Promise.resolve([
@@ -62,19 +75,6 @@ export class AuthlibAccount extends Account {
             lastUsedUsername: this.lastUsedUsername,
             authServer: this.authServer
         });
-    }
-
-    authServer: string;
-    availableProfiles: RemoteUserProfile[] = [];
-    selectedProfile: RemoteUserProfile | undefined;
-
-    constructor(
-        accountName: string,
-        authServer: string,
-        overrideType = AccountType.AUTHLIB_INJECTOR
-    ) {
-        super(accountName, overrideType);
-        this.authServer = authServer;
     }
 }
 

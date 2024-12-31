@@ -22,27 +22,6 @@ export class Cluster<T> {
         }
     }
 
-    protected _use(t: T): void {
-        this.idle.delete(t);
-        this.inUse.add(t);
-    }
-
-    protected notifyAll(): void {
-        let t: T | null;
-        while (this.orders.length > 0 && (t = this._allocate()) !== null) {
-            this._use(t);
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            this.orders.shift()!(t);
-        }
-    }
-
-    protected _allocate(): T | null {
-        if (this.idle.size <= 0) {
-            return null;
-        }
-        return this.idle.values().next().value || null;
-    }
-
     // Allocate new instance, one instance once.
     allocate(): Promise<T> {
         const p = this._allocate();
@@ -63,7 +42,6 @@ export class Cluster<T> {
         this.notifyAll();
     }
 
-    // Discard an instance, remove it from the cluster.
     // Make sure that this instance has been freed! Or this function will do nothing.
     discard(t: T): void {
         this.idle.delete(t);
@@ -83,5 +61,28 @@ export class Cluster<T> {
         const p0 = [...oset];
         oset.clear();
         return p0;
+    }
+
+    protected _use(t: T): void {
+        this.idle.delete(t);
+        this.inUse.add(t);
+    }
+
+    // Discard an instance, remove it from the cluster.
+
+    protected notifyAll(): void {
+        let t: T | null;
+        while (this.orders.length > 0 && (t = this._allocate()) !== null) {
+            this._use(t);
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            this.orders.shift()!(t);
+        }
+    }
+
+    protected _allocate(): T | null {
+        if (this.idle.size <= 0) {
+            return null;
+        }
+        return this.idle.values().next().value || null;
     }
 }

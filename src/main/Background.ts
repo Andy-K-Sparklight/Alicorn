@@ -26,27 +26,6 @@ export function registerBackgroundListeners(): void {
             openAtLogin: i
         });
     });
-    ipcMain.on("closeWindow", () => {
-        console.log("Closing window!");
-        // My poor hooves!!!
-        // Use destroy to make sure they close
-        try {
-            getMainWindow()?.webContents.removeAllListeners();
-            getMainWindow()?.close();
-        } catch {}
-        try {
-            loginWindow?.destroy();
-        } catch {}
-
-        console.log("All windows are closed.");
-        console.log("Waiting for application exit...");
-        setTimeout(() => {
-            console.log("Too long! Forcefully stopping!");
-            process.abort();
-        }, 5000);
-        app.releaseSingleInstanceLock();
-        app.exit();
-    });
     ipcMain.on("SOS", (_i, e) => {
         dialog.showErrorBox(
             "Unexpected Error Happened!",
@@ -286,20 +265,7 @@ export function registerBackgroundListeners(): void {
     ipcMain.handle("getElectronVersion", () => {
         return Promise.resolve(process.versions["electron"]);
     });
-    ipcMain.on("configureWindowSize", (_e, w: number, h: number) => {
-        const mw = getMainWindow();
-        if (isNaN(w) || isNaN(h)) {
-            return;
-        }
-        mw?.setSize(w, h);
-    });
-    ipcMain.on("configureWindowPos", (_e, w: number, h: number) => {
-        const mw = getMainWindow();
-        if (isNaN(w) || isNaN(h)) {
-            return;
-        }
-        mw?.setPosition(w, h);
-    });
+
     ipcMain.on("windowMoving", (_e, { mouseX, mouseY }) => {
         const { x, y } = screen.getCursorScreenPoint();
         getMainWindow()?.setPosition(x - mouseX, y - mouseY);
@@ -307,7 +273,7 @@ export function registerBackgroundListeners(): void {
 
     ipcMain.on("ReloadWindow", () => {
         void getMainWindow()?.loadFile(
-            path.resolve(app.getAppPath(), "Renderer.html")
+            path.resolve(app.getAppPath(), "renderer", "index.html")
         );
     });
     ipcMain.on("encryptSync", (e, s: string) => {

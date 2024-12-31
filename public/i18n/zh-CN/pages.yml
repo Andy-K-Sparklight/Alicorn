@@ -1,0 +1,20 @@
+launch:
+  title: 启动
+
+about:
+  title: 关于
+  name: Alicorn 启动器
+  version: 版本 {{version}}
+  dev-note: |-
+    此 Alicorn 是开发中使用的调试版本。
+    为获得最佳性能并规避潜在的漏洞，请改用产品版本。
+  copyright: |-
+    Copyright (C) 2021-2022 Andy K Rarity Sparklight ("ThatRarityEG")
+    Copyright (C) 2024 Ted Gao ("skjsjhb")
+    
+    Alicorn 启动器是按 GNU 公共通用许可证（第三版或后继版本）发行的自由软件。
+    此软件的开发是基于其将对社区有用的愿景而进行的，但不提供任何担保。
+    您须对使用 Alicorn 可能产生的一切影响负责。
+  links:
+    source: 查看源代码
+    license: 查看许可证
