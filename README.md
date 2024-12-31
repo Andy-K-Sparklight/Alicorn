@@ -1,123 +1,131 @@
-# Alicorn Launcher JS Edition
+# Alicorn Launcher
 
-[中文 README](./README_ZH.md)
+> [!NOTE]  
+> The developers behind Alicorn have shifted since early 2023.
+> We're now planning to commit major changes to Alicorn for new features, improved stability,
+> optimized code and better user-experience.
 
-## Collaborator's Note
+That launcher of the block game, once with the magic of friendship.
 
-This is skjsjhb, a user of the Alicorn launcher.
+![Alicorn Badge](https://img.shields.io/badge/Alicorn-2.x-df307f)
+![Creation Date](https://img.shields.io/github/created-at/Andy-K-Sparklight/Alicorn?label=since)
+![License Badge](https://img.shields.io/github/license/Andy-K-Sparklight/Alicorn)
+![Repo Size](https://img.shields.io/github/repo-size/Andy-K-Sparklight/Alicorn)
 
-It's 2024.03 now. Years have passed since the release of Alicorn, and this project has been staled since early 2023,
-after the original maintainer has left the community. MCBBS is also downed, together with the mirror. Quilt has been
-adopted widely, while Forge has become NeoForged. Things changed a lot.
+## Our Goal
 
-I'm not in the development team (I wasn't invited, sadly), which means I'm not an official maintainer of Alicorn.
-However, I decide to continue to add necessary patches. As I do not own the token of most platforms Alicorn was using, I
-might re-create certain content (e.g. actions) with my keys. Also, my code (and design) style is different as
-Sparklight, making breaking changes quite possible.
+The development of Alicorn is based on the following vision:
 
-Most updates will be backed by my Kotlin-based launcher (I won't put a link here to avoid annoying people). The features
-will be tested and backported to Alicorn. See the repository of the new launcher for details.
+- **Game First**
 
-Thanks for supporting Alicorn. Also thanks for loving the block game. Welcome to the age of Sakura (1.20.x). We don't
-have more ponies, but luckily we're still here.
+  Craft your game experience and click to play. Leave the technical jobs to us.
 
-## IMPORTANT
+- **Free as in Pricing**
 
-This was posted by the original maintainer and is now outdated.
+  You're paying for playing, no more for launching.[^1]
 
-> As I, the developer, decided not to contribute to the Minecraft communities, this project **won't receive major
-updates** since Core 50 (that's why I call it Sunset).
->
-> If servere security vulnerbilities are found in the future, patches might still be available. However, generally, this
-> project is now discontinued.
->
-> It doesn't mean you have to switch to another launcher, but if you wish to, we
-> recommand [HMCL](https://github.com/huanghongxun/HMCL), it's a free software (as in freedom) and is still being
-> actively
-> maintained.
+- **Free as in Freedom**
 
----
+  Things related to your game really shouldn't be touched by something you can't control.
 
-A third party Minecraft launcher, with high performance and freedom.
+- **Cross Platform**
 
-![.](https://img.shields.io/badge/Alicorn-is%20cute!-df307f)
-![.](https://github.com/Andy-K-Sparklight/Alicorn/actions/workflows/codeql-analysis.yml/badge.svg)
-![.](https://github.com/Andy-K-Sparklight/Alicorn/actions/workflows/node.js.yml/badge.svg)
-![.](https://deepscan.io/api/teams/16407/projects/19670/branches/514338/badge/grade.svg)
-![.](https://img.shields.io/github/repo-size/Andy-K-Sparklight/Alicorn)
-![.](https://img.shields.io/github/license/Andy-K-Sparklight/Alicorn)
+  Play on any computer regardless of its OS.[^2]
 
-## Why Yet Another Launcher?
+- **Fast**
 
-It's simple: I've been using different launchers and none of them can meet my requirements.
+  Spend time in your world, not entering your world.
 
-And that's why we develop Alicorn.
+- **Space Utilization**
 
-## Why Electron?
+  Create hundreds of game experiences while storing only one copy of game assets.
 
-Still simple: I fancy it!
+- **Not Opinionated**
 
-Some other reasons include awesomely spectacular speed, etc.
+  Play the game in the way you like. It's never a crime to fly in your own world.[^3]
 
-There's no need to consider size. After all, nothing is bigger than your OS ;)
+- **Privacy Aware**
 
-## Principles
+  We collect no data for analysis. There's no option to enable it.
 
-0. Free as in freedom.
+## Supported Platforms
 
-1. Code quality and bug fixes.
+> [!NOTE]
+> Platforms that do not have corresponding LWJGL artifacts are unsupported.
 
-2. Even weight on functionalities and performance.
+> [!IMPORTANT]
+> Certain game experiences may not be available on platforms that Alicorn runs on.
 
-3. Windows last.
+Systems:
 
-4. Bash first.
+- Microsoft Windows 10 / 11
+- Apple macOS (Big Sur or later)
+- GNU/Linux
+    - There are no detailed compatibility metrics, but recent releases should work.
 
-5. Size is not that important, but sometimes is important.
+Architectures:
 
-6. Throw away those stereotypes, the runnable is the best.
-
-7. Embrace UTF-8.
-
-8. Line Feed only.
-
-9. Try to make Alicorn looks the same in different platforms, but not definitely.
-
-10. No SaaS.
+- `x64` (`amd64`)
+- `arm64` (`aarch64`)
 
 ## Build
 
-#### Build Executable
+> [!NOTE]
+> **You may not need to build Alicorn yourself.**
+> For production usages, use stable releases can help to avoid potential bugs and pitfalls.
+> To access the latest features, update from the beta channel to get tested builds.
+> Only build from source for development.
 
-To build Alicorn, you'll need:
+Alicorn can be built from any platform it runs on. The following tools are required:
 
-- [Node.js](https://nodejs.org)
+- Node.js >= 22 (LTS)
 
-- [Git](https://git-scm.com)
+  The Node.js version for building will not affect the copy bundled with Electron.
 
-- Clone the repository:
+- Git
 
-  ```shell
-  git clone https://github.com/Andy-K-Sparklight/Alicorn.git --depth=1
-  ```
+1. Get the code:
 
-- Install dependencies:
+   ```shell
+   git clone --filter=tree:0 https://github.com/Andy-K-Sparklight/Alicorn.git
+   ```
 
-  ```shell
-  yarn
-  ```
+2. Install dependencies:
 
-- Run build:
+   ```shell
+   corepack enable
+   pnpm i
+   ```
 
-  ```shell
-  yarn make
-  ```
+3. Build and run:
 
-  This will generate binaries and put them under `out`, including Windows x64, Windows ia32, GNU/Linux x64, GNU/Linux
-  arm64 ~~and macOS x64~~. This will also generate corresponding archives.
+    - For production:
 
-  _The support for macOS has ended and no more platform dependent code will be commited. The modules present are still
-  kept, but might not run correctly._
+      ```shell
+      pnpm prod
+      pnpm start
+      ```
 
-  You also need `wine` to complete the cross build progress on platforms other than Windows. Follow the instructions
-  given by `electron-packager`.
+    - For development:
+
+      ```shell
+      pnpm dev
+      ```
+
+      This command builds the main process modules and starts a development server (with HMR) for the renderer.
+      Changes made to the renderer will be reflected immediately once saved.
+
+Certain features can be toggled or adjusted during the build process. Check and edit `config.ts` for details.
+
+## License
+
+![GPL-3.0 Logo](https://www.gnu.org/graphics/gplv3-or-later.png)
+
+[GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html) (or any later version)
+
+[^1]: We as developers follow the EULA of the game and advocate copyright protection.
+A valid account is required to enter the game session.
+
+[^2]: When supported by the game.
+
+[^3]: Cheat clients are forbidden in certain servers and are protested by the community. Use them at your own risk.
