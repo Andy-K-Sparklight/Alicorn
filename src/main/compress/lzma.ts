@@ -1,9 +1,35 @@
 import fs from "fs-extra";
 import path from "path";
+import type lzmaNative from "lzma-native";
 import type lzmaJS from "lzma";
 import { pipeline } from "stream/promises";
 import { paths } from "@/main/fs/paths";
 import { unwrapESM } from "@/main/util/module";
+import pkg from "~/package.json";
+
+let lzmaNativeMod: typeof lzmaNative;
+let lzmaJSMod: typeof lzmaJS;
+
+
+async function init() {
+    if (lzmaNativeMod || lzmaJSMod) return; // Already loaded
+
+    if (import.meta.env.AL_ENABLE_NATIVE_LZMA) {
+        // lzma-native uses node-gyp to resolve the prebuilt native modules
+        // The path is not recognized nor bundled by ESBuild
+        // By assigning to the magic variable we can override the resolution base directory
+        const canonicalName = pkg.name.toUpperCase().replaceAll("-", "_") + "_PREBUILD";
+        const ap = process.env[canonicalName];
+        process.env[canonicalName] = paths.app.to("natives/lzma-native");
+        lzmaNativeMod = (await unwrapESM(import("lzma-native"))).default;
+        process.env[canonicalName] = ap;
+    } else {
+        // @ts-expect-error A workaround for using modules not exported
+        const m = await unwrapESM(import("lzma/src/lzma_worker-min.js"));
+        lzmaJSMod = m.default.LZMA_WORKER as typeof lzmaJS;
+    }
+}
+
 
 /**
  * Inflate a file known to be of LZMA format.
@@ -13,29 +39,16 @@ async function inflate(src: string, dst: string) {
 
     if (import.meta.env.AL_ENABLE_NATIVE_LZMA) {
         // Native impl
-
-        // lzma-native uses node-gyp to resolve the prebuilt native modules
-        // The path is not recognized nor bundled by ESBuild
-        // By assigning to the magic variable we can override the resolution base directory
-        const ap = process.env.ALICORN_PREBUILD;
-        process.env.ALICORN_PREBUILD = paths.app.to("natives/lzma-native");
-        const lz = await unwrapESM(import("lzma-native"));
-        process.env.ALICORN_PREBUILD = ap;
-
         const rs = fs.createReadStream(src);
-        const ts = lz.createDecompressor();
+        const ts = lzmaNativeMod.createDecompressor();
         const ws = fs.createWriteStream(dst);
 
         await pipeline(rs, ts, ws);
     } else {
         // JS impl
-
-        // @ts-expect-error A workaround for using modules not exported
-        const lz = (await unwrapESM(import("lzma/src/lzma_worker-min.js"))).LZMA_WORKER as typeof lzmaJS;
         const dat = await fs.readFile(src);
-
         const inflated = await new Promise<Buffer>((res, rej) => {
-            lz.decompress(dat, (r, e) => {
+            lzmaJSMod.decompress(dat, (r, e) => {
                 if (e) rej(e);
                 else res(Buffer.from(r));
             });
@@ -45,4 +58,4 @@ async function inflate(src: string, dst: string) {
     }
 }
 
-export const lzma = { inflate };
+export const lzma = { inflate, init };
