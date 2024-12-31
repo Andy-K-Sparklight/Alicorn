@@ -5,6 +5,9 @@ import { net } from "electron";
 import path from "path";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { netx } from "@/main/net/netx";
+import fs from "fs-extra";
+import { lzma } from "@/main/compress/lzma";
+import * as child_process from "node:child_process";
 
 const JRT_MANIFEST = "https://piston-meta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json";
 
@@ -62,3 +65,117 @@ async function getProfile(componentName: string): Promise<JavaRuntimeProfile> {
         }
     });
 }
+
+interface FileDownload {
+    sha1: string;
+    size: number;
+    url: string;
+}
+
+type FileHint = {
+    type: "directory";
+} | {
+    downloads: {
+        lzma?: FileDownload;
+        raw: FileDownload;
+    }
+    executable: boolean;
+    type: "file";
+} | {
+    target: string;
+    type: "link";
+}
+
+type NamedFileHint = FileHint & { name: string; }
+
+async function installRuntime(component: string, root: string): Promise<void> {
+    console.log(`Installing JRT runtime ${component} to ${root}`);
+    const profile = await getProfile(component);
+    console.debug(`Picked up profile ${profile.manifest.url}`);
+
+    const dat = await (await net.fetch(profile.manifest.url)).json();
+    const files = Object.entries(dat.files)
+        .filter(([, file]) => is<FileHint>(file))
+        .map(([name, file]) => ({ name, ...(file as FileHint) } satisfies NamedFileHint));
+
+    const tasks: DlxDownloadRequest[] = [];
+    for (const f of files.filter(f => f.type === "file")) {
+        const artifact = f.downloads.lzma ?? f.downloads.raw;
+        const ext = f.downloads.lzma ? ".lzma" : "";
+        const dl: DlxDownloadRequest = {
+            path: path.join(root, f.name + ext),
+            ...artifact
+        };
+        tasks.push(dl);
+
+        // We're ignoring directories here as they'll be auto-created when downloading
+    }
+
+    console.debug("Fetching files...");
+    await dlx.getAll(tasks, {
+        onProgress(p) {
+            console.log(`${p.value.current} / ${p.value.total} completed.`);
+        }
+    }); // TODO add progress tracking
+
+    console.debug("Unpacking files...");
+
+    await lzma.init();
+    await Promise.all(files.map(async file => {
+        if (file.type === "file" && file.downloads.lzma) {
+            const src = path.join(root, file.name + ".lzma");
+            const dst = path.join(root, file.name);
+            console.debug(`Unpacking: ${src}`);
+
+            await lzma.inflate(src, dst);
+            await fs.remove(src);
+        }
+    }));
+
+    console.debug("Linking files...");
+    await Promise.all(
+        files.filter(f => f.type === "link")
+            .map(async f => {
+                const target = path.join(root, f.target);
+                const base = path.join(root, f.name);
+                console.debug(`Linking: ${target} -> ${base}`);
+
+                await fs.link(base, target);
+            })
+    );
+
+    if (getOSName() === "windows") {
+        console.debug("Making files executable...");
+
+        await Promise.all(
+            files.filter(f => f.type === "file" && f.executable)
+                .map(async f => {
+                    const pt = path.join(root, f.name);
+                    console.debug(`Add executable flag: ${pt}`);
+                    await fs.chmod(pt, 0o777);
+                })
+        );
+    }
+
+    console.debug("Verifying installation...");
+    await verify(root);
+
+    console.debug(`Runtime installed: ${component}`);
+}
+
+async function verify(root: string): Promise<void> {
+    const ext = getOSName() === "windows" ? ".exe" : "";
+    const bin = path.join(root, "bin", "java" + ext);
+
+    const proc = child_process.spawn(bin, ["-version"]);
+
+    return new Promise<void>((res, rej) => {
+        proc.once("error", rej);
+        proc.once("exit", code => {
+            if (code === 0) res();
+            else rej(`Unexpected exit code ${code}: ${bin}`);
+        });
+    });
+}
+
+export const jrt = { installRuntime };
