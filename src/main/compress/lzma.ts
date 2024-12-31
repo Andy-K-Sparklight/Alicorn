@@ -18,7 +18,7 @@ async function inflate(src: string, dst: string) {
         // The path is not recognized nor bundled by ESBuild
         // By assigning to the magic variable we can override the resolution base directory
         const ap = process.env.ALICORN_PREBUILD;
-        process.env.ALICORN_PREBUILD = paths.app.get("natives/lzma-native");
+        process.env.ALICORN_PREBUILD = paths.app.to("natives/lzma-native");
         const lz = await unwrapESM(import("lzma-native"));
         process.env.ALICORN_PREBUILD = ap;
 

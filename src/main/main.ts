@@ -1,5 +1,4 @@
 import { app, BrowserWindow, session } from "electron";
-import path from "path";
 import pkg from "~/package.json";
 import { ping } from "@/main/dev/ping";
 import { conf } from "@/main/conf/conf";
@@ -67,7 +66,7 @@ async function main() {
         webPreferences: {
             spellcheck: false,
             defaultEncoding: "UTF-8",
-            preload: paths.app.get("preload.js"),
+            preload: paths.app.to("preload.js"),
             devTools: import.meta.env.AL_DEV
         },
         frame: false,
@@ -95,7 +94,7 @@ async function main() {
         injectDevToolsStyles(mainWindow);
         mainWindow.webContents.openDevTools();
     } else {
-        await mainWindow.loadFile(path.resolve(app.getAppPath(), "renderer", "index.html"));
+        await mainWindow.loadFile(paths.app.to("renderer", "index.html"));
     }
 
     console.log("Executing late init tasks...");
@@ -178,7 +177,7 @@ function getIconPath(): string {
     if (getOSName() === "windows") {
         rel = "icon.ico";
     }
-    return path.join(app.getAppPath(), "icons", rel);
+    return paths.app.to("icons", rel);
 }
 
 export function getMainWindow(): BrowserWindow | null {

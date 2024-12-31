@@ -11,7 +11,7 @@ interface PathResolver {
      * Resolves a path in this path partition.
      * @param rel Relative path segments.
      */
-    get(...rel: string[]): string;
+    to(...rel: string[]): string;
 }
 
 /**
@@ -21,11 +21,11 @@ interface PathResolver {
 function createResolver(rootProvider: string | (() => string)): PathResolver {
     if (typeof rootProvider === "string") {
         return {
-            get: (...rel) => path.normalize(path.resolve(rootProvider, ...rel))
+            to: (...rel) => path.normalize(path.resolve(rootProvider, ...rel))
         };
     } else {
         return {
-            get: (...rel) => path.normalize(path.resolve(rootProvider(), ...rel))
+            to: (...rel) => path.normalize(path.resolve(rootProvider(), ...rel))
         };
     }
 }

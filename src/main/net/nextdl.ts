@@ -4,16 +4,16 @@
  * Comparing to the wrapped downloader, the next downloader runs on the main process and utilizes the net module from
  * Electron. This is expected to bypass the connection limit in the browser window and maximize the throughput.
  */
-import type { DownloadRequest } from "@/main/net/types";
 import { net } from "electron";
 import { conf } from "@/main/conf/conf";
 import fs from "fs-extra";
 import { Stream } from "node:stream";
-import { hashFile } from "hasha";
 import { nanoid } from "nanoid";
 import PQueue from "p-queue";
 import EventEmitter from "events";
 import type TypedEmitter from "typed-emitter";
+import { hash } from "@/main/security/hash";
+import path from "node:path";
 
 /**
  * Events emitted when downloading.
@@ -36,10 +36,21 @@ export enum NextDownloadStatus {
     FAILED
 }
 
+/**
+ * A network-level download request for fetching the given resources and save them to the given path.
+ */
+export interface NextDownloadRequest {
+    urls: string[];
+    path: string;
+    sha1?: string;
+    size?: number;
+}
+
 export interface NextDownloadTask {
     id: string;
-    req: DownloadRequest;
+    req: NextDownloadRequest;
     status: NextDownloadStatus;
+    canceled: boolean;
 
     // The current active URL
     activeURL: string;
@@ -78,9 +89,34 @@ function getQueue(): PQueue {
  * Returns an array of 2 elements. The first is a promise which resolves when the download completes with a boolean
  * value indicating the status. The second is the task object.
  */
-function get(req: DownloadRequest): [Promise<boolean>, NextDownloadTask] {
+function get(req: NextDownloadRequest): [Promise<boolean>, NextDownloadTask] {
     const t = createTask(req);
     return [getQueue().add(() => resolve(t)).then(it => !!it), t];
+}
+
+/**
+ * Batched version to resolve the given requests. This is considered slightly faster than the serial version.
+ */
+function gets(req: NextDownloadRequest[]): [Promise<boolean>, NextDownloadTask][] {
+    const ts = req.map(createTask);
+    const resMap = new Map<NextDownloadTask, [(r: boolean) => void, (e: unknown) => void]>();
+    const out: [Promise<boolean>, NextDownloadTask][] = ts.map(t => {
+        const p = new Promise<boolean>(((res, rej) => resMap.set(t, [res, rej])));
+        return [p, t];
+    });
+
+    void getQueue().addAll(ts.map(t => async () => {
+        const [res, rej] = resMap.get(t)!; // Gets the delayed resolvers
+        resMap.delete(t);
+        try {
+            const b = await resolve(t);
+            res(b);
+        } catch (e) {
+            rej(e);
+        }
+    }));
+
+    return out;
 }
 
 /**
@@ -130,6 +166,8 @@ async function resolve(task: NextDownloadTask): Promise<boolean> {
  * Resolves the download task once.
  */
 async function resolveOnce(task: NextDownloadTask): Promise<NextRequestStatus> {
+    if (task.canceled) return NextRequestStatus.FATAL;
+
     task.status = NextDownloadStatus.RETRIEVING;
     const res = await retrieve(task);
     if (res === NextRequestStatus.SUCCESS) {
@@ -152,10 +190,14 @@ class DownloadTaskImpl implements NextDownloadTask {
     id = nanoid();
     req;
     activeURL;
+    canceled = false;
 
-    constructor(req: DownloadRequest) {
+    constructor(req: NextDownloadRequest) {
         if (req.urls.length === 0) throw "No URL specified";
-        this.req = req;
+        this.req = {
+            ...req,
+            path: path.resolve(req.path)
+        };
         this.activeURL = req.urls[0];
     }
 
@@ -209,7 +251,7 @@ class DownloadTaskImpl implements NextDownloadTask {
 /**
  * Creates a task based on the given request.
  */
-function createTask(req: DownloadRequest): NextDownloadTask {
+function createTask(req: NextDownloadRequest): NextDownloadTask {
     return new DownloadTaskImpl(req);
 }
 
@@ -218,6 +260,8 @@ function createTask(req: DownloadRequest): NextDownloadTask {
  */
 async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
     task.startTime = Date.now();
+
+    console.debug(`Retrieving: ${task.activeURL}`);
 
     const { requestTimeout, minSpeed } = conf().net.next;
 
@@ -233,6 +277,7 @@ async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
     let res: Response | null = null;
 
     try {
+
         res = await net.fetch(task.activeURL, {
             credentials: "omit",
             keepalive: true,
@@ -283,15 +328,24 @@ async function validate(task: NextDownloadTask): Promise<boolean> {
 
     try {
         if (task.req.sha1) {
-            const h = await hashFile(task.req.path, { algorithm: "sha1" });
-            return task.req.sha1.toLowerCase() === h.toLowerCase();
+            const h = await hash.forFile(task.req.path, "sha1");
+            if (task.req.sha1.toLowerCase() === h.toLowerCase()) {
+                console.debug(`Hash matched: ${task.req.path}`);
+                return true;
+            }
+            return false;
         }
 
         if (task.req.size && task.req.size > 0) {
             const st = await fs.stat(task.req.path);
-            return st.size === task.req.size;
+            if (st.size === task.req.size) {
+                console.debug(`Size matched: ${task.req.path}`);
+                return true;
+            }
+            return false;
         }
 
+        console.debug(`Skipped validation: ${task.req.path}`);
         return true; // No validation method available
     } catch (e) {
         console.warn(`Error when validating file: ${e}`);
@@ -340,4 +394,11 @@ function createBytesCountingStream(onChange: (b: number) => void): TransformStre
     });
 }
 
-export const nextdl = { get };
+/**
+ * Cancels the task if it isn't being resolved yet.
+ */
+function cancel(task: NextDownloadTask) {
+    task.canceled = true;
+}
+
+export const nextdl = { get, gets, cancel };

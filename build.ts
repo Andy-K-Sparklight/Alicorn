@@ -34,7 +34,8 @@ const sharedOptions: BuildOptions = {
 
 const mainBuildOptions: BuildOptions = {
     entryPoints: {
-        main: "src/main/main.ts"
+        main: "src/main/main.ts",
+        "hash-worker": "src/main/security/hash-worker.ts"
     },
     plugins: [
         typiaPlugin({ cache: true, log: false }),
@@ -68,14 +69,14 @@ if (JSON.parse(buildDefines["import.meta.env.AL_ENABLE_NATIVE_LZMA"])) {
     await fs.copy("node_modules/lzma-native/prebuilds", path.join(outputDir, "natives/lzma-native/prebuilds"));
 }
 
-consola.start("Running build for main module...");
+consola.start("Building main modules...");
 const buildResult = await esbuild.build(mainBuildOptions);
 await fs.outputJSON(path.join(outputDir, ".local/build.meta.json"), buildResult.metafile);
-consola.success("Main module build process completed.");
+consola.success("Main modules built.");
 
-consola.start("Running build for preload module...");
+consola.start("Building preload modules...");
 await esbuild.build(preloadBuildOptions);
-consola.success("Preload module build process completed.");
+consola.success("Preload modules built.");
 
 const viteConfig = path.resolve(import.meta.dirname, "vite.config.ts");
 

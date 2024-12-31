@@ -1,7 +1,10 @@
 import { getOSName } from "@/main/sys/os";
 import os from "node:os";
-import { mget } from "@/main/net/fetch";
 import { is } from "typia";
+import { net } from "electron";
+import path from "path";
+import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
+import { netx } from "@/main/net/netx";
 
 const JRT_MANIFEST = "https://piston-meta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json";
 
@@ -39,7 +42,7 @@ function osPair(): string {
 }
 
 async function getProfile(componentName: string): Promise<JavaRuntimeProfile> {
-    const d = await (await mget(JRT_MANIFEST)).json();
+    const d = await (await netx.get(JRT_MANIFEST)).json();
     const availableProfiles = d[osPair()][componentName];
 
     if (!is<JavaRuntimeProfile[]>(availableProfiles) || availableProfiles.length < 1) {

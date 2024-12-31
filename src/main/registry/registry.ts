@@ -33,7 +33,7 @@ export class NamedRegistry<T> {
 
 
 function pathOf(name: string) {
-    return paths.store.get(`${name}.arc`);
+    return paths.store.to(`${name}.arc`);
 }
 
 /**
