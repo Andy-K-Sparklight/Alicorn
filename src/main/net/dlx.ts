@@ -43,20 +43,18 @@ async function getAll(req: DlxDownloadRequest[], init?: DlxDownloadInit): Promis
         handlers.forEach(([, t]) => nextdl.cancel(t));
     }
 
-    const promises = handlers.map(([p, t], i) => {
+    const promises = handlers.map(async ([p, t], i) => {
         const r = req[i];
-        p.then((done) => {
-            if (done) {
-                const mirrorHint = t.activeURL === r.url ? "" : `(Using ${t.activeURL})`;
-                console.log(`Got: ${r.url} ${mirrorHint}`);
+        if (await p) {
+            const mirrorHint = t.activeURL === r.url ? "" : `(Using ${t.activeURL})`;
+            console.log(`Got: ${r.url} ${mirrorHint}`);
 
-                prog.value.current++;
-                init?.onProgress?.(prog);
-            } else {
-                console.error(`ERR! ${r.url}`);
-                cancelAll();
-            }
-        });
+            prog.value.current++;
+            init?.onProgress?.(prog);
+        } else {
+            console.error(`ERR! ${r.url}`);
+            cancelAll();
+        }
     });
 
     await Promise.all(promises);
