@@ -115,6 +115,14 @@ Alicorn can be built from any platform it runs on. The following tools are requi
       This command builds the main process modules and starts a development server (with HMR) for the renderer.
       Changes made to the renderer will be reflected immediately once saved.
 
+4. To create packaged binaries:
+
+   ```shell
+   pnpm dist
+   ```
+
+   The output files are placed at `out`.
+
 Certain features can be toggled or adjusted during the build process. Check and edit `config.ts` for details.
 
 ## License
