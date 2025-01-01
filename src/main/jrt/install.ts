@@ -152,7 +152,7 @@ async function installRuntime(component: string): Promise<void> {
             })
     );
 
-    if (getOSName() === "windows") {
+    if (getOSName() !== "windows") {
         console.debug("Making files executable...");
 
         await Promise.all(
