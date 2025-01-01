@@ -1,13 +1,15 @@
 import { iTest } from "~/test/instrumented/tools";
 import assert from "node:assert";
 import { app } from "electron";
+import { checkFileDownload } from "~/test/instrumented/net";
 
 /**
  * The main entry of instrumented test.
  */
 export async function runInstrumentedTest() {
     await Promise.all([
-        checkAppReady()
+        checkAppReady(),
+        checkFileDownload()
     ]);
 
     await iTest.dumpSummary();

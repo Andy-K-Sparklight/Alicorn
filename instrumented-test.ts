@@ -10,7 +10,7 @@ export async function printTestSummary(f: string): Promise<void> {
             consola.success(`${s.name} - PASSED`);
         } else {
             consola.error(`${s.name} - FAILED`);
-            consola.error("\t" + s.message);
+            consola.error(s.message);
         }
     }
 
