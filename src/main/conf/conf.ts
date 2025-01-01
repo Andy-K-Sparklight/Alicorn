@@ -56,7 +56,7 @@ const DEFAULT_CONFIG = {
             /**
              * Maximum number of tasks dispatched concurrently.
              */
-            concurrency: 64,
+            concurrency: 32,
 
             /**
              * Whether to validate the integrity of the downloaded file.
@@ -169,8 +169,10 @@ async function load(): Promise<void> {
     const pt = getConfigPath();
     console.log(`Loading config from: ${pt}`);
     try {
-        const user = await fs.readJSON(getConfigPath());
-        config = applyPatch(DEFAULT_CONFIG, user);
+        const d = (await fs.readFile(getConfigPath())).toString();
+        if (d.trim().length > 0) {
+            config = applyPatch(DEFAULT_CONFIG, JSON.parse(d));
+        }
     } catch (e) {
         if (typeof e === "object" && e !== null && "code" in e && e.code === "ENOENT") {
             console.log("Config file does not exist (this is not an error).");
