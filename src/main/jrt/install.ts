@@ -91,7 +91,7 @@ type FileHint = {
 type NamedFileHint = FileHint & { name: string; }
 
 async function installRuntime(component: string): Promise<void> {
-    const root = getComponentHome(component);
+    const root = getInstallPath(component);
 
     console.log(`Installing JRT runtime ${component} to ${root}`);
     const profile = await getProfile(component);
@@ -103,7 +103,8 @@ async function installRuntime(component: string): Promise<void> {
         .map(([name, file]) => ({ name, ...(file as FileHint) } satisfies NamedFileHint));
 
     if (conf().jrt.filterDocs) {
-        files = files.filter(f => !f.name.startsWith("legal/"));
+        const prefix = getOSName() === "osx" ? "jre.bundle/Contents/Home/legal/" : "legal/";
+        files = files.filter(f => !f.name.startsWith(prefix));
     }
 
     const tasks: DlxDownloadRequest[] = [];
@@ -171,9 +172,19 @@ async function installRuntime(component: string): Promise<void> {
     console.debug(`Runtime installed: ${component}`);
 }
 
+function getExecPath(): string {
+    switch (getOSName()) {
+        case "windows" :
+            return "bin/java.exe";
+        case "osx":
+            return "jre.bundle/Contents/Home/bin/java";
+        case "linux":
+            return "bin/java";
+    }
+}
+
 async function verify(root: string): Promise<void> {
-    const ext = getOSName() === "windows" ? ".exe" : "";
-    const bin = path.join(root, "bin", "java" + ext);
+    const bin = path.join(root, getExecPath());
 
     const proc = child_process.spawn(bin, ["-version"]);
 
@@ -189,7 +200,7 @@ async function verify(root: string): Promise<void> {
 /**
  * Gets the path to the given JRT component home.
  */
-function getComponentHome(component: string): string {
+function getInstallPath(component: string): string {
     return paths.store.to("runtimes", component);
 }
 
@@ -197,8 +208,7 @@ function getComponentHome(component: string): string {
  * Gets the path to the JRT executable file.
  */
 function executable(component: string): string {
-    const ext = getOSName() === "windows" ? ".exe" : "";
-    return path.join(getComponentHome(component), "bin", "java" + ext);
+    return path.join(getInstallPath(component), getExecPath());
 }
 
 export const jrt = { installRuntime, executable };
