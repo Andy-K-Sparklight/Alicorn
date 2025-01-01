@@ -1,26 +1,35 @@
-export const DEV_SERVER_PORT = 9000;
+export interface BuildVariant {
+    mode: "development" | "production";
+    platform: string;
+    arch: string;
+}
 
-const isDev = !process.env.NODE_ENV?.includes("prod");
+export function createBuildConfig(variant: BuildVariant) {
+    const { platform, arch } = variant;
 
-// BMCLAPI provides mirrors to speed up resources delivering in some regions.
-// As a non-free third-party service, it's not enabled by default.
-// By changing the option to 'true' you agree the terms and conditions listed at <https://bmclapi2.bangbang93.com>.
-const enableBMCLAPI = false;
+    return {
+        // Build variant object.
+        variant,
 
-// Local accounts are used to test the launcher features in development only.
-// Launching the game without a valid account is not supported and therefore not included by default.
-// By changing the option to 'true' you are at your own risk of breaking the EULA.
-const enableLocalAccount = false;
+        // BMCLAPI provides mirrors to speed up resources delivering in some regions.
+        // As a non-free third-party service, it's not enabled by default.
+        // By changing the option to 'true' you agree the terms and conditions listed at <https://bmclapi2.bangbang93.com>.
+        enableBMCLAPI: false,
 
-// Decompression of LZMA is handled by lzma-native by default, yet not available on all platforms.
-// Disabling this option enforces Alicorn to fall back to a pure JavaScript implementation.
-// JavaScript version can be slower and does not support streaming.
-const enableNativeLZMA = true;
+        // Local accounts are used to test the launcher features in development only.
+        // Launching the game without a valid account is not supported and therefore not included by default.
+        // By changing the option to 'true' you are at your own risk of breaking the EULA.
+        enableLocalAccount: false,
 
-export const buildDefines = {
-    "import.meta.env.AL_DEV": JSON.stringify(isDev),
-    "import.meta.env.AL_ENABLE_BMCLAPI": JSON.stringify(enableBMCLAPI),
-    "import.meta.env.AL_ENABLE_LOCAL_ACCOUNT": JSON.stringify(enableLocalAccount),
-    "import.meta.env.AL_DEV_SERVER_PORT": JSON.stringify(DEV_SERVER_PORT),
-    "import.meta.env.AL_ENABLE_NATIVE_LZMA": JSON.stringify(enableNativeLZMA)
-};
+        // Decompression of LZMA is handled by lzma-native by default, yet not available on all platforms.
+        // Disabling this option enforces Alicorn to fall back to a pure JavaScript implementation.
+        // JavaScript version can be slower and does not support streaming.
+        // This option is (by default) disabled for win32-arm64 and enabled for other platforms.
+        enableNativeLZMA: !(platform === "win32" && arch === "arm64"),
+
+        // Port to be used when hosting HMR content for renderer.
+        devServerPort: 9000
+    };
+}
+
+export type BuildConfig = ReturnType<typeof createBuildConfig>;

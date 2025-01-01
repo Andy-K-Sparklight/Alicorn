@@ -5,10 +5,11 @@
     "version": "2.0.0",
     "type": "module",
     "scripts": {
-        "dev": "cross-env NODE_ENV=development tsx build.ts",
-        "prod": "cross-env NODE_ENV=production tsx build.ts",
+        "dev": "tsx build.ts",
+        "prod": "tsx build.ts production",
         "start": "cd dist/prod && electron .",
         "clean": "shx rm -rf dist",
+        "dist": "tsx pack.ts",
         "test": "vitest --run",
         "type-check": "tsc",
         "prepare": "pnpm install-typia",
@@ -16,6 +17,7 @@
         "update-compat-table": "tsx scripts/gen-compat-table.ts"
     },
     "devDependencies": {
+        "@electron/packager": "^18.3.6",
         "@esbuild-plugins/tsconfig-paths": "^0.1.2",
         "@ryoppippi/unplugin-typia": "^1.1.0",
         "@types/chai-as-promised": "^8.0.1",
@@ -38,7 +40,6 @@
         "esbuild": "^0.24.2",
         "shx": "^0.3.4",
         "tailwindcss": "^3.4.17",
-        "terser": "^5.37.0",
         "ts-patch": "^3.3.0",
         "tsx": "^4.19.2",
         "type-fest": "^4.31.0",

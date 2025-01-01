@@ -1,5 +1,6 @@
-import type { OSName } from "@/modules/commons/Types";
 import os from "os";
+
+export type OSName = "windows" | "osx" | "linux";
 
 /**
  * Gets the canonical name of the OS.

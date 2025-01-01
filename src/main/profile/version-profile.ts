@@ -4,7 +4,7 @@
  * This module is rewritten in the hope that it optimizes the profile parsing process and reduces overhead.
  * In particular, it uses more type-based definitions comparing to the legacy implementation of Alicorn.
  */
-import type { OSName } from "@/modules/commons/Types";
+import type { OSName } from "@/main/sys/os";
 
 /**
  * Game version profile. Contains information for managing resources and spawning game process.
@@ -24,7 +24,7 @@ export interface VersionProfile {
 
     assetIndex: AssetIndexArtifact;
     assets: string;
-    
+
     complianceLevel: number;
 
     downloads: {
