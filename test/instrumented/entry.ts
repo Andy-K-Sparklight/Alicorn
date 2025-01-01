@@ -5,6 +5,7 @@ import { checkFileDownload } from "~/test/instrumented/net";
 import { paths } from "@/main/fs/paths";
 import path from "path";
 import { checkInstallJRT } from "~/test/instrumented/jrt";
+import { checkHash } from "~/test/instrumented/hash";
 
 /**
  * The main entry of instrumented test.
@@ -18,7 +19,8 @@ export async function runInstrumentedTest() {
     await Promise.all([
         checkAppReady(),
         checkFileDownload(),
-        checkInstallJRT()
+        checkInstallJRT(),
+        checkHash()
     ]);
 
     await iTest.dumpSummary();
