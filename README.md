@@ -8,6 +8,8 @@
 That launcher of the block game, once with the magic of friendship.
 
 ![Alicorn Badge](https://img.shields.io/badge/Alicorn-2.x-df307f)
+![Node.js CI](https://github.com/Andy-K-Sparklight/Alicorn/actions/workflows/build.yml/badge.svg)
+![CodeQL](https://github.com/Andy-K-Sparklight/Alicorn/actions/workflows/codeql.yml/badge.svg)
 ![Creation Date](https://img.shields.io/github/created-at/Andy-K-Sparklight/Alicorn?label=since)
 ![License Badge](https://img.shields.io/github/license/Andy-K-Sparklight/Alicorn)
 ![Repo Size](https://img.shields.io/github/repo-size/Andy-K-Sparklight/Alicorn)
