@@ -8,6 +8,7 @@ import { netx } from "@/main/net/netx";
 import fs from "fs-extra";
 import { lzma } from "@/main/compress/lzma";
 import * as child_process from "node:child_process";
+import { conf } from "@/main/conf/conf";
 
 const JRT_MANIFEST = "https://piston-meta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json";
 
@@ -94,9 +95,13 @@ async function installRuntime(component: string, root: string): Promise<void> {
     console.debug(`Picked up profile ${profile.manifest.url}`);
 
     const dat = await (await net.fetch(profile.manifest.url)).json();
-    const files = Object.entries(dat.files)
+    let files = Object.entries(dat.files)
         .filter(([, file]) => is<FileHint>(file))
         .map(([name, file]) => ({ name, ...(file as FileHint) } satisfies NamedFileHint));
+
+    if (conf().jrt.filterDocs) {
+        files = files.filter(f => !f.name.startsWith("legal/"));
+    }
 
     const tasks: DlxDownloadRequest[] = [];
     for (const f of files.filter(f => f.type === "file")) {

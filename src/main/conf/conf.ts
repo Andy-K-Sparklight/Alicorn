@@ -106,6 +106,18 @@ const DEFAULT_CONFIG = {
     },
 
     /**
+     * Java runtime management related options.
+     */
+    jrt: {
+        /**
+         * Remove documents and corresponding links to speed up download.
+         *
+         * This drastically improves the installation of the runtime and should not be disabled in common scenarios.
+         */
+        filterDocs: true
+    },
+
+    /**
      * Application settings.
      */
     app: {
