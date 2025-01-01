@@ -131,7 +131,6 @@ function injectDevToolsStyles(w: BrowserWindow) {
  * App shutdown routine.
  */
 async function shutdownApp() {
-    // TODO remove other daemon processes
     console.log("Stopping!");
 
     setTimeout(() => {
@@ -178,23 +177,4 @@ function getIconPath(): string {
         rel = "icon.ico";
     }
     return paths.app.to("icons", rel);
-}
-
-export function getMainWindow(): BrowserWindow | null {
-    return mainWindow;
-}
-
-export function getMainWindowUATrimmed(): string {
-    const ua = mainWindow?.webContents.getUserAgent();
-    if (ua) {
-        const uas = ua.split(" ");
-        const o: string[] = [];
-        uas.forEach((unit) => {
-            if (!unit.includes("Alicorn") && !unit.includes("Electron")) {
-                o.push(unit);
-            }
-        });
-        return o.join(" ");
-    }
-    return "";
 }

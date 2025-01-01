@@ -107,6 +107,8 @@ dist
 .vercel
 
 # Build output
+build
+dist
 out
 
 # IDEs
