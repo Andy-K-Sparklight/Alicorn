@@ -86,7 +86,7 @@ async function main() {
     console.log("Loading window contents...");
 
     // Load renderer from dev server (dev) or file (prod).
-    if (import.meta.env.AL_DEV && process.env.ALICORN_DEV_SERVER) {
+    if (import.meta.env.AL_DEV) {
         const devServerURL = `http://localhost:${import.meta.env.AL_DEV_SERVER_PORT}/`;
         console.log(`Picked up dev server URL: ${devServerURL}`);
         await mainWindow.loadURL(devServerURL);

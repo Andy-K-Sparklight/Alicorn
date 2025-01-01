@@ -110,13 +110,7 @@ export async function build(variant: BuildVariant) {
 
         consola.start("Starting Electron process...");
         const electronExec = path.resolve(import.meta.dirname, "node_modules", "electron", "cli.js");
-        const proc = child_process.fork(electronExec, ["."], {
-            env: {
-                ...process.env,
-                ALICORN_DEV_SERVER: "1"
-            },
-            cwd: outputDir
-        });
+        const proc = child_process.fork(electronExec, ["."], { cwd: outputDir });
 
         process.once("SIGINT", () => {
             consola.info("Closing Electron app...");
