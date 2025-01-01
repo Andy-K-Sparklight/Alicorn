@@ -261,7 +261,7 @@ function createTask(req: NextDownloadRequest): NextDownloadTask {
 async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
     task.startTime = Date.now();
 
-    console.debug(`Retrieving: ${task.activeURL}`);
+    console.debug(`Get: ${task.activeURL}`);
 
     const { requestTimeout, minSpeed } = conf().net.next;
 
@@ -277,7 +277,6 @@ async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
     let res: Response | null = null;
 
     try {
-
         res = await net.fetch(task.activeURL, {
             credentials: "omit",
             keepalive: true,

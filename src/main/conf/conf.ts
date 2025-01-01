@@ -71,7 +71,19 @@ const DEFAULT_CONFIG = {
             /**
              * Whether to apply mirror rules for speeding download.
              */
-            enable: true
+            enable: true,
+
+            /**
+             * Whether to bench mirrors on startup.
+             */
+            bench: true,
+
+            /**
+             * The preferred mirror.
+             *
+             * This option can be changed when benching.
+             */
+            prefer: "vanilla"
         }
     },
 

@@ -1,17 +1,21 @@
 import { net } from "electron";
+import { conf } from "@/main/conf/conf";
 
 interface Mirror {
+    name: string;
     test: string;
 
     apply(origin: string): string;
 }
 
 const vanilla = {
+    name: "vanilla",
     test: "https://libraries.minecraft.net/com/google/guava/guava/21.0/guava-21.0.jar",
     apply: o => o
 } satisfies Mirror;
 
 const bmclapi = import.meta.env.AL_ENABLE_BMCLAPI && {
+    name: "bmclapi",
     test: "https://bmclapi2.bangbang93.com/maven/com/google/guava/guava/21.0/guava-21.0.jar",
     apply(origin: string): string {
         const u = URL.parse(origin);
@@ -49,15 +53,32 @@ const bmclapi = import.meta.env.AL_ENABLE_BMCLAPI && {
     }
 } satisfies Mirror;
 
-let activeMirrors: Mirror[] = [];
+const mirrorList = [bmclapi, vanilla].filter(Boolean) as Mirror[];
+
+let activeMirrors: Mirror[];
+
+function setInitialMirrors() {
+    if (!activeMirrors) {
+        const preferMirror = mirrorList.find(m => m.name === conf().net.mirror.prefer);
+        activeMirrors = [...new Set([preferMirror, ...mirrorList].filter(Boolean) as Mirror[])];
+    }
+}
 
 function apply(url: string): string[] {
+    setInitialMirrors();
     const sources = [...activeMirrors.map(m => m.apply(url)), url];
     return [...new Set(sources)];
 }
 
 async function bench(): Promise<void> {
+    setInitialMirrors();
+
     const mirrors = [bmclapi, vanilla].filter(Boolean) as Mirror[];
+
+    if (mirrors.length < 2 || !conf().net.mirror.bench) {
+        return;
+    }
+
     const speed: [Mirror, number][] = [];
     for (const m of mirrors) {
         console.log(`Testing URL: ${m.test}`);
@@ -67,6 +88,7 @@ async function bench(): Promise<void> {
     }
     speed.sort((a, b) => b[1] - a[1]);
     activeMirrors = speed.map(it => it[0]);
+    conf().net.mirror.prefer = activeMirrors[0].name;
 }
 
 async function testMirrorSpeed(url: string): Promise<number> {
