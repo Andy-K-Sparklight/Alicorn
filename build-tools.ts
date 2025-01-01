@@ -40,7 +40,7 @@ export async function build(variant: BuildVariant) {
         define: defines,
         outdir: outputDir,
         metafile: true,
-        drop: isDev ? [] : ["console"]
+        drop: cfg.variant.mode === "production" ? ["console"] : undefined
     };
 
     const mainBuildOptions: BuildOptions = {

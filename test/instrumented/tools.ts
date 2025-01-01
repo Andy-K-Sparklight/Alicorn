@@ -14,6 +14,7 @@ export interface TestSuiteSummary {
 const suites: TestSuiteSummary[] = [];
 
 async function run(name: string, exec: () => void | Promise<void>) {
+    console.log(`Executing test: ${name}`);
     try {
         await exec();
         suites.push({
