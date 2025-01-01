@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         os: [ windows-latest, macos-latest, ubuntu-latest ]
 
@@ -28,6 +29,14 @@ jobs:
       - name: Run Unit Tests
         run: |
           pnpm test
+
+      # A workaround for https://github.com/electron/electron/issues/42510
+      - name: Configure Runtime
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          sudo apt update
+          sudo apt install xvfb
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Run Instrumented Tests
         run: |
           pnpm itest
