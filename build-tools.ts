@@ -21,7 +21,7 @@ export async function build(variant: BuildVariant) {
 
     const isDev = cfg.variant.mode === "development";
 
-    const outputDir = path.resolve(import.meta.dirname, "dist", isDev ? "dev" : "prod");
+    const outputDir = path.resolve(import.meta.dirname, "build", isDev ? "dev" : "prod");
 
     await fs.emptyDir(outputDir);
 
@@ -39,7 +39,8 @@ export async function build(variant: BuildVariant) {
         external: ["electron", "original-fs"],
         define: defines,
         outdir: outputDir,
-        metafile: true
+        metafile: true,
+        drop: isDev ? [] : ["console"]
     };
 
     const mainBuildOptions: BuildOptions = {

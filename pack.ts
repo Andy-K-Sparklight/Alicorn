@@ -22,15 +22,16 @@ for (const platform of platforms) {
         const opts = {
             asar: false,
             name: "Alicorn Launcher",
+            executableName: "Alicorn",
             appBundleId: "moe.skjsjhb.alicorn",
             appCopyright: `Copyright (C) 2021-2022 Andy K Rarity Sparklight ("ThatRarityEG") / Copyright (C) 2024-2025 Ted Gao ("skjsjhb")`,
             appCategoryType: "public.app-category.utilities",
             appVersion: pkg.version,
             icon: path.resolve(import.meta.dirname, "resources", "icons", "icon"),
-            dir: path.resolve(import.meta.dirname, "dist", "prod"),
+            dir: path.resolve(import.meta.dirname, "build", "prod"),
             arch: arch,
             platform: platform,
-            out: path.resolve(import.meta.dirname, "out"),
+            out: path.resolve(import.meta.dirname, "dist"),
             overwrite: true,
             ignore: [".local", "node.napi.node"]
         } satisfies Options;

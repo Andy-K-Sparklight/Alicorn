@@ -14,7 +14,7 @@ export default defineConfig(({ command }) => {
         base: "",
         publicDir: path.resolve(import.meta.dirname, "public"),
         build: {
-            outDir: path.resolve(import.meta.dirname, "dist", isDev ? "dev" : "prod", "renderer"),
+            outDir: path.resolve(import.meta.dirname, "build", isDev ? "dev" : "prod", "renderer"),
             emptyOutDir: true,
             rollupOptions: {
                 output: {
