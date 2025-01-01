@@ -8,22 +8,22 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: pnpm/action-setup@v4
-    - name: Use Node.js 22
-      uses: actions/setup-node@v4
-      with:
-        node-version: 22.x
-        cache: pnpm
-    - name: Install Dependencies
-      run: |
-        pnpm i
-    - name: Build
-      run: |
-        pnpm prod
-    - name: Run Test
-      run: |
-        pnpm test
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+      - name: Install Dependencies
+        run: |
+          pnpm i
+      - name: Run Unit Tests
+        run: |
+          pnpm test
+      - name: Run Instrumented Tests
+        run: |
+          pnpm itest

@@ -11,6 +11,7 @@ import os from "node:os";
 import { getOSName } from "@/main/sys/os";
 import { ext } from "@/main/sys/ext";
 import { unwrapESM } from "@/main/util/module";
+import { runInstrumentedTest } from "~/test/instrumented/entry";
 
 void main();
 
@@ -100,6 +101,10 @@ async function main() {
     console.log("Executing late init tasks...");
 
     await mirror.bench();
+
+    if (import.meta.env.AL_TEST) {
+        void runInstrumentedTest();
+    }
 }
 
 /**

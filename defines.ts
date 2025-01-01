@@ -19,6 +19,7 @@ function genBuildDefines(config: BuildConfig) {
 
     return {
         AL_DEV: mode === "development",
+        AL_TEST: mode === "test",
         AL_PLATFORM: platform,
         AL_OS: osNames[platform],
         AL_ARCH: arch,

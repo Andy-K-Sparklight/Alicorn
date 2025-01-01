@@ -7,6 +7,7 @@
     "scripts": {
         "dev": "tsx build.ts",
         "prod": "tsx build.ts production",
+        "itest": "tsx build.ts test",
         "start": "cd build/prod && electron .",
         "clean": "shx rm -rf build && shx rm -rf dist",
         "dist": "tsx pack.ts",

@@ -1,5 +1,7 @@
+export type BuildMode = "development" | "production" | "test"
+
 export interface BuildVariant {
-    mode: "development" | "production";
+    mode: BuildMode;
     platform: string;
     arch: string;
 }
