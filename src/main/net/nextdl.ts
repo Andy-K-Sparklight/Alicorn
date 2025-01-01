@@ -385,10 +385,16 @@ function createTransferGuardStream(minSpeed: number): TransformStream<Uint8Array
  */
 function createBytesCountingStream(onChange: (b: number) => void): TransformStream<Uint8Array, Uint8Array> {
     let bytes = 0;
+    let lastBytes = 0;
     return new TransformStream<Uint8Array, Uint8Array>({
         transform(chunk, controller) {
             bytes += chunk.byteLength;
-            onChange(bytes);
+
+            // Throttle every 64K
+            if (bytes - lastBytes > 1024 * 64) {
+                onChange(bytes);
+                lastBytes = bytes;
+            }
             controller.enqueue(chunk);
         }
     });

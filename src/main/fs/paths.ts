@@ -48,7 +48,7 @@ function optimalStoreRoot(): string {
  * Finds an optimal location for game files.
  */
 function optimalGameRoot(): string {
-    return path.join(optimalStoreRoot(), "game");
+    return path.join(getStoreRoot(), "game");
 }
 
 /**
