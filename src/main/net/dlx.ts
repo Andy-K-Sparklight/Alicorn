@@ -54,6 +54,7 @@ async function getAll(req: DlxDownloadRequest[], init?: DlxDownloadInit): Promis
         } else {
             console.error(`ERR! ${r.url}`);
             cancelAll();
+            throw `Task failed: ${r.url}`;
         }
     });
 
