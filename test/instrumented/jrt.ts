@@ -10,7 +10,7 @@ export async function checkInstallJRT() {
         const bin = jrt.executable("java-runtime-gamma");
         const proc = child_process.spawn(bin, ["-version"], { stdio: "inherit" });
 
-        assert((await fs.stat(bin)).isFile());
+        assert((await fs.stat(bin)).isFile(), "JRT executable file should exist");
 
         await new Promise<void>((res, rej) => {
             proc.on("error", rej);
