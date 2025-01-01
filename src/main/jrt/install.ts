@@ -8,6 +8,7 @@ import { netx } from "@/main/net/netx";
 import fs from "fs-extra";
 import { lzma } from "@/main/compress/lzma";
 import * as child_process from "node:child_process";
+import { paths } from "@/main/fs/paths";
 import { conf } from "@/main/conf/conf";
 
 const JRT_MANIFEST = "https://piston-meta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json";
@@ -89,7 +90,9 @@ type FileHint = {
 
 type NamedFileHint = FileHint & { name: string; }
 
-async function installRuntime(component: string, root: string): Promise<void> {
+async function installRuntime(component: string): Promise<void> {
+    const root = getComponentHome(component);
+
     console.log(`Installing JRT runtime ${component} to ${root}`);
     const profile = await getProfile(component);
     console.debug(`Picked up profile ${profile.manifest.url}`);
@@ -183,4 +186,19 @@ async function verify(root: string): Promise<void> {
     });
 }
 
-export const jrt = { installRuntime };
+/**
+ * Gets the path to the given JRT component home.
+ */
+function getComponentHome(component: string): string {
+    return paths.store.to("runtimes", component);
+}
+
+/**
+ * Gets the path to the JRT executable file.
+ */
+function executable(component: string): string {
+    const ext = getOSName() === "windows" ? ".exe" : "";
+    return path.join(getComponentHome(component), "bin", "java" + ext);
+}
+
+export const jrt = { installRuntime, executable };

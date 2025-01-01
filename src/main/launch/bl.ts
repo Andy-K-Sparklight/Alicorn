@@ -7,6 +7,7 @@ import { containers } from "@/main/container/manage";
 import { launchArgs } from "@/main/launch/args";
 import { accounts } from "@/main/auth/manage";
 import { GameInstance, proc } from "@/main/launch/proc";
+import { jrt } from "@/main/jrt/install";
 
 /**
  * Loads necessary information from the launch hint profile and builds launch init params.
@@ -24,10 +25,12 @@ async function prepare(hint: LaunchHint): Promise<LaunchInit> {
         enabledFeatures.add("has_custom_resolution");
     }
 
+    const jrtExec = jrt.executable(profile.javaVersion?.component || "jre-legacy");
+
     return {
         profile,
         container,
-        jrtExec: "", // TODO
+        jrtExec: jrtExec,
         credentials: account.credentials(),
         enabledFeatures,
         assetsShouldMap,
