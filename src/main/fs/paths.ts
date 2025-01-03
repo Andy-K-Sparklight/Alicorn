@@ -113,6 +113,11 @@ export const paths = {
     store: createResolver(() => getStoreRoot()),
 
     /**
+     * Stores reusable files for ALink.
+     */
+    alink: createResolver(() => path.join(getGameRoot(), ".alink")),
+
+    /**
      * Stores game files.
      */
     game: createResolver(() => getGameRoot()),
