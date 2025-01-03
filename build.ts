@@ -4,8 +4,7 @@ import consola from "consola";
 import type { BuildMode } from "~/config";
 import path from "path";
 import child_process from "node:child_process";
-import { printTestSummary } from "~/instrumented-test";
-
+import { printTestSummary } from "~/scripts/instrumented-test";
 
 const mode = process.argv[2] || "development";
 if (!["development", "production", "test"].includes(mode)) {

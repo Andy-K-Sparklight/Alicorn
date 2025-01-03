@@ -12,8 +12,8 @@ import { nanoid } from "nanoid";
 import PQueue from "p-queue";
 import EventEmitter from "events";
 import type TypedEmitter from "typed-emitter";
-import { hash } from "@/main/security/hash";
 import path from "node:path";
+import { dlchk } from "@/main/net/dlchk";
 
 /**
  * Events emitted when downloading.
@@ -124,15 +124,8 @@ function gets(req: NextDownloadRequest[]): [Promise<boolean>, NextDownloadTask][
  */
 async function resolve(task: NextDownloadTask): Promise<boolean> {
     // Preflight validate
-    let valid = false;
-    if (conf().net.next.validate) {
-        valid = await validate(task);
-    } else {
-        try {
-            await fs.access(task.req.path);
-            valid = true;
-        } catch {}
-    }
+    // For files that cannot be validated, re-downloading is suggested and therefore not skipped
+    const valid = await dlchk.validate({ ...task.req }) === "checked";
 
     if (valid) {
         task.status = NextDownloadStatus.DONE;
@@ -173,7 +166,9 @@ async function resolveOnce(task: NextDownloadTask): Promise<NextRequestStatus> {
     if (res === NextRequestStatus.SUCCESS) {
         if (conf().net.next.validate) {
             task.status = NextDownloadStatus.VALIDATING;
-            const valid = await validate(task);
+            // Here we accept both 'checked' and 'unknown'
+            // As we have no clue to reject a file when we cannot determine it's corrupted
+            const valid = await dlchk.validate({ ...task.req }) !== "failed";
             return valid ? NextRequestStatus.SUCCESS : NextRequestStatus.RETRY;
         } else {
             return NextRequestStatus.SUCCESS;
@@ -311,44 +306,6 @@ async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
     } catch (e) {
         console.warn(`Error when transferring data: ${e}`);
         return NextRequestStatus.RETRY;
-    }
-}
-
-/**
- * Validates the integrity of the task.
- */
-async function validate(task: NextDownloadTask): Promise<boolean> {
-    try {
-        await fs.access(task.req.path);
-    } catch {
-        // Fail silently as the file does not exist
-        return false;
-    }
-
-    try {
-        if (task.req.sha1) {
-            const h = await hash.forFile(task.req.path, "sha1");
-            if (task.req.sha1.toLowerCase() === h.toLowerCase()) {
-                console.debug(`Hash matched: ${task.req.path}`);
-                return true;
-            }
-            return false;
-        }
-
-        if (task.req.size && task.req.size > 0) {
-            const st = await fs.stat(task.req.path);
-            if (st.size === task.req.size) {
-                console.debug(`Size matched: ${task.req.path}`);
-                return true;
-            }
-            return false;
-        }
-
-        console.debug(`Skipped validation: ${task.req.path}`);
-        return true; // No validation method available
-    } catch (e) {
-        console.warn(`Error when validating file: ${e}`);
-        return false;
     }
 }
 

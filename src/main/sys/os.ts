@@ -25,3 +25,11 @@ export function getOSBits(): string {
     if (os.arch() === "ia32") return "32";
     return "64";
 }
+
+/**
+ * Gets the executable suffix of this OS.
+ */
+export function getExecutableExt(): string {
+    if (os.platform() === "win32") return ".exe";
+    return "";
+}

@@ -29,6 +29,9 @@ export function createBuildConfig(variant: BuildVariant) {
         // This option is (by default) disabled for win32-arm64 and enabled for other platforms.
         enableNativeLZMA: !(platform === "win32" && arch === "arm64"),
 
+        // Whether to bundle the prebuilt aria2 binaries.
+        enableBundledAria2: true,
+
         // Port to be used when hosting HMR content for renderer.
         devServerPort: 9000
     };

@@ -12,6 +12,8 @@ import { getOSName } from "@/main/sys/os";
 import { ext } from "@/main/sys/ext";
 import { unwrapESM } from "@/main/util/module";
 import { runInstrumentedTest } from "~/test/instrumented/entry";
+import { aria2 } from "@/main/net/aria2";
+
 
 void main();
 
@@ -25,6 +27,8 @@ let mainWindow: BrowserWindow | null = null;
  */
 async function main() {
     process.noAsar = true;
+    process.env.WS_NO_BUFFER_UTIL = "true";
+    process.env.WS_NO_UTF_8_VALIDATE = "true";
 
     if (!checkSingleInstance()) return;
 
@@ -100,6 +104,10 @@ async function main() {
 
     console.log("Executing late init tasks...");
 
+    if (conf().net.downloader === "aria2") {
+        await aria2.init();
+    }
+
     await mirror.bench();
 
     if (import.meta.env.AL_TEST) {
@@ -145,6 +153,7 @@ async function shutdownApp() {
 
     await conf.store();
     await registry.saveAll();
+    aria2.shutdown();
 
     console.log("Exiting.");
     app.quit();

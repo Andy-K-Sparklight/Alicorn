@@ -70,7 +70,7 @@ Architectures:
 - `x64` (`amd64`)
 - `arm64` (`aarch64`)
 
-## Build
+## Build Instructions
 
 > [!NOTE]
 > **You may not need to build Alicorn yourself.**
@@ -78,7 +78,12 @@ Architectures:
 > To access the latest features, update from the beta channel to get tested builds.
 > Only build from source for development.
 
-Alicorn can be built from any platform it runs on. The following tools are required:
+### Prerequisites
+
+You can build Alicorn for preview on any platform it runs on.
+However, `windows-arm64` and `linux-arm64` cannot be used as the host when packaging.
+
+The following tools are required:
 
 - Node.js >= 22 (LTS)
 
@@ -86,52 +91,66 @@ Alicorn can be built from any platform it runs on. The following tools are requi
 
 - Git
 
-1. Get the code:
+- Wine, when building on non-Windows platforms.
 
-   ```shell
-   git clone --filter=tree:0 https://github.com/Andy-K-Sparklight/Alicorn.git
-   ```
+### Get the Source Code
 
-2. Install dependencies:
+```shell
+git clone --filter=tree:0 https://github.com/Andy-K-Sparklight/Alicorn.git
+```
 
-   ```shell
-   corepack enable
-   pnpm i
-   ```
+Flag `--filter=tree:0` reduces the amount of files to receive, yet preserves the commits.
 
-3. Build and run:
+### Build and Preview
 
-    - For production:
+Install dependencies:
 
-      ```shell
-      pnpm prod
-      pnpm start
-      ```
+```shell
+corepack enable
+pnpm i
+```
 
-    - For development:
+> [!TIP]
+> Alicorn has a set of customizable build options which toggles or adjusts certain features.
+> These options can help when building Alicorn with different "flavors".
+> See `config.ts` for details.
 
-      ```shell
-      pnpm dev
-      ```
+> [!IMPORTANT]
+> Additional files (know as "vendors") may need to be downloaded during the build process.
+> Keep online when building.
 
-      This command builds the main process modules and starts a development server (with HMR) for the renderer.
-      Changes made to the renderer will be reflected immediately once saved.
+Preview for production:
 
-4. To create packaged binaries:
+```shell
+pnpm prod
+pnpm start
+```
 
-   ```shell
-   pnpm dist
-   ```
+Preview for development (with live reload):
 
-   The output files are placed at `out`.
+```shell
+pnpm dev
+```
 
-Certain features can be toggled or adjusted during the build process. Check and edit `config.ts` for details.
+### Create Packaged Binaries
+
+Run the following command to create unzipped packages for all supported platforms:
+
+```shell
+pnpm dist
+```
+
+The output files locate at `out`.
 
 ## License
 
 ![GPL-3.0 Logo](https://www.gnu.org/graphics/gplv3-or-later.png)
 
 [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html) (or any later version)
+
+## Disclaimer
+
+Alicorn is an unofficial (third-party) work. The development of Alicorn is not related to Mojang or Microsoft.
 
 [^1]: We as developers follow the EULA of the game and advocate copyright protection.
 A valid account is required to enter the game session.

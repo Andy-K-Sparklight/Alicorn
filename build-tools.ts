@@ -9,7 +9,8 @@ import consola from "consola";
 import * as vite from "vite";
 import * as child_process from "node:child_process";
 import { type BuildVariant, createBuildConfig } from "~/config";
-import { createBuildDefines } from "~/defines";
+import { createBuildDefines } from "~/scripts/defines";
+import { vendor } from "~/scripts/vendor";
 
 export async function build(variant: BuildVariant) {
     const cfg = createBuildConfig(variant);
@@ -75,10 +76,13 @@ export async function build(variant: BuildVariant) {
     consola.start("Copying resources...");
     await fs.copy("resources", outputDir);
 
+    consola.start("Preparing vendor resources...");
+    await vendor.prepareAssets(cfg, path.join(outputDir, "vendor"));
+
     consola.start("Copying native addons...");
+    const platform = cfg.variant.platform + "-" + cfg.variant.arch;
 
     if (cfg.enableNativeLZMA) {
-        const platform = cfg.variant.platform + "-" + cfg.variant.arch;
         try {
             await fs.copy(`node_modules/lzma-native/prebuilds/${platform}`, path.join(outputDir, `natives/lzma-native/prebuilds/${platform}`));
         } catch (e) {
@@ -111,7 +115,7 @@ export async function build(variant: BuildVariant) {
 
         consola.start("Starting Electron process...");
         const electronExec = path.resolve(import.meta.dirname, "node_modules", "electron", "cli.js");
-        const proc = child_process.fork(electronExec, ["."], { cwd: outputDir });
+        const proc = child_process.fork(electronExec, ["--trace-warnings", "."], { cwd: outputDir });
 
         process.once("SIGINT", () => {
             consola.info("Closing Electron app...");

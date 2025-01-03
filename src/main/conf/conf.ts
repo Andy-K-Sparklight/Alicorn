@@ -35,6 +35,53 @@ const DEFAULT_CONFIG = {
      */
     net: {
         /**
+         * The preferred downloader.
+         *
+         * Values: aria2, next
+         */
+        downloader: "aria2",
+
+        /**
+         * Options for aria2.
+         */
+        aria2: {
+            /**
+             * Parallel tasks limit.
+             */
+            concurrency: 16,
+
+            /**
+             * Whether to validate the integrity of the downloaded file.
+             *
+             * File validation is always performed when preflighting, changes performed by the user will be lost.
+             */
+            validate: true,
+
+            /**
+             * Maximum tries for each download task.
+             */
+            tries: 3,
+
+            /**
+             * Extra arguments passed to aria2c during startup.
+             *
+             * Values are separated by line breaks.
+             */
+            args: "",
+
+            /**
+             * Maximum wait time (sec) before aborting a request. 0 or negative values are not accepted.
+             */
+            requestTimeout: 5,
+
+            /**
+             * Maximum wait time (sec) when the stream is halted (i.e. no bytes are transferred) before aborting
+             * the download.
+             */
+            transferTimeout: 10
+        },
+
+        /**
          * Options for the next downloader.
          */
         next: {
@@ -46,7 +93,7 @@ const DEFAULT_CONFIG = {
             /**
              * Maximum wait time (ms) before aborting a request. 0 or negative value indicates infinite wait time.
              */
-            requestTimeout: 2000,
+            requestTimeout: 5000,
 
             /**
              * Minimum acceptable transfer speed when downloading files.
@@ -60,6 +107,8 @@ const DEFAULT_CONFIG = {
 
             /**
              * Whether to validate the integrity of the downloaded file.
+             *
+             * File validation is always performed when preflighting, changes performed by the user will be lost.
              */
             validate: true
         },
