@@ -126,3 +126,6 @@ emulated
 
 # Coverage
 coverage
+
+# Scratch Files
+.scratch/

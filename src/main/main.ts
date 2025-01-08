@@ -6,13 +6,14 @@ import { bwctl } from "@/main/sys/bwctl";
 import { paths } from "@/main/fs/paths";
 import { mirror } from "@/main/net/mirrors";
 import { registry } from "@/main/registry/registry";
-
 import os from "node:os";
 import { getOSName } from "@/main/sys/os";
 import { ext } from "@/main/sys/ext";
 import { unwrapESM } from "@/main/util/module";
 import { runInstrumentedTest } from "~/test/instrumented/entry";
 import { aria2 } from "@/main/net/aria2";
+import { nfat } from "@/main/net/nfat";
+import path from "path";
 
 
 void main();
@@ -49,7 +50,14 @@ async function main() {
     console.log("Initializing modules...");
     conf.setup();
 
-    paths.setup();
+    if (import.meta.env.AL_TEST) {
+        paths.setup({
+            storeRoot: path.resolve("emulated", "store")
+        });
+    } else {
+        paths.setup();
+    }
+
     ping.setup();
     ext.setup();
 
@@ -104,11 +112,19 @@ async function main() {
 
     console.log("Executing late init tasks...");
 
-    if (conf().net.downloader === "aria2") {
-        await aria2.init();
+    const tasks: Promise<unknown>[] = [];
+
+    if (conf().net.nfat.enable) {
+        tasks.push(nfat.init());
     }
 
-    await mirror.bench();
+    if (conf().net.downloader === "aria2") {
+        tasks.push(aria2.init());
+    }
+
+    tasks.push(mirror.bench());
+
+    await Promise.all(tasks);
 
     if (import.meta.env.AL_TEST) {
         void runInstrumentedTest();
@@ -153,6 +169,7 @@ async function shutdownApp() {
 
     await conf.store();
     await registry.saveAll();
+    nfat.close();
     aria2.shutdown();
 
     console.log("Exiting.");

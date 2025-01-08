@@ -2,6 +2,8 @@ import { iTest } from "~/test/instrumented/tools";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import assert from "node:assert";
 import { hash } from "@/main/security/hash";
+import fs from "fs-extra";
+import { nfat } from "@/main/net/nfat";
 
 export async function checkFileDownload() {
     await iTest.run("File Download", async () => {
@@ -30,5 +32,18 @@ export async function checkFileDownload() {
         assert(completed === 2, "Task count should match");
         assert(await hash.forFile("assetIndex.json", "sha1") === "f3c4aa96e12951cd2781b3e1c0e8ab82bf719cf2", "Hash 1 should match");
         assert(await hash.forFile("log.xml", "sha1") === "bd65e7d2e3c237be76cfbef4c2405033d7f91521", "Hash 2 should match");
+    });
+
+    await iTest.run("NFAT File Reuse", async () => {
+        const src = "NFAT speeds up the download";
+        const fp = "nfat-data.txt";
+        const url = "https://example.com/nfat-data.txt";
+        await fs.writeFile(fp, src);
+        const h = await hash.forFile(fp, "sha1");
+        nfat.enroll(fp, url, h);
+
+        await nfat.deploy("reuse-data.txt", url, h);
+        const dat = await fs.readFile("reuse-data.txt");
+        assert(dat.toString() === src);
     });
 }

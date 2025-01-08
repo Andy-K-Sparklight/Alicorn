@@ -59,6 +59,9 @@ importers:
       nanoid:
         specifier: ^5.0.9
         version: 5.0.9
+      node-sqlite3-wasm:
+        specifier: ^0.8.30
+        version: 0.8.30
       p-queue:
         specifier: ^8.0.1
         version: 8.0.1
@@ -133,7 +136,7 @@ importers:
         specifier: ^3.7.2
         version: 3.7.2(@swc/helpers@0.5.15)(vite@6.0.7(@types/node@22.10.5)(jiti@1.21.7)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       '@vitest/coverage-v8':
-        specifier: 2.1.8
+        specifier: ^2.1.8
         version: 2.1.8(vitest@2.1.8(@types/node@22.10.5)(terser@5.37.0))
       chai-as-promised:
         specifier: ^8.0.1
@@ -145,8 +148,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       electron:
-        specifier: ^33.2.1
-        version: 33.2.1
+        specifier: ^33.3.1
+        version: 33.3.1
       esbuild:
         specifier: ^0.24.2
         version: 0.24.2
@@ -169,7 +172,7 @@ importers:
         specifier: ^2.1.0
         version: 2.1.0
       typescript:
-        specifier: ~5.7.2
+        specifier: ^5.7.2
         version: 5.7.2
       vite:
         specifier: ^6.0.7
@@ -178,7 +181,7 @@ importers:
         specifier: ^5.1.4
         version: 5.1.4(typescript@5.7.2)(vite@6.0.7(@types/node@22.10.5)(jiti@1.21.7)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))
       vitest:
-        specifier: 2.1.8
+        specifier: ^2.1.8
         version: 2.1.8(@types/node@22.10.5)(terser@5.37.0)
       xvfb-maybe:
         specifier: ^0.2.1
@@ -1978,8 +1981,8 @@ packages:
   '@types/lzma@2.3.0':
     resolution: {integrity: sha512-z7TknP6ts5GPnN7P2bkZC1B/tMpoMJXG3UnPY1XDrwBq1OJQ2EpHtEypFwq5Q0A5iS37+oc+MT/o/B7x5lgl8Q==}
 
-  '@types/node@20.17.11':
-    resolution: {integrity: sha512-Ept5glCK35R8yeyIeYlRIZtX6SLRyqMhOFTgj5SOkMpLTdw3SEHI9fHx60xaUZ+V1aJxQJODE+7/j5ocZydYTg==}
+  '@types/node@20.17.12':
+    resolution: {integrity: sha512-vo/wmBgMIiEA23A/knMfn/cf37VnuF52nZh5ZoW0GWt4e4sxNquibrMRJ7UQsA06+MBx9r/H1jsI9grYjQCQlw==}
 
   '@types/node@22.10.5':
     resolution: {integrity: sha512-F8Q+SeGimwOo86fiovQh8qiXfFEh2/ocYv7tU5pJ3EXMSSxk1Joj5wefpFK2fHTf/N6HKGSxIDBT9f3gCxXPkQ==}
@@ -2379,8 +2382,8 @@ packages:
   electron-devtools-installer@4.0.0:
     resolution: {integrity: sha512-9Tntu/jtfSn0n6N/ZI6IdvRqXpDyLQiDuuIbsBI+dL+1Ef7C8J2JwByw58P3TJiNeuqyV3ZkphpNWuZK5iSY2w==}
 
-  electron@33.2.1:
-    resolution: {integrity: sha512-SG/nmSsK9Qg1p6wAW+ZfqU+AV8cmXMTIklUL18NnOKfZLlum4ZsDoVdmmmlL39ZmeCaq27dr7CgslRPahfoVJg==}
+  electron@33.3.1:
+    resolution: {integrity: sha512-Z7l2bVgpdKxHQMI4i0CirBX2n+iCYKOx5mbzNM3BpOyFELwlobEXKmzCmEnwP+3EcNeIhUQyIEBFQxN06QgdIw==}
     engines: {node: '>= 12.20.55'}
     hasBin: true
 
@@ -2962,6 +2965,9 @@ packages:
   node-gyp-build@4.8.4:
     resolution: {integrity: sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==}
     hasBin: true
+
+  node-sqlite3-wasm@0.8.30:
+    resolution: {integrity: sha512-MU88q65ircWo4Xi/auv9hgZbAnxkSWuLDbzWPmwGgzWMmukQCrYejwvyivejGkjVmoHMdLA4BMXZvc/zimZjxQ==}
 
   normalize-package-data@2.5.0:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
@@ -6333,7 +6339,7 @@ snapshots:
     dependencies:
       '@types/node': 22.10.5
 
-  '@types/node@20.17.11':
+  '@types/node@20.17.12':
     dependencies:
       undici-types: 6.19.8
 
@@ -6715,10 +6721,10 @@ snapshots:
     dependencies:
       unzip-crx-3: 0.2.0
 
-  electron@33.2.1:
+  electron@33.3.1:
     dependencies:
       '@electron/get': 2.0.3
-      '@types/node': 20.17.11
+      '@types/node': 20.17.12
       extract-zip: 2.0.1
     transitivePeerDependencies:
       - supports-color
@@ -7385,6 +7391,8 @@ snapshots:
   node-addon-api@3.2.1: {}
 
   node-gyp-build@4.8.4: {}
+
+  node-sqlite3-wasm@0.8.30: {}
 
   normalize-package-data@2.5.0:
     dependencies:

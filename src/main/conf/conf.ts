@@ -133,6 +133,16 @@ const DEFAULT_CONFIG = {
              * This option can be changed when benching.
              */
             prefer: "vanilla"
+        },
+
+        /**
+         * NFAT reuse options.
+         */
+        nfat: {
+            /**
+             * Whether to allow NFAT to record files and reuse them when necessary.
+             */
+            enable: true
         }
     },
 
