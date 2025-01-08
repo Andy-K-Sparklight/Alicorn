@@ -108,6 +108,7 @@ async function checkPath(): Promise<string> {
 
     if (import.meta.env.AL_ENABLE_BUNDLED_ARIA2) {
         exec = paths.app.to("vendor", execName);
+        await fs.chmod(exec, 0o777);
     }
 
     const proc = child_process.spawn(exec, ["-h"]);
@@ -137,6 +138,8 @@ async function init() {
 
         const { concurrency, args, requestTimeout, transferTimeout } = conf().net.aria2;
 
+        const cert = paths.app.to("vendor", "ca-cert.pem");
+
         aria2cProcess = child_process.spawn(pt, [
             `--max-concurrent-downloads=${concurrency}`,
             "--max-connection-per-server=16",
@@ -146,6 +149,7 @@ async function init() {
             `--rpc-listen-port=${aria2cPort}`,
             "--rpc-max-request-size=32M",
             `--rpc-secret=${aria2cToken}`,
+            `--ca-certificate=${cert}`,
             ...args.split("\n").filter(Boolean)
         ]);
 
