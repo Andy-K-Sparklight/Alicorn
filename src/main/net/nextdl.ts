@@ -14,6 +14,7 @@ import EventEmitter from "events";
 import type TypedEmitter from "typed-emitter";
 import path from "node:path";
 import { dlchk } from "@/main/net/dlchk";
+import { nfat } from "@/main/net/nfat";
 
 /**
  * Events emitted when downloading.
@@ -41,6 +42,7 @@ export enum NextDownloadStatus {
  */
 export interface NextDownloadRequest {
     urls: string[];
+    origin: string;
     path: string;
     sha1?: string;
     size?: number;
@@ -123,6 +125,11 @@ function gets(req: NextDownloadRequest[]): [Promise<boolean>, NextDownloadTask][
  * Resolves the download task for the maximum number of tries specified.
  */
 async function resolve(task: NextDownloadTask): Promise<boolean> {
+    // First try to reuse existing files
+    if (task.req.sha1) {
+        await nfat.deploy(task.req.path, task.req.origin, task.req.sha1);
+    }
+
     // Preflight validate
     // For files that cannot be validated, re-downloading is suggested and therefore not skipped
     const valid = await dlchk.validate({ ...task.req }) === "checked";
@@ -144,6 +151,12 @@ async function resolve(task: NextDownloadTask): Promise<boolean> {
             }
             if (st === NextRequestStatus.SUCCESS) {
                 task.status = NextDownloadStatus.DONE;
+
+                // Add file for reusing
+                if (task.req.sha1) {
+                    nfat.enroll(task.req.path, task.req.origin, task.req.sha1);
+                }
+
                 return true;
             }
 

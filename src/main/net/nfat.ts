@@ -7,6 +7,7 @@ import { paths } from "@/main/fs/paths";
 import { hash } from "@/main/security/hash";
 import fs from "fs-extra";
 import path from "path";
+import { conf } from "@/main/conf/conf";
 
 let db: Database;
 
@@ -31,9 +32,9 @@ async function init() {
     db.exec(`
         CREATE TABLE IF NOT EXISTS files
         (
-            sha1 VARCHAR(40) PRIMARY KEY NOT NULL,
-            url  TEXT                    NOT NULL,
-            path TEXT                    NOT NULL
+            sha1 VARCHAR(40) NOT NULL,
+            url  TEXT        NOT NULL,
+            path TEXT        NOT NULL
         );
     `);
 }
@@ -47,15 +48,19 @@ let removeStmt: Statement;
  * Adds a reusable file after download.
  */
 function enroll(fp: string, url: string, sha1: string) {
+    if (!conf().net.nfat.enable) return;
+
     if (!enrollStmt) {
         enrollStmt = db.prepare(`
-            INSERT INTO files
+            INSERT OR IGNORE INTO files
             VALUES (?, ?, ?);
         `);
         statements.push(enrollStmt);
     }
 
-    enrollStmt.run([sha1, url, fp]);
+    const pt = path.normalize(path.resolve(fp));
+
+    enrollStmt.run([sha1, url, pt]);
 }
 
 async function request(url: string, sha1: string): Promise<string | null> {
@@ -69,38 +74,38 @@ async function request(url: string, sha1: string): Promise<string | null> {
         statements.push(requestStmt);
     }
 
-    const r = requestStmt.get(sha1) as FATRecord | null;
+    const results = requestStmt.all(sha1) as unknown as FATRecord[];
 
-    if (!r || r.url !== url) return null;
+    for (const r of results) {
+        if (r.url !== url) continue;
 
-    try {
-        await fs.access(r.path);
-    } catch {
-        return null; // File might have been moved
-    }
+        try {
+            await fs.access(r.path);
 
-    try {
-        const fh = await hash.forFile(r.path, "sha1");
-        if (fh.toLowerCase() === sha1.toLowerCase()) {
-            // Hash validated, reuse this file
-            return r.path;
-        } else {
-            // Hash mismatch
-            if (!removeStmt) {
-                removeStmt = db.prepare(`
-                    DELETE
-                    FROM files
-                    WHERE sha1 = ?;
-                `);
-                statements.push(removeStmt);
+            const fh = await hash.forFile(r.path, "sha1");
+            if (fh.toLowerCase() === sha1.toLowerCase()) {
+                // Hash validated, reuse this file
+                return r.path;
             }
+        } catch {}
 
-            removeStmt.run(sha1);
-            return null;
-        }
-    } catch {
-        return null;
+        remove(r.path);
     }
+
+    return null;
+}
+
+function remove(pt: string) {
+    if (!removeStmt) {
+        removeStmt = db.prepare(`
+            DELETE
+            FROM files
+            WHERE path = ?;
+        `);
+        statements.push(removeStmt);
+    }
+
+    removeStmt.run(pt);
 }
 
 /**
@@ -108,12 +113,16 @@ async function request(url: string, sha1: string): Promise<string | null> {
  * has been deployed.
  */
 async function deploy(target: string, url: string, sha1: string): Promise<boolean> {
+    if (!conf().net.nfat.enable) return false;
+
     const p = await request(url, sha1);
     if (!p) return false;
 
     try {
         await fs.ensureDir(path.dirname(target));
         await fs.copyFile(p, target);
+        enroll(target, url, sha1); // The copied file can also be reused
+        console.debug(`Reused ${p} -> ${target}`);
         return true;
     } catch (e) {
         console.warn(`Unable to reuse file ${p}: ${e}`);

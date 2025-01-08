@@ -48,7 +48,11 @@ async function getAll(req: DlxDownloadRequest[], init?: DlxDownloadInit): Promis
     let promises: Promise<unknown>[] = [];
 
     if (dl === "aria2") {
-        const aria2Tasks: Aria2DownloadRequest[] = req.map(r => ({ ...r, urls: mirror.apply(r.url) }));
+        const aria2Tasks: Aria2DownloadRequest[] = req.map(r => ({
+            ...r,
+            urls: mirror.apply(r.url),
+            origin: r.url
+        }));
         const res = await Promise.all(aria2Tasks.map(t => aria2.resolve(t)));
 
         function cancelAllAria2() {
@@ -73,7 +77,11 @@ async function getAll(req: DlxDownloadRequest[], init?: DlxDownloadInit): Promis
 
 
     } else if (dl === "next") {
-        const nextTasks: NextDownloadRequest[] = req.map(r => ({ ...r, urls: mirror.apply(r.url) }));
+        const nextTasks: NextDownloadRequest[] = req.map(r => ({
+            ...r,
+            urls: mirror.apply(r.url),
+            origin: r.url
+        }));
 
         const handlers = nextdl.gets(nextTasks);
 

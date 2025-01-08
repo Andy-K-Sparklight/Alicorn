@@ -15,6 +15,7 @@ import { net } from "electron";
 import path from "path";
 import { dlchk } from "@/main/net/dlchk";
 import fs from "fs-extra";
+import { nfat } from "@/main/net/nfat";
 
 let aria2cProcess: childProcess.ChildProcess | null = null;
 let aria2cToken: string | null = null;
@@ -24,6 +25,7 @@ let isAvailable = false;
 
 export interface Aria2DownloadRequest {
     urls: string[];
+    origin: string;
     path: string;
     sha1?: string;
     size?: number;
@@ -36,6 +38,11 @@ const taskResolvers = new Map<string, (r: boolean) => void>();
  * Preflights and resolves the given request.
  */
 async function resolve(req: Aria2DownloadRequest): Promise<[Promise<boolean>, string]> {
+    if (req.sha1) {
+        await nfat.deploy(req.path, req.origin, req.sha1);
+    }
+
+
     // Preflight
     const pref = await dlchk.validate({ ...req });
 
@@ -80,7 +87,12 @@ async function commit(req: Aria2DownloadRequest): Promise<[Promise<boolean>, str
     console.debug(`Committed aria2 task ${gid}`);
 
     const p = new Promise<boolean>((res) => {
-        taskResolvers.set(gid, res);
+        taskResolvers.set(gid, (b: boolean) => {
+            if (req.sha1) {
+                nfat.enroll(req.path, req.origin, req.sha1);
+            }
+            res(b);
+        });
     });
 
     return [p, gid];
