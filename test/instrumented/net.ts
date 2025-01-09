@@ -30,8 +30,8 @@ export async function checkFileDownload() {
         });
 
         assert(completed === 2, "Task count should match");
-        assert(await hash.forFile("assetIndex.json", "sha1") === "f3c4aa96e12951cd2781b3e1c0e8ab82bf719cf2", "Hash 1 should match");
-        assert(await hash.forFile("log.xml", "sha1") === "bd65e7d2e3c237be76cfbef4c2405033d7f91521", "Hash 2 should match");
+        assert(await hash.checkFile("assetIndex.json", "sha1", "f3c4aa96e12951cd2781b3e1c0e8ab82bf719cf2"), "Hash 1 should match");
+        assert(await hash.checkFile("log.xml", "sha1", "bd65e7d2e3c237be76cfbef4c2405033d7f91521"), "Hash 2 should match");
     });
 
     await iTest.run("NFAT File Reuse", async () => {

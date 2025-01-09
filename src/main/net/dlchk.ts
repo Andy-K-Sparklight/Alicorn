@@ -11,8 +11,7 @@ async function validate(init: { path: string, sha1?: string, size?: number }): P
         const st = await fs.stat(init.path);
 
         if (init.sha1) {
-            const h = await hash.forFile(init.path, "sha1");
-            return h.toLowerCase() === init.sha1.toLowerCase() ? "checked" : "failed";
+            return (await hash.checkFile(init.path, "sha1", init.sha1)) ? "checked" : "failed";
         } else if (init.size && init.size > 0) {
             return st.size === init.size ? "checked" : "failed";
         }

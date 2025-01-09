@@ -2,11 +2,19 @@ import type { HashWorkerData } from "@/main/security/hash-worker";
 import { Worker } from "node:worker_threads";
 import { paths } from "@/main/fs/paths";
 
+async function checkFile(pt: string, algorithm: string, expectHash: string): Promise<boolean> {
+    return await check(pt, algorithm, expectHash) as boolean;
+}
+
 async function forFile(pt: string, algorithm: string): Promise<string> {
-    const dat: HashWorkerData = { path: pt, algorithm };
+    return await check(pt, algorithm) as string;
+}
+
+async function check(pt: string, algorithm: string, expectHash?: string): Promise<string | boolean> {
+    const dat: HashWorkerData = { path: pt, algorithm, expect: expectHash };
 
     const w = new Worker(paths.app.to("hash-worker.js"), { workerData: dat });
-    return new Promise<string>((res, rej) => {
+    return new Promise<string | boolean>((res, rej) => {
         function err() {
             rej(`Failed to hash file: ${pt}`);
         }
@@ -20,5 +28,5 @@ async function forFile(pt: string, algorithm: string): Promise<string> {
 }
 
 export const hash = {
-    forFile
+    forFile, checkFile
 };
