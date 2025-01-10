@@ -7,6 +7,7 @@ import { LocalAccount } from "@/main/auth/local";
 import { MSAccount } from "@/main/auth/ms";
 import type { Container } from "@/main/container/spec";
 import { StaticContainer } from "@/main/container/static";
+import path from "path";
 
 
 let db: Database;
@@ -50,6 +51,7 @@ async function init() {
     console.log(`Initializing registry database at ${dbPath}`);
 
     await fs.remove(dbPath + ".lock");
+    await fs.ensureDir(path.dirname(dbPath));
 
     db = new Database(dbPath);
 
