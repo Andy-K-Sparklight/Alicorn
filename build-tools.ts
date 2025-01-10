@@ -29,6 +29,10 @@ export async function build(variant: BuildVariant) {
     const defines = {
         "__dirname": "import.meta.dirname",
         "__filename": "import.meta.filename",
+
+        // Exclude polyfills from the ws library
+        "process.env.WS_NO_BUFFER_UTIL": JSON.stringify("true"),
+        "process.env.WS_NO_UTF_8_VALIDATE": JSON.stringify("true"),
         ...defs
     };
 

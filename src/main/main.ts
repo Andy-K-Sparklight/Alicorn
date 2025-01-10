@@ -28,8 +28,6 @@ let mainWindow: BrowserWindow | null = null;
  */
 async function main() {
     process.noAsar = true;
-    process.env.WS_NO_BUFFER_UTIL = "true";
-    process.env.WS_NO_UTF_8_VALIDATE = "true";
 
     if (!checkSingleInstance()) return;
 
@@ -49,7 +47,7 @@ async function main() {
 
     console.log("Initializing modules...");
     conf.setup();
-    
+
     if (import.meta.env.AL_TEST) {
         paths.setup({
             storeRoot: path.resolve("emulated", "store")
