@@ -49,9 +49,7 @@ async function main() {
 
     console.log("Initializing modules...");
     conf.setup();
-
-    await registry.init();
-
+    
     if (import.meta.env.AL_TEST) {
         paths.setup({
             storeRoot: path.resolve("emulated", "store")
@@ -59,6 +57,8 @@ async function main() {
     } else {
         paths.setup();
     }
+
+    await registry.init();
 
     ping.setup();
     ext.setup();
