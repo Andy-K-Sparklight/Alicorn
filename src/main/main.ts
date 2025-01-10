@@ -50,6 +50,8 @@ async function main() {
     console.log("Initializing modules...");
     conf.setup();
 
+    await registry.init();
+
     if (import.meta.env.AL_TEST) {
         paths.setup({
             storeRoot: path.resolve("emulated", "store")
@@ -168,7 +170,7 @@ async function shutdownApp() {
     }, 30_000);
 
     await conf.store();
-    await registry.saveAll();
+    registry.close();
     nfat.close();
     aria2.shutdown();
 

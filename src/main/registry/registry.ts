@@ -1,9 +1,23 @@
 import { paths } from "@/main/fs/paths";
 import fs from "fs-extra";
 import { Serializer } from "superserial";
+import { Database, type Statement } from "node-sqlite3-wasm";
+import type { Account } from "@/main/auth/spec";
+import { LocalAccount } from "@/main/auth/local";
+import { MSAccount } from "@/main/auth/ms";
+import type { Container } from "@/main/container/spec";
+import { StaticContainer } from "@/main/container/static";
 
-const autoSaveMap = new Map<string, unknown>();
-const typesMap = new Map<string, Record<string, unknown>>();
+
+let db: Database;
+let statements: Statement[] = [];
+
+interface RegistryOpenRecord {
+    types: Record<string, unknown>;
+    content: Map<string, unknown>;
+}
+
+const autoSaveMap = new Map<string, RegistryOpenRecord>();
 
 export class NamedRegistry<T> {
     private map: Map<string, T>;
@@ -31,67 +45,108 @@ export class NamedRegistry<T> {
     }
 }
 
+async function init() {
+    const dbPath = paths.store.to("registries.arc");
+    console.log(`Initializing registry database at ${dbPath}`);
 
-function pathOf(name: string) {
-    return paths.store.to(`${name}.arc`);
+    await fs.remove(dbPath + ".lock");
+
+    db = new Database(dbPath);
+
+    db.exec(`
+        CREATE TABLE IF NOT EXISTS registries
+        (
+            id      VARCHAR(32) PRIMARY KEY NOT NULL,
+            content TEXT                    NOT NULL
+        );
+    `);
 }
 
-/**
- * Loads the content of the given registry and converts it to a named registry map.
- */
-async function loadNamed<T>(name: string, types: Record<string, unknown>): Promise<NamedRegistry<T>> {
-    const m = await load(name, new Map(), types);
-    return new NamedRegistry(m);
+let loadedRegistries = new Map<string, NamedRegistry<unknown>>();
+
+function lazyOpenRegistry<T>(name: string, types: Record<string, unknown>): NamedRegistry<T> {
+    const t = loadedRegistries.get(name);
+    if (t) {
+        return t as NamedRegistry<T>;
+    } else {
+        const r = openRegistry<T>(name, types);
+        loadedRegistries.set(name, r);
+        return r;
+    }
 }
 
-/**
- * Loads the content of the given registry.
- */
-async function load<T>(name: string, def: T, types: Record<string, unknown>): Promise<T> {
-    const t = autoSaveMap.get(name);
-    if (t) return t as T;
 
-    console.log(`Loading registry: ${name}`);
-    let dat: T | null = null;
-    try {
-        const content = (await fs.readFile(pathOf(name))).toString();
+let openRegistryStmt: Statement;
+
+function openRegistry<T>(name: string, types: Record<string, unknown>): NamedRegistry<T> {
+    if (!openRegistryStmt) {
+        openRegistryStmt = db.prepare(`
+            SELECT content
+            FROM registries
+            WHERE id = ?;
+        `);
+        statements.push(openRegistryStmt);
+    }
+
+    console.debug(`Opening registry: ${name}`);
+
+    const r = openRegistryStmt.get(name);
+    let m = new Map<string, T>();
+    if (r && r.content) {
         const sr = new Serializer({ classes: types as any });
-        dat = sr.deserialize(content);
+        m = sr.deserialize(r.content as string);
+    }
 
-        console.log(`Loaded registry: ${name}`);
+    autoSaveMap.set(name, {
+        types,
+        content: m
+    });
 
-    } catch (e) {
-        if (typeof e === "object" && e !== null && "code" in e && e.code === "ENOENT") {
-            console.log(`Registry ${name} does not exist (this is not an error).`);
-        } else {
-            throw e;
+    return new NamedRegistry<T>(m);
+}
+
+let insertStmt: Statement;
+
+function close() {
+    if (!insertStmt) {
+        insertStmt = db.prepare(`
+            INSERT OR
+            REPLACE
+            INTO registries
+            VALUES (?, ?);
+        `);
+
+        statements.push(insertStmt);
+    }
+
+    for (const [name, { types, content }] of autoSaveMap.entries()) {
+        console.log(`Saving registry: ${name}`);
+        const sr = new Serializer({ classes: types as any });
+        const t = sr.serialize(content);
+
+        insertStmt.run([name, t]);
+    }
+
+    for (const s of statements) {
+        if (!s.isFinalized) {
+            s.finalize();
         }
     }
 
-    if (!dat) dat = def;
-
-    autoSaveMap.set(name, dat);
-    typesMap.set(name, types);
-
-    return dat;
+    db?.close();
 }
 
-/**
- * Save all registries that have been loaded.
- */
-async function saveAll() {
-    console.log("Saving registries...");
-    await Promise.all(autoSaveMap.entries().map(async ([k, v]) => {
-        try {
-            const types = typesMap.get(k)!;
-            const sr = new Serializer({ classes: types as any });
-            await fs.outputFile(pathOf(k), sr.serialize(v));
-        } catch (e) {
-            console.error(`Unable to save registry ${k}: ${e}`);
-        }
-    }));
-}
 
 export const registry = {
-    load, loadNamed, saveAll
+    init, close
+};
+
+export const reg = {
+    get accounts() {
+        return lazyOpenRegistry<Account>("accounts", { LocalAccount, MSAccount });
+    },
+
+    get containers() {
+        return lazyOpenRegistry<Container>("containers", { StaticContainer });
+    }
 };
