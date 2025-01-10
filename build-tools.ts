@@ -41,7 +41,10 @@ export async function build(variant: BuildVariant) {
         define: defines,
         outdir: outputDir,
         metafile: true,
-        drop: cfg.variant.mode === "production" ? ["console"] : undefined
+        drop: cfg.variant.mode === "production" ? ["console"] : undefined,
+        alias: {
+            "readable-stream": "node:stream"
+        }
     };
 
     const mainBuildOptions: BuildOptions = {
