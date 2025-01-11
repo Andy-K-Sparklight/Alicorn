@@ -2,10 +2,6 @@ import { Container, ContainerType } from "@/main/container/spec";
 import path from "path";
 import { MavenName } from "@/main/profile/maven-name";
 
-export interface StaticContainerInit {
-    rootDir: string;
-}
-
 export class StaticContainer implements Container {
     id: string;
     type: ContainerType = ContainerType.STATIC;
