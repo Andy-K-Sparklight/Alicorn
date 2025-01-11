@@ -1,19 +1,18 @@
-import { app, BrowserWindow, session } from "electron";
-import pkg from "~/package.json";
-import { ping } from "@/main/dev/ping";
 import { conf } from "@/main/conf/conf";
-import { bwctl } from "@/main/sys/bwctl";
+import { ping } from "@/main/dev/ping";
 import { paths } from "@/main/fs/paths";
-import { mirror } from "@/main/net/mirrors";
-import { registry } from "@/main/registry/registry";
-import os from "node:os";
-import { getOSName } from "@/main/sys/os";
-import { ext } from "@/main/sys/ext";
-import { unwrapESM } from "@/main/util/module";
-import { runInstrumentedTest } from "~/test/instrumented/entry";
 import { aria2 } from "@/main/net/aria2";
+import { mirror } from "@/main/net/mirrors";
 import { nfat } from "@/main/net/nfat";
+import { registry } from "@/main/registry/registry";
+import { bwctl } from "@/main/sys/bwctl";
+import { ext } from "@/main/sys/ext";
+import { getOSName } from "@/main/sys/os";
+import { app, BrowserWindow } from "electron";
+import os from "node:os";
 import path from "path";
+import pkg from "~/package.json";
+import { runInstrumentedTest } from "~/test/instrumented/entry";
 
 
 void main();
@@ -61,16 +60,23 @@ async function main() {
     ping.setup();
     ext.setup();
 
-    if (import.meta.env.AL_DEV) {
-        console.log("Installing React DevTools for development...");
-        const { installExtension, REACT_DEVELOPER_TOOLS } = await unwrapESM(import("electron-devtools-installer"));
-        await installExtension(REACT_DEVELOPER_TOOLS);
+    // React DevTools seems unable to load starting from Electron v33
+    // This can only be enabled when https://github.com/electron/electron/issues/41613 is solved
+    // Reinstall electron-devtools-installer and uncomment things below if then
 
-        // https://github.com/MarshallOfSound/electron-devtools-installer/issues/244
-        // A reload is needed for the extensions to work
-        console.log("Reloading extensions...");
-        session.defaultSession.getAllExtensions().forEach(ex => session.defaultSession.loadExtension(ex.path));
-    }
+    // if (import.meta.env.AL_DEV) {
+    //     console.log("Installing React DevTools for development...");
+    //     const { installExtension, REACT_DEVELOPER_TOOLS } = await unwrapESM(import("electron-devtools-installer"));
+    //     await installExtension(REACT_DEVELOPER_TOOLS);
+    //
+    //     // https://github.com/MarshallOfSound/electron-devtools-installer/issues/244
+    //     // A reload is needed for the extensions to work
+    //     console.log("Reloading extensions...");
+    //
+    //     for (const ex of session.defaultSession.getAllExtensions()) {
+    //         await session.defaultSession.loadExtension(ex.path);
+    //     }
+    // }
 
     console.log("Creating window...");
     const [width, height] = bwctl.optimalSize(); // Initial size, will be changed by user settings later
@@ -100,12 +106,15 @@ async function main() {
 
     // Load renderer from dev server (dev) or file (prod).
     if (import.meta.env.AL_DEV) {
+        injectDevToolsStyles(mainWindow);
+
+        // DevTools can be occasionally blocked by waiting the page to load
+        // Open it earlier seems to solve this
+        mainWindow.webContents.openDevTools();
+
         const devServerURL = `http://localhost:${import.meta.env.AL_DEV_SERVER_PORT}/`;
         console.log(`Picked up dev server URL: ${devServerURL}`);
         await mainWindow.loadURL(devServerURL);
-
-        injectDevToolsStyles(mainWindow);
-        mainWindow.webContents.openDevTools();
     } else {
         await mainWindow.loadFile(paths.app.to("renderer", "index.html"));
     }

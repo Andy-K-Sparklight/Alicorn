@@ -1,13 +1,13 @@
-import React, { type FC, useEffect, useState } from "react";
 import { Tab, Tabs } from "@nextui-org/react";
 import { type PageInfo, pages } from "@pages/pages";
+import React, { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "wouter";
 
 /**
  * Sidebar for page selecting.
  */
-export const Sidebar: FC = () => {
+export const TopNavigator: FC = () => {
     const [selected, setSelected] = useState(pages[0].id || "");
     const [pathname] = useLocation();
     const { t } = useTranslation("pages");
@@ -25,7 +25,7 @@ export const Sidebar: FC = () => {
         const { icon, title, id, href } = info;
         return <Tab
             title={
-                <div className="flex items-center gap-2 mx-6">
+                <div className="flex items-center gap-2">
                     {React.createElement(icon)}
                     {t(title)}
                 </div>
@@ -37,7 +37,7 @@ export const Sidebar: FC = () => {
     }
 
     return <div className="flex flex-col w-full h-full items-center justify-center">
-        <Tabs color="primary" size="lg" isVertical selectedKey={selected}>
+        <Tabs color="primary" variant="bordered" selectedKey={selected}>
             {pages.map(page => createPageTab(page))}
         </Tabs>
     </div>;

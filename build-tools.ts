@@ -1,13 +1,13 @@
 // Runs the development build and starts frontend hot-reloading server
-import esbuild, { type BuildOptions } from "esbuild";
-import typiaPlugin from "@ryoppippi/unplugin-typia/esbuild";
 import { TsconfigPathsPlugin } from "@esbuild-plugins/tsconfig-paths";
+import typiaPlugin from "@ryoppippi/unplugin-typia/esbuild";
+import consola from "consola";
+import esbuild, { type BuildOptions } from "esbuild";
 import fs from "fs-extra";
+import * as child_process from "node:child_process";
 
 import path from "path";
-import consola from "consola";
 import * as vite from "vite";
-import * as child_process from "node:child_process";
 import { type BuildVariant, createBuildConfig } from "~/config";
 import { createBuildDefines } from "~/scripts/defines";
 import { vendor } from "~/scripts/vendor";

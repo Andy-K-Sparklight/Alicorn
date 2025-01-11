@@ -1,6 +1,6 @@
 import i18next, { BackendModule } from "i18next";
-import { initReactI18next } from "react-i18next";
 import languageDetector from "i18next-browser-languagedetector";
+import { initReactI18next, useTranslation } from "react-i18next";
 import YAML from "yaml";
 
 const namespaces = ["common", "pages"];
@@ -33,17 +33,26 @@ async function init(): Promise<void> {
                 escapeValue: false
             }
         });
+
+    if (import.meta.env.AL_DEV && import.meta.hot) {
+        // Handle i18n resource reload events
+        import.meta.hot.on("locales-update", async () => {
+            await i18next.reloadResources();
+            await i18next.changeLanguage(i18next.language);
+        });
+    }
 }
 
 // CSS classes that have been defined
 const definedFonts = new Set(["zh-CN", "zh", "en"]);
 
-function getFontClass(): string {
-    return i18next.languages?.find(it => definedFonts.has(it)) ?? "";
+function useFontClass(): string {
+    const { i18n: { languages } } = useTranslation();
+    return languages?.find(it => definedFonts.has(it)) ?? "";
 }
 
 
 export const i18n = {
-    init, getFontClass
+    init, useFontClass
 };
 

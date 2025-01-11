@@ -33,11 +33,3 @@ html, body {
 ::-webkit-scrollbar-thumb:hover {
     background-color: #555;
 }
-
-.zh, .zh-CN {
-    font-family: "Ubuntu Mono", "Noto Sans SC", sans-serif;
-}
-
-.en {
-    font-family: "Ubuntu Mono", sans-serif;
-}

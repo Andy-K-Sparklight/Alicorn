@@ -2,9 +2,9 @@
  * Window management module.
  */
 
-import { type BrowserWindow, ipcMain, screen } from "electron";
-import { Channels } from "@/main/ipc/channels";
 import { conf } from "@/main/conf/conf";
+import { Channels } from "@/main/ipc/channels";
+import { type BrowserWindow, ipcMain, screen } from "electron";
 
 const allowedWindows = new Set<BrowserWindow>();
 
@@ -93,7 +93,7 @@ function optimalSize(): [number, number] {
         height = width / expRatio;
     }
 
-    const scaleFactor = 0.6;
+    const scaleFactor = 0.8;
 
     return [width * scaleFactor, height * scaleFactor];
 }

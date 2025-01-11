@@ -1,13 +1,12 @@
-import React, { type FC } from "react";
-import { clsx } from "clsx";
 import { i18n } from "@/renderer/i18n/i18n";
-import { Divider, NextUIProvider } from "@nextui-org/react";
-import { Route, Switch, useLocation } from "wouter";
-import { useTheme } from "@nextui-org/use-theme";
 import { Header } from "@components/Header";
-import pkg from "~/package.json";
-import { Sidebar } from "@components/Sidebar";
+import { NextUIProvider } from "@nextui-org/react";
+import { useTheme } from "@nextui-org/use-theme";
 import { About } from "@pages/about/About";
+import { clsx } from "clsx";
+import React, { type FC, useEffect, useRef } from "react";
+import { Route, Switch, useLocation } from "wouter";
+import pkg from "~/package.json";
 
 /**
  * App entry.
@@ -16,8 +15,20 @@ export const App: FC = () => {
     const { theme } = useTheme();
     const [, navigate] = useLocation();
 
+    const fontClass = i18n.useFontClass();
+    const prevFontClass = useRef<string>("");
+
+    useEffect(() => {
+        if (prevFontClass.current) {
+            document.body.classList.remove(prevFontClass.current);
+        }
+
+        prevFontClass.current = fontClass;
+        document.body.classList.add(fontClass);
+    }, [fontClass]);
+
     return <NextUIProvider navigate={navigate}>
-        <main className={clsx("fixed inset-0 text-foreground bg-background", theme, i18n.getFontClass())}>
+        <main className={clsx("fixed inset-0 text-foreground bg-background", theme, fontClass)}>
             <div className="flex flex-col w-full h-full">
                 <Header/>
                 <MainArea/>
@@ -31,18 +42,8 @@ export const App: FC = () => {
  * Main app content area.
  */
 const MainArea = () => {
-    return <div className="grow min-h-0 flex w-full">
-        <div className="basis-1/6">
-            <Sidebar/>
-        </div>
-
-        <div className="m-auto h-full py-4">
-            <Divider orientation="vertical"/>
-        </div>
-
-        <div className="grow">
-            <Routes/>
-        </div>
+    return <div className="grow min-h-0 w-full pb-8 pt-4">
+        <Routes/>
     </div>;
 };
 

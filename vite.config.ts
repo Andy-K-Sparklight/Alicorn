@@ -1,8 +1,8 @@
-import { defineConfig } from "vite";
-import path from "node:path";
-import tsConfigPaths from "vite-tsconfig-paths";
 import react from "@vitejs/plugin-react-swc";
+import path from "node:path";
 import tailwindcss from "tailwindcss";
+import { defineConfig, PluginOption } from "vite";
+import tsConfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig(({ command }) => {
     const isDev = command === "serve";
@@ -27,13 +27,33 @@ export default defineConfig(({ command }) => {
         },
         plugins: [
             react(),
-            tsConfigPaths()
+            tsConfigPaths(),
+            i18nHotReload()
         ],
         define: {},
         css: {
             postcss: {
                 plugins: [tailwindcss()]
             }
+        },
+        server: {
+            warmup: {
+                clientFiles: ["index.html"]
+            }
         }
     };
 });
+
+function i18nHotReload(): PluginOption {
+    return {
+        name: "i18n-hot-reload",
+        handleHotUpdate({ file, server }) {
+            if (file.includes("i18n") && file.endsWith(".yml")) {
+                server.ws.send({
+                    type: "custom",
+                    event: "locales-update"
+                });
+            }
+        }
+    };
+}

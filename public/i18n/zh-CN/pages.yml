@@ -3,11 +3,13 @@ launch:
 
 about:
   title: 关于
+  subtitles:
+    app-info: 发行信息
+    packages-info: 软件包列表
+    features-info: 功能开关
   name: Alicorn 启动器
   version: 版本 {{version}}
-  dev-note: |-
-    此 Alicorn 是开发中使用的调试版本。
-    为获得最佳性能并规避潜在的漏洞，请改用产品版本。
+  dev-note: 此 Alicorn 是开发版本。要获得最佳性能和质量，请改用产品版本。
   copyright: |-
     Copyright (C) 2021-2022 Andy K Rarity Sparklight ("ThatRarityEG")
     Copyright (C) 2024-2025 Ted Gao ("skjsjhb")
@@ -15,6 +17,42 @@ about:
     Alicorn 启动器是按 GNU 公共通用许可证（第三版或后继版本）发行的自由软件。
     此软件的开发是基于其将对社区有用的愿景而进行的，但不提供任何担保。
     您须对使用 Alicorn 可能产生的一切影响负责。
+
   links:
     source: 查看源代码
     license: 查看许可证
+
+  deps: |-
+    以下是构造此 Alicorn 所使用的软件包，诚挚地向它们的开发者表示谢意。
+
+    包含在产品中：
+
+    {{prodNames}}
+
+    仅在开发时使用：
+
+    {{devNames}}
+
+  features-note: 若要使用未启用的功能，请重新构建 Alicorn，并打开相应的开关。
+  features-how: 进一步了解
+  features:
+    bmclapi:
+      name: BMCLAPI 镜像加速
+      tip: 在可用时使用 BMCLAPI 加速下载。
+    local-account:
+      name: 本地帐户
+      tip: |-
+        允许使用未验证的离线帐户启动游戏。
+        这违反 EULA，所以不受支持。
+    aria2:
+      name: aria2 下载工具
+      tip: |-
+        使用随附的 aria2 进行下载。
+        未携带 aria2 的 Alicorn 会使用系统中安装的 aria2。
+    lzma-native:
+      name: LZMA 原生库
+      tip: |-
+        使用原生的 LZMA 库改进 LZMA 解包的效率。
+        性能很好，但并非所有平台都支持。
+    enabled: 已启用
+    disabled: 未启用
