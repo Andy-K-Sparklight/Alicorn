@@ -64,11 +64,13 @@ export class GameInstance {
             this.status = GameInstanceStatus.RUNNING;
         });
 
-        proc.on("error", () => {
+        proc.on("error", (e) => {
             console.error(`Error occurred in game instance ${this.id} (PID ${this.proc?.pid ?? "UNKNOWN"})`);
+            console.error(e);
         });
 
         proc.once("exit", (code) => {
+            console.log(`Game instance ${this.id} (PID ${this.proc?.pid ?? "UNKNOWN"}) exited with code ${code}.`);
             if (code === 0) {
                 this.emitter.emit("exit");
                 this.status = GameInstanceStatus.EXITED;
@@ -83,9 +85,17 @@ export class GameInstance {
         const collect = (s: Readable, t: string[]) => {
             const limit = conf().runtime.logsLimit;
             s.on("readable", () => {
-                t.push(s.read().toString());
-                if (t.length > limit) {
-                    t.shift();
+                let data: any;
+
+                while (true) {
+                    data = s.read();
+                    if (data === null) break;
+
+                    t.push(data.toString());
+
+                    if (t.length > limit) {
+                        t.shift();
+                    }
                 }
             });
         };

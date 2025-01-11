@@ -51,34 +51,40 @@ function createTemplateValues(init: LaunchInit): Map<string, string> {
     va.set("classpath_separator", path.delimiter);
     va.set("classpath", createClasspath(init));
 
-    va.set("resolution_width", window.width.toString());
-    va.set("resolution_height", window.height.toString());
+    if (window) {
+        va.set("resolution_width", window.width.toString());
+        va.set("resolution_height", window.height.toString());
+    }
 
     return va;
 }
 
 function createMemoryArgs(init: LaunchInit): string[] {
     const out: string[] = [];
-    const { min, max } = init.pref.memory;
-    if (min) {
-        out.push(`-Xms${min}M`);
+    if (init.pref.memory) {
+        const { min, max } = init.pref.memory;
+        if (min) {
+            out.push(`-Xms${min}M`);
+        }
+        if (max) {
+            out.push(`-Xmx${max}M`);
+        }
     }
-    if (max) {
-        out.push(`-Xmx${max}M`);
-    }
+
     return out;
 }
 
 function getUserGlobalArgs(): string[][] {
     const { vm, game } = conf().runtime.args;
 
-    return [vm, game].map(it => it.split("\n").map(a => a.trim()));
+    return [vm, game].map(it => it.split("\n").filter(s => s.length > 0).map(a => a.trim()));
 }
 
 
 function createWindowSizeArgs(init: LaunchInit): string[] {
     // Resolution args has been included in the profile since 1.13
-    if (init.profile.complianceLevel >= 1) return [];
+    if (init.profile.complianceLevel >= 1 || !init.pref.window) return [];
+
     const { width, height } = init.pref.window;
     if (width > 0 && height > 0) {
         return [
@@ -88,6 +94,7 @@ function createWindowSizeArgs(init: LaunchInit): string[] {
             height.toString()
         ];
     }
+
     return [];
 }
 
@@ -108,7 +115,7 @@ function createArguments(init: LaunchInit): string[] {
     }
 
     const [globalExtraVM, globalExtraGame] = getUserGlobalArgs();
-    const { vm: localExtraVM, game: localExtraGame } = init.pref.args;
+    const { vm: localExtraVM, game: localExtraGame } = init.pref.args ?? { vm: [], game: [] };
 
     const extraVMArgs = [
         ...createMemoryArgs(init),

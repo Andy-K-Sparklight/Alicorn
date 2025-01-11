@@ -20,16 +20,16 @@ async function prepare(hint: LaunchHint): Promise<LaunchInit> {
     const enabledFeatures = new Set<string>();
     // Add custom resolution flag if applicable
     const window = hint.pref.window;
-    if (window.width > 0 && window.height > 0) {
+    if (window && window.width > 0 && window.height > 0) {
         enabledFeatures.add("has_custom_resolution");
     }
 
-    const jrtExec = jrt.executable(profile.javaVersion?.component || "jre-legacy");
+    const jrtExec = hint.pref.alterJRTExec || jrt.executable(profile.javaVersion?.component || "jre-legacy");
 
     return {
         profile,
         container,
-        jrtExec: jrtExec,
+        jrtExec,
         credentials: account.credentials(),
         enabledFeatures,
         assetsShouldMap,

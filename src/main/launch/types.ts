@@ -9,9 +9,8 @@ import { AuthCredentials } from "@/main/auth/spec";
 export interface LaunchHint {
     containerId: string;
     profileId: string;
-    jrtId: string;
     accountId: string;
-    pref: LaunchPref;
+    pref: Partial<LaunchPref>;
 }
 
 /**
@@ -44,6 +43,11 @@ export interface LaunchPref {
         vm: string[];
         game: string[];
     };
+
+    /**
+     * Alternative JRT executable.
+     */
+    alterJRTExec: string;
 }
 
 export interface LaunchInit {
@@ -53,5 +57,5 @@ export interface LaunchInit {
     credentials: AuthCredentials;
     enabledFeatures: Set<string>;
     assetsShouldMap: boolean;
-    pref: LaunchPref;
+    pref: Partial<LaunchPref>;
 }
