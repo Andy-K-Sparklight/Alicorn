@@ -1,5 +1,5 @@
-import { net } from "electron";
 import { conf } from "@/main/conf/conf";
+import { net } from "electron";
 
 interface Mirror {
     name: string;

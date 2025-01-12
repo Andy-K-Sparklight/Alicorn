@@ -1,9 +1,9 @@
-import { build } from "~/build-tools";
-import os from "node:os";
 import consola from "consola";
-import type { BuildMode } from "~/config";
-import path from "path";
 import child_process from "node:child_process";
+import os from "node:os";
+import path from "path";
+import { build } from "~/build-tools";
+import type { BuildMode } from "~/config";
 import { printTestSummary } from "~/scripts/instrumented-test";
 
 const mode = process.argv[2] || "development";

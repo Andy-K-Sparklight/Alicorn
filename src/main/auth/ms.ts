@@ -1,7 +1,7 @@
-import { nanoid } from "nanoid";
-import { net } from "electron";
 import { msAuth } from "@/main/auth/ms-auth";
 import { Account, AuthCredentials } from "@/main/auth/spec";
+import { net } from "electron";
+import { nanoid } from "nanoid";
 
 const OAUTH_API = "https://login.live.com/oauth20_token.srf";
 const XBL_API = "https://user.auth.xboxlive.com/user/authenticate";

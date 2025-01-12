@@ -1,6 +1,6 @@
 import { Container, ContainerType } from "@/main/container/spec";
-import path from "path";
 import { MavenName } from "@/main/profile/maven-name";
+import path from "path";
 
 export class StaticContainer implements Container {
     id: string;
@@ -10,10 +10,6 @@ export class StaticContainer implements Container {
     constructor(id: string, rootDir: string) {
         this.id = id;
         this.rootDir = rootDir;
-    }
-
-    private resolve(...rel: string[]): string {
-        return path.normalize(path.resolve(this.rootDir, ...rel));
     }
 
     asset(hash: string): string {
@@ -70,6 +66,10 @@ export class StaticContainer implements Container {
 
     loggingConfig(id: string): string {
         return this.resolve(id);
+    }
+
+    private resolve(...rel: string[]): string {
+        return path.normalize(path.resolve(this.rootDir, ...rel));
     }
 }
 

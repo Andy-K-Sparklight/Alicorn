@@ -4,17 +4,17 @@
  * Comparing to the wrapped downloader, the next downloader runs on the main process and utilizes the net module from
  * Electron. This is expected to bypass the connection limit in the browser window and maximize the throughput.
  */
-import { net } from "electron";
 import { conf } from "@/main/conf/conf";
-import fs from "fs-extra";
-import { Stream } from "node:stream";
-import { nanoid } from "nanoid";
-import PQueue from "p-queue";
-import EventEmitter from "events";
-import type TypedEmitter from "typed-emitter";
-import path from "node:path";
 import { dlchk } from "@/main/net/dlchk";
 import { nfat } from "@/main/net/nfat";
+import { net } from "electron";
+import EventEmitter from "events";
+import fs from "fs-extra";
+import { nanoid } from "nanoid";
+import path from "node:path";
+import { Stream } from "node:stream";
+import PQueue from "p-queue";
+import type TypedEmitter from "typed-emitter";
 
 /**
  * Events emitted when downloading.

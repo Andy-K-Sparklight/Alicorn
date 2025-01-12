@@ -1,6 +1,6 @@
-import { getOSBits, getOSName } from "@/main/sys/os";
-import type { Library } from "@/main/profile/version-profile";
 import { MavenName } from "@/main/profile/maven-name";
+import type { Library } from "@/main/profile/version-profile";
+import { getOSBits, getOSName } from "@/main/sys/os";
 
 /**
  * Check whether the given library is a native library (which requires unpacking).

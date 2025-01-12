@@ -1,10 +1,10 @@
-import { nanoid } from "nanoid";
-import { ChildProcess } from "child_process";
-import * as child_process from "node:child_process";
-import TypedEmitter from "typed-emitter";
-import EventEmitter from "events";
-import { Readable } from "node:stream";
 import { conf } from "@/main/conf/conf";
+import { ChildProcess } from "child_process";
+import EventEmitter from "events";
+import { nanoid } from "nanoid";
+import * as child_process from "node:child_process";
+import { Readable } from "node:stream";
+import TypedEmitter from "typed-emitter";
 
 type GameInstanceEvents = {
     /**
@@ -44,13 +44,11 @@ export class GameInstance {
     id = nanoid();
     emitter = new EventEmitter() as TypedEmitter<GameInstanceEvents>;
     status = GameInstanceStatus.CREATED;
-
-    private proc: ChildProcess | null = null;
-
     logs = {
         stdout: [] as string[],
         stderr: [] as string[]
     };
+    private proc: ChildProcess | null = null;
 
     constructor(bin: string, args: string[], gameDir: string) {
         const proc = child_process.spawn(bin, args, {

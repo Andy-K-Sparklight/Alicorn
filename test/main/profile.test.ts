@@ -1,7 +1,7 @@
-import { beforeEach, chai, expect, test } from "vitest";
-import fs from "fs-extra";
 import { linkProfile } from "@/main/profile/linker";
 import chaiAsPromised from "chai-as-promised";
+import fs from "fs-extra";
+import { beforeEach, chai, expect, test } from "vitest";
 
 chai.use(chaiAsPromised);
 beforeEach(() => process.chdir(import.meta.dirname));

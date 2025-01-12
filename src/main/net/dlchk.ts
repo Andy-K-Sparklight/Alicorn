@@ -1,5 +1,5 @@
-import fs from "fs-extra";
 import { hash } from "@/main/security/hash";
+import fs from "fs-extra";
 
 type ValidateResult = "checked" | "unknown" | "failed";
 

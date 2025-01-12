@@ -2,10 +2,10 @@
  * Packages the application for supported platforms.
  */
 import { type Options, packager } from "@electron/packager";
-import pkg from "~/package.json";
-import path from "path";
 import consola from "consola";
+import path from "path";
 import { build } from "~/build-tools";
+import pkg from "~/package.json";
 
 const platforms = ["win32", "darwin", "linux"];
 const arches = ["x64", "arm64"];

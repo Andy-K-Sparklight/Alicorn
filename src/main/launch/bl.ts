@@ -1,11 +1,11 @@
 /**
  * The bootloader system.
  */
-import { LaunchHint, LaunchInit } from "@/main/launch/types";
-import { profileLoader } from "@/main/profile/loader";
+import { jrt } from "@/main/jrt/install";
 import { launchArgs } from "@/main/launch/args";
 import { GameInstance, proc } from "@/main/launch/proc";
-import { jrt } from "@/main/jrt/install";
+import { LaunchHint, LaunchInit } from "@/main/launch/types";
+import { profileLoader } from "@/main/profile/loader";
 import { reg } from "@/main/registry/registry";
 
 /**

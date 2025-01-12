@@ -1,7 +1,7 @@
-import fs from "fs-extra";
-import { Writable } from "stream";
-import path from "path";
 import consola from "consola";
+import fs from "fs-extra";
+import path from "path";
+import { Writable } from "stream";
 import type { BuildConfig } from "~/config";
 
 interface VendorFile {

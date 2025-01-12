@@ -2,8 +2,8 @@
  * Utilities for loading profiles.
  */
 import { Container } from "@/main/container/spec";
-import { VersionProfile } from "@/main/profile/version-profile";
 import { linkProfile } from "@/main/profile/linker";
+import { VersionProfile } from "@/main/profile/version-profile";
 import fs from "fs-extra";
 
 async function fromContainer(id: string, container: Container): Promise<VersionProfile> {

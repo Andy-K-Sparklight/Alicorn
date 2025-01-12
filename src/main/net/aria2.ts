@@ -2,20 +2,20 @@
  * Driver for aria2 downloader. aria2 delegates heavy I/O tasks to separated processes and handles all necessary
  * details.
  */
+import { conf } from "@/main/conf/conf";
+import { paths } from "@/main/fs/paths";
+import { dlchk } from "@/main/net/dlchk";
+import { nfat } from "@/main/net/nfat";
+import { WebSocketJsonRpcClient } from "@/main/net/rpc";
+import { getExecutableExt } from "@/main/sys/os";
 import childProcess from "child_process";
 import crypto from "crypto";
-import { paths } from "@/main/fs/paths";
-import { getExecutableExt } from "@/main/sys/os";
-import child_process from "node:child_process";
-import getPort from "get-port";
-import { conf } from "@/main/conf/conf";
-import { WebSocketJsonRpcClient } from "@/main/net/rpc";
-import { WebSocket } from "ws";
 import { net } from "electron";
-import path from "path";
-import { dlchk } from "@/main/net/dlchk";
 import fs from "fs-extra";
-import { nfat } from "@/main/net/nfat";
+import getPort from "get-port";
+import child_process from "node:child_process";
+import path from "path";
+import { WebSocket } from "ws";
 
 let aria2cProcess: childProcess.ChildProcess | null = null;
 let aria2cToken: string | null = null;

@@ -1,7 +1,7 @@
+import { patchProfile } from "@/main/profile/profile-adaptor";
 import type { VersionProfile } from "@/main/profile/version-profile";
 import { mergician } from "mergician";
 import { is } from "typia";
-import { patchProfile } from "@/main/profile/profile-adaptor";
 
 /**
  * Links the given profiles.

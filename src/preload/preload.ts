@@ -1,5 +1,5 @@
-import { contextBridge, ipcRenderer } from "electron";
 import { Channels } from "@/main/ipc/channels";
+import { contextBridge, ipcRenderer } from "electron";
 
 console.log("Enabling preload script.");
 

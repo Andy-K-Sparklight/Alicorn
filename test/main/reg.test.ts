@@ -1,10 +1,10 @@
-import { expect, test } from "vitest";
-import path from "path";
+import { StaticContainer } from "@/main/container/static";
 import { paths } from "@/main/fs/paths";
 import { reg, registry } from "@/main/registry/registry";
-import { StaticContainer } from "@/main/container/static";
 import { Database } from "node-sqlite3-wasm";
+import path from "path";
 import { Serializer } from "superserial";
+import { expect, test } from "vitest";
 
 test("Registry Load & Save", async () => {
     paths.setup({

@@ -1,10 +1,10 @@
 /**
  * Path management module.
  */
-import path from "node:path";
-import os from "node:os";
 import { conf } from "@/main/conf/conf";
 import { app } from "electron";
+import os from "node:os";
+import path from "node:path";
 
 interface PathResolver {
     /**

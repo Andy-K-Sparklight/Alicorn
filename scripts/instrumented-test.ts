@@ -1,5 +1,5 @@
-import fs from "fs-extra";
 import consola from "consola";
+import fs from "fs-extra";
 import { type TestSummary } from "~/test/instrumented/tools";
 
 export async function printTestSummary(f: string): Promise<void> {

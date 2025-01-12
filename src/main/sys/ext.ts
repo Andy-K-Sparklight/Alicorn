@@ -1,5 +1,5 @@
-import { ipcMain, shell } from "electron";
 import { Channels } from "@/main/ipc/channels";
+import { ipcMain, shell } from "electron";
 
 function setup() {
     ipcMain.on(Channels.OPEN_URL, (_, url: string) => {

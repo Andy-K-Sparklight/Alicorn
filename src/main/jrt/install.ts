@@ -1,15 +1,15 @@
-import { getOSName } from "@/main/sys/os";
-import os from "node:os";
-import { is } from "typia";
-import { net } from "electron";
-import path from "path";
+import { lzma } from "@/main/compress/lzma";
+import { conf } from "@/main/conf/conf";
+import { paths } from "@/main/fs/paths";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { netx } from "@/main/net/netx";
+import { getOSName } from "@/main/sys/os";
+import { net } from "electron";
 import fs from "fs-extra";
-import { lzma } from "@/main/compress/lzma";
 import * as child_process from "node:child_process";
-import { paths } from "@/main/fs/paths";
-import { conf } from "@/main/conf/conf";
+import os from "node:os";
+import path from "path";
+import { is } from "typia";
 
 const JRT_MANIFEST = "https://piston-meta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json";
 

@@ -2,12 +2,12 @@
  * NFAT (Network File Allocation Table) allows Alicorn to reuse downloaded files when a same download request is issued.
  * This does not reduce space consumption but generally reduces number of downloads when installing on multiple containers.
  */
-import { Database, type Statement } from "node-sqlite3-wasm";
+import { conf } from "@/main/conf/conf";
 import { paths } from "@/main/fs/paths";
 import { hash } from "@/main/security/hash";
 import fs from "fs-extra";
+import { Database, type Statement } from "node-sqlite3-wasm";
 import path from "path";
-import { conf } from "@/main/conf/conf";
 
 let db: Database;
 

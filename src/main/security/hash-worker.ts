@@ -1,6 +1,6 @@
-import { parentPort, workerData } from "node:worker_threads";
 import { createHash } from "node:crypto";
 import fs from "node:fs";
+import { parentPort, workerData } from "node:worker_threads";
 
 export interface HashWorkerData {
     path: string;

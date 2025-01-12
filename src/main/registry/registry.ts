@@ -1,13 +1,13 @@
-import { paths } from "@/main/fs/paths";
-import fs from "fs-extra";
-import { Serializer } from "superserial";
-import { Database, type Statement } from "node-sqlite3-wasm";
-import type { Account } from "@/main/auth/spec";
 import { LocalAccount } from "@/main/auth/local";
 import { MSAccount } from "@/main/auth/ms";
+import type { Account } from "@/main/auth/spec";
 import type { Container } from "@/main/container/spec";
 import { StaticContainer } from "@/main/container/static";
+import { paths } from "@/main/fs/paths";
+import fs from "fs-extra";
+import { Database, type Statement } from "node-sqlite3-wasm";
 import path from "path";
+import { Serializer } from "superserial";
 
 
 let db: Database;

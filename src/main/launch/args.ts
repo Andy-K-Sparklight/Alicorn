@@ -1,11 +1,11 @@
 /**
  * Argument creation module.
  */
-import { LaunchInit } from "@/main/launch/types";
 import { conf } from "@/main/conf/conf";
-import pkg from "~/package.json";
-import path from "path";
+import { LaunchInit } from "@/main/launch/types";
 import { filterRules } from "@/main/profile/rules";
+import path from "path";
+import pkg from "~/package.json";
 
 function createClasspath(init: LaunchInit): string {
     const libs = init.profile.libraries

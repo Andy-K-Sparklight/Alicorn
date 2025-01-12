@@ -1,9 +1,9 @@
-import { iTest } from "~/test/instrumented/tools";
-import assert from "node:assert";
 import { app } from "electron";
-import { checkFileDownload } from "~/test/instrumented/net";
-import { checkInstallJRT } from "~/test/instrumented/jrt";
+import assert from "node:assert";
 import { checkHash } from "~/test/instrumented/hash";
+import { checkInstallJRT } from "~/test/instrumented/jrt";
+import { checkFileDownload } from "~/test/instrumented/net";
+import { iTest } from "~/test/instrumented/tools";
 
 /**
  * The main entry of instrumented test.

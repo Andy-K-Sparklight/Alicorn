@@ -1,7 +1,7 @@
-import { iTest } from "~/test/instrumented/tools";
-import fs from "fs-extra";
 import { hash } from "@/main/security/hash";
+import fs from "fs-extra";
 import assert from "node:assert";
+import { iTest } from "~/test/instrumented/tools";
 
 export async function checkHash() {
     await iTest.run("Hash File", async () => {

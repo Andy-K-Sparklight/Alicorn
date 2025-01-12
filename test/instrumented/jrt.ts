@@ -1,8 +1,8 @@
-import { iTest } from "~/test/instrumented/tools";
 import { jrt } from "@/main/jrt/install";
-import child_process from "node:child_process";
-import assert from "node:assert";
 import fs from "fs-extra";
+import assert from "node:assert";
+import child_process from "node:child_process";
+import { iTest } from "~/test/instrumented/tools";
 
 export async function checkInstallJRT() {
     await iTest.run("Install JRT", async () => {

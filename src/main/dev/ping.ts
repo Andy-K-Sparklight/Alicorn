@@ -1,5 +1,5 @@
-import { ipcMain } from "electron";
 import { Channels } from "@/main/ipc/channels";
+import { ipcMain } from "electron";
 
 function setup(): void {
     /**

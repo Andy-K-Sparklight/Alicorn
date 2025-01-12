@@ -1,5 +1,5 @@
-import { nanoid } from "nanoid";
 import EventEmitter from "events";
+import { nanoid } from "nanoid";
 import { type WebSocket } from "ws";
 
 export class WebSocketJsonRpcClient {

@@ -1,9 +1,9 @@
-import { iTest } from "~/test/instrumented/tools";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
-import assert from "node:assert";
+import { nfat } from "@/main/net/nfat";
 import { hash } from "@/main/security/hash";
 import fs from "fs-extra";
-import { nfat } from "@/main/net/nfat";
+import assert from "node:assert";
+import { iTest } from "~/test/instrumented/tools";
 
 export async function checkFileDownload() {
     await iTest.run("File Download", async () => {

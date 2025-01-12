@@ -1,5 +1,5 @@
-import { BrowserWindow } from "electron";
 import { bwctl } from "@/main/sys/bwctl";
+import { BrowserWindow } from "electron";
 
 const oAuthUrl =
     "https://login.live.com/oauth20_authorize.srf" +

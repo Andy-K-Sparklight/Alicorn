@@ -1,9 +1,9 @@
+import { Channels } from "@/main/ipc/channels";
+import { ipcMain } from "electron";
+import fs from "fs-extra";
 import os from "node:os";
 import path from "path";
-import fs from "fs-extra";
 import rfdc from "rfdc";
-import { ipcMain } from "electron";
-import { Channels } from "@/main/ipc/channels";
 import * as uuid from "uuid";
 
 /**

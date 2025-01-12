@@ -1,11 +1,11 @@
 /**
  * A wrapper around NextDL providing mirror chaining and progress tracking.
  */
+import { conf } from "@/main/conf/conf";
+import { aria2, type Aria2DownloadRequest } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
 import { nextdl, type NextDownloadRequest } from "@/main/net/nextdl";
 import type { Progress } from "@/main/util/progress";
-import { conf } from "@/main/conf/conf";
-import { aria2, type Aria2DownloadRequest } from "@/main/net/aria2";
 
 export interface DlxDownloadRequest {
     url: string;

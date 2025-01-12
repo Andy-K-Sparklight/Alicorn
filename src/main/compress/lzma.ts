@@ -1,10 +1,10 @@
-import fs from "fs-extra";
-import path from "path";
-import type lzmaNative from "lzma-native";
-import type lzmaJS from "lzma";
-import { pipeline } from "stream/promises";
 import { paths } from "@/main/fs/paths";
 import { unwrapESM } from "@/main/util/module";
+import fs from "fs-extra";
+import type lzmaJS from "lzma";
+import type lzmaNative from "lzma-native";
+import path from "path";
+import { pipeline } from "stream/promises";
 import pkg from "~/package.json";
 
 let lzmaNativeMod: typeof lzmaNative;

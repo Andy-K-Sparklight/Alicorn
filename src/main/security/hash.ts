@@ -1,6 +1,6 @@
+import { paths } from "@/main/fs/paths";
 import type { HashWorkerData } from "@/main/security/hash-worker";
 import { Worker } from "node:worker_threads";
-import { paths } from "@/main/fs/paths";
 
 async function checkFile(pt: string, algorithm: string, expectHash: string): Promise<boolean> {
     return await check(pt, algorithm, expectHash) as boolean;

@@ -1,7 +1,7 @@
-import { expect, test } from "vitest";
-import path from "path";
 import { conf } from "@/main/conf/conf";
 import fs from "fs-extra";
+import path from "path";
+import { expect, test } from "vitest";
 
 const cfgPath = path.resolve("emulated", "config.v2.json");
 process.env.ALICORN_CONFIG_PATH = cfgPath;
