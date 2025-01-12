@@ -141,7 +141,7 @@ async function init() {
         const cert = paths.app.to("vendor", "ca-cert.pem");
 
         aria2cProcess = child_process.spawn(pt, [
-            `--max-concurrent-downloads=${concurrency}`,
+            `--max-concurrent-downloads=${concurrency > 1 ? concurrency : 1}`,
             "--max-connection-per-server=16",
             `--connect-timeout=${requestTimeout}`,
             `--timeout=${transferTimeout}`,
@@ -150,7 +150,7 @@ async function init() {
             "--rpc-max-request-size=32M",
             `--rpc-secret=${aria2cToken}`,
             `--ca-certificate=${cert}`,
-            ...args.split("\n").filter(Boolean)
+            ...args.split("\n").map(a => a.trim()).filter(Boolean)
         ]);
 
         console.debug("Connecting to aria2 RPC interface...");

@@ -1,7 +1,7 @@
 /**
  * Various entry widgets for manipulating the settings.
  */
-import { Input, Select, SelectItem, type SharedSelection, Switch } from "@nextui-org/react";
+import { Input, Select, SelectItem, type SharedSelection, Slider, Switch, Textarea } from "@nextui-org/react";
 import type { Icon } from "@primer/octicons-react";
 import React, { type FC } from "react";
 import { useTranslation } from "react-i18next";
@@ -25,7 +25,7 @@ const Title = ({ id, icon }: { id: string, icon?: Icon }) => {
 const Subtitle = ({ id }: { id: string }) => {
     const { t } = useTranslation("pages", { keyPrefix: "settings.entries" });
 
-    return <div className="text-sm text-foreground-400">{t(`${id}.sub`)}</div>;
+    return <div className="text-sm text-foreground-400 whitespace-pre-line">{t(`${id}.sub`)}</div>;
 };
 
 const EntryLabel = ({ id, icon }: { id: string; icon?: Icon }) => {
@@ -40,6 +40,37 @@ export const TextEntry: FC<SettingsEntryProps<string>> = ({ id, icon, value, onC
     return <div className="flex flex-col gap-2 w-full">
         <EntryLabel id={id} icon={icon}/>
         <Input fullWidth value={value} onValueChange={onChange}/>
+    </div>;
+};
+
+export const NumberTextEntry: FC<SettingsEntryProps<number>> = ({ id, icon, value, onChange }) => {
+    return <div className="flex flex-col gap-2 w-full">
+        <EntryLabel id={id} icon={icon}/>
+        <Input fullWidth type="number" value={value.toString()}
+               onValueChange={(s) => onChange(parseInt(s || "0", 10))}/>
+    </div>;
+};
+
+
+type NumberSliderEntryProps = SettingsEntryProps<number> & { max: number; min: number; }
+
+export const NumberSliderEntry: FC<NumberSliderEntryProps> = ({ id, icon, value, onChange, max, min }) => {
+    return <div className="flex flex-col gap-4 w-full">
+        <EntryLabel id={id} icon={icon}/>
+        <Slider maxValue={max} minValue={min} value={value} hideThumb
+                showTooltip
+                tooltipProps={{ size: "lg", radius: "full" }}
+                startContent={<span className="text-foreground-400">{min}</span>}
+                endContent={<span className="text-foreground-400">{max}</span>}
+                onChange={(v) => onChange(Array.isArray(v) ? v[0] : v)}/>
+    </div>;
+};
+
+
+export const MultilineTextEntry: FC<SettingsEntryProps<string>> = ({ id, icon, value, onChange }) => {
+    return <div className="flex flex-col gap-2 w-full">
+        <EntryLabel id={id} icon={icon}/>
+        <Textarea fullWidth value={value} onValueChange={onChange}/>
     </div>;
 };
 

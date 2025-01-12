@@ -3,9 +3,10 @@ launch:
 
 settings:
   title: 设置
-  hint: 默认设置即是推荐设置。若要修改设置项，请确保了解其功能。
+  hint: 默认设置即是推荐设置。若要修改设置项，请确保了解其功能。部分选项在下一次启动时才会生效。
   tabs:
     pref: 个性化
+    launch: 启动
     network: 网络
     dev: 开发
   entries:
@@ -21,6 +22,21 @@ settings:
       items:
         zh-CN: 简体中文
         en: English
+
+    aria2:
+      title: aria2 下载器
+      sub: |-
+        启用此选项以自动使用随附或系统中的 aria2 以改进下载性能。
+        若禁用，Alicorn 将使用内置的下载程序。
+    aria2-concurrency:
+      title: aria2 并行数
+      sub: aria2 最多可同时下载的任务个数。
+    aria2-args:
+      title: aria2 启动选项
+      sub: 在启动 aria2 时添加以下命令行选项，一行填写一个。
+    nextdl-concurrency:
+      title: 默认并行数
+      sub: 内置下载器可同时下载的任务个数。
 
 
 about:

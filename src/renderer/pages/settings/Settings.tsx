@@ -1,15 +1,17 @@
 import type { UserConfig } from "@/main/conf/conf";
-import { Alert, Tab, Tabs } from "@nextui-org/react";
+import { Alert, ScrollShadow, Tab, Tabs } from "@nextui-org/react";
+import { NetworkTab } from "@pages/settings/NetworkTab";
 import { PreferencesTab } from "@pages/settings/PreferencesTab";
 import { ConfigContext as ConfigContext1, type ConfigContextContent } from "@pages/settings/use-config";
-import { CodeIcon, GlobeIcon, type Icon, PaintbrushIcon } from "@primer/octicons-react";
+import { CodeIcon, GlobeIcon, type Icon, PaintbrushIcon, RocketIcon } from "@primer/octicons-react";
 import React, { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSessionStorage } from "react-use";
 
 interface SettingsPage {
     id: string;
     icon: Icon;
-    content?: React.ComponentType;
+    content: React.ComponentType;
 }
 
 const settingsTabs: SettingsPage[] = [
@@ -19,12 +21,19 @@ const settingsTabs: SettingsPage[] = [
         content: PreferencesTab
     },
     {
+        id: "launch",
+        icon: RocketIcon,
+        content: () => null
+    },
+    {
         id: "network",
-        icon: GlobeIcon
+        icon: GlobeIcon,
+        content: NetworkTab
     },
     {
         id: "dev",
-        icon: CodeIcon
+        icon: CodeIcon,
+        content: () => null
     }
 ];
 
@@ -34,6 +43,7 @@ const settingsTabs: SettingsPage[] = [
 export const Settings: FC = () => {
     const { t } = useTranslation("pages", { keyPrefix: "settings" });
     const [config, setConfig] = useState<UserConfig>();
+    const [tab, setTab] = useSessionStorage("settings.tab", settingsTabs[0].id);
 
     useEffect(() => {
         native.conf.get().then(setConfig);
@@ -62,7 +72,14 @@ export const Settings: FC = () => {
             </div>
 
             <div className="grow w-full flex flex-col min-h-0">
-                <Tabs isVertical>
+                <Tabs
+                    isVertical
+                    selectedKey={tab}
+                    onSelectionChange={(s) => setTab(s.toString())}
+                    classNames={{
+                        wrapper: "h-full"
+                    }}
+                >
                     {
                         settingsTabs.map(({ id, icon, content }) => {
                             return <Tab
@@ -75,13 +92,13 @@ export const Settings: FC = () => {
                                     </div>
                                 }
                             >
-                                <div className="w-full h-full overflow-y-auto">
+                                <ScrollShadow className="w-full h-full overflow-y-auto" size={10}>
                                     <div className="flex flex-col gap-6 w-full px-4 py-2">
                                         <ConfigContext1 value={context}>
-                                            {content && React.createElement(content)}
+                                            {React.createElement(content)}
                                         </ConfigContext1>
                                     </div>
-                                </div>
+                                </ScrollShadow>
                             </Tab>;
                         })
                     }
