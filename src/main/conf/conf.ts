@@ -3,7 +3,6 @@ import { ipcMain } from "electron";
 import fs from "fs-extra";
 import os from "node:os";
 import path from "path";
-import rfdc from "rfdc";
 import * as uuid from "uuid";
 
 /**
@@ -14,6 +13,16 @@ const DEFAULT_CONFIG = {
      * Whether to enable inspect mode.
      */
     inspect: false,
+
+    /**
+     * User preferences.
+     */
+    pref: {
+        /**
+         * Customizable username.
+         */
+        username: os.userInfo().username
+    },
 
     /**
      * Paths to override fallback options.
@@ -269,8 +278,6 @@ async function store(): Promise<void> {
 
 type ConfigSection = string | number | boolean | { [key: string]: ConfigSection; }
 
-const clone = rfdc();
-
 /**
  * Applies the patch object on the base object if type matches.
  *
@@ -283,12 +290,12 @@ function applyPatch<T extends ConfigSection>(origin: T, user: T): T {
         return origin;
     }
 
-    if (typeof user !== "object") return clone(origin);
+    if (typeof user !== "object") return structuredClone(origin);
 
     const o = Object.assign({}, origin);
     for (const [k, v] of Object.entries(o)) {
         if (!(k in user)) {
-            o[k] = clone(v);
+            o[k] = structuredClone(v);
         } else {
             o[k] = applyPatch(v, user[k]);
         }
@@ -319,7 +326,7 @@ function createPatch(origin: ConfigSection, user: ConfigSection): ConfigSection 
     return null;
 }
 
-let config: UserConfig = clone(DEFAULT_CONFIG);
+let config: UserConfig = structuredClone(DEFAULT_CONFIG);
 
 /**
  * Setup main process handlers for configuration syncing.
@@ -328,7 +335,7 @@ function setup() {
     ipcMain.handle(Channels.GET_CONFIG, () => config);
 
     ipcMain.handle(Channels.UPDATE_CONFIG, (_, c: UserConfig) => {
-        config = c;
+        Object.assign(config, c);
     });
 }
 

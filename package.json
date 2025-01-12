@@ -71,7 +71,7 @@
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "react-i18next": "^15.4.0",
-        "rfdc": "^1.4.1",
+        "react-use": "^17.6.0",
         "superserial": "^0.3.5",
         "typia": "^7.5.1",
         "uuid": "^11.0.3",
