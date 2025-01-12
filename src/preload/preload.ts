@@ -1,3 +1,4 @@
+import type { UserConfig } from "@/main/conf/conf";
 import { Channels } from "@/main/ipc/channels";
 import { contextBridge, ipcRenderer } from "electron";
 
@@ -46,6 +47,19 @@ const native = {
          */
         minimize(): void {
             ipcRenderer.send(Channels.MINIMIZE_WINDOW);
+        }
+    },
+
+    /**
+     * Configuration sync methods.
+     */
+    conf: {
+        get(): Promise<UserConfig> {
+            return ipcRenderer.invoke(Channels.GET_CONFIG);
+        },
+
+        update(conf: UserConfig): Promise<void> {
+            return ipcRenderer.invoke(Channels.UPDATE_CONFIG, conf);
         }
     },
 

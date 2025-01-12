@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { initReactI18next, useTranslation } from "react-i18next";
 import YAML from "yaml";
 
+const availableLanguages = ["zh-CN", "en"];
 const namespaces = ["common", "pages"];
 
 /**
@@ -65,8 +66,11 @@ function useAutoFontClass() {
     }, [newFontClass]);
 }
 
+function getAvailableLanguages() {
+    return availableLanguages;
+}
 
 export const i18n = {
-    init, useAutoFontClass
+    init, useAutoFontClass, getAvailableLanguages
 };
 

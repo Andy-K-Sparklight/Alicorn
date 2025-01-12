@@ -1,7 +1,9 @@
 import { i18n } from "@/renderer/i18n/i18n";
 import { Header } from "@components/Header";
 import { NextUIProvider } from "@nextui-org/react";
+import { useTheme } from "@nextui-org/use-theme";
 import { About } from "@pages/about/About";
+import { Settings } from "@pages/settings/Settings";
 import React, { type FC } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import pkg from "~/package.json";
@@ -11,6 +13,7 @@ import pkg from "~/package.json";
  */
 export const App: FC = () => {
     const [, navigate] = useLocation();
+    useTheme();
 
     i18n.useAutoFontClass();
 
@@ -40,6 +43,7 @@ const MainArea = () => {
 const Routes = () => {
     return <Switch>
         <Route path="/About" component={About}/>
+        <Route path="/Settings" component={Settings}/>
     </Switch>;
 };
 

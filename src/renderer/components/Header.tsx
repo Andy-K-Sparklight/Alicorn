@@ -1,5 +1,4 @@
 import { TopNavigator } from "@components/TopNavigator";
-import { Divider } from "@nextui-org/react";
 import { DashIcon, XIcon } from "@primer/octicons-react";
 import React, { type FC } from "react";
 
@@ -16,7 +15,6 @@ export const Header: FC = () => {
             <CloseButton/>
             <MinimizeButton/>
         </div>
-        <Divider className="w-2/3 mx-auto"/>
     </div>;
 };
 

@@ -1,4 +1,4 @@
-import { type Icon, InfoIcon, RocketIcon } from "@primer/octicons-react";
+import { GearIcon, type Icon, InfoIcon, RocketIcon } from "@primer/octicons-react";
 
 /**
  * Describes a page in the app.
@@ -31,6 +31,12 @@ export const pages: PageInfo[] = [
         id: "launch",
         title: "launch.title",
         href: "/Launch"
+    },
+    {
+        icon: GearIcon,
+        id: "settings",
+        title: "settings.title",
+        href: "/Settings"
     },
     {
         icon: InfoIcon,
