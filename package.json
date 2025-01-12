@@ -44,7 +44,7 @@
         "type-fest": "^4.31.0",
         "typed-emitter": "^2.1.0",
         "typescript": "^5.7.2",
-        "vite": "^6.0.7",
+        "vite": "^5.4.11",
         "vite-tsconfig-paths": "^5.1.4",
         "vitest": "^2.1.8",
         "xvfb-maybe": "^0.2.1"
