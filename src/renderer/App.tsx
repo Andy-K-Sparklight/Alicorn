@@ -1,7 +1,6 @@
 import { i18n } from "@/renderer/i18n/i18n";
 import { Header } from "@components/Header";
 import { NextUIProvider } from "@nextui-org/react";
-import { useTheme } from "@nextui-org/use-theme";
 import { About } from "@pages/about/About";
 import { clsx } from "clsx";
 import React, { type FC, useEffect, useRef } from "react";
@@ -12,7 +11,6 @@ import pkg from "~/package.json";
  * App entry.
  */
 export const App: FC = () => {
-    const { theme } = useTheme();
     const [, navigate] = useLocation();
 
     const fontClass = i18n.useFontClass();
@@ -28,7 +26,7 @@ export const App: FC = () => {
     }, [fontClass]);
 
     return <NextUIProvider navigate={navigate}>
-        <main className={clsx("fixed inset-0 text-foreground bg-background", theme, fontClass)}>
+        <main className={clsx("fixed inset-0 text-foreground bg-background", fontClass)}>
             <div className="flex flex-col w-full h-full">
                 <Header/>
                 <MainArea/>
