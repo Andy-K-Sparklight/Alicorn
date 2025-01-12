@@ -2,8 +2,7 @@ import { i18n } from "@/renderer/i18n/i18n";
 import { Header } from "@components/Header";
 import { NextUIProvider } from "@nextui-org/react";
 import { About } from "@pages/about/About";
-import { clsx } from "clsx";
-import React, { type FC, useEffect, useRef } from "react";
+import React, { type FC } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import pkg from "~/package.json";
 
@@ -13,20 +12,10 @@ import pkg from "~/package.json";
 export const App: FC = () => {
     const [, navigate] = useLocation();
 
-    const fontClass = i18n.useFontClass();
-    const prevFontClass = useRef<string>("");
-
-    useEffect(() => {
-        if (prevFontClass.current) {
-            document.body.classList.remove(prevFontClass.current);
-        }
-
-        prevFontClass.current = fontClass;
-        document.body.classList.add(fontClass);
-    }, [fontClass]);
+    i18n.useAutoFontClass();
 
     return <NextUIProvider navigate={navigate}>
-        <main className={clsx("fixed inset-0 text-foreground bg-background", fontClass)}>
+        <main className="fixed inset-0 text-foreground bg-background">
             <div className="flex flex-col w-full h-full">
                 <Header/>
                 <MainArea/>
