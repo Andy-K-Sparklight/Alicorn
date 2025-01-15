@@ -64,7 +64,7 @@ async function commit(req: Aria2DownloadRequest): Promise<[Promise<boolean>, str
     const dir = path.dirname(req.path);
     const file = path.basename(req.path);
 
-    const checksum = (conf().net.aria2.validate && req.sha1) ? { checksum: `sha-1=${req.sha1}` } : {};
+    const checksum = (conf().net.validate && req.sha1) ? { checksum: `sha-1=${req.sha1}` } : {};
 
     const gid = await aria2cRpcClient?.request("aria2.addUri", [
         `token:${aria2cToken}`,
@@ -136,7 +136,8 @@ async function init() {
 
         console.debug(`Using port for aria2c: ${aria2cPort}`);
 
-        const { concurrency, args, requestTimeout, transferTimeout } = conf().net.aria2;
+        const { args, requestTimeout, transferTimeout } = conf().net.aria2;
+        const concurrency = conf().net.concurrency;
 
         const cert = paths.app.to("vendor", "ca-cert.pem");
 

@@ -80,7 +80,7 @@ let queue: PQueue | null = null;
 
 function getQueue(): PQueue {
     if (queue === null) {
-        queue = new PQueue({ concurrency: conf().net.next.concurrency });
+        queue = new PQueue({ concurrency: conf().net.concurrency });
     }
     return queue;
 }
@@ -177,7 +177,7 @@ async function resolveOnce(task: NextDownloadTask): Promise<NextRequestStatus> {
     task.status = NextDownloadStatus.RETRIEVING;
     const res = await retrieve(task);
     if (res === NextRequestStatus.SUCCESS) {
-        if (conf().net.next.validate) {
+        if (conf().net.validate) {
             task.status = NextDownloadStatus.VALIDATING;
             // Here we accept both 'checked' and 'unknown'
             // As we have no clue to reject a file when we cannot determine it's corrupted

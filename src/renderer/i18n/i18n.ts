@@ -36,6 +36,8 @@ async function init(): Promise<void> {
             }
         });
 
+    i18next.setDefaultNamespace(namespaces[0]);
+
     if (import.meta.env.AL_DEV && import.meta.hot) {
         // Handle i18n resource reload events
         import.meta.hot.on("locales-update", async () => {

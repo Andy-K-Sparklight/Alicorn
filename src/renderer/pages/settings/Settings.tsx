@@ -1,12 +1,14 @@
 import type { UserConfig } from "@/main/conf/conf";
 import { Alert, ScrollShadow, Tab, Tabs } from "@nextui-org/react";
+import { DevTab } from "@pages/settings/DevTab";
+import { LaunchTab } from "@pages/settings/LaunchTab";
 import { NetworkTab } from "@pages/settings/NetworkTab";
 import { PreferencesTab } from "@pages/settings/PreferencesTab";
-import { ConfigContext as ConfigContext1, type ConfigContextContent } from "@pages/settings/use-config";
+import { ConfigContext, type ConfigContextContent } from "@pages/settings/use-config";
 import { CodeIcon, GlobeIcon, type Icon, PaintbrushIcon, RocketIcon } from "@primer/octicons-react";
 import React, { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSessionStorage } from "react-use";
+import { useLocalStorage, useSessionStorage } from "react-use";
 
 interface SettingsPage {
     id: string;
@@ -23,7 +25,7 @@ const settingsTabs: SettingsPage[] = [
     {
         id: "launch",
         icon: RocketIcon,
-        content: () => null
+        content: LaunchTab
     },
     {
         id: "network",
@@ -33,7 +35,7 @@ const settingsTabs: SettingsPage[] = [
     {
         id: "dev",
         icon: CodeIcon,
-        content: () => null
+        content: DevTab
     }
 ];
 
@@ -44,6 +46,7 @@ export const Settings: FC = () => {
     const { t } = useTranslation("pages", { keyPrefix: "settings" });
     const [config, setConfig] = useState<UserConfig>();
     const [tab, setTab] = useSessionStorage("settings.tab", settingsTabs[0].id);
+    const [hideAlert, setHideAlert] = useLocalStorage("settings.hideAlert", false);
 
     useEffect(() => {
         native.conf.get().then(setConfig);
@@ -63,12 +66,16 @@ export const Settings: FC = () => {
     return <div className="flex flex-col w-full h-full justify-center items-center gap-8">
         <div className="grow flex flex-col basis-2/3 min-h-0 w-3/4 gap-4">
             <div className="w-full">
-                <Alert
-                    color="warning"
-                    title={t("hint")}
-                    description=""
-                    classNames={{ title: "text-sm", base: "py-2" }}
-                />
+                {
+                    !hideAlert &&
+                    <Alert
+                        color="warning"
+                        title={t("hint")}
+                        description=""
+                        onClose={() => setHideAlert(true)}
+                        isClosable
+                    />
+                }
             </div>
 
             <div className="grow w-full flex flex-col min-h-0">
@@ -94,9 +101,9 @@ export const Settings: FC = () => {
                             >
                                 <ScrollShadow className="w-full h-full overflow-y-auto" size={10}>
                                     <div className="flex flex-col gap-6 w-full px-4 py-2">
-                                        <ConfigContext1 value={context}>
+                                        <ConfigContext.Provider value={context}>
                                             {React.createElement(content)}
-                                        </ConfigContext1>
+                                        </ConfigContext.Provider>
                                     </div>
                                 </ScrollShadow>
                             </Tab>;

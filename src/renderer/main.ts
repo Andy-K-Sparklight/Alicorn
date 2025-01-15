@@ -1,5 +1,6 @@
 import { i18n } from "@/renderer/i18n/i18n";
 import { Root } from "@/renderer/Root";
+import { t } from "i18next";
 import { createElement } from "react";
 import { createRoot } from "react-dom/client";
 import pkg from "~/package.json";
@@ -35,6 +36,8 @@ async function main() {
 
     console.log(`Done (${duration}s)! Showing window.`);
 
+    printDevToolsWarn();
+
     native.bwctl.show();
 }
 
@@ -54,6 +57,19 @@ function render() {
     document.body.appendChild(rootEle);
     const root = createRoot(rootEle);
     root.render(createElement(Root));
+}
+
+/**
+ * Warns the user when DevTools is opened in production mode.
+ */
+function printDevToolsWarn() {
+    if (!import.meta.env.AL_DEV) {
+        const tr = (s: string) => t(`devtools-warn.${s}`);
+
+        console.log("%c" + tr("title"), "font-size: xxx-large; font-weight: bold; color: orange;");
+        console.log("%c" + tr("sub-1"), "font-size: large; font-weight: bold; color: red;");
+        console.log("%c" + tr("sub-2"), "font-size: x-large; font-weight: bold; color: red;");
+    }
 }
 
 void main();

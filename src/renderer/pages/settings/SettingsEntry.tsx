@@ -59,6 +59,7 @@ export const NumberSliderEntry: FC<NumberSliderEntryProps> = ({ id, icon, value,
         <EntryLabel id={id} icon={icon}/>
         <Slider maxValue={max} minValue={min} value={value} hideThumb
                 showTooltip
+                aria-label="Number Slider"
                 tooltipProps={{ size: "lg", radius: "full" }}
                 startContent={<span className="text-foreground-400">{min}</span>}
                 endContent={<span className="text-foreground-400">{max}</span>}

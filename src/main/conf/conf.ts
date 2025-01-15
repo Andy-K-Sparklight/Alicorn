@@ -15,6 +15,16 @@ const DEFAULT_CONFIG = {
     inspect: false,
 
     /**
+     * Development related settings.
+     */
+    dev: {
+        /**
+         * Enable DevTools in production mode. (DevTools is enabled in development mode anyway)
+         */
+        devTools: false
+    },
+
+    /**
      * User preferences.
      */
     pref: {
@@ -51,21 +61,19 @@ const DEFAULT_CONFIG = {
         downloader: "aria2",
 
         /**
+         * Whether to validate files after download.
+         */
+        validate: true,
+
+        /**
+         * The maximum concurrency.
+         */
+        concurrency: 16,
+
+        /**
          * Options for aria2.
          */
         aria2: {
-            /**
-             * Parallel tasks limit.
-             */
-            concurrency: 16,
-
-            /**
-             * Whether to validate the integrity of the downloaded file.
-             *
-             * File validation is always performed when preflighting, changes performed by the user will be lost.
-             */
-            validate: true,
-
             /**
              * Maximum tries for each download task.
              */
@@ -107,19 +115,7 @@ const DEFAULT_CONFIG = {
             /**
              * Minimum acceptable transfer speed when downloading files.
              */
-            minSpeed: 64 * 1024,
-
-            /**
-             * Maximum number of tasks dispatched concurrently.
-             */
-            concurrency: 32,
-
-            /**
-             * Whether to validate the integrity of the downloaded file.
-             *
-             * File validation is always performed when preflighting, changes performed by the user will be lost.
-             */
-            validate: true
+            minSpeed: 64 * 1024
         },
 
         /**

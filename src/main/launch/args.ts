@@ -77,7 +77,7 @@ function createMemoryArgs(init: LaunchInit): string[] {
 function getUserGlobalArgs(): string[][] {
     const { vm, game } = conf().runtime.args;
 
-    return [vm, game].map(it => it.split("\n").filter(s => s.length > 0).map(a => a.trim()));
+    return [vm, game].map(it => it.split("\n").filter(Boolean).map(a => a.trim()));
 }
 
 

@@ -47,6 +47,8 @@ async function main() {
     console.log("Initializing modules...");
     conf.setup();
 
+    const hasDevTools = import.meta.env.AL_DEV || conf().dev.devTools;
+
     if (import.meta.env.AL_TEST) {
         paths.setup({
             storeRoot: path.resolve("emulated", "store")
@@ -86,7 +88,7 @@ async function main() {
             spellcheck: false,
             defaultEncoding: "UTF-8",
             preload: paths.app.to("preload.js"),
-            devTools: import.meta.env.AL_DEV
+            devTools: hasDevTools
         },
         frame: false,
         show: false,
@@ -104,14 +106,17 @@ async function main() {
 
     console.log("Loading window contents...");
 
-    // Load renderer from dev server (dev) or file (prod).
-    if (import.meta.env.AL_DEV) {
+    // Open DevTools if applicable
+    if (hasDevTools) {
         injectDevToolsStyles(mainWindow);
 
         // DevTools can be occasionally blocked by waiting the page to load
         // Open it earlier seems to solve this
         mainWindow.webContents.openDevTools();
+    }
 
+    // Load renderer from dev server (dev) or file (prod).
+    if (import.meta.env.AL_DEV) {
         const devServerURL = `http://localhost:${import.meta.env.AL_DEV_SERVER_PORT}/`;
         console.log(`Picked up dev server URL: ${devServerURL}`);
         await mainWindow.loadURL(devServerURL);
