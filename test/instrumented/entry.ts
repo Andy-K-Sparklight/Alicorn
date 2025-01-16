@@ -1,6 +1,7 @@
 import { app } from "electron";
 import assert from "node:assert";
 import { checkHash } from "~/test/instrumented/hash";
+import { checkInstaller } from "~/test/instrumented/install";
 import { checkInstallJRT } from "~/test/instrumented/jrt";
 import { checkFileDownload } from "~/test/instrumented/net";
 import { iTest } from "~/test/instrumented/tools";
@@ -13,7 +14,8 @@ export async function runInstrumentedTest() {
         checkAppReady(),
         checkFileDownload(),
         checkInstallJRT(),
-        checkHash()
+        checkHash(),
+        checkInstaller()
     ]);
 
     await iTest.dumpSummary();
