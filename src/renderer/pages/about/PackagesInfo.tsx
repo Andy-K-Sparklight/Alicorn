@@ -1,4 +1,4 @@
-import { Card, CardBody } from "@nextui-org/react";
+import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import pkg from "~/package.json";
@@ -13,17 +13,28 @@ export const PackagesInfo: FC = () => {
 };
 
 const DependencyCountCard = () => {
-    const { dependencies, devDependencies } = pkg;
-    const prodNames = Object.keys(dependencies).join(" ");
-    const devNames = Object.keys(devDependencies).join(" ");
+    const packages = Object.entries(pkg.dependencies);
 
     const { t } = useTranslation("pages", { keyPrefix: "about" });
 
-    return <Card className="w-full">
-        <CardBody>
-            <div className="whitespace-pre-line px-2">
-                {t("deps", { prodNames, devNames })}
-            </div>
-        </CardBody>
-    </Card>;
+    return <Table isHeaderSticky classNames={{ base: "overflow-y-scroll" }}>
+        <TableHeader>
+            <TableColumn>
+                {t("packages.name")}
+            </TableColumn>
+            <TableColumn>
+                {t("packages.ver")}
+            </TableColumn>
+        </TableHeader>
+        <TableBody>
+            {
+                packages.map(([name, version]) => {
+                    return <TableRow key={name}>
+                        <TableCell>{name}</TableCell>
+                        <TableCell>{version}</TableCell>
+                    </TableRow>;
+                })
+            }
+        </TableBody>
+    </Table>;
 };
