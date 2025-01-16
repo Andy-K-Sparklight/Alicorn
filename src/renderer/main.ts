@@ -46,7 +46,7 @@ async function main() {
  */
 function disableTitles() {
     window.addEventListener("mouseover", (e) => {
-        if (e.target !== null && typeof e.target === "object" && "title" in e.target) {
+        if (e.target !== null && typeof e.target === "object" && "title" in e.target && e.target.title) {
             e.target.title = "";
         }
     });
