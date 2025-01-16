@@ -10,7 +10,6 @@ settings:
     network: 网络
     dev: 开发
   dev-warn: 这些设置只用于开发，请绝不要随意修改！
-  dev-warn-more: 为什么？
   entries:
     username:
       title: 您的昵称
@@ -59,7 +58,7 @@ settings:
     devtools:
       title: DevTools
       sub: 启用渲染进程的 DevTools 以检查报告的错误。
-      
+
 
 about:
   title: 关于
@@ -82,16 +81,9 @@ about:
     source: 查看源代码
     license: 查看许可证
 
-  deps: |-
-    以下是构造此 Alicorn 所使用的软件包，诚挚地向它们的开发者表示谢意。
-
-    包含在产品中：
-
-    {{prodNames}}
-
-    仅在开发时使用：
-
-    {{devNames}}
+  packages:
+    name: 包名称
+    ver: 版本号
 
   features-note: 若要使用未启用的功能，请重新构建 Alicorn，并打开相应的开关。
   features-how: 进一步了解
