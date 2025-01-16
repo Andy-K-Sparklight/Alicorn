@@ -21,6 +21,8 @@ export default defineConfig(({ command }) => {
                 output: {
                     manualChunks: isDev ? undefined : {
                         nextui: ["@nextui-org/react"],
+                        motion: ["framer-motion"],
+                        theme: ["@nextui-org/theme"],
                         octicons: ["@primer/octicons-react"]
                     }
                 }
