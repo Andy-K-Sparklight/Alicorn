@@ -11,6 +11,7 @@ export default defineConfig(({ command }) => {
 
     return {
         root: "./src/renderer",
+        appType: "mpa",
         base: "",
         publicDir: path.resolve(import.meta.dirname, "public"),
         build: {
