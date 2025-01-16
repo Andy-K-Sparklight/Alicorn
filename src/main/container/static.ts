@@ -48,6 +48,12 @@ export class StaticContainer implements Container {
         return this.resolve("libraries", new MavenName(name).toPath());
     }
 
+    nativeLibrary(libName: string, nativeName: string): string {
+        const n = new MavenName(libName);
+        n.classifier = nativeName;
+        return this.resolve("libraries", n.toPath());
+    }
+
     nativesRoot(id: string): string {
         return this.resolve(".natives", id);
     }

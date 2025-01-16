@@ -59,6 +59,9 @@ importers:
       node-sqlite3-wasm:
         specifier: ^0.8.30
         version: 0.8.30
+      node-stream-zip:
+        specifier: ^1.15.0
+        version: 1.15.0
       p-queue:
         specifier: ^8.0.1
         version: 8.0.1
@@ -3002,6 +3005,10 @@ packages:
 
   node-sqlite3-wasm@0.8.30:
     resolution: {integrity: sha512-MU88q65ircWo4Xi/auv9hgZbAnxkSWuLDbzWPmwGgzWMmukQCrYejwvyivejGkjVmoHMdLA4BMXZvc/zimZjxQ==}
+
+  node-stream-zip@1.15.0:
+    resolution: {integrity: sha512-LN4fydt9TqhZhThkZIVQnF9cwjU3qmUH9h78Mx/K7d3VvfRqqwthLwJEUOEL0QPZ0XQmNN7be5Ggit5+4dq3Bw==}
+    engines: {node: '>=0.12.0'}
 
   normalize-package-data@2.5.0:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
@@ -7491,6 +7498,8 @@ snapshots:
   node-gyp-build@4.8.4: {}
 
   node-sqlite3-wasm@0.8.30: {}
+
+  node-stream-zip@1.15.0: {}
 
   normalize-package-data@2.5.0:
     dependencies:

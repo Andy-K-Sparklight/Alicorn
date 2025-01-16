@@ -91,6 +91,13 @@ export interface Container {
     library(name: string): string;
 
     /**
+     * Gets the path to the native library.
+     * @param libName Library name.
+     * @param nativeName Library native artifact name.
+     */
+    nativeLibrary(libName: string, nativeName: string): string;
+
+    /**
      * Gets the path to the profile document.
      * @param id Profile ID.
      */
