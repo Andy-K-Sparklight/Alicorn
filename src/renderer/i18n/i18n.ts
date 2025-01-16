@@ -13,8 +13,8 @@ const namespaces = ["common", "pages"];
 const i18nLoader: BackendModule = {
     type: "backend",
     init: () => {},
-    read: async (language, namespace) => {
-        const dat = await (await fetch(`i18n/${language}/${namespace}.yml`)).text();
+    read: async (lng, ns) => {
+        const dat = await (await fetch(`i18n/${lng}/${ns}.yml`)).text();
         return YAML.parse(dat);
     }
 };
@@ -31,8 +31,12 @@ async function init(): Promise<void> {
         .init({
             ns: namespaces,
             fallbackLng: "zh-CN",
+            debug: import.meta.env.AL_DEV,
             interpolation: {
                 escapeValue: false
+            },
+            react: {
+                useSuspense: false
             }
         });
 
