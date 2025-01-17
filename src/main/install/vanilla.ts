@@ -27,9 +27,9 @@ async function getManifest(): Promise<VersionManifest> {
     if (!versionManifest) {
         const r = await netx.get(VERSION_MANIFEST);
         if (!r.ok) throw `Unable to get version manifest: ${r.status}`;
+        const d = await r.json() as VersionManifest;
         if (!versionManifest) {
-            // In case the manifest has been assigned during the request
-            versionManifest = await r.json() as VersionManifest;
+            versionManifest = d;
         }
     }
 
