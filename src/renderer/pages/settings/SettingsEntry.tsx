@@ -43,6 +43,23 @@ export const TextEntry: FC<SettingsEntryProps<string>> = ({ id, icon, value, onC
     </div>;
 };
 
+export const DirEntry: FC<SettingsEntryProps<string>> = ({ id, icon, value, onChange }) => {
+    async function runSelect() {
+        const d = await native.ext.selectDir();
+        if (d) onChange(d);
+    }
+
+    return <div className="flex flex-col gap-2 w-full">
+        <EntryLabel id={id} icon={icon}/>
+        <div className="flex items-center gap-1">
+            <Input fullWidth value={value} onValueChange={onChange}/>
+            <Button isIconOnly onPress={runSelect}>
+                <KebabHorizontalIcon/>
+            </Button>
+        </div>
+    </div>;
+};
+
 export const NumberTextEntry: FC<SettingsEntryProps<number>> = ({ id, icon, value, onChange }) => {
     return <div className="flex flex-col gap-2 w-full">
         <EntryLabel id={id} icon={icon}/>
@@ -57,13 +74,18 @@ type NumberSliderEntryProps = SettingsEntryProps<number> & { max: number; min: n
 export const NumberSliderEntry: FC<NumberSliderEntryProps> = ({ id, icon, value, onChange, max, min }) => {
     return <div className="flex flex-col gap-4 w-full">
         <EntryLabel id={id} icon={icon}/>
-        <Slider maxValue={max} minValue={min} value={value} hideThumb
-                showTooltip
-                aria-label="Number Slider"
-                tooltipProps={{ size: "lg", radius: "full" }}
-                startContent={<span className="text-foreground-400">{min}</span>}
-                endContent={<span className="text-foreground-400">{max}</span>}
-                onChange={(v) => onChange(Array.isArray(v) ? v[0] : v)}/>
+        <Slider
+            maxValue={max}
+            minValue={min}
+            value={value}
+            hideThumb
+            showTooltip
+            aria-label="Number Slider"
+            tooltipProps={{ size: "lg", radius: "full" }}
+            startContent={min}
+            endContent={max}
+            onChange={(v) => onChange(Array.isArray(v) ? v[0] : v)}
+        />
     </div>;
 };
 

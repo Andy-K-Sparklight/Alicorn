@@ -22,7 +22,7 @@ const FeaturesNoteCard = () => {
     return <div className="w-full">
         <Alert title={t("features-note")}
                description=""
-               classNames={{ title: "text-md" }}
+               classNames={{ title: "font-bold" }}
                endContent={
                    <Button onPress={() => native.ext.openURL(BUILDING_URL)}>
                        <div className="flex items-center gap-2">

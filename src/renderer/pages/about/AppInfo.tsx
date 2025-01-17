@@ -43,10 +43,11 @@ const DevNoteCard = () => {
     const { t } = useTranslation("pages", { keyPrefix: "about" });
 
     return <div className="w-full">
-        <Alert color="warning"
-               title={t("dev-note")}
-               description=""
-               classNames={{ title: "text-md" }}
+        <Alert
+            color="warning"
+            title={t("dev-note")}
+            description=""
+            classNames={{ title: "font-bold" }}
         />
     </div>;
 };

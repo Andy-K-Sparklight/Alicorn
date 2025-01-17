@@ -14,6 +14,7 @@ export const DevTab: FC = () => {
 
     return <>
         <Alert
+            classNames={{ title: "font-bold" }}
             color="danger"
             title={t("dev-warn")}
             description=""

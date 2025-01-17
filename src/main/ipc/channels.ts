@@ -9,5 +9,6 @@ export enum Channels {
     CLOSE_WINDOW = "closeWindow",
     MINIMIZE_WINDOW = "minimizeWindow",
 
-    OPEN_URL = "openUrl"
+    OPEN_URL = "openUrl",
+    SELECT_DIR = "selectDir"
 }

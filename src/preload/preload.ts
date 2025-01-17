@@ -72,6 +72,13 @@ const native = {
          */
         openURL(url: string): void {
             ipcRenderer.send(Channels.OPEN_URL, url);
+        },
+
+        /**
+         * Selects a directory.
+         */
+        selectDir(): Promise<string> {
+            return ipcRenderer.invoke(Channels.SELECT_DIR);
         }
     }
 };

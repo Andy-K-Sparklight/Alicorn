@@ -4,6 +4,7 @@ import { DevTab } from "@pages/settings/DevTab";
 import { LaunchTab } from "@pages/settings/LaunchTab";
 import { NetworkTab } from "@pages/settings/NetworkTab";
 import { PreferencesTab } from "@pages/settings/PreferencesTab";
+import { StorageTab } from "@pages/settings/StorageTab";
 import { ConfigContext, type ConfigContextContent } from "@pages/settings/use-config";
 import { CodeIcon, GlobeIcon, type Icon, PaintbrushIcon, RocketIcon, ServerIcon } from "@primer/octicons-react";
 import React, { type FC, useEffect, useState } from "react";
@@ -26,6 +27,11 @@ const settingsTabs: SettingsPage[] = [
         id: "launch",
         icon: RocketIcon,
         content: LaunchTab
+    },
+    {
+        id: "storage",
+        icon: ServerIcon,
+        content: StorageTab
     },
     {
         id: "network",
@@ -69,6 +75,7 @@ export const Settings: FC = () => {
                 {
                     !hideAlert &&
                     <Alert
+                        classNames={{ title: "font-bold" }}
                         color="warning"
                         title={t("hint")}
                         description=""
