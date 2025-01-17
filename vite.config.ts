@@ -17,11 +17,11 @@ export default defineConfig(({ command }) => {
         build: {
             outDir: path.resolve(import.meta.dirname, "build", isDev ? "dev" : "prod", "renderer"),
             emptyOutDir: true,
+            chunkSizeWarningLimit: 1024,
             rollupOptions: {
                 output: {
                     manualChunks: isDev ? undefined : {
                         heroui: ["@heroui/react"],
-                        motion: ["framer-motion"],
                         theme: ["@heroui/theme"],
                         octicons: ["@primer/octicons-react"]
                     }
