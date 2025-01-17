@@ -23,10 +23,8 @@ export async function checkFileDownload() {
         ];
 
         let completed = 0;
-        await dlx.getAll(tasks, {
-            onProgress(p) {
-                completed = p.value.current;
-            }
+        await dlx.getAll(tasks, () => {
+            completed++;
         });
 
         assert(completed === 2, "Task count should match");

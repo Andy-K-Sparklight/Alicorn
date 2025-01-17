@@ -4,6 +4,7 @@ import { paths } from "@/main/fs/paths";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { netx } from "@/main/net/netx";
 import { getOSName } from "@/main/sys/os";
+import { progress, type ProgressHandler } from "@/main/util/progress";
 import { net } from "electron";
 import fs from "fs-extra";
 import * as child_process from "node:child_process";
@@ -89,7 +90,7 @@ type FileHint = {
 
 type NamedFileHint = FileHint & { name: string; }
 
-async function installRuntime(component: string): Promise<void> {
+async function installRuntime(component: string, onProgress: ProgressHandler): Promise<void> {
     const root = getInstallPath(component);
 
     console.log(`Installing JRT runtime ${component} to ${root}`);
@@ -98,7 +99,7 @@ async function installRuntime(component: string): Promise<void> {
 
     const dat = await (await net.fetch(profile.manifest.url)).json();
     let files = Object.entries(dat.files)
-        .map(([name, file]) => ({ name, ...(file as FileHint) } satisfies NamedFileHint));
+        .map(([name, file]) => ({ name, ...(file as FileHint) } as NamedFileHint));
 
     if (conf().jrt.filterDocs) {
         const prefix = getOSName() === "osx" ? "jre.bundle/Contents/Home/legal/" : "legal/";
@@ -119,27 +120,26 @@ async function installRuntime(component: string): Promise<void> {
     }
 
     console.debug("Fetching files...");
-    await dlx.getAll(tasks, {
-        onProgress(p) {
-            console.log(`${p.value.current} / ${p.value.total} completed.`);
-        }
-    }); // TODO add progress tracking
+    await dlx.getAll(tasks, p => onProgress({ ...p, state: "jrt.download" }));
 
     console.debug("Unpacking files...");
-
     await lzma.init();
-    await Promise.all(files.map(async file => {
-        if (file.type === "file" && file.downloads.lzma) {
-            const src = path.join(root, file.name + ".lzma");
-            const dst = path.join(root, file.name);
-            console.debug(`Unpacking: ${src}`);
 
-            await lzma.inflate(src, dst);
-            await fs.remove(src);
-        }
-    }));
+    await Promise.all(progress.countPromises(
+        files.filter(f => f.type === "file" && f.downloads.lzma)
+            .map(async file => {
+                const src = path.join(root, file.name + ".lzma");
+                const dst = path.join(root, file.name);
+                console.debug(`Unpacking: ${src}`);
+
+                await lzma.inflate(src, dst);
+                await fs.remove(src);
+            }),
+        p => onProgress({ ...p, state: "jrt.unpack" })
+    ));
 
     console.debug("Linking files...");
+    // Linking can be done very fast so no progress will be reported
     await Promise.all(
         files.filter(f => f.type === "link")
             .map(async f => {
@@ -165,6 +165,16 @@ async function installRuntime(component: string): Promise<void> {
     }
 
     console.debug("Verifying installation...");
+
+    onProgress({
+        state: "jrt.verify",
+        type: "indefinite",
+        value: {
+            total: 0,
+            current: 0
+        }
+    });
+
     await verify(root);
 
     console.debug(`Runtime installed: ${component}`);

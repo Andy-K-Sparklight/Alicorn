@@ -5,7 +5,7 @@ import { conf } from "@/main/conf/conf";
 import { aria2, type Aria2DownloadRequest } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
 import { nextdl, type NextDownloadRequest } from "@/main/net/nextdl";
-import type { Progress } from "@/main/util/progress";
+import type { Progress, ProgressHandler } from "@/main/util/progress";
 
 export interface DlxDownloadRequest {
     url: string;
@@ -14,16 +14,12 @@ export interface DlxDownloadRequest {
     size?: number;
 }
 
-interface DlxDownloadInit {
-    onProgress?: (p: Progress) => void;
-}
-
-
 /**
  * Resolves all given download requests with mirrors applied.
  */
-async function getAll(req: DlxDownloadRequest[], init?: DlxDownloadInit): Promise<void> {
+async function getAll(req: DlxDownloadRequest[], onProgress?: ProgressHandler): Promise<void> {
     const prog: Progress = {
+        state: "generic.download",
         type: "count",
         value: {
             current: 0,
@@ -40,7 +36,7 @@ async function getAll(req: DlxDownloadRequest[], init?: DlxDownloadInit): Promis
 
     function incProgress() {
         prog.value.current++;
-        init?.onProgress?.(prog);
+        onProgress?.(prog);
     }
 
     console.log(`Resolving ${req.length} tasks (${dl}).`);
