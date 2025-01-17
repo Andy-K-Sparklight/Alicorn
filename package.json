@@ -13,14 +13,11 @@
         "dist": "tsx pack.ts",
         "test": "vitest --run",
         "type-check": "tsc",
-        "prepare": "pnpm install-typia",
-        "install-typia": "ts-patch install && typia patch",
         "update-compat-table": "tsx scripts/gen-compat-table.ts"
     },
     "devDependencies": {
         "@electron/packager": "^18.3.6",
         "@esbuild-plugins/tsconfig-paths": "^0.1.2",
-        "@ryoppippi/unplugin-typia": "^1.1.0",
         "@types/chai-as-promised": "^8.0.1",
         "@types/fs-extra": "^11.0.4",
         "@types/lzma": "^2.3.0",
@@ -74,7 +71,6 @@
         "react-i18next": "^15.4.0",
         "react-use": "^17.6.0",
         "superserial": "^0.3.5",
-        "typia": "^7.5.1",
         "uuid": "^11.0.3",
         "wouter": "^3.3.5",
         "ws": "^8.18.0",

@@ -9,7 +9,6 @@ import fs from "fs-extra";
 import * as child_process from "node:child_process";
 import os from "node:os";
 import path from "path";
-import { is } from "typia";
 
 const JRT_MANIFEST = "https://piston-meta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json";
 
@@ -50,12 +49,12 @@ async function getProfile(componentName: string): Promise<JavaRuntimeProfile> {
     const d = await (await netx.get(JRT_MANIFEST)).json();
     const availableProfiles = d[osPair()][componentName];
 
-    if (!is<JavaRuntimeProfile[]>(availableProfiles) || availableProfiles.length < 1) {
+    if (!Array.isArray(availableProfiles) || availableProfiles.length < 1) {
         throw `Could not find available JRT profiles for ${componentName}`;
     }
 
     // Gets the latest release
-    return availableProfiles.reduce((prev, it) => {
+    return availableProfiles.reduce((prev: JavaRuntimeProfile, it) => {
         if (prev.version?.released && it.version?.released) {
             const d1 = new Date(prev.version.released);
             const d2 = new Date(it.version.released);
@@ -99,7 +98,6 @@ async function installRuntime(component: string): Promise<void> {
 
     const dat = await (await net.fetch(profile.manifest.url)).json();
     let files = Object.entries(dat.files)
-        .filter(([, file]) => is<FileHint>(file))
         .map(([name, file]) => ({ name, ...(file as FileHint) } satisfies NamedFileHint));
 
     if (conf().jrt.filterDocs) {

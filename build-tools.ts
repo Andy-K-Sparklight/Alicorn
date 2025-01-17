@@ -1,6 +1,5 @@
 // Runs the development build and starts frontend hot-reloading server
 import { TsconfigPathsPlugin } from "@esbuild-plugins/tsconfig-paths";
-import typiaPlugin from "@ryoppippi/unplugin-typia/esbuild";
 import consola from "consola";
 import esbuild, { type BuildOptions } from "esbuild";
 import fs from "fs-extra";
@@ -57,7 +56,6 @@ export async function build(variant: BuildVariant) {
             "hash-worker": "src/main/security/hash-worker.ts"
         },
         plugins: [
-            typiaPlugin({ cache: true, log: false }),
             TsconfigPathsPlugin({ tsconfig: "./tsconfig.json" })
         ],
         chunkNames: "[hash]",

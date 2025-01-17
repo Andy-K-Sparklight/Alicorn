@@ -27,6 +27,8 @@ export interface VersionProfile {
 
     complianceLevel: number;
 
+    inheritsFrom?: string;
+
     downloads: {
         /**
          * Defines the client download source.

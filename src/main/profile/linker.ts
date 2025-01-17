@@ -1,7 +1,6 @@
 import { patchProfile } from "@/main/profile/profile-adaptor";
 import type { VersionProfile } from "@/main/profile/version-profile";
 import { mergician } from "mergician";
-import { is } from "typia";
 
 /**
  * Links the given profiles.
@@ -37,7 +36,9 @@ export async function linkProfile(id: string, provider: (id: string) => unknown 
 
     await patchProfile(obj);
 
-    if (is<VersionProfile>(obj)) return obj;
+    if (obj.inheritsFrom || !("id" in obj)) {
+        throw `Link unsatisfied: ${id} has no complete inheritance`;
+    }
 
-    throw `Link unsatisfied: ${id} has no complete inheritance`;
+    return obj as VersionProfile;
 }
