@@ -1,5 +1,4 @@
 import { netx } from "@/main/net/netx";
-import { is } from "typia";
 
 const VERSION_MANIFEST = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
 
@@ -21,18 +20,33 @@ export interface VersionManifest {
 
 let versionManifest: VersionManifest;
 
+/**
+ * Gets the version manifest object.
+ */
 async function getManifest(): Promise<VersionManifest> {
     if (!versionManifest) {
         const r = await netx.get(VERSION_MANIFEST);
         if (!r.ok) throw `Unable to get version manifest: ${r.status}`;
-        const d = await r.json();
-        if (!is<VersionManifest>(d)) throw `Malformed version manifest received, skipping.`;
-        versionManifest = d;
+        if (!versionManifest) {
+            // In case the manifest has been assigned during the request
+            versionManifest = await r.json() as VersionManifest;
+        }
     }
 
     return versionManifest;
 }
 
+/**
+ * Prefetches the version manifest to speed up user interaction.
+ */
+async function prefetch(): Promise<void> {
+    try {
+        await getManifest();
+    } catch {
+        // Errors are ignored during prefetch
+    }
+}
+
 export const vanillaInstaller = {
-    getManifest
+    getManifest, prefetch
 };

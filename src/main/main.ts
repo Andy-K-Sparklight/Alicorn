@@ -1,6 +1,7 @@
 import { conf } from "@/main/conf/conf";
 import { ping } from "@/main/dev/ping";
 import { paths } from "@/main/fs/paths";
+import { vanillaInstaller } from "@/main/install/vanilla";
 import { aria2 } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
 import { nfat } from "@/main/net/nfat";
@@ -126,17 +127,12 @@ async function main() {
 
     console.log("Executing late init tasks...");
 
-    const tasks: Promise<unknown>[] = [];
-
-    if (conf().net.nfat.enable) {
-        tasks.push(nfat.init());
-    }
-
-    if (conf().net.downloader === "aria2") {
-        tasks.push(aria2.init());
-    }
-
-    tasks.push(mirror.bench());
+    const tasks = [
+        conf().net.nfat.enable && nfat.init(),
+        conf().net.downloader === "aria2" && aria2.init(),
+        mirror.bench(),
+        vanillaInstaller.prefetch()
+    ].filter(Boolean);
 
     await Promise.all(tasks);
 
@@ -162,10 +158,10 @@ function injectDevToolsStyles(w: BrowserWindow) {
             }
         `;
         w.webContents.devToolsWebContents?.executeJavaScript(`
-            const overriddenStyle = document.createElement('style');
-            overriddenStyle.innerHTML = '${css.replaceAll("\n", " ").replaceAll("'", "\\'")}';
-            document.body.append(overriddenStyle);
-            document.querySelectorAll('.platform-windows').forEach(el => el.classList.remove('platform-windows'));
+            const s = document.createElement('style');
+            s.innerHTML = '${css.replaceAll("\n", " ").replaceAll("'", "\\'")}';
+            document.body.append(s);
+            document.querySelectorAll('.platform-windows').forEach(e => e.classList.remove('platform-windows'));
         `);
     });
 }
