@@ -20,9 +20,9 @@ export default defineConfig(({ command }) => {
             rollupOptions: {
                 output: {
                     manualChunks: isDev ? undefined : {
-                        nextui: ["@nextui-org/react"],
+                        heroui: ["@heroui/react"],
                         motion: ["framer-motion"],
-                        theme: ["@nextui-org/theme"],
+                        theme: ["@heroui/theme"],
                         octicons: ["@primer/octicons-react"]
                     }
                 }

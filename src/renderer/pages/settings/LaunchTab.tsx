@@ -1,4 +1,4 @@
-import { Divider } from "@nextui-org/react";
+import { Divider } from "@heroui/react";
 import { MultilineTextEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
 import { CodeIcon } from "@primer/octicons-react";

@@ -1,11 +1,11 @@
 import type { UserConfig } from "@/main/conf/conf";
-import { Alert, ScrollShadow, Tab, Tabs } from "@nextui-org/react";
+import { Alert, ScrollShadow, Tab, Tabs } from "@heroui/react";
 import { DevTab } from "@pages/settings/DevTab";
 import { LaunchTab } from "@pages/settings/LaunchTab";
 import { NetworkTab } from "@pages/settings/NetworkTab";
 import { PreferencesTab } from "@pages/settings/PreferencesTab";
 import { ConfigContext, type ConfigContextContent } from "@pages/settings/use-config";
-import { CodeIcon, GlobeIcon, type Icon, PaintbrushIcon, RocketIcon } from "@primer/octicons-react";
+import { CodeIcon, GlobeIcon, type Icon, PaintbrushIcon, RocketIcon, ServerIcon } from "@primer/octicons-react";
 import React, { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocalStorage, useSessionStorage } from "react-use";

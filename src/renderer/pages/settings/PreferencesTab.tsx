@@ -1,6 +1,6 @@
 import { i18n } from "@/renderer/i18n/i18n";
-import { Divider } from "@nextui-org/react";
-import { useTheme } from "@nextui-org/use-theme";
+import { Divider } from "@heroui/react";
+import { useTheme } from "@heroui/use-theme";
 import { OnOffEntry, SelectEntry, TextEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
 import { CommentIcon, MoonIcon, PersonIcon } from "@primer/octicons-react";

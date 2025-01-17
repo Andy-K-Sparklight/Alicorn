@@ -1,4 +1,4 @@
-import { Pagination } from "@nextui-org/react";
+import { Pagination } from "@heroui/react";
 import { AppInfo } from "@pages/about/AppInfo";
 import { FeaturesInfo } from "@pages/about/FeaturesInfo";
 import { PackagesInfo } from "@pages/about/PackagesInfo";

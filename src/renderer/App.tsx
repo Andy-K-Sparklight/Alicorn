@@ -1,7 +1,7 @@
 import { i18n } from "@/renderer/i18n/i18n";
 import { Header } from "@components/Header";
-import { NextUIProvider } from "@nextui-org/react";
-import { useTheme } from "@nextui-org/use-theme";
+import { HeroUIProvider } from "@heroui/react";
+import { useTheme } from "@heroui/use-theme";
 import { About } from "@pages/about/About";
 import { Settings } from "@pages/settings/Settings";
 import React, { type FC } from "react";
@@ -17,7 +17,7 @@ export const App: FC = () => {
 
     i18n.useAutoFontClass();
 
-    return <NextUIProvider navigate={navigate}>
+    return <HeroUIProvider navigate={navigate}>
         <main className="fixed inset-0 text-foreground bg-background">
             <div className="flex flex-col w-full h-full">
                 <Header/>
@@ -25,7 +25,7 @@ export const App: FC = () => {
             </div>
             <VersionOverlay/>
         </main>
-    </NextUIProvider>;
+    </HeroUIProvider>;
 };
 
 /**

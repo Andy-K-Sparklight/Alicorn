@@ -1,8 +1,8 @@
 /**
  * Various entry widgets for manipulating the settings.
  */
-import { Input, Select, SelectItem, type SharedSelection, Slider, Switch, Textarea } from "@nextui-org/react";
-import type { Icon } from "@primer/octicons-react";
+import { Button, Input, Select, SelectItem, type SharedSelection, Slider, Switch, Textarea } from "@heroui/react";
+import { type Icon, KebabHorizontalIcon } from "@primer/octicons-react";
 import React, { type FC } from "react";
 import { useTranslation } from "react-i18next";
 

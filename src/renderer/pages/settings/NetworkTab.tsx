@@ -1,4 +1,4 @@
-import { Divider } from "@nextui-org/react";
+import { Divider } from "@heroui/react";
 import { MultilineTextEntry, NumberSliderEntry, OnOffEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
 import { CodeIcon, FileDiffIcon, GitBranchIcon, MoveToBottomIcon, UnfoldIcon } from "@primer/octicons-react";
@@ -54,16 +54,12 @@ export const NetworkTab: FC = () => {
         {
             config.net.downloader === "aria2" &&
             <>
-
-
                 <MultilineTextEntry
                     icon={CodeIcon}
                     id="aria2-args"
                     value={config.net.aria2.args}
                     onChange={makeReduce((c, a) => c.net.aria2.args = a)}
                 />
-
-                <Divider/>
             </>
         }
     </>;

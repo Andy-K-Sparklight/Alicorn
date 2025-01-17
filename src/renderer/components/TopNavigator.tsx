@@ -1,4 +1,4 @@
-import { Tab, Tabs } from "@nextui-org/react";
+import { Tab, Tabs } from "@heroui/react";
 import { type PageInfo, pages } from "@pages/pages";
 import React, { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";

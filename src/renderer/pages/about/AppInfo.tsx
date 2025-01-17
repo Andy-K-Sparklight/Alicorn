@@ -1,5 +1,5 @@
 import logo from "@assets/logo.png";
-import { Alert, Button, ButtonGroup, Card, CardBody, Image } from "@nextui-org/react";
+import { Alert, Button, ButtonGroup, Card, CardBody, Image } from "@heroui/react";
 import { FileBadgeIcon, MarkGithubIcon } from "@primer/octicons-react";
 import { useTranslation } from "react-i18next";
 import pkg from "~/package.json";
