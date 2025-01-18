@@ -24,7 +24,7 @@ if (mode === "test") {
     const xvfbExec = path.resolve(import.meta.dirname, "node_modules", "xvfb-maybe", "src", "xvfb-maybe.js");
     const electronExec = path.resolve(import.meta.dirname, "node_modules", "electron", "cli.js");
     const cwd = path.resolve(import.meta.dirname, "build", "prod");
-    const proc = child_process.fork(xvfbExec, [electronExec, "."], { cwd });
+    const proc = child_process.fork(xvfbExec, [electronExec, "--trace-warnings", "."], { cwd });
 
     proc.once("exit", () => {
         const f = path.join(cwd, "test-summary.json");

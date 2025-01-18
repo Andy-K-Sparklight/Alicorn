@@ -19,7 +19,6 @@ import { pEvent } from "p-event";
 import path from "path";
 import type TypedEventEmitter from "typed-emitter";
 import type TypedEmitter from "typed-emitter";
-import { WebSocket } from "ws";
 
 let aria2cProcess: childProcess.ChildProcess | null = null;
 let aria2cToken: string | null = null;
@@ -97,7 +96,7 @@ async function sendRequest(req: Aria2DownloadRequest): Promise<void> {
             ...checksum
         }
     ]) as Promise<string>;
-    
+
     if (req.signal) {
         Promise.all([getGid, pEvent(req.signal, "abort")]).then(([lateGID]) => remove(lateGID));
     }

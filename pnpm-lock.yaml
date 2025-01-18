@@ -85,13 +85,10 @@ importers:
         version: 0.3.5
       uuid:
         specifier: ^11.0.3
-        version: 11.0.3
+        version: 11.0.5
       wouter:
         specifier: ^3.3.5
         version: 3.3.5(react@18.3.1)
-      ws:
-        specifier: ^8.18.0
-        version: 8.18.0
       yaml:
         specifier: ^2.7.0
         version: 2.7.0
@@ -126,9 +123,6 @@ importers:
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
-      '@types/ws':
-        specifier: ^8.5.13
-        version: 8.5.13
       '@vitejs/plugin-react-swc':
         specifier: ^3.7.2
         version: 3.7.2(@swc/helpers@0.5.15)(vite@5.4.11(@types/node@22.10.5)(terser@5.37.0))
@@ -145,8 +139,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       electron:
-        specifier: ^33.3.1
-        version: 33.3.1
+        specifier: ^35.0.0-alpha.1
+        version: 35.0.0-alpha.1
       esbuild:
         specifier: ^0.24.2
         version: 0.24.2
@@ -1966,9 +1960,6 @@ packages:
   '@types/lzma@2.3.0':
     resolution: {integrity: sha512-z7TknP6ts5GPnN7P2bkZC1B/tMpoMJXG3UnPY1XDrwBq1OJQ2EpHtEypFwq5Q0A5iS37+oc+MT/o/B7x5lgl8Q==}
 
-  '@types/node@20.17.12':
-    resolution: {integrity: sha512-vo/wmBgMIiEA23A/knMfn/cf37VnuF52nZh5ZoW0GWt4e4sxNquibrMRJ7UQsA06+MBx9r/H1jsI9grYjQCQlw==}
-
   '@types/node@22.10.5':
     resolution: {integrity: sha512-F8Q+SeGimwOo86fiovQh8qiXfFEh2/ocYv7tU5pJ3EXMSSxk1Joj5wefpFK2fHTf/N6HKGSxIDBT9f3gCxXPkQ==}
 
@@ -1988,9 +1979,6 @@ packages:
 
   '@types/uuid@10.0.0':
     resolution: {integrity: sha512-7gqG38EyHgyP1S+7+xomFtL+ZNHcKv6DwNaCZmJmo1vgMugyF3TCnXVg4t1uk89mLNwnLtnY3TpOpCOyp1/xHQ==}
-
-  '@types/ws@8.5.13':
-    resolution: {integrity: sha512-osM/gWBTPKgHV8XkTunnegTRIsvF6owmf5w+JtAfOw472dptdm0dlGv4xCt6GwQRcC2XVOvvRE/0bAoQcL2QkA==}
 
   '@types/yauzl@2.10.3':
     resolution: {integrity: sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q==}
@@ -2318,8 +2306,8 @@ packages:
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 
-  electron@33.3.1:
-    resolution: {integrity: sha512-Z7l2bVgpdKxHQMI4i0CirBX2n+iCYKOx5mbzNM3BpOyFELwlobEXKmzCmEnwP+3EcNeIhUQyIEBFQxN06QgdIw==}
+  electron@35.0.0-alpha.1:
+    resolution: {integrity: sha512-oPqCnbapE6m6Cfm3FCYpJ/tyNKNcJ3ImLyM7go7nGI7KU8hvih+VyTYm6nDfopMUW0L+WZb2+UDunlO06k2h6A==}
     engines: {node: '>= 12.20.55'}
     hasBin: true
 
@@ -3467,9 +3455,6 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  undici-types@6.19.8:
-    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
-
   undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
@@ -3516,8 +3501,8 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
-  uuid@11.0.3:
-    resolution: {integrity: sha512-d0z310fCWv5dJwnX1Y/MncBAqGMKEzlBb1AOf7z9K8ALnd0utBX/msg/fA0+sbyN1ihbMsLhrBlnl1ak7Wa0rg==}
+  uuid@11.0.5:
+    resolution: {integrity: sha512-508e6IcKLrhxKdBbcA2b4KQZlLVp2+J5UwQ6F7Drckkc5N9ZJwFa4TgWtsww9UG8fGHbm6gbV19TdM5pQ4GaIA==}
     hasBin: true
 
   v8-compile-cache-lib@3.0.1:
@@ -3633,18 +3618,6 @@ packages:
 
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
-
-  ws@8.18.0:
-    resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
 
   xmlbuilder@15.1.1:
     resolution: {integrity: sha512-yMqGBqtXyeN1e3TGYvgNgDVZ3j84W4cwkOXQswghol6APgZWaff9lnbvN7MHYJOiXsvGPXtjTYJEiC9J2wv9Eg==}
@@ -6078,10 +6051,6 @@ snapshots:
     dependencies:
       '@types/node': 22.10.5
 
-  '@types/node@20.17.12':
-    dependencies:
-      undici-types: 6.19.8
-
   '@types/node@22.10.5':
     dependencies:
       undici-types: 6.20.0
@@ -6102,10 +6071,6 @@ snapshots:
       '@types/node': 22.10.5
 
   '@types/uuid@10.0.0': {}
-
-  '@types/ws@8.5.13':
-    dependencies:
-      '@types/node': 22.10.5
 
   '@types/yauzl@2.10.3':
     dependencies:
@@ -6420,10 +6385,10 @@ snapshots:
 
   eastasianwidth@0.2.0: {}
 
-  electron@33.3.1:
+  electron@35.0.0-alpha.1:
     dependencies:
       '@electron/get': 2.0.3
-      '@types/node': 20.17.12
+      '@types/node': 22.10.5
       extract-zip: 2.0.1
     transitivePeerDependencies:
       - supports-color
@@ -7657,8 +7622,6 @@ snapshots:
 
   typescript@5.7.2: {}
 
-  undici-types@6.19.8: {}
-
   undici-types@6.20.0: {}
 
   universalify@0.1.2: {}
@@ -7690,7 +7653,7 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  uuid@11.0.3: {}
+  uuid@11.0.5: {}
 
   v8-compile-cache-lib@3.0.1:
     optional: true
@@ -7813,8 +7776,6 @@ snapshots:
       strip-ansi: 7.1.0
 
   wrappy@1.0.2: {}
-
-  ws@8.18.0: {}
 
   xmlbuilder@15.1.1: {}
 
