@@ -12,8 +12,8 @@ const namespaces = ["common", "pages"];
  */
 const i18nLoader: BackendModule = {
     type: "backend",
-    init: () => {},
-    read: async (lng, ns) => {
+    init() {},
+    async read(lng, ns) {
         const dat = await (await fetch(`i18n/${lng}/${ns}.yml`)).text();
         return YAML.parse(dat);
     }
