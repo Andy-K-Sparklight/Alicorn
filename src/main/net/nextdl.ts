@@ -118,6 +118,8 @@ async function resolve(task: NextDownloadTask): Promise<void> {
         return;
     }
 
+    task.req.signal?.throwIfAborted();
+
     for (const url of task.req.urls) {
         let tries = conf().net.next.tries;
 
