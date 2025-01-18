@@ -71,6 +71,7 @@
         "react-i18next": "^15.4.0",
         "react-use": "^17.6.0",
         "superserial": "^0.3.5",
+        "v8-compile-cache": "^2.4.0",
         "wouter": "^3.3.5",
         "yaml": "^2.7.0"
     },

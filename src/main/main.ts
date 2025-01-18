@@ -15,7 +15,7 @@ import os from "node:os";
 import path from "path";
 import pkg from "~/package.json";
 import { runInstrumentedTest } from "~/test/instrumented/entry";
-
+import "v8-compile-cache";
 
 void main();
 
