@@ -10,66 +10,76 @@ settings:
     storage: 存储
     network: 网络
     dev: 开发
+
   dev-warn: 这些设置只用于开发，请绝不要随意修改！
   store-warn: 修改存储路径将丢失已保存的数据。要迁移目录，请使用迁移向导。
+
   entries:
-    username:
-      title: 您的昵称
-      sub: 希望 Alicorn 如何称呼您？
-    dark:
-      title: 深色模式
-      sub: 夜漫天际，墨染海角，时序流转之钥。
-    language:
-      title: 语言
-      sub: 设置 Alicorn 使用的语言。
-      items:
-        zh-CN: 简体中文
-        en: English
+    pref:
+      username:
+        title: 您的昵称
+        sub: 希望 Alicorn 如何称呼您？
+      dark:
+        title: 深色模式
+        sub: 夜漫天际，墨染海角，时序流转之钥。
+      language:
+        title: 语言
+        sub: 设置 Alicorn 使用的语言。
+        items:
+          zh-CN: 简体中文
+          en: English
 
-    store-path:
-      title: 存储库路径
-      sub: |-
-        要将游戏文件之外的数据存放在哪里？
+    store:
+      store-path:
+        title: 存储库路径
+        sub: |-
+          要将游戏文件之外的数据存放在哪里？
 
-    game-path:
-      title: 游戏文件路径
-      sub: |-
-        要将游戏所需的文件存放在哪里？
-        默认存放在存储库路径中。
+      game-path:
+        title: 游戏文件路径
+        sub: |-
+          要将游戏所需的文件存放在哪里？
+          默认存放在存储库路径中。
 
-    jvm-args:
-      title: 启动选项 / JVM
-      sub: |-
-        启动游戏时添加的 JVM 选项，一行填写一个。
-        此选项对所有游戏生效。若要配置特定的游戏，请转到其设置页面。
+    launch:
+      jvm-args:
+        title: 启动选项 / JVM
+        sub: |-
+          启动游戏时添加的 JVM 选项，一行填写一个。
+          此选项对所有游戏生效。若要配置特定的游戏，请转到其设置页面。
 
-    game-args:
-      title: 启动选项 / 游戏
-      sub: |-
-        启动游戏时添加的游戏选项，一行填写一个。
-        此选项对所有游戏生效。若要配置特定的游戏，请转到其设置页面。 
+      game-args:
+        title: 启动选项 / 游戏
+        sub: |-
+          启动游戏时添加的游戏选项，一行填写一个。
+          此选项对所有游戏生效。若要配置特定的游戏，请转到其设置页面。
 
-    aria2:
-      title: aria2 下载器
-      sub: |-
-        启用此选项以自动使用随附或系统中的 aria2 以改进下载性能。
-        若禁用，Alicorn 将使用内置的下载程序。
-    concurrency:
-      title: 并行数
-      sub: 最多可同时下载的任务个数。
-    mirror:
-      title: 镜像
-      sub: 使用可用的镜像以加快下载速度。
-    aria2-args:
-      title: aria2 启动选项
-      sub: 在启动 aria2 时添加以下命令行选项，一行填写一个。
-    validate:
-      title: 下载后验证
-      sub: 在下载后验证文件完整性。
+    network:
+      aria2:
+        title: aria2 下载器
+        sub: |-
+          启用此选项以自动使用随附或系统中的 aria2 以改进下载性能。
+          若禁用，Alicorn 将使用内置的下载程序。
+      concurrency:
+        title: 并行数
+        sub: 最多可同时下载的任务个数。
+      mirror:
+        title: 镜像
+        sub: 使用可用的镜像以加快下载速度。
+      aria2-args:
+        title: aria2 启动选项
+        sub: 在启动 aria2 时添加以下命令行选项，一行填写一个。
+      validate:
+        title: 下载后验证
+        sub: 在下载后验证文件完整性。
 
-    devtools:
-      title: DevTools
-      sub: 启用渲染进程的 DevTools 以检查报告的错误。
+    dev:
+      frame:
+        title: 显示窗口控件
+        sub: 显示窗口边框及控制组件。
+      devtools:
+        title: DevTools
+        sub: 启用渲染进程的 DevTools 以检查报告的错误。
 
 
 about:
@@ -84,7 +94,7 @@ about:
   copyright: |-
     Copyright (C) 2021-2022 Andy K Rarity Sparklight ("ThatRarityEG")
     Copyright (C) 2024-2025 Ted Gao ("skjsjhb")
-    
+
     Alicorn 启动器是按 GNU 公共通用许可证（第三版或后继版本）发行的自由软件。
     此软件的开发是基于其将对社区有用的愿景而进行的，但不提供任何担保。
     您须对使用 Alicorn 可能产生的一切影响负责。

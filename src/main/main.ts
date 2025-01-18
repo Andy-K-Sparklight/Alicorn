@@ -84,7 +84,10 @@ async function main() {
     // }
 
     console.log("Creating window...");
+
     const [width, height] = bwctl.optimalSize(); // Initial size, will be changed by user settings later
+    const hasFrame = conf().dev.showFrame;
+
     mainWindow = new BrowserWindow({
         width, height,
         webPreferences: {
@@ -93,10 +96,12 @@ async function main() {
             preload: paths.app.to("preload.js"),
             devTools: hasDevTools
         },
-        frame: false,
+        frame: hasFrame,
         show: false,
         icon: getIconPath()
     });
+
+    mainWindow.setMenu(null);
 
     bwctl.setup();
     bwctl.forWindow(mainWindow, { isMain: true });

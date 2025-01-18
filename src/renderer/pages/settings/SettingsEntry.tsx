@@ -13,8 +13,15 @@ interface SettingsEntryProps<T> {
     onChange: (value: T) => void;
 }
 
+/**
+ * Gets translations for the entries.
+ */
+function useEntriesTrans() {
+    return useTranslation("pages", { keyPrefix: "settings.entries" });
+}
+
 const Title = ({ id, icon }: { id: string, icon?: Icon }) => {
-    const { t } = useTranslation("pages", { keyPrefix: "settings.entries" });
+    const { t } = useEntriesTrans();
 
     return <div className="flex gap-2 items-center">
         {icon && React.createElement(icon)}
@@ -23,7 +30,7 @@ const Title = ({ id, icon }: { id: string, icon?: Icon }) => {
 };
 
 const Subtitle = ({ id }: { id: string }) => {
-    const { t } = useTranslation("pages", { keyPrefix: "settings.entries" });
+    const { t } = useEntriesTrans();
 
     return <div className="text-sm text-foreground-400 whitespace-pre-line">{t(`${id}.sub`)}</div>;
 };
@@ -99,7 +106,6 @@ export const MultilineTextEntry: FC<SettingsEntryProps<string>> = ({ id, icon, v
 
 export const OnOffEntry: FC<SettingsEntryProps<boolean>> = ({ id, icon, value, onChange }) => {
     return <div className="flex flex-col gap-2 w-full">
-
         <Title id={id} icon={icon}/>
 
         <div className="flex gap-2 items-center">
@@ -113,7 +119,7 @@ export const OnOffEntry: FC<SettingsEntryProps<boolean>> = ({ id, icon, value, o
 type SelectEntryProps = SettingsEntryProps<string> & { items: string[] }
 
 export const SelectEntry: FC<SelectEntryProps> = ({ id, icon, value, onChange, items }) => {
-    const { t } = useTranslation("pages", { keyPrefix: "settings.entries" });
+    const { t } = useEntriesTrans();
 
     function handleSelectionChange(s: SharedSelection) {
         if (s instanceof Set && s.size > 0) {

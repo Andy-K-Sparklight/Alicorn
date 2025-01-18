@@ -21,7 +21,7 @@ export const PreferencesTab: FC = () => {
     return <>
         <TextEntry
             icon={PersonIcon}
-            id="username"
+            id="pref.username"
             value={config.pref.username}
             onChange={makeReduce((c, v) => c.pref.username = v)}
         />
@@ -30,7 +30,7 @@ export const PreferencesTab: FC = () => {
 
         <OnOffEntry
             icon={MoonIcon}
-            id="dark"
+            id="pref.dark"
             value={theme === "dark"}
             onChange={isDark => setTheme(isDark ? "dark" : "light")}
         />
@@ -39,7 +39,7 @@ export const PreferencesTab: FC = () => {
 
         <SelectEntry
             icon={CommentIcon}
-            id="language"
+            id="pref.language"
             value={i18next.language}
             onChange={lang => i18next.changeLanguage(lang)}
             items={i18n.getAvailableLanguages()}

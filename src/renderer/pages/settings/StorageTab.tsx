@@ -22,7 +22,7 @@ export const StorageTab: FC = () => {
 
         <DirEntry
             icon={ArchiveIcon}
-            id="store-path"
+            id="store.store-path"
             value={config.paths.store}
             onChange={makeReduce((c, pt) => c.paths.store = pt)}
         />
@@ -31,7 +31,7 @@ export const StorageTab: FC = () => {
 
         <DirEntry
             icon={ArchiveIcon}
-            id="game-path"
+            id="store.game-path"
             value={config.paths.game}
             onChange={makeReduce((c, pt) => c.paths.game = pt)}
         />

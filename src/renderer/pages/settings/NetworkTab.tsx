@@ -15,7 +15,7 @@ export const NetworkTab: FC = () => {
     return <>
         <OnOffEntry
             icon={FileDiffIcon}
-            id="validate"
+            id="network.validate"
             value={config.net.validate}
             onChange={makeReduce((c, v) => c.net.validate = v)}
         />
@@ -24,7 +24,7 @@ export const NetworkTab: FC = () => {
 
         <NumberSliderEntry
             icon={UnfoldIcon}
-            id="concurrency"
+            id="network.concurrency"
             value={config.net.concurrency}
             max={32}
             min={1}
@@ -35,7 +35,7 @@ export const NetworkTab: FC = () => {
 
         <OnOffEntry
             icon={GitBranchIcon}
-            id="mirror"
+            id="network.mirror"
             value={config.net.mirror.enable}
             onChange={makeReduce((c, e) => c.net.mirror.enable = e)}
         />
@@ -44,19 +44,20 @@ export const NetworkTab: FC = () => {
 
         <OnOffEntry
             icon={MoveToBottomIcon}
-            id="aria2"
+            id="network.aria2"
             value={config.net.downloader === "aria2"}
             onChange={makeReduce((c, isAria2) => c.net.downloader = isAria2 ? "aria2" : "nextdl")}
         />
 
-        <Divider/>
 
         {
             config.net.downloader === "aria2" &&
             <>
+                <Divider/>
+
                 <MultilineTextEntry
                     icon={CodeIcon}
-                    id="aria2-args"
+                    id="network.aria2-args"
                     value={config.net.aria2.args}
                     onChange={makeReduce((c, a) => c.net.aria2.args = a)}
                 />

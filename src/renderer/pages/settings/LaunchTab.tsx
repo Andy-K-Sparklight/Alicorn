@@ -12,7 +12,7 @@ export const LaunchTab: FC = () => {
     return <>
         <MultilineTextEntry
             icon={CodeIcon}
-            id="jvm-args"
+            id="launch.jvm-args"
             value={config.runtime.args.vm}
             onChange={makeReduce((c, a) => c.runtime.args.vm = a)}
         />
@@ -21,7 +21,7 @@ export const LaunchTab: FC = () => {
 
         <MultilineTextEntry
             icon={CodeIcon}
-            id="game-args"
+            id="launch.game-args"
             value={config.runtime.args.game}
             onChange={makeReduce((c, a) => c.runtime.args.game = a)}
         />

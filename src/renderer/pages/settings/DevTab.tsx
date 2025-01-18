@@ -1,7 +1,7 @@
-import { Alert } from "@heroui/react";
+import { Alert, Divider } from "@heroui/react";
 import { OnOffEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
-import { CodescanIcon } from "@primer/octicons-react";
+import { BrowserIcon, CodescanIcon } from "@primer/octicons-react";
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -22,9 +22,18 @@ export const DevTab: FC = () => {
 
         <OnOffEntry
             icon={CodescanIcon}
-            id="devtools"
+            id="dev.devtools"
             value={config.dev.devTools}
             onChange={makeReduce((c, d) => c.dev.devTools = d)}
+        />
+
+        <Divider/>
+
+        <OnOffEntry
+            icon={BrowserIcon}
+            id="dev.frame"
+            value={config.dev.showFrame}
+            onChange={makeReduce((c, s) => c.dev.showFrame = s)}
         />
     </>;
 };
