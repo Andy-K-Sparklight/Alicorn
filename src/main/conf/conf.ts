@@ -1,9 +1,9 @@
 import { Channels } from "@/main/ipc/channels";
 import { ipcMain } from "electron";
 import fs from "fs-extra";
+import { randomUUID } from "node:crypto";
 import os from "node:os";
 import path from "path";
-import * as uuid from "uuid";
 
 /**
  * The config (v2) module which has enhanced type support.
@@ -158,7 +158,7 @@ const DEFAULT_CONFIG = {
         /**
          * The ID to identify the client.
          */
-        id: uuid.v7().replaceAll("-", "")
+        id: randomUUID().replaceAll("-", "")
     },
 
     /**

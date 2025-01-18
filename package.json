@@ -71,7 +71,6 @@
         "react-i18next": "^15.4.0",
         "react-use": "^17.6.0",
         "superserial": "^0.3.5",
-        "uuid": "^11.0.3",
         "wouter": "^3.3.5",
         "yaml": "^2.7.0"
     },
