@@ -1,6 +1,7 @@
 import { i18n } from "@/renderer/i18n/i18n";
 import { Root } from "@/renderer/Root";
 import { t } from "i18next";
+import { pEvent } from "p-event";
 import { createElement } from "react";
 import { createRoot } from "react-dom/client";
 import pkg from "~/package.json";
@@ -23,7 +24,7 @@ async function main() {
     document.title = `Alicorn "${codename}"`;
 
     await Promise.all([
-        new Promise<void>(res => document.addEventListener("DOMContentLoaded", () => res())),
+        pEvent(document, "DOMContentLoaded", { rejectionEvents: [] }),
         i18n.init()
     ]);
 

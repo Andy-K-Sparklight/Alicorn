@@ -133,10 +133,11 @@ async function checkPath(): Promise<string> {
 
     const proc = child_process.spawn(exec, ["-h"]);
 
-    return await new Promise((res) => {
-        proc.once("error", () => res(""));
-        proc.once("exit", (code) => res(code === 0 ? exec : ""));
-    });
+    const code = await pEvent(proc, "exit");
+
+    if (code !== 0) return ""; // Invalid binary
+
+    return exec;
 }
 
 async function init() {

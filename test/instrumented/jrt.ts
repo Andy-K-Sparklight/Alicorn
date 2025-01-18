@@ -2,6 +2,7 @@ import { jrt } from "@/main/jrt/install";
 import fs from "fs-extra";
 import assert from "node:assert";
 import child_process from "node:child_process";
+import { pEvent } from "p-event";
 import { iTest } from "~/test/instrumented/tools";
 
 export async function checkInstallJRT() {
@@ -12,12 +13,8 @@ export async function checkInstallJRT() {
 
         assert((await fs.stat(bin)).isFile(), "JRT executable file should exist");
 
-        await new Promise<void>((res, rej) => {
-            proc.on("error", rej);
-            proc.once("exit", (code) => {
-                if (code === 0) res();
-                else rej(`Unexpected exit code: ${rej}`);
-            });
-        });
+        const code = await pEvent(proc, "exit");
+
+        assert(code === 0, "Exit code should be zero");
     });
 }

@@ -1,6 +1,7 @@
 import { paths } from "@/main/fs/paths";
 import type { HashWorkerData } from "@/main/security/hash-worker";
 import { Worker } from "node:worker_threads";
+import { pEvent } from "p-event";
 
 async function checkFile(pt: string, algorithm: string, expectHash: string): Promise<boolean> {
     return await check(pt, algorithm, expectHash) as boolean;
@@ -14,17 +15,12 @@ async function check(pt: string, algorithm: string, expectHash?: string): Promis
     const dat: HashWorkerData = { path: pt, algorithm, expect: expectHash };
 
     const w = new Worker(paths.app.to("hash-worker.js"), { workerData: dat });
-    return new Promise<string | boolean>((res, rej) => {
-        function err() {
-            rej(`Failed to hash file: ${pt}`);
-        }
 
-        w.once("exit", err);
-        w.once("message", (m) => {
-            if (m === "") err();
-            else res(m);
-        });
-    });
+    const hs = await pEvent(w, ["exit", "message"]);
+
+    if (!hs) throw `Failed to hash file: ${pt}`;
+
+    return hs;
 }
 
 export const hash = {

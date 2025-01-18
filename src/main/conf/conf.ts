@@ -21,7 +21,12 @@ const DEFAULT_CONFIG = {
         /**
          * Enable DevTools in production mode. (DevTools is enabled in development mode anyway)
          */
-        devTools: false
+        devTools: false,
+
+        /**
+         * Display window frame.
+         */
+        showFrame: false
     },
 
     /**

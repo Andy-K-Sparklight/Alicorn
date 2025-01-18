@@ -1,13 +1,14 @@
 import EventEmitter from "events";
 import { nanoid } from "nanoid";
+import { pEvent } from "p-event";
 
 export class WebSocketJsonRpcClient {
     // This implementation uses third-party WebSocket implementation
     // Migrate to Node.js native WebSocket when Electron supports Node.js 22.x
     private ws: WebSocket;
 
-    // Map from request ID to the promise callbacks.
-    private promiseMap = new Map<string, [(res: any) => void, (e: any) => void]>();
+    // Map from request ID to callbacks.
+    private callbacks = new Map<string, (e: any, res: any) => void>();
 
     private emitter = new EventEmitter();
 
@@ -24,14 +25,12 @@ export class WebSocketJsonRpcClient {
 
             if (d.id) {
                 // Handles response
-                const p = this.promiseMap.get(d.id);
-                if (!p) return;
+                const cb = this.callbacks.get(d.id);
+                if (!cb) return;
 
-                this.promiseMap.delete(d.id);
-                const [res, rej] = p;
+                this.callbacks.delete(d.id);
 
-                if (d.error) rej(d.error);
-                else res(d.result);
+                cb(d.error, d.result);
             } else {
                 // Dispatches event
                 const { method, params: [event] } = d;
@@ -40,15 +39,8 @@ export class WebSocketJsonRpcClient {
         };
     }
 
-    wait(): Promise<void> {
-        return new Promise<void>((res, rej) => {
-            this.ws.onopen = () => {
-                this.ws.onerror = null;
-                res();
-            };
-
-            this.ws.onerror = (e) => rej(e);
-        });
+    async wait(): Promise<void> {
+        await pEvent(this.ws, "open");
     }
 
     on(channel: string, cb: (res: any) => void) {
@@ -63,9 +55,13 @@ export class WebSocketJsonRpcClient {
             id, method, params
         });
 
+        this.ws.send(body);
+
         return new Promise((res, rej) => {
-            this.promiseMap.set(id, [res, rej]);
-            this.ws.send(body);
+            this.callbacks.set(id, (e, d) => {
+                if (e) rej(e);
+                else res(d);
+            });
         });
     }
 }

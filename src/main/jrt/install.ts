@@ -9,6 +9,7 @@ import { net } from "electron";
 import fs from "fs-extra";
 import * as child_process from "node:child_process";
 import os from "node:os";
+import { pEvent } from "p-event";
 import path from "path";
 
 const JRT_MANIFEST = "https://piston-meta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json";
@@ -210,13 +211,9 @@ async function verify(root: string): Promise<void> {
 
     const proc = child_process.spawn(bin, ["-version"]);
 
-    return new Promise<void>((res, rej) => {
-        proc.once("error", rej);
-        proc.once("exit", code => {
-            if (code === 0) res();
-            else rej(`Unexpected exit code ${code}: ${bin}`);
-        });
-    });
+    const code = await pEvent(proc, "exit");
+
+    if (code !== 0) throw `Unexpected exit code ${code}: ${bin}`;
 }
 
 /**
