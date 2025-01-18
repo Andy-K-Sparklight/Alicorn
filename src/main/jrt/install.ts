@@ -90,7 +90,12 @@ type FileHint = {
 
 type NamedFileHint = FileHint & { name: string; }
 
-async function installRuntime(component: string, onProgress: ProgressHandler): Promise<void> {
+interface JRTInstallInit {
+    onProgress?: ProgressHandler;
+    abortSignal?: AbortSignal;
+}
+
+async function installRuntime(component: string, init?: JRTInstallInit): Promise<void> {
     const root = getInstallPath(component);
 
     console.log(`Installing JRT runtime ${component} to ${root}`);
@@ -100,6 +105,8 @@ async function installRuntime(component: string, onProgress: ProgressHandler): P
     const dat = await (await net.fetch(profile.manifest.url)).json();
     let files = Object.entries(dat.files)
         .map(([name, file]) => ({ name, ...(file as FileHint) } as NamedFileHint));
+
+    init?.abortSignal?.throwIfAborted();
 
     if (conf().jrt.filterDocs) {
         const prefix = getOSName() === "osx" ? "jre.bundle/Contents/Home/legal/" : "legal/";
@@ -120,7 +127,10 @@ async function installRuntime(component: string, onProgress: ProgressHandler): P
     }
 
     console.debug("Fetching files...");
-    await dlx.getAll(tasks, p => onProgress({ ...p, state: "jrt.download" }));
+    await dlx.getAll(tasks, {
+        onProgress: p => init?.onProgress?.({ ...p, state: "jrt.download" }),
+        abortSignal: init?.abortSignal
+    });
 
     console.debug("Unpacking files...");
     await lzma.init();
@@ -135,8 +145,10 @@ async function installRuntime(component: string, onProgress: ProgressHandler): P
                 await lzma.inflate(src, dst);
                 await fs.remove(src);
             }),
-        p => onProgress({ ...p, state: "jrt.unpack" })
+        p => init?.onProgress?.({ ...p, state: "jrt.unpack" })
     ));
+
+    init?.abortSignal?.throwIfAborted();
 
     console.debug("Linking files...");
     // Linking can be done very fast so no progress will be reported
@@ -164,9 +176,11 @@ async function installRuntime(component: string, onProgress: ProgressHandler): P
         );
     }
 
+    init?.abortSignal?.throwIfAborted();
+
     console.debug("Verifying installation...");
 
-    onProgress({
+    init?.onProgress?.({
         state: "jrt.verify",
         type: "indefinite",
         value: {
