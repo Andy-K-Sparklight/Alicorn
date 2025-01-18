@@ -46,13 +46,14 @@ export interface NextDownloadRequest {
     path: string;
     sha1?: string;
     size?: number;
+    signal?: AbortSignal;
 }
 
 export interface NextDownloadTask {
     id: string;
     req: NextDownloadRequest;
     status: NextDownloadStatus;
-    canceled: boolean;
+    signal?: AbortSignal;
 
     // The current active URL
     activeURL: string;
@@ -91,40 +92,17 @@ function getQueue(): PQueue {
  * Returns an array of 2 elements. The first is a promise which resolves when the download completes with a boolean
  * value indicating the status. The second is the task object.
  */
-function get(req: NextDownloadRequest): [Promise<boolean>, NextDownloadTask] {
+async function get(req: NextDownloadRequest): Promise<void> {
     const t = createTask(req);
-    return [getQueue().add(() => resolve(t)).then(it => !!it), t];
-}
-
-/**
- * Batched version to resolve the given requests. This is considered slightly faster than the serial version.
- */
-function gets(req: NextDownloadRequest[]): [Promise<boolean>, NextDownloadTask][] {
-    const ts = req.map(createTask);
-    const resMap = new Map<NextDownloadTask, [(r: boolean) => void, (e: unknown) => void]>();
-    const out: [Promise<boolean>, NextDownloadTask][] = ts.map(t => {
-        const p = new Promise<boolean>(((res, rej) => resMap.set(t, [res, rej])));
-        return [p, t];
-    });
-
-    void getQueue().addAll(ts.map(t => async () => {
-        const [res, rej] = resMap.get(t)!; // Gets the delayed resolvers
-        resMap.delete(t);
-        try {
-            const b = await resolve(t);
-            res(b);
-        } catch (e) {
-            rej(e);
-        }
-    }));
-
-    return out;
+    await getQueue().add(() => resolve(t));
 }
 
 /**
  * Resolves the download task for the maximum number of tries specified.
  */
-async function resolve(task: NextDownloadTask): Promise<boolean> {
+async function resolve(task: NextDownloadTask): Promise<void> {
+    console.debug(`NextDL Get: ${task.req.origin}`);
+
     // First try to reuse existing files
     if (task.req.sha1) {
         await nfat.deploy(task.req.path, task.req.origin, task.req.sha1);
@@ -135,8 +113,9 @@ async function resolve(task: NextDownloadTask): Promise<boolean> {
     const valid = await dlchk.validate({ ...task.req }) === "checked";
 
     if (valid) {
+        console.debug(`NextDL Hit: ${task.req.origin}`);
         task.status = NextDownloadStatus.DONE;
-        return true;
+        return;
     }
 
     for (const url of task.req.urls) {
@@ -150,6 +129,7 @@ async function resolve(task: NextDownloadTask): Promise<boolean> {
                 tries = 0;
             }
             if (st === NextRequestStatus.SUCCESS) {
+                console.debug(`NextDL Got: ${task.req.origin} (Using ${task.activeURL})`);
                 task.status = NextDownloadStatus.DONE;
 
                 // Add file for reusing
@@ -157,25 +137,27 @@ async function resolve(task: NextDownloadTask): Promise<boolean> {
                     nfat.enroll(task.req.path, task.req.origin, task.req.sha1);
                 }
 
-                return true;
+                return;
             }
 
             tries--;
         }
     }
 
+    console.debug(`NextDL Err: ${task.req.origin}`);
     task.status = NextDownloadStatus.FAILED;
-    return false;
+    throw `Task failed: ${task.req.origin}`;
 }
 
 /**
  * Resolves the download task once.
  */
 async function resolveOnce(task: NextDownloadTask): Promise<NextRequestStatus> {
-    if (task.canceled) return NextRequestStatus.FATAL;
+    if (task.signal?.aborted) return NextRequestStatus.FATAL;
 
     task.status = NextDownloadStatus.RETRIEVING;
     const res = await retrieve(task);
+
     if (res === NextRequestStatus.SUCCESS) {
         if (conf().net.validate) {
             task.status = NextDownloadStatus.VALIDATING;
@@ -198,7 +180,7 @@ class DownloadTaskImpl implements NextDownloadTask {
     id = nanoid();
     req;
     activeURL;
-    canceled = false;
+    signal?: AbortSignal = undefined;
 
     constructor(req: NextDownloadRequest) {
         if (req.urls.length === 0) throw "No URL specified";
@@ -273,14 +255,9 @@ async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
 
     const { requestTimeout, minSpeed } = conf().net.next;
 
-    const abortController = new AbortController();
-    let timeout: NodeJS.Timeout | null = null;
+    const timeoutSignal = requestTimeout > 0 ? AbortSignal.timeout(requestTimeout) : null;
 
-    if (requestTimeout > 0) {
-        timeout = setTimeout(() => {
-            abortController.abort(`Request time exceeded (${requestTimeout}ms)`);
-        }, requestTimeout);
-    }
+    const signal = AbortSignal.any([task.signal, timeoutSignal].filter(Boolean) as AbortSignal[]);
 
     let res: Response | null = null;
 
@@ -288,12 +265,8 @@ async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
         res = await net.fetch(task.activeURL, {
             credentials: "omit",
             keepalive: true,
-            signal: abortController.signal
+            signal
         });
-
-        if (timeout) {
-            clearTimeout(timeout);
-        }
 
         if (!res.ok || !res.body) {
             if (res.status >= 400 && res.status < 500) {
@@ -369,11 +342,5 @@ function createBytesCountingStream(onChange: (b: number) => void): TransformStre
     });
 }
 
-/**
- * Cancels the task if it isn't being resolved yet.
- */
-function cancel(task: NextDownloadTask) {
-    task.canceled = true;
-}
 
-export const nextdl = { get, gets, cancel };
+export const nextdl = { get };

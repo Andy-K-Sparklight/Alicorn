@@ -10,6 +10,7 @@ import { bwctl } from "@/main/sys/bwctl";
 import { ext } from "@/main/sys/ext";
 import { getOSName } from "@/main/sys/os";
 import { app, BrowserWindow } from "electron";
+import events from "node:events";
 import os from "node:os";
 import path from "path";
 import pkg from "~/package.json";
@@ -28,6 +29,7 @@ let mainWindow: BrowserWindow | null = null;
  */
 async function main() {
     process.noAsar = true;
+    events.defaultMaxListeners = 8192;
 
     if (!checkSingleInstance()) return;
 

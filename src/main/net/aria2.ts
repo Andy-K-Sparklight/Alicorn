@@ -11,10 +11,14 @@ import { getExecutableExt } from "@/main/sys/os";
 import childProcess from "child_process";
 import crypto from "crypto";
 import { net } from "electron";
+import EventEmitter from "events";
 import fs from "fs-extra";
 import getPort from "get-port";
 import child_process from "node:child_process";
+import { pEvent } from "p-event";
 import path from "path";
+import type TypedEventEmitter from "typed-emitter";
+import type TypedEmitter from "typed-emitter";
 import { WebSocket } from "ws";
 
 let aria2cProcess: childProcess.ChildProcess | null = null;
@@ -29,44 +33,59 @@ export interface Aria2DownloadRequest {
     path: string;
     sha1?: string;
     size?: number;
+    signal?: AbortSignal;
 }
 
-// Maps task GIDs to corresponding listener.
-const taskResolvers = new Map<string, (r: boolean) => void>();
+type Aria2TaskEvents = {
+    finish: () => void;
+    error: (e: string) => void;
+}
+
+const gidEmitters = new Map<string, TypedEmitter<Aria2TaskEvents>>();
 
 /**
  * Preflights and resolves the given request.
+ *
+ * An error is thrown if the download has failed.
  */
-async function resolve(req: Aria2DownloadRequest): Promise<[Promise<boolean>, string]> {
+async function resolve(req: Aria2DownloadRequest): Promise<void> {
+    console.debug(`Aria2 Get: ${req.origin}`);
+
     if (req.sha1) {
         await nfat.deploy(req.path, req.origin, req.sha1);
     }
-
 
     // Preflight
     const pref = await dlchk.validate({ ...req });
 
     if (pref === "checked") {
-        // noinspection ES6MissingAwait
-        return [Promise.resolve(true), ""];
+        return; // Completed
     }
+
+    req.signal?.throwIfAborted();
 
     // Remove the file before downloading or aria2c will complain
     await fs.remove(req.path);
 
-    return await commit(req);
+    try {
+        await sendRequest(req);
+        console.debug(`Aria2 Got: ${req.origin}`);
+    } catch (e) {
+        console.debug(`Aria2 Err: ${req.origin} (${e})`);
+        throw e;
+    }
 }
 
 /**
  * Commits the given request to aria2 and wait until it's resolved.
  */
-async function commit(req: Aria2DownloadRequest): Promise<[Promise<boolean>, string]> {
+async function sendRequest(req: Aria2DownloadRequest): Promise<void> {
     const dir = path.dirname(req.path);
     const file = path.basename(req.path);
 
     const checksum = (conf().net.validate && req.sha1) ? { checksum: `sha-1=${req.sha1}` } : {};
 
-    const gid = await aria2cRpcClient?.request("aria2.addUri", [
+    const getGid = aria2cRpcClient?.request("aria2.addUri", [
         `token:${aria2cToken}`,
         req.urls,
         {
@@ -77,25 +96,27 @@ async function commit(req: Aria2DownloadRequest): Promise<[Promise<boolean>, str
             "max-tries": conf().net.aria2.tries ?? 3,
             ...checksum
         }
-    ]);
-
-    if (!gid) {
-        // noinspection ES6MissingAwait
-        return [Promise.resolve(false), ""];
+    ]) as Promise<string>;
+    
+    if (req.signal) {
+        Promise.all([getGid, pEvent(req.signal, "abort")]).then(([lateGID]) => remove(lateGID));
     }
 
-    console.debug(`Committed aria2 task ${gid}`);
+    const gid = await getGid;
 
-    const p = new Promise<boolean>((res) => {
-        taskResolvers.set(gid, (b: boolean) => {
-            if (req.sha1) {
-                nfat.enroll(req.path, req.origin, req.sha1);
-            }
-            res(b);
-        });
-    });
+    if (!gid) {
+        throw "Unable to commit task (empty GID received)";
+    }
 
-    return [p, gid];
+    const emitter = new EventEmitter() as TypedEventEmitter<Aria2TaskEvents>;
+
+    gidEmitters.set(gid, emitter);
+
+    await pEvent(emitter, "finish");
+
+    if (req.sha1) {
+        nfat.enroll(req.path, req.origin, req.sha1);
+    }
 }
 
 
@@ -180,17 +201,21 @@ async function init() {
 }
 
 
+function extractEmitter(gid: string): TypedEventEmitter<Aria2TaskEvents> | null {
+    const em = gidEmitters.get(gid);
+    if (!em) return null;
+    gidEmitters.delete(gid);
+
+    return em;
+}
+
 function notifyComplete(gid: string) {
-    const res = taskResolvers.get(gid);
-    if (!res) return;
-    taskResolvers.delete(gid);
-    res(true);
+    extractEmitter(gid)?.emit("finish");
 }
 
 async function notifyError(gid: string) {
-    const res = taskResolvers.get(gid);
-    if (!res) return;
-    taskResolvers.delete(gid);
+    const em = extractEmitter(gid);
+    if (!em) return;
 
     const { errorCode, errorMessage } = await aria2cRpcClient?.request("aria2.tellStatus", [
         "token:" + aria2cToken,
@@ -199,7 +224,7 @@ async function notifyError(gid: string) {
     ]);
 
     console.error(`Task ${gid} failed: ${errorCode} (${errorMessage || "?"})`);
-    res(false);
+    em.emit("error", `Task ${gid} failed with code ${errorCode} and message ${errorMessage}`);
 }
 
 function createToken() {

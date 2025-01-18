@@ -5,7 +5,7 @@ import { conf } from "@/main/conf/conf";
 import { aria2, type Aria2DownloadRequest } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
 import { nextdl, type NextDownloadRequest } from "@/main/net/nextdl";
-import type { Progress, ProgressHandler } from "@/main/util/progress";
+import { progress, type ProgressHandler } from "@/main/util/progress";
 
 export interface DlxDownloadRequest {
     url: string;
@@ -14,98 +14,62 @@ export interface DlxDownloadRequest {
     size?: number;
 }
 
+export interface DlxInit {
+    onProgress?: ProgressHandler;
+    abortSignal?: AbortSignal;
+}
+
 /**
  * Resolves all given download requests with mirrors applied.
  */
-async function getAll(req: DlxDownloadRequest[], onProgress?: ProgressHandler): Promise<void> {
-    const prog: Progress = {
-        state: "generic.download",
-        type: "count",
-        value: {
-            current: 0,
-            total: req.length
-        }
-    };
-
+async function getAll(req: DlxDownloadRequest[], init?: DlxInit): Promise<void> {
     let dl = conf().net.downloader;
     if (dl === "aria2" && !aria2.available()) {
         dl = "next";
     }
 
-    let canceled = false;
-
-    function incProgress() {
-        prog.value.current++;
-        onProgress?.(prog);
-    }
+    const abortController = new AbortController();
+    const mixedSignal = AbortSignal.any([abortController.signal, init?.abortSignal].filter(Boolean) as AbortSignal[]);
 
     console.log(`Resolving ${req.length} tasks (${dl}).`);
 
-    let promises: Promise<unknown>[] = [];
+    let promises: Promise<void>[];
 
     if (dl === "aria2") {
         const aria2Tasks: Aria2DownloadRequest[] = req.map(r => ({
             ...r,
             urls: mirror.apply(r.url),
-            origin: r.url
+            origin: r.url,
+            signal: mixedSignal
         }));
-        const res = await Promise.all(aria2Tasks.map(t => aria2.resolve(t)));
 
-        function cancelAllAria2() {
-            if (canceled) return;
-            canceled = true;
-            console.log("Cancelling tasks in the same group.");
-            res.forEach(([, gid]) => aria2.remove(gid));
-        }
-
-        promises = res.map(async ([p], i) => {
-            const r = req[i];
-            if (await p) {
-                console.log(`Got: ${r.url}`);
-
-                incProgress();
-            } else {
-                console.error(`ERR! ${r.url}`);
-                cancelAllAria2();
-                throw `Task failed: ${r.url}`;
-            }
-        });
-
+        promises = aria2Tasks.map(t => aria2.resolve(t));
 
     } else if (dl === "next") {
         const nextTasks: NextDownloadRequest[] = req.map(r => ({
             ...r,
             urls: mirror.apply(r.url),
-            origin: r.url
+            origin: r.url,
+            signal: mixedSignal
         }));
 
-        const handlers = nextdl.gets(nextTasks);
+        promises = nextTasks.map(t => nextdl.get(t));
 
-        function cancelAllNext() {
-            if (canceled) return;
-            canceled = true;
-            console.log("Cancelling tasks in the same group.");
-            handlers.forEach(([, t]) => nextdl.cancel(t));
-        }
-
-        promises = handlers.map(async ([p, t], i) => {
-            const r = req[i];
-            if (await p) {
-                const mirrorHint = t.activeURL === r.url ? "" : `(Using ${t.activeURL})`;
-                console.log(`Got: ${r.url} ${mirrorHint}`);
-
-                incProgress();
-            } else {
-                console.error(`ERR! ${r.url}`);
-                cancelAllNext();
-                throw `Task failed: ${r.url}`;
-            }
-        });
     } else {
         throw `Unknown downloader: ${dl}`;
     }
 
-    await Promise.all(promises);
+
+    try {
+        await Promise.all(progress.countPromises(
+            promises,
+            p => init?.onProgress?.({ ...p, state: "generic.download" })
+        ));
+    } catch (e) {
+        console.debug("Cancelling other tasks in the same group due to previous error.");
+        abortController.abort("Error occurred in other task(s)");
+        throw e;
+    }
 }
 
 export const dlx = { getAll };
