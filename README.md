@@ -1,6 +1,6 @@
 # Alicorn Launcher
 
-> [!NOTE]  
+> [!NOTE]
 > The developers behind Alicorn have shifted since early 2023.
 > We're now planning to commit major changes to Alicorn for new features, improved stability,
 > optimized code and better user-experience.
@@ -85,9 +85,10 @@ However, `windows-arm64` and `linux-arm64` cannot be used as the host when packa
 
 The following tools are required:
 
-- Node.js >= 22 (LTS)
+- Bun (v1.1 or later)
 
-  The Node.js version for building will not affect the copy bundled with Electron.
+  We use Bun to run our build tools for performance reasons.
+  The Bun version for building will not affect the Node.js version bundled with Electron.
 
 - Git
 
@@ -106,8 +107,7 @@ Flag `--filter=tree:0` reduces the amount of files to receive, yet preserves the
 Install dependencies:
 
 ```shell
-corepack enable
-pnpm i
+bun install
 ```
 
 > [!TIP]
@@ -122,14 +122,14 @@ pnpm i
 Preview for production:
 
 ```shell
-pnpm prod
-pnpm start
+bun prod
+bun start
 ```
 
 Preview for development (with live reload):
 
 ```shell
-pnpm dev
+bun dev
 ```
 
 ### Create Packaged Binaries
@@ -137,7 +137,7 @@ pnpm dev
 Run the following command to create unzipped packages for all supported platforms:
 
 ```shell
-pnpm dist
+bun dist
 ```
 
 The output files locate at `out`.
