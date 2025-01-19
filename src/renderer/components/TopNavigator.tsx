@@ -9,7 +9,7 @@ import { useLocation } from "wouter";
  */
 export const TopNavigator: FC = () => {
     const [selected, setSelected] = useState(pages[0].id || "");
-    const [pathname] = useLocation();
+    const [pathname, navigate] = useLocation();
     const { t } = useTranslation("pages");
 
     useEffect(() => {
@@ -22,7 +22,7 @@ export const TopNavigator: FC = () => {
      * This cannot be extracted as a separated component or NextUI will complain.
      */
     function createPageTab(info: PageInfo) {
-        const { icon, title, id, href } = info;
+        const { icon, title, id } = info;
         return <Tab
             title={
                 <div className="flex items-center gap-2">
@@ -32,12 +32,24 @@ export const TopNavigator: FC = () => {
             }
 
             key={id}
-            href={href}
         />;
     }
 
+    // A workaround for https://github.com/heroui-inc/heroui/issues/4598
+    function changePage(id: string | number) {
+        const href = pages.find(p => p.id === id)?.href;
+        if (href) {
+            navigate(href);
+        }
+    }
+
     return <div className="flex flex-col w-full h-full items-center justify-center">
-        <Tabs color="primary" variant="bordered" selectedKey={selected}>
+        <Tabs
+            color="primary"
+            variant="bordered"
+            selectedKey={selected}
+            onSelectionChange={changePage}
+        >
             {pages.map(page => createPageTab(page))}
         </Tabs>
     </div>;
