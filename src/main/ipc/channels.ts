@@ -1,6 +1,4 @@
 export enum Channels {
-    PING = "ping",
-
     GET_CONFIG = "getConfig",
     UPDATE_CONFIG = "updateConfig",
 

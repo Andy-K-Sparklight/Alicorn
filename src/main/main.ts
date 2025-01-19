@@ -1,6 +1,5 @@
 import { conf } from "@/main/conf/conf";
 import { confHost } from "@/main/conf/conf-host";
-import { ping } from "@/main/dev/ping";
 import { paths } from "@/main/fs/paths";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { aria2 } from "@/main/net/aria2";
@@ -62,7 +61,6 @@ async function main() {
 
     await registry.init();
 
-    ping.setup();
     confHost.setup();
     ext.setup();
 

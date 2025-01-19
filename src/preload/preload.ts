@@ -6,18 +6,6 @@ console.log("Enabling preload script.");
 
 const native = {
     /**
-     * Development APIs.
-     */
-    dev: {
-        /**
-         * Sends a ping message to main process.
-         */
-        ping(serial: number): Promise<number> {
-            return ipcRenderer.invoke(Channels.PING, serial);
-        }
-    },
-
-    /**
      * Window control methods.
      */
     bwctl: {
