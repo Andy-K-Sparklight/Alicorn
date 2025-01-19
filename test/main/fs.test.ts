@@ -1,6 +1,6 @@
 import { paths } from "@/main/fs/paths";
+import { expect, test } from "bun:test";
 import path from "path";
-import { expect, test } from "vitest";
 
 test("Path Resolution", () => {
     paths.setup({
@@ -8,5 +8,5 @@ test("Path Resolution", () => {
     });
 
     expect(paths.store.to("foo.so"), "Should resolve file path correctly")
-        .to.equal(path.normalize(path.resolve("emulated", "store", "foo.so")));
+        .toEqual(path.normalize(path.resolve("emulated", "store", "foo.so")));
 });

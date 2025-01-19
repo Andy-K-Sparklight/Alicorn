@@ -64,6 +64,11 @@ interface PathsInit {
      * The root directory of the game containers.
      */
     gameRoot: string;
+
+    /**
+     * Path to the script bundle.
+     */
+    appPath: string;
 }
 
 let initPrompt: Partial<PathsInit> | null = null;

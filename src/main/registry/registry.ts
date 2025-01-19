@@ -10,8 +10,7 @@ import path from "path";
 import { Serializer } from "superserial";
 
 
-let db: Database;
-let statements: Statement[] = [];
+let db: Database | null = null;
 
 interface RegistryOpenRecord {
     types: Record<string, unknown>;
@@ -46,6 +45,9 @@ export class NamedRegistry<T> {
     }
 }
 
+let openRegistryStmt: Statement;
+let insertStmt: Statement;
+
 async function init() {
     const dbPath = paths.store.to("registries.arc");
     console.log(`Initializing registry database at ${dbPath}`);
@@ -61,6 +63,19 @@ async function init() {
             id      VARCHAR(32) PRIMARY KEY NOT NULL,
             content TEXT                    NOT NULL
         );
+    `);
+
+    openRegistryStmt = db.prepare(`
+        SELECT content
+        FROM registries
+        WHERE id = ?;
+    `);
+
+    insertStmt = db.prepare(`
+        INSERT OR
+        REPLACE
+        INTO registries
+        VALUES (?, ?);
     `);
 }
 
@@ -78,18 +93,7 @@ function lazyOpenRegistry<T>(name: string, types: Record<string, unknown>): Name
 }
 
 
-let openRegistryStmt: Statement;
-
 function openRegistry<T>(name: string, types: Record<string, unknown>): NamedRegistry<T> {
-    if (!openRegistryStmt) {
-        openRegistryStmt = db.prepare(`
-            SELECT content
-            FROM registries
-            WHERE id = ?;
-        `);
-        statements.push(openRegistryStmt);
-    }
-
     console.debug(`Opening registry: ${name}`);
 
     const r = openRegistryStmt.get(name);
@@ -107,19 +111,9 @@ function openRegistry<T>(name: string, types: Record<string, unknown>): NamedReg
     return new NamedRegistry<T>(m);
 }
 
-let insertStmt: Statement;
 
 function close() {
-    if (!insertStmt) {
-        insertStmt = db.prepare(`
-            INSERT OR
-            REPLACE
-            INTO registries
-            VALUES (?, ?);
-        `);
-
-        statements.push(insertStmt);
-    }
+    if (!db) return;
 
     for (const [name, { types, content }] of autoSaveMap.entries()) {
         console.log(`Saving registry: ${name}`);
@@ -129,13 +123,11 @@ function close() {
         insertStmt.run([name, t]);
     }
 
-    for (const s of statements) {
-        if (!s.isFinalized) {
-            s.finalize();
-        }
-    }
+    openRegistryStmt.finalize();
+    insertStmt.finalize();
 
-    db?.close();
+    db.close();
+    db = null;
 }
 
 

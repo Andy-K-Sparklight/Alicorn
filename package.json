@@ -5,12 +5,12 @@
     "version": "2.0.0",
     "type": "module",
     "scripts": {
-        "dev": "tsx build.ts",
-        "prod": "tsx build.ts production",
-        "itest": "tsx build.ts test",
+        "dev": "bun build.ts",
+        "prod": "bun build.ts production",
+        "itest": "bun build.ts test",
         "start": "cd build/prod && electron .",
-        "clean": "shx rm -rf build && shx rm -rf dist",
-        "dist": "tsx pack.ts",
+        "clean": "bun exec \"rm -rf build dist\"",
+        "dist": "bun pack.ts",
         "test": "vitest --run",
         "type-check": "tsc",
         "update-compat-table": "tsx scripts/gen-compat-table.ts"
@@ -18,6 +18,7 @@
     "devDependencies": {
         "@electron/packager": "^18.3.6",
         "@esbuild-plugins/tsconfig-paths": "^0.1.2",
+        "@types/bun": "latest",
         "@types/chai-as-promised": "^8.0.1",
         "@types/fs-extra": "^11.0.4",
         "@types/lzma": "^2.3.0",
@@ -74,6 +75,5 @@
         "v8-compile-cache": "^2.4.0",
         "wouter": "^3.3.5",
         "yaml": "^2.7.0"
-    },
-    "packageManager": "pnpm@10.0.0-alpha.2+sha512.f18a59ca3611002321af7681e6d49234cb3ece8496b05818be5b1081168ec21b8c3d28cbb4351e2fdec66ca95e6516faaf08b95b755013c88cf5174d5029865c"
+    }
 }

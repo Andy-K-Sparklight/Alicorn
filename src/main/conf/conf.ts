@@ -1,5 +1,3 @@
-import { Channels } from "@/main/ipc/channels";
-import { ipcMain } from "electron";
 import fs from "fs-extra";
 import { randomUUID } from "node:crypto";
 import os from "node:os";
@@ -329,15 +327,8 @@ function createPatch(origin: ConfigSection, user: ConfigSection): ConfigSection 
 
 let config: UserConfig = structuredClone(DEFAULT_CONFIG);
 
-/**
- * Setup main process handlers for configuration syncing.
- */
-function setup() {
-    ipcMain.handle(Channels.GET_CONFIG, () => config);
-
-    ipcMain.handle(Channels.UPDATE_CONFIG, (_, c: UserConfig) => {
-        Object.assign(config, c);
-    });
+function updateWith(c: UserConfig) {
+    Object.assign(config, c);
 }
 
 /**
@@ -345,6 +336,6 @@ function setup() {
  *
  * A direct call to the constant gets the active configuration object.
  */
-export const conf = Object.assign(() => config, { load, store, setup });
+export const conf = Object.assign(() => config, { load, store, updateWith });
 
 export type UserConfig = typeof DEFAULT_CONFIG;
