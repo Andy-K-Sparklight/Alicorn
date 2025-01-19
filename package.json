@@ -32,7 +32,7 @@
         "chai-as-promised": "^8.0.1",
         "consola": "^3.3.3",
         "cross-env": "^7.0.3",
-        "electron": "^35.0.0-alpha.1",
+        "electron": "^34.0.0",
         "esbuild": "^0.24.2",
         "shx": "^0.3.4",
         "tailwindcss": "^3.4.17",
@@ -76,6 +76,9 @@
         "yaml": "^2.7.0"
     },
     "trustedDependencies": [
-        "@swc/core"
+        "@swc/core",
+        "electron",
+        "esbuild",
+        "lzma-native"
     ]
 }
