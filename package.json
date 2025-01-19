@@ -61,7 +61,6 @@
         "lzma": "^2.3.2",
         "lzma-native": "^8.0.6",
         "mergician": "^2.0.2",
-        "multiline-ts": "^4.0.1",
         "nanoid": "^5.0.9",
         "node-sqlite3-wasm": "^0.8.30",
         "node-stream-zip": "^1.15.0",
@@ -75,5 +74,8 @@
         "v8-compile-cache": "^2.4.0",
         "wouter": "^3.3.5",
         "yaml": "^2.7.0"
-    }
+    },
+    "trustedDependencies": [
+        "@swc/core"
+    ]
 }
