@@ -15,7 +15,8 @@
         "forceConsistentCasingInFileNames": true,
         "noEmit": true,
         "types": [
-            "vite/client"
+            "vite/client",
+            "@types/bun"
         ],
         "paths": {
             "@/*": [

@@ -286,7 +286,7 @@ async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
 
     try {
         await fs.ensureFile(task.req.path);
-        const writeStream = Stream.Writable.toWeb(fs.createWriteStream(task.req.path));
+        const writeStream = Stream.Writable.toWeb(fs.createWriteStream(task.req.path)) as WritableStream<Uint8Array>;
         const guardStream = createTransferGuardStream(minSpeed);
         const countStream = createBytesCountingStream((b) => task.bytesTransferred = b);
         await res.body.pipeThrough(guardStream).pipeThrough(countStream).pipeTo(writeStream);

@@ -1,4 +1,5 @@
 import { conf } from "@/main/conf/conf";
+import { confHost } from "@/main/conf/conf-host";
 import { ping } from "@/main/dev/ping";
 import { paths } from "@/main/fs/paths";
 import { vanillaInstaller } from "@/main/install/vanilla";
@@ -48,7 +49,6 @@ async function main() {
     app.on("window-all-closed", () => {});
 
     console.log("Initializing modules...");
-    conf.setup();
 
     const hasDevTools = import.meta.env.AL_DEV || conf().dev.devTools;
 
@@ -63,6 +63,7 @@ async function main() {
     await registry.init();
 
     ping.setup();
+    confHost.setup();
     ext.setup();
 
     // React DevTools seems unable to load starting from Electron v33

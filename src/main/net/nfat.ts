@@ -9,13 +9,17 @@ import fs from "fs-extra";
 import { Database, type Statement } from "node-sqlite3-wasm";
 import path from "path";
 
-let db: Database;
+let db: Database | null = null;
 
 interface FATRecord {
     sha1: string;
     url: string;
     path: string;
 }
+
+let enrollStmt: Statement;
+let requestStmt: Statement;
+let removeStmt: Statement;
 
 async function init() {
     const pt = paths.store.to("fat.arc");
@@ -37,12 +41,25 @@ async function init() {
             path TEXT        NOT NULL
         );
     `);
+
+    enrollStmt = db.prepare(`
+        INSERT OR IGNORE INTO files
+        VALUES (?, ?, ?);
+    `);
+
+    requestStmt = db.prepare(`
+        SELECT url, path
+        FROM files
+        WHERE sha1 = ?;
+    `);
+
+    removeStmt = db.prepare(`
+        DELETE
+        FROM files
+        WHERE path = ?;
+    `);
 }
 
-const statements: Statement[] = [];
-let enrollStmt: Statement;
-let requestStmt: Statement;
-let removeStmt: Statement;
 
 /**
  * Adds a reusable file after download.
@@ -50,30 +67,12 @@ let removeStmt: Statement;
 function enroll(fp: string, url: string, sha1: string) {
     if (!conf().net.nfat.enable) return;
 
-    if (!enrollStmt) {
-        enrollStmt = db.prepare(`
-            INSERT OR IGNORE INTO files
-            VALUES (?, ?, ?);
-        `);
-        statements.push(enrollStmt);
-    }
-
     const pt = path.normalize(path.resolve(fp));
 
     enrollStmt.run([sha1, url, pt]);
 }
 
 async function request(url: string, sha1: string): Promise<string | null> {
-    if (!requestStmt) {
-        requestStmt = db.prepare(`
-            SELECT url, path
-            FROM files
-            WHERE sha1 = ?;
-        `);
-
-        statements.push(requestStmt);
-    }
-
     const results = requestStmt.all(sha1) as unknown as FATRecord[];
 
     for (const r of results) {
@@ -96,15 +95,6 @@ async function request(url: string, sha1: string): Promise<string | null> {
 }
 
 function remove(pt: string) {
-    if (!removeStmt) {
-        removeStmt = db.prepare(`
-            DELETE
-            FROM files
-            WHERE path = ?;
-        `);
-        statements.push(removeStmt);
-    }
-
     removeStmt.run(pt);
 }
 
@@ -132,8 +122,14 @@ async function deploy(target: string, url: string, sha1: string): Promise<boolea
 }
 
 function close() {
-    statements.forEach(s => s.isFinalized || s.finalize());
-    db?.close();
+    if (!db) return;
+
+    enrollStmt.finalize();
+    requestStmt.finalize();
+    removeStmt.finalize();
+
+    db.close();
+    db = null;
 }
 
 export const nfat = { init, enroll, deploy, close };
