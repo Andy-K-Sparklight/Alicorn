@@ -1,4 +1,4 @@
-import { bwctl } from "@/main/sys/bwctl";
+import { windowControl } from "@/main/sys/window-control";
 import { BrowserWindow } from "electron";
 import { pEvent } from "p-event";
 import timers from "timers/promises";
@@ -12,7 +12,7 @@ const oAuthUrl =
 
 
 async function browserLogin(part: string): Promise<string> {
-    const [width, height] = bwctl.optimalSize();
+    const [width, height] = windowControl.optimalSize();
 
     const w = new BrowserWindow({
         width, height,

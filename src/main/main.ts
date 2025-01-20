@@ -6,9 +6,9 @@ import { aria2 } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
 import { nfat } from "@/main/net/nfat";
 import { registry } from "@/main/registry/registry";
-import { bwctl } from "@/main/sys/bwctl";
 import { ext } from "@/main/sys/ext";
 import { getOSName } from "@/main/sys/os";
+import { windowControl } from "@/main/sys/window-control";
 import { app, BrowserWindow, Menu } from "electron";
 import events from "node:events";
 import os from "node:os";
@@ -88,7 +88,7 @@ async function main() {
 
     const { size: [width, height], pos: [px, py] } = conf().app.window;
 
-    const [defWidth, defHeight] = bwctl.optimalSize(); // Initial size, will be changed by user settings later
+    const [defWidth, defHeight] = windowControl.optimalSize(); // Initial size, will be changed by user settings later
     const hasFrame = conf().dev.showFrame;
 
     mainWindow = new BrowserWindow({
@@ -112,8 +112,8 @@ async function main() {
 
     mainWindow.setMenu(null);
 
-    bwctl.setup();
-    bwctl.forWindow(mainWindow);
+    windowControl.setup();
+    windowControl.forWindow(mainWindow);
 
     // Exit app once main window closed
     mainWindow.once("closed", () => {

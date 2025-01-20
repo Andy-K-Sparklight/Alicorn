@@ -61,4 +61,4 @@ function optimalSize(): [number, number] {
     return [width * scaleFactor, height * scaleFactor];
 }
 
-export const bwctl = { setup, forWindow, optimalSize };
+export const windowControl = { setup, forWindow, optimalSize };
