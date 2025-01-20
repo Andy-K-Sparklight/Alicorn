@@ -1,4 +1,9 @@
+import { clinker } from "@/main/container/linker";
+import type { Container } from "@/main/container/spec";
+import { dlx } from "@/main/net/dlx";
 import { netx } from "@/main/net/netx";
+import { profileLoader } from "@/main/profile/loader";
+import type { VersionProfile } from "@/main/profile/version-profile";
 
 const VERSION_MANIFEST = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
 
@@ -47,6 +52,35 @@ async function prefetch(): Promise<void> {
     }
 }
 
+/**
+ * Fetches and loads the version manifest of the specified ID.
+ */
+async function installProfile(id: string | "latest-release" | "latest-snapshot", container: Container): Promise<VersionProfile> {
+    const mf = await getManifest();
+
+    if (id === "latest-release") {
+        id = mf.latest.release;
+    }
+
+    if (id === "latest-snapshot") {
+        id = mf.latest.snapshot;
+    }
+
+    const v = mf.versions.find(ent => ent.id === id);
+
+    if (!v) throw `No such profile: ${id}`;
+
+    const fp = container.profile(id);
+
+    await dlx.getAll([{ ...v, path: fp }]);
+
+    if (container.spec.flags.link) {
+        await clinker.link(fp, v.sha1);
+    }
+
+    return await profileLoader.fromContainer(id, container);
+}
+
 export const vanillaInstaller = {
-    getManifest, prefetch
+    getManifest, prefetch, installProfile
 };
