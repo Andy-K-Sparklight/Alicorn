@@ -1,4 +1,4 @@
-import { StaticContainer } from "@/main/container/static";
+import type { ContainerSpec } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import { reg, registry } from "@/main/registry/registry";
 import { Database } from "node-sqlite3-wasm";
@@ -11,7 +11,11 @@ import { iTest } from "~/test/instrumented/tools";
  */
 export async function checkRegistries() {
     await iTest.run("Registries Save & Load", async () => {
-        const c = new StaticContainer("default", ".");
+        const c: ContainerSpec = {
+            id: "default",
+            root: "fake-root",
+            flags: {}
+        };
 
         reg.containers.add(c.id, c);
 
@@ -26,11 +30,11 @@ export async function checkRegistries() {
             WHERE id = 'containers';
         `) as { content: string };
 
-        const m = new Serializer({ classes: { StaticContainer } }).deserialize<Map<string, StaticContainer>>(content);
+        const m = new Serializer({ classes: {} }).deserialize<Map<string, ContainerSpec>>(content);
 
         const co = m.get("default");
 
         assert(co !== null, "Should save registry content to database");
-        assert(co instanceof StaticContainer, "Should keep class information");
+        assert(co?.root === "fake-root", "Should keep object information");
     });
 }

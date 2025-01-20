@@ -1,41 +1,27 @@
 /**
- * Alicorn provides multiple container types for different path resolution strategy.
+ * Minimum required information to construct a container.
  */
-export enum ContainerType {
-    /**
-     * All files are statically allocated in the container. Similar to the vanilla game structure.
-     */
-    STATIC = "static",
+export interface ContainerSpec {
+    id: string;
+    root: string;
+    flags: Partial<ContainerFlags>;
+}
 
+/**
+ * Flags for describing management strategies of the container.
+ */
+export interface ContainerFlags {
     /**
-     * Immutable files are allocated in the store area and can be reused. Paths are redirected at runtime.
-     *
-     * Not compatible with Forge or third-party clients relying on certain structure.
+     * Whether to link immutable files to reduce space consumption.
      */
-    SHARED = "shared",
-
-    /**
-     * Immutable files are hard-linked. No path redirection needed.
-     *
-     * A trade-off between compatibility and performance. Remains compatibility with most clients, yet the files are
-     * prone to modifications and must be placed on the same filesystem with the containers.
-     */
-    LINKED = "linked"
+    link: boolean;
 }
 
 /**
  * Containers are abstractions for managing game files.
  */
 export interface Container {
-    /**
-     * Container ID.
-     */
-    id: string;
-
-    /**
-     * Container filesystem type.
-     */
-    type: ContainerType;
+    spec: ContainerSpec;
 
     /**
      * Gets the path to the asset object.

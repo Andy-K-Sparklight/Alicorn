@@ -1,8 +1,7 @@
 import { LocalAccount } from "@/main/auth/local";
 import { MSAccount } from "@/main/auth/ms";
 import type { Account } from "@/main/auth/spec";
-import type { Container } from "@/main/container/spec";
-import { StaticContainer } from "@/main/container/static";
+import type { ContainerSpec } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import fs from "fs-extra";
 import { Database, type Statement } from "node-sqlite3-wasm";
@@ -141,6 +140,6 @@ export const reg = {
     },
 
     get containers() {
-        return lazyOpenRegistry<Container>("containers", { StaticContainer });
+        return lazyOpenRegistry<ContainerSpec>("containers", {});
     }
 };

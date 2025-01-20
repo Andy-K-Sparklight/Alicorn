@@ -1,15 +1,34 @@
-import { Container, ContainerType } from "@/main/container/spec";
+import { Container, type ContainerSpec } from "@/main/container/spec";
 import { MavenName } from "@/main/profile/maven-name";
+import { reg } from "@/main/registry/registry";
 import path from "path";
 
-export class StaticContainer implements Container {
-    id: string;
-    type: ContainerType = ContainerType.STATIC;
-    private readonly rootDir: string;
+let cachedContainers = new Map<string, Container>();
 
-    constructor(id: string, rootDir: string) {
-        this.id = id;
-        this.rootDir = rootDir;
+function get(id: string): Container {
+    return hydrate(reg.containers.get(id));
+}
+
+function create(spec: ContainerSpec): Container {
+    return new SimpleContainer(spec);
+}
+
+function hydrate(spec: ContainerSpec): Container {
+    let cc = cachedContainers.get(spec.id);
+
+    if (!cc) {
+        cc = create(spec);
+        cachedContainers.set(spec.id, cc);
+    }
+
+    return cc;
+}
+
+class SimpleContainer implements Container {
+    spec;
+
+    constructor(spec: ContainerSpec) {
+        this.spec = spec;
     }
 
     asset(hash: string): string {
@@ -75,7 +94,10 @@ export class StaticContainer implements Container {
     }
 
     private resolve(...rel: string[]): string {
-        return path.normalize(path.resolve(this.rootDir, ...rel));
+        return path.normalize(path.resolve(this.spec.root, ...rel));
     }
 }
 
+export const containers = {
+    create, get
+};
