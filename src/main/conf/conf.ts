@@ -44,7 +44,12 @@ const DEFAULT_CONFIG = {
         /**
          * Path to the game containers.
          */
-        game: ""
+        game: "",
+
+        /**
+         * Path to store temp files.
+         */
+        temp: ""
     },
 
     /**

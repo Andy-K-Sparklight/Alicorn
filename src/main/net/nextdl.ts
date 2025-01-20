@@ -4,9 +4,9 @@
  * Comparing to the wrapped downloader, the next downloader runs on the main process and utilizes the net module from
  * Electron. This is expected to bypass the connection limit in the browser window and maximize the throughput.
  */
+import { cacheStore } from "@/main/cache/store";
 import { conf } from "@/main/conf/conf";
 import { dlchk } from "@/main/net/dlchk";
-import { nfat } from "@/main/net/nfat";
 import { net } from "electron";
 import EventEmitter from "events";
 import fs from "fs-extra";
@@ -105,7 +105,7 @@ async function resolve(task: NextDownloadTask): Promise<void> {
 
     // First try to reuse existing files
     if (task.req.sha1) {
-        await nfat.deploy(task.req.path, task.req.origin, task.req.sha1);
+        await cacheStore.deploy(task.req.sha1, task.req.path, "copy");
     }
 
     // Preflight validate
@@ -135,9 +135,7 @@ async function resolve(task: NextDownloadTask): Promise<void> {
                 task.status = NextDownloadStatus.DONE;
 
                 // Add file for reusing
-                if (task.req.sha1) {
-                    nfat.enroll(task.req.path, task.req.origin, task.req.sha1);
-                }
+                await cacheStore.enroll(task.req.path, task.req.sha1);
 
                 return;
             }

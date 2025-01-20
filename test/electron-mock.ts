@@ -5,7 +5,20 @@ class BrowserWindow {}
 
 mock.module("electron", () => {
     return {
-        app: { getAppPath: () => path.resolve("build", "dev") },
+        app: {
+            getAppPath() {
+                return path.resolve("build", "dev");
+            },
+
+            getPath(sec: string) {
+                switch (sec) {
+                    case "app":
+                        return this.getAppPath();
+                    case "temp":
+                        return path.resolve("emulated", "temp");
+                }
+            }
+        },
         screen: {},
         ipcMain: {},
         net: { fetch },

@@ -1,5 +1,6 @@
 import { app } from "electron";
 import assert from "node:assert";
+import { checkCache } from "~/test/instrumented/cache";
 import { checkHash } from "~/test/instrumented/hash";
 import { checkInstaller } from "~/test/instrumented/install";
 import { checkInstallJRT } from "~/test/instrumented/jrt";
@@ -17,7 +18,8 @@ export async function runInstrumentedTest() {
         checkInstallJRT(),
         checkHash(),
         checkInstaller(),
-        checkRegistries()
+        checkRegistries(),
+        checkCache()
     ]);
 
     await iTest.dumpSummary();

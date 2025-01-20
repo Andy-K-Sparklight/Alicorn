@@ -35,5 +35,14 @@ export const StorageTab: FC = () => {
             value={config.paths.game}
             onChange={makeReduce((c, pt) => c.paths.game = pt)}
         />
+
+        <Divider/>
+
+        <DirEntry
+            icon={ArchiveIcon}
+            id="store.temp-path"
+            value={config.paths.temp}
+            onChange={makeReduce((c, pt) => c.paths.temp = pt)}
+        />
     </>;
 };

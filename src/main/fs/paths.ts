@@ -66,6 +66,11 @@ interface PathsInit {
     gameRoot: string;
 
     /**
+     * The root directory for storing temporary files.
+     */
+    tempRoot: string;
+
+    /**
      * Path to the script bundle.
      */
     appPath: string;
@@ -74,6 +79,7 @@ interface PathsInit {
 let initPrompt: Partial<PathsInit> | null = null;
 let fallbackStoreRoot = "";
 let fallbackGameRoot = "";
+let fallbackTempRoot = "";
 
 /**
  * Setup path resolvers with the given prompts.
@@ -85,6 +91,7 @@ function setup(init?: Partial<PathsInit>): void {
     initPrompt = init ?? null;
     fallbackStoreRoot = optimalStoreRoot();
     fallbackGameRoot = optimalGameRoot();
+    fallbackTempRoot = path.resolve(app.getPath("temp"), "Alicorn");
 
     console.log(`Fallback store path: ${fallbackStoreRoot}`);
 }
@@ -101,6 +108,13 @@ function getStoreRoot() {
  */
 function getGameRoot() {
     return initPrompt?.gameRoot || conf().paths.game || fallbackGameRoot;
+}
+
+/**
+ * Gets the path to the temp directory.
+ */
+function getTempRoot() {
+    return initPrompt?.tempRoot || conf().paths.temp || fallbackTempRoot;
 }
 
 /**
@@ -132,5 +146,10 @@ export const paths = {
      *
      * On some platforms this path is not writable. Avoid making changes to it.
      */
-    app: createResolver(() => app.getAppPath())
+    app: createResolver(() => app.getAppPath()),
+
+    /**
+     * Stores temp files.
+     */
+    temp: createResolver(() => getTempRoot())
 };

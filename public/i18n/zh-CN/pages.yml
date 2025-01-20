@@ -41,6 +41,11 @@ settings:
           要将游戏所需的文件存放在哪里？
           默认存放在存储库路径中。
 
+      temp-path:
+        title: 临时文件路径
+        sub: |-
+          要将临时文件存放在哪里？
+
     launch:
       jvm-args:
         title: 启动选项 / JVM

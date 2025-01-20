@@ -2,10 +2,10 @@
  * Driver for aria2 downloader. aria2 delegates heavy I/O tasks to separated processes and handles all necessary
  * details.
  */
+import { cacheStore } from "@/main/cache/store";
 import { conf } from "@/main/conf/conf";
 import { paths } from "@/main/fs/paths";
 import { dlchk } from "@/main/net/dlchk";
-import { nfat } from "@/main/net/nfat";
 import { WebSocketJsonRpcClient } from "@/main/net/rpc";
 import { getExecutableExt } from "@/main/sys/os";
 import childProcess from "child_process";
@@ -51,7 +51,7 @@ async function resolve(req: Aria2DownloadRequest): Promise<void> {
     console.debug(`Aria2 Get: ${req.origin}`);
 
     if (req.sha1) {
-        await nfat.deploy(req.path, req.origin, req.sha1);
+        await cacheStore.deploy(req.sha1, req.path, "copy");
     }
 
     // Preflight
@@ -113,9 +113,7 @@ async function sendRequest(req: Aria2DownloadRequest): Promise<void> {
 
     await pEvent(emitter, "finish");
 
-    if (req.sha1) {
-        nfat.enroll(req.path, req.origin, req.sha1);
-    }
+    await cacheStore.enroll(req.path, req.sha1);
 }
 
 

@@ -4,7 +4,6 @@ import { paths } from "@/main/fs/paths";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { aria2 } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
-import { nfat } from "@/main/net/nfat";
 import { registry } from "@/main/registry/registry";
 import { ext } from "@/main/sys/ext";
 import { getOSName } from "@/main/sys/os";
@@ -144,7 +143,6 @@ async function main() {
     console.log("Executing late init tasks...");
 
     const tasks = [
-        conf().net.nfat.enable && nfat.init(),
         conf().net.downloader === "aria2" && aria2.init(),
         mirror.bench(),
         vanillaInstaller.prefetch()
@@ -195,7 +193,6 @@ async function shutdownApp() {
 
     await conf.store();
     registry.close();
-    nfat.close();
     aria2.shutdown();
 
     console.log("Exiting.");

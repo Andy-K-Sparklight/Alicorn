@@ -1,7 +1,5 @@
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
-import { nfat } from "@/main/net/nfat";
 import { hash } from "@/main/security/hash";
-import fs from "fs-extra";
 import assert from "node:assert";
 import { iTest } from "~/test/instrumented/tools";
 
@@ -74,18 +72,5 @@ export async function checkFileDownload() {
         }
 
         assert(caught, "Should throw error for invalid HTTP status code");
-    });
-
-    await iTest.run("NFAT File Reuse", async () => {
-        const src = "NFAT speeds up the download";
-        const fp = "nfat-data.txt";
-        const url = "https://example.com/nfat-data.txt";
-        await fs.writeFile(fp, src);
-        const h = await hash.forFile(fp, "sha1");
-        nfat.enroll(fp, url, h);
-
-        await nfat.deploy("reuse-data.txt", url, h);
-        const dat = await fs.readFile("reuse-data.txt");
-        assert(dat.toString() === src);
     });
 }
