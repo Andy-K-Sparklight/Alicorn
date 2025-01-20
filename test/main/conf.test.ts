@@ -9,15 +9,21 @@ process.env.ALICORN_CONFIG_PATH = cfgPath;
 test("Config Read & Write", async () => {
     await fs.remove(cfgPath);
     await conf.load();
-    expect(conf().inspect, "Should use default config when missing").toBeFalse();
+    expect(conf().dev.devTools, "Should use default config when missing").toBeFalse();
 
-    conf().inspect = true;
+    conf().dev.devTools = true;
     await conf.store();
     await conf.load();
-    expect(conf().inspect, "Should keep changes between saves & loads").toBeTrue();
+    expect(conf().dev.devTools, "Should keep changes between saves & loads").toBeTrue();
 
     // Ensure that unmodified keys are excluded
-    conf().inspect = false;
+    conf().dev.devTools = false;
     await conf.store();
     expect(fs.existsSync(cfgPath), "Should empty file when no changes are made").toBeFalse();
+
+    // Check array values
+    conf().runtime.args.vm = ["arg1"];
+    await conf.store();
+    await conf.load();
+    expect(conf().runtime.args.vm.length, "Should save array values").toEqual(1);
 });

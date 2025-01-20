@@ -1,9 +1,9 @@
 /**
  * Various entry widgets for manipulating the settings.
  */
-import { Button, Input, Select, SelectItem, type SharedSelection, Slider, Switch, Textarea } from "@heroui/react";
-import { type Icon, KebabHorizontalIcon } from "@primer/octicons-react";
-import React, { type FC } from "react";
+import { Button, Input, Select, SelectItem, type SharedSelection, Slider, Switch } from "@heroui/react";
+import { type Icon, KebabHorizontalIcon, PlusIcon, XIcon } from "@primer/octicons-react";
+import React, { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface SettingsEntryProps<T> {
@@ -67,15 +67,6 @@ export const DirEntry: FC<SettingsEntryProps<string>> = ({ id, icon, value, onCh
     </div>;
 };
 
-export const NumberTextEntry: FC<SettingsEntryProps<number>> = ({ id, icon, value, onChange }) => {
-    return <div className="flex flex-col gap-2 w-full">
-        <EntryLabel id={id} icon={icon}/>
-        <Input fullWidth type="number" value={value.toString()}
-               onValueChange={(s) => onChange(parseInt(s || "0", 10))}/>
-    </div>;
-};
-
-
 type NumberSliderEntryProps = SettingsEntryProps<number> & { max: number; min: number; }
 
 export const NumberSliderEntry: FC<NumberSliderEntryProps> = ({ id, icon, value, onChange, max, min }) => {
@@ -96,11 +87,49 @@ export const NumberSliderEntry: FC<NumberSliderEntryProps> = ({ id, icon, value,
     </div>;
 };
 
+export const StringArrayEntry: FC<SettingsEntryProps<string[]>> = ({ id, icon, value, onChange }) => {
+    const [str, setStr] = useState("");
 
-export const MultilineTextEntry: FC<SettingsEntryProps<string>> = ({ id, icon, value, onChange }) => {
+    function addItem() {
+        const s = str.trim();
+        if (s) {
+            const d = [...value, s];
+            onChange(d);
+            setStr("");
+        }
+    }
+
+    function removeItem(i: number) {
+        const d = value.slice(0, i).concat(value.slice(i + 1));
+        onChange(d);
+    }
+
     return <div className="flex flex-col gap-2 w-full">
         <EntryLabel id={id} icon={icon}/>
-        <Textarea fullWidth value={value} onValueChange={onChange}/>
+
+        {
+            value.map((s, i) =>
+                <div key={i} className="mt-2 flex items-center gap-2">
+                    <div
+                        className="cursor-pointer"
+                        onClick={() => removeItem(i)}
+                    >
+                        <XIcon className="text-foreground-400"/>
+                    </div>
+
+                    <div className="text-sm">
+                        {s}
+                    </div>
+                </div>
+            )
+        }
+
+        <div className="flex items-center gap-1 mt-2">
+            <Input fullWidth value={str} onValueChange={setStr} onBlur={addItem}/>
+            <Button isIconOnly onPress={addItem}>
+                <PlusIcon/>
+            </Button>
+        </div>
     </div>;
 };
 

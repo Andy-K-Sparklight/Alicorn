@@ -74,13 +74,6 @@ function createMemoryArgs(init: LaunchInit): string[] {
     return out;
 }
 
-function getUserGlobalArgs(): string[][] {
-    const { vm, game } = conf().runtime.args;
-
-    return [vm, game].map(it => it.split("\n").filter(Boolean).map(a => a.trim()));
-}
-
-
 function createWindowSizeArgs(init: LaunchInit): string[] {
     // Resolution args has been included in the profile since 1.13
     if (init.profile.complianceLevel >= 1 || !init.pref.window) return [];
@@ -114,7 +107,7 @@ function createArguments(init: LaunchInit): string[] {
         vmArgs.push(loggingArg);
     }
 
-    const [globalExtraVM, globalExtraGame] = getUserGlobalArgs();
+    const { vm: globalExtraVM, game: globalExtraGame } = conf().runtime.args;
     const { vm: localExtraVM, game: localExtraGame } = init.pref.args ?? { vm: [], game: [] };
 
     const extraVMArgs = [

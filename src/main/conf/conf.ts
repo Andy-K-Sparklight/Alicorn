@@ -8,11 +8,6 @@ import path from "path";
  */
 const DEFAULT_CONFIG = {
     /**
-     * Whether to enable inspect mode.
-     */
-    inspect: false,
-
-    /**
      * Development related settings.
      */
     dev: {
@@ -87,7 +82,7 @@ const DEFAULT_CONFIG = {
              *
              * Values are separated by line breaks.
              */
-            args: "",
+            args: [] as string[],
 
             /**
              * Maximum wait time (sec) before aborting a request. 0 or negative values are not accepted.
@@ -170,12 +165,10 @@ const DEFAULT_CONFIG = {
     runtime: {
         /**
          * Global additional arguments.
-         *
-         * Values are separated by line breaks.
          */
         args: {
-            vm: "",
-            game: ""
+            vm: [] as string[],
+            game: [] as string[]
         },
 
         /**
@@ -205,14 +198,14 @@ const DEFAULT_CONFIG = {
          */
         window: {
             /**
-             * Window size, e.g. "960,540"
+             * Window size.
              */
-            size: "",
+            size: [] as number[],
 
             /**
-             * Window position, e.g. "0,0"
+             * Window position.
              */
-            pos: ""
+            pos: [] as number[]
         }
     }
 };
@@ -275,7 +268,8 @@ async function store(): Promise<void> {
     }
 }
 
-type ConfigSection = string | number | boolean | { [key: string]: ConfigSection; }
+type ConfigSection = string | number | boolean | string[] | number[] | boolean[] | ConfigSectionObject;
+type ConfigSectionObject = { [key: string]: ConfigSection; }
 
 /**
  * Applies the patch object on the base object if type matches.
@@ -283,24 +277,35 @@ type ConfigSection = string | number | boolean | { [key: string]: ConfigSection;
  * The origin object is not modified. The returned object does not reference contents from the both object.
  */
 function applyPatch<T extends ConfigSection>(origin: T, user: T): T {
+    // Primitives, no clone needed
     if (typeof origin !== "object") {
-        // Primitives, no clone needed
         if (typeof user === typeof origin) return user;
         return origin;
     }
 
+    // Filter out other primitives
     if (typeof user !== "object") return structuredClone(origin);
 
-    const o = Object.assign({}, origin);
+    // Arrays work like primitives
+    if (Array.isArray(origin)) {
+        if (Array.isArray(user)) return user.concat() as T;
+        return origin.concat() as T;
+    }
+
+    // Filter out other arrays
+    if (Array.isArray(user)) return structuredClone(origin);
+
+    // Assign objects
+    const o = Object.assign({}, origin) as ConfigSectionObject;
     for (const [k, v] of Object.entries(o)) {
         if (!(k in user)) {
             o[k] = structuredClone(v);
         } else {
-            o[k] = applyPatch(v, user[k]);
+            o[k] = applyPatch(v, (user as ConfigSectionObject)[k]);
         }
     }
 
-    return o;
+    return o as T;
 }
 
 /**
@@ -312,11 +317,22 @@ function createPatch(origin: ConfigSection, user: ConfigSection): ConfigSection 
         if (typeof user !== typeof origin) return null;
         return user === origin ? null : user;
     }
+
     if (typeof user !== "object") return null;
+
+    if (Array.isArray(origin)) {
+        if (!Array.isArray(user)) return null;
+        if (origin.length === user.length && origin.every((v, i) => user[i] == v)) {
+            return null;
+        }
+        return user;
+    }
+
+    if (Array.isArray(user)) return null;
 
     for (const [k, v] of Object.entries(origin)) {
         if (!(k in user)) continue;
-        const dv = createPatch(v, user[k]);
+        const dv = createPatch(v, (user as ConfigSectionObject)[k]);
         if (dv != null) {
             out[k] = dv;
         }

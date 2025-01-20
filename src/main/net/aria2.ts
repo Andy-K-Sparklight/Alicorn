@@ -172,7 +172,7 @@ async function init() {
             "--rpc-max-request-size=32M",
             `--rpc-secret=${aria2cToken}`,
             `--ca-certificate=${cert}`,
-            ...args.split("\n").map(a => a.trim()).filter(Boolean)
+            ...args
         ]);
 
         console.debug("Connecting to aria2 RPC interface...");

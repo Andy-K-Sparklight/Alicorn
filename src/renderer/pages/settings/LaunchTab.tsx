@@ -1,5 +1,5 @@
 import { Divider } from "@heroui/react";
-import { MultilineTextEntry } from "@pages/settings/SettingsEntry";
+import { StringArrayEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
 import { CodeIcon } from "@primer/octicons-react";
 import { FC } from "react";
@@ -10,7 +10,7 @@ export const LaunchTab: FC = () => {
     if (!config) return;
 
     return <>
-        <MultilineTextEntry
+        <StringArrayEntry
             icon={CodeIcon}
             id="launch.jvm-args"
             value={config.runtime.args.vm}
@@ -19,7 +19,7 @@ export const LaunchTab: FC = () => {
 
         <Divider/>
 
-        <MultilineTextEntry
+        <StringArrayEntry
             icon={CodeIcon}
             id="launch.game-args"
             value={config.runtime.args.game}

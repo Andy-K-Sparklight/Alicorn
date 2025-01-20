@@ -1,5 +1,5 @@
 import { Divider } from "@heroui/react";
-import { MultilineTextEntry, NumberSliderEntry, OnOffEntry } from "@pages/settings/SettingsEntry";
+import { NumberSliderEntry, OnOffEntry, StringArrayEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
 import { CodeIcon, FileDiffIcon, GitBranchIcon, MoveToBottomIcon, UnfoldIcon } from "@primer/octicons-react";
 import React, { FC } from "react";
@@ -55,7 +55,7 @@ export const NetworkTab: FC = () => {
             <>
                 <Divider/>
 
-                <MultilineTextEntry
+                <StringArrayEntry
                     icon={CodeIcon}
                     id="network.aria2-args"
                     value={config.net.aria2.args}

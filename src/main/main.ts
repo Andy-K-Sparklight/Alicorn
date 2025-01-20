@@ -9,7 +9,7 @@ import { registry } from "@/main/registry/registry";
 import { bwctl } from "@/main/sys/bwctl";
 import { ext } from "@/main/sys/ext";
 import { getOSName } from "@/main/sys/os";
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, Menu } from "electron";
 import events from "node:events";
 import os from "node:os";
 import path from "path";
@@ -28,6 +28,8 @@ let mainWindow: BrowserWindow | null = null;
  * Main entry point.
  */
 async function main() {
+    Menu.setApplicationMenu(null);
+
     process.noAsar = true;
     events.defaultMaxListeners = 8192;
 
@@ -84,26 +86,34 @@ async function main() {
 
     console.log("Creating window...");
 
-    const [width, height] = bwctl.optimalSize(); // Initial size, will be changed by user settings later
+    const { size: [width, height], pos: [px, py] } = conf().app.window;
+
+    const [defWidth, defHeight] = bwctl.optimalSize(); // Initial size, will be changed by user settings later
     const hasFrame = conf().dev.showFrame;
 
     mainWindow = new BrowserWindow({
-        width, height,
+        width: Math.floor(width || defWidth),
+        height: Math.floor(height || defHeight),
         webPreferences: {
             spellcheck: false,
             defaultEncoding: "UTF-8",
             preload: paths.app.to("preload.js"),
             devTools: hasDevTools
         },
+        x: isNaN(px) ? undefined : Math.floor(px),
+        y: isNaN(py) ? undefined : Math.floor(py),
         frame: hasFrame,
         show: false,
         icon: getIconPath()
     });
 
+    mainWindow.on("resized", () => conf().app.window.size = mainWindow!.getSize());
+    mainWindow.on("moved", () => conf().app.window.pos = mainWindow!.getPosition());
+
     mainWindow.setMenu(null);
 
     bwctl.setup();
-    bwctl.forWindow(mainWindow, { isMain: true });
+    bwctl.forWindow(mainWindow);
 
     // Exit app once main window closed
     mainWindow.once("closed", () => {
