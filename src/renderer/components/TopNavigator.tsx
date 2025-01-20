@@ -46,7 +46,7 @@ export const TopNavigator: FC = () => {
     return <div className="flex flex-col w-full h-full items-center justify-center">
         <Tabs
             color="primary"
-            variant="bordered"
+            variant="light"
             selectedKey={selected}
             onSelectionChange={changePage}
         >
