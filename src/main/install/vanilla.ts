@@ -82,9 +82,7 @@ async function installProfile(id: string | "latest-release" | "latest-snapshot",
 
     await dlx.getAll([{ ...v, path: fp }], { signal: control?.signal });
 
-    if (container.spec.flags.link) {
-        await cache.link(fp, v.sha1);
-    }
+    // Profiles are not linked as they may frequently get modified
 
     return await profileLoader.fromContainer(id, container);
 }
@@ -96,6 +94,7 @@ async function installLibraries(profile: VersionProfile, container: Container, f
     const { signal, onProgress } = control ?? {};
     const usableLibraries = profile.libraries.filter(lib => filterRules(lib.rules, features));
     const tasks: DlxDownloadRequest[] = [];
+    const shouldLink = container.spec.flags.link;
 
     for (const lib of usableLibraries) {
         if (nativeLib.isNative(lib)) {
@@ -106,7 +105,8 @@ async function installLibraries(profile: VersionProfile, container: Container, f
                 tasks.push({
                     ...a,
                     url: a.url, // A workaround for TS type system
-                    path: fp
+                    path: fp,
+                    fastLink: shouldLink
                 });
             }
         }
@@ -118,7 +118,8 @@ async function installLibraries(profile: VersionProfile, container: Container, f
                 tasks.push({
                     ...a,
                     url: a.url,
-                    path: fp
+                    path: fp,
+                    fastLink: shouldLink
                 });
             }
         }
@@ -129,7 +130,8 @@ async function installLibraries(profile: VersionProfile, container: Container, f
 
     tasks.push({
         ...ca,
-        path: clientPath
+        path: clientPath,
+        fastLink: shouldLink
     });
 
     signal?.throwIfAborted();
@@ -138,8 +140,7 @@ async function installLibraries(profile: VersionProfile, container: Container, f
 
     await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "vanilla.download-libs") });
 
-
-    if (container.spec.flags.link) {
+    if (shouldLink) {
         await Promise.all(tasks.map(async t => {
             await cache.link(t.path, t.sha1);
         }));
@@ -162,9 +163,12 @@ async function installAssets(profile: VersionProfile, container: Container, cont
 
     const assetIndexPath = container.assetIndex(profile.assetIndex.id);
 
+    const shouldLink = container.spec.flags.link;
+
     await dlx.getAll([{
         ...profile.assetIndex,
-        path: assetIndexPath
+        path: assetIndexPath,
+        fastLink: shouldLink
     }], { signal });
 
     const assetIndex = await fs.readJSON(assetIndexPath) as AssetIndex;
@@ -178,11 +182,18 @@ async function installAssets(profile: VersionProfile, container: Container, cont
             url: `${ASSETS_BASE_URL}/${hash.slice(0, 2)}/${hash}`,
             path: container.asset(hash),
             sha1: hash,
-            size
+            size,
+            fastLink: shouldLink
         }
     ));
 
     await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "vanilla.download-assets") });
+
+    if (shouldLink) {
+        await Promise.all(tasks.map(async t => {
+            await cache.link(t.path, t.sha1);
+        }));
+    }
 
     async function makeLink(src: string, dst: string) {
         await fs.ensureDir(path.dirname(dst));

@@ -104,13 +104,18 @@ async function enroll(fp: string, sha1?: string) {
 /**
  * Tries to find existing object and copy it to the target.
  */
-async function deploy(target: string, sha1: string): Promise<boolean> {
+async function deploy(target: string, sha1: string, link: boolean): Promise<boolean> {
     if (!await checkFile(sha1)) return false; // Object corrupted
 
     try {
         await fs.ensureDir(path.dirname(target));
         await fs.remove(target);
-        await fs.copy(getCachePath(sha1), target);
+        if (link) {
+            await fs.link(getCachePath(sha1), target);
+        } else {
+            await fs.copy(getCachePath(sha1), target);
+        }
+
         console.debug(`Cache used: ${sha1} -> ${target}`);
         return true;
     } catch (e) {

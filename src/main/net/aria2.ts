@@ -33,6 +33,7 @@ export interface Aria2DownloadRequest {
     sha1?: string;
     size?: number;
     signal?: AbortSignal;
+    fastLink?: boolean;
 }
 
 type Aria2TaskEvents = {
@@ -51,7 +52,7 @@ async function resolve(req: Aria2DownloadRequest): Promise<void> {
     console.debug(`Aria2 Get: ${req.origin}`);
 
     if (req.sha1) {
-        await cache.deploy(req.path, req.sha1);
+        await cache.deploy(req.path, req.sha1, !!req.fastLink);
     }
 
     // Preflight

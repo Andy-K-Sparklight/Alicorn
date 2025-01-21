@@ -14,6 +14,11 @@ export interface DlxDownloadRequest {
     path: string;
     sha1?: string;
     size?: number;
+
+    /**
+     * Whether to link the file (instead of copying) when found in cache.
+     */
+    fastLink?: boolean;
 }
 
 /**

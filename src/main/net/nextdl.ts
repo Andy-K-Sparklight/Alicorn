@@ -47,6 +47,7 @@ export interface NextDownloadRequest {
     sha1?: string;
     size?: number;
     signal?: AbortSignal;
+    fastLink?: boolean;
 }
 
 export interface NextDownloadTask {
@@ -87,7 +88,7 @@ async function get(req: NextDownloadRequest): Promise<void> {
 
     // First try to reuse existing files
     if (task.req.sha1) {
-        await cache.deploy(task.req.path, task.req.sha1);
+        await cache.deploy(task.req.path, task.req.sha1, !!task.req.fastLink);
     }
 
     // Preflight validate

@@ -10,9 +10,9 @@ export async function checkCache() {
         const sha1 = await hash.forFile("cache-data.txt", "sha1");
         await cache.enroll("cache-data.txt");
 
-        await cache.deploy("reuse-data.txt", sha1);
+        await cache.deploy("reuse-data.txt", sha1, true);
         const dat = await fs.readFile("reuse-data.txt");
 
-        assert(dat.toString() === "ciallo, world", "Reused file should have the same content");
+        assert(dat.toString() === "ciallo, world", "Reused files should have the same content");
     });
 }
