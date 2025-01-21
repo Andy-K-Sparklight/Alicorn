@@ -1,3 +1,4 @@
+import { isTruthy } from "@/main/util/misc";
 import consola from "consola";
 import fs from "fs-extra";
 import path from "path";
@@ -53,7 +54,7 @@ function createFileList(cfg: BuildConfig): VendorFile[] {
     return [
         cfg.enableBundledAria2 && getComponent("aria2c"),
         cfg.enableBundledAria2 && getComponent("certificate")
-    ].filter(Boolean) as VendorFile[];
+    ].filter(isTruthy);
 }
 
 async function getFile(url: string, target: string) {
@@ -69,7 +70,7 @@ async function getFile(url: string, target: string) {
 
     await fs.ensureDir(path.dirname(target));
 
-    await res.body?.pipeTo(Writable.toWeb(fs.createWriteStream(target)));
+    await res.body?.pipeTo(Writable.toWeb(fs.createWriteStream(target)) as WritableStream<Uint8Array>);
     consola.success(`Got: ${url} -> ${target}`);
 }
 

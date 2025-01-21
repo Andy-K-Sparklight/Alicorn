@@ -1,4 +1,4 @@
-import type { Library } from "@/main/profile/version-profile";
+import type { Library, LibraryArtifact } from "@/main/profile/version-profile";
 import { getOSBits, getOSName } from "@/main/sys/os";
 
 /**
@@ -11,10 +11,22 @@ function isNative(l: Library): boolean {
 /**
  * Gets the name of the native artifact.
  */
-function getArtifactName(l: Library): string {
+function getArtifactName(l: Library): string | null {
     const index = l.natives?.[getOSName()];
-    if (!index) throw `Library ${l.name} has no native artifact for ${getOSName()}`;
-    return index.replaceAll("${arch}", getOSBits());
+    return index?.replaceAll("${arch}", getOSBits()) ?? null;
 }
 
-export const nativeLib = { isNative, getArtifactName };
+/**
+ * Gets the artifact of the native library.
+ */
+function getArtifact(l: Library): LibraryArtifact | null {
+    const name = getArtifactName(l);
+
+    if (name) {
+        return l.downloads?.classifiers?.[name] ?? null;
+    }
+
+    return null;
+}
+
+export const nativeLib = { isNative, getArtifactName, getArtifact };

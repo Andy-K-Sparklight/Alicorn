@@ -4,6 +4,7 @@
 import { paths } from "@/main/fs/paths";
 import { hash } from "@/main/security/hash";
 import fs from "fs-extra";
+import path from "path";
 
 function getStorePath(sha1: string) {
     return paths.game.to(".store", sha1.slice(0, 2), sha1);
@@ -25,15 +26,21 @@ async function link(fp: string, sha1?: string) {
             if (await hash.checkFile(ep, "sha1", sha1)) {
                 // Link the file
                 await fs.remove(fp);
+                await fs.ensureDir(path.dirname(fp));
                 await fs.link(ep, fp);
+                console.debug(`File compacted: ${ep} -> ${fp}`);
                 return;
             }
-        } catch {}
+        } catch {
+        }
 
         await fs.remove(ep); // Delete corrupted cache, if any
+        await fs.ensureDir(path.dirname(ep));
         await fs.link(fp, ep); // Link backward
 
-    } catch {}
+    } catch (e) {
+        console.warn(`Unable to link file ${fp}: ${e}`);
+    }
 }
 
 export const clinker = { link };

@@ -5,7 +5,8 @@ import { conf } from "@/main/conf/conf";
 import { aria2, type Aria2DownloadRequest } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
 import { nextdl, type NextDownloadRequest } from "@/main/net/nextdl";
-import { progress, type ProgressHandler } from "@/main/util/progress";
+import { isTruthy } from "@/main/util/misc";
+import { progress, type ProgressController } from "@/main/util/progress";
 
 export interface DlxDownloadRequest {
     url: string;
@@ -14,22 +15,17 @@ export interface DlxDownloadRequest {
     size?: number;
 }
 
-export interface DlxInit {
-    onProgress?: ProgressHandler;
-    abortSignal?: AbortSignal;
-}
-
 /**
  * Resolves all given download requests with mirrors applied.
  */
-async function getAll(req: DlxDownloadRequest[], init?: DlxInit): Promise<void> {
+async function getAll(req: DlxDownloadRequest[], control?: ProgressController): Promise<void> {
     let dl = conf().net.downloader;
     if (dl === "aria2" && !aria2.available()) {
         dl = "next";
     }
 
     const abortController = new AbortController();
-    const mixedSignal = AbortSignal.any([abortController.signal, init?.abortSignal].filter(Boolean) as AbortSignal[]);
+    const mixedSignal = AbortSignal.any([abortController.signal, control?.signal].filter(isTruthy));
 
     console.log(`Resolving ${req.length} tasks (${dl}).`);
 
@@ -63,7 +59,7 @@ async function getAll(req: DlxDownloadRequest[], init?: DlxInit): Promise<void> 
     try {
         await Promise.all(progress.countPromises(
             promises,
-            p => init?.onProgress?.({ ...p, state: "generic.download" })
+            progress.makeNamed(control?.onProgress, "generic.download")
         ));
     } catch (e) {
         console.debug("Cancelling other tasks in the same group due to previous error.");

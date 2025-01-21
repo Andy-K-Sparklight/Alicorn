@@ -44,8 +44,10 @@ async function unpack(profile: VersionProfile, container: Container, features: S
 
     await Promise.all(sources.map(async s => {
         const name = nativeLib.getArtifactName(s);
-        await unpackOne(container.nativeLibrary(s.name, name), nativesRoot, s.extract?.exclude);
+        if (name) {
+            await unpackOne(container.nativeLibrary(s.name, name), nativesRoot, s.extract?.exclude);
+        }
     }));
 }
 
-export const nativesLint = { unpack, unpackOne };
+export const nativesLint = { unpack };

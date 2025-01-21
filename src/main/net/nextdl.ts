@@ -7,6 +7,7 @@
 import { cacheStore } from "@/main/cache/store";
 import { conf } from "@/main/conf/conf";
 import { dlchk } from "@/main/net/dlchk";
+import { isTruthy } from "@/main/util/misc";
 import { net } from "electron";
 import EventEmitter from "events";
 import fs from "fs-extra";
@@ -257,7 +258,7 @@ async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
 
     const timeoutSignal = requestTimeout > 0 ? AbortSignal.timeout(requestTimeout) : null;
 
-    const signal = AbortSignal.any([task.signal, timeoutSignal].filter(Boolean) as AbortSignal[]);
+    const signal = AbortSignal.any([task.signal, timeoutSignal].filter(isTruthy));
 
     let res: Response | null = null;
 

@@ -1,4 +1,5 @@
 import { conf } from "@/main/conf/conf";
+import { isTruthy } from "@/main/util/misc";
 import { net } from "electron";
 
 interface Mirror {
@@ -53,14 +54,14 @@ const bmclapi = import.meta.env.AL_ENABLE_BMCLAPI && {
     }
 } satisfies Mirror;
 
-const mirrorList = [bmclapi, vanilla].filter(Boolean) as Mirror[];
+const mirrorList = [bmclapi, vanilla].filter(isTruthy);
 
 let activeMirrors: Mirror[];
 
 function setInitialMirrors() {
     if (!activeMirrors) {
         const preferMirror = mirrorList.find(m => m.name === conf().net.mirror.prefer);
-        activeMirrors = [...new Set([preferMirror, ...mirrorList].filter(Boolean) as Mirror[])];
+        activeMirrors = [...new Set([preferMirror, ...mirrorList].filter(isTruthy))];
     }
 }
 
@@ -73,7 +74,7 @@ function apply(url: string): string[] {
 async function bench(): Promise<void> {
     setInitialMirrors();
 
-    const mirrors = [bmclapi, vanilla].filter(Boolean) as Mirror[];
+    const mirrors = [bmclapi, vanilla].filter(isTruthy);
 
     if (mirrors.length < 2 || !conf().net.mirror.bench) {
         return;

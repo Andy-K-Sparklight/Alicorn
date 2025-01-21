@@ -5,7 +5,10 @@
 /**
  * Possible types of progress listed.
  */
-export type ProgressStateName = "generic.download" | "generic.count" | "jrt.download" | "jrt.unpack" | "jrt.verify"
+export type ProgressStateName =
+    "generic.download" | "generic.count" |
+    "jrt.download" | "jrt.unpack" | "jrt.verify" |
+    "vanilla.download-libs" | "vanilla.unpack-libs"
 
 /**
  * Interface describing generic progress.
@@ -24,7 +27,29 @@ export interface Progress {
  */
 export type ProgressHandler = (progress: Progress) => void;
 
-function countPromises<T>(p: Promise<T>[], onProgress: ProgressHandler): Promise<T>[] {
+/**
+ * Unifies abort signal and progress handler in one interface.
+ */
+export interface ProgressController {
+    onProgress?: ProgressHandler;
+    signal?: AbortSignal;
+}
+
+/**
+ * Creates a new handler that forwards underlying progress events to the given parent, with state set to the new name.
+ */
+function makeNamed(src: ProgressHandler | undefined, state: ProgressStateName): ProgressHandler | undefined {
+    if (src) {
+        return (p: Progress) => {
+            src({ ...p, state });
+        };
+    }
+    return undefined;
+}
+
+function countPromises<T>(p: Promise<T>[], onProgress?: ProgressHandler): Promise<T>[] {
+    if (!onProgress) return p;
+
     const po: Progress = {
         state: "generic.count",
         type: "count",
@@ -41,6 +66,7 @@ function countPromises<T>(p: Promise<T>[], onProgress: ProgressHandler): Promise
 }
 
 export const progress = {
-    countPromises
+    countPromises,
+    makeNamed
 };
 
