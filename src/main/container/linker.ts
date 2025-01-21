@@ -10,6 +10,67 @@ function getStorePath(sha1: string) {
     return paths.game.to(".store", sha1.slice(0, 2), sha1);
 }
 
+async function checkFile(sha1: string): Promise<boolean> {
+    const fp = getStorePath(sha1);
+    const sp = fp + ".sig";
+
+    try {
+        const st = await fs.stat(fp);
+
+        let shouldVerify = false;
+        let shouldUpdateSig = false;
+
+        try {
+            const d = parseInt((await fs.readFile(sp)).toString(), 10);
+            if (st.mtime.getTime() <= d) {
+                // File still valid
+                return true;
+            }
+
+            shouldVerify = true;
+            shouldUpdateSig = true;
+        } catch {
+            shouldUpdateSig = true;
+            // No valid signature
+            if (st.ctime !== st.mtime) {
+                shouldVerify = true;
+            }
+        }
+
+        if (shouldVerify) {
+            if (!await hash.checkFile(fp, "sha1", sha1)) {
+                // File invalid, remove it
+                console.warn(`Possibly corrupted store file: ${fp}`);
+                await fs.remove(fp);
+                await fs.remove(sp);
+                return false;
+            }
+
+            console.debug(`File revalidated: ${fp}`);
+        }
+
+        if (shouldUpdateSig) {
+            await signFile(sha1);
+        }
+
+        return true;
+    } catch {
+        return false; // File not exist or not readable
+    }
+}
+
+async function signFile(sha1: string) {
+    try {
+        const fp = getStorePath(sha1);
+        const sp = fp + ".sig";
+        const stat = await fs.stat(fp);
+        await fs.writeFile(sp, stat.mtime.getTime().toString());
+        console.debug(`File mtime signature updated: ${sha1}`);
+    } catch (e) {
+        console.warn(`Unable to add file mtime signature for ${sha1}: ${e}`);
+    }
+}
+
 /**
  * Links the file to existing cache.
  */
@@ -22,8 +83,7 @@ async function link(fp: string, sha1?: string) {
         const ep = getStorePath(sha1);
 
         try {
-            await fs.access(ep);
-            if (await hash.checkFile(ep, "sha1", sha1)) {
+            if (await checkFile(sha1)) {
                 // Link the file
                 await fs.remove(fp);
                 await fs.ensureDir(path.dirname(fp));
@@ -37,7 +97,7 @@ async function link(fp: string, sha1?: string) {
         await fs.remove(ep); // Delete corrupted cache, if any
         await fs.ensureDir(path.dirname(ep));
         await fs.link(fp, ep); // Link backward
-
+        await signFile(sha1);
     } catch (e) {
         console.warn(`Unable to link file ${fp}: ${e}`);
     }
