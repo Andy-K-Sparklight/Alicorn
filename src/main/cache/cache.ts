@@ -94,7 +94,6 @@ async function enroll(fp: string, sha1?: string) {
         await fs.remove(ep); // Delete existing object
         await fs.ensureDir(path.dirname(ep));
         await fs.copy(fp, ep); // Add file to cache
-        console.log("Signing file");
         await signFile(sha1);
     } catch (e) {
         console.warn(`Unable to enroll ${fp}: ${e}`);
