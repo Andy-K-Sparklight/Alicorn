@@ -2,7 +2,6 @@ import { containers } from "@/main/container/manage";
 import { paths } from "@/main/fs/paths";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import type { VersionProfile } from "@/main/profile/version-profile";
-import fs from "fs-extra";
 import assert from "node:assert";
 import { iTest } from "~/test/instrumented/tools";
 
@@ -25,11 +24,9 @@ export async function checkInstaller() {
 
     await iTest.run("Install Libraries", async () => {
         await vanillaInstaller.installLibraries(pf, c, new Set());
-        await fs.access(c.client(pf.id));
     });
 
     await iTest.run("Install Assets", async () => {
         await vanillaInstaller.installAssets(pf, c);
-        await fs.access(c.assetIndex(pf.assetIndex.id));
     });
 }

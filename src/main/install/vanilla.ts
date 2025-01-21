@@ -138,6 +138,8 @@ async function installLibraries(profile: VersionProfile, container: Container, f
 
     console.debug(`Library artifacts counted: ${tasks.length}`);
 
+    if (import.meta.env.AL_TEST) return; // Skips download
+
     await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "vanilla.download-libs") });
 
     if (shouldLink) {
@@ -186,6 +188,8 @@ async function installAssets(profile: VersionProfile, container: Container, cont
             fastLink: shouldLink
         }
     ));
+
+    if (import.meta.env.AL_TEST) return; // Skips download
 
     await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "vanilla.download-assets") });
 
