@@ -7,12 +7,13 @@ import { GameInstance, proc } from "@/main/launch/proc";
 import { LaunchHint, LaunchInit } from "@/main/launch/types";
 import { profileLoader } from "@/main/profile/loader";
 import { reg } from "@/main/registry/registry";
+import { containers } from "../container/manage";
 
 /**
  * Loads necessary information from the launch hint profile and builds launch init params.
  */
 async function prepare(hint: LaunchHint): Promise<LaunchInit> {
-    const container = reg.containers.get(hint.containerId);
+    const container = containers.get(hint.containerId);
     const profile = await profileLoader.fromContainer(hint.profileId, container);
     const account = reg.accounts.get(hint.accountId);
     const assetsShouldMap = await profileLoader.assetIndexShouldMap(profile.assetIndex.id, container);

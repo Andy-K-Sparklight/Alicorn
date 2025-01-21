@@ -23,17 +23,21 @@ export const Header: FC = () => {
  * The close button. Shows on the right corner when the cursor is moved near it, otherwise hidden for a cleaner LAF.
  */
 const CloseButton = () => {
-    return <div onClick={closeWindow}
-                className="opacity-0 hover:opacity-100 duration-300 cursor-pointer no-drag
-    fixed top-0 right-0 w-16 h-16 bg-danger flex justify-center items-center rounded-bl-full">
+    return <div
+        onClick={closeWindow}
+        className="opacity-0 hover:opacity-100 duration-300 cursor-pointer no-drag
+    fixed top-0 right-0 w-16 h-16 bg-danger flex justify-center items-center rounded-bl-full"
+    >
         <XIcon className="text-foreground ml-3 mb-3" size={24}/>
     </div>;
 };
 
 const MinimizeButton = () => {
-    return <div onClick={minimizeWindow}
-                className="opacity-0 hover:opacity-100 duration-300 cursor-pointer no-drag
-    fixed top-0 left-0 w-16 h-16 bg-default flex justify-center items-center rounded-br-full">
+    return <div
+        onClick={minimizeWindow}
+        className="opacity-0 hover:opacity-100 duration-300 cursor-pointer no-drag
+    fixed top-0 left-0 w-16 h-16 bg-default flex justify-center items-center rounded-br-full"
+    >
         <DashIcon className="text-foreground mr-3 mb-3" size={24}/>
     </div>;
 };

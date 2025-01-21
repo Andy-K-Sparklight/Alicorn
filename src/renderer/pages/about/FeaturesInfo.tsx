@@ -20,17 +20,18 @@ const FeaturesNoteCard = () => {
     const { t } = useTranslation("pages", { keyPrefix: "about" });
 
     return <div className="w-full">
-        <Alert title={t("features-note")}
-               description=""
-               classNames={{ title: "font-bold" }}
-               endContent={
-                   <Button onPress={() => native.ext.openURL(BUILDING_URL)}>
-                       <div className="flex items-center gap-2">
-                           <ArrowRightIcon/>
-                           {t("features-how")}
-                       </div>
-                   </Button>
-               }
+        <Alert
+            title={t("features-note")}
+            description=""
+            classNames={{ title: "font-bold" }}
+            endContent={
+                <Button onPress={() => native.ext.openURL(BUILDING_URL)}>
+                    <div className="flex items-center gap-2">
+                        <ArrowRightIcon/>
+                        {t("features-how")}
+                    </div>
+                </Button>
+            }
         />
     </div>;
 };
@@ -45,21 +46,24 @@ const FeaturesTable = () => {
             <TableCell>
                 <div className="flex items-center gap-2">
                     {t(`${name}.name`)}
-                    <Tooltip placement="right"
-                             color="foreground"
-                             content={<div className="whitespace-pre-line">{t(`${name}.tip`)}</div>}
+                    <Tooltip
+                        placement="right"
+                        color="foreground"
+                        content={<div className="whitespace-pre-line">{t(`${name}.tip`)}</div>}
                     >
                         <InfoIcon className="text-foreground-400"/>
                     </Tooltip>
                 </div>
             </TableCell>
             <TableCell>
-                <div className={clsx("flex items-center gap-2",
-                    {
-                        "text-success": available,
-                        "text-warning": !available
-                    }
-                )}>
+                <div
+                    className={clsx("flex items-center gap-2",
+                        {
+                            "text-success": available,
+                            "text-warning": !available
+                        }
+                    )}
+                >
                     {available ? <CheckIcon/> : <XIcon/>}
                     {t(available ? "enabled" : "disabled")}
                 </div>
