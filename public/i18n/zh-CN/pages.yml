@@ -19,9 +19,14 @@ settings:
       username:
         title: 您的昵称
         sub: 希望 Alicorn 如何称呼您？
-      dark:
-        title: 深色模式
-        sub: 夜漫天际，墨染海角，时序流转之钥。
+      theme:
+        title: 主题
+        sub: 待是百色作一色，始觉旧时胜今时。
+        items:
+          light: 天（原厂）
+          dark: 夜（原厂）
+          sakura-light: 樱花（云）
+          sakura-dark: 樱花（月）
       language:
         title: 语言
         sub: 设置 Alicorn 使用的语言。
@@ -50,13 +55,13 @@ settings:
       jvm-args:
         title: 启动选项 / JVM
         sub: |-
-          启动游戏时添加的 JVM 选项，一行填写一个。
+          启动游戏时添加的 JVM 选项。
           此选项对所有游戏生效。若要配置特定的游戏，请转到其设置页面。
 
       game-args:
         title: 启动选项 / 游戏
         sub: |-
-          启动游戏时添加的游戏选项，一行填写一个。
+          启动游戏时添加的游戏选项。
           此选项对所有游戏生效。若要配置特定的游戏，请转到其设置页面。
 
     network:
@@ -73,7 +78,7 @@ settings:
         sub: 使用可用的镜像以加快下载速度。
       aria2-args:
         title: aria2 启动选项
-        sub: 在启动 aria2 时添加以下命令行选项，一行填写一个。
+        sub: 在启动 aria2 时添加以下命令行选项。
       validate:
         title: 下载后验证
         sub: 在下载后验证文件完整性。

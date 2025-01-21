@@ -1,11 +1,12 @@
 import { i18n } from "@/renderer/i18n/i18n";
+import { themeManager, useTheme } from "@/renderer/theme";
 import { Divider } from "@heroui/react";
-import { useTheme } from "@heroui/use-theme";
-import { OnOffEntry, SelectEntry, TextEntry } from "@pages/settings/SettingsEntry";
+import { SelectEntry, TextEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
-import { CommentIcon, MoonIcon, PersonIcon } from "@primer/octicons-react";
+import { CommentIcon, PaintbrushIcon, PersonIcon } from "@primer/octicons-react";
 import React, { type FC } from "react";
 import { useTranslation } from "react-i18next";
+
 
 /**
  * User preferences page.
@@ -28,11 +29,12 @@ export const PreferencesTab: FC = () => {
 
         <Divider/>
 
-        <OnOffEntry
-            icon={MoonIcon}
-            id="pref.dark"
-            value={theme === "dark"}
-            onChange={isDark => setTheme(isDark ? "dark" : "light")}
+        <SelectEntry
+            icon={PaintbrushIcon}
+            id="pref.theme"
+            value={theme}
+            onChange={t => setTheme(t)}
+            items={themeManager.getThemes()}
         />
 
         <Divider/>

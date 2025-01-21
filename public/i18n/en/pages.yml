@@ -1,0 +1,142 @@
+launch:
+  title: Launch
+
+settings:
+  title: Settings
+  hint: Default values are recommended ones. Don't change any before knowing what they do. Some settings require restart.
+  tabs:
+    pref: Custom
+    launch: Launch
+    storage: Storage
+    network: Network
+    dev: Dev
+
+  dev-warn: Do not modify these unless for development!
+  store-warn: You lose data if modifying directly. Use path migration wizard for this.
+
+  entries:
+    pref:
+      username:
+        title: Nickname
+        sub: Your nickname you want Alicorn to use.
+      theme:
+        title: Theme
+        sub: Days back when the world was colorized...
+        items:
+          light: Sora (Factory)
+          dark: Yoru (Factory)
+          sakura-light: Sakura (Day)
+          sakura-dark: Sakura (Night)
+      language:
+        title: Language
+        sub: Select the language for UI.
+        items:
+          zh-CN: 简体中文
+          en: English
+
+    store:
+      store-path:
+        title: Store Path
+        sub: |-
+          Path to store application files.
+
+      game-path:
+        title: Game Files Path
+        sub: |-
+          Path to store game files.
+          That's in the store path by default.
+
+      temp-path:
+        title: Temp Path
+        sub: |-
+          Path to store temp files.
+
+    launch:
+      jvm-args:
+        title: Launch Args (JVM)
+        sub: |-
+          Arguments appended to the JVM section when launching.
+          Applies to all games. To configure certain game, use its option tab.
+
+      game-args:
+        title: Launch Args (Game)
+        sub: |-
+          Arguments appended to the game section when launching.
+          Applies to all games. To configure certain game, use its option tab.
+
+    network:
+      aria2:
+        title: aria2
+        sub: |-
+          Use aria2 to improve download performance.
+          Default downloader will be used if disabled.
+      concurrency:
+        title: Concurrency
+        sub: Max number of parallel tasks.
+      mirror:
+        title: Mirror
+        sub: Pick up available mirrors.
+      aria2-args:
+        title: Startup Arguments for aria2
+        sub: Arguments appended when aria2 starts up.
+      validate:
+        title: Validate Files
+        sub: Check file integrity after download.
+
+    dev:
+      frame:
+        title: Window Frame
+        sub: Display window frame and control widgets.
+      devtools:
+        title: DevTools
+        sub: Inspect renderer with DevTools.
+
+
+about:
+  title: About
+  subtitles:
+    app-info: Release Summary
+    packages-info: Packages
+    features-info: Enabled Features
+  name: Alicorn Launcher
+  version: Version {{version}}
+  dev-note: This is a development build. Use production build for improved performance and security.
+  copyright: |-
+    Copyright (C) 2021-2022 Andy K Rarity Sparklight ("ThatRarityEG")
+    Copyright (C) 2024-2025 Ted Gao ("skjsjhb")
+
+    Alicorn Launcher is released under GNU Generic Public License (version 3 or later).
+    Developed in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+    You are responsible for all consequences that may arise for using this software.
+
+  links:
+    source: Source
+    license: License
+
+  packages:
+    name: Package Name
+    ver: Version
+
+  features-note: Rebuild is needed to toggle these features.
+  features-how: How To
+  features:
+    bmclapi:
+      name: BMCLAPI
+      tip: Add BMCLAPI as alternative mirror.
+    local-account:
+      name: Local Account
+      tip: |-
+        Allow launching the game with offline account.
+        This breaks the EULA and will not supported.
+    aria2:
+      name: Bundled aria2
+      tip: |-
+        Pick up bundled aria2 binary.
+        aria2 installed in the system will be picked up anyway.
+    lzma-native:
+      name: Native LZMA Library
+      tip: |-
+        Improve LZMA inflation speed using native library.
+        Fast, yet not widely supported.
+    enabled: Available
+    disabled: Not Available
