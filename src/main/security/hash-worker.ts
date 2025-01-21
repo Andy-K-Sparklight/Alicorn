@@ -1,34 +1,15 @@
 import { createHash } from "node:crypto";
 import fs from "node:fs";
-import { parentPort, workerData } from "node:worker_threads";
 import { pEvent } from "p-event";
+import workerPool from "workerpool";
 
-export interface HashWorkerData {
-    path: string;
-    algorithm: string;
-    expect?: string;
-}
-
-async function main() {
-    const { path, algorithm, expect } = workerData as HashWorkerData;
-
+async function hash(path: string, algorithm: string): Promise<string> {
     const hash = createHash(algorithm);
     const rs = fs.createReadStream(path);
-
     rs.on("data", (chunk) => hash.update(chunk));
 
-    let result: unknown;
-
-    try {
-        await pEvent(rs, "end");
-
-        const h = hash.digest("hex").toLowerCase().trim();
-        result = expect ? h === expect.toLowerCase().trim() : h;
-    } catch {
-        result = expect ? false : "";
-    }
-
-    parentPort!.postMessage(result);
+    await pEvent(rs, "end");
+    return hash.digest("hex").toLowerCase().trim();
 }
 
-void main();
+workerPool.worker({ hash });

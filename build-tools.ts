@@ -61,6 +61,10 @@ export async function build(variant: BuildVariant) {
         chunkNames: "[hash]",
         splitting: true,
         format: "esm",
+        banner: {
+            // A patch to make require available
+            js: "import { createRequire } from \"node:module\";global.require = createRequire(import.meta.url);\n"
+        },
         ...sharedOptions
     };
 

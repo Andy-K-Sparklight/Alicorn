@@ -7,6 +7,7 @@ import { mirror } from "@/main/net/mirrors";
 import { nextdl, type NextDownloadRequest } from "@/main/net/nextdl";
 import { isTruthy } from "@/main/util/misc";
 import { progress, type ProgressController } from "@/main/util/progress";
+import pLimit from "p-limit";
 
 export interface DlxDownloadRequest {
     url: string;
@@ -29,6 +30,8 @@ async function getAll(req: DlxDownloadRequest[], control?: ProgressController): 
 
     console.log(`Resolving ${req.length} tasks (${dl}).`);
 
+
+    let limit = pLimit(conf().net.concurrency);
     let promises: Promise<void>[];
 
     if (dl === "aria2") {
@@ -39,7 +42,7 @@ async function getAll(req: DlxDownloadRequest[], control?: ProgressController): 
             signal: mixedSignal
         }));
 
-        promises = aria2Tasks.map(t => aria2.resolve(t));
+        promises = aria2Tasks.map(t => limit(() => aria2.resolve(t)));
 
     } else if (dl === "next") {
         const nextTasks: NextDownloadRequest[] = req.map(r => ({
@@ -49,7 +52,7 @@ async function getAll(req: DlxDownloadRequest[], control?: ProgressController): 
             signal: mixedSignal
         }));
 
-        promises = nextTasks.map(t => nextdl.get(t));
+        promises = nextTasks.map(t => limit(() => nextdl.get(t)));
 
     } else {
         throw `Unknown downloader: ${dl}`;

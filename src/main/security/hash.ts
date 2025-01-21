@@ -1,26 +1,18 @@
 import { paths } from "@/main/fs/paths";
-import type { HashWorkerData } from "@/main/security/hash-worker";
-import { Worker } from "node:worker_threads";
-import { pEvent } from "p-event";
+import lazyValue from "lazy-value";
+import workerPool from "workerpool";
+
+let pool = lazyValue(() => workerPool.pool(paths.app.to("hash-worker.js")));
 
 async function checkFile(pt: string, algorithm: string, expectHash: string): Promise<boolean> {
-    return await check(pt, algorithm, expectHash) as boolean;
+    return await forFile(pt, algorithm) === expectHash.trim().toLowerCase();
 }
 
 async function forFile(pt: string, algorithm: string): Promise<string> {
-    return await check(pt, algorithm) as string;
-}
+    const h = await pool().exec("hash", [pt, algorithm]);
 
-async function check(pt: string, algorithm: string, expectHash?: string): Promise<string | boolean> {
-    const dat: HashWorkerData = { path: pt, algorithm, expect: expectHash };
-
-    const w = new Worker(paths.app.to("hash-worker.js"), { workerData: dat });
-
-    const hs = await pEvent(w, ["exit", "message"]);
-
-    if (!hs) throw `Failed to hash file: ${pt}`;
-
-    return hs;
+    if (!h) throw `Failed to hash file: ${pt}`;
+    return h;
 }
 
 export const hash = {

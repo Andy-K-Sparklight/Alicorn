@@ -4,7 +4,7 @@
  * Comparing to the wrapped downloader, the next downloader runs on the main process and utilizes the net module from
  * Electron. This is expected to bypass the connection limit in the browser window and maximize the throughput.
  */
-import { cacheStore } from "@/main/cache/store";
+import { cache } from "@/main/cache/cache";
 import { conf } from "@/main/conf/conf";
 import { dlchk } from "@/main/net/dlchk";
 import { isTruthy } from "@/main/util/misc";
@@ -14,7 +14,6 @@ import fs from "fs-extra";
 import { nanoid } from "nanoid";
 import path from "node:path";
 import { Stream } from "node:stream";
-import PQueue from "p-queue";
 import type TypedEmitter from "typed-emitter";
 
 /**
@@ -78,30 +77,12 @@ enum NextRequestStatus {
     FATAL
 }
 
-let queue: PQueue | null = null;
-
-function getQueue(): PQueue {
-    if (queue === null) {
-        queue = new PQueue({ concurrency: conf().net.concurrency });
-    }
-    return queue;
-}
-
-/**
- * Builds a task for the given request and schedule them to be run in the global queue.
- *
- * Returns an array of 2 elements. The first is a promise which resolves when the download completes with a boolean
- * value indicating the status. The second is the task object.
- */
-async function get(req: NextDownloadRequest): Promise<void> {
-    const t = createTask(req);
-    await getQueue().add(() => resolve(t));
-}
-
 /**
  * Resolves the download task for the maximum number of tries specified.
  */
-async function resolve(task: NextDownloadTask): Promise<void> {
+async function get(req: NextDownloadRequest): Promise<void> {
+    const task = createTask(req);
+
     console.debug(`NextDL Get: ${task.req.origin}`);
 
     // First try to reuse existing files
