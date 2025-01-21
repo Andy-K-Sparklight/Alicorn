@@ -11,7 +11,7 @@
         "start": "cd build/prod && electron .",
         "clean": "bun exec \"rm -rf build dist\"",
         "dist": "bun pack.ts",
-        "type-check": "tsc",
+        "type-check": "tsc --noEmit",
         "update-compat-table": "bun scripts/gen-compat-table.ts"
     },
     "devDependencies": {

@@ -20,6 +20,8 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - name: Install Dependencies
         run: bun install
+      - name: Check Types
+        run: bun type-check
       - name: Run Unit Tests
         run: bun test
       - name: Run Instrumented Tests

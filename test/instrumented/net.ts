@@ -42,7 +42,7 @@ export async function checkFileDownload() {
         let completed = 0;
         const p = dlx.getAll(tasks, {
             onProgress: () => completed++,
-            abortSignal: abortController.signal
+            signal: abortController.signal
         });
 
         abortController.abort("Cancelled");
