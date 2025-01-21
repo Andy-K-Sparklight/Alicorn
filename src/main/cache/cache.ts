@@ -20,8 +20,10 @@ async function checkFile(sha1: string): Promise<boolean> {
     try {
         const st = await fs.stat(fp);
 
+        // This flag checks whether the file need to be verified
+        // In case the signature is missing, we can still use ctime and mtime to identify modified objects
+        // Thus verification is not always necessary
         let shouldVerify = false;
-        let shouldUpdateSig = false;
 
         try {
             const d = parseInt((await fs.readFile(sp)).toString(), 10);
@@ -31,9 +33,7 @@ async function checkFile(sha1: string): Promise<boolean> {
             }
 
             shouldVerify = true;
-            shouldUpdateSig = true;
         } catch {
-            shouldUpdateSig = true;
             // No valid signature
             if (st.ctimeMs !== st.mtimeMs) {
                 shouldVerify = true;
@@ -52,10 +52,7 @@ async function checkFile(sha1: string): Promise<boolean> {
             console.debug(`File revalidated: ${fp}`);
         }
 
-        if (shouldUpdateSig) {
-            await signFile(sha1);
-        }
-
+        await signFile(sha1);
         return true;
     } catch {
         return false; // File not exist or not readable

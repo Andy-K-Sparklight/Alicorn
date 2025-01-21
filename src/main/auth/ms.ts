@@ -106,7 +106,7 @@ export class MSAccount implements Account {
         if (!accessToken) throw `Empty OAuth token received (the authorization may have failed)`;
 
         this.expiresAt = Date.now() + (expiresIn - 300) * 1000; // Reserve 5min for the token
-        this.oAuthToken = accessToken ?? "";
+        this.oAuthToken = accessToken;
         this.refreshToken = refreshToken ?? "";
     }
 
