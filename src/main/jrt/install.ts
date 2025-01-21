@@ -179,14 +179,7 @@ async function installRuntime(component: string, control?: ProgressController): 
 
     console.debug("Verifying installation...");
 
-    control?.onProgress?.({
-        state: "jrt.verify",
-        type: "indefinite",
-        value: {
-            total: 0,
-            current: 0
-        }
-    });
+    control?.onProgress?.(progress.indefinite("jrt.verify"));
 
     await verify(root);
 

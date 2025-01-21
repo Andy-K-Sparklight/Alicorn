@@ -2,7 +2,7 @@
  * Driver for aria2 downloader. aria2 delegates heavy I/O tasks to separated processes and handles all necessary
  * details.
  */
-import { cacheStore } from "@/main/cache/store";
+import { cache } from "@/main/cache/cache";
 import { conf } from "@/main/conf/conf";
 import { paths } from "@/main/fs/paths";
 import { dlchk } from "@/main/net/dlchk";
@@ -51,7 +51,7 @@ async function resolve(req: Aria2DownloadRequest): Promise<void> {
     console.debug(`Aria2 Get: ${req.origin}`);
 
     if (req.sha1) {
-        await cacheStore.deploy(req.sha1, req.path, "copy");
+        await cache.deploy(req.path, req.sha1);
     }
 
     // Preflight
@@ -113,7 +113,7 @@ async function sendRequest(req: Aria2DownloadRequest): Promise<void> {
 
     await pEvent(emitter, "finish");
 
-    await cacheStore.enroll(req.path, req.sha1);
+    await cache.enroll(req.path, req.sha1);
 }
 
 
@@ -161,6 +161,7 @@ async function init() {
         const cert = paths.app.to("vendor", "ca-cert.pem");
 
         aria2cProcess = child_process.spawn(pt, [
+            `--quiet=true`, // If not added, the download will stop once the log reaches the limit
             `--max-concurrent-downloads=${concurrency > 1 ? concurrency : 1}`,
             "--max-connection-per-server=16",
             `--connect-timeout=${requestTimeout}`,
@@ -171,7 +172,7 @@ async function init() {
             `--rpc-secret=${aria2cToken}`,
             `--ca-certificate=${cert}`,
             ...args
-        ]);
+        ], { stdio: "ignore" });
 
         console.debug("Connecting to aria2 RPC interface...");
 

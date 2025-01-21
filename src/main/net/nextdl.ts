@@ -87,7 +87,7 @@ async function get(req: NextDownloadRequest): Promise<void> {
 
     // First try to reuse existing files
     if (task.req.sha1) {
-        await cacheStore.deploy(task.req.sha1, task.req.path, "copy");
+        await cache.deploy(task.req.path, task.req.sha1);
     }
 
     // Preflight validate
@@ -117,7 +117,7 @@ async function get(req: NextDownloadRequest): Promise<void> {
                 task.status = NextDownloadStatus.DONE;
 
                 // Add file for reusing
-                await cacheStore.enroll(task.req.path, task.req.sha1);
+                await cache.enroll(task.req.path, task.req.sha1);
 
                 return;
             }

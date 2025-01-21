@@ -27,4 +27,9 @@ export async function checkInstaller() {
         await vanillaInstaller.installLibraries(pf, c, new Set());
         await fs.access(c.client(pf.id));
     });
+
+    await iTest.run("Install Assets", async () => {
+        await vanillaInstaller.installAssets(pf, c);
+        await fs.access(c.assetIndex(pf.assetIndex.id));
+    });
 }

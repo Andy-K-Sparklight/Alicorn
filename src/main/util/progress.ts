@@ -6,9 +6,17 @@
  * Possible types of progress listed.
  */
 export type ProgressStateName =
-    "generic.download" | "generic.count" |
-    "jrt.download" | "jrt.unpack" | "jrt.verify" |
-    "vanilla.download-libs" | "vanilla.unpack-libs"
+    "generic.download" |
+    "generic.count" |
+    "jrt.download" |
+    "jrt.unpack" |
+    "jrt.verify" |
+    "vanilla.resolve" |
+    "vanilla.download-libs" |
+    "vanilla.unpack-libs" |
+    "vanilla.download-asset-index" |
+    "vanilla.download-assets" |
+    "vanilla.link-assets"
 
 /**
  * Interface describing generic progress.
@@ -65,8 +73,20 @@ function countPromises<T>(p: Promise<T>[], onProgress?: ProgressHandler): Promis
     }));
 }
 
+function indefinite(state: ProgressStateName): Progress {
+    return {
+        state,
+        type: "indefinite",
+        value: {
+            current: 0,
+            total: 0
+        }
+    };
+}
+
 export const progress = {
     countPromises,
-    makeNamed
+    makeNamed,
+    indefinite
 };
 
