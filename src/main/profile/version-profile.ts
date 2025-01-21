@@ -146,3 +146,7 @@ export interface LoggingArtifact {
     url: string;
 }
 
+export interface AssetIndex {
+    map_to_resources?: boolean,
+    objects: Record<string, { hash: string, size: number }>;
+}

@@ -1,4 +1,4 @@
-import { clinker } from "@/main/container/linker";
+import { cache } from "@/main/cache/cache";
 import type { Container } from "@/main/container/spec";
 import { nativesLint } from "@/main/install/natives-lint";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
@@ -6,8 +6,10 @@ import { netx } from "@/main/net/netx";
 import { profileLoader } from "@/main/profile/loader";
 import { nativeLib } from "@/main/profile/native-lib";
 import { filterRules } from "@/main/profile/rules";
-import type { VersionProfile } from "@/main/profile/version-profile";
+import type { AssetIndex, VersionProfile } from "@/main/profile/version-profile";
 import { progress, type ProgressController } from "@/main/util/progress";
+import fs from "fs-extra";
+import path from "path";
 
 const VERSION_MANIFEST = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
 
@@ -59,7 +61,9 @@ async function prefetch(): Promise<void> {
 /**
  * Fetches and loads the version manifest of the specified ID.
  */
-async function installProfile(id: string | "latest-release" | "latest-snapshot", container: Container): Promise<VersionProfile> {
+async function installProfile(id: string | "latest-release" | "latest-snapshot", container: Container, control?: ProgressController): Promise<VersionProfile> {
+    control?.onProgress?.(progress.indefinite("vanilla.resolve"));
+
     const mf = await getManifest();
 
     if (id === "latest-release") {
@@ -76,10 +80,10 @@ async function installProfile(id: string | "latest-release" | "latest-snapshot",
 
     const fp = container.profile(id);
 
-    await dlx.getAll([{ ...v, path: fp }]);
+    await dlx.getAll([{ ...v, path: fp }], { signal: control?.signal });
 
     if (container.spec.flags.link) {
-        await clinker.link(fp, v.sha1);
+        await cache.link(fp, v.sha1);
     }
 
     return await profileLoader.fromContainer(id, container);
@@ -100,10 +104,9 @@ async function installLibraries(profile: VersionProfile, container: Container, f
             if (name && a && a.url) {
                 const fp = container.nativeLibrary(lib.name, name);
                 tasks.push({
-                    url: a.url,
-                    path: fp,
-                    sha1: a.sha1,
-                    size: a.size
+                    ...a,
+                    url: a.url, // A workaround for TS type system
+                    path: fp
                 });
             }
         }
@@ -113,10 +116,9 @@ async function installLibraries(profile: VersionProfile, container: Container, f
             if (a.url) {
                 const fp = container.library(lib.name);
                 tasks.push({
+                    ...a,
                     url: a.url,
-                    path: fp,
-                    sha1: a.sha1,
-                    size: a.size
+                    path: fp
                 });
             }
         }
@@ -139,22 +141,74 @@ async function installLibraries(profile: VersionProfile, container: Container, f
 
     if (container.spec.flags.link) {
         await Promise.all(tasks.map(async t => {
-            await clinker.link(t.path, t.sha1);
+            await cache.link(t.path, t.sha1);
         }));
     }
 
-    onProgress?.({
-        state: "vanilla.unpack-libs",
-        type: "indefinite",
-        value: {
-            current: 0,
-            total: 0
-        }
-    });
+    onProgress?.(progress.indefinite("vanilla.unpack-libs"));
 
     await nativesLint.unpack(profile, container, features);
 }
 
+const ASSETS_BASE_URL = "https://resources.download.minecraft.net";
+
+/**
+ * Installs assets and asset index.
+ */
+async function installAssets(profile: VersionProfile, container: Container, control?: ProgressController): Promise<void> {
+    const { signal, onProgress } = control ?? {};
+
+    onProgress?.(progress.indefinite("vanilla.download-asset-index"));
+
+    const assetIndexPath = container.assetIndex(profile.assetIndex.id);
+
+    await dlx.getAll([{
+        ...profile.assetIndex,
+        path: assetIndexPath
+    }], { signal });
+
+    const assetIndex = await fs.readJSON(assetIndexPath) as AssetIndex;
+
+    const assetCount = Object.keys(assetIndex.objects).length;
+
+    console.debug(`Fetching ${assetCount} assets...`);
+
+    const tasks: DlxDownloadRequest[] = Object.values(assetIndex.objects).map(({ hash, size }) => (
+        {
+            url: `${ASSETS_BASE_URL}/${hash.slice(0, 2)}/${hash}`,
+            path: container.asset(hash),
+            sha1: hash,
+            size
+        }
+    ));
+
+    await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "vanilla.download-assets") });
+
+    async function makeLink(src: string, dst: string) {
+        await fs.ensureDir(path.dirname(dst));
+        await fs.remove(dst); // This is required for updating links
+        await fs.link(src, dst);
+        console.debug(`Linking asset ${src} -> ${dst}`);
+    }
+
+    console.debug(`Linking ${assetCount} assets...`);
+
+    await Promise.all(progress.countPromises(
+        Object.entries(assetIndex.objects).map(async ([name, { hash }]) => {
+            const src = container.asset(hash);
+            const dst = container.assetLegacy(profile.assetIndex.id, name);
+            await makeLink(src, dst);
+
+            if (assetIndex.map_to_resources) {
+                // Also link to the resources dir
+                const dst = container.assetMapped(name);
+                await makeLink(src, dst);
+            }
+        }),
+        progress.makeNamed(onProgress, "vanilla.link-assets")
+    ));
+}
+
 export const vanillaInstaller = {
-    getManifest, prefetch, installProfile, installLibraries
+    getManifest, prefetch, installProfile, installLibraries, installAssets
 };
