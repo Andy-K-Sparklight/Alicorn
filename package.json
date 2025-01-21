@@ -33,7 +33,7 @@
         "type-fest": "^4.33.0",
         "typed-emitter": "^2.1.0",
         "typescript": "^5.7.3",
-        "vite": "^6.0.11",
+        "vite": "^5.4.12",
         "vite-tsconfig-paths": "^5.1.4",
         "xvfb-maybe": "^0.2.1"
     },
