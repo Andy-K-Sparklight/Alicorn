@@ -9,9 +9,10 @@ import { ext } from "@/main/sys/ext";
 import { getOSName } from "@/main/sys/os";
 import { windowControl } from "@/main/sys/window-control";
 import { isTruthy } from "@/main/util/misc";
-import { app, BrowserWindow, Menu } from "electron";
+import { app, BrowserWindow, Menu, net, protocol } from "electron";
 import events from "node:events";
 import os from "node:os";
+import { pathToFileURL } from "node:url";
 import path from "path";
 import dedent from "ts-dedent";
 import pkg from "~/package.json";
@@ -33,6 +34,8 @@ async function main() {
 
     process.noAsar = true;
     events.defaultMaxListeners = 8192;
+
+    registerAppProtocol();
 
     if (!checkSingleInstance()) return;
 
@@ -62,6 +65,8 @@ async function main() {
         paths.setup();
     }
 
+    addAppProtocolHandler();
+
     await registry.init();
 
     confHost.setup();
@@ -89,7 +94,7 @@ async function main() {
 
     const { size: [width, height], pos: [px, py] } = conf().app.window;
 
-    const [defWidth, defHeight] = windowControl.optimalSize(); // Initial size, will be changed by user settings later
+    const [defWidth, defHeight] = windowControl.optimalSize();
     const hasFrame = conf().dev.showFrame;
 
     mainWindow = new BrowserWindow({
@@ -139,7 +144,7 @@ async function main() {
         console.log(`Picked up dev server URL: ${devServerURL}`);
         await mainWindow.loadURL(devServerURL);
     } else {
-        await mainWindow.loadFile(paths.app.to("renderer", "index.html"));
+        await mainWindow.loadURL("app://./index.html");
     }
 
     console.log("Executing late init tasks...");
@@ -155,6 +160,47 @@ async function main() {
     if (import.meta.env.AL_TEST) {
         void runInstrumentedTest();
     }
+}
+
+function registerAppProtocol() {
+    protocol.registerSchemesAsPrivileged([
+        {
+            scheme: "app",
+            privileges: {
+                standard: true,
+                secure: true,
+                supportFetchAPI: true,
+                stream: true,
+                codeCache: true
+            }
+        }
+    ]);
+}
+
+function addAppProtocolHandler() {
+    protocol.handle("app", (req) => {
+        const { host, pathname } = new URL(req.url);
+        if (host === ".") {
+            // Resolve inside the app bundle
+            const target = paths.app.to("renderer", pathname.slice(1));
+            const root = paths.app.to("renderer");
+            const relativePath = path.relative(root, target);
+            const safe = relativePath && !relativePath.startsWith("..") && !path.isAbsolute(relativePath);
+            if (safe) {
+                return net.fetch(pathToFileURL(target).toString());
+            } else {
+                return new Response(`The specified path ${target} is not included in the app bundle.`, {
+                    status: 404,
+                    headers: { "Content-Type": "text/plain" }
+                });
+            }
+        }
+
+        return new Response(`Unable to process request URL: ${req.url}`, {
+            status: 404,
+            headers: { "Content-Type": "text/plain" }
+        });
+    });
 }
 
 /**
