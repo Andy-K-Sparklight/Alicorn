@@ -89,18 +89,18 @@ export default {
         },
         background: "#0b0b0b",
         foreground: {
-            "50": "#4d4547",
-            "100": "#796d70",
-            "200": "#a69599",
-            "300": "#d2bdc3",
-            "400": "#ffe5ec",
+            "50": "#413a3b",
+            "100": "#4d4547",
+            "200": "#796d70",
+            "300": "#a69599",
+            "400": "#d2bdc3",
             "500": "#ffeaef",
             "600": "#ffeef3",
             "700": "#fff3f6",
             "800": "#fff7f9",
             "900": "#fffcfd",
             foreground: "#000",
-            DEFAULT: "#ffe5ec"
+            DEFAULT: "#ffeaef"
         },
         content1: {
             DEFAULT: "#101010",
