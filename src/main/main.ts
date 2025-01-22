@@ -13,6 +13,7 @@ import { app, BrowserWindow, Menu } from "electron";
 import events from "node:events";
 import os from "node:os";
 import path from "path";
+import dedent from "ts-dedent";
 import pkg from "~/package.json";
 import { runInstrumentedTest } from "~/test/instrumented/entry";
 import "v8-compile-cache";
@@ -163,7 +164,7 @@ function injectDevToolsStyles(w: BrowserWindow) {
     if (os.platform() !== "win32") return;
 
     w.webContents.on("devtools-opened", () => {
-        const css = `
+        const css = dedent`
             :root {
                 --source-code-font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace !important;
                 --source-code-font-size: 14px !important;
@@ -172,7 +173,7 @@ function injectDevToolsStyles(w: BrowserWindow) {
                 --default-font-size: var(--source-code-font-size) !important;
             }
         `;
-        w.webContents.devToolsWebContents?.executeJavaScript(`
+        w.webContents.devToolsWebContents?.executeJavaScript(dedent`
             const s = document.createElement('style');
             s.innerHTML = '${css.replaceAll("\n", " ").replaceAll("'", "\\'")}';
             document.body.append(s);
