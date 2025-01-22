@@ -21,6 +21,7 @@ export function useTheme() {
         const clazz = [theme, isDark(t) && "dark"].filter(isTruthy);
         document.documentElement.classList.remove(originalTheme.current, "dark");
         document.documentElement.classList.add(...clazz);
+        originalTheme.current = theme ?? "dark";
     }, [theme]);
 
     return { theme, setTheme };
