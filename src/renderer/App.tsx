@@ -1,4 +1,5 @@
 import { i18n } from "@/renderer/i18n/i18n";
+import { useTheme } from "@/renderer/theme";
 import { Header } from "@components/Header";
 import { HeroUIProvider } from "@heroui/react";
 import { About } from "@pages/about/About";
@@ -12,6 +13,7 @@ import pkg from "~/package.json";
  */
 export const App: FC = () => {
     const [, navigate] = useLocation();
+    useTheme();
 
     i18n.useAutoFontClass();
 

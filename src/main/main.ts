@@ -14,7 +14,7 @@ import events from "node:events";
 import os from "node:os";
 import { pathToFileURL } from "node:url";
 import path from "path";
-import dedent from "ts-dedent";
+import { dedent } from "ts-dedent";
 import pkg from "~/package.json";
 import { runInstrumentedTest } from "~/test/instrumented/entry";
 import "v8-compile-cache";
@@ -210,6 +210,7 @@ function injectDevToolsStyles(w: BrowserWindow) {
     if (os.platform() !== "win32") return;
 
     w.webContents.on("devtools-opened", () => {
+        console.log(dedent);
         const css = dedent`
             :root {
                 --source-code-font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace !important;

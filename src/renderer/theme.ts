@@ -1,6 +1,5 @@
-import { isTruthy } from "@/main/util/misc";
 import type { ConfigTheme } from "@heroui/react";
-import { type Dispatch, type SetStateAction, useEffect, useRef, useState } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useRef } from "react";
 import { useLocalStorage } from "react-use";
 import themes from "~/themes";
 
@@ -13,14 +12,20 @@ function isDark(th: string) {
 }
 
 export function useTheme() {
-    useState();
     const [theme, setTheme] = useLocalStorage("theme", "dark") as [string, Dispatch<SetStateAction<string>>, () => void];
-    const originalTheme = useRef(theme);
+    const originalTheme = useRef<string | null>(null);
 
     useEffect(() => {
-        const clazz = [theme, isDark(theme) && "dark"].filter(isTruthy);
-        document.documentElement.classList.remove(originalTheme.current, "dark");
-        document.documentElement.classList.add(...clazz);
+        if (originalTheme.current) {
+            document.documentElement.classList.remove(originalTheme.current, "dark");
+        }
+
+        console.log(`Adding theme: ${theme}`);
+        document.documentElement.classList.add(theme);
+        if (isDark(theme)) {
+            document.documentElement.classList.add("dark");
+        }
+
         originalTheme.current = theme;
     }, [theme]);
 
