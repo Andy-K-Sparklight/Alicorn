@@ -58,7 +58,7 @@ function optimalSize(): [number, number] {
 
     const scaleFactor = 0.8;
 
-    return [width * scaleFactor, height * scaleFactor];
+    return [Math.round(width * scaleFactor), Math.round(height * scaleFactor)];
 }
 
 export const windowControl = { setup, forWindow, optimalSize };
