@@ -1,10 +1,9 @@
 import { i18n } from "@/renderer/i18n/i18n";
-import { themeManager, useTheme } from "@/renderer/theme";
 import { Header } from "@components/Header";
 import { HeroUIProvider } from "@heroui/react";
 import { About } from "@pages/about/About";
 import { Settings } from "@pages/settings/Settings";
-import React, { type FC, useEffect } from "react";
+import React, { type FC } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import pkg from "~/package.json";
 
@@ -13,17 +12,6 @@ import pkg from "~/package.json";
  */
 export const App: FC = () => {
     const [, navigate] = useLocation();
-    const { theme } = useTheme();
-
-    useEffect(() => {
-        if (themeManager.isDark(theme)) {
-            console.log(`Is dark: ${theme}`);
-            document.documentElement.classList.add("dark");
-        } else {
-            console.log(`Is not dark: ${theme}`);
-            document.documentElement.classList.remove("dark");
-        }
-    }, [theme]);
 
     i18n.useAutoFontClass();
 
