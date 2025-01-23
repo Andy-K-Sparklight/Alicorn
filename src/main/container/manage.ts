@@ -1,7 +1,7 @@
 import { Container, type ContainerSpec } from "@/main/container/spec";
 import { MavenName } from "@/main/profile/maven-name";
 import { reg } from "@/main/registry/registry";
-import path from "path";
+import path from "node:path";
 
 let cachedContainers = new Map<string, Container>();
 

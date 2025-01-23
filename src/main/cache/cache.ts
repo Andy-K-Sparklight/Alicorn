@@ -4,7 +4,7 @@
 import { paths } from "@/main/fs/paths";
 import { hash } from "@/main/security/hash";
 import fs from "fs-extra";
-import path from "path";
+import path from "node:path";
 
 function getCachePath(sha1: string) {
     return paths.game.to(".store", sha1.slice(0, 2), sha1);

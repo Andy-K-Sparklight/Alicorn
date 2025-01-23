@@ -1,8 +1,8 @@
 import { isTruthy } from "@/main/util/misc";
 import consola from "consola";
 import fs from "fs-extra";
-import path from "path";
-import { Writable } from "stream";
+import path from "node:path";
+import { Writable } from "node:stream";
 import type { BuildConfig } from "~/config";
 
 interface VendorFile {

@@ -1,6 +1,6 @@
 import { paths } from "@/main/fs/paths";
 import { expect, test } from "bun:test";
-import path from "path";
+import path from "node:path";
 
 test("Path Resolution", () => {
     paths.setup({

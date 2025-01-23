@@ -1,8 +1,8 @@
 import { conf } from "@/main/conf/conf";
-import { ChildProcess } from "child_process";
-import EventEmitter from "events";
 import { nanoid } from "nanoid";
 import * as child_process from "node:child_process";
+import { ChildProcess } from "node:child_process";
+import EventEmitter from "node:events";
 import { Readable } from "node:stream";
 import TypedEmitter from "typed-emitter";
 

@@ -1,7 +1,7 @@
 import { conf } from "@/main/conf/conf";
 import { expect, test } from "bun:test";
 import fs from "fs-extra";
-import path from "path";
+import path from "node:path";
 
 const cfgPath = path.resolve("emulated", "config.v2.json");
 process.env.ALICORN_CONFIG_PATH = cfgPath;

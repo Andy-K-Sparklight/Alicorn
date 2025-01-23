@@ -9,8 +9,8 @@ import { net } from "electron";
 import fs from "fs-extra";
 import * as child_process from "node:child_process";
 import os from "node:os";
+import path from "node:path";
 import { pEvent } from "p-event";
-import path from "path";
 
 const JRT_MANIFEST = "https://piston-meta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json";
 

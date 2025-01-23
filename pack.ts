@@ -3,7 +3,7 @@
  */
 import { type Options, packager } from "@electron/packager";
 import consola from "consola";
-import path from "path";
+import path from "node:path";
 import { build } from "~/build-tools";
 import pkg from "~/package.json";
 

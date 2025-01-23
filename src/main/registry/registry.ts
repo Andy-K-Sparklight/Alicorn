@@ -5,7 +5,7 @@ import type { ContainerSpec } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import fs from "fs-extra";
 import { Database, type Statement } from "node-sqlite3-wasm";
-import path from "path";
+import path from "node:path";
 import { Serializer } from "superserial";
 
 

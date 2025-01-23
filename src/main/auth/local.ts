@@ -1,5 +1,5 @@
 import { Account, AuthCredentials } from "@/main/auth/spec";
-import crypto from "crypto";
+import crypto from "node:crypto";
 
 export class LocalAccount implements Account {
     uuid: string;

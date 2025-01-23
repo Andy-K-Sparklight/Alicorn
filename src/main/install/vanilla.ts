@@ -9,7 +9,7 @@ import { filterRules } from "@/main/profile/rules";
 import type { AssetIndex, VersionProfile } from "@/main/profile/version-profile";
 import { progress, type ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
-import path from "path";
+import path from "node:path";
 
 const VERSION_MANIFEST = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
 

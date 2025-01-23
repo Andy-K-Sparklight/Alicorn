@@ -5,7 +5,7 @@ import type { VersionProfile } from "@/main/profile/version-profile";
 import { unwrapESM } from "@/main/util/module";
 import fs from "fs-extra";
 import type streamZip from "node-stream-zip";
-import path from "path";
+import path from "node:path";
 
 let zl: typeof streamZip;
 

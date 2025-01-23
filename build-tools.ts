@@ -5,7 +5,7 @@ import esbuild, { type BuildOptions } from "esbuild";
 import fs from "fs-extra";
 import * as child_process from "node:child_process";
 
-import path from "path";
+import path from "node:path";
 import * as vite from "vite";
 import { type BuildVariant, createBuildConfig } from "~/config";
 import { createBuildDefines } from "~/scripts/defines";

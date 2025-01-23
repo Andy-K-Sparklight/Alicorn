@@ -4,7 +4,7 @@
 import { conf } from "@/main/conf/conf";
 import { LaunchInit } from "@/main/launch/types";
 import { filterRules } from "@/main/profile/rules";
-import path from "path";
+import path from "node:path";
 import pkg from "~/package.json";
 
 function createClasspath(init: LaunchInit): string {

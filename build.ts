@@ -1,7 +1,7 @@
 import consola from "consola";
 import child_process from "node:child_process";
 import os from "node:os";
-import path from "path";
+import path from "node:path";
 import { build } from "~/build-tools";
 import type { BuildMode } from "~/config";
 import { printTestSummary } from "~/scripts/instrumented-test";

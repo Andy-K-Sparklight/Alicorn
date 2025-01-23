@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import { randomUUID } from "node:crypto";
 import os from "node:os";
-import path from "path";
+import path from "node:path";
 
 /**
  * The config (v2) module which has enhanced type support.

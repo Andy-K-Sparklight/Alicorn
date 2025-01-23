@@ -3,7 +3,7 @@ import { unwrapESM } from "@/main/util/module";
 import fs from "fs-extra";
 import type lzmaJS from "lzma";
 import type lzmaNative from "lzma-native";
-import path from "path";
+import path from "node:path";
 import { pipeline } from "stream/promises";
 import pkg from "~/package.json";
 
