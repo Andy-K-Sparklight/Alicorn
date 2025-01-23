@@ -90,7 +90,12 @@ async function installProfile(id: string | "latest-release" | "latest-snapshot",
 /**
  * Downloads and installs libraries. Unpacks them if necessary.
  */
-async function installLibraries(profile: VersionProfile, container: Container, features: Set<string>, control?: ProgressController) {
+async function installLibraries(
+    profile: VersionProfile,
+    container: Container,
+    features: Set<string>,
+    control?: ProgressController
+) {
     const { signal, onProgress } = control ?? {};
     const usableLibraries = profile.libraries.filter(lib => filterRules(lib.rules, features));
     const tasks: DlxDownloadRequest[] = [];
@@ -157,8 +162,18 @@ const ASSETS_BASE_URL = "https://resources.download.minecraft.net";
 
 /**
  * Installs assets and asset index.
+ *
+ * This function accepts a parameter (`level`) that controls files that should be downloaded.
+ * For regular installs, `full` is used to get the full game experience.
+ * For users with such requests, `video-only` can be used to omit audio files, which saves space and speeds up the
+ * installation.
  */
-async function installAssets(profile: VersionProfile, container: Container, control?: ProgressController): Promise<void> {
+async function installAssets(
+    profile: VersionProfile,
+    container: Container,
+    level: "full" | "video-only",
+    control?: ProgressController
+): Promise<void> {
     const { signal, onProgress } = control ?? {};
 
     onProgress?.(progress.indefinite("vanilla.download-asset-index"));
@@ -179,7 +194,15 @@ async function installAssets(profile: VersionProfile, container: Container, cont
 
     console.debug(`Fetching ${assetCount} assets...`);
 
-    const tasks: DlxDownloadRequest[] = Object.values(assetIndex.objects).map(({ hash, size }) => (
+    const objects = Object.entries(assetIndex.objects).filter(([name]) => {
+        if (level === "video-only") {
+            // Filter out audio files
+            return !name.toLowerCase().endsWith(".ogg");
+        }
+        return true;
+    });
+
+    const tasks: DlxDownloadRequest[] = objects.map(([, { hash, size }]) => (
         {
             url: `${ASSETS_BASE_URL}/${hash.slice(0, 2)}/${hash}`,
             path: container.asset(hash),
@@ -209,7 +232,7 @@ async function installAssets(profile: VersionProfile, container: Container, cont
     console.debug(`Linking ${assetCount} assets...`);
 
     await Promise.all(progress.countPromises(
-        Object.entries(assetIndex.objects).map(async ([name, { hash }]) => {
+        objects.map(async ([name, { hash }]) => {
             const src = container.asset(hash);
             const dst = container.assetLegacy(profile.assetIndex.id, name);
             await makeLink(src, dst);
