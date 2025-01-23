@@ -27,6 +27,6 @@ export async function checkInstaller() {
     });
 
     await iTest.run("Install Assets", async () => {
-        await vanillaInstaller.installAssets(pf, c);
+        await vanillaInstaller.installAssets(pf, c, "video-only");
     });
 }
