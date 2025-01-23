@@ -26,7 +26,7 @@ async function checkFile(sha1: string): Promise<boolean> {
         let shouldVerify = false;
 
         try {
-            const d = parseInt((await fs.readFile(sp)).toString(), 10);
+            const d = parseFloat((await fs.readFile(sp)).toString());
             if (st.mtimeMs <= d) {
                 // File still valid
                 return true;
@@ -49,7 +49,7 @@ async function checkFile(sha1: string): Promise<boolean> {
                 return false;
             }
 
-            console.debug(`File revalidated: ${fp}`);
+            console.debug(`Cache revalidated: ${fp}`);
         }
 
         await signFile(sha1);
@@ -65,7 +65,7 @@ async function signFile(sha1: string) {
         const sp = fp + ".sig";
         const stat = await fs.stat(fp);
         await fs.writeFile(sp, stat.mtimeMs.toString());
-        console.debug(`File mtime signature updated: ${sha1}`);
+        console.debug(`Cache mtime signature updated: ${fp}`);
     } catch (e) {
         console.warn(`Unable to add file mtime signature for ${sha1}: ${e}`);
     }
