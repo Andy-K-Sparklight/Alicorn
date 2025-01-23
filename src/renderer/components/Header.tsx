@@ -8,9 +8,7 @@ import React, { type FC } from "react";
 export const Header: FC = () => {
     return <div className="drag shrink-0 grow-0 basis-20">
         <div className="flex gap-2 h-full justify-center items-center px-8">
-            <div className="no-drag">
-                <TopNavigator/>
-            </div>
+            <TopNavigator/>
 
             <CloseButton/>
             <MinimizeButton/>
