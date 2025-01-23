@@ -210,7 +210,6 @@ function injectDevToolsStyles(w: BrowserWindow) {
     if (os.platform() !== "win32") return;
 
     w.webContents.on("devtools-opened", () => {
-        console.log(dedent);
         const css = dedent`
             :root {
                 --source-code-font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace !important;

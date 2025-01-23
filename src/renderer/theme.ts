@@ -20,7 +20,6 @@ export function useTheme() {
             document.documentElement.classList.remove(originalTheme.current, "dark");
         }
 
-        console.log(`Adding theme: ${theme}`);
         document.documentElement.classList.add(theme);
         if (isDark(theme)) {
             document.documentElement.classList.add("dark");
@@ -32,4 +31,4 @@ export function useTheme() {
     return { theme, setTheme };
 }
 
-export const themeManager = { getThemes, isDark };
+export const themeManager = { getThemes };
