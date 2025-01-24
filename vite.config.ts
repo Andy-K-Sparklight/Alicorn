@@ -43,6 +43,9 @@ export default defineConfig(({ command }) => {
             warmup: {
                 clientFiles: ["index.html"]
             }
+        },
+        esbuild: {
+            legalComments: "none"
         }
     };
 });

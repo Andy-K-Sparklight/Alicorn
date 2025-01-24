@@ -6,6 +6,7 @@ import fs from "fs-extra";
 import * as child_process from "node:child_process";
 
 import path from "node:path";
+import { dedent } from "ts-dedent";
 import * as vite from "vite";
 import { type BuildVariant, createBuildConfig } from "~/config";
 import { createBuildDefines } from "~/scripts/defines";
@@ -47,7 +48,8 @@ export async function build(variant: BuildVariant) {
         drop: cfg.variant.mode === "production" ? ["console"] : undefined,
         alias: {
             "readable-stream": "node:stream"
-        }
+        },
+        legalComments: "none"
     };
 
     const mainBuildOptions: BuildOptions = {
@@ -63,7 +65,10 @@ export async function build(variant: BuildVariant) {
         format: "esm",
         banner: {
             // A patch to make require available
-            js: "import { createRequire } from \"node:module\";global.require = createRequire(import.meta.url);\n"
+            js: dedent`
+                import { createRequire } from "node:module";
+                global.require = createRequire(import.meta.url);
+            `
         },
         ...sharedOptions
     };
