@@ -103,19 +103,19 @@ export default {
             DEFAULT: "#ffeaef"
         },
         content1: {
-            DEFAULT: "#101010",
+            DEFAULT: "#1f161a",
             foreground: "#fff"
         },
         content2: {
-            DEFAULT: "#232323",
+            DEFAULT: "#291c21",
             foreground: "#fff"
         },
         content3: {
-            DEFAULT: "#363636",
+            DEFAULT: "#39262d",
             foreground: "#fff"
         },
         content4: {
-            DEFAULT: "#494949",
+            DEFAULT: "#483039",
             foreground: "#fff"
         },
         focus: "#ff86b5",
