@@ -3,6 +3,7 @@ import { MSAccount } from "@/main/auth/ms";
 import type { Account } from "@/main/auth/spec";
 import type { ContainerSpec } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
+import type { LaunchHint } from "@/main/launch/types";
 import fs from "fs-extra";
 import { Database, type Statement } from "node-sqlite3-wasm";
 import path from "node:path";
@@ -141,5 +142,9 @@ export const reg = {
 
     get containers() {
         return lazyOpenRegistry<ContainerSpec>("containers", {});
+    },
+
+    get launchHints() {
+        return lazyOpenRegistry<LaunchHint>("hints", {});
     }
 };
