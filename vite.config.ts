@@ -23,7 +23,7 @@ export default defineConfig(({ command }) => {
                     manualChunks: isDev ? undefined : {
                         heroui: ["@heroui/react"],
                         theme: ["@heroui/theme"],
-                        octicons: ["@primer/octicons-react"]
+                        lucide: ["lucide-react"]
                     }
                 }
             }

@@ -1,4 +1,5 @@
-import { GearIcon, type Icon, InfoIcon, RocketIcon } from "@primer/octicons-react";
+import { CogIcon, InfoIcon, RocketIcon } from "lucide-react";
+import React from "react";
 
 /**
  * Describes a page in the app.
@@ -12,7 +13,7 @@ export interface PageInfo {
     /**
      * Page icon class.
      */
-    icon: Icon;
+    icon: React.ComponentType;
 
     /**
      * Page title (translation key).
@@ -33,7 +34,7 @@ export const pages: PageInfo[] = [
         href: "/Launch"
     },
     {
-        icon: GearIcon,
+        icon: CogIcon,
         id: "settings",
         title: "settings.title",
         href: "/Settings"

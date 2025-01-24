@@ -1,6 +1,6 @@
 import { Alert, Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from "@heroui/react";
-import { ArrowRightIcon, CheckIcon, InfoIcon, XIcon } from "@primer/octicons-react";
 import { clsx } from "clsx";
+import { ArrowRightIcon, CheckIcon, InfoIcon, XIcon } from "lucide-react";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 

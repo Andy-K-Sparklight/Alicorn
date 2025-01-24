@@ -1,7 +1,7 @@
 import { Alert, Divider } from "@heroui/react";
 import { DirEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
-import { ArchiveIcon } from "@primer/octicons-react";
+import { HardDriveIcon } from "lucide-react";
 import React, { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -21,7 +21,7 @@ export const StorageTab: FC = () => {
         />
 
         <DirEntry
-            icon={ArchiveIcon}
+            icon={HardDriveIcon}
             id="store.store-path"
             value={config.paths.store}
             onChange={makeReduce((c, pt) => c.paths.store = pt)}
@@ -30,7 +30,7 @@ export const StorageTab: FC = () => {
         <Divider/>
 
         <DirEntry
-            icon={ArchiveIcon}
+            icon={HardDriveIcon}
             id="store.game-path"
             value={config.paths.game}
             onChange={makeReduce((c, pt) => c.paths.game = pt)}
@@ -39,7 +39,7 @@ export const StorageTab: FC = () => {
         <Divider/>
 
         <DirEntry
-            icon={ArchiveIcon}
+            icon={HardDriveIcon}
             id="store.temp-path"
             value={config.paths.temp}
             onChange={makeReduce((c, pt) => c.paths.temp = pt)}

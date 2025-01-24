@@ -6,21 +6,21 @@ import { NetworkTab } from "@pages/settings/NetworkTab";
 import { PreferencesTab } from "@pages/settings/PreferencesTab";
 import { StorageTab } from "@pages/settings/StorageTab";
 import { ConfigContext, type ConfigContextContent } from "@pages/settings/use-config";
-import { CodeIcon, GlobeIcon, type Icon, PaintbrushIcon, RocketIcon, ServerIcon } from "@primer/octicons-react";
+import { BrushIcon, CodeXmlIcon, DatabaseIcon, NetworkIcon, RocketIcon } from "lucide-react";
 import React, { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocalStorage, useSessionStorage } from "react-use";
 
 interface SettingsPage {
     id: string;
-    icon: Icon;
+    icon: React.ComponentType;
     content: React.ComponentType;
 }
 
 const settingsTabs: SettingsPage[] = [
     {
         id: "pref",
-        icon: PaintbrushIcon,
+        icon: BrushIcon,
         content: PreferencesTab
     },
     {
@@ -30,17 +30,17 @@ const settingsTabs: SettingsPage[] = [
     },
     {
         id: "storage",
-        icon: ServerIcon,
+        icon: DatabaseIcon,
         content: StorageTab
     },
     {
         id: "network",
-        icon: GlobeIcon,
+        icon: NetworkIcon,
         content: NetworkTab
     },
     {
         id: "dev",
-        icon: CodeIcon,
+        icon: CodeXmlIcon,
         content: DevTab
     }
 ];
@@ -121,4 +121,3 @@ export const Settings: FC = () => {
         </div>
     </div>;
 };
-

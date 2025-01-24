@@ -1,5 +1,5 @@
 import { TopNavigator } from "@components/TopNavigator";
-import { DashIcon, XIcon } from "@primer/octicons-react";
+import { MinusIcon, XIcon } from "lucide-react";
 import React, { type FC } from "react";
 
 /**
@@ -36,7 +36,7 @@ const MinimizeButton = () => {
         className="opacity-0 hover:opacity-100 duration-300 cursor-pointer no-drag
     fixed top-0 left-0 w-16 h-16 bg-default flex justify-center items-center rounded-br-full"
     >
-        <DashIcon className="text-foreground mr-3 mb-3" size={24}/>
+        <MinusIcon className="text-foreground mr-3 mb-3" size={24}/>
     </div>;
 };
 

@@ -1,6 +1,6 @@
 import logo from "@assets/logo.png";
 import { Alert, Button, ButtonGroup, Card, CardBody, Image } from "@heroui/react";
-import { FileBadgeIcon, MarkGithubIcon } from "@primer/octicons-react";
+import { FileBadgeIcon, FolderGit2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import pkg from "~/package.json";
 
@@ -73,7 +73,7 @@ const AppLinks = () => {
     return <ButtonGroup>
         <Button
             onPress={() => native.ext.openURL(SRC_URL)}
-            startContent={<MarkGithubIcon/>}
+            startContent={<FolderGit2/>}
         >
             {t("source")}
         </Button>

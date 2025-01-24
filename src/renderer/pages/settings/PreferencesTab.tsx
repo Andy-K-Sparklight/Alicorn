@@ -3,7 +3,7 @@ import { themeManager, useTheme } from "@/renderer/theme";
 import { Divider } from "@heroui/react";
 import { SelectEntry, TextEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
-import { CommentIcon, PaintbrushIcon, PersonIcon } from "@primer/octicons-react";
+import { FileUserIcon, LanguagesIcon, PaletteIcon } from "lucide-react";
 import React, { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -21,7 +21,7 @@ export const PreferencesTab: FC = () => {
 
     return <>
         <TextEntry
-            icon={PersonIcon}
+            icon={FileUserIcon}
             id="pref.username"
             value={config.pref.username}
             onChange={makeReduce((c, v) => c.pref.username = v)}
@@ -30,7 +30,7 @@ export const PreferencesTab: FC = () => {
         <Divider/>
 
         <SelectEntry
-            icon={PaintbrushIcon}
+            icon={PaletteIcon}
             id="pref.theme"
             value={theme}
             onChange={t => setTheme(t)}
@@ -40,7 +40,7 @@ export const PreferencesTab: FC = () => {
         <Divider/>
 
         <SelectEntry
-            icon={CommentIcon}
+            icon={LanguagesIcon}
             id="pref.language"
             value={i18next.language}
             onChange={lang => i18next.changeLanguage(lang)}

@@ -2,13 +2,13 @@
  * Various entry widgets for manipulating the settings.
  */
 import { Button, Input, Select, SelectItem, type SharedSelection, Slider, Switch } from "@heroui/react";
-import { type Icon, KebabHorizontalIcon, PlusIcon, XIcon } from "@primer/octicons-react";
+import { EllipsisIcon, PlusIcon, XIcon } from "lucide-react";
 import React, { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface SettingsEntryProps<T> {
     id: string;
-    icon?: Icon;
+    icon?: React.ComponentType;
     value: T;
     onChange: (value: T) => void;
 }
@@ -20,7 +20,7 @@ function useEntriesTrans() {
     return useTranslation("pages", { keyPrefix: "settings.entries" });
 }
 
-const Title = ({ id, icon }: { id: string, icon?: Icon }) => {
+const Title = ({ id, icon }: { id: string, icon?: React.ComponentType }) => {
     const { t } = useEntriesTrans();
 
     return <div className="flex gap-2 items-center">
@@ -35,7 +35,7 @@ const Subtitle = ({ id }: { id: string }) => {
     return <div className="text-sm text-foreground-400 whitespace-pre-line">{t(`${id}.sub`)}</div>;
 };
 
-const EntryLabel = ({ id, icon }: { id: string; icon?: Icon }) => {
+const EntryLabel = ({ id, icon }: { id: string; icon?: React.ComponentType }) => {
     return <div className="flex flex-col gap-2">
 
         <Title id={id} icon={icon}/>
@@ -61,7 +61,7 @@ export const DirEntry: FC<SettingsEntryProps<string>> = ({ id, icon, value, onCh
         <div className="flex items-center gap-1">
             <Input fullWidth value={value} onValueChange={onChange}/>
             <Button isIconOnly onPress={runSelect}>
-                <KebabHorizontalIcon/>
+                <EllipsisIcon/>
             </Button>
         </div>
     </div>;

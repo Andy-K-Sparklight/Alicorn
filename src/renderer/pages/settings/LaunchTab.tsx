@@ -1,7 +1,7 @@
 import { Divider } from "@heroui/react";
 import { StringArrayEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
-import { CodeIcon } from "@primer/octicons-react";
+import { TerminalIcon } from "lucide-react";
 import { FC } from "react";
 
 export const LaunchTab: FC = () => {
@@ -11,7 +11,7 @@ export const LaunchTab: FC = () => {
 
     return <>
         <StringArrayEntry
-            icon={CodeIcon}
+            icon={TerminalIcon}
             id="launch.jvm-args"
             value={config.runtime.args.vm}
             onChange={makeReduce((c, a) => c.runtime.args.vm = a)}
@@ -20,7 +20,7 @@ export const LaunchTab: FC = () => {
         <Divider/>
 
         <StringArrayEntry
-            icon={CodeIcon}
+            icon={TerminalIcon}
             id="launch.game-args"
             value={config.runtime.args.game}
             onChange={makeReduce((c, a) => c.runtime.args.game = a)}

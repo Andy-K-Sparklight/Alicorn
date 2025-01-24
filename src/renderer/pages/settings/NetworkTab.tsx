@@ -1,7 +1,7 @@
 import { Divider } from "@heroui/react";
 import { NumberSliderEntry, OnOffEntry, StringArrayEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
-import { CodeIcon, FileDiffIcon, GitBranchIcon, MoveToBottomIcon, UnfoldIcon } from "@primer/octicons-react";
+import { ArrowLeftRightIcon, DatabaseBackupIcon, DownloadIcon, FileDiffIcon, TerminalIcon } from "lucide-react";
 import React, { FC } from "react";
 
 /**
@@ -23,7 +23,7 @@ export const NetworkTab: FC = () => {
         <Divider/>
 
         <NumberSliderEntry
-            icon={UnfoldIcon}
+            icon={ArrowLeftRightIcon}
             id="network.concurrency"
             value={config.net.concurrency}
             max={32}
@@ -34,7 +34,7 @@ export const NetworkTab: FC = () => {
         <Divider/>
 
         <OnOffEntry
-            icon={GitBranchIcon}
+            icon={DatabaseBackupIcon}
             id="network.mirror"
             value={config.net.mirror.enable}
             onChange={makeReduce((c, e) => c.net.mirror.enable = e)}
@@ -43,7 +43,7 @@ export const NetworkTab: FC = () => {
         <Divider/>
 
         <OnOffEntry
-            icon={MoveToBottomIcon}
+            icon={DownloadIcon}
             id="network.aria2"
             value={config.net.downloader === "aria2"}
             onChange={makeReduce((c, isAria2) => c.net.downloader = isAria2 ? "aria2" : "nextdl")}
@@ -56,7 +56,7 @@ export const NetworkTab: FC = () => {
                 <Divider/>
 
                 <StringArrayEntry
-                    icon={CodeIcon}
+                    icon={TerminalIcon}
                     id="network.aria2-args"
                     value={config.net.aria2.args}
                     onChange={makeReduce((c, a) => c.net.aria2.args = a)}

@@ -33,3 +33,7 @@ html, body {
 ::-webkit-scrollbar-thumb:hover {
     background-color: #555;
 }
+
+svg.lucide {
+    padding: 2px;
+}
