@@ -1,6 +1,6 @@
 import type { ConfigThemes } from "@heroui/react";
-import sakuraDark from "~/themes/sakura-dark";
-import sakuraLight from "~/themes/sakura-light";
+import sakuraDark from "./themes/sakura-dark";
+import sakuraLight from "./themes/sakura-light";
 
 export default {
     "sakura-light": sakuraLight,

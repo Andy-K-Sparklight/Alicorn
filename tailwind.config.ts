@@ -1,6 +1,6 @@
 import { heroui } from "@heroui/react";
 import type { Config } from "tailwindcss";
-import themes from "~/themes";
+import themes from "./themes";
 
 export default {
     content: [
