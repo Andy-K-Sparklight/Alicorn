@@ -1,11 +1,9 @@
 import { conf } from "@/main/conf/conf";
-import { confHost } from "@/main/conf/conf-host";
 import { paths } from "@/main/fs/paths";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { aria2 } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
 import { registry } from "@/main/registry/registry";
-import { ext } from "@/main/sys/ext";
 import { getOSName } from "@/main/sys/os";
 import { windowControl } from "@/main/sys/window-control";
 import { isTruthy } from "@/main/util/misc";
@@ -69,8 +67,8 @@ async function main() {
 
     await registry.init();
 
-    confHost.setup();
-    ext.setup();
+    // Register IPC handlers
+    await import("@/main/api/loader");
 
     // React DevTools seems unable to load starting from Electron v33
     // This can only be enabled when https://github.com/electron/electron/issues/41613 is solved
@@ -117,9 +115,6 @@ async function main() {
     mainWindow.on("moved", () => conf().app.window.pos = mainWindow!.getPosition());
 
     mainWindow.setMenu(null);
-
-    windowControl.setup();
-    windowControl.forWindow(mainWindow);
 
     // Exit app once main window closed
     mainWindow.once("closed", () => {
