@@ -3,6 +3,7 @@ import { MSAccount } from "@/main/auth/ms";
 import type { Account } from "@/main/auth/spec";
 import type { ContainerSpec } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
+import type { GameProfile } from "@/main/game/spec";
 import type { LaunchHint } from "@/main/launch/types";
 import fs from "fs-extra";
 import { Database, type Statement } from "node-sqlite3-wasm";
@@ -38,6 +39,10 @@ export class NamedRegistry<T> {
             return;
         }
         this.map.set(id, obj);
+    }
+
+    getAll(): T[] {
+        return [...this.map.values()];
     }
 
     remove(id: string) {
@@ -146,5 +151,9 @@ export const reg = {
 
     get launchHints() {
         return lazyOpenRegistry<LaunchHint>("hints", {});
+    },
+
+    get games() {
+        return lazyOpenRegistry<GameProfile>("games", {});
     }
 };

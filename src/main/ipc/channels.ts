@@ -1,4 +1,5 @@
 import type { UserConfig } from "@/main/conf/conf";
+import type { GameProfile } from "@/main/game/spec";
 
 export type IpcEvents = {
     updateConfig: (c: UserConfig) => void;
@@ -12,4 +13,5 @@ export type IpcEvents = {
 export type IpcCommands = {
     getConfig: () => UserConfig;
     selectDir: () => string;
+    listGames: () => GameProfile[];
 }
