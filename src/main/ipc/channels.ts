@@ -1,12 +1,15 @@
-export enum Channels {
-    GET_CONFIG = "getConfig",
-    UPDATE_CONFIG = "updateConfig",
+import type { UserConfig } from "@/main/conf/conf";
 
-    SHOW_WINDOW = "showWindow",
-    HIDE_WINDOW = "hideWindow",
-    CLOSE_WINDOW = "closeWindow",
-    MINIMIZE_WINDOW = "minimizeWindow",
+export type IpcEvents = {
+    updateConfig: (c: UserConfig) => void;
+    showWindow: () => void;
+    hideWindow: () => void;
+    closeWindow: () => void;
+    minimizeWindow: () => void;
+    openUrl: (url: string) => void;
+}
 
-    OPEN_URL = "openUrl",
-    SELECT_DIR = "selectDir"
+export type IpcCommands = {
+    getConfig: () => UserConfig;
+    selectDir: () => string;
 }

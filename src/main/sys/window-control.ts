@@ -2,20 +2,19 @@
  * Window management module.
  */
 
-import { Channels } from "@/main/ipc/channels";
-import { type BrowserWindow, ipcMain, screen } from "electron";
+import { ipcMain } from "@/main/ipc/typed";
+import { type BrowserWindow, screen } from "electron";
 
 const allowedWindows = new Set<BrowserWindow>();
-
 
 /**
  * Setup listeners.
  */
 function setup() {
-    ipcMain.on(Channels.SHOW_WINDOW, (e) => getWindow(e.sender.id)?.show());
-    ipcMain.on(Channels.HIDE_WINDOW, (e) => getWindow(e.sender.id)?.hide());
-    ipcMain.on(Channels.MINIMIZE_WINDOW, (e) => getWindow(e.sender.id)?.minimize());
-    ipcMain.on(Channels.CLOSE_WINDOW, (e) => getWindow(e.sender.id)?.close());
+    ipcMain.on("showWindow", (e) => getWindow(e.sender.id)?.show());
+    ipcMain.on("hideWindow", (e) => getWindow(e.sender.id)?.hide());
+    ipcMain.on("minimizeWindow", (e) => getWindow(e.sender.id)?.minimize());
+    ipcMain.on("closeWindow", (e) => getWindow(e.sender.id)?.close());
 }
 
 /**

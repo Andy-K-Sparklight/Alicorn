@@ -1,8 +1,11 @@
 import type { UserConfig } from "@/main/conf/conf";
-import { Channels } from "@/main/ipc/channels";
-import { contextBridge, ipcRenderer } from "electron";
+import { type IpcCommands, type IpcEvents } from "@/main/ipc/channels";
+import type { TypedIpcRenderer } from "@/main/ipc/typed";
+import { contextBridge, ipcRenderer as ipcRendererRaw } from "electron";
 
 console.log("Enabling preload script.");
+
+const ipcRenderer = ipcRendererRaw as TypedIpcRenderer<IpcEvents, IpcCommands>;
 
 const native = {
     /**
@@ -13,28 +16,28 @@ const native = {
          * Makes the window visible.
          */
         show(): void {
-            ipcRenderer.send(Channels.SHOW_WINDOW);
+            ipcRenderer.send("showWindow");
         },
 
         /**
          * Makes the window no longer visible.
          */
         hide(): void {
-            ipcRenderer.send(Channels.HIDE_WINDOW);
+            ipcRenderer.send("hideWindow");
         },
 
         /**
          * Closes the window.
          */
         close(): void {
-            ipcRenderer.send(Channels.CLOSE_WINDOW);
+            ipcRenderer.send("closeWindow");
         },
 
         /**
          * Minimizes the window.
          */
         minimize(): void {
-            ipcRenderer.send(Channels.MINIMIZE_WINDOW);
+            ipcRenderer.send("minimizeWindow");
         }
     },
 
@@ -43,11 +46,11 @@ const native = {
      */
     conf: {
         get(): Promise<UserConfig> {
-            return ipcRenderer.invoke(Channels.GET_CONFIG);
+            return ipcRenderer.invoke("getConfig");
         },
 
-        update(conf: UserConfig): Promise<void> {
-            return ipcRenderer.invoke(Channels.UPDATE_CONFIG, conf);
+        update(conf: UserConfig): void {
+            ipcRenderer.send("updateConfig", conf);
         }
     },
 
@@ -59,14 +62,14 @@ const native = {
          * Opens a URL in external browser.
          */
         openURL(url: string): void {
-            ipcRenderer.send(Channels.OPEN_URL, url);
+            ipcRenderer.send("openUrl", url);
         },
 
         /**
          * Selects a directory.
          */
         selectDir(): Promise<string> {
-            return ipcRenderer.invoke(Channels.SELECT_DIR);
+            return ipcRenderer.invoke("selectDir");
         }
     }
 };

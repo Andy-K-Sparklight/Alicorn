@@ -1,14 +1,13 @@
 import { conf, type UserConfig } from "@/main/conf/conf";
-import { Channels } from "@/main/ipc/channels";
-import { ipcMain } from "electron";
+import { ipcMain } from "@/main/ipc/typed";
 
 /**
  * Setup main process handlers for configuration syncing.
  */
 function setup() {
-    ipcMain.handle(Channels.GET_CONFIG, () => conf());
+    ipcMain.handle("getConfig", () => conf());
 
-    ipcMain.handle(Channels.UPDATE_CONFIG, (_, c: UserConfig) => conf.updateWith(c));
+    ipcMain.on("updateConfig", (_, c: UserConfig) => conf.updateWith(c));
 }
 
 export const confHost = {
