@@ -6,7 +6,7 @@ import EventEmitter from "node:events";
 import { Readable } from "node:stream";
 import TypedEmitter from "typed-emitter";
 
-type GameInstanceEvents = {
+export type GameInstanceEvents = {
     /**
      * Exits normally.
      */
@@ -33,17 +33,12 @@ type GameInstanceEvents = {
     stderr: (s: string) => void
 }
 
-enum GameInstanceStatus {
-    CREATED = "created",
-    RUNNING = "running",
-    EXITED = "exited",
-    CRASHED = "crashed"
-}
+type GameInstanceStatus = "created" | "running" | "exited" | "crashed"
 
 export class GameInstance {
     id = nanoid();
     emitter = new EventEmitter() as TypedEmitter<GameInstanceEvents>;
-    status = GameInstanceStatus.CREATED;
+    status: GameInstanceStatus = "created";
     logs = {
         stdout: [] as string[],
         stderr: [] as string[]
@@ -59,7 +54,7 @@ export class GameInstance {
         this.proc = proc;
 
         proc.once("spawn", () => {
-            this.status = GameInstanceStatus.RUNNING;
+            this.status = "running";
         });
 
         proc.on("error", (e) => {
@@ -71,10 +66,10 @@ export class GameInstance {
             console.log(`Game instance ${this.id} (PID ${this.proc?.pid ?? "UNKNOWN"}) exited with code ${code}.`);
             if (code === 0) {
                 this.emitter.emit("exit");
-                this.status = GameInstanceStatus.EXITED;
+                this.status = "exited";
             } else {
                 this.emitter.emit("crash");
-                this.status = GameInstanceStatus.CRASHED;
+                this.status = "crashed";
             }
 
             this.emitter.emit("end");
@@ -107,6 +102,14 @@ export class GameInstance {
      */
     stop() {
         this.proc?.kill();
+        this.detach();
+    }
+
+    detach() {
+        this.proc?.stdout?.removeAllListeners();
+        this.proc?.stderr?.removeAllListeners();
+        this.emitter.removeAllListeners();
+        this.proc = null;
     }
 }
 
@@ -115,13 +118,11 @@ const instances = new Map<string, GameInstance>();
 /**
  * Creates a new game process and saves it for lookups.
  */
-function newGameProc(...args: ConstructorParameters<typeof GameInstance>): GameInstance {
+function create(...args: ConstructorParameters<typeof GameInstance>): GameInstance {
     const g = new GameInstance(...args);
     instances.set(g.id, g);
     g.emitter.once("exit", () => instances.delete(g.id));
     return g;
 }
 
-export const proc = {
-    newGameProc
-};
+export const gameProc = { create };
