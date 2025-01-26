@@ -89,6 +89,7 @@ export const NumberSliderEntry: FC<NumberSliderEntryProps> = ({ id, icon, value,
 
 export const StringArrayEntry: FC<SettingsEntryProps<string[]>> = ({ id, icon, value, onChange }) => {
     const [str, setStr] = useState("");
+    const { t } = useTranslation("pages", { keyPrefix: "settings" });
 
     function addItem() {
         const s = str.trim();
@@ -130,6 +131,11 @@ export const StringArrayEntry: FC<SettingsEntryProps<string[]>> = ({ id, icon, v
                 <PlusIcon/>
             </Button>
         </div>
+
+        {
+            str &&
+            <div className="text-sm text-secondary">{t("input-blur-to-add")}</div>
+        }
     </div>;
 };
 

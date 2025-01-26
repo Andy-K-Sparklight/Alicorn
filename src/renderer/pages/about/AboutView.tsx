@@ -7,7 +7,7 @@ import React, { type FC, useState } from "react";
 /**
  * The about page.
  */
-export const About: FC = () => {
+export const AboutView: FC = () => {
     const [page, setPage] = useState(1);
 
     const pages = [
@@ -25,4 +25,3 @@ export const About: FC = () => {
         <Pagination showControls initialPage={1} total={pages.length} page={page} onChange={setPage}/>
     </div>;
 };
-

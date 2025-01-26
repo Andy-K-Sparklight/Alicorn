@@ -1,3 +1,5 @@
+import type { LaunchHint } from "@/main/launch/types";
+
 export interface GameProfile {
     /**
      * Game identifier.
@@ -12,7 +14,7 @@ export interface GameProfile {
     /**
      * Time last accessed.
      */
-    time: string;
+    time: number;
 
     /**
      * Whether the game has been installed.
@@ -20,7 +22,17 @@ export interface GameProfile {
     installed: boolean;
 
     /**
-     * ID used for launch configuration.
+     * Launch hint object.
      */
-    launchHintId: string;
+    launchHint: LaunchHint;
+}
+
+export interface GameSummary {
+    id: string;
+    name: string;
+    versionId: string;
+    gameVersion: string;
+    installed: boolean;
+    isModded: boolean;
+    modLoader: string;
 }

@@ -1,5 +1,8 @@
-launch:
-  title: 启动
+games:
+  title: 游戏库
+  game-card:
+    ready: 准备就绪
+    unready: 需要安装
 
 settings:
   title: 设置
@@ -13,6 +16,7 @@ settings:
 
   dev-warn: 这些设置只用于开发，请绝不要随意修改！
   store-warn: 修改存储路径将丢失已保存的数据。要迁移目录，请使用迁移向导。
+  input-blur-to-add: 在输入框外单击即可添加
 
   entries:
     pref:

@@ -1,5 +1,5 @@
 import type { UserConfig } from "@/main/conf/conf";
-import type { GameProfile } from "@/main/game/spec";
+import type { GameProfile, GameSummary } from "@/main/game/spec";
 import { type IpcCommands, type IpcEvents } from "@/main/ipc/channels";
 import type { TypedIpcRenderer } from "@/main/ipc/typed";
 import { contextBridge, ipcRenderer as ipcRendererRaw } from "electron";
@@ -51,6 +51,13 @@ const native = {
          */
         list(): Promise<GameProfile[]> {
             return ipcRenderer.invoke("listGames");
+        },
+
+        /**
+         * Gets detailed information for the given game.
+         */
+        tell(gameId: string): Promise<GameSummary> {
+            return ipcRenderer.invoke("tellGame", gameId);
         }
     },
 

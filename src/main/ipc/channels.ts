@@ -1,5 +1,5 @@
 import type { UserConfig } from "@/main/conf/conf";
-import type { GameProfile } from "@/main/game/spec";
+import type { GameProfile, GameSummary } from "@/main/game/spec";
 
 export type IpcEvents = {
     updateConfig: (c: UserConfig) => void;
@@ -17,5 +17,6 @@ export type IpcCommands = {
     getConfig: () => UserConfig;
     selectDir: () => string;
     listGames: () => GameProfile[];
+    tellGame: (gameId: string) => GameSummary;
     launch: (id: string) => string;
 }

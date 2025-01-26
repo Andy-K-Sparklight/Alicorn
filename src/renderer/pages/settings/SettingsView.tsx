@@ -6,7 +6,7 @@ import { NetworkTab } from "@pages/settings/NetworkTab";
 import { PreferencesTab } from "@pages/settings/PreferencesTab";
 import { StorageTab } from "@pages/settings/StorageTab";
 import { ConfigContext, type ConfigContextContent } from "@pages/settings/use-config";
-import { BrushIcon, CodeXmlIcon, DatabaseIcon, NetworkIcon, RocketIcon } from "lucide-react";
+import { BrushIcon, CodeXmlIcon, DatabaseIcon, RocketIcon, WifiIcon } from "lucide-react";
 import React, { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocalStorage, useSessionStorage } from "react-use";
@@ -35,7 +35,7 @@ const settingsTabs: SettingsPage[] = [
     },
     {
         id: "network",
-        icon: NetworkIcon,
+        icon: WifiIcon,
         content: NetworkTab
     },
     {
@@ -48,7 +48,7 @@ const settingsTabs: SettingsPage[] = [
 /**
  * The about page.
  */
-export const Settings: FC = () => {
+export const SettingsView: FC = () => {
     const { t } = useTranslation("pages", { keyPrefix: "settings" });
     const [config, setConfig] = useState<UserConfig>();
     const [tab, setTab] = useSessionStorage("settings.tab", settingsTabs[0].id);

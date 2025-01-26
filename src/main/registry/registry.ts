@@ -4,7 +4,6 @@ import type { Account } from "@/main/auth/spec";
 import type { ContainerSpec } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import type { GameProfile } from "@/main/game/spec";
-import type { LaunchHint } from "@/main/launch/types";
 import fs from "fs-extra";
 import { Database, type Statement } from "node-sqlite3-wasm";
 import path from "node:path";
@@ -39,6 +38,10 @@ export class NamedRegistry<T> {
             return;
         }
         this.map.set(id, obj);
+    }
+
+    keys(): string[] {
+        return [...this.map.keys()];
     }
 
     getAll(): T[] {
@@ -147,10 +150,6 @@ export const reg = {
 
     get containers() {
         return lazyOpenRegistry<ContainerSpec>("containers", {});
-    },
-
-    get launchHints() {
-        return lazyOpenRegistry<LaunchHint>("hints", {});
     },
 
     get games() {

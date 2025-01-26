@@ -4,11 +4,10 @@ import { reg } from "@/main/registry/registry";
 import { MessageChannelMain, MessagePortMain } from "electron";
 import type EventEmitter from "node:events";
 
-ipcMain.handle("launch", async (_, launchHintId: string) => {
-    const launchHint = reg.launchHints.get(launchHintId);
-    if (!launchHint) throw `No such launch hint: ${launchHintId}`;
+ipcMain.handle("launch", async (_, gameId: string) => {
+    const launchHint = reg.games.get(gameId).launchHint;
 
-    console.log(`Launching ${launchHintId}`);
+    console.log(`Launching ${gameId}`);
     const g = await bl.launch(launchHint);
 
     return g.id;

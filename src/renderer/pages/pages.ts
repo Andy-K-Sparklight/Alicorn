@@ -1,4 +1,4 @@
-import { CogIcon, InfoIcon, RocketIcon } from "lucide-react";
+import { BoxIcon, CogIcon, InfoIcon } from "lucide-react";
 import React from "react";
 
 /**
@@ -28,10 +28,10 @@ export interface PageInfo {
 
 export const pages: PageInfo[] = [
     {
-        icon: RocketIcon,
-        id: "launch",
-        title: "launch.title",
-        href: "/Launch"
+        icon: BoxIcon,
+        id: "games",
+        title: "games.title",
+        href: "/Games"
     },
     {
         icon: CogIcon,
