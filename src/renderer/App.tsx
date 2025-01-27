@@ -3,7 +3,7 @@ import { useTheme } from "@/renderer/theme";
 import { Navigator } from "@components/Navigator";
 import { HeroUIProvider } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
-import { GamesView } from "@pages/launch/GamesView";
+import { GamesView } from "@pages/games/GamesView";
 import { SettingsView } from "@pages/settings/SettingsView";
 import React, { type FC } from "react";
 import { Route, Switch, useLocation } from "wouter";

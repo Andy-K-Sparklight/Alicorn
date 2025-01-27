@@ -1,5 +1,14 @@
 games:
   title: 游戏库
+  new: 创建新游戏
+  reload: 重新加载
+  load-failed: 无法读取 {{name}} （标识符为 {{id}}），此游戏可能已损坏。
+  remove-failed: 删除游戏
+  sorting:
+    az: 名称升序
+    za: 名称降序
+    earliest: 最早游玩
+    latest: 最近游玩
   game-card:
     ready: 准备就绪
     unready: 需要安装

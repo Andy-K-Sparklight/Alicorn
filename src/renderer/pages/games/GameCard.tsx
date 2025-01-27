@@ -1,53 +1,68 @@
 import type { GameProfile, GameSummary } from "@/main/game/spec";
 import grassBlock from "@assets/img/grass-block.webp";
-import { Button, Card, CardBody, Chip, Skeleton, Spinner, Tooltip } from "@heroui/react";
+import { Alert, Button, Card, CardBody, Chip, Skeleton, Spinner, Tooltip } from "@heroui/react";
 import { clsx } from "clsx";
-import { CheckCircleIcon, CirclePlayIcon, CloudDownloadIcon, DownloadIcon, EllipsisIcon } from "lucide-react";
+import {
+    CheckCircleIcon,
+    CirclePlayIcon,
+    CloudDownloadIcon,
+    DownloadIcon,
+    EllipsisIcon,
+    TrashIcon
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-/**
- * The index page of game launching, listing user-defined games for playing.
- */
-export function GamesView() {
-    const [games, setGames] = useState<GameProfile[]>();
-
-    async function loadGames() {
-        setGames(await native.game.list());
-    }
-
-    useEffect(() => {
-        void loadGames();
-    }, []);
-
-    return <div className="w-5/6 h-full mx-auto overflow-y-auto">
-        <div className="flex flex-col gap-3 w-full">
-            {
-                games?.map(g => <GameCardDisplay key={g.id} gameId={g.id}/>)
-            }
-        </div>
-    </div>;
-}
-
 interface GameCardDisplayProps {
-    gameId: string;
+    gameProfile: GameProfile;
 }
 
-function GameCardDisplay({ gameId }: GameCardDisplayProps) {
+export function GameCardDisplay({ gameProfile }: GameCardDisplayProps) {
     const [summary, setSummary] = useState<GameSummary>();
     const [error, setError] = useState();
+
+    const { id, name } = gameProfile;
 
     // TODO error handler
 
     useEffect(() => {
-        native.game.tell(gameId).then(setSummary);
-    }, [gameId]);
+        native.game.tell(id).then(setSummary).catch(setError);
+    }, [id]);
 
-    if (!summary) {
-        return <GameCardSkeleton/>;
+    if (summary) {
+        return <GameCard gameSummary={summary}/>;
     }
 
-    return <GameCard gameSummary={summary}/>;
+    if (error) {
+        // TODO add error message
+        return <GameLoadFailedAlert name={name} id={id}/>;
+    }
+
+    return <GameCardSkeleton/>;
+}
+
+interface GameLoadFailedAlertProps {
+    name: string;
+    id: string;
+}
+
+function GameLoadFailedAlert({ name, id }: GameLoadFailedAlertProps) {
+    const { t } = useTranslation("pages", { keyPrefix: "games" });
+
+    return <Alert
+        classNames={{ title: "font-bold" }}
+        color="danger"
+        title={t("load-failed", { name, id })}
+        description=""
+        endContent={
+            <Button color="danger">
+                <div className="flex items-center gap-1">
+                    <TrashIcon/>
+                    {t("remove-failed")}
+                </div>
+            </Button>
+        }
+    />;
 }
 
 function GameCardSkeleton() {
