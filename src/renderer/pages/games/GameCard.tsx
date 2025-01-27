@@ -1,4 +1,4 @@
-import type { GameProfile, GameSummary } from "@/main/game/spec";
+import type { GameProfile, GameProfileDetail } from "@/main/game/spec";
 import grassBlock from "@assets/img/grass-block.webp";
 import {
     Alert,
@@ -32,7 +32,7 @@ interface GameCardDisplayProps {
 }
 
 export function GameCardDisplay({ gameProfile }: GameCardDisplayProps) {
-    const [summary, setSummary] = useState<GameSummary>();
+    const [summary, setSummary] = useState<GameProfileDetail>();
     const [error, setError] = useState();
 
     const { id, name } = gameProfile;
@@ -44,7 +44,7 @@ export function GameCardDisplay({ gameProfile }: GameCardDisplayProps) {
     }, [id]);
 
     if (summary) {
-        return <GameCard gameSummary={summary}/>;
+        return <GameCard detail={summary}/>;
     }
 
     if (error) {
@@ -99,13 +99,13 @@ function GameCardSkeleton() {
 }
 
 interface GameCardProps {
-    gameSummary: GameSummary;
+    detail: GameProfileDetail;
 }
 
-function GameCard({ gameSummary }: GameCardProps) {
+function GameCard({ detail }: GameCardProps) {
     const { t } = useTranslation("pages", { keyPrefix: "games.game-card" });
 
-    const { name, versionId, gameVersion, installed } = gameSummary;
+    const { name, versionId, gameVersion, installed } = detail;
 
     return <Card>
         <CardBody>

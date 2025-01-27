@@ -4,9 +4,9 @@ import * as child_process from "node:child_process";
 import { ChildProcess } from "node:child_process";
 import EventEmitter from "node:events";
 import { Readable } from "node:stream";
-import TypedEmitter from "typed-emitter";
+import type TypedEmitter from "typed-emitter";
 
-export type GameInstanceEvents = {
+type GameProcessEvents = {
     /**
      * Exits normally.
      */
@@ -33,12 +33,12 @@ export type GameInstanceEvents = {
     stderr: (s: string) => void
 }
 
-type GameInstanceStatus = "created" | "running" | "exited" | "crashed"
+type GameProcessStatus = "created" | "running" | "exited" | "crashed"
 
-export class GameInstance {
+export class GameProcess {
     id = nanoid();
-    emitter = new EventEmitter() as TypedEmitter<GameInstanceEvents>;
-    status: GameInstanceStatus = "created";
+    emitter = new EventEmitter() as TypedEmitter<GameProcessEvents>;
+    status: GameProcessStatus = "created";
     logs = {
         stdout: [] as string[],
         stderr: [] as string[]
@@ -65,11 +65,11 @@ export class GameInstance {
         proc.once("exit", (code) => {
             console.log(`Game instance ${this.id} (PID ${this.proc?.pid ?? "UNKNOWN"}) exited with code ${code}.`);
             if (code === 0) {
-                this.emitter.emit("exit");
                 this.status = "exited";
+                this.emitter.emit("exit");
             } else {
-                this.emitter.emit("crash");
                 this.status = "crashed";
+                this.emitter.emit("crash");
             }
 
             this.emitter.emit("end");
@@ -98,6 +98,13 @@ export class GameInstance {
     }
 
     /**
+     * Gets the process PID.
+     */
+    pid() {
+        return this.proc?.pid ?? -1;
+    }
+
+    /**
      * Terminates the process.
      */
     stop() {
@@ -113,15 +120,15 @@ export class GameInstance {
     }
 }
 
-const instances = new Map<string, GameInstance>();
+const procs = new Map<string, GameProcess>();
 
 /**
  * Creates a new game process and saves it for lookups.
  */
-function create(...args: ConstructorParameters<typeof GameInstance>): GameInstance {
-    const g = new GameInstance(...args);
-    instances.set(g.id, g);
-    g.emitter.once("exit", () => instances.delete(g.id));
+function create(...args: ConstructorParameters<typeof GameProcess>): GameProcess {
+    const g = new GameProcess(...args);
+    procs.set(g.id, g);
+    g.emitter.once("exit", () => procs.delete(g.id));
     return g;
 }
 

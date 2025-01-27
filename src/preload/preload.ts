@@ -1,5 +1,6 @@
+import type { LaunchGameResult } from "@/main/api/launcher";
 import type { UserConfig } from "@/main/conf/conf";
-import type { GameProfile, GameSummary } from "@/main/game/spec";
+import type { GameProfile, GameProfileDetail } from "@/main/game/spec";
 import { type IpcCommands, type IpcEvents } from "@/main/ipc/channels";
 import type { TypedIpcRenderer } from "@/main/ipc/typed";
 import { contextBridge, ipcRenderer as ipcRendererRaw } from "electron";
@@ -56,7 +57,7 @@ const native = {
         /**
          * Gets detailed information for the given game.
          */
-        tell(gameId: string): Promise<GameSummary> {
+        tell(gameId: string): Promise<GameProfileDetail> {
             return ipcRenderer.invoke("tellGame", gameId);
         }
     },
@@ -68,17 +69,17 @@ const native = {
         /**
          * Launches the game using the given launch hint.
          */
-        launch(launchHintId: string): Promise<string> {
-            return ipcRenderer.invoke("launch", launchHintId);
+        launch(gameId: string): Promise<LaunchGameResult> {
+            return ipcRenderer.invoke("launch", gameId);
         },
 
         /**
          * Creates an event target to receive events from the game.
          */
-        async subscribe(gameId: string): Promise<EventTarget> {
-            ipcRenderer.send("subscribeGameEvents", gameId);
+        async subscribe(procId: string): Promise<EventTarget> {
+            ipcRenderer.send("subscribeGameEvents", procId);
             const port = await new Promise(res =>
-                ipcRendererRaw.once(`feedGameEvents:${gameId}`, (e) => res(e.ports[0]))
+                ipcRendererRaw.once(`dispatchGameEvents:${procId}`, (e) => res(e.ports[0]))
             ) as MessagePort;
 
             const et = new EventTarget();
@@ -93,15 +94,15 @@ const native = {
         /**
          * Terminates the given game.
          */
-        stop(gameId: string): void {
-            ipcRenderer.send("stopGame", gameId);
+        stop(procId: string): void {
+            ipcRenderer.send("stopGame", procId);
         },
 
         /**
          * Detaches the given game.
          */
-        remove(gameId: string): void {
-            ipcRenderer.send("removeGame", gameId);
+        remove(procId: string): void {
+            ipcRenderer.send("removeGame", procId);
         }
     },
 

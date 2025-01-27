@@ -27,7 +27,10 @@ export interface GameProfile {
     launchHint: LaunchHint;
 }
 
-export interface GameSummary {
+/**
+ * Detailed game profile to be used in the frontend.
+ */
+export interface GameProfileDetail {
     id: string;
     name: string;
     versionId: string;

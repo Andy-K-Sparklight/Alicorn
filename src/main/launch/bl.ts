@@ -3,13 +3,13 @@
  */
 import { jrt } from "@/main/jrt/install";
 import { launchArgs } from "@/main/launch/args";
-import { GameInstance, gameProc } from "@/main/launch/game-proc";
+import { gameProc, GameProcess } from "@/main/launch/proc";
 import { LaunchHint, LaunchInit } from "@/main/launch/types";
 import { profileLoader } from "@/main/profile/loader";
 import { reg } from "@/main/registry/registry";
 import { containers } from "../container/manage";
 
-const games = new Map<string, GameInstance>();
+const games = new Map<string, GameProcess>();
 
 /**
  * Loads necessary information from the launch hint profile and builds launch init params.
@@ -40,7 +40,7 @@ async function prepare(hint: LaunchHint): Promise<LaunchInit> {
     };
 }
 
-async function launch(hint: LaunchHint): Promise<GameInstance> {
+async function launch(hint: LaunchHint): Promise<GameProcess> {
     const init = await prepare(hint);
     const args = launchArgs.createArguments(init);
     const g = gameProc.create(init.jrtExec, args, init.container.gameDir());
@@ -48,7 +48,7 @@ async function launch(hint: LaunchHint): Promise<GameInstance> {
     return g;
 }
 
-function getInstance(gid: string): GameInstance {
+function getInstance(gid: string): GameProcess {
     const g = games.get(gid);
     if (!g) throw `No such instance: ${gid}`;
     return g;

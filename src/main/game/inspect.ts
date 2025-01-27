@@ -1,5 +1,5 @@
 import { containers } from "@/main/container/manage";
-import type { GameSummary } from "@/main/game/spec";
+import type { GameProfileDetail } from "@/main/game/spec";
 import { profileInspector } from "@/main/profile/inspect";
 import { profileLoader } from "@/main/profile/loader";
 import { reg } from "@/main/registry/registry";
@@ -7,7 +7,7 @@ import { reg } from "@/main/registry/registry";
 /**
  * Creates a detailed summary object for the specified game.
  */
-async function tellGame(gameId: string): Promise<GameSummary> {
+async function tellGame(gameId: string): Promise<GameProfileDetail> {
     const game = reg.games.get(gameId);
     const container = containers.get(game.launchHint.containerId);
     const profile = await profileLoader.fromContainer(game.launchHint.profileId, container);
