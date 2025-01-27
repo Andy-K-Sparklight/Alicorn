@@ -22,7 +22,6 @@ const FeaturesNoteCard = () => {
     return <div className="w-full">
         <Alert
             title={t("features-note")}
-            description=""
             classNames={{ title: "font-bold" }}
             endContent={
                 <Button onPress={() => native.ext.openURL(BUILDING_URL)}>

@@ -78,7 +78,6 @@ export const SettingsView: FC = () => {
                         classNames={{ title: "font-bold" }}
                         color="warning"
                         title={t("hint")}
-                        description=""
                         onClose={() => setHideAlert(true)}
                         isClosable
                     />

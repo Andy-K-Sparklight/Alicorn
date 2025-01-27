@@ -4,8 +4,9 @@ import { Navigator } from "@components/Navigator";
 import { HeroUIProvider } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
 import { GamesView } from "@pages/games/GamesView";
+import { pages } from "@pages/pages";
 import { SettingsView } from "@pages/settings/SettingsView";
-import React, { type FC } from "react";
+import React, { type FC, useEffect } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import pkg from "~/package.json";
 
@@ -13,10 +14,17 @@ import pkg from "~/package.json";
  * App entry.
  */
 export const App: FC = () => {
-    const [, navigate] = useLocation();
+    const [pathname, navigate] = useLocation();
     useTheme();
 
     i18n.useAutoFontClass();
+
+    // TODO allow user to select default page
+    useEffect(() => {
+        if (pathname === "/") {
+            navigate(pages[0].href);
+        }
+    }, [pathname]);
 
     return <HeroUIProvider navigate={navigate}>
         <main className="fixed inset-0 text-foreground bg-background">

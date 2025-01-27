@@ -1,5 +1,11 @@
 import type { GameProfile, GameProfileDetail } from "@/main/game/spec";
+import damagedAnvil from "@assets/img/damaged-anvil.webp";
+import fabric from "@assets/img/fabric.webp";
 import grassBlock from "@assets/img/grass-block.webp";
+import neoForged from "@assets/img/neoforged.webp";
+import quilt from "@assets/img/quilt.webp";
+import snowyGrassBlock from "@assets/img/snowy-grass-block.webp";
+import tnt from "@assets/img/tnt.webp";
 import {
     Alert,
     Button,
@@ -47,7 +53,7 @@ export function GameCardDisplay({ gameProfile }: GameCardDisplayProps) {
         return <GameCard detail={summary}/>;
     }
 
-    if (error) {
+    if (error !== undefined) {
         // TODO add error message
         return <GameLoadFailedAlert name={name} id={id}/>;
     }
@@ -67,7 +73,6 @@ function GameLoadFailedAlert({ name, id }: GameLoadFailedAlertProps) {
         classNames={{ title: "font-bold" }}
         color="danger"
         title={t("load-failed", { name, id })}
-        description=""
         endContent={
             <Button color="danger">
                 <div className="flex items-center gap-1">
@@ -103,17 +108,16 @@ interface GameCardProps {
 }
 
 function GameCard({ detail }: GameCardProps) {
+    const { id, name, versionId, gameVersion, installed, stable, modLoader } = detail;
     const { t } = useTranslation("pages", { keyPrefix: "games.game-card" });
 
-    const { name, versionId, gameVersion, installed } = detail;
+    const gameVersionChip =
+        <Chip color={stable ? "primary" : "warning"} variant="flat">{gameVersion}</Chip>;
 
     return <Card>
         <CardBody>
             <div className="flex gap-4 items-center h-16 px-3">
-                <div className="h-full p-3 bg-content2 rounded-full">
-                    {/* TODO icon based on loader type */}
-                    <img src={grassBlock} alt="Vanilla Game Type" className="w-full h-full object-contain"/>
-                </div>
+                <GameTypeImage loader={modLoader} stable={stable}/>
 
                 <div className="flex flex-col gap-1">
                     <div className="font-bold text-xl">{name}</div>
@@ -121,43 +125,97 @@ function GameCard({ detail }: GameCardProps) {
                 </div>
 
                 <div className="ml-auto flex gap-2 items-center">
-                    {/* TODO color based on snapshot / release */}
-                    <Chip color="primary" variant="flat">{gameVersion}</Chip>
-                </div>
-
-                <div
-                    className={
-                        clsx({
-                            "text-success": installed,
-                            "text-warning": !installed
-                        })
-                    }
-                >
-                    <Tooltip content={t(installed ? "ready" : "unready")} color="foreground">
-                        {
-                            installed ? <CheckCircleIcon/> : <CloudDownloadIcon/>
-                        }
-                    </Tooltip>
-                </div>
-
-                <div className="ml-4 flex gap-2">
                     {
-                        // TODO bind button actions
-                        installed ?
-                            <Button isIconOnly color="primary">
-                                <CirclePlayIcon/>
-                            </Button>
+                        stable ?
+                            gameVersionChip
                             :
-                            <Button isIconOnly color="secondary">
-                                <DownloadIcon/>
-                            </Button>
+                            <Tooltip content={t("unstable")} color="foreground">
+                                {gameVersionChip}
+                            </Tooltip>
                     }
 
-                    <GameCardDropdown/>
+                </div>
+
+                <GameStatusBadge installed={installed}/>
+
+                <div className="ml-4">
+                    <GameActions gameId={id} installed={installed}/>
                 </div>
             </div>
         </CardBody>
     </Card>;
+}
+
+function GameTypeImage({ loader, stable }: { loader: string, stable: boolean }) {
+    let src: string;
+
+    switch (loader) {
+        case "":
+            src = stable ? grassBlock : snowyGrassBlock;
+            break;
+        case "quilt":
+            src = quilt;
+            break;
+        case "fabric":
+            src = fabric;
+            break;
+        case "neoforged":
+            src = neoForged;
+            break;
+        case "forge":
+            src = damagedAnvil;
+            break;
+        default:
+            src = tnt;
+            break;
+    }
+
+
+    return <div className="h-full p-3 bg-content2 rounded-full">
+        <img src={src} alt={loader ?? "vanilla"} className="w-full h-full object-contain"/>
+    </div>;
+}
+
+function GameStatusBadge({ installed }: { installed: boolean }) {
+    const { t } = useTranslation("pages", { keyPrefix: "games.game-card" });
+
+    return <div
+        className={
+            clsx({
+                "text-success": installed,
+                "text-warning": !installed
+            })
+        }
+    >
+        <Tooltip content={t(installed ? "ready" : "unready")} color="foreground">
+            {
+                installed ? <CheckCircleIcon/> : <CloudDownloadIcon/>
+            }
+        </Tooltip>
+    </div>;
+}
+
+interface GameActionsProps {
+    installed: boolean;
+    gameId: string;
+}
+
+function GameActions({ installed }: GameActionsProps) {
+    return <div className="flex gap-2">
+        {
+            // TODO bind button actions
+            installed ?
+                <Button isIconOnly color="primary">
+                    <CirclePlayIcon/>
+                </Button>
+                :
+                <Button isIconOnly color="secondary">
+                    <DownloadIcon/>
+                </Button>
+        }
+
+        <GameCardDropdown/>
+    </div>;
 }
 
 function GameCardDropdown() {

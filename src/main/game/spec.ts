@@ -36,6 +36,6 @@ export interface GameProfileDetail {
     versionId: string;
     gameVersion: string;
     installed: boolean;
-    isModded: boolean;
     modLoader: string;
+    stable: boolean;
 }

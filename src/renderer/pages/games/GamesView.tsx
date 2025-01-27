@@ -1,5 +1,5 @@
 import type { GameProfile } from "@/main/game/spec";
-import { Button, ButtonGroup, Tooltip } from "@heroui/react";
+import { Alert, Button, ButtonGroup, Spinner, Tooltip } from "@heroui/react";
 import { GameCardDisplay } from "@pages/games/GameCard";
 import {
     ArrowDownAZIcon,
@@ -18,16 +18,25 @@ import { useLocalStorage } from "react-use";
  */
 export function GamesView() {
     const [games, setGames] = useState<GameProfile[]>();
+    const [error, setError] = useState();
     const [sortMethod, setSortMethod] = useLocalStorage<SortMethod>("games.sort-method", "latest");
     const { t } = useTranslation("pages", { keyPrefix: "games" });
 
     async function loadGames() {
-        setGames(await native.game.list());
+        native.game.list().then(setGames).catch(setError);
     }
 
     useEffect(() => {
         void loadGames();
     }, []);
+
+    if (error !== undefined) {
+        return <FailedAlert retry={loadGames}/>;
+    }
+
+    if (!games) {
+        return <LoadingSpinner/>;
+    }
 
     const sortedGames = games && toSortedGames(games, sortMethod!);
 
@@ -108,4 +117,30 @@ function SortMethodControl({ sortMethod, onChange }: SortMethodControlProps) {
             )
         }
     </ButtonGroup>;
+}
+
+function LoadingSpinner() {
+    const { t } = useTranslation("pages", { keyPrefix: "games" });
+    return <div className="w-full h-full flex justify-center items-center gap-6">
+        <Spinner/>
+        {t("loading")}
+    </div>;
+}
+
+function FailedAlert({ retry }: { retry: () => void }) {
+    const { t } = useTranslation("pages", { keyPrefix: "games" });
+    return <Alert
+        color="danger"
+        className="w-5/6 mx-auto"
+        classNames={{ title: "font-bold" }}
+        title={t("load-list-failed")}
+        endContent={
+            <Button onPress={retry}>
+                <div className="flex items-center gap-2">
+                    <RefreshCcwIcon/>
+                    {t("reload")}
+                </div>
+            </Button>
+        }
+    />;
 }

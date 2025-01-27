@@ -17,7 +17,6 @@ export const StorageTab: FC = () => {
             classNames={{ title: "font-bold" }}
             color="warning"
             title={t("store-warn")}
-            description=""
         />
 
         <DirEntry

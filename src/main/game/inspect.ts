@@ -19,8 +19,8 @@ async function tellGame(gameId: string): Promise<GameProfileDetail> {
         versionId: profile.id,
         gameVersion: profileSummary.gameVersion,
         installed: game.installed,
-        isModded: profileSummary.isModded,
-        modLoader: profileSummary.modLoader
+        modLoader: profileSummary.modLoader,
+        stable: profile.type === "release"
     };
 }
 

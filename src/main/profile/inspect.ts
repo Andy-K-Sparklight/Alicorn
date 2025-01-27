@@ -13,12 +13,9 @@ export interface VersionProfileSummary {
     gameVersion: string;
 
     /**
-     * Whether the client has been modified.
-     */
-    isModded: boolean;
-
-    /**
-     * Mod loader type of the client. An empty string indicates no known loader.
+     * Mod loader type of the client.
+     * Value 'unknown' indicates no known loader.
+     * This field is empty for vanilla profiles.
      */
     modLoader: string;
 }
@@ -55,11 +52,13 @@ function detectModLoader(p: VersionProfile): string {
  * Creates summary for the given profile.
  */
 function summarize(p: VersionProfile): VersionProfileSummary {
-    const ld = detectModLoader(p);
+    let ld = detectModLoader(p);
+    if (!ld && p.id !== p.version) {
+        ld = "unknown";
+    }
     return {
         id: p.id,
         gameVersion: p.version || p.id,
-        isModded: !!(ld || p.id !== p.version),
         modLoader: ld
     };
 }

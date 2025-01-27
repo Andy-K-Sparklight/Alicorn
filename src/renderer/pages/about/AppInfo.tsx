@@ -46,7 +46,6 @@ const DevNoteCard = () => {
         <Alert
             color="warning"
             title={t("dev-note")}
-            description=""
             classNames={{ title: "font-bold" }}
         />
     </div>;

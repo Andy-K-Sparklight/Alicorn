@@ -17,7 +17,6 @@ export const DevTab: FC = () => {
             classNames={{ title: "font-bold" }}
             color="danger"
             title={t("dev-warn")}
-            description=""
         />
 
         <OnOffEntry
