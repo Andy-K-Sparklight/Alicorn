@@ -1,6 +1,19 @@
 import type { GameProfile, GameSummary } from "@/main/game/spec";
 import grassBlock from "@assets/img/grass-block.webp";
-import { Alert, Button, Card, CardBody, Chip, Skeleton, Spinner, Tooltip } from "@heroui/react";
+import {
+    Alert,
+    Button,
+    Card,
+    CardBody,
+    Chip,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownTrigger,
+    Skeleton,
+    Spinner,
+    Tooltip
+} from "@heroui/react";
 import { clsx } from "clsx";
 import {
     CheckCircleIcon,
@@ -8,6 +21,7 @@ import {
     CloudDownloadIcon,
     DownloadIcon,
     EllipsisIcon,
+    InfoIcon,
     TrashIcon
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -139,11 +153,34 @@ function GameCard({ gameSummary }: GameCardProps) {
                             </Button>
                     }
 
-                    <Button isIconOnly>
-                        <EllipsisIcon/>
-                    </Button>
+                    <GameCardDropdown/>
                 </div>
             </div>
         </CardBody>
     </Card>;
+}
+
+function GameCardDropdown() {
+    const { t } = useTranslation("pages", { keyPrefix: "games.game-card" });
+
+    return <Dropdown>
+        <DropdownTrigger>
+            <Button isIconOnly>
+                <EllipsisIcon/>
+            </Button>
+        </DropdownTrigger>
+        <DropdownMenu>
+            <DropdownItem key="info" startContent={<InfoIcon/>}>
+                {t("info")}
+            </DropdownItem>
+            <DropdownItem
+                color="danger"
+                className="text-danger"
+                key="remove"
+                startContent={<TrashIcon/>}
+            >
+                {t("remove")}
+            </DropdownItem>
+        </DropdownMenu>
+    </Dropdown>;
 }
