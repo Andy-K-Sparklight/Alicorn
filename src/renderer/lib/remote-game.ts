@@ -2,22 +2,31 @@
  * Syncs events from main process and maintain renderer-side game instances.
  */
 
+import type { GameProfileDetail } from "@/main/game/spec";
+import type { GameProcessLog } from "@/main/launch/log-parser";
+import debounce from "debounce";
+import { pEvent } from "p-event";
+import { useEffect, useState } from "react";
+
 /**
  * Contains a slice of game information at the renderer side.
  */
-interface RemoteGameProcess {
+export interface RemoteGameProcess {
     id: string;
     pid: number;
+    detail: GameProfileDetail;
 
     status: RemoteGameStatus;
 
-    logs: {
+    outputs: {
         stdout: string[];
         stderr: string[];
     };
+
+    logs: GameProcessLog[];
 }
 
-type RemoteGameStatus = "running" | "exited" | "crashed";
+export type RemoteGameStatus = "running" | "exited" | "crashed";
 
 /**
  * Update the given process object based on events from the event target.
@@ -26,7 +35,7 @@ function syncEvents(emitter: EventTarget, proc: RemoteGameProcess): RemoteGamePr
     emitter.addEventListener("exit", () => proc.status = "exited");
     emitter.addEventListener("crash", () => proc.status = "crashed");
 
-    function clearLogs(buf: string[]) {
+    function clearLogs<T>(buf: T[]) {
         const limit = 10000;
         const deleteCount = 100;
         if (buf.length > limit) {
@@ -34,7 +43,7 @@ function syncEvents(emitter: EventTarget, proc: RemoteGameProcess): RemoteGamePr
         }
     }
 
-    function collect(name: string, buf: string[]) {
+    function collect<T>(name: string, buf: T[]) {
         emitter.addEventListener(name, (e: Event) => {
             if (e instanceof CustomEvent) {
                 const [s] = e.detail;
@@ -44,8 +53,9 @@ function syncEvents(emitter: EventTarget, proc: RemoteGameProcess): RemoteGamePr
         });
     }
 
-    collect("stdout", proc.logs.stdout);
-    collect("stderr", proc.logs.stderr);
+    collect("stdout", proc.outputs.stdout);
+    collect("stderr", proc.outputs.stderr);
+    collect("log", proc.logs);
 
     return proc;
 }
@@ -53,45 +63,103 @@ function syncEvents(emitter: EventTarget, proc: RemoteGameProcess): RemoteGamePr
 const procs = new Map<string, RemoteGameProcess>();
 const emitters = new Map<string, EventTarget>();
 
-async function create(gameId: string): Promise<void> {
-    const res = await native.launcher.launch(gameId);
+async function create(detail: GameProfileDetail): Promise<string> {
+    const meta = await native.launcher.launch(detail.id);
+
+    console.log(`Created game process ${meta.id} (PID ${meta.pid}).`);
+
     const proc: RemoteGameProcess = {
-        id: res.id,
-        pid: res.pid,
+        id: meta.id,
+        pid: meta.pid,
+        detail,
         status: "running",
-        logs: {
+        outputs: {
             stdout: [],
             stderr: []
-        }
+        },
+
+        logs: []
     };
 
-    const et = await native.launcher.subscribe(res.id);
+    console.log("Establishing event stream...");
+
+    void native.launcher.subscribe(meta.id);
+
+    const msg = await pEvent(window, "message", e =>
+        e instanceof MessageEvent && e.data === `dispatchGameEventsRemote:${meta.id}`
+    ) as MessageEvent;
+
+    console.log("Established event stream.");
+
+    const port = msg.ports[0];
+
+    const et = new EventTarget();
+
+    port.onmessage = e => {
+        const { channel, args } = e.data;
+        et.dispatchEvent(new CustomEvent(channel, { detail: args }));
+    };
+
     syncEvents(et, proc);
 
     const em = new EventTarget();
 
-    ["exit", "crash", "stdout", "stderr"].forEach(ch => {
+    ["exit", "crash", "stdout", "stderr", "log"].forEach(ch => {
         et.addEventListener(ch, () => em.dispatchEvent(new CustomEvent("change")));
     });
 
-    procs.set(res.id, proc);
-    emitters.set(res.id, em);
+    procs.set(meta.id, proc);
+    emitters.set(meta.id, em);
+
+    return meta.id;
 }
 
 /**
- * Gets a getter to the game process object and an event target for retrieving the realtime game status.
+ * Gets an event target which emits 'change' event when the game status changes.
  */
-function subscribe(procId: string): [() => RemoteGameProcess, EventTarget] | null {
+function subscribe(procId: string): EventTarget {
+    const e = emitters.get(procId);
+    if (e) return e;
+    throw `Process not found: ${procId}`;
+}
+
+/**
+ * Gets a copy of the game status.
+ */
+function slice(procId: string): RemoteGameProcess {
     const proc = procs.get(procId);
-    const et = emitters.get(procId);
+    if (proc) return structuredClone(proc);
+    throw `Process not found: ${procId}`;
+}
 
-    if (proc && et) {
-        return [() => structuredClone(proc), et];
-    }
+/**
+ * Retrieves an auto-updating game process object.
+ *
+ * This hook internally uses 'useState' and may cause frequent re-renders.
+ * Be aware of this when optimizing.
+ *
+ * Argument 'wait' can be used to control whether to debounce the specified function.
+ */
+function useGameProc(procId: string, wait = 0): RemoteGameProcess {
+    const [proc, setProc] = useState(slice(procId));
 
-    return null;
+    useEffect(() => {
+        setProc(slice(procId));
+        const emitter = subscribe(procId);
+
+        function fn() {
+            setProc(slice(procId));
+        }
+
+        const handler = wait > 0 ? debounce(fn, wait) : fn;
+        emitter.addEventListener("change", handler);
+
+        return () => emitter.removeEventListener("change", handler);
+    }, [procId]);
+
+    return proc;
 }
 
 export const remoteGame = {
-    create, subscribe
+    create, useGameProc
 };

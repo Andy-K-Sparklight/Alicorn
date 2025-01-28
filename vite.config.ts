@@ -33,7 +33,6 @@ export default defineConfig(({ command }) => {
             tsConfigPaths(),
             i18nHotReload()
         ],
-        define: {},
         css: {
             postcss: {
                 plugins: [tailwindcss()]

@@ -28,7 +28,7 @@ export default {
             "700": "#f9bdd4",
             "800": "#fbd5e4",
             "900": "#feeef4",
-            foreground: "#000",
+            foreground: "#fff",
             DEFAULT: "#f374a5"
         },
         secondary: {
@@ -42,7 +42,7 @@ export default {
             "700": "#afeafb",
             "800": "#ccf2fc",
             "900": "#eafafe",
-            foreground: "#000",
+            foreground: "#fff",
             DEFAULT: "#56d3f6"
         },
         success: {
@@ -56,7 +56,7 @@ export default {
             "700": "#aef2d2",
             "800": "#ccf7e3",
             "900": "#eafcf3",
-            foreground: "#000",
+            foreground: "#fff",
             DEFAULT: "#54e3a1"
         },
         warning: {
@@ -70,7 +70,7 @@ export default {
             "700": "#ffceb4",
             "800": "#ffe0d0",
             "900": "#fff2eb",
-            foreground: "#000",
+            foreground: "#fff",
             DEFAULT: "#ff9761"
         },
         danger: {
@@ -84,7 +84,7 @@ export default {
             "700": "#f9a9a9",
             "800": "#fbc8c8",
             "900": "#fde8e8",
-            foreground: "#000",
+            foreground: "#fff",
             DEFAULT: "#f24949"
         },
         background: "#0b0b0b",
@@ -99,7 +99,7 @@ export default {
             "700": "#fff3f6",
             "800": "#fff7f9",
             "900": "#fffcfd",
-            foreground: "#000",
+            foreground: "#fff",
             DEFAULT: "#ffeaef"
         },
         content1: {

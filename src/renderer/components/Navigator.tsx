@@ -10,7 +10,7 @@ import { useLocation } from "wouter";
  */
 export function Navigator() {
     return <div className="flex gap-2 justify-center items-center py-4">
-        <div className="drag w-5/6 h-full flex items-center justify-between bg-default-100 rounded-full py-1 px-1">
+        <div className="drag w-11/12 h-full flex items-center justify-between bg-default-100 rounded-full py-1 px-1">
             <div className="no-drag">
                 <PageTabs/>
             </div>

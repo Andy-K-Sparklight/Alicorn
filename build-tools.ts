@@ -27,12 +27,13 @@ export async function build(variant: BuildVariant) {
     await fs.emptyDir(outputDir);
 
     const defines = {
+        "process.env.NODE_ENV": isDev ? "\"development\"" : "\"production\"",
         "__dirname": "import.meta.dirname",
         "__filename": "import.meta.filename",
 
         // Exclude polyfills from the ws library
-        "process.env.WS_NO_BUFFER_UTIL": JSON.stringify("true"),
-        "process.env.WS_NO_UTF_8_VALIDATE": JSON.stringify("true"),
+        "process.env.WS_NO_BUFFER_UTIL": "\"true\"",
+        "process.env.WS_NO_UTF_8_VALIDATE": "\"true\"",
         ...defs
     };
 
@@ -45,7 +46,7 @@ export async function build(variant: BuildVariant) {
         define: defines,
         outdir: outputDir,
         metafile: true,
-        drop: cfg.variant.mode === "production" ? ["console"] : undefined,
+        // drop: cfg.variant.mode === "production" ? ["console"] : undefined,
         alias: {
             "readable-stream": "node:stream"
         },

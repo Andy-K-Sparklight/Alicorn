@@ -37,7 +37,7 @@ ipcMain.on("removeGame", (_, procId: string) => {
 });
 
 function forwardGameEvents(src: EventEmitter, dst: MessagePortMain) {
-    ["end", "crash", "exit", "stdout", "stderr"].forEach(ch => {
+    ["end", "crash", "exit", "stdout", "stderr", "log"].forEach(ch => {
         src.on(ch, (...args) => dst.postMessage({ channel: ch, args }));
     });
 }

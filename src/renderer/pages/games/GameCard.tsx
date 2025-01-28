@@ -1,11 +1,6 @@
 import type { GameProfile, GameProfileDetail } from "@/main/game/spec";
-import damagedAnvil from "@assets/img/damaged-anvil.webp";
-import fabric from "@assets/img/fabric.webp";
-import grassBlock from "@assets/img/grass-block.webp";
-import neoForged from "@assets/img/neoforged.webp";
-import quilt from "@assets/img/quilt.webp";
-import snowyGrassBlock from "@assets/img/snowy-grass-block.webp";
-import tnt from "@assets/img/tnt.webp";
+import { remoteGame } from "@/renderer/lib/remote-game";
+import { GameTypeImage } from "@components/GameTypeImage";
 import {
     Alert,
     Button,
@@ -32,6 +27,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "wouter";
 
 interface GameCardDisplayProps {
     gameProfile: GameProfile;
@@ -74,11 +70,8 @@ function GameLoadFailedAlert({ name, id }: GameLoadFailedAlertProps) {
         color="danger"
         title={t("load-failed", { name, id })}
         endContent={
-            <Button color="danger">
-                <div className="flex items-center gap-1">
-                    <TrashIcon/>
-                    {t("remove-failed")}
-                </div>
+            <Button startContent={<TrashIcon/>} color="danger">
+                {t("remove-failed")}
             </Button>
         }
     />;
@@ -117,7 +110,9 @@ function GameCard({ detail }: GameCardProps) {
     return <Card>
         <CardBody>
             <div className="flex gap-4 items-center h-16 px-3">
-                <GameTypeImage loader={modLoader} stable={stable}/>
+                <div className="h-full p-3 bg-content2 rounded-full">
+                    <GameTypeImage loader={modLoader} stable={stable}/>
+                </div>
 
                 <div className="flex flex-col gap-1">
                     <div className="font-bold text-xl">{name}</div>
@@ -139,41 +134,11 @@ function GameCard({ detail }: GameCardProps) {
                 <GameStatusBadge installed={installed}/>
 
                 <div className="ml-4">
-                    <GameActions gameId={id} installed={installed}/>
+                    <GameActions detail={detail} installed={installed}/>
                 </div>
             </div>
         </CardBody>
     </Card>;
-}
-
-function GameTypeImage({ loader, stable }: { loader: string, stable: boolean }) {
-    let src: string;
-
-    switch (loader) {
-        case "":
-            src = stable ? grassBlock : snowyGrassBlock;
-            break;
-        case "quilt":
-            src = quilt;
-            break;
-        case "fabric":
-            src = fabric;
-            break;
-        case "neoforged":
-            src = neoForged;
-            break;
-        case "forge":
-            src = damagedAnvil;
-            break;
-        default:
-            src = tnt;
-            break;
-    }
-
-
-    return <div className="h-full p-3 bg-content2 rounded-full">
-        <img src={src} alt={loader ?? "vanilla"} className="w-full h-full object-contain"/>
-    </div>;
 }
 
 function GameStatusBadge({ installed }: { installed: boolean }) {
@@ -197,15 +162,26 @@ function GameStatusBadge({ installed }: { installed: boolean }) {
 
 interface GameActionsProps {
     installed: boolean;
-    gameId: string;
+    detail: GameProfileDetail;
 }
 
-function GameActions({ installed }: GameActionsProps) {
+function GameActions({ installed, detail }: GameActionsProps) {
+    const [launching, setLaunching] = useState(false);
+    const [, nav] = useLocation();
+
+    function launch() {
+        setLaunching(true);
+        remoteGame.create(detail).then((procId) => {
+            setLaunching(false);
+            nav(`/Monitor/${procId}`);
+        });
+    }
+
     return <div className="flex gap-2">
         {
             // TODO bind button actions
             installed ?
-                <Button isIconOnly color="primary">
+                <Button isIconOnly isLoading={launching} color="primary" onPress={launch}>
                     <CirclePlayIcon/>
                 </Button>
                 :

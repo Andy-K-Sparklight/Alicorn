@@ -28,8 +28,6 @@ async function main() {
         i18n.init()
     ]);
 
-    disableTitles();
-
     console.log("Performing initial render.");
     render();
 
@@ -40,17 +38,6 @@ async function main() {
     printDevToolsWarn();
 
     native.bwctl.show();
-}
-
-/**
- * Hides title popups on certain elements to make the LAF closer to native UI.
- */
-function disableTitles() {
-    window.addEventListener("mouseover", (e) => {
-        if (e.target !== null && typeof e.target === "object" && "title" in e.target && e.target.title) {
-            e.target.title = "";
-        }
-    });
 }
 
 function render() {

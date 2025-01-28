@@ -18,6 +18,22 @@ games:
     info: 查看详细信息
     remove: 移除游戏
 
+monitor:
+  title: 运行中
+  log-view: 游戏日志
+  perf-view: 性能查看器
+  status:
+    running: 正常运行中
+    exited: 已停止
+    crashed: 发生错误
+  actions:
+    back-to-list: 返回总览
+    stop: 停止
+    stop-title: 停止游戏，确定吗？
+    stop-sub: 游戏数据可能丢失。
+    stop-confirm: 我知道我在做什么！
+    reveal-rsp: 打开资源包文件夹
+
 settings:
   title: 设置
   hint: 默认设置即是推荐设置。若要修改设置项，请确保了解其功能。部分选项在下一次启动时才会生效。

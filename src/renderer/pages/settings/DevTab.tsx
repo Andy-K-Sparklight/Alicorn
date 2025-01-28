@@ -1,4 +1,5 @@
-import { Alert, Divider } from "@heroui/react";
+import { Alert } from "@components/Alert";
+import { Divider } from "@heroui/react";
 import { OnOffEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
 import { AppWindowIcon, SearchCodeIcon } from "lucide-react";

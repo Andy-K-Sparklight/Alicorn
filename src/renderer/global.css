@@ -37,3 +37,7 @@ html, body {
 svg.lucide {
     padding: 2px;
 }
+
+pre {
+    font-family: "Ubuntu Mono", monospace;
+}

@@ -41,6 +41,7 @@ async function prepare(hint: LaunchHint): Promise<LaunchInit> {
 }
 
 async function launch(hint: LaunchHint): Promise<GameProcess> {
+    console.log(`Launching game ${hint.id} (${hint.profileId} on ${hint.containerId}).`);
     const init = await prepare(hint);
     const args = launchArgs.createArguments(init);
     const g = gameProc.create(init.jrtExec, args, init.container.gameDir());

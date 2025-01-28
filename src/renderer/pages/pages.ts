@@ -1,4 +1,4 @@
-import { BoxIcon, CogIcon, InfoIcon } from "lucide-react";
+import { BoxIcon, CogIcon, InfoIcon, SquareActivityIcon } from "lucide-react";
 import React from "react";
 
 /**
@@ -32,6 +32,12 @@ export const pages: PageInfo[] = [
         id: "games",
         title: "games.title",
         href: "/Games"
+    },
+    {
+        icon: SquareActivityIcon,
+        id: "monitor",
+        title: "monitor.title",
+        href: "/Monitor"
     },
     {
         icon: CogIcon,

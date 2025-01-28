@@ -1,4 +1,5 @@
-import { Alert, Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from "@heroui/react";
+import { Alert } from "@components/Alert";
+import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from "@heroui/react";
 import { clsx } from "clsx";
 import { ArrowRightIcon, CheckIcon, InfoIcon, XIcon } from "lucide-react";
 import { FC } from "react";
@@ -24,11 +25,11 @@ const FeaturesNoteCard = () => {
             title={t("features-note")}
             classNames={{ title: "font-bold" }}
             endContent={
-                <Button onPress={() => native.ext.openURL(BUILDING_URL)}>
-                    <div className="flex items-center gap-2">
-                        <ArrowRightIcon/>
-                        {t("features-how")}
-                    </div>
+                <Button
+                    startContent={<ArrowRightIcon/>}
+                    onPress={() => native.ext.openURL(BUILDING_URL)}
+                >
+                    {t("features-how")}
                 </Button>
             }
         />

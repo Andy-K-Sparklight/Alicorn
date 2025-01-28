@@ -1,5 +1,6 @@
 import logo from "@assets/logo.png";
-import { Alert, Button, ButtonGroup, Card, CardBody, Image } from "@heroui/react";
+import { Alert } from "@components/Alert";
+import { Button, ButtonGroup, Card, CardBody, Image } from "@heroui/react";
 import { FileBadgeIcon, FolderGit2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import pkg from "~/package.json";
@@ -30,7 +31,7 @@ const VersionCard = () => {
                 />
                 <div className="flex flex-col grow">
                     <p className="text-xl font-bold">{t("name")}</p>
-                    <p className="text-md text-foreground-400">
+                    <p className="text-medium text-foreground-400">
                         {t("version", { version })}
                     </p>
                 </div>

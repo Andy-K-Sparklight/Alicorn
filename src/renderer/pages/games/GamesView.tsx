@@ -1,5 +1,6 @@
 import type { GameProfile } from "@/main/game/spec";
-import { Alert, Button, ButtonGroup, Spinner, Tooltip } from "@heroui/react";
+import { Alert } from "@components/Alert";
+import { Button, ButtonGroup, Spinner, Tooltip } from "@heroui/react";
 import { GameCardDisplay } from "@pages/games/GameCard";
 import {
     ArrowDownAZIcon,
@@ -40,13 +41,10 @@ export function GamesView() {
 
     const sortedGames = games && toSortedGames(games, sortMethod!);
 
-    return <div className="flex flex-col w-5/6 h-full mx-auto">
+    return <div className="flex flex-col w-full h-full mx-auto">
         <div className="flex gap-2">
-            <Button fullWidth color="primary" size="lg">
-                <div className="flex items-center gap-1">
-                    <PlusIcon/>
-                    {t("new")}
-                </div>
+            <Button fullWidth color="primary" size="lg" startContent={<PlusIcon/>}>
+                {t("new")}
             </Button>
 
             <SortMethodControl sortMethod={sortMethod!} onChange={setSortMethod}/>
@@ -131,7 +129,7 @@ function FailedAlert({ retry }: { retry: () => void }) {
     const { t } = useTranslation("pages", { keyPrefix: "games" });
     return <Alert
         color="danger"
-        className="w-5/6 mx-auto"
+        className="w-11/12 mx-auto"
         classNames={{ title: "font-bold" }}
         title={t("load-list-failed")}
         endContent={

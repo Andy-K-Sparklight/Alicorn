@@ -1,4 +1,5 @@
 import { conf } from "@/main/conf/conf";
+import { type GameProcessLog, logParser } from "@/main/launch/log-parser";
 import { nanoid } from "nanoid";
 import * as child_process from "node:child_process";
 import { ChildProcess } from "node:child_process";
@@ -31,6 +32,11 @@ type GameProcessEvents = {
      * Standard error message received.
      */
     stderr: (s: string) => void
+
+    /**
+     * Game log object parsed and received.
+     */
+    log: (log: GameProcessLog) => void
 }
 
 type GameProcessStatus = "created" | "running" | "exited" | "crashed"
@@ -39,10 +45,11 @@ export class GameProcess {
     id = nanoid();
     emitter = new EventEmitter() as TypedEmitter<GameProcessEvents>;
     status: GameProcessStatus = "created";
-    logs = {
+    outputs = {
         stdout: [] as string[],
         stderr: [] as string[]
     };
+    logs: GameProcessLog[] = [];
     private proc: ChildProcess | null = null;
 
     constructor(bin: string, args: string[], gameDir: string) {
@@ -63,7 +70,7 @@ export class GameProcess {
         });
 
         proc.once("exit", (code) => {
-            console.log(`Game instance ${this.id} (PID ${this.proc?.pid ?? "UNKNOWN"}) exited with code ${code}.`);
+            console.log(`Game process ${this.id} (PID ${proc.pid ?? "UNKNOWN"}) exited with code ${code}.`);
             if (code === 0) {
                 this.status = "exited";
                 this.emitter.emit("exit");
@@ -73,9 +80,12 @@ export class GameProcess {
             }
 
             this.emitter.emit("end");
+            this.detach();
         });
 
-        const collect = (s: Readable, t: string[]) => {
+        let logIndex = 0;
+
+        const collect = (s: Readable, t: string[], name: "stdout" | "stderr") => {
             const limit = conf().runtime.logsLimit;
             s.on("readable", () => {
                 let data: any;
@@ -84,7 +94,18 @@ export class GameProcess {
                     data = s.read();
                     if (data === null) break;
 
-                    t.push(data.toString());
+                    const str = data.toString();
+
+                    const logs = logParser.parse(str, logIndex);
+                    logIndex += logs.length;
+
+                    for (const l of logs) {
+                        this.logs.push(l);
+                        this.emitter.emit("log", l);
+                    }
+
+                    t.push(str);
+                    this.emitter.emit(name, str);
 
                     if (t.length > limit) {
                         t.shift();
@@ -93,8 +114,8 @@ export class GameProcess {
             });
         };
 
-        collect(proc.stdout, this.logs.stdout);
-        collect(proc.stderr, this.logs.stderr);
+        collect(proc.stdout, this.outputs.stdout, "stdout");
+        collect(proc.stderr, this.outputs.stderr, "stderr");
     }
 
     /**
@@ -109,7 +130,6 @@ export class GameProcess {
      */
     stop() {
         this.proc?.kill();
-        this.detach();
     }
 
     detach() {
@@ -120,16 +140,12 @@ export class GameProcess {
     }
 }
 
-const procs = new Map<string, GameProcess>();
 
 /**
  * Creates a new game process and saves it for lookups.
  */
 function create(...args: ConstructorParameters<typeof GameProcess>): GameProcess {
-    const g = new GameProcess(...args);
-    procs.set(g.id, g);
-    g.emitter.once("exit", () => procs.delete(g.id));
-    return g;
+    return new GameProcess(...args);
 }
 
 export const gameProc = { create };

@@ -1,5 +1,6 @@
 import type { UserConfig } from "@/main/conf/conf";
-import { Alert, ScrollShadow, Tab, Tabs } from "@heroui/react";
+import { Alert } from "@components/Alert";
+import { ScrollShadow, Tab, Tabs } from "@heroui/react";
 import { DevTab } from "@pages/settings/DevTab";
 import { LaunchTab } from "@pages/settings/LaunchTab";
 import { NetworkTab } from "@pages/settings/NetworkTab";

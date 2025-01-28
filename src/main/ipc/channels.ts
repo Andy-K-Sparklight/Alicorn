@@ -12,6 +12,7 @@ export type IpcEvents = {
     subscribeGameEvents: (gid: string) => void;
     stopGame: (id: string) => void;
     removeGame: (id: string) => void;
+    revealGameContent: (id: string, scope: string) => void;
 }
 
 export type IpcCommands = {

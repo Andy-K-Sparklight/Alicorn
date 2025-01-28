@@ -1,4 +1,5 @@
-import { Alert, Divider } from "@heroui/react";
+import { Alert } from "@components/Alert";
+import { Divider } from "@heroui/react";
 import { DirEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
 import { HardDriveIcon } from "lucide-react";

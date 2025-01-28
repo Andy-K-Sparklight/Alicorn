@@ -59,6 +59,13 @@ const native = {
          */
         tell(gameId: string): Promise<GameProfileDetail> {
             return ipcRenderer.invoke("tellGame", gameId);
+        },
+
+        /**
+         * Reveals the given scope in the game directory.
+         */
+        reveal(gameId: string, scope: string): void {
+            ipcRenderer.send("revealGameContent", gameId, scope);
         }
     },
 
@@ -74,21 +81,17 @@ const native = {
         },
 
         /**
-         * Creates an event target to receive events from the game.
+         * Forwards game events port received from the main process into the main world.
          */
-        async subscribe(procId: string): Promise<EventTarget> {
+        async subscribe(procId: string): Promise<void> {
             ipcRenderer.send("subscribeGameEvents", procId);
             const port = await new Promise(res =>
                 ipcRendererRaw.once(`dispatchGameEvents:${procId}`, (e) => res(e.ports[0]))
             ) as MessagePort;
 
-            const et = new EventTarget();
-            port.onmessage = (e) => {
-                const { channel, args } = e.data;
-                et.dispatchEvent(new CustomEvent(channel, { detail: args }));
-            };
-
-            return et;
+            // Event targets cannot be transferred through the context bridge.
+            // We send a port with events forwarded and let the renderer rebuild the event target.
+            window.postMessage(`dispatchGameEventsRemote:${procId}`, "*", [port]);
         },
 
         /**

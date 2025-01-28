@@ -28,6 +28,7 @@ let mainWindow: BrowserWindow | null = null;
  * Main entry point.
  */
 async function main() {
+    const beginTime = performance.now();
     Menu.setApplicationMenu(null);
 
     process.noAsar = true;
@@ -111,6 +112,12 @@ async function main() {
         icon: getIconPath()
     });
 
+    // Open DevTools if applicable
+    if (hasDevTools) {
+        injectDevToolsStyles(mainWindow);
+        mainWindow.webContents.openDevTools();
+    }
+
     mainWindow.on("resized", () => conf().app.window.size = mainWindow!.getSize());
     mainWindow.on("moved", () => conf().app.window.pos = mainWindow!.getPosition());
 
@@ -123,15 +130,6 @@ async function main() {
     });
 
     console.log("Loading window contents...");
-
-    // Open DevTools if applicable
-    if (hasDevTools) {
-        injectDevToolsStyles(mainWindow);
-
-        // DevTools can be occasionally blocked by waiting the page to load
-        // Open it earlier seems to solve this
-        mainWindow.webContents.openDevTools();
-    }
 
     // Load renderer from dev server (dev) or file (prod).
     if (import.meta.env.AL_DEV) {
@@ -151,6 +149,10 @@ async function main() {
     ].filter(isTruthy);
 
     await Promise.all(tasks);
+
+    const deltaTime = Math.round(performance.now() - beginTime) / 1000;
+
+    console.log(`Done (${deltaTime}s)! Alicorn is now fully initialized.`);
 
     if (import.meta.env.AL_TEST) {
         void runInstrumentedTest();
