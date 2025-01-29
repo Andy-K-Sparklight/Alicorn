@@ -19,12 +19,15 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: "1.1.45"
+          bun-version: "1.2.0"
       - name: Install Dependencies
         run: bun install
       - name: Check Types
         run: bun type-check
       - name: Run Unit Tests
         run: bun test
+      - name: Deactivate AppImage Restrictions
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Run Instrumented Tests
         run: bun itest
