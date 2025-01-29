@@ -11,13 +11,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-latest, macos-latest, ubuntu-22.04 ]
+        os: [ windows-latest, macos-latest, ubuntu-latest ]
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
       - name: Install Dependencies
         run: bun install
       - name: Check Types
