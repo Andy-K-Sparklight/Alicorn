@@ -27,7 +27,6 @@ export async function build(variant: BuildVariant) {
     await fs.emptyDir(outputDir);
 
     const defines = {
-        "process.env.NODE_ENV": isDev ? "\"development\"" : "\"production\"",
         "__dirname": "import.meta.dirname",
         "__filename": "import.meta.filename",
 
@@ -46,7 +45,7 @@ export async function build(variant: BuildVariant) {
         define: defines,
         outdir: outputDir,
         metafile: true,
-        // drop: cfg.variant.mode === "production" ? ["console"] : undefined,
+        drop: cfg.variant.mode === "production" ? ["console"] : undefined,
         alias: {
             "readable-stream": "node:stream"
         },
