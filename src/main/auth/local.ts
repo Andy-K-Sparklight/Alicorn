@@ -3,17 +3,17 @@ import crypto from "node:crypto";
 
 export class LocalAccount implements Account {
     uuid;
-    #name: string;
+    private name: string;
 
     constructor(name: string) {
-        this.#name = name;
+        this.name = name;
         this.uuid = offlineUUIDOf(name);
     }
 
     credentials(): AuthCredentials {
         if (import.meta.env.AL_ENABLE_LOCAL_ACCOUNT) {
             return {
-                playerName: this.#name,
+                playerName: this.name,
                 uuid: this.uuid,
                 accessToken: "0",
                 xboxId: "0"

@@ -70,6 +70,18 @@ const native = {
     },
 
     /**
+     * Authentication operations.
+     */
+    auth: {
+        /**
+         * Refreshes the account of the given game.
+         */
+        refresh(id: string): Promise<boolean> {
+            return ipcRenderer.invoke("gameAuth", id);
+        }
+    },
+
+    /**
      * Launcher and game instance managements.
      */
     launcher: {

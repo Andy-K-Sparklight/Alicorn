@@ -31,4 +31,4 @@ export function useTheme() {
     return { theme, setTheme };
 }
 
-export const themeManager = { getThemes };
+export const themeManager = { getThemes, isDark };

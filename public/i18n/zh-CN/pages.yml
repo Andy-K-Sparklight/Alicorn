@@ -6,6 +6,9 @@ games:
   reload: 重新加载
   load-failed: 无法读取 {{name}} （标识符为 {{id}}），此游戏可能已损坏。
   remove-failed: 删除游戏
+  auth-failed:
+    title: 帐户验证失败
+    sub: 请修复此问题，然后再尝试启动游戏。
   sorting:
     az: 名称升序
     za: 名称降序

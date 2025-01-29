@@ -12,7 +12,6 @@ export interface LaunchGameResult {
 ipcMain.handle("launch", async (_, gameId: string) => {
     const launchHint = reg.games.get(gameId).launchHint;
 
-    console.log(`Launching ${gameId}`);
     const g = await bl.launch(launchHint);
 
     return {

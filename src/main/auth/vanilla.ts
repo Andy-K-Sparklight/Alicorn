@@ -12,41 +12,48 @@ const MOJANG_PROFILE_API = "https://api.minecraftservices.com/minecraft/profile"
 export class VanillaAccount implements Account {
     uuid = "";
 
-    #partId: string;
-    #refreshToken = "";
+    private partId: string;
+    private refreshToken = "";
+    private playerName = "";
+    private accessToken = "";
+
     #oAuthToken = "";
     #xblToken = "";
     #xstsToken = "";
-    #expiresAt = -1;
+    #oauthTokenExpiresAt = -1;
+    #accessTokenExpiresAt = -1;
     #xboxId = "";
     #userHash = "";
-    #accessToken = "";
-    #playerName = "";
     #code = "";
 
     constructor(partId?: string) {
-        this.#partId = partId || nanoid();
+        this.partId = partId || nanoid();
     }
 
     credentials(): AuthCredentials {
         return {
             uuid: this.uuid,
-            playerName: this.#playerName,
+            playerName: this.playerName,
             xboxId: this.#xboxId,
-            accessToken: this.#accessToken
+            accessToken: this.accessToken
         };
     }
 
     async refresh(): Promise<boolean> {
+        if (!this.#isAccessTokenExpired()) {
+            console.log(`Account ${this.uuid} is not expired, skipped.`);
+            return true;
+        }
+
         try {
-            if (this.#isExpired()) {
+            if (this.#isOAuthTokenExpired()) {
                 console.log("Obtaining new OAuth code.");
                 await this.#getCode();
             } else {
                 console.log("Reusing existing refresh token.");
             }
 
-            await this.#getOAuthToken(!this.#isExpired());
+            await this.#getOAuthToken(!this.#isOAuthTokenExpired());
             await this.#getXBLToken();
             await Promise.all([
                 this.#getXboxId(),
@@ -57,7 +64,7 @@ export class VanillaAccount implements Account {
                 })()
             ]);
 
-            console.log(`Login complete. Welcome back, ${this.#playerName}!`);
+            console.log(`Login complete. Welcome back, ${this.playerName}!`);
             return true;
         } catch (e) {
             console.error(`Login failed: ${e}`);
@@ -65,20 +72,24 @@ export class VanillaAccount implements Account {
         }
     }
 
-    #isExpired(): boolean {
-        return this.#expiresAt <= Date.now();
+    #isOAuthTokenExpired(): boolean {
+        return this.#oauthTokenExpiresAt <= Date.now();
+    }
+
+    #isAccessTokenExpired(): boolean {
+        return this.#accessTokenExpiresAt <= Date.now();
     }
 
     async #getCode(): Promise<void> {
-        this.#code = await vanillaOAuth.browserLogin(this.#partId);
+        this.#code = await vanillaOAuth.browserLogin(this.partId);
         if (!this.#code) throw "Empty code received (the login may have failed)";
     }
 
     async #getOAuthToken(refresh: boolean) {
         console.log("Code -> OAuth Token");
-        const doRefresh = refresh && this.#refreshToken;
+        const doRefresh = refresh && this.refreshToken;
 
-        const credit = doRefresh ? this.#refreshToken : this.#code;
+        const credit = doRefresh ? this.refreshToken : this.#code;
         const grantType = doRefresh ? "refresh_token" : "authorization_code";
         const grantTag = doRefresh ? "refresh_token" : "code";
 
@@ -104,9 +115,9 @@ export class VanillaAccount implements Account {
 
         if (!accessToken) throw `Empty OAuth token received (the authorization may have failed)`;
 
-        this.#expiresAt = Date.now() + (expiresIn - 300) * 1000; // Reserve 5min for the token
+        this.#oauthTokenExpiresAt = Date.now() + (expiresIn - 300) * 1000; // Reserve 5min for the token
         this.#oAuthToken = accessToken;
-        this.#refreshToken = refreshToken ?? "";
+        this.refreshToken = refreshToken ?? "";
     }
 
     async #getXBLToken(): Promise<void> {
@@ -208,11 +219,12 @@ export class VanillaAccount implements Account {
             })
         });
 
-        const { access_token: accessToken } = await res.json();
+        const { access_token: accessToken, expires_in: expiresIn } = await res.json();
 
         if (!accessToken) throw "Empty access token received (the authorization may have failed)";
 
-        this.#accessToken = accessToken;
+        this.#accessTokenExpiresAt = Date.now() + (expiresIn - 300) * 1000;
+        this.accessToken = accessToken;
     }
 
 
@@ -220,7 +232,7 @@ export class VanillaAccount implements Account {
         console.log("Access Token -> Profile");
         const res = await net.fetch(MOJANG_PROFILE_API, {
             headers: {
-                Authorization: `Bearer ${this.#accessToken}`
+                Authorization: `Bearer ${this.accessToken}`
             }
         });
 
@@ -229,6 +241,6 @@ export class VanillaAccount implements Account {
         if (!id || !name) throw "Empty profile received (the authorization may have failed)";
 
         this.uuid = id;
-        this.#playerName = name;
+        this.playerName = name;
     }
 }

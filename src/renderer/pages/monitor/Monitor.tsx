@@ -215,7 +215,7 @@ function MonitorActions({ procId, gameId, status }: MonitorActionsProps) {
 
     const stopDisabled = status !== "running";
 
-    return <div className="h-full flex flex-col gap-4">
+    return <div className="flex flex-col gap-4">
         <Button startContent={<ArrowLeftIcon/>} onPress={() => nav("/monitor")}>
             {t("back-to-list")}
         </Button>

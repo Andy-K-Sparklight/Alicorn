@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import { useLocation } from "wouter";
 
 interface GameCardDisplayProps {
@@ -167,12 +168,19 @@ function GameActions({ installed, detail }: GameActionsProps) {
     const [launching, setLaunching] = useState(false);
     const [, nav] = useLocation();
 
-    function launch() {
+    async function launch() {
         setLaunching(true);
-        remoteGame.create(detail).then((procId) => {
-            setLaunching(false);
-            nav(`/monitor/${procId}`);
-        });
+        const authed = await native.auth.refresh(detail.id);
+
+        if (!authed) {
+            toast(AuthFailedToast, { type: "error" });
+            return;
+        }
+
+        // TODO add error handler
+        const procId = await remoteGame.create(detail);
+        setLaunching(false);
+        nav(`/monitor/${procId}`);
     }
 
     return <div className="flex gap-2">
@@ -189,6 +197,15 @@ function GameActions({ installed, detail }: GameActionsProps) {
         }
 
         <GameCardDropdown/>
+    </div>;
+}
+
+function AuthFailedToast() {
+    const { t } = useTranslation("pages", { keyPrefix: "games.auth-failed" });
+
+    return <div className="flex flex-col gap-1 mx-4">
+        <div className="font-bold text-xl">{t("title")}</div>
+        <div className="text-medium">{t("sub")}</div>
     </div>;
 }
 

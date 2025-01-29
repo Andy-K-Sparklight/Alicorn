@@ -1,5 +1,5 @@
 import { useAutoFontClass } from "@/renderer/i18n/i18n";
-import { useTheme } from "@/renderer/theme";
+import { themeManager, useTheme } from "@/renderer/theme";
 import { Navigator } from "@components/Navigator";
 import { HeroUIProvider } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
@@ -8,6 +8,7 @@ import { MonitorView } from "@pages/monitor/MonitorView";
 import { pages } from "@pages/pages";
 import { SettingsView } from "@pages/settings/SettingsView";
 import React from "react";
+import { ToastContainer } from "react-toastify";
 import { Redirect, Route, Switch, useLocation } from "wouter";
 import pkg from "~/package.json";
 
@@ -17,8 +18,11 @@ import pkg from "~/package.json";
 export function App() {
     const [, nav] = useLocation();
 
-    useTheme();
+    const { theme } = useTheme();
     useAutoFontClass();
+
+    // Toasts use the opposite theme
+    const toastTheme = themeManager.isDark(theme) ? "light" : "dark";
 
     return <HeroUIProvider navigate={nav}>
         <main className="fixed inset-0 text-foreground bg-background">
@@ -27,6 +31,11 @@ export function App() {
                 <MainArea/>
             </div>
             <VersionOverlay/>
+            <ToastContainer
+                theme={toastTheme}
+                position="bottom-left"
+                newestOnTop
+            />
         </main>
     </HeroUIProvider>;
 }
