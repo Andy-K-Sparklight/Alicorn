@@ -28,20 +28,14 @@ function PageTabs() {
 
     const activeTab = pages.find(p => pathname.startsWith("/" + p.id))?.id ?? pages[0].id;
 
-    // A workaround for https://github.com/heroui-inc/heroui/issues/4598
-    function changePage(id: string | number) {
-        const href = "/" + id;
-        if (href) {
-            navigate(href);
-        }
-    }
-
     return <Tabs
         color="primary"
         variant="light"
         radius="full"
         selectedKey={activeTab}
-        onSelectionChange={changePage}
+
+        // A workaround for https://github.com/heroui-inc/heroui/issues/4598
+        onSelectionChange={id => navigate("/" + id)}
     >
         {
             pages.map(p =>
