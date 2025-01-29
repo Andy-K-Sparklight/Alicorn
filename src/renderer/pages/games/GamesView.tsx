@@ -39,7 +39,7 @@ export function GamesView() {
         return <LoadingSpinner/>;
     }
 
-    const sortedGames = games && toSortedGames(games, sortMethod!);
+    const sortedGames = toSortedGames(games, sortMethod!);
 
     return <div className="flex flex-col w-full h-full mx-auto">
         <div className="flex gap-2">
@@ -60,7 +60,7 @@ export function GamesView() {
         <div className="mt-4 w-full h-full overflow-y-auto">
             <div className="flex flex-col gap-3 w-full">
                 {
-                    sortedGames?.map(g => <GameCardDisplay key={g.id} gameProfile={g}/>)
+                    sortedGames.map(({ id, name }) => <GameCardDisplay key={id} id={id} name={name}/>)
                 }
             </div>
         </div>

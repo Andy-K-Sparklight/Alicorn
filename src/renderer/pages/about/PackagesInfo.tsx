@@ -1,23 +1,22 @@
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react";
-import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import pkg from "~/package.json";
 
-export const PackagesInfo: FC = () => {
+export function PackagesInfo() {
     const { t } = useTranslation("pages", { keyPrefix: "about.subtitles" });
 
     return <>
         <h1 className="text-2xl font-bold mb-4">{t("packages-info")}</h1>
-        <DependencyCountCard/>
+        <Packages/>
     </>;
-};
+}
 
-const DependencyCountCard = () => {
+function Packages() {
     const packages = Object.entries(pkg.dependencies);
 
     const { t } = useTranslation("pages", { keyPrefix: "about" });
 
-    return <Table isHeaderSticky classNames={{ base: "overflow-y-scroll" }}>
+    return <Table isHeaderSticky aria-label="Packages" classNames={{ base: "overflow-y-scroll" }}>
         <TableHeader>
             <TableColumn>
                 {t("packages.name")}
@@ -37,4 +36,4 @@ const DependencyCountCard = () => {
             }
         </TableBody>
     </Table>;
-};
+}

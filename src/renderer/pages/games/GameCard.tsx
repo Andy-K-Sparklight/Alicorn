@@ -1,4 +1,4 @@
-import type { GameProfile, GameProfileDetail } from "@/main/game/spec";
+import type { GameProfileDetail } from "@/main/game/spec";
 import { remoteGame } from "@/renderer/lib/remote-game";
 import { GameTypeImage } from "@components/GameTypeImage";
 import {
@@ -30,14 +30,13 @@ import { useTranslation } from "react-i18next";
 import { useLocation } from "wouter";
 
 interface GameCardDisplayProps {
-    gameProfile: GameProfile;
+    id: string;
+    name: string;
 }
 
-export function GameCardDisplay({ gameProfile }: GameCardDisplayProps) {
+export function GameCardDisplay({ id, name }: GameCardDisplayProps) {
     const [summary, setSummary] = useState<GameProfileDetail>();
     const [error, setError] = useState();
-
-    const { id, name } = gameProfile;
 
     // TODO error handler
 
@@ -101,7 +100,7 @@ interface GameCardProps {
 }
 
 function GameCard({ detail }: GameCardProps) {
-    const { id, name, versionId, gameVersion, installed, stable, modLoader } = detail;
+    const { name, versionId, gameVersion, installed, stable, modLoader } = detail;
     const { t } = useTranslation("pages", { keyPrefix: "games.game-card" });
 
     const gameVersionChip =
@@ -128,7 +127,6 @@ function GameCard({ detail }: GameCardProps) {
                                 {gameVersionChip}
                             </Tooltip>
                     }
-
                 </div>
 
                 <GameStatusBadge installed={installed}/>
@@ -173,7 +171,7 @@ function GameActions({ installed, detail }: GameActionsProps) {
         setLaunching(true);
         remoteGame.create(detail).then((procId) => {
             setLaunching(false);
-            nav(`/Monitor/${procId}`);
+            nav(`/monitor/${procId}`);
         });
     }
 

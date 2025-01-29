@@ -14,41 +14,23 @@ export interface PageInfo {
      * Page icon class.
      */
     icon: React.ComponentType;
-
-    /**
-     * Page title (translation key).
-     */
-    title: string;
-
-    /**
-     * Route to navigate to when the icon is clicked.
-     */
-    href: string;
 }
 
 export const pages: PageInfo[] = [
     {
-        icon: BoxIcon,
         id: "games",
-        title: "games.title",
-        href: "/Games"
+        icon: BoxIcon
     },
     {
-        icon: SquareActivityIcon,
         id: "monitor",
-        title: "monitor.title",
-        href: "/Monitor"
+        icon: SquareActivityIcon
     },
     {
-        icon: CogIcon,
         id: "settings",
-        title: "settings.title",
-        href: "/Settings"
+        icon: CogIcon
     },
     {
-        icon: InfoIcon,
         id: "about",
-        title: "about.title",
-        href: "/About"
+        icon: InfoIcon
     }
 ];

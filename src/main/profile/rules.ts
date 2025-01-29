@@ -10,9 +10,10 @@ export function filterRules(r: Rule[] | undefined, features: Set<string>): boole
     const match = r.findLast(it => {
         const criteria = [];
         if (it.os) {
-            if (it.os.name) criteria.push(it.os.name === getOSName());
-            if (it.os.version) criteria.push(new RegExp(it.os.version).test(os.version()));
-            if (it.os.arch) criteria.push(it.os.arch === os.arch());
+            const { name, version, arch } = it.os;
+            if (name) criteria.push(name === getOSName());
+            if (version) criteria.push(new RegExp(version).test(os.version()));
+            if (arch) criteria.push(arch === os.arch());
         }
 
         if (it.features) {

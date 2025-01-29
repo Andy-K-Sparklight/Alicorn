@@ -3,10 +3,10 @@ import { Divider } from "@heroui/react";
 import { OnOffEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
 import { AppWindowIcon, SearchCodeIcon } from "lucide-react";
-import React, { FC } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 
-export const DevTab: FC = () => {
+export function DevTab() {
     const { t } = useTranslation("pages", { keyPrefix: "settings" });
 
     const [config, makeReduce] = useConfig();
@@ -36,4 +36,4 @@ export const DevTab: FC = () => {
             onChange={makeReduce((c, s) => c.dev.showFrame = s)}
         />
     </>;
-};
+}

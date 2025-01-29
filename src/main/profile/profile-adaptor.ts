@@ -33,7 +33,7 @@ async function patchComplianceLevel(src: Record<string, unknown>) {
         }
     }
 
-    Object.defineProperty(src, "complianceLevel", { value: level });
+    src.complianceLevel = level;
 }
 
 
@@ -48,12 +48,10 @@ async function transformLegacy(src: Record<string, unknown>): Promise<void> {
     if (src.complianceLevel === 0 && "minecraftArguments" in src) {
         const gameArgs = (typeof src["minecraftArguments"] === "string" ? src["minecraftArguments"] : "").split(" ");
         const { vmArgs } = await unwrapESM(import("@/refs/default-vm-args.json"));
-        Object.defineProperty(src, "arguments", {
-            value: {
-                game: gameArgs,
-                jvm: vmArgs
-            }
-        });
+        src.arguments = {
+            game: gameArgs,
+            jvm: vmArgs
+        };
     }
 }
 

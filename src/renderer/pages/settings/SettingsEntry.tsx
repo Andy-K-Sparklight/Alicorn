@@ -3,7 +3,7 @@
  */
 import { Button, Input, Select, SelectItem, type SharedSelection, Slider, Switch } from "@heroui/react";
 import { EllipsisIcon, PlusIcon, XIcon } from "lucide-react";
-import React, { type FC, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface SettingsEntryProps<T> {
@@ -20,37 +20,37 @@ function useEntriesTrans() {
     return useTranslation("pages", { keyPrefix: "settings.entries" });
 }
 
-const Title = ({ id, icon }: { id: string, icon?: React.ComponentType }) => {
+function Title({ id, icon: Icon }: { id: string, icon?: React.ComponentType }) {
     const { t } = useEntriesTrans();
 
     return <div className="flex gap-2 items-center">
-        {icon && React.createElement(icon)}
+        {Icon && <Icon/>}
         <div className="text-lg font-bold">{t(`${id}.title`)}</div>
     </div>;
-};
+}
 
-const Subtitle = ({ id }: { id: string }) => {
+function Subtitle({ id }: { id: string }) {
     const { t } = useEntriesTrans();
 
     return <div className="text-sm text-foreground-400 whitespace-pre-line">{t(`${id}.sub`)}</div>;
-};
+}
 
-const EntryLabel = ({ id, icon }: { id: string; icon?: React.ComponentType }) => {
+function EntryLabel({ id, icon }: { id: string; icon?: React.ComponentType }) {
     return <div className="flex flex-col gap-2">
 
         <Title id={id} icon={icon}/>
         <Subtitle id={id}/>
     </div>;
-};
+}
 
-export const TextEntry: FC<SettingsEntryProps<string>> = ({ id, icon, value, onChange }) => {
+export function TextEntry({ id, icon, value, onChange }: SettingsEntryProps<string>) {
     return <div className="flex flex-col gap-2 w-full">
         <EntryLabel id={id} icon={icon}/>
         <Input fullWidth value={value} onValueChange={onChange}/>
     </div>;
-};
+}
 
-export const DirEntry: FC<SettingsEntryProps<string>> = ({ id, icon, value, onChange }) => {
+export function DirEntry({ id, icon, value, onChange }: SettingsEntryProps<string>) {
     async function runSelect() {
         const d = await native.ext.selectDir();
         if (d) onChange(d);
@@ -65,11 +65,11 @@ export const DirEntry: FC<SettingsEntryProps<string>> = ({ id, icon, value, onCh
             </Button>
         </div>
     </div>;
-};
+}
 
 type NumberSliderEntryProps = SettingsEntryProps<number> & { max: number; min: number; }
 
-export const NumberSliderEntry: FC<NumberSliderEntryProps> = ({ id, icon, value, onChange, max, min }) => {
+export function NumberSliderEntry({ id, icon, value, onChange, max, min }: NumberSliderEntryProps) {
     return <div className="flex flex-col gap-4 w-full">
         <EntryLabel id={id} icon={icon}/>
         <Slider
@@ -85,9 +85,9 @@ export const NumberSliderEntry: FC<NumberSliderEntryProps> = ({ id, icon, value,
             onChange={(v) => onChange(Array.isArray(v) ? v[0] : v)}
         />
     </div>;
-};
+}
 
-export const StringArrayEntry: FC<SettingsEntryProps<string[]>> = ({ id, icon, value, onChange }) => {
+export function StringArrayEntry({ id, icon, value, onChange }: SettingsEntryProps<string[]>) {
     const [str, setStr] = useState("");
     const { t } = useTranslation("pages", { keyPrefix: "settings" });
 
@@ -137,9 +137,9 @@ export const StringArrayEntry: FC<SettingsEntryProps<string[]>> = ({ id, icon, v
             <div className="text-sm text-secondary">{t("input-blur-to-add")}</div>
         }
     </div>;
-};
+}
 
-export const OnOffEntry: FC<SettingsEntryProps<boolean>> = ({ id, icon, value, onChange }) => {
+export function OnOffEntry({ id, icon, value, onChange }: SettingsEntryProps<boolean>) {
     return <div className="flex flex-col gap-2 w-full">
         <Title id={id} icon={icon}/>
 
@@ -148,12 +148,12 @@ export const OnOffEntry: FC<SettingsEntryProps<boolean>> = ({ id, icon, value, o
             <Subtitle id={id}/>
         </div>
     </div>;
-};
+}
 
 
-type SelectEntryProps = SettingsEntryProps<string> & { items: string[] }
+type SelectEntryProps<T> = SettingsEntryProps<T> & { items: T[] }
 
-export const SelectEntry: FC<SelectEntryProps> = ({ id, icon, value, onChange, items }) => {
+export function SelectEntry({ id, icon, value, onChange, items }: SelectEntryProps<string>) {
     const { t } = useEntriesTrans();
 
     function handleSelectionChange(s: SharedSelection) {
@@ -171,4 +171,4 @@ export const SelectEntry: FC<SelectEntryProps> = ({ id, icon, value, onChange, i
             }
         </Select>
     </div>;
-};
+}

@@ -71,16 +71,10 @@ const AppLinks = () => {
     const { t } = useTranslation("pages", { keyPrefix: "about.links" });
 
     return <ButtonGroup>
-        <Button
-            onPress={() => native.ext.openURL(SRC_URL)}
-            startContent={<FolderGit2/>}
-        >
+        <Button onPress={() => native.ext.openURL(SRC_URL)} startContent={<FolderGit2/>}>
             {t("source")}
         </Button>
-        <Button
-            onPress={() => native.ext.openURL(LICENSE_URL)}
-            startContent={<FileBadgeIcon/>}
-        >
+        <Button onPress={() => native.ext.openURL(LICENSE_URL)} startContent={<FileBadgeIcon/>}>
             {t("license")}
         </Button>
     </ButtonGroup>;

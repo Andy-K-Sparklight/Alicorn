@@ -6,7 +6,6 @@ import { mirror } from "@/main/net/mirrors";
 import { registry } from "@/main/registry/registry";
 import { getOSName } from "@/main/sys/os";
 import { windowControl } from "@/main/sys/window-control";
-import { isTruthy } from "@/main/util/misc";
 import { app, BrowserWindow, Menu, net, protocol } from "electron";
 import events from "node:events";
 import os from "node:os";
@@ -146,7 +145,7 @@ async function main() {
         conf().net.downloader === "aria2" && aria2.init(),
         mirror.bench(),
         vanillaInstaller.prefetch()
-    ].filter(isTruthy);
+    ].filter(Boolean);
 
     await Promise.all(tasks);
 

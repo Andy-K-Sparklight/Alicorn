@@ -58,15 +58,6 @@ export interface NextDownloadTask {
 
     // The current active URL
     activeURL: string;
-
-    // The time the download begins
-    startTime: number;
-
-    // The total length of the content
-    bytesTotal: number;
-
-    // The transferred length of the content
-    bytesTransferred: number;
 }
 
 /**
@@ -174,51 +165,20 @@ class DownloadTaskImpl implements NextDownloadTask {
         this.activeURL = req.urls[0];
     }
 
-    private _status: NextDownloadStatus = NextDownloadStatus.PENDING;
+    #_status: NextDownloadStatus = NextDownloadStatus.PENDING;
 
     get status() {
-        return this._status;
+        return this.#_status;
     }
 
     set status(value: NextDownloadStatus) {
-        this._status = value;
-        this.notify();
+        this.#_status = value;
+        this.#notify();
     }
 
-    private _startTime = -1;
-
-    get startTime(): number {
-        return this._startTime;
+    #notify() {
+        emitter.emit("change", this.id);
     }
-
-    set startTime(value: number) {
-        this._startTime = value;
-        this.notify();
-    }
-
-    private _bytesTotal = -1;
-
-    get bytesTotal(): number {
-        return this._bytesTotal;
-    }
-
-    set bytesTotal(value: number) {
-        this._bytesTotal = value;
-        this.notify();
-    }
-
-    private _bytesTransferred = -1;
-
-    get bytesTransferred(): number {
-        return this._bytesTransferred;
-    }
-
-    set bytesTransferred(value: number) {
-        this._bytesTransferred = value;
-        this.notify();
-    }
-
-    private notify = () => emitter.emit("change", this.id);
 }
 
 /**
@@ -232,8 +192,6 @@ function createTask(req: NextDownloadRequest): NextDownloadTask {
  * Starts a request to the task URL and tries to fetch its content.
  */
 async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
-    task.startTime = Date.now();
-
     console.debug(`Get: ${task.activeURL}`);
 
     const { requestTimeout, minSpeed } = conf().net.next;
@@ -269,8 +227,7 @@ async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
         await fs.ensureFile(task.req.path);
         const writeStream = Stream.Writable.toWeb(fs.createWriteStream(task.req.path)) as WritableStream<Uint8Array>;
         const guardStream = createTransferGuardStream(minSpeed);
-        const countStream = createBytesCountingStream((b) => task.bytesTransferred = b);
-        await res.body.pipeThrough(guardStream).pipeThrough(countStream).pipeTo(writeStream);
+        await res.body.pipeThrough(guardStream).pipeTo(writeStream);
         return NextRequestStatus.SUCCESS;
     } catch (e) {
         console.warn(`Error when transferring data: ${e}`);
@@ -304,26 +261,5 @@ function createTransferGuardStream(minSpeed: number): TransformStream<Uint8Array
         }
     });
 }
-
-/**
- * Creates a transform stream that counts the bytes transferred. Notifies the caller via a callback function.
- */
-function createBytesCountingStream(onChange: (b: number) => void): TransformStream<Uint8Array, Uint8Array> {
-    let bytes = 0;
-    let lastBytes = 0;
-    return new TransformStream<Uint8Array, Uint8Array>({
-        transform(chunk, controller) {
-            bytes += chunk.byteLength;
-
-            // Throttle every 64K
-            if (bytes - lastBytes > 1024 * 64) {
-                onChange(bytes);
-                lastBytes = bytes;
-            }
-            controller.enqueue(chunk);
-        }
-    });
-}
-
 
 export const nextdl = { get };

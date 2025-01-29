@@ -50,7 +50,7 @@ export class GameProcess {
         stderr: [] as string[]
     };
     logs: GameProcessLog[] = [];
-    private proc: ChildProcess | null = null;
+    #proc: ChildProcess | null = null;
 
     constructor(bin: string, args: string[], gameDir: string) {
         const proc = child_process.spawn(bin, args, {
@@ -58,14 +58,14 @@ export class GameProcess {
             detached: true
         });
 
-        this.proc = proc;
+        this.#proc = proc;
 
         proc.once("spawn", () => {
             this.status = "running";
         });
 
         proc.on("error", (e) => {
-            console.error(`Error occurred in game instance ${this.id} (PID ${this.proc?.pid ?? "UNKNOWN"})`);
+            console.error(`Error occurred in game instance ${this.id} (PID ${this.#proc?.pid ?? "UNKNOWN"})`);
             console.error(e);
         });
 
@@ -122,21 +122,21 @@ export class GameProcess {
      * Gets the process PID.
      */
     pid() {
-        return this.proc?.pid ?? -1;
+        return this.#proc?.pid ?? -1;
     }
 
     /**
      * Terminates the process.
      */
     stop() {
-        this.proc?.kill();
+        this.#proc?.kill();
     }
 
     detach() {
-        this.proc?.stdout?.removeAllListeners();
-        this.proc?.stderr?.removeAllListeners();
+        this.#proc?.stdout?.removeAllListeners();
+        this.#proc?.stderr?.removeAllListeners();
         this.emitter.removeAllListeners();
-        this.proc = null;
+        this.#proc = null;
     }
 }
 

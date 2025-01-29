@@ -1,5 +1,5 @@
-import { msAuth } from "@/main/auth/ms-auth";
-import { Account, AuthCredentials } from "@/main/auth/spec";
+import { Account, AuthCredentials } from "@/main/auth/types";
+import { vanillaOAuth } from "@/main/auth/vanilla-oauth";
 import { net } from "electron";
 import { nanoid } from "nanoid";
 
@@ -9,56 +9,55 @@ const XSTS_API = "https://xsts.auth.xboxlive.com/xsts/authorize";
 const MOJANG_LOGIN_API = "https://api.minecraftservices.com/authentication/login_with_xbox";
 const MOJANG_PROFILE_API = "https://api.minecraftservices.com/minecraft/profile";
 
-
-export class MSAccount implements Account {
+export class VanillaAccount implements Account {
     uuid = "";
 
-    private readonly partId: string;
-    private refreshToken = "";
-    private oAuthToken = "";
-    private xblToken = "";
-    private xstsToken = "";
-    private expiresAt = -1;
-    private xboxId = "";
-    private userHash = "";
-    private accessToken = "";
-    private playerName = "";
-    private code = "";
+    #partId: string;
+    #refreshToken = "";
+    #oAuthToken = "";
+    #xblToken = "";
+    #xstsToken = "";
+    #expiresAt = -1;
+    #xboxId = "";
+    #userHash = "";
+    #accessToken = "";
+    #playerName = "";
+    #code = "";
 
     constructor(partId?: string) {
-        this.partId = partId || nanoid();
+        this.#partId = partId || nanoid();
     }
 
     credentials(): AuthCredentials {
         return {
             uuid: this.uuid,
-            playerName: this.playerName,
-            xboxId: this.xboxId,
-            accessToken: this.accessToken
+            playerName: this.#playerName,
+            xboxId: this.#xboxId,
+            accessToken: this.#accessToken
         };
     }
 
     async refresh(): Promise<boolean> {
         try {
-            if (this.isExpired()) {
+            if (this.#isExpired()) {
                 console.log("Obtaining new OAuth code.");
-                await this.getCode();
+                await this.#getCode();
             } else {
                 console.log("Reusing existing refresh token.");
             }
 
-            await this.getOAuthToken(!this.isExpired());
-            await this.getXBLToken();
+            await this.#getOAuthToken(!this.#isExpired());
+            await this.#getXBLToken();
             await Promise.all([
-                this.getXboxId(),
+                this.#getXboxId(),
                 (async () => {
-                    await this.getXSTSToken();
-                    await this.getAccessToken();
-                    await this.getUserProfile();
+                    await this.#getXSTSToken();
+                    await this.#getAccessToken();
+                    await this.#getUserProfile();
                 })()
             ]);
 
-            console.log(`Login complete. Welcome back, ${this.playerName}!`);
+            console.log(`Login complete. Welcome back, ${this.#playerName}!`);
             return true;
         } catch (e) {
             console.error(`Login failed: ${e}`);
@@ -66,20 +65,20 @@ export class MSAccount implements Account {
         }
     }
 
-    private isExpired(): boolean {
-        return this.expiresAt <= Date.now();
+    #isExpired(): boolean {
+        return this.#expiresAt <= Date.now();
     }
 
-    private async getCode(): Promise<void> {
-        this.code = await msAuth.browserLogin(this.partId);
-        if (!this.code) throw "Empty code received (the login may have failed)";
+    async #getCode(): Promise<void> {
+        this.#code = await vanillaOAuth.browserLogin(this.#partId);
+        if (!this.#code) throw "Empty code received (the login may have failed)";
     }
 
-    private async getOAuthToken(refresh: boolean) {
+    async #getOAuthToken(refresh: boolean) {
         console.log("Code -> OAuth Token");
-        const doRefresh = refresh && this.refreshToken;
+        const doRefresh = refresh && this.#refreshToken;
 
-        const credit = doRefresh ? this.refreshToken : this.code;
+        const credit = doRefresh ? this.#refreshToken : this.#code;
         const grantType = doRefresh ? "refresh_token" : "authorization_code";
         const grantTag = doRefresh ? "refresh_token" : "code";
 
@@ -105,12 +104,12 @@ export class MSAccount implements Account {
 
         if (!accessToken) throw `Empty OAuth token received (the authorization may have failed)`;
 
-        this.expiresAt = Date.now() + (expiresIn - 300) * 1000; // Reserve 5min for the token
-        this.oAuthToken = accessToken;
-        this.refreshToken = refreshToken ?? "";
+        this.#expiresAt = Date.now() + (expiresIn - 300) * 1000; // Reserve 5min for the token
+        this.#oAuthToken = accessToken;
+        this.#refreshToken = refreshToken ?? "";
     }
 
-    private async getXBLToken(): Promise<void> {
+    async #getXBLToken(): Promise<void> {
         console.log("OAuth Token -> XBL");
         const res = await net.fetch(XBL_API, {
             method: "POST",
@@ -122,7 +121,7 @@ export class MSAccount implements Account {
                 Properties: {
                     AuthMethod: "RPS",
                     SiteName: "user.auth.xboxlive.com",
-                    RpsTicket: this.oAuthToken
+                    RpsTicket: this.#oAuthToken
                 },
                 RelyingParty: "http://auth.xboxlive.com",
                 TokenType: "JWT"
@@ -137,11 +136,11 @@ export class MSAccount implements Account {
 
         if (!token || !uhs) throw `Empty XBL token received (the authorization may have failed)`;
 
-        this.xblToken = token;
-        this.userHash = uhs;
+        this.#xblToken = token;
+        this.#userHash = uhs;
     }
 
-    private async getXboxId(): Promise<void> {
+    async #getXboxId(): Promise<void> {
         console.log("XBL -> Xbox ID");
         const res = await net.fetch(XSTS_API, {
             method: "POST",
@@ -152,7 +151,7 @@ export class MSAccount implements Account {
             body: JSON.stringify({
                 Properties: {
                     SandboxId: "RETAIL",
-                    UserTokens: [this.xblToken]
+                    UserTokens: [this.#xblToken]
                 },
                 RelyingParty: "http://xboxlive.com",
                 TokenType: "JWT"
@@ -165,10 +164,10 @@ export class MSAccount implements Account {
 
         const { DisplayClaims: { xui: [{ xid }] } } = dat;
 
-        this.xboxId = xid ?? ""; // Xbox ID is not enforced
+        this.#xboxId = xid ?? ""; // Xbox ID is not enforced
     }
 
-    private async getXSTSToken(): Promise<void> {
+    async #getXSTSToken(): Promise<void> {
         console.log("XBL -> XSTS");
         const res = await net.fetch(XSTS_API, {
             method: "POST",
@@ -179,7 +178,7 @@ export class MSAccount implements Account {
             body: JSON.stringify({
                 Properties: {
                     SandboxId: "RETAIL",
-                    UserTokens: [this.xblToken]
+                    UserTokens: [this.#xblToken]
                 },
                 RelyingParty: "rp://api.minecraftservices.com/",
                 TokenType: "JWT"
@@ -194,10 +193,10 @@ export class MSAccount implements Account {
 
         if (!token) throw `Empty XSTS token received (the authorization may have failed)`;
 
-        this.xstsToken = token;
+        this.#xstsToken = token;
     }
 
-    private async getAccessToken(): Promise<void> {
+    async #getAccessToken(): Promise<void> {
         console.log("XSTS -> Access Token");
         const res = await net.fetch(MOJANG_LOGIN_API, {
             method: "POST",
@@ -205,7 +204,7 @@ export class MSAccount implements Account {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                identityToken: `XBL3.0 x=${this.userHash};${this.xstsToken}`
+                identityToken: `XBL3.0 x=${this.#userHash};${this.#xstsToken}`
             })
         });
 
@@ -213,15 +212,15 @@ export class MSAccount implements Account {
 
         if (!accessToken) throw "Empty access token received (the authorization may have failed)";
 
-        this.accessToken = accessToken;
+        this.#accessToken = accessToken;
     }
 
 
-    private async getUserProfile(): Promise<void> {
+    async #getUserProfile(): Promise<void> {
         console.log("Access Token -> Profile");
         const res = await net.fetch(MOJANG_PROFILE_API, {
             headers: {
-                Authorization: `Bearer ${this.accessToken}`
+                Authorization: `Bearer ${this.#accessToken}`
             }
         });
 
@@ -230,8 +229,6 @@ export class MSAccount implements Account {
         if (!id || !name) throw "Empty profile received (the authorization may have failed)";
 
         this.uuid = id;
-        this.playerName = name;
+        this.#playerName = name;
     }
 }
-
-

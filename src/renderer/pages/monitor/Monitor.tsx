@@ -1,5 +1,5 @@
 import type { GameProcessLog } from "@/main/launch/log-parser";
-import { remoteGame, type RemoteGameProcess, type RemoteGameStatus } from "@/renderer/lib/remote-game";
+import { type RemoteGameProcess, type RemoteGameStatus, useGameProc } from "@/renderer/lib/remote-game";
 import { GameTypeImage } from "@components/GameTypeImage";
 import { Button, Card, CardBody, Popover, PopoverContent, PopoverTrigger, Tab, Tabs } from "@heroui/react";
 import { clsx } from "clsx";
@@ -20,7 +20,7 @@ import { useLocation } from "wouter";
 const GameProcessContext = React.createContext<RemoteGameProcess | null>(null);
 
 export function Monitor({ procId }: { procId: string }) {
-    const proc = remoteGame.useGameProc(procId, 200);
+    const proc = useGameProc(procId, 200);
 
     return <GameProcessContext.Provider value={proc}>
         <div className="w-full h-full flex gap-4 mx-auto">
@@ -146,19 +146,31 @@ function LogLine({ log }: { log: GameProcessLog }) {
 
 function ControlPanel() {
     const proc = useContext(GameProcessContext)!;
+    const { detail: { name, modLoader, stable }, status } = proc;
 
-    return <div className="flex flex-col w-full h-full">
+    return <div className="w-full h-full flex flex-col gap-4">
         <div className="grow">
-            <GameInfoCard/>
+            <GameInfoCardMemo
+                name={name}
+                modLoader={modLoader}
+                stable={stable}
+                status={status}
+            />
         </div>
-        <div className="pt-4">
-            <MonitorActions procId={proc.id} gameId={proc.detail.id} status={proc.status}/>
-        </div>
+        <MonitorActionsMemo procId={proc.id} gameId={proc.detail.id} status={proc.status}/>
     </div>;
 }
 
-function GameInfoCard() {
-    const { detail: { name, modLoader, stable }, status } = useContext(GameProcessContext)!;
+interface GameInfoCardProps {
+    name: string;
+    modLoader: string;
+    stable: boolean;
+    status: RemoteGameStatus;
+}
+
+const GameInfoCardMemo = React.memo(GameInfoCard);
+
+function GameInfoCard({ name, modLoader, stable, status }: GameInfoCardProps) {
     const { t } = useTranslation("pages", { keyPrefix: "monitor.status" });
 
     return <Card className="h-full">
@@ -188,7 +200,9 @@ interface MonitorActionsProps {
     status: RemoteGameStatus;
 }
 
-const MonitorActions = React.memo(({ procId, gameId, status }: MonitorActionsProps) => {
+const MonitorActionsMemo = React.memo(MonitorActions);
+
+function MonitorActions({ procId, gameId, status }: MonitorActionsProps) {
     const { t } = useTranslation("pages", { keyPrefix: "monitor.actions" });
     const [stopConfirmOpen, setStopConfirmOpen] = useState(false);
     const [, nav] = useLocation();
@@ -202,7 +216,7 @@ const MonitorActions = React.memo(({ procId, gameId, status }: MonitorActionsPro
     const stopDisabled = status !== "running";
 
     return <div className="h-full flex flex-col gap-4">
-        <Button startContent={<ArrowLeftIcon/>} onPress={() => nav("/Monitor")}>
+        <Button startContent={<ArrowLeftIcon/>} onPress={() => nav("/monitor")}>
             {t("back-to-list")}
         </Button>
         <Button startContent={<FolderArchive/>} onPress={() => native.game.reveal(gameId, "resourcepacks")}>
@@ -243,4 +257,4 @@ const MonitorActions = React.memo(({ procId, gameId, status }: MonitorActionsPro
             </PopoverContent>
         </Popover>
     </div>;
-});
+}

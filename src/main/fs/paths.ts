@@ -100,7 +100,7 @@ function setup(init?: Partial<PathsInit>): void {
  * Gets the path to the store root on the fly.
  */
 function getStoreRoot() {
-    return process.env.ALICORN_STORE_PATH || initPrompt?.storeRoot || conf().paths.store || fallbackStoreRoot;
+    return initPrompt?.storeRoot || conf().paths.store || fallbackStoreRoot;
 }
 
 /**

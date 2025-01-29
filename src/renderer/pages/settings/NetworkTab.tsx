@@ -2,12 +2,12 @@ import { Divider } from "@heroui/react";
 import { NumberSliderEntry, OnOffEntry, StringArrayEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
 import { ArrowLeftRightIcon, DatabaseBackupIcon, DownloadIcon, FileDiffIcon, TerminalIcon } from "lucide-react";
-import React, { FC } from "react";
+import React from "react";
 
 /**
  * Network configuration page.
  */
-export const NetworkTab: FC = () => {
+export function NetworkTab() {
     const [config, makeReduce] = useConfig();
 
     if (!config) return;
@@ -64,4 +64,4 @@ export const NetworkTab: FC = () => {
             </>
         }
     </>;
-};
+}

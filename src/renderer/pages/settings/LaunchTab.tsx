@@ -2,9 +2,8 @@ import { Divider } from "@heroui/react";
 import { StringArrayEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
 import { TerminalIcon } from "lucide-react";
-import { FC } from "react";
 
-export const LaunchTab: FC = () => {
+export function LaunchTab() {
     const [config, makeReduce] = useConfig();
 
     if (!config) return;
@@ -28,4 +27,4 @@ export const LaunchTab: FC = () => {
 
         <Divider/>
     </>;
-};
+}

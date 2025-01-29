@@ -26,11 +26,11 @@ export function Navigator() {
 function PageTabs() {
     const [pathname, navigate] = useLocation();
 
-    const currentTabId = pages.find(p => pathname.startsWith(p.href))?.id ?? pages[0].id;
+    const activeTab = pages.find(p => pathname.startsWith("/" + p.id))?.id ?? pages[0].id;
 
     // A workaround for https://github.com/heroui-inc/heroui/issues/4598
     function changePage(id: string | number) {
-        const href = pages.find(p => p.id === id)?.href;
+        const href = "/" + id;
         if (href) {
             navigate(href);
         }
@@ -40,7 +40,7 @@ function PageTabs() {
         color="primary"
         variant="light"
         radius="full"
-        selectedKey={currentTabId}
+        selectedKey={activeTab}
         onSelectionChange={changePage}
     >
         {
@@ -60,11 +60,11 @@ function PageTabs() {
 
 function PageTitle({ page }: { page: PageInfo }) {
     const { t } = useTranslation("pages");
-    const { icon, title } = page;
+    const { id, icon: Icon } = page;
 
     return <div className="flex items-center gap-2">
-        {React.createElement(icon)}
-        {t(title)}
+        <Icon/>
+        {t(id + ".title")}
     </div>;
 }
 

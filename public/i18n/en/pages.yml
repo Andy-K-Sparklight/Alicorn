@@ -117,8 +117,8 @@ about:
     name: Package Name
     ver: Version
 
-  features-note: Rebuild is needed to toggle these features.
-  features-how: How To
+  rebuild-note: Rebuild is needed to toggle these features.
+  rebuild-how: How To
   features:
     bmclapi:
       name: BMCLAPI

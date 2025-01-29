@@ -3,13 +3,17 @@ import { BrowserWindow } from "electron";
 import { pEvent } from "p-event";
 import timers from "timers/promises";
 
-const oAuthUrl =
-    "https://login.live.com/oauth20_authorize.srf" +
-    "?client_id=00000000402b5328" +
-    "&response_type=code" +
-    "&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL" +
-    "&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf";
+const OAUTH_URL = createOAuthUrl();
 
+function createOAuthUrl() {
+    const u = new URL("https://login.live.com/oauth20_authorize.srf");
+    const sp = u.searchParams;
+    sp.append("client_id", "00000000402b5328");
+    sp.append("response_type", "code");
+    sp.append("scope", "service::user.auth.xboxlive.com::MBI_SSL");
+    sp.append("redirect_uri", "https://login.live.com/oauth20_desktop.srf");
+    return u.toString();
+}
 
 async function browserLogin(part: string): Promise<string> {
     const [width, height] = windowControl.optimalSize();
@@ -37,7 +41,7 @@ async function browserLogin(part: string): Promise<string> {
 
     // Wait for the content to load for no more than 5s
     Promise.race([
-        w.loadURL(oAuthUrl),
+        w.loadURL(OAUTH_URL),
         timers.setTimeout(5000)
     ]).finally(() => w.show());
 
@@ -47,6 +51,6 @@ async function browserLogin(part: string): Promise<string> {
 }
 
 
-export const msAuth = {
+export const vanillaOAuth = {
     browserLogin
 };

@@ -151,8 +151,8 @@ about:
     name: 包名称
     ver: 版本号
 
-  features-note: 若要使用未启用的功能，请重新构建 Alicorn，并打开相应的开关。
-  features-how: 进一步了解
+  rebuild-note: 若要使用未启用的功能，请重新构建 Alicorn，并打开相应的开关。
+  rebuild-how: 进一步了解
   features:
     bmclapi:
       name: BMCLAPI 镜像加速

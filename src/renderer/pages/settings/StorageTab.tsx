@@ -3,10 +3,10 @@ import { Divider } from "@heroui/react";
 import { DirEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
 import { HardDriveIcon } from "lucide-react";
-import React, { type FC } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 
-export const StorageTab: FC = () => {
+export function StorageTab() {
     const { t } = useTranslation("pages", { keyPrefix: "settings" });
 
     const [config, makeReduce] = useConfig();
@@ -45,4 +45,4 @@ export const StorageTab: FC = () => {
             onChange={makeReduce((c, pt) => c.paths.temp = pt)}
         />
     </>;
-};
+}

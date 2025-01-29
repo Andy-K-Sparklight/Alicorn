@@ -1,6 +1,6 @@
 import { LocalAccount } from "@/main/auth/local";
-import { MSAccount } from "@/main/auth/ms";
-import type { Account } from "@/main/auth/spec";
+import type { Account } from "@/main/auth/types";
+import { VanillaAccount } from "@/main/auth/vanilla";
 import type { ContainerSpec } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import type { GameProfile } from "@/main/game/spec";
@@ -8,7 +8,6 @@ import fs from "fs-extra";
 import { Database, type Statement } from "node-sqlite3-wasm";
 import path from "node:path";
 import { Serializer } from "superserial";
-
 
 let db: Database | null = null;
 
@@ -20,14 +19,14 @@ interface RegistryOpenRecord {
 const autoSaveMap = new Map<string, RegistryOpenRecord>();
 
 export class NamedRegistry<T> {
-    private map: Map<string, T>;
+    #map: Map<string, T>;
 
     constructor(base?: Map<string, T>) {
-        this.map = base ?? new Map();
+        this.#map = base ?? new Map();
     }
 
     get(id: string): T {
-        const t = this.map.get(id);
+        const t = this.#map.get(id);
         if (t === undefined) throw `Entry not found: ${id}`;
         return t;
     }
@@ -37,19 +36,19 @@ export class NamedRegistry<T> {
             console.warn("An entry with empty ID has been ignored.");
             return;
         }
-        this.map.set(id, obj);
+        this.#map.set(id, obj);
     }
 
     keys(): string[] {
-        return [...this.map.keys()];
+        return [...this.#map.keys()];
     }
 
     getAll(): T[] {
-        return [...this.map.values()];
+        return [...this.#map.values()];
     }
 
     remove(id: string) {
-        this.map.delete(id);
+        this.#map.delete(id);
     }
 }
 
@@ -145,7 +144,7 @@ export const registry = {
 
 export const reg = {
     get accounts() {
-        return lazyOpenRegistry<Account>("accounts", { LocalAccount, MSAccount });
+        return lazyOpenRegistry<Account>("accounts", { LocalAccount, MSAccount: VanillaAccount });
     },
 
     get containers() {

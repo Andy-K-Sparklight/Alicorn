@@ -1,4 +1,4 @@
-import { i18n } from "@/renderer/i18n/i18n";
+import { useAutoFontClass } from "@/renderer/i18n/i18n";
 import { useTheme } from "@/renderer/theme";
 import { Navigator } from "@components/Navigator";
 import { HeroUIProvider } from "@heroui/react";
@@ -16,9 +16,9 @@ import pkg from "~/package.json";
  */
 export function App() {
     const [, nav] = useLocation();
-    useTheme();
 
-    i18n.useAutoFontClass();
+    useTheme();
+    useAutoFontClass();
 
     return <HeroUIProvider navigate={nav}>
         <main className="fixed inset-0 text-foreground bg-background">
@@ -31,37 +31,39 @@ export function App() {
     </HeroUIProvider>;
 }
 
+
 /**
  * Main app content area.
  */
-const MainArea = () => {
-    return <div className="grow min-h-0 w-11/12 pb-8 pt-4 mx-auto">
+function MainArea() {
+    return <div className="grow min-h-0 w-11/12 mb-8 mt-4 mx-auto">
         <Routes/>
     </div>;
-};
+}
 
 function DefaultPageRedirect() {
     // TODO load default page from user config
-    return <Redirect to={pages[0].href}/>;
+    return <Redirect to={"/" + pages[0].id}/>;
 }
+
 
 /**
  * App routes.
  */
-const Routes = () => {
+function Routes() {
     return <Switch>
-        <Route path="/About" component={AboutView}/>
-        <Route path="/Settings" component={SettingsView}/>
-        <Route path="/Games" component={GamesView}/>
-        <Route path="/Monitor/:procId" component={MonitorView}/>
+        <Route path="/about" component={AboutView}/>
+        <Route path="/settings" component={SettingsView}/>
+        <Route path="/games" component={GamesView}/>
+        <Route path="/monitor/:procId" component={MonitorView}/>
         <Route path="/" component={DefaultPageRedirect}/>
     </Switch>;
-};
+}
 
 /**
  * Version overlay at the right bottom.
  */
-const VersionOverlay = () => {
+function VersionOverlay() {
     if (!import.meta.env.AL_DEV) return "";
 
     const { version, codename } = pkg;
@@ -69,4 +71,4 @@ const VersionOverlay = () => {
     return <div className="fixed right-2 bottom-2 text-sm text-foreground-400">
         Alicorn Launcher "{codename}" {version}
     </div>;
-};
+}

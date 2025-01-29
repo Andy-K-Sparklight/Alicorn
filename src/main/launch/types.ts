@@ -1,4 +1,4 @@
-import { AuthCredentials } from "@/main/auth/spec";
+import { AuthCredentials } from "@/main/auth/types";
 import { Container } from "@/main/container/spec";
 import { VersionProfile } from "@/main/profile/version-profile";
 

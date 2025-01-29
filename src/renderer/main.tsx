@@ -1,9 +1,11 @@
+import { App } from "@/renderer/App";
 import { i18n } from "@/renderer/i18n/i18n";
-import { Root } from "@/renderer/Root";
 import { t } from "i18next";
 import { pEvent } from "p-event";
-import { createElement } from "react";
+import React from "react";
 import { createRoot } from "react-dom/client";
+import { Router } from "wouter";
+import { useHashLocation } from "wouter/use-hash-location";
 import pkg from "~/package.json";
 
 // Styles and fonts
@@ -40,11 +42,19 @@ async function main() {
     native.bwctl.show();
 }
 
+function Root() {
+    return <React.StrictMode>
+        <Router hook={useHashLocation}>
+            <App/>
+        </Router>
+    </React.StrictMode>;
+}
+
 function render() {
     const rootEle = document.createElement("div");
     document.body.appendChild(rootEle);
     const root = createRoot(rootEle);
-    root.render(createElement(Root));
+    root.render(<Root/>);
 }
 
 /**

@@ -85,9 +85,12 @@ async function create(detail: GameProfileDetail): Promise<string> {
 
     void native.launcher.subscribe(meta.id);
 
-    const msg = await pEvent(window, "message", e =>
-        e instanceof MessageEvent && e.data === `dispatchGameEventsRemote:${meta.id}`
-    ) as MessageEvent;
+    const msg = await pEvent(window, "message", {
+        rejectionEvents: [],
+        filter(e) {
+            return e instanceof MessageEvent && e.data === `dispatchGameEventsRemote:${meta.id}`;
+        }
+    }) as MessageEvent;
 
     console.log("Established event stream.");
 
@@ -140,7 +143,7 @@ function slice(procId: string): RemoteGameProcess {
  *
  * Argument 'wait' can be used to control whether to debounce the specified function.
  */
-function useGameProc(procId: string, wait = 0): RemoteGameProcess {
+export function useGameProc(procId: string, wait = 0): RemoteGameProcess {
     const [proc, setProc] = useState(slice(procId));
 
     useEffect(() => {
@@ -161,5 +164,5 @@ function useGameProc(procId: string, wait = 0): RemoteGameProcess {
 }
 
 export const remoteGame = {
-    create, useGameProc
+    create
 };

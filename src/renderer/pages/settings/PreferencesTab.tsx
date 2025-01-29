@@ -4,14 +4,14 @@ import { Divider } from "@heroui/react";
 import { SelectEntry, TextEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
 import { FileUserIcon, LanguagesIcon, PaletteIcon } from "lucide-react";
-import React, { type FC } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 
 
 /**
  * User preferences page.
  */
-export const PreferencesTab: FC = () => {
+export function PreferencesTab() {
     const [config, makeReduce] = useConfig();
 
     const { theme, setTheme } = useTheme();
@@ -47,4 +47,4 @@ export const PreferencesTab: FC = () => {
             items={i18n.getAvailableLanguages()}
         />
     </>;
-};
+}

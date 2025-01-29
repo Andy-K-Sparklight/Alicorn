@@ -66,6 +66,11 @@ export interface Container {
     assetIndex(id: string): string;
 
     /**
+     * Resolve game contents. e.g. resource packs, shader packs, mods, etc..
+     */
+    content(scope: string): string;
+
+    /**
      * Gets the game directory.
      */
     gameDir(): string;

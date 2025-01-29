@@ -57,10 +57,10 @@ const definedFonts = new Set(["zh-CN", "zh", "en"]);
 /**
  * A hook to automatically update font classes when the current locale changes.
  */
-function useAutoFontClass() {
+export function useAutoFontClass() {
     const { i18n: { languages } } = useTranslation();
     const fontClass = useRef("");
-    const newFontClass = languages?.find(it => definedFonts.has(it)) ?? "";
+    const newFontClass = "lang-" + (languages?.find(it => definedFonts.has(it)) ?? "");
 
     useEffect(() => {
         if (fontClass.current) {
@@ -77,6 +77,5 @@ function getAvailableLanguages() {
 }
 
 export const i18n = {
-    init, useAutoFontClass, getAvailableLanguages
+    init, getAvailableLanguages
 };
-

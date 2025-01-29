@@ -9,7 +9,7 @@ async function hash(path: string, algorithm: string): Promise<string> {
     rs.on("data", (chunk) => hash.update(chunk));
 
     await pEvent(rs, "end");
-    return hash.digest("hex").toLowerCase().trim();
+    return hash.digest("hex").toLowerCase();
 }
 
 workerPool.worker({ hash });

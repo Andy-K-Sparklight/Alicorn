@@ -4,6 +4,7 @@
 import { conf } from "@/main/conf/conf";
 import { LaunchInit } from "@/main/launch/types";
 import { filterRules } from "@/main/profile/rules";
+import { isTruthy } from "@/main/util/misc";
 import path from "node:path";
 import pkg from "~/package.json";
 
@@ -60,18 +61,14 @@ function createTemplateValues(init: LaunchInit): Map<string, string> {
 }
 
 function createMemoryArgs(init: LaunchInit): string[] {
-    const out: string[] = [];
-    if (init.pref.memory) {
-        const { min, max } = init.pref.memory;
-        if (min) {
-            out.push(`-Xms${min}M`);
-        }
-        if (max) {
-            out.push(`-Xmx${max}M`);
-        }
-    }
+    if (!init.pref.memory) return [];
 
-    return out;
+    const { min, max } = init.pref.memory;
+
+    return [
+        min > 0 && `-Xms${min}M`,
+        max > 0 && `-Xmx${max}M`
+    ].filter(isTruthy);
 }
 
 function createWindowSizeArgs(init: LaunchInit): string[] {
