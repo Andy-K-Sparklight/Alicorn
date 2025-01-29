@@ -89,7 +89,7 @@ export async function build(variant: BuildVariant) {
     await fs.ensureDir(outputDir);
 
     consola.start("Linking resources...");
-    await fs.copy("resources", outputDir);
+    await linkAll("resources", outputDir);
 
     consola.start("Preparing vendor resources...");
     await vendor.prepareAssets(cfg, path.join(outputDir, "vendor"));
@@ -97,11 +97,11 @@ export async function build(variant: BuildVariant) {
     consola.start("Linking native addons...");
     const platform = cfg.variant.platform + "-" + cfg.variant.arch;
 
-    await fs.copy("node_modules/node-sqlite3-wasm/dist/node-sqlite3-wasm.wasm", path.join(outputDir, "node-sqlite3-wasm.wasm"));
+    await fs.link("node_modules/node-sqlite3-wasm/dist/node-sqlite3-wasm.wasm", path.join(outputDir, "node-sqlite3-wasm.wasm"));
 
     if (cfg.enableNativeLZMA) {
         try {
-            await fs.copy(`node_modules/lzma-native/prebuilds/${platform}`, path.join(outputDir, `natives/lzma-native/prebuilds/${platform}`));
+            await linkAll(`node_modules/lzma-native/prebuilds/${platform}`, path.join(outputDir, `natives/lzma-native/prebuilds/${platform}`));
         } catch (e) {
             consola.error("Unable to link lzma-native prebuilt binaries. (Is it supported?)");
             throw e;
@@ -151,4 +151,21 @@ export async function build(variant: BuildVariant) {
     }
 
     consola.success("Done.");
+}
+
+async function linkAll(src: string, dst: string) {
+    const st = await fs.stat(src);
+    if (st.isFile()) {
+        await fs.link(src, dst);
+        return;
+    }
+
+    if (st.isDirectory()) {
+        const files = await fs.readdir(src);
+        await fs.ensureDir(dst);
+
+        for (const f of files) {
+            await linkAll(path.join(src, f), path.join(dst, f));
+        }
+    }
 }
