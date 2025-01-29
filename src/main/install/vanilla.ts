@@ -130,6 +130,7 @@ async function installLibraries(
         }
     }
 
+    // Add client file
     const ca = profile.downloads.client;
     const clientPath = container.client(profile.id);
 
@@ -138,6 +139,15 @@ async function installLibraries(
         path: clientPath,
         fastLink: shouldLink
     });
+
+    // Add logging config
+    const logging = profile.logging?.client?.file;
+    if (logging) {
+        tasks.push({
+            ...logging,
+            path: container.loggingConfig(logging.id)
+        });
+    }
 
     signal?.throwIfAborted();
 
