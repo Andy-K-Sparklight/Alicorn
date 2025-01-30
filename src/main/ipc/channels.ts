@@ -22,4 +22,5 @@ export type IpcCommands = {
     tellGame: (gameId: string) => GameProfileDetail;
     launch: (id: string) => LaunchGameResult;
     gameAuth: (gameId: string) => boolean;
+    addGame: (game: GameProfile) => void;
 }

@@ -19,3 +19,5 @@ ipcMain.on("revealGameContent", async (_, gameId, scope) => {
     await containerInspector.createContentDir(container, scope);
     void shell.openPath(container.content(scope));
 });
+
+ipcMain.handle("addGame", (_, game) => reg.games.add(game.id, game));

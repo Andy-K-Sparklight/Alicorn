@@ -66,6 +66,13 @@ const native = {
          */
         reveal(gameId: string, scope: string): void {
             ipcRenderer.send("revealGameContent", gameId, scope);
+        },
+
+        /**
+         * Adds the specified game to registry.
+         */
+        add(game: GameProfile): Promise<void> {
+            return ipcRenderer.invoke("addGame", game);
         }
     },
 
