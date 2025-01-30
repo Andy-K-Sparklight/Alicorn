@@ -16,12 +16,12 @@ export class VanillaAccount implements Account {
     private refreshToken = "";
     private playerName = "";
     private accessToken = "";
+    private refreshTokenExpiresAt = -1;
+    private accessTokenExpiresAt = -1;
 
     #oAuthToken = "";
     #xblToken = "";
     #xstsToken = "";
-    #oauthTokenExpiresAt = -1;
-    #accessTokenExpiresAt = -1;
     #xboxId = "";
     #userHash = "";
     #code = "";
@@ -73,11 +73,11 @@ export class VanillaAccount implements Account {
     }
 
     #isOAuthTokenExpired(): boolean {
-        return this.#oauthTokenExpiresAt <= Date.now();
+        return this.refreshTokenExpiresAt <= Date.now();
     }
 
     #isAccessTokenExpired(): boolean {
-        return this.#accessTokenExpiresAt <= Date.now();
+        return this.accessTokenExpiresAt <= Date.now();
     }
 
     async #getCode(): Promise<void> {
@@ -115,7 +115,7 @@ export class VanillaAccount implements Account {
 
         if (!accessToken) throw `Empty OAuth token received (the authorization may have failed)`;
 
-        this.#oauthTokenExpiresAt = Date.now() + (expiresIn - 300) * 1000; // Reserve 5min for the token
+        this.refreshTokenExpiresAt = Date.now() + (expiresIn - 300) * 1000; // Reserve 5min for the token
         this.#oAuthToken = accessToken;
         this.refreshToken = refreshToken ?? "";
     }
@@ -223,7 +223,7 @@ export class VanillaAccount implements Account {
 
         if (!accessToken) throw "Empty access token received (the authorization may have failed)";
 
-        this.#accessTokenExpiresAt = Date.now() + (expiresIn - 300) * 1000;
+        this.accessTokenExpiresAt = Date.now() + (expiresIn - 300) * 1000;
         this.accessToken = accessToken;
     }
 
