@@ -63,6 +63,8 @@ function syncEvents(emitter: EventTarget, proc: RemoteGameProcess): RemoteGamePr
 const procs = new Map<string, RemoteGameProcess>();
 const emitters = new Map<string, EventTarget>();
 
+const globalEmitter = new EventTarget();
+
 async function create(detail: GameProfileDetail): Promise<string> {
     const meta = await native.launcher.launch(detail.id);
 
@@ -111,8 +113,17 @@ async function create(detail: GameProfileDetail): Promise<string> {
         et.addEventListener(ch, () => em.dispatchEvent(new CustomEvent("change")));
     });
 
+    function emitGlobal() {
+        globalEmitter.dispatchEvent(new CustomEvent("change"));
+    }
+
+    ["exit", "crash"].forEach(ch => {
+        et.addEventListener(ch, () => emitGlobal());
+    });
+
     procs.set(meta.id, proc);
     emitters.set(meta.id, em);
+    emitGlobal();
 
     return meta.id;
 }
@@ -133,6 +144,13 @@ function slice(procId: string): RemoteGameProcess {
     const proc = procs.get(procId);
     if (proc) return structuredClone(proc);
     throw `Process not found: ${procId}`;
+}
+
+/**
+ * Gets deep copy of all statuses.
+ */
+function sliceAll(): RemoteGameProcess[] {
+    return structuredClone([...procs.values()]);
 }
 
 /**
@@ -161,6 +179,21 @@ export function useGameProc(procId: string, wait = 0): RemoteGameProcess {
     }, [procId]);
 
     return proc;
+}
+
+export function useGameProcList(): RemoteGameProcess[] {
+    const [procs, setProcs] = useState<RemoteGameProcess[]>(sliceAll());
+
+    useEffect(() => {
+        function handler() {
+            setProcs(sliceAll());
+        }
+
+        globalEmitter.addEventListener("change", handler);
+        return () => globalEmitter.removeEventListener("change", handler);
+    }, []);
+
+    return procs;
 }
 
 export const remoteGame = {

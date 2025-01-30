@@ -41,7 +41,7 @@ export function GamesView() {
 
     const sortedGames = toSortedGames(games, sortMethod!);
 
-    return <div className="flex flex-col w-full h-full mx-auto">
+    return <div className="flex flex-col w-full h-full">
         <div className="flex gap-2">
             <Button fullWidth color="primary" size="lg" startContent={<PlusIcon/>}>
                 {t("new")}

@@ -4,7 +4,7 @@ import { Navigator } from "@components/Navigator";
 import { HeroUIProvider } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
 import { GamesView } from "@pages/games/GamesView";
-import { MonitorView } from "@pages/monitor/MonitorView";
+import { MonitorListView, MonitorView } from "@pages/monitor/MonitorView";
 import { pages } from "@pages/pages";
 import { SettingsView } from "@pages/settings/SettingsView";
 import React from "react";
@@ -65,6 +65,7 @@ function Routes() {
         <Route path="/settings" component={SettingsView}/>
         <Route path="/games" component={GamesView}/>
         <Route path="/monitor/:procId" component={MonitorView}/>
+        <Route path="/monitor" component={MonitorListView}/>
         <Route path="/" component={DefaultPageRedirect}/>
     </Switch>;
 }
