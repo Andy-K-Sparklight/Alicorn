@@ -14,7 +14,7 @@ interface VersionSelectorProps {
 
 export function VersionSelector({ version, onChange }: VersionSelectorProps) {
     const vm = useVersionManifest();
-    const { t } = useTranslation("pages", { keyPrefix: "create-game.version-select" });
+    const { t } = useTranslation("pages", { keyPrefix: "create-game" });
     const [showSnapshots, setShowSnapshots] = useState(false);
 
     if (!vm) return <VersionLoading/>;
@@ -38,7 +38,7 @@ export function VersionSelector({ version, onChange }: VersionSelectorProps) {
                 isVirtualized
                 aria-label="Select Version"
                 selectedKeys={version ? [version] : []}
-                placeholder={t("placeholder")}
+                placeholder={t("version-select-placeholder")}
                 onSelectionChange={handleSelectionChange}
                 scrollShadowProps={{
                     style: {
