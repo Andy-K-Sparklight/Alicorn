@@ -1,3 +1,4 @@
+import type { CreateGameInit } from "@/main/api/game";
 import type { LaunchGameResult } from "@/main/api/launcher";
 import type { UserConfig } from "@/main/conf/conf";
 import type { GameProfile, GameProfileDetail } from "@/main/game/spec";
@@ -23,6 +24,6 @@ export type IpcCommands = {
     tellGame: (gameId: string) => GameProfileDetail;
     launch: (id: string) => LaunchGameResult;
     gameAuth: (gameId: string) => boolean;
-    addGame: (game: GameProfile) => void;
+    addGame: (game: CreateGameInit) => void;
     getVersionManifest: () => VersionManifest;
 }

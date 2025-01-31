@@ -196,6 +196,6 @@ export function useGameProcList(): RemoteGameProcess[] {
     return procs;
 }
 
-export const remoteGame = {
+export const procService = {
     create
 };

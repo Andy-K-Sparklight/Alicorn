@@ -1,9 +1,27 @@
+create-game:
+  title: 创建新游戏
+  name-input-title: 游戏名称
+  version-select-title: 游戏版本
+  storage-title: 存储
+  container-select-title: 选择要共享存储空间的游戏
+  container-select-placeholder: 未选取
+  version-select-placeholder: 未选取
+  storage-policy:
+    new: 独立分配
+    share: 与已有游戏共享
+  account-title: 帐户
+  default-name: 新游戏（{{date}}）
+  loading-versions: 正在获取版本列表……
+
+  account-tip: 现在需要为每个游戏重新登录帐户。在未来的版本中，将能够选择使用已有的帐户。
+  create-btn: 创建
+  toast-created: 已创建游戏。
+
 games:
   loading: 正在读取游戏列表……
   load-list-failed: 读取游戏列表失败。
   title: 游戏库
   new: 创建新游戏
-  reload: 重新加载
   load-failed: 无法读取 {{name}} （标识符为 {{id}}），此游戏可能已损坏。
   remove-failed: 删除游戏
   auth-failed:

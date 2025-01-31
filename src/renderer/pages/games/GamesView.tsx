@@ -1,38 +1,26 @@
 import type { GameProfile } from "@/main/game/spec";
+import { useGameList } from "@/renderer/services/game";
 import { Alert } from "@components/Alert";
 import { Button, ButtonGroup, Spinner, Tooltip } from "@heroui/react";
 import { GameCardDisplay } from "@pages/games/GameCard";
-import {
-    ArrowDownAZIcon,
-    ArrowUpAZIcon,
-    ClockArrowDownIcon,
-    ClockArrowUpIcon,
-    PlusIcon,
-    RefreshCcwIcon
-} from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowDownAZIcon, ArrowUpAZIcon, ClockArrowDownIcon, ClockArrowUpIcon, PlusIcon } from "lucide-react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocalStorage } from "react-use";
+import { useLocation } from "wouter";
 
 /**
  * The index page of game launching, listing user-defined games for playing.
  */
 export function GamesView() {
-    const [games, setGames] = useState<GameProfile[]>();
+    const games = useGameList();
     const [error, setError] = useState();
     const [sortMethod, setSortMethod] = useLocalStorage<SortMethod>("games.sort-method", "latest");
+    const [, nav] = useLocation();
     const { t } = useTranslation("pages", { keyPrefix: "games" });
 
-    async function loadGames() {
-        native.game.list().then(setGames).catch(setError);
-    }
-
-    useEffect(() => {
-        void loadGames();
-    }, []);
-
     if (error !== undefined) {
-        return <FailedAlert retry={loadGames}/>;
+        return <FailedAlert/>;
     }
 
     if (!games) {
@@ -43,18 +31,16 @@ export function GamesView() {
 
     return <div className="flex flex-col w-full h-full">
         <div className="flex gap-2">
-            <Button fullWidth color="primary" size="lg" startContent={<PlusIcon/>}>
+            <Button
+                onPress={() => nav("/create-game")}
+                fullWidth
+                color="primary"
+                startContent={<PlusIcon/>}
+            >
                 {t("new")}
             </Button>
 
             <SortMethodControl sortMethod={sortMethod!} onChange={setSortMethod}/>
-
-            <Tooltip content={t("reload")}>
-                <Button isIconOnly size="lg">
-                    <RefreshCcwIcon onClick={loadGames}/>
-                </Button>
-            </Tooltip>
-
         </div>
 
         <div className="mt-4 w-full h-full overflow-y-auto">
@@ -105,7 +91,6 @@ function SortMethodControl({ sortMethod, onChange }: SortMethodControlProps) {
                 <Tooltip content={t(m)} key={m}>
                     <Button
                         isIconOnly
-                        size="lg"
                         color={sortMethod === m ? "secondary" : "default"}
                         onPress={() => onChange(m)}
                     >
@@ -125,20 +110,12 @@ function LoadingSpinner() {
     </div>;
 }
 
-function FailedAlert({ retry }: { retry: () => void }) {
+function FailedAlert() {
     const { t } = useTranslation("pages", { keyPrefix: "games" });
     return <Alert
         color="danger"
         className="w-11/12 mx-auto"
         classNames={{ title: "font-bold" }}
         title={t("load-list-failed")}
-        endContent={
-            <Button onPress={retry}>
-                <div className="flex items-center gap-2">
-                    <RefreshCcwIcon/>
-                    {t("reload")}
-                </div>
-            </Button>
-        }
     />;
 }

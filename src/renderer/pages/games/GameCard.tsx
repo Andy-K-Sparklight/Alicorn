@@ -1,5 +1,5 @@
 import type { GameProfileDetail } from "@/main/game/spec";
-import { remoteGame } from "@/renderer/lib/remote-game";
+import { procService } from "@/renderer/services/proc";
 import { GameTypeImage } from "@components/GameTypeImage";
 import {
     Alert,
@@ -170,7 +170,7 @@ function GameActions({ installed, detail }: GameActionsProps) {
 
     async function launch() {
         setLaunching(true);
-        const authed = await native.auth.refresh(detail.id);
+        const authed = await native.auth.forGame(detail.id);
 
         if (!authed) {
             toast(AuthFailedToast, { type: "error" });
@@ -178,7 +178,7 @@ function GameActions({ installed, detail }: GameActionsProps) {
         }
 
         // TODO add error handler
-        const procId = await remoteGame.create(detail);
+        const procId = await procService.create(detail);
         setLaunching(false);
         nav(`/monitor/${procId}`);
     }

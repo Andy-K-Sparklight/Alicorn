@@ -1,3 +1,4 @@
+import type { CreateGameInit } from "@/main/api/game";
 import type { LaunchGameResult } from "@/main/api/launcher";
 import type { UserConfig } from "@/main/conf/conf";
 import type { GameProfile, GameProfileDetail } from "@/main/game/spec";
@@ -72,7 +73,7 @@ const native = {
         /**
          * Adds the specified game to registry.
          */
-        add(game: GameProfile): Promise<void> {
+        add(game: CreateGameInit): Promise<void> {
             return ipcRenderer.invoke("addGame", game);
         }
     },
@@ -82,9 +83,9 @@ const native = {
      */
     auth: {
         /**
-         * Refreshes the account of the given game.
+         * Authenticate the account of the specified game.
          */
-        refresh(id: string): Promise<boolean> {
+        forGame(id: string): Promise<boolean> {
             return ipcRenderer.invoke("gameAuth", id);
         }
     },

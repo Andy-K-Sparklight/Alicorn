@@ -7,9 +7,12 @@ import { VersionProfile } from "@/main/profile/version-profile";
  * User is capable for customizing the detailed launch options without creating new containers or create additional files.
  */
 export interface LaunchHint {
-    id: string;
     containerId: string;
     profileId: string;
+
+    /**
+     * Account identifier. An empty string indicates a new account should be created when launching.
+     */
     accountId: string;
     pref: Partial<LaunchPref>;
 }

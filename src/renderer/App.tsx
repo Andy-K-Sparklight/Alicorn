@@ -3,8 +3,10 @@ import { themeManager, useTheme } from "@/renderer/theme";
 import { Navigator } from "@components/Navigator";
 import { HeroUIProvider } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
+import { CreateGameView } from "@pages/create-game/CreateGameView";
 import { GamesView } from "@pages/games/GamesView";
-import { MonitorListView, MonitorView } from "@pages/monitor/MonitorView";
+import { MonitorListView } from "@pages/monitor-list/MonitorListView";
+import { MonitorView } from "@pages/monitor/MonitorView";
 import { pages } from "@pages/pages";
 import { SettingsView } from "@pages/settings/SettingsView";
 import React from "react";
@@ -63,6 +65,7 @@ function Routes() {
     return <Switch>
         <Route path="/about" component={AboutView}/>
         <Route path="/settings" component={SettingsView}/>
+        <Route path="/create-game" component={CreateGameView}/>
         <Route path="/games" component={GamesView}/>
         <Route path="/monitor/:procId" component={MonitorView}/>
         <Route path="/monitor" component={MonitorListView}/>
