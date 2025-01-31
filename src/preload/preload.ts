@@ -1,6 +1,7 @@
 import type { LaunchGameResult } from "@/main/api/launcher";
 import type { UserConfig } from "@/main/conf/conf";
 import type { GameProfile, GameProfileDetail } from "@/main/game/spec";
+import type { VersionManifest } from "@/main/install/vanilla";
 import { type IpcCommands, type IpcEvents } from "@/main/ipc/channels";
 import type { TypedIpcRenderer } from "@/main/ipc/typed";
 import { contextBridge, ipcRenderer as ipcRendererRaw } from "electron";
@@ -125,6 +126,18 @@ const native = {
          */
         remove(procId: string): void {
             ipcRenderer.send("removeGame", procId);
+        }
+    },
+
+    /**
+     * Operation related with fetching external manifests.
+     */
+    sources: {
+        /**
+         * Retrieves the base game version manifest.
+         */
+        getVersionManifest(): Promise<VersionManifest> {
+            return ipcRenderer.invoke("getVersionManifest");
         }
     },
 

@@ -1,6 +1,7 @@
 import type { LaunchGameResult } from "@/main/api/launcher";
 import type { UserConfig } from "@/main/conf/conf";
 import type { GameProfile, GameProfileDetail } from "@/main/game/spec";
+import type { VersionManifest } from "@/main/install/vanilla";
 
 export type IpcEvents = {
     updateConfig: (c: UserConfig) => void;
@@ -23,4 +24,5 @@ export type IpcCommands = {
     launch: (id: string) => LaunchGameResult;
     gameAuth: (gameId: string) => boolean;
     addGame: (game: GameProfile) => void;
+    getVersionManifest: () => VersionManifest;
 }

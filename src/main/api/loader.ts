@@ -4,3 +4,4 @@ import "./window";
 import "./game";
 import "./launcher";
 import "./auth";
+import "./sources";
