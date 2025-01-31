@@ -1,4 +1,5 @@
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
+import reactSWC from "@vitejs/plugin-react-swc";
 import path from "node:path";
 import tailwindcss from "tailwindcss";
 import { defineConfig, PluginOption } from "vite";
@@ -29,7 +30,16 @@ export default defineConfig(({ command }) => {
             }
         },
         plugins: [
-            react(),
+            isDev ?
+                reactSWC() :
+                // Use React Compiler in production for better performance
+                react({
+                    babel: {
+                        plugins: [
+                            ["babel-plugin-react-compiler", { target: "19" }]
+                        ]
+                    }
+                }),
             tsConfigPaths(),
             i18nHotReload()
         ],
