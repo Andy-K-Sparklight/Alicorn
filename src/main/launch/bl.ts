@@ -1,12 +1,12 @@
 /**
  * The bootloader system.
  */
+import { accounts } from "@/main/auth/manage";
 import { jrt } from "@/main/jrt/install";
 import { launchArgs } from "@/main/launch/args";
 import { gameProc, GameProcess } from "@/main/launch/proc";
 import { LaunchHint, LaunchInit } from "@/main/launch/types";
 import { profileLoader } from "@/main/profile/loader";
-import { reg } from "@/main/registry/registry";
 import { containers } from "../container/manage";
 
 const games = new Map<string, GameProcess>();
@@ -17,7 +17,7 @@ const games = new Map<string, GameProcess>();
 async function prepare(hint: LaunchHint): Promise<LaunchInit> {
     const container = containers.get(hint.containerId);
     const profile = await profileLoader.fromContainer(hint.profileId, container);
-    const account = reg.accounts.get(hint.accountId);
+    const account = accounts.get(hint.accountId);
     const assetsShouldMap = await profileLoader.assetIndexShouldMap(profile.assetIndex.id, container);
 
     const enabledFeatures = new Set<string>();

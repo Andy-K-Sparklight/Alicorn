@@ -1,19 +1,23 @@
-import { Account, AuthCredentials } from "@/main/auth/types";
+import { Account, type AccountProps, AuthCredentials } from "@/main/auth/types";
 import crypto from "node:crypto";
 
 export class LocalAccount implements Account {
     uuid;
-    private name: string;
+    #name: string;
+
+    static fromProps(props: LocalAccountProps): LocalAccount {
+        return new LocalAccount(props.playerName);
+    }
 
     constructor(name: string) {
-        this.name = name;
+        this.#name = name;
         this.uuid = offlineUUIDOf(name);
     }
 
     credentials(): AuthCredentials {
         if (import.meta.env.AL_ENABLE_LOCAL_ACCOUNT) {
             return {
-                playerName: this.name,
+                playerName: this.#name,
                 uuid: this.uuid,
                 accessToken: "0",
                 xboxId: "0"
@@ -25,6 +29,13 @@ export class LocalAccount implements Account {
 
     async refresh(): Promise<boolean> {
         return true;
+    }
+
+    toProps(): AccountProps {
+        return {
+            type: "local",
+            playerName: this.#name
+        };
     }
 }
 
@@ -38,4 +49,9 @@ function offlineUUIDOf(name: string): string {
     bytes[8] &= 0x3f;
     bytes[8] |= 0x80;
     return bytes.toString("hex").toLowerCase();
+}
+
+export interface LocalAccountProps {
+    type: "local";
+    playerName: string;
 }

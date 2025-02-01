@@ -30,7 +30,6 @@
         "react-i18next": "^15.4.0",
         "react-toastify": "^11.0.3",
         "react-use": "^17.6.0",
-        "superserial": "^0.3.5",
         "ts-dedent": "^2.2.0",
         "v8-compile-cache": "^2.4.0",
         "virtua": "^0.40.0",
@@ -1205,8 +1204,6 @@
     "sucrase": ["sucrase@3.35.0", "", { "dependencies": { "@jridgewell/gen-mapping": "^0.3.2", "commander": "^4.0.0", "glob": "^10.3.10", "lines-and-columns": "^1.1.6", "mz": "^2.7.0", "pirates": "^4.0.1", "ts-interface-checker": "^0.1.9" }, "bin": { "sucrase": "bin/sucrase", "sucrase-node": "bin/sucrase-node" } }, "sha512-8EbVDiu9iN/nESwxeSxDKe0dunta1GOlHufmSSXxMD2z2/tMZpDMpvXQGsc+ajGo8y2uYUmixaSRUc/QPoQ0GA=="],
 
     "sumchecker": ["sumchecker@3.0.1", "", { "dependencies": { "debug": "^4.1.0" } }, "sha512-MvjXzkz/BOfyVDkG0oFOtBxHX2u3gKbMHIF/dXblZsgD3BWOFLmHovIpZY7BykJdAjcqRCBi1WYBNdEC9yI7vg=="],
-
-    "superserial": ["superserial@0.3.5", "", {}, "sha512-tVPAVriEP69bSOfa2pVqd+4pkrdGyvr8sE5MbgWdFT8StyWany+rZ2lz2G3qHAMtcu2CSHtZHeoSjH3+hg6yWQ=="],
 
     "supports-preserve-symlinks-flag": ["supports-preserve-symlinks-flag@1.0.0", "", {}, "sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w=="],
 

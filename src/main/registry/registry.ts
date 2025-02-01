@@ -1,22 +1,14 @@
-import { LocalAccount } from "@/main/auth/local";
-import type { Account } from "@/main/auth/types";
-import { VanillaAccount } from "@/main/auth/vanilla";
+import type { AccountProps } from "@/main/auth/types";
 import type { ContainerSpec } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import type { GameProfile } from "@/main/game/spec";
 import fs from "fs-extra";
 import { Database, type Statement } from "node-sqlite3-wasm";
 import path from "node:path";
-import { Serializer } from "superserial";
 
 let db: Database | null = null;
 
-interface RegistryOpenRecord {
-    types: Record<string, unknown>;
-    content: Map<string, unknown>;
-}
-
-const autoSaveMap = new Map<string, RegistryOpenRecord>();
+const autoSaveMap = new Map<string, Map<string, unknown>>();
 
 export class NamedRegistry<T> {
     #map: Map<string, T>;
@@ -88,32 +80,31 @@ async function init() {
 
 let loadedRegistries = new Map<string, NamedRegistry<unknown>>();
 
-function lazyOpenRegistry<T>(name: string, types: Record<string, unknown>): NamedRegistry<T> {
+function lazyOpenRegistry<T>(name: string): NamedRegistry<T> {
     const t = loadedRegistries.get(name);
     if (t) {
         return t as NamedRegistry<T>;
     } else {
-        const r = openRegistry<T>(name, types);
+        const r = openRegistry<T>(name);
         loadedRegistries.set(name, r);
         return r;
     }
 }
 
 
-function openRegistry<T>(name: string, types: Record<string, unknown>): NamedRegistry<T> {
+function openRegistry<T>(name: string): NamedRegistry<T> {
     console.debug(`Opening registry: ${name}`);
 
     const r = openRegistryStmt.get(name);
     let m = new Map<string, T>();
     if (r && r.content) {
-        const sr = new Serializer({ classes: types as any });
-        m = sr.deserialize(r.content as string);
+        const data = JSON.parse(r.content as string) as Record<string, T>;
+        for (const [k, v] of Object.entries(data)) {
+            m.set(k, v);
+        }
     }
 
-    autoSaveMap.set(name, {
-        types,
-        content: m
-    });
+    autoSaveMap.set(name, m);
 
     return new NamedRegistry<T>(m);
 }
@@ -122,11 +113,15 @@ function openRegistry<T>(name: string, types: Record<string, unknown>): NamedReg
 function close() {
     if (!db) return;
 
-    for (const [name, { types, content }] of autoSaveMap.entries()) {
+    for (const [name, content] of autoSaveMap.entries()) {
         console.log(`Saving registry: ${name}`);
-        const sr = new Serializer({ classes: types as any });
-        const t = sr.serialize(content);
+        const obj: Record<string, unknown> = {};
 
+        for (const [k, v] of content.entries()) {
+            obj[k] = v;
+        }
+
+        const t = JSON.stringify(obj, null, 4);
         insertStmt.run([name, t]);
     }
 
@@ -144,14 +139,14 @@ export const registry = {
 
 export const reg = {
     get accounts() {
-        return lazyOpenRegistry<Account>("accounts", { LocalAccount, MSAccount: VanillaAccount });
+        return lazyOpenRegistry<AccountProps>("accounts");
     },
 
     get containers() {
-        return lazyOpenRegistry<ContainerSpec>("containers", {});
+        return lazyOpenRegistry<ContainerSpec>("containers");
     },
 
     get games() {
-        return lazyOpenRegistry<GameProfile>("games", {});
+        return lazyOpenRegistry<GameProfile>("games");
     }
 };

@@ -3,7 +3,6 @@ import { paths } from "@/main/fs/paths";
 import { reg, registry } from "@/main/registry/registry";
 import { Database } from "node-sqlite3-wasm";
 import assert from "node:assert";
-import { Serializer } from "superserial";
 import { iTest } from "~/test/instrumented/tools";
 
 /**
@@ -30,9 +29,9 @@ export async function checkRegistries() {
             WHERE id = 'containers';
         `) as { content: string };
 
-        const m = new Serializer({ classes: {} }).deserialize<Map<string, ContainerSpec>>(content);
+        const m = JSON.parse(content as string);
 
-        const co = m.get("default");
+        const co = m["default"];
 
         assert(co !== null, "Should save registry content to database");
         assert(co?.root === "fake-root", "Should keep object information");
