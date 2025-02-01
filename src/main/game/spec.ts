@@ -22,9 +22,20 @@ export interface GameProfile {
     installed: boolean;
 
     /**
+     * Virtual properties for uncreated games.
+     */
+    virtual: VirtualProperties;
+
+    /**
      * Launch hint object.
      */
     launchHint: LaunchHint;
+}
+
+interface VirtualProperties {
+    baseVersion: string;
+    modLoader: string; // Empty string indicates no mod loader (vanilla)
+    type: string;
 }
 
 /**

@@ -34,6 +34,10 @@ export interface CreateGameInit {
 ipcMain.handle("addGame", async (_, init) => {
     const { name, profileId, containerId } = init;
 
+    const vm = await vanillaInstaller.getManifest();
+
+    const p = vm.versions.find(v => v.id === profileId)!;
+
     let cid = containerId;
 
     if (!cid) {
@@ -56,15 +60,13 @@ ipcMain.handle("addGame", async (_, init) => {
             profileId,
             pref: {} // TODO allow user to choose pref
         },
-        time: Date.now()
+        time: Date.now(),
+        virtual: {
+            baseVersion: profileId, // TODO compatibility with other mod loaders
+            modLoader: "",
+            type: p.type
+        }
     };
 
     reg.games.add(g.id, g);
-
-    const c = containers.get(cid);
-
-    // TODO it may be possible to delay the installation to launch stage
-    // This can be helpful when creating games with mod loaders
-    // Implement it and then remove this
-    await vanillaInstaller.installProfile(profileId, c);
 });
