@@ -1,7 +1,7 @@
 import type { ContainerSpec } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import { reg, registry } from "@/main/registry/registry";
-import { Database } from "node-sqlite3-wasm";
+import fs from "fs-extra";
 import assert from "node:assert";
 import { iTest } from "~/test/instrumented/tools";
 
@@ -20,18 +20,11 @@ export async function checkRegistries() {
 
         assert(reg.containers.get("default") === c, "Should save registry content in memory");
 
-        registry.close();
+        await registry.close();
 
-        const db = new Database(paths.store.to("registries.arc"));
-        const { content } = db.get(`
-            SELECT content
-            FROM registries
-            WHERE id = 'containers';
-        `) as { content: string };
+        const m = await fs.readJSON(paths.store.to("registries.json"));
 
-        const m = JSON.parse(content as string);
-
-        const co = m["default"];
+        const co = m["containers"]["default"];
 
         assert(co !== null, "Should save registry content to database");
         assert(co?.root === "fake-root", "Should keep object information");

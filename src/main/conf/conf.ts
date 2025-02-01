@@ -1,3 +1,4 @@
+import { isENOENT } from "@/main/util/fs";
 import fs from "fs-extra";
 import { randomUUID } from "node:crypto";
 import os from "node:os";
@@ -251,7 +252,7 @@ async function load(): Promise<void> {
             config = applyPatch(DEFAULT_CONFIG, JSON.parse(d));
         }
     } catch (e) {
-        if (typeof e === "object" && e !== null && "code" in e && e.code === "ENOENT") {
+        if (isENOENT(e)) {
             console.log("Config file does not exist (this is not an error).");
         } else {
             throw e;

@@ -96,8 +96,6 @@ export async function build(variant: BuildVariant) {
     consola.start("Linking native addons...");
     const platform = cfg.variant.platform + "-" + cfg.variant.arch;
 
-    await fs.link("node_modules/node-sqlite3-wasm/dist/node-sqlite3-wasm.wasm", path.join(outputDir, "node-sqlite3-wasm.wasm"));
-
     if (cfg.enableNativeLZMA) {
         try {
             await linkAll(`node_modules/lzma-native/prebuilds/${platform}`, path.join(outputDir, `natives/lzma-native/prebuilds/${platform}`));

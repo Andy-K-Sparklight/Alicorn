@@ -236,7 +236,7 @@ async function shutdownApp() {
     }, 30_000);
 
     await conf.store();
-    registry.close();
+    await registry.close();
     aria2.shutdown();
 
     console.log("Exiting.");
