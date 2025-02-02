@@ -12,6 +12,7 @@ ipcMain.handle("gameAuth", async (_, gameId) => {
 
     if (success) {
         g.launchHint.accountId = a.uuid;
+        reg.accounts.add(a.uuid, a.toProps());
     }
 
     return success;

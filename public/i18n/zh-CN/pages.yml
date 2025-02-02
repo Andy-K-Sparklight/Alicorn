@@ -38,6 +38,7 @@ games:
     unready: 需要安装
     info: 查看详细信息
     remove: 移除游戏
+    installed: 已安装游戏，开始游玩吧！
 
 monitor:
   title: 运行中

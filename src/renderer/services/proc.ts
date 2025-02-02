@@ -4,9 +4,9 @@
 
 import type { GameProfileDetail } from "@/main/game/spec";
 import type { GameProcessLog } from "@/main/launch/log-parser";
-import debounce from "debounce";
 import { pEvent } from "p-event";
 import { useEffect, useState } from "react";
+import throttle from "throttleit";
 
 /**
  * Contains a slice of game information at the renderer side.
@@ -172,7 +172,7 @@ export function useGameProc(procId: string, wait = 0): RemoteGameProcess {
             setProc(slice(procId));
         }
 
-        const handler = wait > 0 ? debounce(fn, wait) : fn;
+        const handler = wait > 0 ? throttle(fn, wait) : fn;
         emitter.addEventListener("change", handler);
 
         return () => emitter.removeEventListener("change", handler);

@@ -4,7 +4,6 @@ import { Alert } from "@components/Alert";
 import { Button, ButtonGroup, Spinner, Tooltip } from "@heroui/react";
 import { GameCardDisplay } from "@pages/games/GameCard";
 import { ArrowDownAZIcon, ArrowUpAZIcon, ClockArrowDownIcon, ClockArrowUpIcon, PlusIcon } from "lucide-react";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocalStorage } from "react-use";
 import { useLocation } from "wouter";
@@ -14,14 +13,9 @@ import { useLocation } from "wouter";
  */
 export function GamesView() {
     const games = useGameList();
-    const [error, setError] = useState();
     const [sortMethod, setSortMethod] = useLocalStorage<SortMethod>("games.sort-method", "latest");
     const [, nav] = useLocation();
     const { t } = useTranslation("pages", { keyPrefix: "games" });
-
-    if (error !== undefined) {
-        return <FailedAlert/>;
-    }
 
     if (!games) {
         return <LoadingSpinner/>;

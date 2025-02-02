@@ -5,6 +5,7 @@ import type { GameProfile, GameProfileDetail } from "@/main/game/spec";
 import type { VersionManifest } from "@/main/install/vanilla";
 import { type IpcCommands, type IpcEvents } from "@/main/ipc/channels";
 import type { TypedIpcRenderer } from "@/main/ipc/typed";
+import type { WindowMessageContent } from "@/renderer/util/message";
 import { contextBridge, ipcRenderer as ipcRendererRaw } from "electron";
 
 console.log("Enabling preload script.");
@@ -42,6 +43,26 @@ const native = {
          */
         minimize(): void {
             ipcRenderer.send("minimizeWindow");
+        }
+    },
+
+    /**
+     * Game installation operations.
+     */
+    install: {
+        /**
+         * Install vanilla game.
+         */
+        installVanilla(gameId: string): void {
+            const ch = new MessageChannel();
+
+            ipcRenderer.postMessage("installVanilla", gameId, [ch.port2]);
+
+            window.postMessage(
+                { channel: `port:${gameId}` } satisfies WindowMessageContent,
+                "*",
+                [ch.port1]
+            );
         }
     },
 
@@ -105,6 +126,8 @@ const native = {
          * Forwards game events port received from the main process into the main world.
          */
         async subscribe(procId: string): Promise<void> {
+            // TODO setup event communicating between preload and renderer using MessagePort
+
             ipcRenderer.send("subscribeGameEvents", procId);
             const port = await new Promise(res =>
                 ipcRendererRaw.once(`dispatchGameEvents:${procId}`, (e) => res(e.ports[0]))
@@ -112,6 +135,7 @@ const native = {
 
             // Event targets cannot be transferred through the context bridge.
             // We send a port with events forwarded and let the renderer rebuild the event target.
+            // TODO modify the message to be compatible with the global messaging interface
             window.postMessage(`dispatchGameEventsRemote:${procId}`, "*", [port]);
         },
 

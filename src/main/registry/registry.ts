@@ -69,7 +69,7 @@ async function close() {
     const fp = paths.store.to("registries.json");
     console.log(`Saving registries to: ${fp}`);
 
-    await fs.outputJSON(fp, registryContent);
+    await fs.outputJSON(fp, registryContent, { spaces: 4 });
 }
 
 export const registry = {

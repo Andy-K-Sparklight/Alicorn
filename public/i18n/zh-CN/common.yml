@@ -2,3 +2,16 @@ devtools-warn:
   title: 等一下！
   sub-1: 如果有人要你在这里输入一些东西，110% 你被骗了。
   sub-2: 别听他们的 —— 这非常危险！
+
+progress:
+  jrt:
+    download: 正在下载 Java 运行环境：{{current}} / {{total}}
+    unpack: 正在解包 Java 运行环境：{{current}} / {{total}}
+    verify: 正在验证 Java 安装
+  vanilla:
+    resolve: 正在获取版本信息
+    download-libs: 正在下载运行库：{{current}} / {{total}}
+    unpack-libs: 正在解包运行库：{{current}} / {{total}}
+    download-asset-index: 正在获取资源信息
+    download-assets: 正在下载游戏资源：{{current}} / {{total}}
+    link-assets: 正在处理游戏资源：{{current}} / {{total}}

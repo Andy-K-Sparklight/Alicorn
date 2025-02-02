@@ -1,4 +1,5 @@
 import type { GameProfileDetail } from "@/main/game/spec";
+import { remoteInstaller, useInstallProgress } from "@/renderer/services/install";
 import { procService } from "@/renderer/services/proc";
 import { GameTypeImage } from "@components/GameTypeImage";
 import {
@@ -20,6 +21,7 @@ import {
     CheckCircleIcon,
     CirclePlayIcon,
     CloudDownloadIcon,
+    DotIcon,
     DownloadIcon,
     EllipsisIcon,
     InfoIcon,
@@ -39,14 +41,16 @@ export function GameCardDisplay({ id, name }: GameCardDisplayProps) {
     const [summary, setSummary] = useState<GameProfileDetail>();
     const [error, setError] = useState();
 
-    // TODO error handler
+    function loadGameDetail() {
+        native.game.tell(id).then(setSummary).catch(setError);
+    }
 
     useEffect(() => {
-        native.game.tell(id).then(setSummary).catch(setError);
+        loadGameDetail();
     }, [id]);
 
     if (summary) {
-        return <GameCard detail={summary}/>;
+        return <GameCard detail={summary} onReload={loadGameDetail}/>;
     }
 
     if (error !== undefined) {
@@ -98,14 +102,30 @@ function GameCardSkeleton() {
 
 interface GameCardProps {
     detail: GameProfileDetail;
+    onReload: () => void;
 }
 
-function GameCard({ detail }: GameCardProps) {
+function GameCard({ detail, onReload }: GameCardProps) {
     const { name, versionId, gameVersion, installed, stable, modLoader } = detail;
     const { t } = useTranslation("pages", { keyPrefix: "games.game-card" });
+    const { t: tc } = useTranslation("common", { keyPrefix: "progress" });
+    const installProgress = useInstallProgress(detail.id);
 
+    const isInstalling = installProgress !== null;
+    const installStatus = installed ? "installed" : isInstalling ? "installing" : "not-installed";
+
+    const progressText = installProgress && tc(installProgress.state, { ...installProgress.value });
     const gameVersionChip =
         <Chip color={stable ? "primary" : "warning"} variant="flat">{gameVersion}</Chip>;
+
+    useEffect(() => {
+        onReload();
+    }, [installStatus]);
+
+    async function handleInstall() {
+        await remoteInstaller.install(detail.id);
+        toast(t("installed"), { type: "success" });
+    }
 
     return <Card>
         <CardBody>
@@ -116,7 +136,16 @@ function GameCard({ detail }: GameCardProps) {
 
                 <div className="flex flex-col gap-1">
                     <div className="font-bold text-xl">{name}</div>
-                    <div className="text-foreground-400">{versionId}</div>
+                    <div className="flex items-center text-foreground-400">
+                        {versionId}
+                        {
+                            progressText &&
+                            <>
+                                <DotIcon/>
+                                {progressText}
+                            </>
+                        }
+                    </div>
                 </div>
 
                 <div className="ml-auto flex gap-2 items-center">
@@ -133,7 +162,11 @@ function GameCard({ detail }: GameCardProps) {
                 <GameStatusBadge installed={installed}/>
 
                 <div className="ml-4">
-                    <GameActions detail={detail} installed={installed}/>
+                    <GameActions
+                        detail={detail}
+                        installStatus={installStatus}
+                        onInstall={handleInstall}
+                    />
                 </div>
             </div>
         </CardBody>
@@ -159,12 +192,15 @@ function GameStatusBadge({ installed }: { installed: boolean }) {
     </div>;
 }
 
+type InstallStatus = "installed" | "installing" | "not-installed";
+
 interface GameActionsProps {
-    installed: boolean;
+    installStatus: InstallStatus;
     detail: GameProfileDetail;
+    onInstall: () => void;
 }
 
-function GameActions({ installed, detail }: GameActionsProps) {
+function GameActions({ installStatus, detail, onInstall }: GameActionsProps) {
     const [launching, setLaunching] = useState(false);
     const [, nav] = useLocation();
 
@@ -186,12 +222,17 @@ function GameActions({ installed, detail }: GameActionsProps) {
     return <div className="flex gap-2">
         {
             // TODO bind button actions
-            installed ?
+            installStatus === "installed" ?
                 <Button isIconOnly isLoading={launching} color="primary" onPress={launch}>
                     <CirclePlayIcon/>
                 </Button>
                 :
-                <Button isIconOnly color="secondary">
+                <Button
+                    isIconOnly
+                    isLoading={installStatus === "installing"}
+                    color="secondary"
+                    onPress={onInstall}
+                >
                     <DownloadIcon/>
                 </Button>
         }

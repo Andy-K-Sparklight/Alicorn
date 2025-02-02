@@ -91,11 +91,16 @@ type FileHint = {
 
 type NamedFileHint = FileHint & { name: string; }
 
-
 async function installRuntime(component: string, control?: ProgressController): Promise<void> {
     const { signal, onProgress } = control ?? {};
 
     const root = getInstallPath(component);
+
+    try {
+        await verify(root);
+        console.log(`JRT component already installed: ${component}`);
+        return;
+    } catch {}
 
     console.log(`Installing JRT runtime ${component} to ${root}`);
     const profile = await getProfile(component);
@@ -204,7 +209,7 @@ async function verify(root: string): Promise<void> {
 
     const proc = child_process.spawn(bin, ["-version"]);
 
-    const code = await pEvent(proc, "exit");
+    const code = await pEvent(proc, "exit", { timeout: 5000 });
 
     if (code !== 0) throw `Unexpected exit code ${code}: ${bin}`;
 }

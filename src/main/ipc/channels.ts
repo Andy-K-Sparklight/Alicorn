@@ -15,6 +15,8 @@ export type IpcEvents = {
     stopGame: (id: string) => void;
     removeGame: (id: string) => void;
     revealGameContent: (id: string, scope: string) => void;
+
+    installVanilla: (gameId: string) => void; // Called via 'postMessage'
 }
 
 export type IpcCommands = {
