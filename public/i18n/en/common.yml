@@ -2,3 +2,16 @@ devtools-warn:
   title: Wait!
   sub-1: You're 110% fooled if someone asks you to type anything here.
   sub-2: DON'T DO THIS - THIS IS DANGER!
+
+progress:
+  jrt:
+    download: Downloading Java Files {{current}} / {{total}}
+    unpack: Unpacking Java Files {{current}} / {{total}}
+    verify: Verifying Java Installation
+  vanilla:
+    resolve: Resolving Version Profile
+    download-libs: Downloading Libraries {{current}} / {{total}}
+    unpack-libs: Unpacking Libraries {{current}} / {{total}}
+    download-asset-index: Resolving Asset Index
+    download-assets: Downloading Assets {{current}} / {{total}}
+    link-assets: Processing Assets {{current}} / {{total}}

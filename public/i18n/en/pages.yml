@@ -1,5 +1,60 @@
-launch:
-  title: Launch
+create-game:
+  title: Create New Game
+  name-input-title: Game Name
+  version-select-title: Version
+  storage-title: Storage
+  container-select-title: Choose a game to share storage with
+  container-select-placeholder: N/A
+  version-select-placeholder: N/A
+  storage-policy:
+    new: Dedicated
+    share: Share With Existing
+  account-title: Account
+  default-name: New Game ({{date}})
+  loading-versions: Retrieving Version Manifest
+
+  account-tip: Re-login is required for each game for now. Existing accounts can be reused in the future.
+  create-btn: Create
+  toast-created: Game created.
+
+games:
+  loading: Reading game list...
+  load-list-failed: Unable to read game list.
+  title: Games
+  new: Create
+  load-failed: Unable to load {{name}} ({{id}}). Is it corrupted?
+  remove-failed: Delete
+  auth-failed:
+    title: Failed to Authenticate
+    sub: Please fix that before launching.
+  sorting:
+    az: A to Z
+    za: Z to A
+    earliest: Earliest First
+    latest: Latest First
+  game-card:
+    unstable: This is a snapshot
+    ready: Ready
+    unready: Not Installed
+    info: About
+    remove: Remove
+    installed: Game installed. Have fun!
+
+monitor:
+  title: Processes
+  log-view: Logs
+  perf-view: Performance Inspector
+  status:
+    running: Running
+    exited: Exited
+    crashed: Crashed
+  actions:
+    back-to-list: Back to List
+    stop: Abort
+    stop-title: Abort the game?
+    stop-sub: Data loss may happen.
+    stop-confirm: I know what I'm doing!
+    reveal-rsp: Reveal Resource Packs
 
 settings:
   title: Settings
@@ -13,6 +68,7 @@ settings:
 
   dev-warn: Do not modify these unless for development!
   store-warn: You lose data if modifying directly. Use path migration wizard for this.
+  input-blur-to-add: Click outside to add
 
   entries:
     pref:
