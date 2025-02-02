@@ -17,11 +17,11 @@
     "devDependencies": {
         "@electron/packager": "^18.3.6",
         "@esbuild-plugins/tsconfig-paths": "^0.1.2",
-        "@types/bun": "^1.2.1",
+        "@types/bun": "^1.2.2",
         "@types/fs-extra": "^11.0.4",
         "@types/lzma": "^2.3.0",
         "@types/lzma-native": "^4.0.4",
-        "@types/node": "^22.12.0",
+        "@types/node": "^22.13.0",
         "@types/react": "^19.0.8",
         "@types/react-dom": "^19.0.3",
         "@types/uuid": "^10.0.0",
@@ -70,7 +70,7 @@
         "v8-compile-cache": "^2.4.0",
         "virtua": "^0.40.0",
         "workerpool": "^9.2.0",
-        "wouter": "^3.5.0",
+        "wouter": "^3.5.1",
         "yaml": "^2.7.0"
     },
     "trustedDependencies": [
