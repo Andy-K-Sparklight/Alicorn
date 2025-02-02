@@ -82,7 +82,7 @@ function SortMethodControl({ sortMethod, onChange }: SortMethodControlProps) {
     return <ButtonGroup>
         {
             (["az", "za", "earliest", "latest"] as const).map(m =>
-                <Tooltip content={t(m)} key={m}>
+                <Tooltip content={t(m)} key={m} color="foreground">
                     <Button
                         isIconOnly
                         color={sortMethod === m ? "secondary" : "default"}
