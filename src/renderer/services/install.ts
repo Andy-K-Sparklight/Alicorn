@@ -1,60 +1,47 @@
 import type { VanillaInstallEvent } from "@/main/api/install";
 import type { Progress } from "@/main/util/progress";
-import type { WindowMessageContent } from "@/renderer/util/message";
-import { pEvent } from "p-event";
+import { retrievePort } from "@/preload/message";
+import Emittery from "emittery";
 import { useCallback, useSyncExternalStore } from "react";
 import throttle from "throttleit";
 
 // Maps game ID to its event target
-const emitters = new Map<string, EventTarget>();
+const globalEmitter = new Emittery();
 const progressMap = new Map<string, Progress>();
-
-function getEmitter(gameId: string): EventTarget {
-    let et = emitters.get(gameId);
-    if (!et) {
-        et = new EventTarget();
-        emitters.set(gameId, et);
-    }
-    return et;
-}
 
 async function install(gameId: string): Promise<void> {
     native.install.installVanilla(gameId);
+    const port = await retrievePort(gameId);
 
-    const pe = await pEvent(window, "message", (e: MessageEvent<WindowMessageContent>) => e.data.channel === `port:${gameId}`);
+    const emitChange = throttle(() => globalEmitter.emit(`change:${gameId}`), 100);
 
-    const [port] = pe.ports;
+    // TODO add rej error handler
+    return new Promise(res => {
+        port.onmessage = (e: MessageEvent<VanillaInstallEvent>) => {
+            switch (e.data.type) {
+                case "progress":
+                    progressMap.set(gameId, e.data.progress);
+                    break;
+                case "finish":
+                    port.close();
+                    progressMap.delete(gameId);
+                    res();
+                    break;
+            }
 
-    const et = getEmitter(gameId);
-
-    const emitChange = throttle(() => et.dispatchEvent(new CustomEvent("change")), 100);
-
-    port.onmessage = (e: MessageEvent<VanillaInstallEvent>) => {
-        const d = e.data as VanillaInstallEvent;
-        if (d.type === "progress") {
-            progressMap.set(gameId, d.progress);
-        }
-
-        if (d.type === "finish") {
-            progressMap.delete(gameId);
-        }
-
-        // Progress events come at a very high rate and must be throttled for acceptable performance
-        // It's guaranteed the last call ("finish") will not be ignored
-        emitChange();
-    };
-
-    await pEvent(port, "message", (e: MessageEvent<VanillaInstallEvent>) => e.data.type === "finish");
-
-    port.close();
+            // Progress events come at a very high rate and must be throttled for acceptable performance
+            // It's guaranteed the last call ("finish") will not be ignored
+            emitChange();
+        };
+    });
 }
 
 function makeSubscribe(gameId: string) {
     return (onStoreChange: () => void) => {
-        const et = getEmitter(gameId);
-        et.addEventListener("change", onStoreChange);
+        const ch = `change:${gameId}`;
+        globalEmitter.on(ch, onStoreChange);
 
-        return () => et.removeEventListener("change", onStoreChange);
+        return () => globalEmitter.off(ch, onStoreChange);
     };
 }
 
@@ -65,6 +52,7 @@ function makeGetSnapshot(gameId: string): () => Progress | null {
 export function useInstallProgress(gameId: string): Progress | null {
     const subscribe = useCallback(makeSubscribe(gameId), [gameId]);
     const getSnapshot = useCallback(makeGetSnapshot(gameId), [gameId]);
+
     return useSyncExternalStore(subscribe, getSnapshot);
 }
 

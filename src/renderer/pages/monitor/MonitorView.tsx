@@ -1,5 +1,5 @@
 import type { GameProcessLog } from "@/main/launch/log-parser";
-import { type RemoteGameProcess, type RemoteGameStatus, useGameProc } from "@/renderer/services/proc";
+import { type RemoteGameProcess, type RemoteGameStatus, useGameProcDetail } from "@/renderer/services/proc";
 import { GameTypeImage } from "@components/GameTypeImage";
 import { Button, Card, CardBody, Popover, PopoverContent, PopoverTrigger, Tab, Tabs } from "@heroui/react";
 import { clsx } from "clsx";
@@ -25,7 +25,7 @@ export function MonitorView() {
 const GameProcessContext = React.createContext<RemoteGameProcess | null>(null);
 
 function Monitor({ procId }: { procId: string }) {
-    const proc = useGameProc(procId, 200);
+    const proc = useGameProcDetail(procId);
 
     return <GameProcessContext.Provider value={proc}>
         <div className="w-full h-full flex gap-4 mx-auto">

@@ -11,12 +11,12 @@ export type IpcEvents = {
     closeWindow: () => void;
     minimizeWindow: () => void;
     openUrl: (url: string) => void;
-    subscribeGameEvents: (gid: string) => void;
     stopGame: (id: string) => void;
     removeGame: (id: string) => void;
     revealGameContent: (id: string, scope: string) => void;
 
-    installVanilla: (gameId: string) => void; // Called via 'postMessage'
+    installVanilla: (gameId: string) => void;
+    subscribeGameEvents: (gid: string) => void;
 }
 
 export type IpcCommands = {

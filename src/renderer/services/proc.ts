@@ -2,11 +2,12 @@
  * Syncs events from main process and maintain renderer-side game instances.
  */
 
+import type { GameProcEvent } from "@/main/api/launcher";
 import type { GameProfileDetail } from "@/main/game/spec";
 import type { GameProcessLog } from "@/main/launch/log-parser";
-import { pEvent } from "p-event";
-import { useEffect, useState } from "react";
-import throttle from "throttleit";
+import { retrievePort } from "@/preload/message";
+import Emittery from "emittery";
+import { useCallback, useSyncExternalStore } from "react";
 
 /**
  * Contains a slice of game information at the renderer side.
@@ -28,42 +29,27 @@ export interface RemoteGameProcess {
 
 export type RemoteGameStatus = "running" | "exited" | "crashed";
 
-/**
- * Update the given process object based on events from the event target.
- */
-function syncEvents(emitter: EventTarget, proc: RemoteGameProcess): RemoteGameProcess {
-    emitter.addEventListener("exit", () => proc.status = "exited");
-    emitter.addEventListener("crash", () => proc.status = "crashed");
-
-    function clearLogs<T>(buf: T[]) {
-        const limit = 10000;
-        const deleteCount = 100;
-        if (buf.length > limit) {
-            buf.splice(0, deleteCount);
-        }
+function clearLogs<T>(buf: T[]) {
+    const limit = 10000;
+    const deleteCount = 100;
+    if (buf.length > limit) {
+        buf.splice(0, deleteCount);
     }
-
-    function collect<T>(name: string, buf: T[]) {
-        emitter.addEventListener(name, (e: Event) => {
-            if (e instanceof CustomEvent) {
-                const [s] = e.detail;
-                buf.push(s);
-                clearLogs(buf);
-            }
-        });
-    }
-
-    collect("stdout", proc.outputs.stdout);
-    collect("stderr", proc.outputs.stderr);
-    collect("log", proc.logs);
-
-    return proc;
 }
 
 const procs = new Map<string, RemoteGameProcess>();
-const emitters = new Map<string, EventTarget>();
+let procsArray: RemoteGameProcess[] = [];
 
-const globalEmitter = new EventTarget();
+// Emits "change" event on changing of any component
+const detailedEmitter = new Emittery();
+
+// Emits "change" event only when game statuses change
+const restrictedEmitter = new Emittery();
+
+// Sync the immutable processes array when the map changes
+restrictedEmitter.on("change", () => {
+    procsArray = [...procs.values()];
+});
 
 async function create(detail: GameProfileDetail): Promise<string> {
     const meta = await native.launcher.launch(detail.id);
@@ -85,115 +71,85 @@ async function create(detail: GameProfileDetail): Promise<string> {
 
     console.log("Establishing event stream...");
 
-    void native.launcher.subscribe(meta.id);
+    native.launcher.subscribe(meta.id);
 
-    const msg = await pEvent(window, "message", {
-        rejectionEvents: [],
-        filter(e) {
-            return e instanceof MessageEvent && e.data === `dispatchGameEventsRemote:${meta.id}`;
-        }
-    }) as MessageEvent;
+    const port = await retrievePort(meta.id);
 
     console.log("Established event stream.");
 
-    const port = msg.ports[0];
+    port.onmessage = (e: MessageEvent<GameProcEvent>) => {
+        const currentProc = procs.get(meta.id);
+        if (!currentProc) return;
 
-    const et = new EventTarget();
+        const np = structuredClone(currentProc); // Process objects should be immutable
+        switch (e.data.type) {
+            case "exit":
+                np.status = "exited";
+                restrictedEmitter.emit("change");
+                break;
+            case "crash":
+                np.status = "crashed";
+                restrictedEmitter.emit("change");
+                break;
+            case "stdout":
+            case "stderr":
+                const s = e.data.data;
+                const buf = np.outputs[e.data.type]; // The channels and the buffers share the same names
+                buf.push(s);
+                clearLogs(buf);
+                break;
+            case "log":
+                const log = e.data.log;
+                np.logs.push(log);
+                clearLogs(np.logs);
+                break;
+        }
 
-    port.onmessage = e => {
-        const { channel, args } = e.data;
-        et.dispatchEvent(new CustomEvent(channel, { detail: args }));
+        procs.set(meta.id, np);
+        detailedEmitter.emit(`change:${meta.id}`);
     };
 
-    syncEvents(et, proc);
-
-    const em = new EventTarget();
-
-    ["exit", "crash", "stdout", "stderr", "log"].forEach(ch => {
-        et.addEventListener(ch, () => em.dispatchEvent(new CustomEvent("change")));
-    });
-
-    function emitGlobal() {
-        globalEmitter.dispatchEvent(new CustomEvent("change"));
-    }
-
-    ["exit", "crash"].forEach(ch => {
-        et.addEventListener(ch, () => emitGlobal());
-    });
-
     procs.set(meta.id, proc);
-    emitters.set(meta.id, em);
-    emitGlobal();
+
+    // Emit change event since proc list changes
+    void restrictedEmitter.emit("change");
 
     return meta.id;
 }
 
 /**
- * Gets an event target which emits 'change' event when the game status changes.
- */
-function subscribe(procId: string): EventTarget {
-    const e = emitters.get(procId);
-    if (e) return e;
-    throw `Process not found: ${procId}`;
-}
-
-/**
- * Gets a copy of the game status.
- */
-function slice(procId: string): RemoteGameProcess {
-    const proc = procs.get(procId);
-    if (proc) return structuredClone(proc);
-    throw `Process not found: ${procId}`;
-}
-
-/**
- * Gets deep copy of all statuses.
- */
-function sliceAll(): RemoteGameProcess[] {
-    return structuredClone([...procs.values()]);
-}
-
-/**
- * Retrieves an auto-updating game process object.
+ * Subscribes to the game process detail.
  *
- * This hook internally uses 'useState' and may cause frequent re-renders.
- * Be aware of this when optimizing.
- *
- * Argument 'wait' can be used to control whether to debounce the specified function.
+ * This hook updates its value whenever a component (status, logs, outputs) of the process changes.
+ * This can introduce much performance overhead and should be taken into account when using.
  */
-export function useGameProc(procId: string, wait = 0): RemoteGameProcess {
-    const [proc, setProc] = useState(slice(procId));
-
-    useEffect(() => {
-        setProc(slice(procId));
-        const emitter = subscribe(procId);
-
-        function fn() {
-            setProc(slice(procId));
-        }
-
-        const handler = wait > 0 ? throttle(fn, wait) : fn;
-        emitter.addEventListener("change", handler);
-
-        return () => emitter.removeEventListener("change", handler);
+export function useGameProcDetail(procId: string): RemoteGameProcess {
+    const subscribe = useCallback((cb: () => void) => {
+        const ch = `change:${procId}`;
+        detailedEmitter.on(ch, cb);
+        return () => restrictedEmitter.off(ch, cb);
     }, [procId]);
 
-    return proc;
+    const getSnapshot = useCallback(() => procs.get(procId)!, [procId]);
+
+    return useSyncExternalStore(subscribe, getSnapshot);
 }
 
+/**
+ * Subscribes to the game process list.
+ *
+ * This hook only updates its value when the game status changes.
+ * Logs and outputs do not trigger updates for performance concerns.
+ */
 export function useGameProcList(): RemoteGameProcess[] {
-    const [procs, setProcs] = useState<RemoteGameProcess[]>(sliceAll());
-
-    useEffect(() => {
-        function handler() {
-            setProcs(sliceAll());
-        }
-
-        globalEmitter.addEventListener("change", handler);
-        return () => globalEmitter.removeEventListener("change", handler);
+    const subscribe = useCallback((cb: () => void) => {
+        restrictedEmitter.on("change", cb);
+        return () => restrictedEmitter.off("change", cb);
     }, []);
 
-    return procs;
+    const getSnapshot = useCallback(() => procsArray, []);
+
+    return useSyncExternalStore(subscribe, getSnapshot);
 }
 
 export const procService = {

@@ -8,6 +8,7 @@
         "@fontsource/ubuntu-mono": "^5.1.1",
         "@heroui/react": "^2.6.14",
         "clsx": "^2.1.1",
+        "emittery": "^1.1.0",
         "fast-xml-parser": "^4.5.1",
         "framer-motion": "^12.0.6",
         "fs-extra": "^11.3.0",
@@ -769,6 +770,8 @@
     "electron": ["electron@35.0.0-alpha.5", "", { "dependencies": { "@electron/get": "^2.0.0", "@types/node": "^22.7.7", "extract-zip": "^2.0.1" }, "bin": { "electron": "cli.js" } }, "sha512-LfPhKwdQDuYy2PD1dBn17QLkxmOguVgmu0zNm6F+pncxhzVI/wmpKCOJOGmu9KuyBDtdbc0KxxuDO4K5wl/Whw=="],
 
     "electron-to-chromium": ["electron-to-chromium@1.5.90", "", {}, "sha512-C3PN4aydfW91Natdyd449Kw+BzhLmof6tzy5W1pFC5SpQxVXT+oyiyOG9AgYYSN9OdA/ik3YkCrpwqI8ug5Tug=="],
+
+    "emittery": ["emittery@1.1.0", "", {}, "sha512-rsX7ktqARv/6UQDgMaLfIqUWAEzzbCQiVh7V9rhDXp6c37yoJcks12NVD+XPkgl4AEavmNhVfrhGoqYwIsMYYA=="],
 
     "emoji-regex": ["emoji-regex@9.2.2", "", {}, "sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg=="],
 
