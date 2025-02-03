@@ -20,6 +20,10 @@ export class NamedRegistry<T> {
         return t as T;
     }
 
+    has(id: string): boolean {
+        return id in (registryContent[this.#name] ?? {});
+    }
+
     add(id: string, obj: T) {
         if (!id) {
             console.warn("An entry with empty ID has been ignored.");

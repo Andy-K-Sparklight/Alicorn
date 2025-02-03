@@ -106,10 +106,10 @@ interface GameCardProps {
 }
 
 function GameCard({ detail, onReload }: GameCardProps) {
-    const { name, versionId, gameVersion, installed, stable, modLoader } = detail;
+    const { id, name, versionId, gameVersion, installed, stable, modLoader } = detail;
     const { t } = useTranslation("pages", { keyPrefix: "games.game-card" });
     const { t: tc } = useTranslation("common", { keyPrefix: "progress" });
-    const installProgress = useInstallProgress(detail.id);
+    const installProgress = useInstallProgress(id);
 
     const isInstalling = installProgress !== null;
     const installStatus = installed ? "installed" : isInstalling ? "installing" : "not-installed";
@@ -123,7 +123,7 @@ function GameCard({ detail, onReload }: GameCardProps) {
     }, [installStatus]);
 
     async function handleInstall() {
-        await remoteInstaller.install(detail.id);
+        await remoteInstaller.install(id);
         toast(t("installed"), { type: "success" });
     }
 
@@ -137,6 +137,8 @@ function GameCard({ detail, onReload }: GameCardProps) {
                 <div className="flex flex-col gap-1">
                     <div className="font-bold text-xl">{name}</div>
                     <div className="flex items-center text-foreground-400">
+                        {id}
+                        <DotIcon/>
                         {versionId}
                         {
                             progressText &&

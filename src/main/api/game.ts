@@ -8,7 +8,6 @@ import { vanillaInstaller } from "@/main/install/vanilla";
 import { ipcMain } from "@/main/ipc/typed";
 import { reg } from "@/main/registry/registry";
 import { shell } from "electron";
-import { nanoid } from "nanoid";
 
 ipcMain.handle("listGames", () => reg.games.getAll());
 ipcMain.handle("tellGame", (_, gameId) => gameInspector.tellGame(gameId));
@@ -41,7 +40,7 @@ ipcMain.handle("addGame", async (_, init) => {
     let cid = containerId;
 
     if (!cid) {
-        cid = nanoid();
+        cid = genContainerId();
         const spec: ContainerSpec = {
             id: cid,
             root: paths.game.to(cid),
@@ -51,7 +50,7 @@ ipcMain.handle("addGame", async (_, init) => {
     }
 
     const g: GameProfile = {
-        id: nanoid(),
+        id: genGameId(),
         name,
         installed: false,
         launchHint: {
@@ -70,3 +69,25 @@ ipcMain.handle("addGame", async (_, init) => {
 
     reg.games.add(g.id, g);
 });
+
+function genGameId(): string {
+    let i = 1;
+    while (true) {
+        const st = "#" + i;
+        if (!reg.games.has(st)) {
+            return st;
+        }
+        i++;
+    }
+}
+
+function genContainerId(): string {
+    let i = 1;
+    while (true) {
+        const st = "#" + i;
+        if (!reg.containers.has(st)) {
+            return st;
+        }
+        i++;
+    }
+}

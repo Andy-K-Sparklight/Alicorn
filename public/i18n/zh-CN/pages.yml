@@ -10,7 +10,7 @@ create-game:
     new: 独立分配
     share: 与已有游戏共享
   account-title: 帐户
-  default-name: 新游戏（{{date}}）
+  default-name: 新游戏
   loading-versions: 正在获取版本列表……
 
   account-tip: 现在需要为每个游戏重新登录帐户。在未来的版本中，将能够选择使用已有的帐户。

@@ -10,7 +10,7 @@ create-game:
     new: Dedicated
     share: Share With Existing
   account-title: Account
-  default-name: New Game ({{date}})
+  default-name: New Game
   loading-versions: Retrieving Version Manifest
 
   account-tip: Re-login is required for each game for now. Existing accounts can be reused in the future.

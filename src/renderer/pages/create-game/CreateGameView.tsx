@@ -15,7 +15,7 @@ import { useLocation } from "wouter";
 export function CreateGameView() {
     const { t } = useTranslation("pages", { keyPrefix: "create-game" });
 
-    const [gameName, setGameName] = useState(t("default-name", { date: new Date().toLocaleString() }));
+    const [gameName, setGameName] = useState(t("default-name"));
     const [gameVersion, setGameVersion] = useState<string>();
     const [containerId, setContainerId] = useState<string>();
     const [shareContainer, setShareContainer] = useState(false);
