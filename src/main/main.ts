@@ -141,6 +141,8 @@ async function main() {
 
     console.log("Executing late init tasks...");
 
+    setAutoSave();
+
     const tasks = [
         conf().net.downloader === "aria2" && aria2.init(),
         mirror.bench(),
@@ -224,6 +226,30 @@ function injectDevToolsStyles(w: BrowserWindow) {
     });
 }
 
+let currentSaving: Promise<void> | null = null;
+
+async function saveContents() {
+    if (!currentSaving) {
+        // Add this flag to prevent writing concurrently to the same file
+        currentSaving = (async () => {
+            await conf.store();
+            await registry.close();
+            currentSaving = null;
+        })();
+    }
+
+    await currentSaving;
+}
+
+let autoSaveInterval: NodeJS.Timer;
+
+function setAutoSave() {
+    autoSaveInterval = setInterval(() => {
+        console.log("Auto saving in progress.");
+        void saveContents();
+    }, 5 * 60 * 1000);
+}
+
 /**
  * App shutdown routine.
  */
@@ -233,10 +259,10 @@ async function shutdownApp() {
     setTimeout(() => {
         console.log("Forcefully stopping due to shutdown timeout.");
         app.exit();
-    }, 30_000);
+    }, 30 * 1000);
 
-    await conf.store();
-    await registry.close();
+    clearInterval(autoSaveInterval);
+    await saveContents();
     aria2.shutdown();
 
     console.log("Exiting.");
