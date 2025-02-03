@@ -1,3 +1,5 @@
+import path from "node:path";
+
 export type BuildMode = "development" | "production" | "test"
 
 export interface BuildVariant {
@@ -7,11 +9,14 @@ export interface BuildVariant {
 }
 
 export function createBuildConfig(variant: BuildVariant) {
-    const { platform, arch } = variant;
+    const { platform, arch, mode } = variant;
 
     return {
         // Build variant object.
         variant,
+
+        // Output directory
+        outputDir: path.resolve(import.meta.dirname, "build", mode),
 
         // BMCLAPI provides mirrors to speed up resources delivering in some regions.
         // As a non-free third-party service, it's not enabled by default.

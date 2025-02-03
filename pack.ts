@@ -4,7 +4,7 @@
 import { type Options, packager } from "@electron/packager";
 import consola from "consola";
 import path from "node:path";
-import { build } from "~/build-tools";
+import { build } from "~/build-src/run-build";
 import pkg from "~/package.json";
 
 const platforms = ["win32", "darwin", "linux"];
@@ -14,11 +14,9 @@ consola.info(`Start cross-packaging for ${platforms.join(",")} x ${arches.join("
 
 for (const platform of platforms) {
     for (const arch of arches) {
-        consola.start(`Creating app resources for ${platform}-${arch}...`);
+        consola.start(`pack: ${platform}-${arch}...`);
         await build({ mode: "production", platform, arch });
-        consola.success("App resources built.");
 
-        consola.start(`Packaging for ${platform}-${arch}...`);
         const opts = {
             asar: false,
             name: "Alicorn Launcher",
@@ -28,7 +26,7 @@ for (const platform of platforms) {
             appCategoryType: "public.app-category.utilities",
             appVersion: pkg.version,
             icon: path.resolve(import.meta.dirname, "resources", "icons", "icon"),
-            dir: path.resolve(import.meta.dirname, "build", "prod"),
+            dir: path.resolve(import.meta.dirname, "build", "production"),
             arch: arch,
             platform: platform,
             out: path.resolve(import.meta.dirname, "dist"),
@@ -37,8 +35,7 @@ for (const platform of platforms) {
         } satisfies Options;
 
         await packager(opts);
-        consola.success(`Packaged for ${platform}-${arch}`);
     }
 }
 
-consola.success("All done.");
+consola.success("done.");

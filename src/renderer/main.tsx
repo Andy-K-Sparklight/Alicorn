@@ -23,7 +23,7 @@ async function main() {
     const { codename, version } = pkg;
     console.log(`Alicorn Launcher "${codename}" ${version}`);
 
-    document.title = `Alicorn "${codename}"`;
+    document.title = `Alicorn Launcher "${codename}"`;
 
     await Promise.all([
         pEvent(document, "DOMContentLoaded", { rejectionEvents: [] }),

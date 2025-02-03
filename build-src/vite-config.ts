@@ -11,12 +11,12 @@ export default defineConfig(({ command }) => {
     process.env.NODE_ENV = isDev ? "development" : "production";
 
     return {
-        root: "./src/renderer",
+        root: path.resolve(import.meta.dirname, "..", "src", "renderer"),
         appType: "mpa",
         base: "",
-        publicDir: path.resolve(import.meta.dirname, "public"),
+        publicDir: path.resolve(import.meta.dirname, "..", "public"),
         build: {
-            outDir: path.resolve(import.meta.dirname, "build", isDev ? "dev" : "prod", "renderer"),
+            // Output directory will be specified when building
             emptyOutDir: true,
             chunkSizeWarningLimit: 1024,
             rollupOptions: {

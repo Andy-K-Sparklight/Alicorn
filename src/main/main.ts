@@ -108,7 +108,8 @@ async function main() {
         y: isNaN(py) ? undefined : Math.floor(py),
         frame: hasFrame,
         show: false,
-        icon: getIconPath()
+        icon: getIconPath(),
+        title: "Alicorn Launcher"
     });
 
     // Open DevTools if applicable
