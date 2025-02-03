@@ -101,7 +101,12 @@ function createArguments(init: LaunchInit): string[] {
         const { argument, file } = init.profile.logging.client;
         const loggingConfigPath = init.container.loggingConfig(file.id);
         const loggingArg = argument.replaceAll("${path}", loggingConfigPath);
-        vmArgs.push(loggingArg);
+        vmArgs.push(
+            loggingArg,
+            "-Dlog4j2.formatMsgNoLookups=true",
+            "-Dcom.sun.jndi.rmi.object.trustURLCodebase=false",
+            "-Dcom.sun.jndi.cosnaming.object.trustURLCodebase=false"
+        );
     }
 
     const { vm: globalExtraVM, game: globalExtraGame } = conf().runtime.args;
