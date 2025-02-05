@@ -11,7 +11,7 @@ interface ContainerSelectorProps {
 export function ContainerSelector({ enabled, containerId, onChange }: ContainerSelectorProps) {
     const { t } = useTranslation("pages", { keyPrefix: "create-game" });
 
-    const games = useGameList();
+    const games = useGameList() ?? [];
 
     const sid = games.find(g => g.launchHint.containerId === containerId)?.id;
 
