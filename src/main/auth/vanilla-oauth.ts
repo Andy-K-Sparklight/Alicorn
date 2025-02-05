@@ -1,7 +1,6 @@
 import { windowControl } from "@/main/sys/window-control";
 import { BrowserWindow } from "electron";
 import { pEvent } from "p-event";
-import timers from "timers/promises";
 
 const OAUTH_URL = createOAuthUrl();
 
@@ -29,21 +28,37 @@ async function browserLogin(part: string): Promise<string> {
 
     let code = "";
 
-    w.webContents.on("did-stop-loading", () => {
-        const url = w.webContents.getURL();
-        const rawCode = URL.parse(url)?.searchParams.get("code");
+    let isShowing = false;
 
-        if (rawCode) {
-            code = decodeURIComponent(rawCode);
-            w.close();
+    w.webContents.on("did-stop-loading", () => {
+        const url = URL.parse(w.webContents.getURL());
+
+        if (url && url.hostname === "login.live.com" && url.pathname === "/oauth20_desktop.srf") {
+            const rawCode = url.searchParams.get("code");
+
+            if (rawCode) {
+                code = decodeURIComponent(rawCode);
+                w.close();
+                return;
+            }
+        }
+
+        if (!isShowing) {
+            // Show the window if we cannot extract the code at once
+            console.debug("The initial page does not contain the code, showing for user interactions.");
+            w.show();
         }
     });
 
-    // Wait for the content to load for no more than 5s
-    Promise.race([
-        w.loadURL(OAUTH_URL),
-        timers.setTimeout(5000)
-    ]).finally(() => w.show());
+    setTimeout(() => {
+        if (!code && !isShowing) {
+            // Show the window if the web page loads too slow
+            console.debug("Login timed out, showing window.");
+            w.show();
+        }
+    }, 5000);
+
+    void w.loadURL(OAUTH_URL);
 
     await pEvent(w, "close");
 
