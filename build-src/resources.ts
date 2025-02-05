@@ -1,4 +1,5 @@
 import consola from "consola";
+import fs from "fs-extra";
 import path from "node:path";
 import type { BuildConfig } from "~/config";
 import { linkAll } from "./util";
@@ -9,6 +10,7 @@ export async function processResources(cfg: BuildConfig): Promise<void> {
 
     consola.start("res: linking app resources");
     await linkAll("resources", outputDir);
+    await emitPackageJson(outputDir);
 
     consola.start("res: processing vendored files");
     await vendor.prepareAssets(cfg, path.join(outputDir, "vendor"));
@@ -24,4 +26,18 @@ export async function processResources(cfg: BuildConfig): Promise<void> {
             throw e;
         }
     }
+}
+
+async function emitPackageJson(outDir: string) {
+    const src = await fs.readJSON(path.resolve(import.meta.dirname, "..", "package.json"));
+
+    const output = {
+        name: src.name,
+        author: src.author,
+        main: "main.js",
+        type: "module",
+        version: src.version
+    };
+
+    await fs.outputJSON(path.join(outDir, "package.json"), output);
 }
