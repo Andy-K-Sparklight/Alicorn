@@ -1,11 +1,18 @@
 import type { GameProfile } from "@/main/game/spec";
 import { useEffect, useState } from "react";
 
-export function useGameList(): GameProfile[] {
-    const [games, setGames] = useState<GameProfile[]>([]);
+export function useGameList(): GameProfile[] | null {
+    const [games, setGames] = useState<GameProfile[] | null>(null);
+
+    function load() {
+        native.game.list().then(setGames);
+    }
 
     useEffect(() => {
-        native.game.list().then(setGames);
+        load();
+
+        native.game.onChange(load);
+        return () => native.game.offChange(load);
     }, []);
 
     return games;

@@ -1,4 +1,4 @@
-import type { GameProfileDetail } from "@/main/game/spec";
+import type { GameProfile, GameProfileDetail } from "@/main/game/spec";
 import { remoteInstaller, useInstallProgress } from "@/renderer/services/install";
 import { procService } from "@/renderer/services/proc";
 import { GameTypeImage } from "@components/GameTypeImage";
@@ -12,8 +12,6 @@ import {
     DropdownItem,
     DropdownMenu,
     DropdownTrigger,
-    Skeleton,
-    Spinner,
     Tooltip
 } from "@heroui/react";
 import { clsx } from "clsx";
@@ -27,38 +25,23 @@ import {
     InfoIcon,
     TrashIcon
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { useLocation } from "wouter";
 
 interface GameCardDisplayProps {
-    id: string;
-    name: string;
+    game: GameProfile;
 }
 
-export function GameCardDisplay({ id, name }: GameCardDisplayProps) {
-    const [summary, setSummary] = useState<GameProfileDetail>();
-    const [error, setError] = useState();
-
-    function loadGameDetail() {
-        native.game.tell(id).then(setSummary).catch(setError);
-    }
-
-    useEffect(() => {
-        loadGameDetail();
-    }, [id]);
+export function GameCardDisplay({ game }: GameCardDisplayProps) {
+    const summary = tellGame(game);
 
     if (summary) {
-        return <GameCard detail={summary} onReload={loadGameDetail}/>;
+        return <GameCard detail={summary}/>;
     }
 
-    if (error !== undefined) {
-        // TODO add error message
-        return <GameLoadFailedAlert name={name} id={id}/>;
-    }
-
-    return <GameCardSkeleton/>;
+    return <GameLoadFailedAlert name={game.name} id={game.id}/>;
 }
 
 interface GameLoadFailedAlertProps {
@@ -81,31 +64,11 @@ function GameLoadFailedAlert({ name, id }: GameLoadFailedAlertProps) {
     />;
 }
 
-function GameCardSkeleton() {
-    return <Card>
-        <CardBody>
-            <div className="flex gap-4 items-center h-16 px-3">
-                <Skeleton className="h-full aspect-square rounded-full"/>
-
-                <div className="flex flex-col gap-3">
-                    <Skeleton className="h-4 w-36 rounded-full"/>
-                    <Skeleton className="h-3 w-64 rounded-full"/>
-                </div>
-
-                <Skeleton className="ml-auto h-5 w-36 rounded-full"/>
-
-                <Spinner className="ml-4" color="default"/>
-            </div>
-        </CardBody>
-    </Card>;
-}
-
 interface GameCardProps {
     detail: GameProfileDetail;
-    onReload: () => void;
 }
 
-function GameCard({ detail, onReload }: GameCardProps) {
+function GameCard({ detail }: GameCardProps) {
     const { id, name, versionId, gameVersion, installed, stable, modLoader } = detail;
     const { t } = useTranslation("pages", { keyPrefix: "games.game-card" });
     const { t: tc } = useTranslation("common", { keyPrefix: "progress" });
@@ -117,10 +80,6 @@ function GameCard({ detail, onReload }: GameCardProps) {
     const progressText = installProgress && tc(installProgress.state, { ...installProgress.value });
     const gameVersionChip =
         <Chip color={stable ? "primary" : "warning"} variant="flat">{gameVersion}</Chip>;
-
-    useEffect(() => {
-        onReload();
-    }, [installStatus]);
 
     async function handleInstall() {
         await remoteInstaller.install(id);
@@ -275,4 +234,20 @@ function GameCardDropdown() {
             </DropdownItem>
         </DropdownMenu>
     </Dropdown>;
+}
+
+/**
+ * Flatten the specified game profile.
+ * @deprecated modify other components to use GameProfile directly.
+ */
+function tellGame(game: GameProfile): GameProfileDetail {
+    return {
+        id: game.id,
+        name: game.name,
+        versionId: game.launchHint.profileId, // TODO add support for mod loader
+        gameVersion: game.virtual.baseVersion,
+        installed: game.installed,
+        modLoader: game.virtual.modLoader,
+        stable: game.virtual.type === "release"
+    };
 }

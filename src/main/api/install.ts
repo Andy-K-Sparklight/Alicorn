@@ -1,4 +1,5 @@
 import { containers } from "@/main/container/manage";
+import { games } from "@/main/game/manage";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { ipcMain } from "@/main/ipc/typed";
 import { jrt } from "@/main/jrt/install";
@@ -38,7 +39,9 @@ ipcMain.on("installVanilla", async (e, gameId) => {
     // TODO add selection for assets installation
     await vanillaInstaller.installAssets(p, c, "full", { onProgress });
 
-    game.installed = true;
+    const ng = structuredClone(game);
+    ng.installed = true;
+    games.add(ng);
 
     console.debug(`Completed installation of ${gameId}`);
     // TODO add error handler

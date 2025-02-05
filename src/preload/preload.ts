@@ -1,16 +1,18 @@
 import type { CreateGameInit } from "@/main/api/game";
 import type { LaunchGameResult } from "@/main/api/launcher";
 import type { UserConfig } from "@/main/conf/conf";
-import type { GameProfile, GameProfileDetail } from "@/main/game/spec";
+import type { GameProfile } from "@/main/game/spec";
 import type { VersionManifest } from "@/main/install/vanilla";
-import { type IpcCommands, type IpcEvents } from "@/main/ipc/channels";
+import { type IpcCallEvents, type IpcCommands, type IpcMessageEvents, type IpcPushEvents } from "@/main/ipc/channels";
 import type { TypedIpcRenderer } from "@/main/ipc/typed";
 import { contextBridge, ipcRenderer as ipcRendererRaw } from "electron";
+import Emittery from "emittery";
 import { exposePort } from "./message";
 
 console.log("Enabling preload script.");
 
-const ipcRenderer = ipcRendererRaw as TypedIpcRenderer<IpcEvents, IpcCommands>;
+const ipcRenderer = ipcRendererRaw as TypedIpcRenderer<IpcCallEvents, IpcPushEvents, IpcMessageEvents, IpcCommands>;
+const internalEvents = new Emittery();
 
 const native = {
     /**
@@ -72,13 +74,6 @@ const native = {
         },
 
         /**
-         * Gets detailed information for the given game.
-         */
-        tell(gameId: string): Promise<GameProfileDetail> {
-            return ipcRenderer.invoke("tellGame", gameId);
-        },
-
-        /**
          * Reveals the given scope in the game directory.
          */
         reveal(gameId: string, scope: string): void {
@@ -90,6 +85,20 @@ const native = {
          */
         add(game: CreateGameInit): Promise<void> {
             return ipcRenderer.invoke("addGame", game);
+        },
+
+        /**
+         * Adds a listener for game changes.
+         */
+        onChange(fn: () => void) {
+            internalEvents.on("gameChanged", fn);
+        },
+
+        /**
+         * Removes previously added listener.
+         */
+        offChange(fn: () => void) {
+            internalEvents.off("gameChanged", fn);
         }
     },
 
@@ -184,6 +193,13 @@ const native = {
         }
     }
 };
+
+// Unwraps IPC events as internal events
+(["gameChanged"] as const).forEach(ch => {
+    ipcRenderer.on(ch, (_, ...args) => {
+        void internalEvents.emit(ch, args);
+    });
+});
 
 contextBridge.exposeInMainWorld("native", native);
 

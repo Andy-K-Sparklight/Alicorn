@@ -3,10 +3,15 @@ import type { ContainerSpec } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import type { GameProfile } from "@/main/game/spec";
 import { isENOENT } from "@/main/util/fs";
+import deepFreeze from "deep-freeze-es6";
 import fs from "fs-extra";
 
 let registryContent: Record<string, Record<string, unknown>> = {};
 
+/**
+ * A registry mapping unique IDs to objects.
+ * Registry objects are immutable.
+ */
 export class NamedRegistry<T> {
     #name: string;
 
@@ -60,6 +65,13 @@ async function init() {
     console.log(`Opening registries: ${fp}`);
     try {
         registryContent = await fs.readJSON(fp);
+
+        // Freeze to prevent uncaught modification
+        for (const tb of Object.values(registryContent)) {
+            for (const v of Object.values(tb)) {
+                deepFreeze(v);
+            }
+        }
     } catch (e) {
         if (isENOENT(e)) {
             console.log("Registry file does not exist (this is not an error).");

@@ -1,10 +1,13 @@
 import type { CreateGameInit } from "@/main/api/game";
 import type { LaunchGameResult } from "@/main/api/launcher";
 import type { UserConfig } from "@/main/conf/conf";
-import type { GameProfile, GameProfileDetail } from "@/main/game/spec";
+import type { GameProfile } from "@/main/game/spec";
 import type { VersionManifest } from "@/main/install/vanilla";
 
-export type IpcEvents = {
+/**
+ * Events sent from renderer to main.
+ */
+export type IpcCallEvents = {
     updateConfig: (c: UserConfig) => void;
     showWindow: () => void;
     hideWindow: () => void;
@@ -14,16 +17,28 @@ export type IpcEvents = {
     stopGame: (id: string) => void;
     removeGame: (id: string) => void;
     revealGameContent: (id: string, scope: string) => void;
+}
 
+/**
+ * Events sent from renderer to main with message port forwarding.
+ */
+export type IpcMessageEvents = {
     installVanilla: (gameId: string) => void;
     subscribeGameEvents: (gid: string) => void;
+}
+
+/**
+ * Events sent from main to renderer.
+ */
+export type IpcPushEvents = {
+    gameChanged: () => void;
 }
 
 export type IpcCommands = {
     getConfig: () => UserConfig;
     selectDir: () => string;
     listGames: () => GameProfile[];
-    tellGame: (gameId: string) => GameProfileDetail;
+    removeGame: (gameId: string) => void;
     launch: (id: string) => LaunchGameResult;
     gameAuth: (gameId: string) => boolean;
     addGame: (game: CreateGameInit) => void;

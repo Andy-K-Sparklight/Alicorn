@@ -1,4 +1,4 @@
-import type { IpcCommands, IpcEvents } from "@/main/ipc/channels";
+import type { IpcCallEvents, IpcCommands, IpcMessageEvents } from "@/main/ipc/channels";
 import {
     ipcMain as ipcMainRaw,
     type IpcMain,
@@ -54,60 +54,68 @@ export interface TypedIpcMain<
 }
 
 export interface TypedIpcRenderer<
-    IpcEvents extends InputMap,
-    IpcCommands extends InputMap
+    CallEvents extends InputMap,
+    PushEvents extends InputMap,
+    MessageEvents extends InputMap,
+    Commands extends InputMap
 > extends IpcRenderer {
-    on<K extends keyof IpcEvents>(
+    on<K extends keyof PushEvents>(
         channel: K,
         listener: (
             event: IpcRendererEvent,
-            ...args: Parameters<IpcEvents[K]>
+            ...args: Parameters<PushEvents[K]>
         ) => void
     ): this;
 
-    once<K extends keyof IpcEvents>(
+    once<K extends keyof PushEvents>(
         channel: K,
         listener: (
             event: IpcRendererEvent,
-            ...args: Parameters<IpcEvents[K]>
+            ...args: Parameters<PushEvents[K]>
         ) => void
     ): this;
 
-    removeListener<K extends keyof IpcEvents>(
+    removeListener<K extends keyof PushEvents>(
         channel: K,
         listener: (
             event: IpcRendererEvent,
-            ...args: Parameters<IpcEvents[K]>
+            ...args: Parameters<PushEvents[K]>
         ) => void
     ): this;
 
-    removeAllListeners<K extends keyof IpcEvents>(channel?: K): this;
+    removeAllListeners<K extends keyof PushEvents>(channel?: K): this;
 
-    send<K extends keyof IpcEvents>(
+    send<K extends keyof CallEvents>(
         channel: K,
-        ...args: Parameters<IpcEvents[K]>
+        ...args: Parameters<CallEvents[K]>
     ): void;
 
-    sendSync<K extends keyof IpcEvents>(
+    sendSync<K extends keyof CallEvents>(
         channel: K,
-        ...args: Parameters<IpcEvents[K]>
-    ): ReturnType<IpcEvents[K]>;
+        ...args: Parameters<CallEvents[K]>
+    ): ReturnType<CallEvents[K]>;
 
-    sendTo<K extends keyof IpcEvents>(
+    sendTo<K extends keyof CallEvents>(
         webContentsId: number,
         channel: K,
-        ...args: Parameters<IpcEvents[K]>
+        ...args: Parameters<CallEvents[K]>
     ): void;
 
-    sendToHost<K extends keyof IpcEvents>(
+    sendToHost<K extends keyof CallEvents>(
         channel: K,
-        ...args: Parameters<IpcEvents[K]>
+        ...args: Parameters<CallEvents[K]>
     ): void;
 
-    invoke<K extends keyof IpcCommands>(
+    invoke<K extends keyof Commands>(
         channel: K,
-        ...args: Parameters<IpcCommands[K]>
-    ): Promise<ReturnType<IpcCommands[K]>>;
+        ...args: Parameters<Commands[K]>
+    ): Promise<ReturnType<Commands[K]>>;
+
+    postMessage<K extends keyof MessageEvents>(
+        channel: K,
+        message: Parameters<MessageEvents[K]>[0],
+        transfer?: MessagePort[]
+    ): void;
 }
 
-export const ipcMain = ipcMainRaw as TypedIpcMain<IpcEvents, IpcCommands>;
+export const ipcMain = ipcMainRaw as TypedIpcMain<IpcCallEvents & IpcMessageEvents, IpcCommands>;

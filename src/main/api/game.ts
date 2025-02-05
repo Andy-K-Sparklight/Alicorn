@@ -2,7 +2,7 @@ import { containerInspector } from "@/main/container/inspect";
 import { containers } from "@/main/container/manage";
 import type { ContainerSpec } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
-import { gameInspector } from "@/main/game/inspect";
+import { games } from "@/main/game/manage";
 import type { GameProfile } from "@/main/game/spec";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { ipcMain } from "@/main/ipc/typed";
@@ -10,7 +10,7 @@ import { reg } from "@/main/registry/registry";
 import { shell } from "electron";
 
 ipcMain.handle("listGames", () => reg.games.getAll());
-ipcMain.handle("tellGame", (_, gameId) => gameInspector.tellGame(gameId));
+ipcMain.handle("removeGame", (_, gameId) => games.remove(gameId));
 
 const allowedContentScopes = new Set(["resourcepacks"]);
 
@@ -67,7 +67,7 @@ ipcMain.handle("addGame", async (_, init) => {
         }
     };
 
-    reg.games.add(g.id, g);
+    games.add(g);
 });
 
 function genGameId(): string {

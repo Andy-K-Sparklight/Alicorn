@@ -40,7 +40,7 @@ export function GamesView() {
         <div className="mt-4 w-full h-full overflow-y-auto">
             <div className="flex flex-col gap-3 w-full">
                 {
-                    sortedGames.map(({ id, name }) => <GameCardDisplay key={id} id={id} name={name}/>)
+                    sortedGames.map(g => <GameCardDisplay key={g.id} game={g}/>)
                 }
             </div>
         </div>
