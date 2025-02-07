@@ -11,6 +11,7 @@ import { shell } from "electron";
 
 ipcMain.handle("listGames", () => reg.games.getAll());
 ipcMain.handle("removeGame", (_, gameId) => games.remove(gameId));
+ipcMain.handle("getGameProfile", (_, id) => reg.games.get(id));
 
 const allowedContentScopes = new Set(["resourcepacks"]);
 
@@ -49,6 +50,13 @@ ipcMain.handle("addGame", async (_, init) => {
         reg.containers.add(cid, spec);
     }
 
+    const type = ({
+        "release": "vanilla-release",
+        "snapshot": "vanilla-snapshot",
+        "old_alpha": "vanilla-old-alpha",
+        "old_beta": "vanilla-old-beta"
+    } as const)[p.type] ?? "unknown";
+
     const g: GameProfile = {
         id: genGameId(),
         name,
@@ -60,11 +68,10 @@ ipcMain.handle("addGame", async (_, init) => {
             pref: {} // TODO allow user to choose pref
         },
         time: Date.now(),
-        virtual: {
-            baseVersion: profileId, // TODO compatibility with other mod loaders
-            modLoader: "",
-            type: p.type
-        }
+        versions: {
+            game: p.id
+        },
+        type
     };
 
     games.add(g);

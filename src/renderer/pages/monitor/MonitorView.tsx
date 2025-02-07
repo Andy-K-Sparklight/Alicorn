@@ -1,3 +1,4 @@
+import type { GameCoreType } from "@/main/game/spec";
 import type { GameProcessLog } from "@/main/launch/log-parser";
 import { type RemoteGameProcess, type RemoteGameStatus, useGameProcDetail } from "@/renderer/services/proc";
 import { GameTypeImage } from "@components/GameTypeImage";
@@ -151,31 +152,29 @@ function LogLine({ log }: { log: GameProcessLog }) {
 
 function ControlPanel() {
     const proc = useContext(GameProcessContext)!;
-    const { detail: { name, modLoader, stable }, status } = proc;
+    const { profile: { id, name, type }, status } = proc;
 
     return <div className="w-full h-full flex flex-col gap-4">
         <div className="grow">
             <GameInfoCardMemo
                 name={name}
-                modLoader={modLoader}
-                stable={stable}
+                type={type}
                 status={status}
             />
         </div>
-        <MonitorActionsMemo procId={proc.id} gameId={proc.detail.id} status={proc.status}/>
+        <MonitorActionsMemo procId={proc.id} gameId={id} status={status}/>
     </div>;
 }
 
 interface GameInfoCardProps {
     name: string;
-    modLoader: string;
-    stable: boolean;
+    type: GameCoreType;
     status: RemoteGameStatus;
 }
 
 const GameInfoCardMemo = React.memo(GameInfoCard);
 
-function GameInfoCard({ name, modLoader, stable, status }: GameInfoCardProps) {
+function GameInfoCard({ name, type, status }: GameInfoCardProps) {
     const { t } = useTranslation("pages", { keyPrefix: "monitor.status" });
 
     return <Card className="h-full">
@@ -190,7 +189,7 @@ function GameInfoCard({ name, modLoader, stable, status }: GameInfoCardProps) {
                         })
                     }
                 >
-                    <GameTypeImage loader={modLoader} stable={stable}/>
+                    <GameTypeImage type={type}/>
                 </div>
                 <div className="font-bold text-2xl">{name}</div>
                 <div className="text-lg text-foreground-400">{t(status)}</div>

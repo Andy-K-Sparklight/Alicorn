@@ -88,6 +88,13 @@ const native = {
         },
 
         /**
+         * Gets the game profile of the specified ID.
+         */
+        getProfile(id: string): Promise<GameProfile> {
+            return ipcRenderer.invoke("getGameProfile", id);
+        },
+
+        /**
          * Adds a listener for game changes.
          */
         onChange(fn: () => void) {

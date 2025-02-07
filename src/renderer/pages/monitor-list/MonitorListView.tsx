@@ -35,7 +35,7 @@ function StatusChip({ status }: { status: RemoteGameStatus }) {
 }
 
 function MonitorItem({ proc }: { proc: RemoteGameProcess }) {
-    const { detail: { modLoader, stable, name, versionId }, status } = proc;
+    const { profile: { type, name }, status } = proc;
     const [, nav] = useLocation();
 
     function revealProc() {
@@ -46,13 +46,10 @@ function MonitorItem({ proc }: { proc: RemoteGameProcess }) {
         <CardBody>
             <div className="flex gap-4 items-center h-16 px-3">
                 <div className="h-full p-3 bg-content2 rounded-full">
-                    <GameTypeImage loader={modLoader} stable={stable}/>
+                    <GameTypeImage type={type}/>
                 </div>
 
-                <div className="flex flex-col gap-1">
-                    <div className="font-bold text-xl">{name}</div>
-                    <div className="text-foreground-400">{versionId}</div>
-                </div>
+                <div className="font-bold text-xl">{name}</div>
 
                 <div className="ml-auto flex gap-2 items-center">
                     <StatusChip status={status}/>

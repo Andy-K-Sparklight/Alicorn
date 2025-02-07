@@ -22,8 +22,6 @@ games:
   load-list-failed: 读取游戏列表失败。
   title: 游戏库
   new: 创建新游戏
-  load-failed: 无法读取 {{name}} （标识符为 {{id}}），此游戏可能已损坏。
-  remove-failed: 删除游戏
   auth-failed:
     title: 帐户验证失败
     sub: 请修复此问题，然后再尝试启动游戏。
@@ -33,11 +31,8 @@ games:
     earliest: 最早游玩
     latest: 最近游玩
   game-card:
-    unstable: 这是快照版本
     ready: 准备就绪
     unready: 需要安装
-    info: 查看详细信息
-    remove: 移除游戏
     installed: 已安装游戏，开始游玩吧！
 
 monitor:

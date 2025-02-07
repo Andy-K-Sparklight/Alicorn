@@ -5,7 +5,7 @@ import { FileBadgeIcon, FolderGit2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import pkg from "~/package.json";
 
-export const AppInfo = () => {
+export function AppInfo() {
     const { t } = useTranslation("pages", { keyPrefix: "about.subtitles" });
     return <>
         <h1 className="text-2xl font-bold mb-4">{t("app-info")}</h1>
@@ -14,9 +14,9 @@ export const AppInfo = () => {
         <CopyrightCard/>
         <AppLinks/>
     </>;
-};
+}
 
-const VersionCard = () => {
+function VersionCard() {
     const { t } = useTranslation("pages", { keyPrefix: "about" });
     const version = `"${pkg.codename}" ${pkg.version}`;
 
@@ -38,9 +38,9 @@ const VersionCard = () => {
             </div>
         </CardBody>
     </Card>;
-};
+}
 
-const DevNoteCard = () => {
+function DevNoteCard() {
     const { t } = useTranslation("pages", { keyPrefix: "about" });
 
     return <div className="w-full">
@@ -50,9 +50,9 @@ const DevNoteCard = () => {
             classNames={{ title: "font-bold" }}
         />
     </div>;
-};
+}
 
-const CopyrightCard = () => {
+function CopyrightCard() {
     const { t } = useTranslation("pages", { keyPrefix: "about" });
 
     return <Card className="w-full">
@@ -62,12 +62,12 @@ const CopyrightCard = () => {
             </div>
         </CardBody>
     </Card>;
-};
+}
 
 const SRC_URL = "https://github.com/Andy-K-Sparklight/Alicorn";
 const LICENSE_URL = "https://www.gnu.org/licenses/gpl-3.0.html";
 
-const AppLinks = () => {
+function AppLinks() {
     const { t } = useTranslation("pages", { keyPrefix: "about.links" });
 
     return <ButtonGroup>
@@ -78,4 +78,4 @@ const AppLinks = () => {
             {t("license")}
         </Button>
     </ButtonGroup>;
-};
+}

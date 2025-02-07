@@ -22,31 +22,28 @@ export interface GameProfile {
     installed: boolean;
 
     /**
-     * Virtual properties for uncreated games.
+     * Game related versions.
      */
-    virtual: VirtualProperties;
+    versions: { game: string } & Record<string, string>;
 
     /**
      * Launch hint object.
      */
     launchHint: LaunchHint;
+
+    /**
+     * Type of the game core.
+     */
+    type: GameCoreType;
 }
 
-interface VirtualProperties {
-    baseVersion: string;
-    modLoader: string; // Empty string indicates no mod loader (vanilla)
-    type: string;
-}
-
-/**
- * Detailed game profile to be used in the frontend.
- */
-export interface GameProfileDetail {
-    id: string;
-    name: string;
-    versionId: string;
-    gameVersion: string;
-    installed: boolean;
-    modLoader: string;
-    stable: boolean;
-}
+export type GameCoreType =
+    "vanilla-snapshot" |
+    "vanilla-release" |
+    "vanilla-old-alpha" |
+    "vanilla-old-beta" |
+    "forge" |
+    "fabric" |
+    "quilt" |
+    "neoforged" |
+    "unknown"

@@ -3,7 +3,7 @@
  */
 
 import type { GameProcEvent } from "@/main/api/launcher";
-import type { GameProfileDetail } from "@/main/game/spec";
+import type { GameProfile } from "@/main/game/spec";
 import type { GameProcessLog } from "@/main/launch/log-parser";
 import { retrievePort } from "@/preload/message";
 import Emittery from "emittery";
@@ -15,9 +15,8 @@ import { useCallback, useSyncExternalStore } from "react";
 export interface RemoteGameProcess {
     id: string;
     pid: number;
-    detail: GameProfileDetail;
-
     status: RemoteGameStatus;
+    profile: GameProfile;
 
     outputs: {
         stdout: string[];
@@ -51,15 +50,16 @@ restrictedEmitter.on("change", () => {
     procsArray = [...procs.values()];
 });
 
-async function create(detail: GameProfileDetail): Promise<string> {
-    const meta = await native.launcher.launch(detail.id);
+async function create(id: string): Promise<string> {
+    const meta = await native.launcher.launch(id);
+    const profile = await native.game.getProfile(id);
 
     console.log(`Created game process ${meta.id} (PID ${meta.pid}).`);
 
     const proc: RemoteGameProcess = {
         id: meta.id,
         pid: meta.pid,
-        detail,
+        profile,
         status: "running",
         outputs: {
             stdout: [],

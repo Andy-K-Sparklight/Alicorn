@@ -1,30 +1,10 @@
-import type { GameProfile, GameProfileDetail } from "@/main/game/spec";
+import type { GameProfile } from "@/main/game/spec";
 import { remoteInstaller, useInstallProgress } from "@/renderer/services/install";
 import { procService } from "@/renderer/services/proc";
 import { GameTypeImage } from "@components/GameTypeImage";
-import {
-    Alert,
-    Button,
-    Card,
-    CardBody,
-    Chip,
-    Dropdown,
-    DropdownItem,
-    DropdownMenu,
-    DropdownTrigger,
-    Tooltip
-} from "@heroui/react";
+import { Button, Card, CardBody, Chip, Tooltip } from "@heroui/react";
 import { clsx } from "clsx";
-import {
-    CheckCircleIcon,
-    CirclePlayIcon,
-    CloudDownloadIcon,
-    DotIcon,
-    DownloadIcon,
-    EllipsisIcon,
-    InfoIcon,
-    TrashIcon
-} from "lucide-react";
+import { CheckCircleIcon, CirclePlayIcon, CloudDownloadIcon, DotIcon, DownloadIcon, EllipsisIcon } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -35,41 +15,15 @@ interface GameCardDisplayProps {
 }
 
 export function GameCardDisplay({ game }: GameCardDisplayProps) {
-    const summary = tellGame(game);
-
-    if (summary) {
-        return <GameCard detail={summary}/>;
-    }
-
-    return <GameLoadFailedAlert name={game.name} id={game.id}/>;
-}
-
-interface GameLoadFailedAlertProps {
-    name: string;
-    id: string;
-}
-
-function GameLoadFailedAlert({ name, id }: GameLoadFailedAlertProps) {
-    const { t } = useTranslation("pages", { keyPrefix: "games" });
-
-    return <Alert
-        classNames={{ title: "font-bold" }}
-        color="danger"
-        title={t("load-failed", { name, id })}
-        endContent={
-            <Button startContent={<TrashIcon/>} color="danger">
-                {t("remove-failed")}
-            </Button>
-        }
-    />;
+    return <GameCard profile={game}/>;
 }
 
 interface GameCardProps {
-    detail: GameProfileDetail;
+    profile: GameProfile;
 }
 
-function GameCard({ detail }: GameCardProps) {
-    const { id, name, versionId, gameVersion, installed, stable, modLoader } = detail;
+function GameCard({ profile }: GameCardProps) {
+    const { id, name, versions: { game: gameVersion }, installed, type } = profile;
     const { t } = useTranslation("pages", { keyPrefix: "games.game-card" });
     const { t: tc } = useTranslation("common", { keyPrefix: "progress" });
     const installProgress = useInstallProgress(id);
@@ -78,8 +32,6 @@ function GameCard({ detail }: GameCardProps) {
     const installStatus = installed ? "installed" : isInstalling ? "installing" : "not-installed";
 
     const progressText = installProgress && tc(installProgress.state, { ...installProgress.value });
-    const gameVersionChip =
-        <Chip color={stable ? "primary" : "warning"} variant="flat">{gameVersion}</Chip>;
 
     async function handleInstall() {
         await remoteInstaller.install(id);
@@ -90,15 +42,13 @@ function GameCard({ detail }: GameCardProps) {
         <CardBody>
             <div className="flex gap-4 items-center h-16 px-3">
                 <div className="h-full p-3 bg-content2 rounded-full">
-                    <GameTypeImage loader={modLoader} stable={stable}/>
+                    <GameTypeImage type={type}/>
                 </div>
 
                 <div className="flex flex-col gap-1">
                     <div className="font-bold text-xl">{name}</div>
                     <div className="flex items-center text-foreground-400">
                         {id}
-                        <DotIcon/>
-                        {versionId}
                         {
                             progressText &&
                             <>
@@ -110,21 +60,14 @@ function GameCard({ detail }: GameCardProps) {
                 </div>
 
                 <div className="ml-auto flex gap-2 items-center">
-                    {
-                        stable ?
-                            gameVersionChip
-                            :
-                            <Tooltip content={t("unstable")} color="foreground">
-                                {gameVersionChip}
-                            </Tooltip>
-                    }
+                    <Chip color="primary" variant="flat">{gameVersion}</Chip>
                 </div>
 
                 <GameStatusBadge installed={installed}/>
 
                 <div className="ml-4">
                     <GameActions
-                        detail={detail}
+                        gameId={id}
                         installStatus={installStatus}
                         onInstall={handleInstall}
                     />
@@ -157,17 +100,17 @@ type InstallStatus = "installed" | "installing" | "not-installed";
 
 interface GameActionsProps {
     installStatus: InstallStatus;
-    detail: GameProfileDetail;
+    gameId: string;
     onInstall: () => void;
 }
 
-function GameActions({ installStatus, detail, onInstall }: GameActionsProps) {
+function GameActions({ installStatus, gameId, onInstall }: GameActionsProps) {
     const [launching, setLaunching] = useState(false);
     const [, nav] = useLocation();
 
     async function launch() {
         setLaunching(true);
-        const authed = await native.auth.forGame(detail.id);
+        const authed = await native.auth.forGame(gameId);
 
         if (!authed) {
             toast(AuthFailedToast, { type: "error" });
@@ -175,7 +118,7 @@ function GameActions({ installStatus, detail, onInstall }: GameActionsProps) {
         }
 
         // TODO add error handler
-        const procId = await procService.create(detail);
+        const procId = await procService.create(gameId);
         setLaunching(false);
         nav(`/monitor/${procId}`);
     }
@@ -198,7 +141,9 @@ function GameActions({ installStatus, detail, onInstall }: GameActionsProps) {
                 </Button>
         }
 
-        <GameCardDropdown/>
+        <Button isIconOnly>
+            <EllipsisIcon/>
+        </Button>
     </div>;
 }
 
@@ -209,45 +154,4 @@ function AuthFailedToast() {
         <div className="font-bold text-xl">{t("title")}</div>
         <div className="text-medium">{t("sub")}</div>
     </div>;
-}
-
-function GameCardDropdown() {
-    const { t } = useTranslation("pages", { keyPrefix: "games.game-card" });
-
-    return <Dropdown>
-        <DropdownTrigger>
-            <Button isIconOnly>
-                <EllipsisIcon/>
-            </Button>
-        </DropdownTrigger>
-        <DropdownMenu>
-            <DropdownItem key="info" startContent={<InfoIcon/>}>
-                {t("info")}
-            </DropdownItem>
-            <DropdownItem
-                color="danger"
-                className="text-danger"
-                key="remove"
-                startContent={<TrashIcon/>}
-            >
-                {t("remove")}
-            </DropdownItem>
-        </DropdownMenu>
-    </Dropdown>;
-}
-
-/**
- * Flatten the specified game profile.
- * @deprecated modify other components to use GameProfile directly.
- */
-function tellGame(game: GameProfile): GameProfileDetail {
-    return {
-        id: game.id,
-        name: game.name,
-        versionId: game.launchHint.profileId, // TODO add support for mod loader
-        gameVersion: game.virtual.baseVersion,
-        installed: game.installed,
-        modLoader: game.virtual.modLoader,
-        stable: game.virtual.type === "release"
-    };
 }

@@ -48,7 +48,15 @@ export function App() {
  */
 function MainArea() {
     return <div className="grow min-h-0 w-11/12 mb-8 mt-4 mx-auto">
-        <Routes/>
+        <Switch>
+            <Route path="/about" component={AboutView}/>
+            <Route path="/settings" component={SettingsView}/>
+            <Route path="/create-game" component={CreateGameView}/>
+            <Route path="/games" component={GamesView}/>
+            <Route path="/monitor/:procId" component={MonitorView}/>
+            <Route path="/monitor" component={MonitorListView}/>
+            <Route path="/" component={DefaultPageRedirect}/>
+        </Switch>
     </div>;
 }
 
@@ -57,21 +65,6 @@ function DefaultPageRedirect() {
     return <Redirect to={"/" + pages[0].id}/>;
 }
 
-
-/**
- * App routes.
- */
-function Routes() {
-    return <Switch>
-        <Route path="/about" component={AboutView}/>
-        <Route path="/settings" component={SettingsView}/>
-        <Route path="/create-game" component={CreateGameView}/>
-        <Route path="/games" component={GamesView}/>
-        <Route path="/monitor/:procId" component={MonitorView}/>
-        <Route path="/monitor" component={MonitorListView}/>
-        <Route path="/" component={DefaultPageRedirect}/>
-    </Switch>;
-}
 
 /**
  * Version overlay at the right bottom.

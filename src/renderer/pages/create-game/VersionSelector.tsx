@@ -1,7 +1,6 @@
 import type { VersionEntry } from "@/main/install/vanilla";
 import { useVersionManifest } from "@/renderer/services/sources";
-import grassBlock from "@assets/img/grass-block.webp";
-import snowyGrassBlock from "@assets/img/snowy-grass-block.webp";
+import { GameTypeImage } from "@components/GameTypeImage";
 import { Checkbox, Select, SelectItem, type SharedSelection, Spinner } from "@heroui/react";
 import { DotIcon } from "lucide-react";
 import React, { useState } from "react";
@@ -66,11 +65,16 @@ export function VersionSelector({ version, onChange }: VersionSelectorProps) {
 }
 
 function VersionContent({ version: { id, type, sha1, releaseTime } }: { version: VersionEntry }) {
-    const src = type === "release" ? grassBlock : snowyGrassBlock;
+    const gameType = ({
+        "release": "vanilla-release",
+        "snapshot": "vanilla-snapshot",
+        "old_alpha": "vanilla-old-alpha",
+        "old_beta": "vanilla-old-beta"
+    } as const)[type] ?? "unknown";
 
     return <div className="flex h-[64px] items-center gap-4 py-2">
         <div className="h-full rounded-full bg-content2 p-2">
-            <img src={src} alt="version" className="w-full h-full object-contain"/>
+            <GameTypeImage type={gameType}/>
         </div>
 
         <div className="flex flex-col">

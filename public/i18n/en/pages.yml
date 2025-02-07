@@ -22,8 +22,6 @@ games:
   load-list-failed: Unable to read game list.
   title: Games
   new: Create
-  load-failed: Unable to load {{name}} ({{id}}). Is it corrupted?
-  remove-failed: Delete
   auth-failed:
     title: Failed to Authenticate
     sub: Please fix that before launching.
@@ -33,11 +31,8 @@ games:
     earliest: Earliest First
     latest: Latest First
   game-card:
-    unstable: This is a snapshot
     ready: Ready
     unready: Not Installed
-    info: About
-    remove: Remove
     installed: Game installed. Have fun!
 
 monitor:
