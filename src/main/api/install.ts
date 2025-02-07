@@ -37,7 +37,7 @@ ipcMain.on("installVanilla", async (e, gameId) => {
     await vanillaInstaller.installLibraries(p, c, new Set(), { onProgress });
 
     // TODO add selection for assets installation
-    await vanillaInstaller.installAssets(p, c, "full", { onProgress });
+    await vanillaInstaller.installAssets(p, c, game.assetsLevel, { onProgress });
 
     const ng = structuredClone(game);
     ng.installed = true;

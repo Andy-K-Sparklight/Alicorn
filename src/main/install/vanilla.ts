@@ -200,10 +200,6 @@ async function installAssets(
 
     const assetIndex = await fs.readJSON(assetIndexPath) as AssetIndex;
 
-    const assetCount = Object.keys(assetIndex.objects).length;
-
-    console.debug(`Fetching ${assetCount} assets...`);
-
     const objects = Object.entries(assetIndex.objects).filter(([name]) => {
         if (level === "video-only") {
             // Filter out audio files
@@ -211,6 +207,8 @@ async function installAssets(
         }
         return true;
     });
+
+    console.debug(`Fetching ${objects.length} assets...`);
 
     const tasks: DlxDownloadRequest[] = objects.map(([, { hash, size }]) => (
         {
@@ -239,7 +237,7 @@ async function installAssets(
         console.debug(`Linking asset ${src} -> ${dst}`);
     }
 
-    console.debug(`Linking ${assetCount} assets...`);
+    console.debug(`Linking ${objects.length} assets...`);
 
     await Promise.all(progress.countPromises(
         objects.map(async ([name, { hash }]) => {
