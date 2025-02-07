@@ -3,17 +3,31 @@ create-game:
   name-input-title: 游戏名称
   version-select-title: 游戏版本
   storage-title: 存储
+  assets-title: 游戏资源
   container-select-title: 选择要共享存储空间的游戏
   container-select-placeholder: 未选取
   version-select-placeholder: 未选取
   storage-policy:
-    new: 独立分配
-    share: 与已有游戏共享
+    new:
+      label: 独立分配
+      sub: 游戏将单独安装，存档、资源包、模组等内容将与其它游戏隔离。
+    share:
+      label: 与已有游戏共享
+      sub: 与已有游戏共同安装，它们将共享存档、资源包、模组等内容。
   account-title: 帐户
   default-name: 新游戏
   loading-versions: 正在获取版本列表……
 
   account-tip: 现在需要为每个游戏重新登录帐户。在未来的版本中，将能够选择使用已有的帐户。
+
+  assets-level:
+    full:
+      label: 下载完整资源
+      sub: 获取完整的游戏体验，但文件较大。
+    video-only:
+      label: 仅下载视觉资源
+      sub: 不下载音频文件，安装速度较快，但游戏将没有声音。
+
   create-btn: 创建
   toast-created: 已创建游戏。
 

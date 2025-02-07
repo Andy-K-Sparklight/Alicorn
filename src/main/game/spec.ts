@@ -27,6 +27,11 @@ export interface GameProfile {
     versions: { game: string } & Record<string, string>;
 
     /**
+     * Assets level for downloading partial assets.
+     */
+    assetsLevel: "full" | "video-only";
+
+    /**
      * Launch hint object.
      */
     launchHint: LaunchHint;

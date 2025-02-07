@@ -33,6 +33,15 @@ export function ContainerSelector({ enabled, containerId, onChange }: ContainerS
         selectedKeys={sid ? [sid] : []}
         onSelectionChange={handleSelectionChange}
     >
-        {games.map(g => <SelectItem key={g.id}>{g.name}</SelectItem>)}
+        {
+            games.map(g =>
+                <SelectItem key={g.id} textValue={g.id}>
+                    <div className="flex items-center gap-2">
+                        <div>{g.name}</div>
+                        <div className="text-foreground-400 text-sm">{g.id}</div>
+                    </div>
+                </SelectItem>
+            )
+        }
     </Select>;
 }

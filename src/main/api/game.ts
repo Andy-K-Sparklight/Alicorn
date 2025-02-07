@@ -28,11 +28,12 @@ ipcMain.on("revealGameContent", async (_, gameId, scope) => {
 export interface CreateGameInit {
     name: string;
     profileId: string;
+    assetsLevel: "full" | "video-only";
     containerId?: string;
 }
 
 ipcMain.handle("addGame", async (_, init) => {
-    const { name, profileId, containerId } = init;
+    const { name, profileId, containerId, assetsLevel } = init;
 
     const vm = await vanillaInstaller.getManifest();
 
@@ -67,6 +68,7 @@ ipcMain.handle("addGame", async (_, init) => {
             profileId,
             pref: {} // TODO allow user to choose pref
         },
+        assetsLevel,
         time: Date.now(),
         versions: {
             game: p.id
