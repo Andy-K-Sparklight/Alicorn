@@ -33,7 +33,6 @@ create-game:
 
 games:
   loading: 正在读取游戏列表……
-  load-list-failed: 读取游戏列表失败。
   title: 游戏库
   new: 创建新游戏
   auth-failed:

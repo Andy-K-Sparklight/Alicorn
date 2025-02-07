@@ -1,6 +1,5 @@
 import type { GameProfile } from "@/main/game/spec";
 import { useGameList } from "@/renderer/services/game";
-import { Alert } from "@components/Alert";
 import { Button, ButtonGroup, Spinner, Tooltip } from "@heroui/react";
 import { GameCardDisplay } from "@pages/games/GameCard";
 import { ArrowDownAZIcon, ArrowUpAZIcon, ClockArrowDownIcon, ClockArrowUpIcon, PlusIcon } from "lucide-react";
@@ -102,14 +101,4 @@ function LoadingSpinner() {
         <Spinner/>
         {t("loading")}
     </div>;
-}
-
-function FailedAlert() {
-    const { t } = useTranslation("pages", { keyPrefix: "games" });
-    return <Alert
-        color="danger"
-        className="w-11/12 mx-auto"
-        classNames={{ title: "font-bold" }}
-        title={t("load-list-failed")}
-    />;
 }

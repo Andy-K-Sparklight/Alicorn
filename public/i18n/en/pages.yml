@@ -19,7 +19,6 @@ create-game:
 
 games:
   loading: Reading game list...
-  load-list-failed: Unable to read game list.
   title: Games
   new: Create
   auth-failed:
