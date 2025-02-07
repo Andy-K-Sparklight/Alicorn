@@ -15,6 +15,7 @@ export default defineConfig(({ command }) => {
         appType: "mpa",
         base: "",
         publicDir: path.resolve(import.meta.dirname, "..", "public"),
+        cacheDir: path.resolve(import.meta.dirname, "..", ".vite-cache"),
         build: {
             // Output directory will be specified when building
             emptyOutDir: true,

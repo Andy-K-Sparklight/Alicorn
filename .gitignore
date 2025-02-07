@@ -129,3 +129,4 @@ coverage
 
 # Scratch Files
 .scratch/
+.vite-cache/
