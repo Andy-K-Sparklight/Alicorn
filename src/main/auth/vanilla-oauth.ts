@@ -47,6 +47,7 @@ async function browserLogin(part: string): Promise<string> {
             // Show the window if we cannot extract the code at once
             console.debug("The initial page does not contain the code, showing for user interactions.");
             w.show();
+            isShowing = true;
         }
     });
 
