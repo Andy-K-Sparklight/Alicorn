@@ -162,7 +162,9 @@ async function main() {
     }
 
     // Delay update check after app initialization
-    await update.runUpdate();
+    if (conf().app.hotUpdate) {
+        await update.runUpdate();
+    }
 }
 
 function registerAppProtocol() {

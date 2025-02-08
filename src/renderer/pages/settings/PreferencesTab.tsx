@@ -1,9 +1,9 @@
 import { i18n } from "@/renderer/i18n/i18n";
 import { themeManager, useTheme } from "@/renderer/theme";
 import { Divider } from "@heroui/react";
-import { SelectEntry, TextEntry } from "@pages/settings/SettingsEntry";
+import { OnOffEntry, SelectEntry, TextEntry } from "@pages/settings/SettingsEntry";
 import { useConfig } from "@pages/settings/use-config";
-import { FileUserIcon, LanguagesIcon, PaletteIcon } from "lucide-react";
+import { FileUserIcon, HardDriveUploadIcon, LanguagesIcon, PaletteIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -45,6 +45,15 @@ export function PreferencesTab() {
             value={i18next.language}
             onChange={lang => i18next.changeLanguage(lang)}
             items={i18n.getAvailableLanguages()}
+        />
+
+        <Divider/>
+
+        <OnOffEntry
+            icon={HardDriveUploadIcon}
+            id="pref.hot-update"
+            value={config.app.hotUpdate}
+            onChange={makeReduce((c, v) => c.app.hotUpdate = v)}
         />
     </>;
 }

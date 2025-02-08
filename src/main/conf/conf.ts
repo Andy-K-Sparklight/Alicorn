@@ -212,7 +212,12 @@ const DEFAULT_CONFIG = {
              * Window position.
              */
             pos: [] as number[]
-        }
+        },
+
+        /**
+         * Enable hot update.
+         */
+        hotUpdate: true
     }
 };
 

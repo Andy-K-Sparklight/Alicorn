@@ -97,6 +97,11 @@ settings:
         items:
           zh-CN: 简体中文
           en: English
+      hot-update:
+        title: 实时更新
+        sub: |-
+          自动获取和安装可用的更新。
+          更新包很小，这通常不会影响游戏下载和运行。
 
     store:
       store-path:
