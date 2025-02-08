@@ -1,9 +1,9 @@
 import { type RemoteGameProcess, type RemoteGameStatus, useGameProcList } from "@/renderer/services/proc";
+import { useNav } from "@/renderer/util/nav";
 import { GameTypeImage } from "@components/GameTypeImage";
 import { Button, Card, CardBody, Chip } from "@heroui/react";
 import { ArrowRightIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "wouter";
 
 export function MonitorListView() {
     const procs = useGameProcList();
@@ -36,7 +36,7 @@ function StatusChip({ status }: { status: RemoteGameStatus }) {
 
 function MonitorItem({ proc }: { proc: RemoteGameProcess }) {
     const { profile: { type, name }, status } = proc;
-    const [, nav] = useLocation();
+    const nav = useNav();
 
     function revealProc() {
         nav(`/monitor/${proc.id}`);

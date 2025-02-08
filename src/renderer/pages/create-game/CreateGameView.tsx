@@ -1,3 +1,4 @@
+import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/Alert";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { Button, Input } from "@heroui/react";
@@ -6,7 +7,6 @@ import { VersionSelector } from "@pages/create-game/VersionSelector";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { useLocation } from "wouter";
 
 
 /**
@@ -22,7 +22,7 @@ export function CreateGameView() {
     const [assetsLevel, setAssetsLevel] = useState<"full" | "video-only">("full");
 
     const [creating, setCreating] = useState(false);
-    const [, nav] = useLocation();
+    const nav = useNav();
 
     const valid = gameVersion && (!shareContainer || (shareContainer && containerId));
 

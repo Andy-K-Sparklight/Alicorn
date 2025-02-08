@@ -1,6 +1,7 @@
 import type { GameProfile } from "@/main/game/spec";
 import { remoteInstaller, useInstallProgress } from "@/renderer/services/install";
 import { procService } from "@/renderer/services/proc";
+import { useNav } from "@/renderer/util/nav";
 import { GameTypeImage } from "@components/GameTypeImage";
 import { Button, Card, CardBody, Chip, Tooltip } from "@heroui/react";
 import { clsx } from "clsx";
@@ -8,7 +9,6 @@ import { CheckCircleIcon, CirclePlayIcon, CloudDownloadIcon, DotIcon, DownloadIc
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { useLocation } from "wouter";
 
 interface GameCardDisplayProps {
     game: GameProfile;
@@ -106,7 +106,7 @@ interface GameActionsProps {
 
 function GameActions({ installStatus, gameId, onInstall }: GameActionsProps) {
     const [launching, setLaunching] = useState(false);
-    const [, nav] = useLocation();
+    const nav = useNav();
 
     async function launch() {
         setLaunching(true);

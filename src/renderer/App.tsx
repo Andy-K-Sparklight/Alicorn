@@ -1,5 +1,6 @@
 import { useAutoFontClass } from "@/renderer/i18n/i18n";
 import { themeManager, useTheme } from "@/renderer/theme";
+import { useNav } from "@/renderer/util/nav";
 import { Navigator } from "@components/Navigator";
 import { HeroUIProvider } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
@@ -11,14 +12,14 @@ import { pages } from "@pages/pages";
 import { SettingsView } from "@pages/settings/SettingsView";
 import React from "react";
 import { ToastContainer } from "react-toastify";
-import { Redirect, Route, Switch, useLocation } from "wouter";
+import { Redirect, Route, Switch } from "wouter";
 import pkg from "~/package.json";
 
 /**
  * App entry.
  */
 export function App() {
-    const [, nav] = useLocation();
+    const nav = useNav();
 
     const { theme } = useTheme();
     useAutoFontClass();

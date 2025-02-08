@@ -1,6 +1,7 @@
 import type { GameCoreType } from "@/main/game/spec";
 import type { GameProcessLog } from "@/main/launch/log-parser";
 import { type RemoteGameProcess, type RemoteGameStatus, useGameProcDetail } from "@/renderer/services/proc";
+import { useNav } from "@/renderer/util/nav";
 import { GameTypeImage } from "@components/GameTypeImage";
 import { Button, Card, CardBody, Popover, PopoverContent, PopoverTrigger, Tab, Tabs } from "@heroui/react";
 import { clsx } from "clsx";
@@ -16,7 +17,7 @@ import {
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { VList, type VListHandle } from "virtua";
-import { useLocation, useParams } from "wouter";
+import { useParams } from "wouter";
 
 export function MonitorView() {
     const { procId } = useParams<{ procId: string }>();
@@ -209,7 +210,7 @@ const MonitorActionsMemo = React.memo(MonitorActions);
 function MonitorActions({ procId, gameId, status }: MonitorActionsProps) {
     const { t } = useTranslation("pages", { keyPrefix: "monitor.actions" });
     const [stopConfirmOpen, setStopConfirmOpen] = useState(false);
-    const [, nav] = useLocation();
+    const nav = useNav();
 
     function handleStopAction() {
         native.launcher.stop(procId);

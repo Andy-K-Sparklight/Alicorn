@@ -1,11 +1,11 @@
 import type { GameProfile } from "@/main/game/spec";
 import { useGameList } from "@/renderer/services/game";
+import { useNav } from "@/renderer/util/nav";
 import { Button, ButtonGroup, Spinner, Tooltip } from "@heroui/react";
 import { GameCardDisplay } from "@pages/games/GameCard";
 import { ArrowDownAZIcon, ArrowUpAZIcon, ClockArrowDownIcon, ClockArrowUpIcon, PlusIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLocalStorage } from "react-use";
-import { useLocation } from "wouter";
 
 /**
  * The index page of game launching, listing user-defined games for playing.
@@ -13,7 +13,8 @@ import { useLocation } from "wouter";
 export function GamesView() {
     const games = useGameList();
     const [sortMethod, setSortMethod] = useLocalStorage<SortMethod>("games.sort-method", "latest");
-    const [, nav] = useLocation();
+    const nav = useNav();
+
     const { t } = useTranslation("pages", { keyPrefix: "games" });
 
     if (!games) {
