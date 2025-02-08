@@ -108,6 +108,10 @@ function GameActions({ installStatus, gameId, onInstall }: GameActionsProps) {
     const [launching, setLaunching] = useState(false);
     const nav = useNav();
 
+    function handleShowDetails() {
+        nav(`/game-detail/${gameId}`);
+    }
+
     async function launch() {
         setLaunching(true);
         const authed = await native.auth.forGame(gameId);
@@ -141,7 +145,7 @@ function GameActions({ installStatus, gameId, onInstall }: GameActionsProps) {
                 </Button>
         }
 
-        <Button isIconOnly>
+        <Button isIconOnly onPress={handleShowDetails}>
             <EllipsisIcon/>
         </Button>
     </div>;

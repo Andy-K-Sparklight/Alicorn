@@ -48,6 +48,26 @@ games:
     unready: 需要安装
     installed: 已安装游戏，开始游玩吧！
 
+game-detail:
+  header:
+    installed: 已安装
+    not-installed: 未安装
+    container: 位于空间 {{containerId}} 中
+    profile: 版本 {{profileId}}
+    reveal: 打开游戏目录
+  manage:
+    advanced:
+      title: 高级
+      unlink:
+        label: 移除游戏
+        sub: 将该游戏从游戏列表中移除，但保留其数据，可以在稍后将其重新导入。
+        btn: 移除游戏
+        confirm:
+          title: 移除此游戏？
+          sub: 将从游戏列表中删除此游戏。
+          btn: 我知道我在做什么！
+
+
 monitor:
   title: 运行中
   log-view: 游戏日志

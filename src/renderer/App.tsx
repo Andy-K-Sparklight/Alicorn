@@ -5,6 +5,7 @@ import { Navigator } from "@components/Navigator";
 import { HeroUIProvider } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
 import { CreateGameView } from "@pages/create-game/CreateGameView";
+import { GameDetailView } from "@pages/game-detail/GameDetailView";
 import { GamesView } from "@pages/games/GamesView";
 import { MonitorListView } from "@pages/monitor-list/MonitorListView";
 import { MonitorView } from "@pages/monitor/MonitorView";
@@ -54,6 +55,7 @@ function MainArea() {
             <Route path="/settings" component={SettingsView}/>
             <Route path="/create-game" component={CreateGameView}/>
             <Route path="/games" component={GamesView}/>
+            <Route path="/game-detail/:gameId" component={GameDetailView}/>
             <Route path="/monitor/:procId" component={MonitorView}/>
             <Route path="/monitor" component={MonitorListView}/>
             <Route path="/" component={DefaultPageRedirect}/>

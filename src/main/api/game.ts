@@ -13,7 +13,7 @@ ipcMain.handle("listGames", () => reg.games.getAll());
 ipcMain.handle("removeGame", (_, gameId) => games.remove(gameId));
 ipcMain.handle("getGameProfile", (_, id) => reg.games.get(id));
 
-const allowedContentScopes = new Set(["resourcepacks"]);
+const allowedContentScopes = new Set(["resourcepacks", "."]);
 
 ipcMain.on("revealGameContent", async (_, gameId, scope) => {
     if (!allowedContentScopes.has(scope)) return;

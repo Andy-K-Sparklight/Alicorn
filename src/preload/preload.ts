@@ -81,6 +81,14 @@ const native = {
         },
 
         /**
+         * Removes the specified game.
+         * @param gameId
+         */
+        remove(gameId: string): Promise<void> {
+            return ipcRenderer.invoke("removeGame", gameId);
+        },
+
+        /**
          * Adds the specified game to registry.
          */
         add(game: CreateGameInit): Promise<void> {
