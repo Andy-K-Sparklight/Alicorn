@@ -5,6 +5,7 @@ import { aria2 } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
 import { registry } from "@/main/registry/registry";
 import { getOSName } from "@/main/sys/os";
+import { update } from "@/main/sys/update";
 import { windowControl } from "@/main/sys/window-control";
 import { app, BrowserWindow, Menu, net, protocol } from "electron";
 import events from "node:events";
@@ -159,6 +160,9 @@ async function main() {
     if (import.meta.env.AL_TEST) {
         void runInstrumentedTest();
     }
+
+    // Delay update check after app initialization
+    await update.runUpdate();
 }
 
 function registerAppProtocol() {

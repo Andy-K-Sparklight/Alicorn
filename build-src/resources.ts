@@ -34,7 +34,7 @@ async function emitPackageJson(outDir: string) {
     const output = {
         name: src.name,
         author: src.author,
-        main: "main.js",
+        main: "boot.js",
         type: "module",
         version: src.version
     };

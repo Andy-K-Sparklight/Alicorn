@@ -58,7 +58,8 @@ export async function build(variant: BuildVariant) {
     const mainBuildOptions: BuildOptions = {
         entryPoints: {
             main: "src/main/main.ts",
-            "hash-worker": "src/main/security/hash-worker.ts"
+            "hash-worker": "src/main/security/hash-worker.ts",
+            boot: "src/main/sys/boot.ts"
         },
         plugins: [
             TsconfigPathsPlugin({ tsconfig: "./tsconfig.json" })

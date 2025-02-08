@@ -146,7 +146,7 @@ export const paths = {
      *
      * On some platforms this path is not writable. Avoid making changes to it.
      */
-    app: createResolver(() => app.getAppPath()),
+    app: createResolver(() => import.meta.dirname),
 
     /**
      * Stores temp files.
