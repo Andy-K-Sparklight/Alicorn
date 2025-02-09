@@ -3,7 +3,7 @@
     "name": "alicorn-launcher",
     "author": "skjsjhb",
     "codename": "Amazing Grace",
-    "version": "2.0.0-alpha",
+    "version": "2.0.0-beta",
     "type": "module",
     "scripts": {
         "dev": "bun build.ts",

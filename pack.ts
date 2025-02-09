@@ -54,8 +54,8 @@ for (const platform of platforms) {
         }
 
         if (platform === "darwin") {
-            consola.start(`Creating DMG image from ${outPath}`);
             if (os.platform() === "darwin") {
+                consola.start(`Creating DMG image from ${outPath}`);
                 await createDMG({
                     appPath: path.join(outPath, "Alicorn Launcher.app"),
                     name: "Alicorn Launcher",
