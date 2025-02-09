@@ -30,10 +30,11 @@ export interface CreateGameInit {
     profileId: string;
     assetsLevel: "full" | "video-only";
     containerId?: string;
+    containerShouldLink: boolean; // Only present when creating dedicated container
 }
 
 ipcMain.handle("addGame", async (_, init) => {
-    const { name, profileId, containerId, assetsLevel } = init;
+    const { name, profileId, containerId, assetsLevel, containerShouldLink } = init;
 
     const vm = await vanillaInstaller.getManifest();
 
@@ -46,7 +47,9 @@ ipcMain.handle("addGame", async (_, init) => {
         const spec: ContainerSpec = {
             id: cid,
             root: paths.game.to(cid),
-            flags: {} // TODO add support for linking
+            flags: {
+                link: containerShouldLink
+            }
         };
         reg.containers.add(cid, spec);
     }

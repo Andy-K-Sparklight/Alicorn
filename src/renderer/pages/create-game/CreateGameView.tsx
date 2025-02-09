@@ -1,7 +1,7 @@
 import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/Alert";
 import { Radio, RadioGroup } from "@heroui/radio";
-import { Button, Input } from "@heroui/react";
+import { Button, Input, Switch } from "@heroui/react";
 import { ContainerSelector } from "@pages/create-game/ContainerSelector";
 import { VersionSelector } from "@pages/create-game/VersionSelector";
 import React, { useState } from "react";
@@ -18,6 +18,7 @@ export function CreateGameView() {
     const [gameName, setGameName] = useState(t("default-name"));
     const [gameVersion, setGameVersion] = useState<string>();
     const [containerId, setContainerId] = useState<string>();
+    const [containerShouldLink, setContainerShouldLink] = useState(true);
     const [shareContainer, setShareContainer] = useState(false);
     const [assetsLevel, setAssetsLevel] = useState<"full" | "video-only">("full");
 
@@ -34,7 +35,8 @@ export function CreateGameView() {
                 name: gameName,
                 containerId,
                 profileId: gameVersion,
-                assetsLevel
+                assetsLevel,
+                containerShouldLink
             });
             setCreating(false);
             toast(t("toast-created"), { type: "success" });
@@ -57,7 +59,7 @@ export function CreateGameView() {
                 </div>
 
 
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-6">
                     <div className="font-bold text-xl">{t("storage-title")}</div>
 
                     <RadioGroup
@@ -66,13 +68,25 @@ export function CreateGameView() {
                     >
                         {
                             ["new", "share"].map(lv =>
-                                <Radio key={lv} value={lv} description={t(`storage-policy.${lv}.sub`)}>
-                                    {t(`storage-policy.${lv}.label`)}
-                                </Radio>
+                                <div key={lv} className="flex flex-col gap-2">
+                                    <Radio value={lv} description={t(`storage-policy.${lv}.sub`)}>
+                                        {t(`storage-policy.${lv}.label`)}
+                                    </Radio>
+                                </div>
                             )
                         }
                     </RadioGroup>
-
+                    <Switch
+                        size="sm"
+                        isSelected={containerShouldLink}
+                        onValueChange={setContainerShouldLink}
+                        isDisabled={shareContainer}
+                    >
+                        <div className="flex flex-col">
+                            <div className="text-medium">{t("container-link.label")}</div>
+                            <div className="text-foreground-400 text-sm">{t("container-link.sub")}</div>
+                        </div>
+                    </Switch>
                     <ContainerSelector enabled={shareContainer} containerId={containerId} onChange={setContainerId}/>
                 </div>
 
