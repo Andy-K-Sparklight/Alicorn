@@ -1,13 +1,20 @@
-import type { GameCoreType } from "@/main/game/spec";
+import type { GameCoreType, GameProfile } from "@/main/game/spec";
 import { useGameList } from "@/renderer/services/game";
 import { useNav } from "@/renderer/util/nav";
 import { ConfirmPopup } from "@components/ConfirmPopup";
 import { GameTypeImage } from "@components/GameTypeImage";
 import { Button, Tab, Tabs } from "@heroui/react";
 import { DotIcon, FolderIcon, UnlinkIcon } from "lucide-react";
-import React from "react";
+import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "wouter";
+
+
+const GameProfileContext = React.createContext<GameProfile | null>(null);
+
+function useGameProfile(): GameProfile {
+    return useContext(GameProfileContext)!;
+}
 
 export function GameDetailView() {
     const { gameId } = useParams<{ gameId: string }>();
@@ -20,19 +27,21 @@ export function GameDetailView() {
     const { name, installed, type, launchHint: { containerId, profileId } } = game;
 
     return <div className="w-full h-full flex flex-col gap-4">
-        <div>
-            <Header
-                id={gameId}
-                name={name}
-                installed={installed}
-                containerId={containerId}
-                profileId={profileId}
-                type={type}
-            />
-        </div>
-        <div className="grow min-h-0">
-            <ManagePanel gameId={gameId}/>
-        </div>
+        <GameProfileContext.Provider value={game}>
+            <div>
+                <Header
+                    id={gameId}
+                    name={name}
+                    installed={installed}
+                    containerId={containerId}
+                    profileId={profileId}
+                    type={type}
+                />
+            </div>
+            <div className="grow min-h-0">
+                <ManagePanel/>
+            </div>
+        </GameProfileContext.Provider>
     </div>;
 }
 
@@ -81,11 +90,11 @@ function Header({ id, name, installed, containerId, profileId, type }: HeaderPro
     </div>;
 }
 
-function ManagePanel({ gameId }: { gameId: string }) {
+function ManagePanel() {
     const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage" });
 
     const tabs = {
-        advanced: <AdvancedPanel gameId={gameId}/>
+        advanced: <AdvancedPanel/>
     };
 
     return <div className="w-5/6 mx-auto h-full">
@@ -105,29 +114,34 @@ function ManagePanel({ gameId }: { gameId: string }) {
     </div>;
 }
 
-function AdvancedPanel({ gameId }: { gameId: string }) {
+function AdvancedPanel() {
     const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage.advanced" });
     const nav = useNav();
+    const { id, name } = useGameProfile();
 
     async function handleUnlink() {
-        await native.game.remove(gameId);
+        await native.game.remove(id);
         nav("/games");
     }
 
     return <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-2 items-start">
-            <div className="font-bold text-lg">{t("unlink.label")}</div>
-            <div className="text-sm text-foreground-400">{t("unlink.sub")}</div>
+        <div className="flex items-center">
+            <div className="grow flex flex-col gap-1">
+                <div className="font-bold text-lg">{t("unlink.label")}</div>
+                <div className="text-sm text-foreground-400">{t("unlink.sub")}</div>
+            </div>
 
-            <ConfirmPopup
-                placement="right"
-                title={t("unlink.confirm.title")}
-                sub={t("unlink.confirm.sub")}
-                btnText={t("unlink.confirm.btn")}
-                onConfirm={handleUnlink}
-            >
-                <Button startContent={<UnlinkIcon/>}>{t("unlink.btn")}</Button>
-            </ConfirmPopup>
+            <div>
+                <ConfirmPopup
+                    placement="right"
+                    title={t("unlink.confirm.title")}
+                    sub={t("unlink.confirm.sub")}
+                    btnText={t("unlink.confirm.btn")}
+                    onConfirm={handleUnlink}
+                >
+                    <Button startContent={<UnlinkIcon/>}>{t("unlink.btn", { name })}</Button>
+                </ConfirmPopup>
+            </div>
         </div>
     </div>;
 }

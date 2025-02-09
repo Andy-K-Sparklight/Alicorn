@@ -61,7 +61,7 @@ game-detail:
       unlink:
         label: 移除游戏
         sub: 将该游戏从游戏列表中移除，但保留其数据，可以在稍后将其重新导入。
-        btn: 移除游戏
+        btn: 移除「{{name}}」
         confirm:
           title: 移除此游戏？
           sub: 将从游戏列表中删除此游戏。
