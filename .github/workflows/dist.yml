@@ -1,0 +1,49 @@
+name: Distribution
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.2.2"
+      - name: Install Dependencies
+        run: bun install
+      - name: Check Types
+        run: bun type-check
+      - name: Pack
+        run: bun pack
+      - name: List Contents
+        run: ls -lh --color=auto ./dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: win32-x64
+          path: "./dist/Alicorn Launcher-win32-x64.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: win32-arm64
+          path: "./dist/Alicorn Launcher-win32-arm64.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: darwin-x64
+          path: "./dist/Alicorn Launcher-darwin-x64.dmg"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: darwin-arm64
+          path: "./dist/Alicorn Launcher-darwin-arm64.dmg"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-x64
+          path: "./dist/Alicorn Launcher-linux-x64.tar.gz"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-arm64
+          path: "./dist/Alicorn Launcher-linux-arm64.tar.gz"

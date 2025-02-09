@@ -2,9 +2,11 @@
  * Packages the application for supported platforms.
  */
 import { type Options, packager } from "@electron/packager";
-import { zip } from "compressing";
+import { tgz, zip } from "compressing";
 import consola from "consola";
+import { createDMG } from "electron-installer-dmg";
 import fs from "fs-extra";
+import os from "node:os";
 import path from "node:path";
 import { build } from "~/build-src/run-build";
 import pkg from "~/package.json";
@@ -12,9 +14,11 @@ import pkg from "~/package.json";
 const platforms = ["win32", "darwin", "linux"];
 const arches = ["x64", "arm64"];
 
+
 consola.info(`Start cross-packaging for ${platforms.join(",")} x ${arches.join(",")}`);
 
-await fs.ensureDir(path.resolve(import.meta.dirname, "dist"));
+const outRoot = path.resolve(import.meta.dirname, "dist");
+await fs.emptyDir(outRoot);
 
 for (const platform of platforms) {
     for (const arch of arches) {
@@ -22,8 +26,8 @@ for (const platform of platforms) {
         await build({ mode: "production", platform, arch });
 
         consola.start(`hot-update bundle: ${platform}-${arch}...`);
-        const src = path.join(import.meta.dirname, "build", "production");
-        await zip.compressDir(src, path.resolve(import.meta.dirname, "dist", `app-bundle-${platform}-${arch}.zip`), { ignoreBase: true });
+        const appRoot = path.join(import.meta.dirname, "build", "production");
+        await zip.compressDir(appRoot, path.resolve(outRoot, `app-bundle-${platform}-${arch}.zip`), { ignoreBase: true });
 
         consola.start(`pack: ${platform}-${arch}...`);
         const opts = {
@@ -35,15 +39,38 @@ for (const platform of platforms) {
             appCategoryType: "public.app-category.utilities",
             appVersion: pkg.version,
             icon: path.resolve(import.meta.dirname, "resources", "icons", "icon"),
-            dir: path.resolve(import.meta.dirname, "build", "production"),
+            dir: appRoot,
             arch: arch,
             platform: platform,
-            out: path.resolve(import.meta.dirname, "dist"),
+            out: outRoot,
             overwrite: true,
             ignore: [".local", "node.napi.node"]
         } satisfies Options;
 
-        await packager(opts);
+        const [outPath] = await packager(opts);
+
+        if (platform === "win32") {
+            consola.start(`Creating zip archive from ${outPath}`);
+            await zip.compressDir(outPath, outPath + ".zip", { ignoreBase: true });
+        }
+
+        if (platform === "darwin") {
+            consola.start(`Creating DMG image from ${outPath}`);
+            if (os.platform() === "darwin") {
+                await createDMG({
+                    appPath: path.join(outPath, "Alicorn Launcher.app"),
+                    name: "Alicorn Launcher",
+                    out: outPath + ".dmg"
+                });
+            } else {
+                consola.log("DMG images can only be created on macOS, skipped.");
+            }
+        }
+
+        if (platform === "linux") {
+            consola.start(`Creating tar.gz package from ${outPath}`);
+            await tgz.compressDir(outPath, outPath + ".tar.gz", { ignoreBase: true });
+        }
     }
 }
 
