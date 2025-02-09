@@ -80,17 +80,26 @@ Architectures:
 
 ### Prerequisites
 
-You can build Alicorn for preview on any platform it runs on.
-However, `windows-arm64` and `linux-arm64` cannot be used as the host when packaging.
+You can build Alicorn for **preview** on any platform it runs on.
+For **packaging**, however, there are several limitations:
+
+- ARM64 platforms other than macOS cannot be used for packaging.
+- DMG images can only be generated on macOS. It's skipped on other platforms.
 
 The following tools are required:
 
 - Bun (v1.1 or later)
 
+  > [!IMPORTANT]
+  > There is a known bug with Bun 1.2.1 and 1.2.2 that causes Vite to fail the build process.
+  > Avoid these versions when installing.
+
   We use Bun to run our build tools for performance reasons.
   The Bun version for building will not affect the Node.js version bundled with Electron.
 
 - Git
+
+- Node.js (v22 or later), when packaging. (**NOT** needed for development)
 
 - Wine, when building on non-Windows platforms.
 
@@ -116,7 +125,7 @@ bun install
 > See `config.ts` for details.
 
 > [!IMPORTANT]
-> Additional files (know as "vendors") may need to be downloaded during the build process.
+> Additional files (known as "vendors") may need to be downloaded during the build process.
 > Keep online when building.
 
 Preview for production:
@@ -134,13 +143,14 @@ bun dev
 
 ### Create Packaged Binaries
 
-Run the following command to create unzipped packages for all supported platforms:
-
 ```shell
-bun dist
+npm run dist
 ```
 
-The output files locate at `out`.
+The output files locate at `dist`, including:
+
+- Unpacked (directory) files of the app.
+- Corresponding archives (`.dmg` must be built on macOS).
 
 ## License
 
