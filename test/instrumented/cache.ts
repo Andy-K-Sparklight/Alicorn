@@ -14,5 +14,12 @@ export async function checkCache() {
         const dat = await fs.readFile("reuse-data.txt");
 
         assert(dat.toString() === "ciallo, world", "Reused files should have the same content");
+
+        try {
+            await fs.writeFile("reuse-data.txt", "this should not be written");
+        } catch {}
+
+        const dat1 = await fs.readFile("reuse-data.txt");
+        assert(dat1.toString() === "ciallo, world", "Reused files should be readonly");
     });
 }

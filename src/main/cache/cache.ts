@@ -108,6 +108,7 @@ async function deploy(target: string, sha1: string, link: boolean): Promise<bool
         await fs.remove(target);
         if (link) {
             await fs.link(getCachePath(sha1), target);
+            await fs.chmod(target, 0o555);
         } else {
             await fs.copy(getCachePath(sha1), target);
         }
@@ -137,6 +138,7 @@ async function link(fp: string, sha1?: string) {
                 await fs.remove(fp);
                 await fs.ensureDir(path.dirname(fp));
                 await fs.link(ep, fp);
+                await fs.chmod(fp, 0o555);
                 console.debug(`File compacted: ${ep} -> ${fp}`);
                 return;
             }
@@ -146,6 +148,7 @@ async function link(fp: string, sha1?: string) {
         await fs.remove(ep); // Delete corrupted cache, if any
         await fs.ensureDir(path.dirname(ep));
         await fs.link(fp, ep); // Link backward
+        await fs.chmod(fp, 0o555);
         await signFile(sha1);
     } catch (e) {
         console.warn(`Unable to link file ${fp}: ${e}`);
