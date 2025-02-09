@@ -86,8 +86,7 @@ export async function build(variant: BuildVariant) {
     await processResources(cfg);
 
     consola.start("build: main");
-    const buildResult = await esbuild.build(mainBuildOptions);
-    await fs.outputJSON(path.join(outputDir, ".local/build.meta.json"), buildResult.metafile);
+    await esbuild.build(mainBuildOptions);
 
     consola.start("build: preload");
     await esbuild.build(preloadBuildOptions);
