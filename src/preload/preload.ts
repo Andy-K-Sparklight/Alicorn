@@ -89,6 +89,13 @@ const native = {
         },
 
         /**
+         * Renames the game.
+         */
+        rename(gameId: string, newName: string): Promise<void> {
+            return ipcRenderer.invoke("renameGame", gameId, newName);
+        },
+
+        /**
          * Adds the specified game to registry.
          */
         add(game: CreateGameInit): Promise<void> {

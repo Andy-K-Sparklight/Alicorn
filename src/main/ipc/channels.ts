@@ -43,5 +43,6 @@ export type IpcCommands = {
     launch: (id: string) => LaunchGameResult;
     gameAuth: (gameId: string) => boolean;
     addGame: (game: CreateGameInit) => void;
+    renameGame: (gameId: string, newName: string) => void;
     getVersionManifest: () => VersionManifest;
 }

@@ -82,6 +82,15 @@ ipcMain.handle("addGame", async (_, init) => {
     games.add(g);
 });
 
+ipcMain.handle("renameGame", (_, id, name) => {
+    const g = reg.games.get(id);
+    if (g) {
+        const ng = structuredClone(g);
+        ng.name = name;
+        games.add(ng);
+    }
+});
+
 function genGameId(): string {
     let i = 1;
     while (true) {

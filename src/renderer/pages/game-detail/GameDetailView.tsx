@@ -2,9 +2,10 @@ import type { GameCoreType, GameProfile } from "@/main/game/spec";
 import { useGameList } from "@/renderer/services/game";
 import { useNav } from "@/renderer/util/nav";
 import { ConfirmPopup } from "@components/ConfirmPopup";
+import { Editable } from "@components/Editable";
 import { GameTypeImage } from "@components/GameTypeImage";
 import { Button, Tab, Tabs } from "@heroui/react";
-import { DotIcon, FolderIcon, UnlinkIcon } from "lucide-react";
+import { DotIcon, EditIcon, FolderIcon, UnlinkIcon } from "lucide-react";
 import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "wouter";
@@ -61,13 +62,30 @@ function Header({ id, name, installed, containerId, profileId, type }: HeaderPro
         native.game.reveal(id, ".");
     }
 
+    function handleNameChange(newName: string) {
+        console.log(`Setting game name to ${newName}`);
+        void native.game.rename(id, newName);
+    }
+
     return <div className="p-4 h-32 flex gap-8">
         <div className="h-full rounded-full bg-content2 p-4">
             <GameTypeImage type={type}/>
         </div>
 
         <div className="flex flex-col gap-1 justify-center grow">
-            <div className="font-bold text-2xl">{name}</div>
+            <Editable
+                value={name}
+                onValueChange={handleNameChange}
+                inputProps={{ classNames: { input: "text-xl" } }}
+            >
+                <div className="flex gap-2 items-center font-bold text-2xl">
+                    {name}
+                    <span className="text-foreground-400 cursor-pointer">
+                        <EditIcon/>
+                    </span>
+                </div>
+            </Editable>
+
             <div className="flex text-foreground-400 items-center">
                 {id}
                 <DotIcon/>
