@@ -17,6 +17,7 @@ export interface RemoteGameProcess {
     pid: number;
     status: RemoteGameStatus;
     profile: GameProfile;
+    memUsage: number[];
 
     outputs: {
         stdout: string[];
@@ -60,6 +61,7 @@ async function create(id: string): Promise<string> {
         id: meta.id,
         pid: meta.pid,
         profile,
+        memUsage: [],
         status: "running",
         outputs: {
             stdout: [],
@@ -102,6 +104,12 @@ async function create(id: string): Promise<string> {
                 const log = e.data.log;
                 np.logs.push(log);
                 clearLogs(np.logs);
+                break;
+            case "memUsageUpdate":
+                np.memUsage.push(e.data.mem);
+                if (np.memUsage.length > 30) {
+                    np.memUsage.splice(0, 10);
+                }
                 break;
         }
 

@@ -1,9 +1,11 @@
 import { conf } from "@/main/conf/conf";
 import { type GameProcessLog, logParser } from "@/main/launch/log-parser";
+import { command } from "@/main/util/command";
 import { nanoid } from "nanoid";
 import * as child_process from "node:child_process";
 import { ChildProcess } from "node:child_process";
 import EventEmitter from "node:events";
+import os from "node:os";
 import { Readable } from "node:stream";
 import type TypedEmitter from "typed-emitter";
 
@@ -37,6 +39,11 @@ type GameProcessEvents = {
      * Game log object parsed and received.
      */
     log: (log: GameProcessLog) => void
+
+    /**
+     * Memory usage value updated.
+     */
+    memUsageUpdate: (bytes: number) => void;
 }
 
 type GameProcessStatus = "created" | "running" | "exited" | "crashed"
@@ -51,6 +58,7 @@ export class GameProcess {
     };
     logs: GameProcessLog[] = [];
     #proc: ChildProcess | null = null;
+    #memMonitTimer: NodeJS.Timer | null = null;
 
     constructor(bin: string, args: string[], gameDir: string) {
         const proc = child_process.spawn(bin, args, {
@@ -116,6 +124,14 @@ export class GameProcess {
 
         collect(proc.stdout, this.outputs.stdout, "stdout");
         collect(proc.stderr, this.outputs.stderr, "stderr");
+
+        this.#memMonitTimer = setInterval(async () => {
+            try {
+                const m = await this.getMemoryUsage();
+                this.emitter.emit("memUsageUpdate", m);
+            } catch {
+            }
+        }, 1000);
     }
 
     /**
@@ -133,10 +149,34 @@ export class GameProcess {
     }
 
     detach() {
+        if (this.#memMonitTimer) {
+            clearInterval(this.#memMonitTimer);
+        }
         this.#proc?.stdout?.removeAllListeners();
         this.#proc?.stderr?.removeAllListeners();
         this.emitter.removeAllListeners();
         this.#proc = null;
+    }
+
+    /**
+     * Queries the estimated memory usage of the game.
+     *
+     * There is not a single authoritative source of how much RAM a process really uses.
+     * We take working set on Windows and RSS on Linux-like systems for what's commonly known as "memory usage".
+     */
+    async getMemoryUsage(): Promise<number> {
+        if (!this.#proc) return -1;
+
+        let cmdLine: string;
+
+        if (os.platform() === "win32") {
+            cmdLine = `wmic process where processid=${this.#proc.pid} get WorkingSetSize`;
+        } else {
+            cmdLine = `ps -o rss= ${this.#proc.pid}`;
+        }
+
+        const str = await command.run(cmdLine);
+        return parseInt(str.match(/[1-9][0-9]*/)?.[0] ?? "0", 10) || 0;
     }
 }
 

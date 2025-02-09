@@ -4,7 +4,8 @@ import { type RemoteGameProcess, type RemoteGameStatus, useGameProcDetail } from
 import { useNav } from "@/renderer/util/nav";
 import { ConfirmPopup } from "@components/ConfirmPopup";
 import { GameTypeImage } from "@components/GameTypeImage";
-import { Button, Card, CardBody, Tab, Tabs } from "@heroui/react";
+import { Button, Card, CardBody, Link, Tab, Tabs } from "@heroui/react";
+import { MemoryUsageChart } from "@pages/monitor/MemoryUsageChart";
 import { clsx } from "clsx";
 import { ArrowLeftIcon, CpuIcon, FileClockIcon, FolderArchive, OctagonXIcon } from "lucide-react";
 import React, { useContext, useEffect, useRef } from "react";
@@ -60,6 +61,7 @@ function ContentArea() {
                 </div>
             }
         >
+            <PerformanceDisplay/>
         </Tab>
     </Tabs>;
 }
@@ -112,6 +114,28 @@ function LogsDisplay() {
             )
         }
     </VList>;
+}
+
+const EXPLAIN_MEMORY_URL = "https://stackoverflow.com/a/5406063";
+
+function PerformanceDisplay() {
+    const { memUsage } = useContext(GameProcessContext)!;
+    const { t } = useTranslation("pages", { keyPrefix: "monitor.memory" });
+
+    function handleExplainMemory() {
+        native.ext.openURL(EXPLAIN_MEMORY_URL);
+    }
+
+    return <div className="w-full h-full flex flex-col gap-4 p-4">
+        <div className="basis-1/2 flex flex-col gap-4">
+            <div className="text-xl font-bold">{t("title")}</div>
+            <div className="text-foreground-400 text-sm">
+                {t("sub")}
+                <Link onPress={handleExplainMemory} className="text-sm">{t("sub-link")}</Link>
+            </div>
+            <MemoryUsageChart stat={memUsage}/>
+        </div>
+    </div>;
 }
 
 const LogLineMemo = React.memo(LogLine, (prevProps, nextProps) => {

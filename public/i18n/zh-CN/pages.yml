@@ -87,6 +87,11 @@ monitor:
     stop-sub: 游戏数据可能丢失。
     stop-confirm: 我知道我在做什么！
     reveal-rsp: 打开资源包文件夹
+  memory:
+    title: 内存使用量
+    sub: 实时内存使用量（MiB），测量值可能偏大。
+    sub-link: 为什么？
+    now: 现在
 
 settings:
   title: 设置
