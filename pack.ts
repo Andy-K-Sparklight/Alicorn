@@ -14,7 +14,6 @@ import pkg from "~/package.json";
 const platforms = ["win32", "darwin", "linux"];
 const arches = ["x64", "arm64"];
 
-
 consola.info(`Start cross-packaging for ${platforms.join(",")} x ${arches.join(",")}`);
 
 const outRoot = path.resolve(import.meta.dirname, "dist");
