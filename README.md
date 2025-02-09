@@ -90,10 +90,6 @@ The following tools are required:
 
 - Bun (v1.1 or later)
 
-  > [!IMPORTANT]
-  > There is a known bug with Bun 1.2.1 and 1.2.2 that causes Vite to fail the build process.
-  > Avoid these versions when installing.
-
   We use Bun to run our build tools for performance reasons.
   The Bun version for building will not affect the Node.js version bundled with Electron.
 
@@ -102,6 +98,10 @@ The following tools are required:
 - Node.js (v22 or later), when packaging. (**NOT** needed for development)
 
 - Wine, when building on non-Windows platforms.
+
+> [!IMPORTANT]
+> There is a known bug with Bun 1.2.1 and 1.2.2 that causes Vite to fail the build process.
+> Avoid these versions when installing.
 
 ### Get the Source Code
 
