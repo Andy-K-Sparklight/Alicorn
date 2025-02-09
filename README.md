@@ -95,7 +95,7 @@ The following tools are required:
 
 - Git
 
-- Node.js (v22 or later), when packaging. (**NOT** needed for development)
+- Node.js (v23 or later), when packaging. (**NOT** needed for development)
 
 - Wine, when building on non-Windows platforms.
 
@@ -143,7 +143,11 @@ bun dev
 
 ### Create Packaged Binaries
 
+This is a bit tricky as Bun skips "untrusted" post-install scripts, which are needed for modules like
+`electron-installer-dmg`. Hence, it's required to reinstall the modules using `npm` before building:
+
 ```shell
+npm install
 npm run dist
 ```
 
