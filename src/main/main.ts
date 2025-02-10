@@ -55,7 +55,6 @@ async function main() {
 
     console.log("Initializing modules...");
 
-    const hasDevTools = import.meta.env.AL_DEV || conf().dev.devTools;
 
     if (import.meta.env.AL_TEST) {
         paths.setup({
@@ -90,7 +89,42 @@ async function main() {
     //     }
     // }
 
+    if (!import.meta.env.AL_TEST) {
+        await setupMainWindow();
+    }
+
+    console.log("Executing late init tasks...");
+
+    setAutoSave();
+
+    const tasks = [
+        conf().net.downloader === "aria2" && aria2.init(),
+        mirror.bench(),
+        vanillaInstaller.prefetch()
+    ].filter(Boolean);
+
+    await Promise.all(tasks);
+
+    const deltaTime = Math.round(performance.now() - beginTime) / 1000;
+
+    console.log(`Done (${deltaTime}s)! Alicorn is now fully initialized.`);
+
+    // Generate a random client ID if it's not configured
+    conf().client.id = randomUUID().replaceAll("-", "");
+
+    if (import.meta.env.AL_TEST) {
+        void runInstrumentedTest();
+    }
+
+    // Delay update check after app initialization
+    if (conf().app.hotUpdate) {
+        await update.runUpdate();
+    }
+}
+
+async function setupMainWindow() {
     console.log("Creating window...");
+    const hasDevTools = import.meta.env.AL_DEV || conf().dev.devTools;
 
     const { size: [width, height], pos: [px, py] } = conf().app.window;
 
@@ -140,34 +174,6 @@ async function main() {
         await mainWindow.loadURL(devServerURL);
     } else {
         await mainWindow.loadURL("app://./index.html");
-    }
-
-    console.log("Executing late init tasks...");
-
-    setAutoSave();
-
-    const tasks = [
-        conf().net.downloader === "aria2" && aria2.init(),
-        mirror.bench(),
-        vanillaInstaller.prefetch()
-    ].filter(Boolean);
-
-    await Promise.all(tasks);
-
-    const deltaTime = Math.round(performance.now() - beginTime) / 1000;
-
-    console.log(`Done (${deltaTime}s)! Alicorn is now fully initialized.`);
-
-    if (import.meta.env.AL_TEST) {
-        void runInstrumentedTest();
-    }
-
-    // Generate a random client ID if it's not configured
-    conf().client.id = randomUUID().replaceAll("-", "");
-
-    // Delay update check after app initialization
-    if (conf().app.hotUpdate) {
-        await update.runUpdate();
     }
 }
 

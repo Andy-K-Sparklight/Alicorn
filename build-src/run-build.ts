@@ -26,6 +26,7 @@ export async function build(variant: BuildVariant) {
 
     const isDev = cfg.variant.mode === "development";
     const isProd = cfg.variant.mode === "production";
+    const isTest = cfg.variant.mode === "test";
 
     await fs.emptyDir(outputDir);
 
@@ -104,7 +105,7 @@ export async function build(variant: BuildVariant) {
         await server.listen();
         await runElectronDev(outputDir);
         await server.close();
-    } else {
+    } else if (isProd) {
         await vite.build({
             configFile: viteConfigFile,
             define: defines,
