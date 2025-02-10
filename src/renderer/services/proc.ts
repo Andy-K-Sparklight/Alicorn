@@ -18,6 +18,8 @@ export interface RemoteGameProcess {
     status: RemoteGameStatus;
     profile: GameProfile;
     memUsage: number[];
+    startTime: number;
+    exitTime?: number;
 
     outputs: {
         stdout: string[];
@@ -63,6 +65,7 @@ async function create(id: string): Promise<string> {
         profile,
         memUsage: [],
         status: "running",
+        startTime: Date.now(), // Time measurement is done at the front end
         outputs: {
             stdout: [],
             stderr: []
@@ -87,10 +90,12 @@ async function create(id: string): Promise<string> {
         switch (e.data.type) {
             case "exit":
                 np.status = "exited";
+                np.exitTime = Date.now();
                 restrictedEmitter.emit("change");
                 break;
             case "crash":
                 np.status = "crashed";
+                np.exitTime = Date.now();
                 restrictedEmitter.emit("change");
                 break;
             case "stdout":

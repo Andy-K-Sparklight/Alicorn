@@ -7,8 +7,8 @@ import { GameTypeImage } from "@components/GameTypeImage";
 import { Button, Card, CardBody, Link, Tab, Tabs } from "@heroui/react";
 import { MemoryUsageChart } from "@pages/monitor/MemoryUsageChart";
 import { clsx } from "clsx";
-import { ArrowLeftIcon, CpuIcon, FileClockIcon, FolderArchive, OctagonXIcon } from "lucide-react";
-import React, { useContext, useEffect, useRef } from "react";
+import { ArrowLeftIcon, CpuIcon, FileClockIcon, FolderArchiveIcon, FolderIcon, OctagonXIcon } from "lucide-react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { VList, type VListHandle } from "virtua";
 import { useParams } from "wouter";
@@ -170,14 +170,23 @@ function LogLine({ log }: { log: GameProcessLog }) {
 
 function ControlPanel() {
     const proc = useContext(GameProcessContext)!;
-    const { profile: { id, name, type }, status } = proc;
+    const { profile: { id, name, type }, status, startTime, pid, exitTime, id: procId } = proc;
+    const [time, setTime] = useState(Date.now());
+
+    useEffect(() => {
+        const t = window.setInterval(() => setTime(Date.now()), 1000);
+        return () => window.clearInterval(t);
+    }, []);
 
     return <div className="w-full h-full flex flex-col gap-4">
         <div className="grow">
             <GameInfoCardMemo
+                id={id}
                 name={name}
                 type={type}
                 status={status}
+                uptime={(exitTime ?? time) - startTime}
+                pid={pid}
             />
         </div>
         <MonitorActionsMemo procId={proc.id} gameId={id} status={status}/>
@@ -185,22 +194,25 @@ function ControlPanel() {
 }
 
 interface GameInfoCardProps {
+    id: string;
     name: string;
     type: GameCoreType;
     status: RemoteGameStatus;
+    uptime: number;
+    pid: number;
 }
 
 const GameInfoCardMemo = React.memo(GameInfoCard);
 
-function GameInfoCard({ name, type, status }: GameInfoCardProps) {
-    const { t } = useTranslation("pages", { keyPrefix: "monitor.status" });
+function GameInfoCard({ id, name, type, status, uptime, pid }: GameInfoCardProps) {
+    const { t } = useTranslation("pages", { keyPrefix: "monitor" });
 
     return <Card className="h-full">
         <CardBody>
-            <div className="flex flex-col p-4 gap-2 items-center my-auto">
+            <div className="flex flex-col p-4 gap-6 items-center my-auto">
                 <div
                     className={
-                        clsx("max-w-40 m-8 p-5 bg-content2 rounded-full outline outline-4 outline-offset-8", {
+                        clsx("max-w-40 mx-10 p-5 bg-content2 rounded-full outline outline-4 outline-offset-8", {
                             "outline-success": status === "running",
                             "outline-default": status === "exited",
                             "outline-danger": status === "crashed"
@@ -209,8 +221,28 @@ function GameInfoCard({ name, type, status }: GameInfoCardProps) {
                 >
                     <GameTypeImage type={type}/>
                 </div>
-                <div className="font-bold text-2xl">{name}</div>
-                <div className="text-lg text-foreground-400">{t(status)}</div>
+
+
+                <div className="mt-2 flex flex-col items-center gap-1">
+                    <div className="font-bold text-lg">{name}</div>
+                    <div className="text-default-400">{id}</div>
+                </div>
+
+
+                <div className="flex flex-col w-5/6 gap-1">
+                    <div className="flex text-sm">
+                        <div className="grow text-foreground-400">{t("label.status")}</div>
+                        <div>{t(`status.${status}`)}</div>
+                    </div>
+                    <div className="flex text-sm">
+                        <div className="grow text-foreground-400">{t("label.uptime")}</div>
+                        <div>{formatTime(uptime)}</div>
+                    </div>
+                    <div className="flex text-sm">
+                        <div className="grow text-foreground-400">{t("label.pid")}</div>
+                        <div>{pid}</div>
+                    </div>
+                </div>
             </div>
         </CardBody>
     </Card>;
@@ -238,7 +270,10 @@ function MonitorActions({ procId, gameId, status }: MonitorActionsProps) {
         <Button startContent={<ArrowLeftIcon/>} onPress={() => nav("/monitor")}>
             {t("back-to-list")}
         </Button>
-        <Button startContent={<FolderArchive/>} onPress={() => native.game.reveal(gameId, "resourcepacks")}>
+        <Button startContent={<FolderIcon/>} onPress={() => native.game.reveal(gameId, ".")}>
+            {t("reveal-root")}
+        </Button>
+        <Button startContent={<FolderArchiveIcon/>} onPress={() => native.game.reveal(gameId, "resourcepacks")}>
             {t("reveal-rsp")}
         </Button>
         <ConfirmPopup
@@ -258,4 +293,17 @@ function MonitorActions({ procId, gameId, status }: MonitorActionsProps) {
             </Button>
         </ConfirmPopup>
     </div>;
+}
+
+function formatTime(ms: number) {
+    const sec = Math.round(ms / 1000);
+    const hrs = Math.floor(sec / 3600);
+    const min = Math.floor((sec % 3600) / 60);
+    const rs = sec % 60;
+
+    const hh = hrs.toString().padStart(2, "0");
+    const mm = min.toString().padStart(2, "0");
+    const ss = rs.toString().padStart(2, "0");
+
+    return `${hh}:${mm}:${ss}`;
 }

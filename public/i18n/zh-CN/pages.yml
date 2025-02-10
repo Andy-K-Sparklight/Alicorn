@@ -76,6 +76,10 @@ monitor:
   title: 运行中
   log-view: 游戏日志
   perf-view: 性能查看器
+  label:
+    status: 状态
+    uptime: 运行时间
+    pid: 进程号
   status:
     running: 正常运行中
     exited: 已停止
@@ -86,6 +90,7 @@ monitor:
     stop-title: 停止游戏，确定吗？
     stop-sub: 游戏数据可能丢失。
     stop-confirm: 我知道我在做什么！
+    reveal-root: 打开游戏目录
     reveal-rsp: 打开资源包文件夹
   memory:
     title: 内存使用量
