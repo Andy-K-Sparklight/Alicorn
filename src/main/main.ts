@@ -8,6 +8,7 @@ import { getOSName } from "@/main/sys/os";
 import { update } from "@/main/sys/update";
 import { windowControl } from "@/main/sys/window-control";
 import { app, BrowserWindow, Menu, net, protocol } from "electron";
+import { randomUUID } from "node:crypto";
 import events from "node:events";
 import os from "node:os";
 import path from "node:path";
@@ -160,6 +161,9 @@ async function main() {
     if (import.meta.env.AL_TEST) {
         void runInstrumentedTest();
     }
+
+    // Generate a random client ID if it's not configured
+    conf().client.id = randomUUID().replaceAll("-", "");
 
     // Delay update check after app initialization
     if (conf().app.hotUpdate) {

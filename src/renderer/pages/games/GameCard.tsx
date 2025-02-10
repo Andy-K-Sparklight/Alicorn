@@ -1,29 +1,19 @@
 import type { GameProfile } from "@/main/game/spec";
 import { remoteInstaller, useInstallProgress } from "@/renderer/services/install";
-import { procService } from "@/renderer/services/proc";
-import { useNav } from "@/renderer/util/nav";
 import { GameTypeImage } from "@components/GameTypeImage";
-import { Button, Card, CardBody, Chip, Tooltip } from "@heroui/react";
+import { Card, CardBody, Chip, Tooltip } from "@heroui/react";
+import { GameCardActions } from "@pages/games/GameCardActions";
 import { clsx } from "clsx";
-import { CheckCircleIcon, CirclePlayIcon, CloudDownloadIcon, DotIcon, DownloadIcon, EllipsisIcon } from "lucide-react";
-import { useState } from "react";
+import { CheckCircleIcon, CloudDownloadIcon, DotIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-interface GameCardDisplayProps {
+interface GameCardProps {
     game: GameProfile;
 }
 
-export function GameCardDisplay({ game }: GameCardDisplayProps) {
-    return <GameCard profile={game}/>;
-}
-
-interface GameCardProps {
-    profile: GameProfile;
-}
-
-function GameCard({ profile }: GameCardProps) {
-    const { id, name, versions: { game: gameVersion }, installed, type } = profile;
+export function GameCard({ game }: GameCardProps) {
+    const { id, name, versions: { game: gameVersion }, installed, type } = game;
     const { t } = useTranslation("pages", { keyPrefix: "games.game-card" });
     const { t: tc } = useTranslation("common", { keyPrefix: "progress" });
     const installProgress = useInstallProgress(id);
@@ -66,7 +56,7 @@ function GameCard({ profile }: GameCardProps) {
                 <GameStatusBadge installed={installed}/>
 
                 <div className="ml-4">
-                    <GameActions
+                    <GameCardActions
                         gameId={id}
                         installStatus={installStatus}
                         onInstall={handleInstall}
@@ -93,69 +83,5 @@ function GameStatusBadge({ installed }: { installed: boolean }) {
                 installed ? <CheckCircleIcon/> : <CloudDownloadIcon/>
             }
         </Tooltip>
-    </div>;
-}
-
-type InstallStatus = "installed" | "installing" | "not-installed";
-
-interface GameActionsProps {
-    installStatus: InstallStatus;
-    gameId: string;
-    onInstall: () => void;
-}
-
-function GameActions({ installStatus, gameId, onInstall }: GameActionsProps) {
-    const [launching, setLaunching] = useState(false);
-    const nav = useNav();
-
-    function handleShowDetails() {
-        nav(`/game-detail/${gameId}`);
-    }
-
-    async function launch() {
-        setLaunching(true);
-        const authed = await native.auth.forGame(gameId);
-
-        if (!authed) {
-            toast(AuthFailedToast, { type: "error" });
-            return;
-        }
-
-        // TODO add error handler
-        const procId = await procService.create(gameId);
-        setLaunching(false);
-        nav(`/monitor/${procId}`);
-    }
-
-    return <div className="flex gap-2">
-        {
-            // TODO bind button actions
-            installStatus === "installed" ?
-                <Button isIconOnly isLoading={launching} color="primary" onPress={launch}>
-                    <CirclePlayIcon/>
-                </Button>
-                :
-                <Button
-                    isIconOnly
-                    isLoading={installStatus === "installing"}
-                    color="secondary"
-                    onPress={onInstall}
-                >
-                    <DownloadIcon/>
-                </Button>
-        }
-
-        <Button isIconOnly onPress={handleShowDetails}>
-            <EllipsisIcon/>
-        </Button>
-    </div>;
-}
-
-function AuthFailedToast() {
-    const { t } = useTranslation("pages", { keyPrefix: "games.auth-failed" });
-
-    return <div className="flex flex-col gap-1 mx-4">
-        <div className="font-bold text-xl">{t("title")}</div>
-        <div className="text-medium">{t("sub")}</div>
     </div>;
 }

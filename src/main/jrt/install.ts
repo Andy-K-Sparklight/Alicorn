@@ -5,7 +5,6 @@ import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { netx } from "@/main/net/netx";
 import { getOSName } from "@/main/sys/os";
 import { progress, type ProgressController } from "@/main/util/progress";
-import { net } from "electron";
 import fs from "fs-extra";
 import * as child_process from "node:child_process";
 import os from "node:os";
@@ -75,19 +74,22 @@ interface FileDownload {
     url: string;
 }
 
-type FileHint = {
-    type: "directory";
-} | {
-    downloads: {
-        lzma?: FileDownload;
-        raw: FileDownload;
+type FileHint =
+    {
+        type: "directory";
+    } |
+    {
+        downloads: {
+            lzma?: FileDownload;
+            raw: FileDownload;
+        }
+        executable: boolean;
+        type: "file";
+    } |
+    {
+        target: string;
+        type: "link";
     }
-    executable: boolean;
-    type: "file";
-} | {
-    target: string;
-    type: "link";
-}
 
 type NamedFileHint = FileHint & { name: string; }
 
@@ -106,7 +108,7 @@ async function installRuntime(component: string, control?: ProgressController): 
     const profile = await getProfile(component);
     console.debug(`Picked up profile ${profile.manifest.url}`);
 
-    const dat = await (await net.fetch(profile.manifest.url)).json();
+    const dat = await (await netx.get(profile.manifest.url)).json();
     let files = Object.entries(dat.files)
         .map(([name, file]) => ({ name, ...(file as FileHint) } as NamedFileHint));
 

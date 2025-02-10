@@ -2,7 +2,7 @@ import type { GameProfile } from "@/main/game/spec";
 import { useGameList } from "@/renderer/services/game";
 import { useNav } from "@/renderer/util/nav";
 import { Button, ButtonGroup, Spinner, Tooltip } from "@heroui/react";
-import { GameCardDisplay } from "@pages/games/GameCard";
+import { GameCard } from "@pages/games/GameCard";
 import { ArrowDownAZIcon, ArrowUpAZIcon, ClockArrowDownIcon, ClockArrowUpIcon, PlusIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLocalStorage } from "react-use";
@@ -40,7 +40,7 @@ export function GamesView() {
         <div className="mt-4 w-full h-full overflow-y-auto">
             <div className="flex flex-col gap-3 w-full">
                 {
-                    sortedGames.map(g => <GameCardDisplay key={g.id} game={g}/>)
+                    sortedGames.map(g => <GameCard key={g.id} game={g}/>)
                 }
             </div>
         </div>
@@ -85,7 +85,7 @@ function SortMethodControl({ sortMethod, onChange }: SortMethodControlProps) {
                 <Tooltip content={t(m)} key={m} color="foreground">
                     <Button
                         isIconOnly
-                        color={sortMethod === m ? "secondary" : "default"}
+                        color={sortMethod === m ? "primary" : "default"}
                         onPress={() => onChange(m)}
                     >
                         {iconMap[m]}

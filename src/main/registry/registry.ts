@@ -1,5 +1,5 @@
 import type { AccountProps } from "@/main/auth/types";
-import type { ContainerSpec } from "@/main/container/spec";
+import type { ContainerProps } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import type { GameProfile } from "@/main/game/spec";
 import { isENOENT } from "@/main/util/fs";
@@ -94,6 +94,6 @@ export const registry = {
 
 export const reg = {
     accounts: new NamedRegistry<AccountProps>("accounts"),
-    containers: new NamedRegistry<ContainerSpec>("containers"),
+    containers: new NamedRegistry<ContainerProps>("containers"),
     games: new NamedRegistry<GameProfile>("games")
 };

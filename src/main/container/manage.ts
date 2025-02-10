@@ -1,4 +1,4 @@
-import { Container, type ContainerSpec } from "@/main/container/spec";
+import { Container, type ContainerProps } from "@/main/container/spec";
 import { MavenName } from "@/main/profile/maven-name";
 import { reg } from "@/main/registry/registry";
 import path from "node:path";
@@ -6,14 +6,14 @@ import path from "node:path";
 let cachedContainers = new Map<string, Container>();
 
 function get(id: string): Container {
-    return hydrate(reg.containers.get(id));
+    return loadFromProps(reg.containers.get(id));
 }
 
-function create(spec: ContainerSpec): Container {
-    return new SimpleContainer(spec);
+function create(props: ContainerProps): Container {
+    return new SimpleContainer(props);
 }
 
-function hydrate(spec: ContainerSpec): Container {
+function loadFromProps(spec: ContainerProps): Container {
     let cc = cachedContainers.get(spec.id);
 
     if (!cc) {
@@ -25,10 +25,10 @@ function hydrate(spec: ContainerSpec): Container {
 }
 
 class SimpleContainer implements Container {
-    spec;
+    props;
 
-    constructor(spec: ContainerSpec) {
-        this.spec = spec;
+    constructor(spec: ContainerProps) {
+        this.props = spec;
     }
 
     asset(hash: string): string {
@@ -98,7 +98,7 @@ class SimpleContainer implements Container {
     }
 
     #resolve(...rel: string[]): string {
-        return path.normalize(path.resolve(this.spec.root, ...rel));
+        return path.normalize(path.resolve(this.props.root, ...rel));
     }
 }
 

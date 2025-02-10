@@ -22,10 +22,33 @@ function compatFragment(src: string): string {
     `;
 }
 
+function isPossiblyXmlLog(src: string): boolean {
+    return src.trim().replaceAll("\n", "").startsWith("<log4j");
+}
+
+function parseAsRaw(src: string, index: number): GameProcessLog {
+    const ss = src.toLowerCase();
+    console.log(src);
+    const level = ["fatal", "error", "warn", "info", "debug", "trace"].find(lv => ss.includes(lv))?.toUpperCase() ?? "INFO";
+    return {
+        index,
+        time: Date.now(),
+        logger: "Unknown",
+        level,
+        thread: "Unknown",
+        message: src.trim(),
+        throwable: undefined
+    };
+}
+
 /**
  * Parse the XML-formatted log output as JS objects.
  */
 function parse(src: string, index: number): GameProcessLog[] {
+    if (!isPossiblyXmlLog(src)) {
+        return [parseAsRaw(src, index)];
+    }
+
     const dom = parser().parse(compatFragment(src));
     let events = dom?.["Events"]?.["Event"];
 

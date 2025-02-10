@@ -5,7 +5,7 @@ import { pEvent } from "p-event";
  *
  * All messages sent over the window object must implement this interface to avoid possible interference.
  */
-export interface WindowMessageContent<T = never> {
+interface WindowMessageContent<T = never> {
     channel: string;
     detail?: T;
 }

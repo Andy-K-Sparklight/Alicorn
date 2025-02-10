@@ -11,23 +11,8 @@ import { isTruthy } from "@/main/util/misc";
 import { net } from "electron";
 import fs from "fs-extra";
 import { nanoid } from "nanoid";
-import EventEmitter from "node:events";
 import path from "node:path";
 import { Stream } from "node:stream";
-import type TypedEmitter from "typed-emitter";
-
-/**
- * Events emitted when downloading.
- */
-type NextDownloadEvents = {
-    /**
-     * Emitted when the status of a task changes.
-     */
-    change: (id: string) => void;
-}
-
-const emitter = new EventEmitter() as TypedEmitter<NextDownloadEvents>;
-emitter.setMaxListeners(0);
 
 export enum NextDownloadStatus {
     PENDING,
@@ -148,44 +133,21 @@ async function resolveOnce(task: NextDownloadTask): Promise<NextRequestStatus> {
 }
 
 /**
- * An implementation of the download task, capable for dispatching events when specific properties change.
- */
-class DownloadTaskImpl implements NextDownloadTask {
-    id = nanoid();
-    req;
-    activeURL;
-    signal?: AbortSignal = undefined;
-
-    constructor(req: NextDownloadRequest) {
-        if (req.urls.length === 0) throw "No URL specified";
-        this.req = {
-            ...req,
-            path: path.resolve(req.path)
-        };
-        this.activeURL = req.urls[0];
-    }
-
-    #_status: NextDownloadStatus = NextDownloadStatus.PENDING;
-
-    get status() {
-        return this.#_status;
-    }
-
-    set status(value: NextDownloadStatus) {
-        this.#_status = value;
-        this.#notify();
-    }
-
-    #notify() {
-        emitter.emit("change", this.id);
-    }
-}
-
-/**
  * Creates a task based on the given request.
  */
 function createTask(req: NextDownloadRequest): NextDownloadTask {
-    return new DownloadTaskImpl(req);
+    if (req.urls.length === 0) throw "No URL specified";
+
+    return {
+        id: nanoid(),
+        req: {
+            ...req,
+            path: path.resolve(req.path)
+        },
+        activeURL: req.urls[0],
+        signal: req.signal,
+        status: NextDownloadStatus.PENDING
+    };
 }
 
 /**

@@ -1,4 +1,4 @@
-import type { ContainerSpec } from "@/main/container/spec";
+import type { ContainerProps } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import { reg, registry } from "@/main/registry/registry";
 import fs from "fs-extra";
@@ -10,7 +10,7 @@ import { iTest } from "~/test/instrumented/tools";
  */
 export async function checkRegistries() {
     await iTest.run("Registries Save & Load", async () => {
-        const c: ContainerSpec = {
+        const c: ContainerProps = {
             id: "default",
             root: "fake-root",
             flags: {}

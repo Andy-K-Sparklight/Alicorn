@@ -141,6 +141,15 @@ Preview for development (with live reload):
 bun dev
 ```
 
+> [!NOTE]
+> There is a [known issue](https://github.com/electron/electron/issues/42510) related to sandboxing on Ubuntu 24.x (and
+> likely later versions) that makes Alicorn fail to launch. Use the command below as a workaround while waiting for a
+> fix:
+>
+> ```shell
+> sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+> ```
+
 ### Create Packaged Binaries
 
 This is a bit tricky as Bun skips "untrusted" post-install scripts, which are needed for modules like

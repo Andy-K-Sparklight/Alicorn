@@ -35,7 +35,6 @@ async function getAll(req: DlxDownloadRequest[], control?: ProgressController): 
 
     console.log(`Resolving ${req.length} tasks (${dl}).`);
 
-
     let limit = pLimit(conf().net.concurrency);
     let promises: Promise<void>[];
 

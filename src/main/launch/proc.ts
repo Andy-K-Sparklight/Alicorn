@@ -1,12 +1,12 @@
 import { conf } from "@/main/conf/conf";
 import { type GameProcessLog, logParser } from "@/main/launch/log-parser";
-import { command } from "@/main/util/command";
 import { nanoid } from "nanoid";
 import * as child_process from "node:child_process";
 import { ChildProcess } from "node:child_process";
 import EventEmitter from "node:events";
 import os from "node:os";
 import { Readable } from "node:stream";
+import { promisify } from "node:util";
 import type TypedEmitter from "typed-emitter";
 
 type GameProcessEvents = {
@@ -168,15 +168,19 @@ export class GameProcess {
         if (!this.#proc) return -1;
 
         let cmdLine: string;
+        let factor = 1;
 
         if (os.platform() === "win32") {
             cmdLine = `wmic process where processid=${this.#proc.pid} get WorkingSetSize`;
         } else {
             cmdLine = `ps -o rss= ${this.#proc.pid}`;
+            factor = 1024;
         }
 
-        const str = await command.run(cmdLine);
-        return parseInt(str.match(/[1-9][0-9]*/)?.[0] ?? "0", 10) || 0;
+        const exec = promisify(child_process.exec);
+
+        const { stdout } = await exec(cmdLine);
+        return parseInt(stdout.toString().match(/[1-9][0-9]*/)?.[0] ?? "0", 10) * factor || 0;
     }
 }
 

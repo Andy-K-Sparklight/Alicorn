@@ -1,5 +1,5 @@
+import Emittery from "emittery";
 import { nanoid } from "nanoid";
-import EventEmitter from "node:events";
 import { pEvent } from "p-event";
 
 export class WebSocketJsonRpcClient {
@@ -10,7 +10,7 @@ export class WebSocketJsonRpcClient {
     // Map from request ID to callbacks.
     #callbacks = new Map<string, (e: any, res: any) => void>();
 
-    #emitter = new EventEmitter();
+    #emitter = new Emittery();
 
     constructor(ws: WebSocket) {
         this.#ws = ws;
@@ -34,7 +34,7 @@ export class WebSocketJsonRpcClient {
             } else {
                 // Dispatches event
                 const { method, params: [event] } = d;
-                this.#emitter.emit(method, event);
+                void this.#emitter.emit(method, event);
             }
         };
     }

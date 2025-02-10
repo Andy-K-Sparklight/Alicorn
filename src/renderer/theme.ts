@@ -11,8 +11,8 @@ function isDark(th: string) {
     return (themes as Record<string, ConfigTheme>)[th]?.extend === "dark" || th === "dark";
 }
 
-export function useTheme() {
-    const [theme, setTheme] = useLocalStorage("theme", "dark") as [string, Dispatch<SetStateAction<string>>, () => void];
+export function useAutoTheme() {
+    const { theme } = useTheme();
     const originalTheme = useRef<string | null>(null);
 
     useEffect(() => {
@@ -27,6 +27,10 @@ export function useTheme() {
 
         originalTheme.current = theme;
     }, [theme]);
+}
+
+export function useTheme() {
+    const [theme, setTheme] = useLocalStorage("theme", "dark") as [string, Dispatch<SetStateAction<string>>, () => void];
 
     return { theme, setTheme };
 }

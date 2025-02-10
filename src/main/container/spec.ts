@@ -1,7 +1,7 @@
 /**
  * Minimum required information to construct a container.
  */
-export interface ContainerSpec {
+export interface ContainerProps {
     id: string;
     root: string;
     flags: Partial<ContainerFlags>;
@@ -21,7 +21,7 @@ export interface ContainerFlags {
  * Containers are abstractions for managing game files.
  */
 export interface Container {
-    spec: ContainerSpec;
+    props: ContainerProps;
 
     /**
      * Gets the path to the asset object.

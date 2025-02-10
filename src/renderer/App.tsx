@@ -1,5 +1,5 @@
 import { useAutoFontClass } from "@/renderer/i18n/i18n";
-import { themeManager, useTheme } from "@/renderer/theme";
+import { themeManager, useAutoTheme, useTheme } from "@/renderer/theme";
 import { useNav } from "@/renderer/util/nav";
 import { Navigator } from "@components/Navigator";
 import { HeroUIProvider } from "@heroui/react";
@@ -22,7 +22,9 @@ import pkg from "~/package.json";
 export function App() {
     const nav = useNav();
 
+    useAutoTheme();
     const { theme } = useTheme();
+
     useAutoFontClass();
 
     // Toasts use the opposite theme
@@ -39,6 +41,7 @@ export function App() {
                 theme={toastTheme}
                 position="bottom-left"
                 newestOnTop
+                pauseOnFocusLoss={false}
             />
         </main>
     </HeroUIProvider>;

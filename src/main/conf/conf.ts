@@ -1,6 +1,5 @@
 import { isENOENT } from "@/main/util/fs";
 import fs from "fs-extra";
-import { randomUUID } from "node:crypto";
 import os from "node:os";
 import path from "node:path";
 
@@ -162,7 +161,7 @@ const DEFAULT_CONFIG = {
         /**
          * The ID to identify the client.
          */
-        id: randomUUID().replaceAll("-", "")
+        id: ""
     },
 
     /**

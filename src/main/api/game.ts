@@ -1,6 +1,6 @@
 import { containerInspector } from "@/main/container/inspect";
 import { containers } from "@/main/container/manage";
-import type { ContainerSpec } from "@/main/container/spec";
+import type { ContainerProps } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import { games } from "@/main/game/manage";
 import type { GameProfile } from "@/main/game/spec";
@@ -44,7 +44,7 @@ ipcMain.handle("addGame", async (_, init) => {
 
     if (!cid) {
         cid = genContainerId();
-        const spec: ContainerSpec = {
+        const spec: ContainerProps = {
             id: cid,
             root: paths.game.to(cid),
             flags: {

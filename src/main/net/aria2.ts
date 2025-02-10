@@ -9,16 +9,14 @@ import { dlchk } from "@/main/net/dlchk";
 import { WebSocketJsonRpcClient } from "@/main/net/rpc";
 import { getExecutableExt } from "@/main/sys/os";
 import { net } from "electron";
+import Emittery from "emittery";
 import fs from "fs-extra";
 import getPort from "get-port";
 import childProcess from "node:child_process";
 import child_process from "node:child_process";
 import crypto from "node:crypto";
-import EventEmitter from "node:events";
 import path from "node:path";
 import { pEvent } from "p-event";
-import type TypedEventEmitter from "typed-emitter";
-import type TypedEmitter from "typed-emitter";
 
 let aria2cProcess: childProcess.ChildProcess | null = null;
 let aria2cToken: string | null = null;
@@ -36,12 +34,7 @@ export interface Aria2DownloadRequest {
     fastLink?: boolean;
 }
 
-type Aria2TaskEvents = {
-    finish: () => void;
-    error: (e: string) => void;
-}
-
-const gidEmitters = new Map<string, TypedEmitter<Aria2TaskEvents>>();
+const gidEmitters = new Map<string, Emittery>();
 
 /**
  * Preflights and resolves the given request.
@@ -108,8 +101,7 @@ async function sendRequest(req: Aria2DownloadRequest): Promise<void> {
         throw "Unable to commit task (empty GID received)";
     }
 
-    const emitter = new EventEmitter() as TypedEventEmitter<Aria2TaskEvents>;
-
+    const emitter = new Emittery();
     gidEmitters.set(gid, emitter);
 
     await pEvent(emitter, "finish");
@@ -201,7 +193,7 @@ async function init() {
 }
 
 
-function extractEmitter(gid: string): TypedEventEmitter<Aria2TaskEvents> | null {
+function extractEmitter(gid: string): Emittery | null {
     const em = gidEmitters.get(gid);
     if (!em) return null;
     gidEmitters.delete(gid);
@@ -224,7 +216,7 @@ async function notifyError(gid: string) {
     ]);
 
     console.error(`Task ${gid} failed: ${errorCode} (${errorMessage || "?"})`);
-    em.emit("error", `Task ${gid} failed with code ${errorCode} and message ${errorMessage}`);
+    void em.emit("error", `Task ${gid} failed with code ${errorCode} and message ${errorMessage}`);
 }
 
 function createToken() {

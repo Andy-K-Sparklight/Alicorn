@@ -2,6 +2,7 @@ create-game:
   title: 创建新游戏
   name-input-title: 游戏名称
   version-select-title: 游戏版本
+  include-snapshots: 包含快照
   storage-title: 存储
   assets-title: 游戏资源
   container-select-title: 选择要共享存储空间的游戏

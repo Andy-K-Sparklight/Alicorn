@@ -11,9 +11,14 @@ interface VersionSelectorProps {
     onChange: (version?: string) => void;
 }
 
+function useTrans() {
+    return useTranslation("pages", { keyPrefix: "create-game" }).t;
+}
+
 export function VersionSelector({ version, onChange }: VersionSelectorProps) {
     const vm = useVersionManifest();
-    const { t } = useTranslation("pages", { keyPrefix: "create-game" });
+    const t = useTrans();
+
     const [showSnapshots, setShowSnapshots] = useState(false);
 
     if (!vm) return <VersionLoading/>;
@@ -48,17 +53,19 @@ export function VersionSelector({ version, onChange }: VersionSelectorProps) {
                 itemHeight={64}
             >
                 {
-                    versions.map(v => {
-                        return <SelectItem key={v.id} textValue={v.id}>
+                    versions.map(v =>
+                        <SelectItem key={v.id} textValue={v.id}>
                             <VersionContent version={v}/>
-                        </SelectItem>;
-                    })
+                        </SelectItem>
+                    )
                 }
             </Select>
         </div>
 
         <div>
-            <Checkbox checked={showSnapshots} onValueChange={setShowSnapshots}>包含快照</Checkbox>
+            <Checkbox checked={showSnapshots} onValueChange={setShowSnapshots}>
+                {t("include-snapshots")}
+            </Checkbox>
         </div>
 
     </div>;
@@ -89,7 +96,7 @@ function VersionContent({ version: { id, type, sha1, releaseTime } }: { version:
 }
 
 function VersionLoading() {
-    const { t } = useTranslation("pages", { keyPrefix: "create-game" });
+    const t = useTrans();
 
     return <div className="flex gap-4 justify-center items-center">
         <Spinner size="sm"/>

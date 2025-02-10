@@ -99,7 +99,7 @@ async function installLibraries(
     const { signal, onProgress } = control ?? {};
     const usableLibraries = profile.libraries.filter(lib => filterRules(lib.rules, features));
     const tasks: DlxDownloadRequest[] = [];
-    const shouldLink = container.spec.flags.link;
+    const shouldLink = container.props.flags.link;
 
     for (const lib of usableLibraries) {
         if (nativeLib.isNative(lib)) {
@@ -158,9 +158,7 @@ async function installLibraries(
     await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "vanilla.download-libs") });
 
     if (shouldLink) {
-        await Promise.all(tasks.map(async t => {
-            await cache.link(t.path, t.sha1);
-        }));
+        await linkTasks(tasks);
     }
 
     onProgress?.(progress.indefinite("vanilla.unpack-libs"));
@@ -190,7 +188,7 @@ async function installAssets(
 
     const assetIndexPath = container.assetIndex(profile.assetIndex.id);
 
-    const shouldLink = container.spec.flags.link;
+    const shouldLink = container.props.flags.link;
 
     await dlx.getAll([{
         ...profile.assetIndex,
@@ -225,16 +223,7 @@ async function installAssets(
     await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "vanilla.download-assets") });
 
     if (shouldLink) {
-        await Promise.all(tasks.map(async t => {
-            await cache.link(t.path, t.sha1);
-        }));
-    }
-
-    async function makeLink(src: string, dst: string) {
-        await fs.ensureDir(path.dirname(dst));
-        await fs.remove(dst); // This is required for updating links
-        await fs.link(src, dst);
-        console.debug(`Linking asset ${src} -> ${dst}`);
+        await linkTasks(tasks);
     }
 
     console.debug(`Linking ${objects.length} assets...`);
@@ -243,16 +232,33 @@ async function installAssets(
         objects.map(async ([name, { hash }]) => {
             const src = container.asset(hash);
             const dst = container.assetLegacy(profile.assetIndex.id, name);
-            await makeLink(src, dst);
+            await makeAssetLink(src, dst);
 
             if (assetIndex.map_to_resources) {
                 // Also link to the resources dir
                 const dst = container.assetMapped(name);
-                await makeLink(src, dst);
+                await makeAssetLink(src, dst);
             }
         }),
         progress.makeNamed(onProgress, "vanilla.link-assets")
     ));
+}
+
+/**
+ * Link game assets for legacy versions. Assets are always linked regardless of the `link` flag.
+ */
+async function makeAssetLink(src: string, dst: string) {
+    await fs.ensureDir(path.dirname(dst));
+    await fs.remove(dst); // This is required for updating links
+    await fs.link(src, dst);
+    console.debug(`Linking asset ${src} -> ${dst}`);
+}
+
+/**
+ * Utility function to link all downloaded files from the task set.
+ */
+async function linkTasks(tasks: DlxDownloadRequest[]): Promise<void> {
+    await Promise.all(tasks.map(t => cache.link(t.path, t.sha1)));
 }
 
 export const vanillaInstaller = {
