@@ -212,6 +212,13 @@ const native = {
          */
         selectDir(): Promise<string> {
             return ipcRenderer.invoke("selectDir");
+        },
+
+        /**
+         * Sends current language value to the main process.
+         */
+        updateLanguage(lang: string): void {
+            ipcRenderer.send("languageChange", lang);
         }
     }
 };

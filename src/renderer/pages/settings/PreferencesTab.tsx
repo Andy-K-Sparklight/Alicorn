@@ -43,7 +43,7 @@ export function PreferencesTab() {
             icon={LanguagesIcon}
             id="pref.language"
             value={i18next.language}
-            onChange={lang => i18next.changeLanguage(lang)}
+            onChange={lang => void i18n.alterLanguage(lang)}
             items={i18n.getAvailableLanguages()}
         />
 

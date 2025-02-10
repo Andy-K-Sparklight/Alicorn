@@ -17,6 +17,7 @@ export type IpcCallEvents = {
     stopGame: (id: string) => void;
     removeGame: (id: string) => void;
     revealGameContent: (id: string, scope: string) => void;
+    languageChange: (lang: string) => void;
 }
 
 /**

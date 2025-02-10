@@ -42,13 +42,21 @@ async function init(): Promise<void> {
 
     i18next.setDefaultNamespace(namespaces[0]);
 
+    // Send the language information to main process once initialized
+    native.ext.updateLanguage(i18next.language);
+
     if (import.meta.env.AL_DEV && import.meta.hot) {
         // Handle i18n resource reload events
         import.meta.hot.on("locales-update", async () => {
             await i18next.reloadResources();
-            await i18next.changeLanguage(i18next.language);
+            await alterLanguage(i18next.language);
         });
     }
+}
+
+async function alterLanguage(lang: string) {
+    await i18next.changeLanguage(lang);
+    native.ext.updateLanguage(lang);
 }
 
 // CSS classes that have been defined
@@ -77,5 +85,5 @@ function getAvailableLanguages() {
 }
 
 export const i18n = {
-    init, getAvailableLanguages
+    init, getAvailableLanguages, alterLanguage
 };

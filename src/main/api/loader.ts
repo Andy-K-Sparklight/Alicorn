@@ -6,3 +6,4 @@ import "./launcher";
 import "./auth";
 import "./sources";
 import "./install";
+import "./i18n";

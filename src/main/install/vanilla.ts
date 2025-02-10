@@ -7,6 +7,7 @@ import { profileLoader } from "@/main/profile/loader";
 import { nativeLib } from "@/main/profile/native-lib";
 import { filterRules } from "@/main/profile/rules";
 import type { AssetIndex, VersionProfile } from "@/main/profile/version-profile";
+import { i18nMain } from "@/main/util/i18n";
 import { progress, type ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
 import path from "node:path";
@@ -257,8 +258,7 @@ async function emitOptions(container: Container) {
     }
 
     const values = {
-        // TODO retrieve language from frontend user settings
-        lang: navigator.language.replaceAll("-", "_").toLowerCase()
+        lang: i18nMain.language.replaceAll("-", "_").toLowerCase()
     };
 
     const out = Object.entries(values).map(([k, v]) => `${k}:${v}`).join("\n");
