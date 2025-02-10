@@ -19,6 +19,8 @@ export interface RemoteGameProcess {
     profile: GameProfile;
     memUsage: number[];
     startTime: number;
+    server: string | null;
+    serverPing: number[];
     exitTime?: number;
 
     outputs: {
@@ -65,6 +67,8 @@ async function create(id: string): Promise<string> {
         profile,
         memUsage: [],
         status: "running",
+        server: null,
+        serverPing: [],
         startTime: Date.now(), // Time measurement is done at the front end
         outputs: {
             stdout: [],
@@ -91,6 +95,9 @@ async function create(id: string): Promise<string> {
             case "exit":
                 np.status = "exited";
                 np.exitTime = Date.now();
+                np.memUsage = [];
+                np.serverPing = [];
+                np.server = null;
                 restrictedEmitter.emit("change");
                 break;
             case "crash":
@@ -114,6 +121,16 @@ async function create(id: string): Promise<string> {
                 np.memUsage.push(e.data.mem);
                 if (np.memUsage.length > 30) {
                     np.memUsage.splice(0, 10);
+                }
+                break;
+            case "serverChange":
+                np.server = e.data.server;
+                np.serverPing = [];
+                break;
+            case "serverPingUpdate":
+                np.serverPing.push(e.data.ping);
+                if (np.serverPing.length > 30) {
+                    np.serverPing.splice(0, 10);
                 }
                 break;
         }

@@ -3,13 +3,13 @@ import { useTranslation } from "react-i18next";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-interface MemoryUsageChartProps {
+interface ServerPingChartProps {
     stat: number[];
 }
 
-export function MemoryUsageChart({ stat }: MemoryUsageChartProps) {
+export function ServerPingChart({ stat }: ServerPingChartProps) {
     const { primary, background } = useThemeColorValues();
-    const { t } = useTranslation("pages", { keyPrefix: "monitor.memory" });
+    const { t } = useTranslation("pages", { keyPrefix: "monitor.ping" });
 
     const raw = stat.slice(-10);
 
@@ -17,8 +17,8 @@ export function MemoryUsageChart({ stat }: MemoryUsageChartProps) {
         raw.unshift(0);
     }
 
-    const data = raw.map((mem, i) => ({
-        mem: Math.round(mem / 1024 / 1024 * 100) / 100,
+    const data = raw.map((ping, i) => ({
+        ping: Math.round(ping),
         time: i === 9 ? t("now") : (i - 9) + "s"
     }));
 
@@ -30,7 +30,7 @@ export function MemoryUsageChart({ stat }: MemoryUsageChartProps) {
                         isAnimationActive={false}
                         type="monotone"
                         dot={false}
-                        dataKey="mem"
+                        dataKey="ping"
                         stroke={primary}
                         strokeWidth={3}
                     />

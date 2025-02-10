@@ -98,6 +98,11 @@ monitor:
     sub: 实时内存使用量（MiB），测量值可能偏大。
     sub-link: 为什么？
     now: 现在
+  ping:
+    title: 网络延迟
+    sub: 到服务器 {{server}} 的延迟（毫秒），测量值可能与游戏内有差异。持续零值可能是服务器禁用了 Ping 检测。
+    no-server: 目前未连接服务器。当你连接服务器时，Alicorn 将实时测量延迟。
+    now: 现在
 
 settings:
   title: 设置

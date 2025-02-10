@@ -1,5 +1,6 @@
 import { conf } from "@/main/conf/conf";
 import { type GameProcessLog, logParser } from "@/main/launch/log-parser";
+import isValidHostname from "is-valid-hostname";
 import { nanoid } from "nanoid";
 import * as child_process from "node:child_process";
 import { ChildProcess } from "node:child_process";
@@ -7,6 +8,7 @@ import EventEmitter from "node:events";
 import os from "node:os";
 import { Readable } from "node:stream";
 import { promisify } from "node:util";
+import ping from "ping";
 import type TypedEmitter from "typed-emitter";
 
 type GameProcessEvents = {
@@ -41,9 +43,19 @@ type GameProcessEvents = {
     log: (log: GameProcessLog) => void
 
     /**
+     * New ping value received from network monitor.
+     */
+    serverPingUpdate: (ping: number) => void;
+
+    /**
      * Memory usage value updated.
      */
     memUsageUpdate: (bytes: number) => void;
+
+    /**
+     * Server changes.
+     */
+    serverChange: (server: string | null) => void;
 }
 
 type GameProcessStatus = "created" | "running" | "exited" | "crashed"
@@ -59,6 +71,8 @@ export class GameProcess {
     logs: GameProcessLog[] = [];
     #proc: ChildProcess | null = null;
     #memMonitTimer: NodeJS.Timer | null = null;
+    #netMonitTimer: NodeJS.Timer | null = null;
+    #currentServer: string | null = null;
 
     constructor(bin: string, args: string[], gameDir: string) {
         const proc = child_process.spawn(bin, args, {
@@ -109,6 +123,7 @@ export class GameProcess {
 
                     for (const l of logs) {
                         this.logs.push(l);
+                        this.#handleLogExtensions(l.message);
                         this.emitter.emit("log", l);
                     }
 
@@ -132,6 +147,13 @@ export class GameProcess {
             } catch {
             }
         }, 1000);
+
+        this.#netMonitTimer = setInterval(async () => {
+            if (this.#currentServer) {
+                const res = await ping.promise.probe(this.#currentServer, { timeout: 1 });
+                this.emitter.emit("serverPingUpdate", typeof res.time === "number" ? res.time : 0);
+            }
+        }, 1000);
     }
 
     /**
@@ -152,6 +174,11 @@ export class GameProcess {
         if (this.#memMonitTimer) {
             clearInterval(this.#memMonitTimer);
         }
+
+        if (this.#netMonitTimer) {
+            clearInterval(this.#netMonitTimer);
+        }
+
         this.#proc?.stdout?.removeAllListeners();
         this.#proc?.stderr?.removeAllListeners();
         this.emitter.removeAllListeners();
@@ -181,6 +208,27 @@ export class GameProcess {
 
         const { stdout } = await exec(cmdLine);
         return parseInt(stdout.toString().match(/[1-9][0-9]*/)?.[0] ?? "0", 10) * factor || 0;
+    }
+
+    #handleLogExtensions(s: string) {
+        if (s.includes("[CHAT]")) return; // Prevent chat message injection
+
+        const ss = s.toLowerCase();
+
+        if (ss.startsWith("connecting to")) {
+            const [rawHost] = ss.replaceAll("connecting to", "").split(",");
+            const host = rawHost.trim();
+            if (isValidHostname(host)) {
+                this.#currentServer = host;
+                this.emitter.emit("serverChange", host);
+            }
+        }
+
+        if (ss.startsWith("starting integrated minecraft server")) {
+            // User went single-player, remove server information
+            this.#currentServer = null;
+            this.emitter.emit("serverChange", null);
+        }
     }
 }
 
