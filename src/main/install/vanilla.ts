@@ -245,6 +245,27 @@ async function installAssets(
 }
 
 /**
+ * Emits initial options for better user experience.
+ */
+async function emitOptions(container: Container) {
+    const fp = container.options();
+
+    try {
+        await fs.access(fp);
+        return;
+    } catch {
+    }
+
+    const values = {
+        // TODO retrieve language from frontend user settings
+        lang: navigator.language.replaceAll("-", "_").toLowerCase()
+    };
+
+    const out = Object.entries(values).map(([k, v]) => `${k}:${v}`).join("\n");
+    await fs.outputFile(fp, out);
+}
+
+/**
  * Link game assets for legacy versions. Assets are always linked regardless of the `link` flag.
  */
 async function makeAssetLink(src: string, dst: string) {
@@ -262,5 +283,5 @@ async function linkTasks(tasks: DlxDownloadRequest[]): Promise<void> {
 }
 
 export const vanillaInstaller = {
-    getManifest, prefetch, installProfile, installLibraries, installAssets
+    getManifest, prefetch, installProfile, installLibraries, installAssets, emitOptions
 };

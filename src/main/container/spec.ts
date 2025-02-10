@@ -118,6 +118,11 @@ export interface Container {
      * @param id Logger ID.
      */
     loggingConfig(id: string): string;
+
+    /**
+     * Gets the path to the options file.
+     */
+    options(): string;
 }
 
 export const CONTAINER_REG_VERSION = 0;

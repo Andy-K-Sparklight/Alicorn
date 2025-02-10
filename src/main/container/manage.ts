@@ -97,6 +97,10 @@ class SimpleContainer implements Container {
         return this.#resolve(id);
     }
 
+    options(): string {
+        return this.#resolve("options.txt");
+    }
+
     #resolve(...rel: string[]): string {
         return path.normalize(path.resolve(this.props.root, ...rel));
     }

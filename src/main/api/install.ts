@@ -33,11 +33,14 @@ ipcMain.on("installVanilla", async (e, gameId) => {
     // TODO add signal control to stop the action
     const p = await vanillaInstaller.installProfile(game.launchHint.profileId, c, { onProgress });
 
+    // TODO patch `javaVersion` for legacy profiles without such key
     await jrt.installRuntime(p.javaVersion?.component ?? "jre-legacy", { onProgress });
     await vanillaInstaller.installLibraries(p, c, new Set(), { onProgress });
 
     // TODO add selection for assets installation
     await vanillaInstaller.installAssets(p, c, game.assetsLevel, { onProgress });
+
+    await vanillaInstaller.emitOptions(c);
 
     const ng = structuredClone(game);
     ng.installed = true;
