@@ -1,12 +1,14 @@
-import type { AccountProps } from "@/main/auth/types";
-import type { ContainerProps } from "@/main/container/spec";
+import { ACCOUNT_REG_TRANS, ACCOUNT_REG_VERSION, type AccountProps } from "@/main/auth/types";
+import { CONTAINER_REG_TRANS, CONTAINER_REG_VERSION, type ContainerProps } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
-import type { GameProfile } from "@/main/game/spec";
+import { GAME_REG_TRANS, GAME_REG_VERSION, type GameProfile } from "@/main/game/spec";
 import { isENOENT } from "@/main/util/fs";
 import deepFreeze from "deep-freeze-es6";
 import fs from "fs-extra";
 
-let registryContent: Record<string, Record<string, unknown>> = {};
+let registryContent: Record<string, Record<string, unknown>> & { versions?: Record<string, number> } = {};
+
+export type RegistryTransformer = (src: any) => any;
 
 /**
  * A registry mapping unique IDs to objects.
@@ -14,9 +16,41 @@ let registryContent: Record<string, Record<string, unknown>> = {};
  */
 export class NamedRegistry<T> {
     #name: string;
+    #version: number;
+    #transformers: RegistryTransformer[];
 
-    constructor(name: string) {
+    constructor(name: string, version: number, transformers: RegistryTransformer[]) {
         this.#name = name;
+        this.#version = version;
+        this.#transformers = transformers;
+
+        this.upgrade();
+    }
+
+    upgrade() {
+        let table = registryContent[this.#name];
+        if (!table) {
+            table = {};
+            registryContent[this.#name] = table;
+        }
+
+        if (!registryContent.versions) {
+            registryContent.versions = {};
+        }
+
+        const currentVersion = registryContent.versions[this.#name] ?? 0;
+
+        for (let i = currentVersion; i < this.#version; i++) {
+            console.log(`Upgrading registry ${this.#name} from version ${i}`);
+            for (const [k, v] of Object.entries(table)) {
+                const trans = this.#transformers[i];
+                if (trans) {
+                    table[k] = trans(v);
+                }
+            }
+        }
+
+        registryContent.versions[this.#name] = this.#version;
     }
 
     get(id: string): T {
@@ -66,6 +100,11 @@ async function init() {
     try {
         registryContent = await fs.readJSON(fp);
 
+        // Upgrade before freezing
+        for (const r of Object.values(reg)) {
+            r.upgrade();
+        }
+
         // Freeze to prevent uncaught modification
         for (const tb of Object.values(registryContent)) {
             for (const v of Object.values(tb)) {
@@ -93,7 +132,7 @@ export const registry = {
 };
 
 export const reg = {
-    accounts: new NamedRegistry<AccountProps>("accounts"),
-    containers: new NamedRegistry<ContainerProps>("containers"),
-    games: new NamedRegistry<GameProfile>("games")
+    accounts: new NamedRegistry<AccountProps>("accounts", ACCOUNT_REG_VERSION, ACCOUNT_REG_TRANS),
+    containers: new NamedRegistry<ContainerProps>("containers", CONTAINER_REG_VERSION, CONTAINER_REG_TRANS),
+    games: new NamedRegistry<GameProfile>("games", GAME_REG_VERSION, GAME_REG_TRANS)
 };

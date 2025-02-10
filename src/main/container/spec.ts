@@ -1,3 +1,5 @@
+import type { RegistryTransformer } from "@/main/registry/registry";
+
 /**
  * Minimum required information to construct a container.
  */
@@ -117,3 +119,6 @@ export interface Container {
      */
     loggingConfig(id: string): string;
 }
+
+export const CONTAINER_REG_VERSION = 0;
+export const CONTAINER_REG_TRANS: RegistryTransformer[] = [];

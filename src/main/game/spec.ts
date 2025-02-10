@@ -1,4 +1,5 @@
 import type { LaunchHint } from "@/main/launch/types";
+import type { RegistryTransformer } from "@/main/registry/registry";
 
 export interface GameProfile {
     /**
@@ -20,6 +21,14 @@ export interface GameProfile {
      * Whether the game has been installed.
      */
     installed: boolean;
+
+    /**
+     * Props for installing the game.
+     */
+    installProps: {
+        // TODO add other types when supporting mod loader
+        type: "vanilla";
+    };
 
     /**
      * Game related versions.
@@ -52,3 +61,15 @@ export type GameCoreType =
     "quilt" |
     "neoforged" |
     "unknown"
+
+export const GAME_REG_VERSION = 1;
+export const GAME_REG_TRANS: RegistryTransformer[] = [
+    // v1: patch the `installerProps` key
+    (s) => {
+        s.installProps = {
+            type: "vanilla"
+        };
+
+        return s;
+    }
+];
