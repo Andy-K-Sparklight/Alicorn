@@ -58,7 +58,7 @@ export async function checkFileDownload() {
         assert(completed < 1, "Should abort the download");
     });
 
-    await iTest.run("Error Download", async () => {
+    await iTest.run("Error Request", async () => {
         let caught = false;
         try {
             await dlx.getAll([
@@ -72,5 +72,22 @@ export async function checkFileDownload() {
         }
 
         assert(caught, "Should throw error for invalid HTTP status code");
+    });
+
+    await iTest.run("Error Unmatched Checksum", async () => {
+        let caught = false;
+        try {
+            await dlx.getAll([
+                {
+                    url: "https://piston-data.mojang.com/v1/objects/bd65e7d2e3c237be76cfbef4c2405033d7f91521/client-1.12.xml",
+                    sha1: "aaaae7d2e3c237be76cfbef4c2405033d7f91521",
+                    path: "log.xml"
+                }
+            ]);
+        } catch {
+            caught = true;
+        }
+
+        assert(caught, "Should throw error for unmatched checksum");
     });
 }
