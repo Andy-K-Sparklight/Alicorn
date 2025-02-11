@@ -18,7 +18,7 @@ async function getLibrary(): Promise<typeof streamZip> {
 
 async function unpackOne(lib: string, out: string, exclude?: string[]): Promise<void> {
     const z = await getLibrary();
-    const filter = (p: string) => !(p.endsWith("/") || exclude?.find(e => p.startsWith(e)));
+    const filter = (p: string) => !(p.endsWith("/") || exclude?.some(e => p.startsWith(e)));
     const f = new z.async({ file: lib });
 
     try {

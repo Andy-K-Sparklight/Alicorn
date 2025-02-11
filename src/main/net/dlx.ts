@@ -7,6 +7,7 @@ import { mirror } from "@/main/net/mirrors";
 import { nextdl, type NextDownloadRequest } from "@/main/net/nextdl";
 import { isTruthy } from "@/main/util/misc";
 import { progress, type ProgressController } from "@/main/util/progress";
+import path from "node:path";
 import pLimit from "p-limit";
 
 export interface DlxDownloadRequest {
@@ -25,6 +26,15 @@ export interface DlxDownloadRequest {
  * Resolves all given download requests with mirrors applied.
  */
 async function getAll(req: DlxDownloadRequest[], control?: ProgressController): Promise<void> {
+    // Make the tasks unique or conflicts will happen
+    const cache = new Map<string, DlxDownloadRequest>();
+
+    for (const r of req) {
+        cache.set(path.normalize(path.resolve(r.path)), r);
+    }
+
+    req = [...cache.values()];
+
     let dl = conf().net.downloader;
     if (dl === "aria2" && !aria2.available()) {
         dl = "next";
