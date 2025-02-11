@@ -62,7 +62,6 @@ settings:
 
   dev-warn: Do not modify these unless for development!
   store-warn: You lose data if modifying directly. Use path migration wizard for this.
-  input-blur-to-add: Click outside to add
 
   entries:
     pref:

@@ -15,3 +15,7 @@ progress:
     download-asset-index: Resolving Asset Index
     download-assets: Downloading Assets {{current}} / {{total}}
     link-assets: Processing Assets {{current}} / {{total}}
+
+input:
+  string-array:
+    blur-to-add: Click outside to add

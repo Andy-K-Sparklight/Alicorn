@@ -85,6 +85,12 @@ game-detail:
       alter-jrt:
         label: 手动指定 Java 主程序
         sub: Alicorn 将自动设定用于启动游戏的 Java 运行环境，但你可以覆盖此设置。
+      vm-args:
+        label: JVM 启动选项
+        sub: 启动时添加的 JVM 选项，仅对当前游戏生效。
+      game-args:
+        label: 游戏启动选项
+        sub: 启动时添加的游戏选项，仅对当前游戏生效。
 
 
 monitor:
@@ -130,7 +136,6 @@ settings:
 
   dev-warn: 这些设置只用于开发，请绝不要随意修改！
   store-warn: 修改存储路径将丢失已保存的数据。要迁移目录，请使用迁移向导。
-  input-blur-to-add: 在输入框外单击即可添加
 
   entries:
     pref:

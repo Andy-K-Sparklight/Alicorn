@@ -1,9 +1,10 @@
 /**
  * Various entry widgets for manipulating the settings.
  */
+import { StringArrayInput } from "@components/StringArrayInput";
 import { Button, Input, Select, SelectItem, type SharedSelection, Slider, Switch } from "@heroui/react";
-import { EllipsisIcon, PlusIcon, XIcon } from "lucide-react";
-import React, { useState } from "react";
+import { EllipsisIcon } from "lucide-react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 
 interface SettingsEntryProps<T> {
@@ -88,54 +89,9 @@ export function NumberSliderEntry({ id, icon, value, onChange, max, min }: Numbe
 }
 
 export function StringArrayEntry({ id, icon, value, onChange }: SettingsEntryProps<string[]>) {
-    const [str, setStr] = useState("");
-    const { t } = useTranslation("pages", { keyPrefix: "settings" });
-
-    function addItem() {
-        const s = str.trim();
-        if (s) {
-            const d = [...value, s];
-            onChange(d);
-            setStr("");
-        }
-    }
-
-    function removeItem(i: number) {
-        const d = value.slice(0, i).concat(value.slice(i + 1));
-        onChange(d);
-    }
-
     return <div className="flex flex-col gap-2 w-full">
         <EntryLabel id={id} icon={icon}/>
-
-        {
-            value.map((s, i) =>
-                <div key={i} className="mt-2 flex items-center gap-2">
-                    <div
-                        className="cursor-pointer"
-                        onClick={() => removeItem(i)}
-                    >
-                        <XIcon className="text-foreground-400"/>
-                    </div>
-
-                    <div className="text-sm">
-                        {s}
-                    </div>
-                </div>
-            )
-        }
-
-        <div className="flex items-center gap-1 mt-2">
-            <Input fullWidth value={str} onValueChange={setStr} onBlur={addItem}/>
-            <Button isIconOnly onPress={addItem}>
-                <PlusIcon/>
-            </Button>
-        </div>
-
-        {
-            str &&
-            <div className="text-sm text-secondary">{t("input-blur-to-add")}</div>
-        }
+        <StringArrayInput value={value} onChange={onChange}/>
     </div>;
 }
 
