@@ -90,13 +90,6 @@ const native = {
         },
 
         /**
-         * Renames the game.
-         */
-        rename(gameId: string, newName: string): Promise<void> {
-            return ipcRenderer.invoke("renameGame", gameId, newName);
-        },
-
-        /**
          * Adds the specified game to registry.
          */
         add(game: CreateGameInit): Promise<void> {
@@ -111,10 +104,10 @@ const native = {
         },
 
         /**
-         * Sets alternative JRT to run the game.
+         * Updates the specified game profile.
          */
-        setAlterJRT(id: string, fp: string) {
-            return ipcRenderer.invoke("setAlterJRT", id, fp);
+        update(g: GameProfile) {
+            return ipcRenderer.invoke("updateGame", g);
         },
 
         /**

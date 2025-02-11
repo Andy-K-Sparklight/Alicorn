@@ -41,12 +41,11 @@ export type IpcCommands = {
     selectDir: () => string;
     listGames: () => GameProfile[];
     getGameProfile: (id: string) => GameProfile;
-    setAlterJRT: (id: string, fp: string) => void;
     removeGame: (gameId: string) => void;
     launch: (id: string) => LaunchGameResult;
     gameAuth: (gameId: string) => boolean;
     listAccounts: () => DetailedAccountProps[];
     addGame: (game: CreateGameInit) => void;
-    renameGame: (gameId: string, newName: string) => void;
+    updateGame: (game: GameProfile) => void;
     getVersionManifest: () => VersionManifest;
 }

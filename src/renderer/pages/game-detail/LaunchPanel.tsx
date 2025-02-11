@@ -8,7 +8,9 @@ export function LaunchPanel() {
     const game = useCurrentGameProfile();
 
     function updateJRTExec(fp: string) {
-        void native.game.setAlterJRT(game.id, fp);
+        const ng = structuredClone(game);
+        ng.launchHint.pref.alterJRTExec = fp;
+        void native.game.update(ng);
     }
 
     return <div className="flex flex-col gap-6">

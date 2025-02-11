@@ -1,10 +1,9 @@
-import type { GameCoreType } from "@/main/game/spec";
 import { useGameProfile } from "@/renderer/services/game";
 import { Editable } from "@components/Editable";
 import { GameTypeImage } from "@components/GameTypeImage";
 import { Button, Tab, Tabs } from "@heroui/react";
 import { AdvancedPanel } from "@pages/game-detail/AdvancedPanel";
-import { GameProfileProvider } from "@pages/game-detail/GameProfileProvider";
+import { GameProfileProvider, useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
 import { LaunchPanel } from "@pages/game-detail/LaunchPanel";
 import { DotIcon, EditIcon, FolderIcon } from "lucide-react";
 import React from "react";
@@ -24,16 +23,7 @@ export function GameDetailView() {
 
     return <GameProfileProvider game={game}>
         <div className="w-full h-full flex flex-col gap-4">
-            <div>
-                <Header
-                    id={gameId}
-                    name={name}
-                    installed={installed}
-                    containerId={containerId}
-                    profileId={profileId}
-                    type={type}
-                />
-            </div>
+            <Header/>
             <div className="grow min-h-0">
                 <ManagePanel/>
             </div>
@@ -42,25 +32,19 @@ export function GameDetailView() {
         ;
 }
 
-interface HeaderProps {
-    id: string;
-    name: string;
-    installed: boolean;
-    containerId: string;
-    profileId: string;
-    type: GameCoreType;
-}
-
-function Header({ id, name, installed, containerId, profileId, type }: HeaderProps) {
+function Header() {
     const { t } = useTranslation("pages", { keyPrefix: "game-detail.header" });
+    const game = useCurrentGameProfile();
+    const { id, name, installed, type, launchHint: { containerId, profileId } } = game;
 
     function handleReveal() {
         native.game.reveal(id, ".");
     }
 
     function handleNameChange(newName: string) {
-        console.log(`Setting game name to ${newName}`);
-        void native.game.rename(id, newName);
+        const ng = structuredClone(game);
+        ng.name = newName;
+        void native.game.update(ng);
     }
 
     return <div className="p-4 h-32 flex gap-8">

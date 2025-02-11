@@ -86,24 +86,7 @@ ipcMain.handle("addGame", async (_, init) => {
     games.add(g);
 });
 
-ipcMain.handle("renameGame", (_, id, name) => {
-    const g = reg.games.get(id);
-    if (g) {
-        const ng = structuredClone(g);
-        ng.name = name;
-        games.add(ng);
-    }
-});
-
-ipcMain.handle("setAlterJRT", (_, id, fp) => {
-    const g = reg.games.get(id);
-
-    if (g) {
-        const ng = structuredClone(g);
-        ng.launchHint.pref.alterJRTExec = fp;
-        games.add(ng);
-    }
-});
+ipcMain.handle("updateGame", (_, g) => games.add(structuredClone(g)));
 
 function genGameId(): string {
     let i = 1;
