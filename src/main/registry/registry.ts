@@ -81,6 +81,10 @@ export class NamedRegistry<T> {
         return Object.keys(registryContent[this.#name] ?? {});
     }
 
+    entries(): [string, T] [] {
+        return Object.entries(registryContent[this.#name] ?? {}) as [string, T] [];
+    }
+
     getAll(): T[] {
         return Object.values(registryContent[this.#name] ?? {}) as T[];
     }

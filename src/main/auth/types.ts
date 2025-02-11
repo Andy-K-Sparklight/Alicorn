@@ -30,5 +30,7 @@ export interface Account {
 
 export type AccountProps = LocalAccountProps | VanillaAccountProps;
 
+export type DetailedAccountProps = AccountProps & { uuid: string; }
+
 export const ACCOUNT_REG_VERSION = 0;
 export const ACCOUNT_REG_TRANS: RegistryTransformer[] = [];

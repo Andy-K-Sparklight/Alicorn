@@ -1,5 +1,6 @@
 import type { CreateGameInit } from "@/main/api/game";
 import type { LaunchGameResult } from "@/main/api/launcher";
+import type { DetailedAccountProps } from "@/main/auth/types";
 import type { UserConfig } from "@/main/conf/conf";
 import type { GameProfile } from "@/main/game/spec";
 import type { VersionManifest } from "@/main/install/vanilla";
@@ -43,6 +44,7 @@ export type IpcCommands = {
     removeGame: (gameId: string) => void;
     launch: (id: string) => LaunchGameResult;
     gameAuth: (gameId: string) => boolean;
+    listAccounts: () => DetailedAccountProps[];
     addGame: (game: CreateGameInit) => void;
     renameGame: (gameId: string, newName: string) => void;
     getVersionManifest: () => VersionManifest;

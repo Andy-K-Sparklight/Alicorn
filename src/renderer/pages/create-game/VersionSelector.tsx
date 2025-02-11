@@ -32,7 +32,7 @@ export function VersionSelector({ version, onChange }: VersionSelectorProps) {
     function handleSelectionChange(sel: SharedSelection) {
         if (sel instanceof Set) {
             const s = [...sel];
-            onChange(s[0]?.toString()); // Might be null when no selection
+            onChange(s[0]?.toString() ?? null); // Might be null when no selection
         }
     }
 

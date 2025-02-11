@@ -1,5 +1,6 @@
 import type { CreateGameInit } from "@/main/api/game";
 import type { LaunchGameResult } from "@/main/api/launcher";
+import type { DetailedAccountProps } from "@/main/auth/types";
 import type { UserConfig } from "@/main/conf/conf";
 import type { GameProfile } from "@/main/game/spec";
 import type { VersionManifest } from "@/main/install/vanilla";
@@ -133,6 +134,13 @@ const native = {
          */
         forGame(id: string): Promise<boolean> {
             return ipcRenderer.invoke("gameAuth", id);
+        },
+
+        /**
+         * Gets all accounts stored in the registry.
+         */
+        getAccounts(): Promise<DetailedAccountProps[]> {
+            return ipcRenderer.invoke("listAccounts");
         }
     },
 

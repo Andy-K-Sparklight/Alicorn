@@ -24,3 +24,5 @@ ipcMain.handle("gameAuth", async (_, gameId) => {
 
     return true;
 });
+
+ipcMain.handle("listAccounts", () => reg.accounts.entries().map(([k, v]) => ({ ...v, uuid: k })));

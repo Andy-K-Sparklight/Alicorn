@@ -27,7 +27,8 @@ export function GameCardActions({ installStatus, gameId, onInstall }: GameAction
         const authed = await native.auth.forGame(gameId);
 
         if (!authed) {
-            toast(AuthFailedToast, { type: "error" });
+            toast(<AuthFailedToast/>, { type: "error" });
+            setLaunching(false);
             return;
         }
 

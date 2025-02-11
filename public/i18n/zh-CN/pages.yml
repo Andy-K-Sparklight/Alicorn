@@ -23,7 +23,16 @@ create-game:
   default-name: 新游戏
   loading-versions: 正在获取版本列表……
 
-  account-tip: 现在需要为每个游戏重新登录帐户。在未来的版本中，将能够选择使用已有的帐户。
+  account:
+    select:
+      label: 选择一个帐户
+      placeholder: 未选取
+    new:
+      label: 登录新帐户
+      sub: 当启动游戏时，将提示你进行登录。
+    reuse:
+      label: 使用已有帐户
+      sub: 选择一个已经创建的帐户。
 
   assets-level:
     full:

@@ -1,7 +1,7 @@
 import { useNav } from "@/renderer/util/nav";
-import { Alert } from "@components/Alert";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { Button, Input, Switch } from "@heroui/react";
+import { AccountSelector } from "@pages/create-game/AccountSelector";
 import { ContainerSelector } from "@pages/create-game/ContainerSelector";
 import { VersionSelector } from "@pages/create-game/VersionSelector";
 import React, { useState } from "react";
@@ -20,6 +20,10 @@ export function CreateGameView() {
     const [containerId, setContainerId] = useState<string>();
     const [containerShouldLink, setContainerShouldLink] = useState(true);
     const [shareContainer, setShareContainer] = useState(false);
+
+    const [newAccount, setNewAccount] = useState<boolean>(true);
+    const [accountId, setAccountId] = useState<string | null>(null);
+
     const [assetsLevel, setAssetsLevel] = useState<"full" | "video-only">("full");
 
     const [creating, setCreating] = useState(false);
@@ -34,6 +38,7 @@ export function CreateGameView() {
             await native.game.add({
                 name: gameName,
                 containerId,
+                accountId,
                 profileId: gameVersion,
                 assetsLevel,
                 containerShouldLink
@@ -94,10 +99,25 @@ export function CreateGameView() {
                 <div className="flex flex-col gap-4">
                     <div className="font-bold text-xl">{t("account-title")}</div>
 
-                    <Alert
-                        classNames={{ title: "font-bold" }}
-                        title={t("account-tip")}
-                    />
+                    <RadioGroup
+                        value={newAccount ? "new" : "reuse"}
+                        onValueChange={v => setNewAccount(v === "new")}
+                    >
+                        {
+                            ["new", "reuse"].map(lv =>
+                                <Radio key={lv} value={lv} description={t(`account.${lv}.sub`)}>
+                                    {t(`account.${lv}.label`)}
+                                </Radio>
+                            )
+                        }
+                    </RadioGroup>
+
+                    <AccountSelector enabled={!newAccount} accountId={accountId} onChange={setAccountId}/>
+
+                    {/*<Alert*/}
+                    {/*    classNames={{ title: "font-bold" }}*/}
+                    {/*    title={t("account-tip")}*/}
+                    {/*/>*/}
                 </div>
 
                 <div className="flex flex-col gap-4">

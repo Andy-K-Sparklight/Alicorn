@@ -28,6 +28,7 @@ ipcMain.on("revealGameContent", async (_, gameId, scope) => {
 export interface CreateGameInit {
     name: string;
     profileId: string;
+    accountId: string | null;
     assetsLevel: "full" | "video-only";
     containerId?: string;
     containerShouldLink: boolean; // Only present when creating dedicated container
@@ -69,7 +70,7 @@ ipcMain.handle("addGame", async (_, init) => {
             type: "vanilla"
         },
         launchHint: {
-            accountId: "", // TODO update ID when other account types are added
+            accountId: init.accountId ?? "",
             containerId: cid,
             profileId,
             pref: {} // TODO allow user to choose pref
