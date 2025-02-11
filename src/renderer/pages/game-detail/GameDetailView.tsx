@@ -1,34 +1,29 @@
-import type { GameCoreType, GameProfile } from "@/main/game/spec";
-import { useGameList } from "@/renderer/services/game";
-import { useNav } from "@/renderer/util/nav";
-import { ConfirmPopup } from "@components/ConfirmPopup";
+import type { GameCoreType } from "@/main/game/spec";
+import { useGameProfile } from "@/renderer/services/game";
 import { Editable } from "@components/Editable";
 import { GameTypeImage } from "@components/GameTypeImage";
 import { Button, Tab, Tabs } from "@heroui/react";
-import { DotIcon, EditIcon, FolderIcon, UnlinkIcon } from "lucide-react";
-import React, { useContext } from "react";
+import { AdvancedPanel } from "@pages/game-detail/AdvancedPanel";
+import { GameProfileProvider } from "@pages/game-detail/GameProfileProvider";
+import { LaunchPanel } from "@pages/game-detail/LaunchPanel";
+import { DotIcon, EditIcon, FolderIcon } from "lucide-react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "wouter";
 
 
-const GameProfileContext = React.createContext<GameProfile | null>(null);
-
-function useGameProfile(): GameProfile {
-    return useContext(GameProfileContext)!;
-}
-
 export function GameDetailView() {
     const { gameId } = useParams<{ gameId: string }>();
-    const games = useGameList();
+    const game = useGameProfile(gameId);
 
-    const game = games?.find(g => g.id === gameId);
-
-    if (!game) return null;
+    if (!game) {
+        return null;
+    }
 
     const { name, installed, type, launchHint: { containerId, profileId } } = game;
 
-    return <div className="w-full h-full flex flex-col gap-4">
-        <GameProfileContext.Provider value={game}>
+    return <GameProfileProvider game={game}>
+        <div className="w-full h-full flex flex-col gap-4">
             <div>
                 <Header
                     id={gameId}
@@ -42,8 +37,9 @@ export function GameDetailView() {
             <div className="grow min-h-0">
                 <ManagePanel/>
             </div>
-        </GameProfileContext.Provider>
-    </div>;
+        </div>
+    </GameProfileProvider>
+        ;
 }
 
 interface HeaderProps {
@@ -112,6 +108,7 @@ function ManagePanel() {
     const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage" });
 
     const tabs = {
+        launch: <LaunchPanel/>,
         advanced: <AdvancedPanel/>
     };
 
@@ -129,37 +126,5 @@ function ManagePanel() {
                 )
             }
         </Tabs>
-    </div>;
-}
-
-function AdvancedPanel() {
-    const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage.advanced" });
-    const nav = useNav();
-    const { id, name } = useGameProfile();
-
-    async function handleUnlink() {
-        await native.game.remove(id);
-        nav("/games");
-    }
-
-    return <div className="flex flex-col gap-6">
-        <div className="flex items-center">
-            <div className="grow flex flex-col gap-1">
-                <div className="font-bold text-lg">{t("unlink.label")}</div>
-                <div className="text-sm text-foreground-400">{t("unlink.sub")}</div>
-            </div>
-
-            <div>
-                <ConfirmPopup
-                    placement="right"
-                    title={t("unlink.confirm.title")}
-                    sub={t("unlink.confirm.sub")}
-                    btnText={t("unlink.confirm.btn")}
-                    onConfirm={handleUnlink}
-                >
-                    <Button startContent={<UnlinkIcon/>}>{t("unlink.btn", { name })}</Button>
-                </ConfirmPopup>
-            </div>
-        </div>
     </div>;
 }

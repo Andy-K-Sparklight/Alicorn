@@ -80,6 +80,11 @@ game-detail:
           title: 移除此游戏？
           sub: 将从游戏列表中删除此游戏。
           btn: 我知道我在做什么！
+    launch:
+      title: 启动
+      alter-jrt:
+        label: 手动指定 Java 主程序
+        sub: Alicorn 将自动设定用于启动游戏的 Java 运行环境，但你可以覆盖此设置。
 
 
 monitor:

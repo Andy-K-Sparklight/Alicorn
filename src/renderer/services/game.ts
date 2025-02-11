@@ -31,3 +31,9 @@ function getSnapshot() {
 export function useGameList(): GameProfile[] | null {
     return useSyncExternalStore(subscribe, getSnapshot);
 }
+
+export function useGameProfile(id: string): GameProfile | null {
+    const games = useGameList();
+
+    return games?.find(g => g.id === id) ?? null;
+}

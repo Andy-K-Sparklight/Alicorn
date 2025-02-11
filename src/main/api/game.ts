@@ -95,6 +95,16 @@ ipcMain.handle("renameGame", (_, id, name) => {
     }
 });
 
+ipcMain.handle("setAlterJRT", (_, id, fp) => {
+    const g = reg.games.get(id);
+
+    if (g) {
+        const ng = structuredClone(g);
+        ng.launchHint.pref.alterJRTExec = fp;
+        games.add(ng);
+    }
+});
+
 function genGameId(): string {
     let i = 1;
     while (true) {

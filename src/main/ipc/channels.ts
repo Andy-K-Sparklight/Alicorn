@@ -41,6 +41,7 @@ export type IpcCommands = {
     selectDir: () => string;
     listGames: () => GameProfile[];
     getGameProfile: (id: string) => GameProfile;
+    setAlterJRT: (id: string, fp: string) => void;
     removeGame: (gameId: string) => void;
     launch: (id: string) => LaunchGameResult;
     gameAuth: (gameId: string) => boolean;

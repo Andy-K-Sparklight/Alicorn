@@ -111,6 +111,13 @@ const native = {
         },
 
         /**
+         * Sets alternative JRT to run the game.
+         */
+        setAlterJRT(id: string, fp: string) {
+            return ipcRenderer.invoke("setAlterJRT", id, fp);
+        },
+
+        /**
          * Adds a listener for game changes.
          */
         onChange(fn: () => void) {
