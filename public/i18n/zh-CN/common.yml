@@ -19,3 +19,6 @@ progress:
 input:
   string-array:
     blur-to-add: 在输入框外单击即可添加
+
+toast:
+  game-installed: 已安装游戏，开始游玩吧！

@@ -32,7 +32,6 @@ games:
   game-card:
     ready: Ready
     unready: Not Installed
-    installed: Game installed. Have fun!
 
 monitor:
   title: Processes

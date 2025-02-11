@@ -60,7 +60,6 @@ games:
   game-card:
     ready: 准备就绪
     unready: 需要安装
-    installed: 已安装游戏，开始游玩吧！
 
 game-detail:
   header:
@@ -80,6 +79,10 @@ game-detail:
           title: 移除此游戏？
           sub: 将从游戏列表中删除此游戏。
           btn: 我知道我在做什么！
+      reinstall:
+        label: 重新安装
+        sub: 重新下载和设置此游戏。
+        btn: 重新安装「{{name}}」
     launch:
       title: 启动
       alter-jrt:

@@ -19,3 +19,6 @@ progress:
 input:
   string-array:
     blur-to-add: Click outside to add
+
+toast:
+  game-installed: Game installed. Have fun!

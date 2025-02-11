@@ -6,7 +6,6 @@ import { GameCardActions } from "@pages/games/GameCardActions";
 import { clsx } from "clsx";
 import { CheckCircleIcon, CloudDownloadIcon, DotIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
 
 interface GameCardProps {
     game: GameProfile;
@@ -19,13 +18,12 @@ export function GameCard({ game }: GameCardProps) {
     const installProgress = useInstallProgress(id);
 
     const isInstalling = installProgress !== null;
-    const installStatus = installed ? "installed" : isInstalling ? "installing" : "not-installed";
+    const installStatus = isInstalling ? "installing" : installed ? "installed" : "not-installed";
 
     const progressText = installProgress && tc(installProgress.state, { ...installProgress.value });
 
     async function handleInstall() {
         await remoteInstaller.install(id);
-        toast(t("installed"), { type: "success" });
     }
 
     return <Card>

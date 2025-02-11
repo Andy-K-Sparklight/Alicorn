@@ -2,7 +2,9 @@ import type { VanillaInstallEvent } from "@/main/api/install";
 import type { Progress } from "@/main/util/progress";
 import { retrievePort } from "@/preload/message";
 import Emittery from "emittery";
+import { t } from "i18next";
 import { useCallback, useSyncExternalStore } from "react";
+import { toast } from "react-toastify";
 import throttle from "throttleit";
 
 // Maps game ID to its event target
@@ -25,6 +27,7 @@ async function install(gameId: string): Promise<void> {
                 case "finish":
                     port.close();
                     progressMap.delete(gameId);
+                    toast(t("toast.game-installed"), { type: "success" });
                     res();
                     break;
             }
