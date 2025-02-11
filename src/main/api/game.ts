@@ -8,6 +8,7 @@ import { vanillaInstaller } from "@/main/install/vanilla";
 import { ipcMain } from "@/main/ipc/typed";
 import { reg } from "@/main/registry/registry";
 import { shell } from "electron";
+import fs from "fs-extra";
 
 ipcMain.handle("listGames", () => reg.games.getAll());
 ipcMain.handle("removeGame", (_, gameId) => games.remove(gameId));
@@ -44,15 +45,14 @@ ipcMain.handle("addGame", async (_, init) => {
     let cid = containerId;
 
     if (!cid) {
-        cid = genContainerId();
-        const spec: ContainerProps = {
-            id: cid,
-            root: paths.game.to(cid),
-            flags: {
-                link: containerShouldLink
-            }
+        const props = await genContainerProps();
+        cid = props.id;
+
+        props.flags = {
+            link: containerShouldLink
         };
-        reg.containers.add(cid, spec);
+
+        reg.containers.add(cid, props);
     }
 
     const type = ({
@@ -99,13 +99,27 @@ function genGameId(): string {
     }
 }
 
-function genContainerId(): string {
+async function genContainerProps(): Promise<ContainerProps> {
+    let dirs: string[] = [];
+
+    try {
+        dirs = await fs.readdir(paths.game.to());
+    } catch {}
+
     let i = 1;
+    let st: string;
+
     while (true) {
-        const st = "#" + i;
-        if (!reg.containers.has(st)) {
-            return st;
+        st = "#" + i;
+        if (!reg.containers.has(st) && !dirs.includes(st)) {
+            break;
         }
         i++;
     }
+
+    return {
+        id: st,
+        root: paths.game.to(st),
+        flags: {}
+    };
 }
