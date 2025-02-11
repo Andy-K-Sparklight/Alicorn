@@ -65,6 +65,9 @@ ipcMain.handle("addGame", async (_, init) => {
         id: genGameId(),
         name,
         installed: false,
+        installProps: {
+            type: "vanilla"
+        },
         launchHint: {
             accountId: "", // TODO update ID when other account types are added
             containerId: cid,
