@@ -21,5 +21,6 @@ input:
     blur-to-add: 在输入框外单击即可添加
 
 toast:
+  app-upgraded: 已安装更新：{{version}}
   game-installed: 已安装游戏，开始游玩吧！
   game-destroyed: 已删除「{{name}}」。

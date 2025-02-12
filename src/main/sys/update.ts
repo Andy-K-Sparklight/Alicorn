@@ -1,4 +1,4 @@
-import { app, net } from "electron";
+import { app, BrowserWindow, net } from "electron";
 import fs from "fs-extra";
 import { nanoid } from "nanoid";
 import StreamZip from "node-stream-zip";
@@ -115,6 +115,8 @@ async function runUpdate() {
             const [am, ver] = a;
             console.debug(`Found updatable version: ${ver}`);
             await installAsset(am, ver);
+
+            BrowserWindow.getAllWindows().forEach(w => w.webContents.send("appUpgraded", ver));
         } else {
             console.log("This is already the latest version.");
         }

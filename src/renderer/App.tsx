@@ -11,8 +11,9 @@ import { MonitorListView } from "@pages/monitor-list/MonitorListView";
 import { MonitorView } from "@pages/monitor/MonitorView";
 import { pages } from "@pages/pages";
 import { SettingsView } from "@pages/settings/SettingsView";
-import React from "react";
-import { ToastContainer } from "react-toastify";
+import { t } from "i18next";
+import React, { useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import { Redirect, Route, Switch } from "wouter";
 import pkg from "~/package.json";
 
@@ -29,6 +30,10 @@ export function App() {
 
     // Toasts use the opposite theme
     const toastTheme = themeManager.isDark(theme) ? "light" : "dark";
+
+    useEffect(() => {
+        native.app.onUpgraded(version => toast(t("toast.app-upgraded", { version }), { type: "info" }));
+    }, []);
 
     return <HeroUIProvider navigate={nav}>
         <main className="fixed inset-0 text-foreground bg-background">

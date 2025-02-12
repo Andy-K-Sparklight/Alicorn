@@ -17,6 +17,18 @@ const internalEvents = new Emittery();
 
 const native = {
     /**
+     * App operations.
+     */
+    app: {
+        /**
+         * Gets notified when app has been upgraded.
+         */
+        onUpgraded(handler: (version: string) => void) {
+            ipcRenderer.on("appUpgraded", (_, v) => handler(v));
+        }
+    },
+
+    /**
      * Window control methods.
      */
     bwctl: {
