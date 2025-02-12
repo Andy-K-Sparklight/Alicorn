@@ -60,7 +60,13 @@ function ContentArea() {
 
 function ControlPanel() {
     const proc = useCurrentProc();
-    const { profile: { id, name, type }, status, startTime, pid, exitTime } = proc;
+    const {
+        profile: { id, name, type, launchHint: { containerId, profileId } },
+        status,
+        startTime,
+        pid,
+        exitTime
+    } = proc;
     const [time, setTime] = useState(Date.now());
 
     useEffect(() => {
@@ -73,6 +79,7 @@ function ControlPanel() {
             <StatusDisplayMemo
                 id={id}
                 name={name}
+                profileId={profileId}
                 type={type}
                 status={status}
                 uptime={(exitTime ?? time) - startTime}

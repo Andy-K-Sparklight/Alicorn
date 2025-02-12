@@ -22,3 +22,4 @@ input:
 
 toast:
   game-installed: 已安装游戏，开始游玩吧！
+  game-destroyed: 已删除「{{name}}」。

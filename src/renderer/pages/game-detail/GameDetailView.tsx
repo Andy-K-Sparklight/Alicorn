@@ -10,7 +10,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "wouter";
 
-
 export function GameDetailView() {
     const { gameId } = useParams<{ gameId: string }>();
     const game = useGameProfile(gameId);
@@ -19,17 +18,14 @@ export function GameDetailView() {
         return null;
     }
 
-    const { name, installed, type, launchHint: { containerId, profileId } } = game;
-
     return <GameProfileProvider game={game}>
         <div className="w-full h-full flex flex-col gap-4">
             <Header/>
-            <div className="grow min-h-0">
+            <div className="grow min-h-0 pb-8">
                 <ManagePanel/>
             </div>
         </div>
-    </GameProfileProvider>
-        ;
+    </GameProfileProvider>;
 }
 
 function Header() {

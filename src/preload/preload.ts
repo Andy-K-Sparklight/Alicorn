@@ -104,10 +104,24 @@ const native = {
         },
 
         /**
+         * Checks whether the game profile is being shared with other games.
+         */
+        queryShared(id: string): Promise<string[]> {
+            return ipcRenderer.invoke("querySharedGames", id);
+        },
+
+        /**
          * Updates the specified game profile.
          */
         update(g: GameProfile) {
             return ipcRenderer.invoke("updateGame", g);
+        },
+
+        /**
+         * Destroys the specified game.
+         */
+        destroy(id: string) {
+            ipcRenderer.send("destroyGame", id);
         },
 
         /**

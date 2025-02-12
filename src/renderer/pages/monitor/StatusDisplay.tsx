@@ -11,41 +11,43 @@ export const StatusDisplayMemo = React.memo(StatusDisplay);
 interface StatusDisplayProps {
     id: string;
     name: string;
+    profileId: string;
     type: GameCoreType;
     status: RemoteGameStatus;
     uptime: number;
     pid: number;
 }
 
-function StatusDisplay({ id, name, type, status, uptime, pid }: StatusDisplayProps) {
+function StatusDisplay({ id, name, profileId, type, status, uptime, pid }: StatusDisplayProps) {
     const { t } = useTranslation("pages", { keyPrefix: "monitor" });
 
     return <Card className="h-full">
         <CardBody>
-            <div className="flex flex-col p-4 gap-6 items-center my-auto">
-                <div
-                    className={
-                        clsx("max-w-40 mx-10 p-5 bg-content2 rounded-full outline outline-4 outline-offset-8", {
-                            "outline-success": status === "running",
-                            "outline-default": status === "exited",
-                            "outline-danger": status === "crashed"
-                        })
-                    }
-                >
-                    <GameTypeImage type={type}/>
+            <div className="flex flex-col gap-6 p-6 items-center my-auto">
+                <div className="w-full flex gap-6 justify-center items-center">
+                    <div
+                        className={
+                            clsx("h-16 aspect-square p-2 bg-content2 rounded-full outline outline-2 outline-offset-4", {
+                                "outline-success": status === "running",
+                                "outline-default": status === "exited",
+                                "outline-danger": status === "crashed"
+                            })
+                        }
+                    >
+                        <GameTypeImage type={type}/>
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                        <div className="font-bold text-lg">{name}</div>
+                        <div className="text-default-400">{id}</div>
+                    </div>
                 </div>
 
-
-                <div className="mt-2 flex flex-col items-center gap-1">
-                    <div className="font-bold text-lg">{name}</div>
-                    <div className="text-default-400">{id}</div>
-                </div>
-
-
-                <div className="flex flex-col w-5/6 gap-1">
+                <div className="flex flex-col w-full gap-1">
                     <DataSlot label={t("label.status")} value={t(`status.${status}`)}/>
                     <DataSlot label={t("label.uptime")} value={formatTime(uptime)}/>
                     <DataSlot label={t("label.pid")} value={pid.toString()}/>
+                    <DataSlot label={t("label.profile")} value={profileId}/>
                 </div>
             </div>
         </CardBody>
@@ -53,7 +55,7 @@ function StatusDisplay({ id, name, type, status, uptime, pid }: StatusDisplayPro
 }
 
 function DataSlot({ label, value }: { label: string, value: string }) {
-    return <div className="flex text-sm">
+    return <div className="flex text-sm flex-wrap">
         <div className="grow text-foreground-400">{label}</div>
         <div>{value}</div>
     </div>;

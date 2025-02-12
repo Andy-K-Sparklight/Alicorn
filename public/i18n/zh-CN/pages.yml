@@ -71,6 +71,7 @@ game-detail:
   manage:
     advanced:
       title: 高级
+      danger-warn: 以下的操作可能会损坏你的游戏！请三思而后行。
       unlink:
         label: 移除游戏
         sub: 将该游戏从游戏列表中移除，但保留其数据，可以在稍后将其重新导入。
@@ -83,6 +84,44 @@ game-detail:
         label: 重新安装
         sub: 重新下载和设置此游戏。
         btn: 重新安装「{{name}}」
+      install-full:
+        label: 下载完整资源
+        sub: 此游戏当前仅包含视觉资源。下载完整资源，获取全部游戏体验。
+        btn: 下载完整资源
+      destroy:
+        label: 抹掉游戏
+        sub: 删除全部游戏文件，该操作不可撤销。
+        sub-disabled: |-
+          此游戏当前与其它游戏共享空间，无法将其抹掉。
+          要抹掉此游戏，请先移除以下游戏：{{sharedGames}}
+        btn: 抹掉「{{name}}」
+        confirm:
+          title: 等一下！
+          sub: |-
+            这会抹掉「{{name}}」的所有数据，包括游戏资源、运行库、存档、模组、资源包等内容。
+            这是永久性的 —— 即便是通过回收站也无法恢复它们。
+            确实要这么做？
+          input-hint: "请输入此游戏的编号（以 # 开头）来确认。"
+          btn: 抹掉「{{name}}」并删除其所有数据
+        challenge:
+          title: 如果抹掉「{{name}}」，将会发生什么？
+          wrong-1:
+            label: 我仍然能启动该游戏
+            sub: 不！此游戏将被永久删除，你无法再使用它了。
+          wrong-2:
+            label: 我仍然能查看和备份我的存档
+            sub: 不！存档文件会被删除，而且没有方法找回它们。
+          wrong-3:
+            label: 我可以从回收站恢复删除的数据
+            sub: 不！数据一旦删除，即使使用回收站也无法恢复。
+          correct:
+            label: 我无法再使用该游戏的任何内容，也不可能找回
+            sub: 是的 —— 所有的游戏资源、运行库、存档、模组、资源包等内容都会被删除。
+          btn:
+            0: 我确实要抹掉「{{name}}」并删除其所有数据
+            1: 我明白我将没有任何方法找回「{{name}}」的任何内容
+            2: 我知道我在做什么！
+
     launch:
       title: 启动
       alter-jrt:
@@ -104,6 +143,7 @@ monitor:
     status: 状态
     uptime: 运行时间
     pid: 进程号
+    profile: 核心名称
   status:
     running: 正常运行中
     exited: 已停止

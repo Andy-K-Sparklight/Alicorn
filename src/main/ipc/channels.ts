@@ -17,6 +17,7 @@ export type IpcCallEvents = {
     openUrl: (url: string) => void;
     stopGame: (id: string) => void;
     removeGame: (id: string) => void;
+    destroyGame: (id: string) => void;
     revealGameContent: (id: string, scope: string) => void;
     languageChange: (lang: string) => void;
 }
@@ -42,6 +43,7 @@ export type IpcCommands = {
     listGames: () => GameProfile[];
     getGameProfile: (id: string) => GameProfile;
     removeGame: (gameId: string) => void;
+    querySharedGames: (id: string) => string[];
     launch: (id: string) => LaunchGameResult;
     gameAuth: (gameId: string) => boolean;
     listAccounts: () => DetailedAccountProps[];

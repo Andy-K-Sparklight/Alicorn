@@ -88,6 +88,22 @@ ipcMain.handle("addGame", async (_, init) => {
 
 ipcMain.handle("updateGame", (_, g) => games.add(structuredClone(g)));
 
+ipcMain.on("destroyGame", async (_, id) => {
+    if (games.queryShared(id).length > 0) return;
+
+    const g = reg.games.get(id);
+
+    if (g) {
+        games.remove(g.id);
+        // Containers and accounts will be purged when saving registries
+
+        const root = containers.get(g.launchHint.containerId).props.root;
+        await fs.remove(root);
+    }
+});
+
+ipcMain.handle("querySharedGames", async (_, id) => games.queryShared(id));
+
 function genGameId(): string {
     let i = 1;
     while (true) {
@@ -110,7 +126,7 @@ async function genContainerProps(): Promise<ContainerProps> {
     let st: string;
 
     while (true) {
-        st = "#" + i;
+        st = "MC-" + i;
         if (!reg.containers.has(st) && !dirs.includes(st)) {
             break;
         }
