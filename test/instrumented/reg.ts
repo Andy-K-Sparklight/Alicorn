@@ -1,5 +1,5 @@
-import type { ContainerProps } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
+import type { GameProfile } from "@/main/game/spec";
 import { reg, registry } from "@/main/registry/registry";
 import fs from "fs-extra";
 import assert from "node:assert";
@@ -10,23 +10,25 @@ import { iTest } from "~/test/instrumented/tools";
  */
 export async function checkRegistries() {
     await iTest.run("Registries Save & Load", async () => {
-        const c: ContainerProps = {
+        const g = {
             id: "default",
-            root: "fake-root",
-            flags: {}
-        };
+            name: "fake",
+            launchHint: {
+                containerId: "" // Required when purging
+            }
+        } as GameProfile; // We're not building a full copy here
 
-        reg.containers.add(c.id, c);
+        reg.games.add(g.id, g);
 
-        assert(reg.containers.get("default") === c, "Should save registry content in memory");
+        assert(reg.games.get("default") === g, "Should save registry content in memory");
 
         await registry.close();
 
         const m = await fs.readJSON(paths.store.to("registries.json"));
 
-        const co = m["containers"]["default"];
+        const co = m["games"]["default"];
 
-        assert(co !== null, "Should save registry content to database");
-        assert(co?.root === "fake-root", "Should keep object information");
+        assert(!!co, "Should save registry content");
+        assert(co.name === "fake", "Should keep object information");
     });
 }
