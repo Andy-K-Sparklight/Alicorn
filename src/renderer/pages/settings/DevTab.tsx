@@ -11,7 +11,6 @@ export function DevTab() {
 
     const [config, makeReduce] = useConfig();
 
-
     return <>
         <Alert
             classNames={{ title: "font-bold" }}

@@ -2,7 +2,6 @@ import { useAutoFontClass } from "@/renderer/i18n/i18n";
 import { themeManager, useAutoTheme, useTheme } from "@/renderer/theme";
 import { useNav } from "@/renderer/util/nav";
 import { AnimatedRoute } from "@components/AnimatedRoute";
-import { ConfigProvider } from "@components/ConfigProvider";
 import { Navigator } from "@components/Navigator";
 import { HeroUIProvider } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
@@ -40,21 +39,19 @@ export function App() {
 
 
     return <HeroUIProvider navigate={nav}>
-        <ConfigProvider>
-            <main className="fixed inset-0 text-foreground bg-background">
-                <div className="flex flex-col w-full h-full">
-                    <Navigator/>
-                    <MainArea/>
-                </div>
-                <VersionOverlay/>
-                <ToastContainer
-                    theme={toastTheme}
-                    position="bottom-left"
-                    newestOnTop
-                    pauseOnFocusLoss={false}
-                />
-            </main>
-        </ConfigProvider>
+        <main className="fixed inset-0 text-foreground bg-background">
+            <div className="flex flex-col w-full h-full">
+                <Navigator/>
+                <MainArea/>
+            </div>
+            <VersionOverlay/>
+            <ToastContainer
+                theme={toastTheme}
+                position="bottom-left"
+                newestOnTop
+                pauseOnFocusLoss={false}
+            />
+        </main>
     </HeroUIProvider>;
 }
 

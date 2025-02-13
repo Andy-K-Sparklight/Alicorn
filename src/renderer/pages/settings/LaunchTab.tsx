@@ -22,7 +22,5 @@ export function LaunchTab() {
             value={config.runtime.args.game}
             onChange={makeReduce((c, a) => c.runtime.args.game = a)}
         />
-
-        <Divider/>
     </>;
 }

@@ -7,7 +7,6 @@ import { FileUserIcon, HardDriveUploadIcon, LanguagesIcon, PaletteIcon } from "l
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-
 /**
  * User preferences page.
  */
