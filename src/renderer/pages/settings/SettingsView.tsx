@@ -4,8 +4,9 @@ import { DevTab } from "@pages/settings/DevTab";
 import { LaunchTab } from "@pages/settings/LaunchTab";
 import { NetworkTab } from "@pages/settings/NetworkTab";
 import { PreferencesTab } from "@pages/settings/PreferencesTab";
+import { PrivacyTab } from "@pages/settings/PrivacyTab";
 import { StorageTab } from "@pages/settings/StorageTab";
-import { BrushIcon, CodeXmlIcon, DatabaseIcon, RocketIcon, WifiIcon } from "lucide-react";
+import { BrushIcon, CodeXmlIcon, DatabaseIcon, LockIcon, RocketIcon, WifiIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useLocalStorage, useSessionStorage } from "react-use";
@@ -36,6 +37,11 @@ const settingsTabs: SettingsPage[] = [
         id: "network",
         icon: WifiIcon,
         content: NetworkTab
+    },
+    {
+        id: "privacy",
+        icon: LockIcon,
+        content: PrivacyTab
     },
     {
         id: "dev",
