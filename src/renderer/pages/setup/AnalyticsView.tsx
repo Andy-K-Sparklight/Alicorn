@@ -11,7 +11,7 @@ export function AnalyticsView() {
     const nav = useNav();
 
     function nextPage() {
-        nav("/finish");
+        nav("/setup/finish");
     }
 
     const allDisabled = !(config.analytics.crashReports || config.analytics.performanceReports || config.analytics.ping);
@@ -75,6 +75,6 @@ export function AnalyticsView() {
 function SwitchLabel({ title, sub }: { title: string; sub: string }) {
     return <div className="ml-2 text-medium flex flex-col gap-1">
         {title}
-        <div className="text-default-400 text-sm whitespace-pre-line">{sub}</div>
+        <div className="text-foreground-400 text-sm whitespace-pre-line">{sub}</div>
     </div>;
 }

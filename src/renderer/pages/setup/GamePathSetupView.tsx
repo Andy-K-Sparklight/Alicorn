@@ -11,7 +11,7 @@ export function GamePathSetupView() {
     const nav = useNav();
 
     function nextPage() {
-        nav("/account-init");
+        nav("/setup/account-init");
     }
 
     return <div className="flex flex-col w-5/6 h-full mx-auto items-center justify-center gap-6">

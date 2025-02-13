@@ -18,7 +18,7 @@ export function AccountInitView() {
     const loggedIn = accountProps !== null;
 
     function nextPage() {
-        nav("/analytics");
+        nav("/setup/analytics");
     }
 
     async function handleAuth() {
@@ -70,7 +70,7 @@ export function AccountInitView() {
             </DialogProvider>
         </div>
 
-        <div className="text-sm text-success mt-auto">{t("warranty")}</div>
+        <div className="text-sm text-foreground-400 mt-auto">{t("warranty")}</div>
     </div>;
 }
 

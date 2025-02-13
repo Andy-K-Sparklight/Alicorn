@@ -10,7 +10,7 @@ export function LicenseView() {
     const nav = useNav();
 
     function nextPage() {
-        nav("/game-path");
+        nav("/setup/game-path");
     }
 
     return <div className="flex flex-col w-5/6 h-full mx-auto items-center justify-center gap-4">
@@ -33,7 +33,7 @@ export function LicenseView() {
             </Card>
 
             <div className="flex flex-col gap-2 items-center">
-                <div className="text-sm text-default-400">{t("btn-hint")}</div>
+                <div className="text-sm text-foreground-400">{t("btn-hint")}</div>
                 <ConfirmPopup
                     title={t("confirm.title")}
                     sub={t("confirm.sub")}

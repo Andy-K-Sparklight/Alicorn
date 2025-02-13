@@ -11,7 +11,7 @@ export function FinishView() {
     const nav = useNav();
 
     function finishSetup() {
-        nav("~/");
+        nav("/");
         markSetupDone("1");
     }
 

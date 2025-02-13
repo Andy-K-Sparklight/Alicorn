@@ -9,11 +9,11 @@ export function WelcomeView() {
     const nav = useNav();
 
     function nextPage() {
-        nav("/license");
+        nav("/setup/license");
     }
 
     return <div className="flex flex-col w-5/6 h-full mx-auto items-center justify-center gap-4" onClick={nextPage}>
-        <div className="w-full h-full flex items-center gap-6">
+        <div className="w-full flex items-center gap-6 grow">
             <div className="flex gap-10 h-24 items-center">
                 <img className="w-full h-full object-contain" alt="Legacy Logo" src={logoLegacy}/>
                 <div className="text-foreground-400">

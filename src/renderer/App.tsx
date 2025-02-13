@@ -1,6 +1,7 @@
 import { useAutoFontClass } from "@/renderer/i18n/i18n";
 import { themeManager, useAutoTheme, useTheme } from "@/renderer/theme";
 import { useNav } from "@/renderer/util/nav";
+import { AnimatedRoute } from "@components/AnimatedRoute";
 import { ConfigProvider } from "@components/ConfigProvider";
 import { Navigator } from "@components/Navigator";
 import { HeroUIProvider } from "@heroui/react";
@@ -16,7 +17,7 @@ import { t } from "i18next";
 import React, { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { useLocalStorage } from "react-use";
-import { Redirect, Route, Switch } from "wouter";
+import { Redirect } from "wouter";
 import pkg from "~/package.json";
 
 /**
@@ -62,18 +63,16 @@ export function App() {
  * Main app content area.
  */
 function MainArea() {
-    return <div className="grow min-h-0 w-11/12 mb-8 mt-4 mx-auto">
-        <Switch>
-            <Route path="/about" component={AboutView}/>
-            <Route path="/settings" component={SettingsView}/>
-            <Route path="/create-game" component={CreateGameView}/>
-            <Route path="/games" component={GamesView}/>
-            <Route path="/game-detail/:gameId" component={GameDetailView}/>
-            <Route path="/monitor/:procId" component={MonitorView}/>
-            <Route path="/monitor" component={MonitorListView}/>
-            <Route path="/setup" component={SetupView} nest/>
-            <Route path="/" component={DefaultPageRedirect}/>
-        </Switch>
+    return <div className="grow min-h-0 w-11/12 mb-8 mt-4 mx-auto relative">
+        <AnimatedRoute path="/about" component={AboutView}/>
+        <AnimatedRoute path="/settings" component={SettingsView}/>
+        <AnimatedRoute path="/create-game" component={CreateGameView}/>
+        <AnimatedRoute path="/games" component={GamesView}/>
+        <AnimatedRoute path="/game-detail/:gameId" component={GameDetailView}/>
+        <AnimatedRoute path="/monitor/:procId" component={MonitorView}/>
+        <AnimatedRoute path="/monitor" component={MonitorListView}/>
+        <AnimatedRoute path="/setup/*?" component={SetupView}/>
+        <AnimatedRoute path="/" component={DefaultPageRedirect}/>
     </div>;
 }
 
