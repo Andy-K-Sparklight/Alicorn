@@ -1,3 +1,4 @@
+import type { PropsWithParams } from "@components/AnimatedRoute";
 import { Tab, Tabs } from "@heroui/react";
 import { GameProcessProvider, useCurrentProc } from "@pages/monitor/GameProcessProvider";
 import { LogsDisplay } from "@pages/monitor/LogsDisplay";
@@ -7,10 +8,8 @@ import { StatusDisplayMemo } from "@pages/monitor/StatusDisplay";
 import { CpuIcon, FileClockIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "wouter";
 
-export function MonitorView() {
-    const { procId } = useParams<{ procId: string }>();
+export function MonitorView({ params: { procId } }: PropsWithParams<{ procId: string }>) {
     return <Monitor procId={procId} key={procId}/>;
 }
 

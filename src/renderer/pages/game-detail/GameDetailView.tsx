@@ -1,4 +1,5 @@
 import { useGameProfile } from "@/renderer/services/game";
+import type { PropsWithParams } from "@components/AnimatedRoute";
 import { Editable } from "@components/Editable";
 import { GameTypeImage } from "@components/GameTypeImage";
 import { Button, Tab, Tabs } from "@heroui/react";
@@ -8,10 +9,8 @@ import { LaunchPanel } from "@pages/game-detail/LaunchPanel";
 import { DotIcon, EditIcon, FolderIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "wouter";
 
-export function GameDetailView() {
-    const { gameId } = useParams<{ gameId: string }>();
+export function GameDetailView({ params: { gameId } }: PropsWithParams<{ gameId: string }>) {
     const game = useGameProfile(gameId);
 
     if (!game) {

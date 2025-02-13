@@ -1,14 +1,17 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
-import { useRoute } from "wouter";
+import { useLocation, useRoute } from "wouter";
 
 interface AnimatedRouteProps {
     path: string;
     component: React.ComponentType<{ params: any }>;
 }
 
+export type PropsWithParams<T> = { params: T }
+
 export function AnimatedRoute({ path, component }: AnimatedRouteProps) {
     const [matched, params] = useRoute(path);
+    const [pathname] = useLocation();
 
     const Component = component;
 
@@ -17,15 +20,15 @@ export function AnimatedRoute({ path, component }: AnimatedRouteProps) {
             matched &&
             <motion.div
                 className="absolute inset-0"
-                initial={{ opacity: 0, translateX: "3%" }}
-                animate={{ opacity: 1, translateX: "0%" }}
-                exit={{ opacity: 0, translateX: "-3%" }}
+                initial={{ opacity: 0, translateX: "3%", zIndex: 10 }}
+                animate={{ opacity: 1, translateX: "0%", zIndex: 0 }}
+                exit={{ opacity: 0, translateX: "-3%", zIndex: -10 }}
                 transition={{
                     duration: 0.8,
                     type: "spring"
                 }}
             >
-                <Component key={path} params={params}/>
+                <Component key={pathname} params={params}/>
             </motion.div>
         }
     </AnimatePresence>;
