@@ -217,6 +217,26 @@ const DEFAULT_CONFIG = {
          * Enable hot update.
          */
         hotUpdate: true
+    },
+
+    /**
+     * App analytics sharing configuration.
+     */
+    analytics: {
+        /**
+         * Allow to share crash reports.
+         */
+        crashReports: true,
+
+        /**
+         * Allow to share performance reports.
+         */
+        performanceReports: true,
+
+        /**
+         * Allow to send ping messages.
+         */
+        ping: true
     }
 };
 

@@ -30,7 +30,7 @@ export function AccountSelector({ enabled, accountId, onChange }: AccountSelecto
                 <SelectItem key={a.uuid} textValue={a.playerName}>
                     <div className="flex items-center gap-1">
                         <div>{a.playerName}</div>
-                        <div className="text-default-400">{a.uuid}</div>
+                        <div className="text-foreground-400">{a.uuid}</div>
                     </div>
                 </SelectItem>
             )

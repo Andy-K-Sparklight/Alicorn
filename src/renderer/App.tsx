@@ -1,6 +1,7 @@
 import { useAutoFontClass } from "@/renderer/i18n/i18n";
 import { themeManager, useAutoTheme, useTheme } from "@/renderer/theme";
 import { useNav } from "@/renderer/util/nav";
+import { ConfigProvider } from "@components/ConfigProvider";
 import { Navigator } from "@components/Navigator";
 import { HeroUIProvider } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
@@ -9,11 +10,12 @@ import { GameDetailView } from "@pages/game-detail/GameDetailView";
 import { GamesView } from "@pages/games/GamesView";
 import { MonitorListView } from "@pages/monitor-list/MonitorListView";
 import { MonitorView } from "@pages/monitor/MonitorView";
-import { pages } from "@pages/pages";
 import { SettingsView } from "@pages/settings/SettingsView";
+import { SetupView } from "@pages/setup/SetupView";
 import { t } from "i18next";
 import React, { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import { useLocalStorage } from "react-use";
 import { Redirect, Route, Switch } from "wouter";
 import pkg from "~/package.json";
 
@@ -35,20 +37,23 @@ export function App() {
         native.app.onUpgraded(version => toast(t("toast.app-upgraded", { version }), { type: "info" }));
     }, []);
 
+
     return <HeroUIProvider navigate={nav}>
-        <main className="fixed inset-0 text-foreground bg-background">
-            <div className="flex flex-col w-full h-full">
-                <Navigator/>
-                <MainArea/>
-            </div>
-            <VersionOverlay/>
-            <ToastContainer
-                theme={toastTheme}
-                position="bottom-left"
-                newestOnTop
-                pauseOnFocusLoss={false}
-            />
-        </main>
+        <ConfigProvider>
+            <main className="fixed inset-0 text-foreground bg-background">
+                <div className="flex flex-col w-full h-full">
+                    <Navigator/>
+                    <MainArea/>
+                </div>
+                <VersionOverlay/>
+                <ToastContainer
+                    theme={toastTheme}
+                    position="bottom-left"
+                    newestOnTop
+                    pauseOnFocusLoss={false}
+                />
+            </main>
+        </ConfigProvider>
     </HeroUIProvider>;
 }
 
@@ -66,14 +71,15 @@ function MainArea() {
             <Route path="/game-detail/:gameId" component={GameDetailView}/>
             <Route path="/monitor/:procId" component={MonitorView}/>
             <Route path="/monitor" component={MonitorListView}/>
+            <Route path="/setup" component={SetupView} nest/>
             <Route path="/" component={DefaultPageRedirect}/>
         </Switch>
     </div>;
 }
 
 function DefaultPageRedirect() {
-    // TODO load default page from user config
-    return <Redirect to={"/" + pages[0].id}/>;
+    const [setupDone] = useLocalStorage("setup.done"); // TODO update the flag when setup is done
+    return <Redirect to={setupDone ? "/games" : "/setup"}/>;
 }
 
 

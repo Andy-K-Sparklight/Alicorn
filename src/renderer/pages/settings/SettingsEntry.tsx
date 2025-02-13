@@ -1,9 +1,9 @@
 /**
  * Various entry widgets for manipulating the settings.
  */
+import { DirInput } from "@components/DirInput";
 import { StringArrayInput } from "@components/StringArrayInput";
-import { Button, Input, Select, SelectItem, type SharedSelection, Slider, Switch } from "@heroui/react";
-import { EllipsisIcon } from "lucide-react";
+import { Input, Select, SelectItem, type SharedSelection, Slider, Switch } from "@heroui/react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -52,19 +52,9 @@ export function TextEntry({ id, icon, value, onChange }: SettingsEntryProps<stri
 }
 
 export function DirEntry({ id, icon, value, onChange }: SettingsEntryProps<string>) {
-    async function runSelect() {
-        const d = await native.ext.selectDir();
-        if (d) onChange(d);
-    }
-
     return <div className="flex flex-col gap-2 w-full">
         <EntryLabel id={id} icon={icon}/>
-        <div className="flex items-center gap-1">
-            <Input fullWidth value={value} onValueChange={onChange}/>
-            <Button isIconOnly onPress={runSelect}>
-                <EllipsisIcon/>
-            </Button>
-        </div>
+        <DirInput value={value} onChange={onChange}/>
     </div>;
 }
 

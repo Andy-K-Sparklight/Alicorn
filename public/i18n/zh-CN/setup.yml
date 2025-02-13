@@ -1,0 +1,96 @@
+welcome:
+  title: 这次会有所不同。
+  sub: |-
+    「太阳落下去了，但始终都会升起来的。」
+
+    历练而归，新章再启。
+    现在的 Alicorn 比以往任何时候都更加强大。
+  is-dev: 此 Alicorn 是开发版本
+  continue: 按任意位置继续
+
+license:
+  title: 了解我们的许可证
+  sub: |-
+    Alicorn 是以《GNU 通用公共许可证》（第三版或更新版本）发行的自由软件。
+    若要使用 Alicorn，必须接受此许可证。
+  btn-hint: 点按此按钮，即代表你接受上述许可证的内容。
+  btn: 我接受此许可证
+  confirm:
+    title: 接受许可证？
+    sub: 我理解并接受许可证中的条款与条件。
+    btn: 是的，我接受此许可证
+
+game-path:
+  title: 你想将 Minecraft 存放在哪里？
+  sub: |-
+    游戏文件、存档、模组、资源包等内容都会存放于此处。
+    建议选择空间充足的位置。
+  btn: 看上去不错！
+
+account-init:
+  title: 登录你的帐户
+  sub: |-
+    你需要登录到 Minecraft，才能使用游戏的在线功能。
+    请使用购买游戏时的帐户进行登录。
+  sub-ok: |-
+    欢迎回来，{{playerName}}！
+    你的帐户特征码（UUID）是： {{uuid}}
+  btn-login: 使用 Microsoft 帐户登录
+  btn-next: 使用此帐户继续
+  btn-skip: 我现在无法登录
+  warranty: 你的帐户令牌将被存储在设备上安全的位置。Alicorn 不会存储你的密码。
+  skip-confirm:
+    title: 为何无法登录？
+    alt-account:
+      label: 我的服务器不使用在线验证
+      sub: 请先登录你的 Microsoft 帐户。稍后，你可以在创建游戏时使用其它验证方式。
+    no-account:
+      label: 我没有购买 Minecraft
+      sub: 必须购买 Minecraft 并注册帐户后，才能游玩游戏。
+    offline:
+      label: 我无法完成登录流程
+      sub: 你可以稍后重新尝试登录。在此期间，你可以继续完成设置并下载游戏。
+    btn: 在不登录的情况下继续
+
+analytics:
+  title: Alicorn 需要你
+  sub: |-
+    在使用 Alicorn 的过程中，软件可能会发生意外错误。
+    你或许认为这没办法避免 —— 但其实不是这样。
+
+    你可以选择分享一些数据，来帮助我们改进 Alicorn。
+
+  options:
+    crash:
+      label: 发送崩溃报告
+      sub: |-
+        通过收集 Alicorn 崩溃时的信息，我们能减少这些错误的发生频率。
+        我们无法预知错误信息的内容，因此在每次发送前你都能检查要发送的数据。
+    performance:
+      label: 发送性能数据
+      sub: |-
+        衡量部分关键功能的响应时间，以便我们持续优化 Alicorn 的表现。
+    ping:
+      label: 发送 Ping 信息
+      sub: |-
+        这些 Ping 信息能帮助我们估计 Alicorn 的活跃用户数。
+
+  btn: 发送选定的数据
+  btn-none: 不要发送任何数据
+
+  warranty: |-
+    我们使用专为 Alicorn 开发的自由软件收集这些数据，查看我们的项目主页，了解我们如何使用它们。
+    要发送的数据都是完全匿名的，并且我们绝不会将它们与其他人分享。
+
+  warranty-none: |-
+    我们理解你的选择，如果禁用所有数据收集选项，Alicorn 就不会发送任何使用数据。
+    （也许确实不太可能，但是）如果你稍后改变主意，可以在设置中进行调整。
+
+finish:
+  title: 一切准备就绪
+  sub: |-
+    「我们要把天空，涂上五颜六色。」
+    生存、创造与冒险，世界无极限。
+    现在开始你的旅途吧！
+
+  btn: 进入 Alicorn

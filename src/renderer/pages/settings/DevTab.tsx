@@ -1,7 +1,7 @@
 import { Alert } from "@components/Alert";
+import { useConfig } from "@components/ConfigProvider";
 import { Divider } from "@heroui/react";
 import { OnOffEntry } from "@pages/settings/SettingsEntry";
-import { useConfig } from "@pages/settings/use-config";
 import { AppWindowIcon, SearchCodeIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -11,7 +11,6 @@ export function DevTab() {
 
     const [config, makeReduce] = useConfig();
 
-    if (!config) return;
 
     return <>
         <Alert

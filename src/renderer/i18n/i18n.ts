@@ -5,7 +5,7 @@ import { initReactI18next, useTranslation } from "react-i18next";
 import YAML from "yaml";
 
 const availableLanguages = ["zh-CN", "en"];
-const namespaces = ["common", "pages"];
+const namespaces = ["common", "pages", "setup"];
 
 /**
  * Loading language resources from YAML files.

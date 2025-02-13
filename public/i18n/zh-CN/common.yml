@@ -24,3 +24,4 @@ toast:
   app-upgraded: 已安装更新：{{version}}
   game-installed: 已安装游戏，开始游玩吧！
   game-destroyed: 已删除「{{name}}」。
+  login-failed: 无法登录帐户。（或许稍后再试试？）

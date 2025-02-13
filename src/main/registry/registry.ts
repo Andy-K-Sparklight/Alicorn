@@ -134,26 +134,18 @@ async function close() {
 }
 
 /**
- * Remove unreachable containers and accounts.
+ * Remove unreachable containers.
  */
 function purgeRegistries() {
     const usedContainers = new Set<string>();
-    const usedAccounts = new Set<string>();
 
     for (const g of reg.games.getAll()) {
         usedContainers.add(g.launchHint.containerId);
-        usedAccounts.add(g.launchHint.accountId);
     }
 
     for (const k of reg.containers.keys()) {
         if (!usedContainers.has(k)) {
             reg.containers.remove(k);
-        }
-    }
-
-    for (const k of reg.accounts.keys()) {
-        if (!usedAccounts.has(k)) {
-            reg.accounts.remove(k);
         }
     }
 }

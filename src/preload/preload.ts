@@ -167,6 +167,13 @@ const native = {
          */
         getAccounts(): Promise<DetailedAccountProps[]> {
             return ipcRenderer.invoke("listAccounts");
+        },
+
+        /**
+         * Creates a new vanilla account.
+         */
+        createVanilla(): Promise<DetailedAccountProps | null> {
+            return ipcRenderer.invoke("createVanillaAccount");
         }
     },
 

@@ -1,5 +1,5 @@
 import { accounts } from "@/main/auth/manage";
-import { VanillaAccount } from "@/main/auth/vanilla";
+import { VanillaAccount, type VanillaAccountProps } from "@/main/auth/vanilla";
 import { games } from "@/main/game/manage";
 import { ipcMain } from "@/main/ipc/typed";
 import { reg } from "@/main/registry/registry";
@@ -26,3 +26,13 @@ ipcMain.handle("gameAuth", async (_, gameId) => {
 });
 
 ipcMain.handle("listAccounts", () => reg.accounts.entries().map(([k, v]) => ({ ...v, uuid: k })));
+
+ipcMain.handle("createVanillaAccount", async () => {
+    const a = new VanillaAccount();
+    if (await a.refresh()) {
+        reg.accounts.add(a.uuid, a.toProps());
+        return a.toProps() as VanillaAccountProps;
+    }
+
+    return null;
+});

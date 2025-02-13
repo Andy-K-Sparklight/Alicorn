@@ -39,7 +39,7 @@ function StatusDisplay({ id, name, profileId, type, status, uptime, pid }: Statu
 
                     <div className="flex flex-col gap-1">
                         <div className="font-bold text-lg">{name}</div>
-                        <div className="text-default-400">{id}</div>
+                        <div className="text-foreground-400">{id}</div>
                     </div>
                 </div>
 

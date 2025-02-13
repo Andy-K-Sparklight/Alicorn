@@ -77,9 +77,6 @@ interface PathsInit {
 }
 
 let initPrompt: Partial<PathsInit> | null = null;
-let fallbackStoreRoot = "";
-let fallbackGameRoot = "";
-let fallbackTempRoot = "";
 
 /**
  * Setup path resolvers with the given prompts.
@@ -89,32 +86,42 @@ function setup(init?: Partial<PathsInit>): void {
     console.log("Configuring paths...");
 
     initPrompt = init ?? null;
-    fallbackStoreRoot = optimalStoreRoot();
-    fallbackGameRoot = optimalGameRoot();
-    fallbackTempRoot = path.resolve(app.getPath("temp"), "Alicorn");
 
-    console.log(`Fallback store path: ${fallbackStoreRoot}`);
+    if (!conf().paths.store) {
+        conf().paths.store = optimalStoreRoot();
+        console.log(`Store path set to ${conf().paths.store}`);
+    }
+
+    if (!conf().paths.game) {
+        conf().paths.game = optimalGameRoot();
+        console.log(`Game path set to ${conf().paths.game}`);
+    }
+
+    if (!conf().paths.temp) {
+        conf().paths.temp = path.resolve(app.getPath("temp"), "Alicorn");
+        console.log(`Temp path set to ${conf().paths.temp}`);
+    }
 }
 
 /**
  * Gets the path to the store root on the fly.
  */
 function getStoreRoot() {
-    return initPrompt?.storeRoot || conf().paths.store || fallbackStoreRoot;
+    return initPrompt?.storeRoot || conf().paths.store;
 }
 
 /**
  * Gets the path to the game containers.
  */
 function getGameRoot() {
-    return initPrompt?.gameRoot || conf().paths.game || fallbackGameRoot;
+    return initPrompt?.gameRoot || conf().paths.game;
 }
 
 /**
  * Gets the path to the temp directory.
  */
 function getTempRoot() {
-    return initPrompt?.tempRoot || conf().paths.temp || fallbackTempRoot;
+    return initPrompt?.tempRoot || conf().paths.temp;
 }
 
 /**

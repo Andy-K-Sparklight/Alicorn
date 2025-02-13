@@ -48,6 +48,7 @@ export type IpcCommands = {
     launch: (id: string) => LaunchGameResult;
     gameAuth: (gameId: string) => boolean;
     listAccounts: () => DetailedAccountProps[];
+    createVanillaAccount: () => DetailedAccountProps | null;
     addGame: (game: CreateGameInit) => void;
     updateGame: (game: GameProfile) => void;
     getVersionManifest: () => VersionManifest;

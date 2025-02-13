@@ -1,6 +1,6 @@
 import { Button, Tab, Tabs } from "@heroui/react";
 import { type PageInfo, pages } from "@pages/pages";
-import { MinusIcon, XIcon } from "lucide-react";
+import { MinusIcon, SparklesIcon, XIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "wouter";
@@ -24,9 +24,18 @@ export function Navigator() {
 }
 
 function PageTabs() {
+    const { t } = useTranslation("pages");
     const [pathname, navigate] = useLocation();
 
-    const activeTab = pages.find(p => pathname.startsWith("/" + p.id))?.id ?? pages[0].id;
+    const isSetup = pathname.startsWith("/setup");
+
+    const activeTab = isSetup ? "setup" : pages.find(p => pathname.startsWith("/" + p.id))?.id ?? pages[0].id;
+
+    function handleSelectionChange(id: string | number) {
+        if (!isSetup) {
+            navigate("/" + id);
+        }
+    }
 
     return <Tabs
         color="primary"
@@ -35,19 +44,29 @@ function PageTabs() {
         selectedKey={activeTab}
 
         // A workaround for https://github.com/heroui-inc/heroui/issues/4598
-        onSelectionChange={id => navigate("/" + id)}
+        onSelectionChange={handleSelectionChange}
     >
         {
-            pages.map(p =>
-                // Tabs cannot be extracted as separated components or HeroUI will complain
-                // Upstream issue: https://github.com/heroui-inc/heroui/issues/729
+            isSetup ?
                 <Tab
+                    key="setup"
                     title={
-                        <PageTitle page={p}/>
+                        <PageTitle page={{ id: "setup", icon: SparklesIcon }}/>
                     }
-                    key={p.id}
-                />
-            )
+                >
+
+                </Tab>
+                :
+                pages.map(p =>
+                    // Tabs cannot be extracted as separated components or HeroUI will complain
+                    // Upstream issue: https://github.com/heroui-inc/heroui/issues/729
+                    <Tab
+                        title={
+                            <PageTitle page={p}/>
+                        }
+                        key={p.id}
+                    />
+                )
         }
     </Tabs>;
 }
@@ -62,10 +81,11 @@ function PageTitle({ page }: { page: PageInfo }) {
     </div>;
 }
 
+
 /**
  * The close button. Shows on the right corner when the cursor is moved near it, otherwise hidden for a cleaner LAF.
  */
-const CloseButton = () => {
+function CloseButton() {
     return <Button
         onPress={() => native.bwctl.close()}
         className="rounded-full bg-transparent hover:bg-danger"
@@ -75,9 +95,9 @@ const CloseButton = () => {
     >
         <XIcon/>
     </Button>;
-};
+}
 
-const MinimizeButton = () => {
+function MinimizeButton() {
     return <Button
         onPress={() => native.bwctl.minimize()}
         className="rounded-full bg-transparent hover:bg-default"
@@ -85,4 +105,4 @@ const MinimizeButton = () => {
     >
         <MinusIcon/>
     </Button>;
-};
+}

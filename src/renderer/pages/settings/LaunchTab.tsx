@@ -1,12 +1,10 @@
+import { useConfig } from "@components/ConfigProvider";
 import { Divider } from "@heroui/react";
 import { StringArrayEntry } from "@pages/settings/SettingsEntry";
-import { useConfig } from "@pages/settings/use-config";
 import { TerminalIcon } from "lucide-react";
 
 export function LaunchTab() {
     const [config, makeReduce] = useConfig();
-
-    if (!config) return;
 
     return <>
         <StringArrayEntry

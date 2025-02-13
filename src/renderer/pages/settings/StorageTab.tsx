@@ -1,7 +1,7 @@
 import { Alert } from "@components/Alert";
+import { useConfig } from "@components/ConfigProvider";
 import { Divider } from "@heroui/react";
 import { DirEntry } from "@pages/settings/SettingsEntry";
-import { useConfig } from "@pages/settings/use-config";
 import { HardDriveIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -10,8 +10,6 @@ export function StorageTab() {
     const { t } = useTranslation("pages", { keyPrefix: "settings" });
 
     const [config, makeReduce] = useConfig();
-
-    if (!config) return;
 
     return <>
         <Alert

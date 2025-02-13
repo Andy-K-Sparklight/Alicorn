@@ -1,8 +1,8 @@
 import { i18n } from "@/renderer/i18n/i18n";
 import { themeManager, useTheme } from "@/renderer/theme";
+import { useConfig } from "@components/ConfigProvider";
 import { Divider } from "@heroui/react";
 import { OnOffEntry, SelectEntry, TextEntry } from "@pages/settings/SettingsEntry";
-import { useConfig } from "@pages/settings/use-config";
 import { FileUserIcon, HardDriveUploadIcon, LanguagesIcon, PaletteIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -16,8 +16,6 @@ export function PreferencesTab() {
 
     const { theme, setTheme } = useTheme();
     const { i18n: i18next } = useTranslation();
-
-    if (!config) return;
 
     return <>
         <TextEntry
