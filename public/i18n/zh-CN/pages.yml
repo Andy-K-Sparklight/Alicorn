@@ -175,6 +175,7 @@ settings:
     launch: 启动
     storage: 存储
     network: 网络
+    privacy: 隐私
     dev: 开发
 
   dev-warn: 这些设置只用于开发，请绝不要随意修改！
@@ -193,6 +194,9 @@ settings:
           dark: 夜（原厂）
           sakura-light: 樱花（云）
           sakura-dark: 樱花（月）
+          overworld: 世界（改色）
+          twikie: 友谊与魔法之歌（Alicorn 纪念）
+          amazing-grace: 悠音（Alicorn 2.x 印象）
       language:
         title: 语言
         sub: 设置 Alicorn 使用的语言。
@@ -253,6 +257,17 @@ settings:
       validate:
         title: 下载后验证
         sub: 在下载后验证文件完整性。
+
+    privacy:
+      crash-report:
+        title: 发送崩溃报告
+        sub: 在 Alicorn 发生错误时发送报告，以便于我们排除同类错误。
+      performance-report:
+        title: 发送性能数据
+        sub: 发送部分功能的性能数据，以帮助我们改进 Alicorn 的表现。
+      ping:
+        title: 发送 Ping 信息
+        sub: 这些信息将用于估计 Alicorn 的活跃用户数。
 
     dev:
       frame:
