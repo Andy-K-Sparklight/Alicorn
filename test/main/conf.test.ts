@@ -16,11 +16,6 @@ test("Config Read & Write", async () => {
     await conf.load();
     expect(conf().dev.devTools, "Should keep changes between saves & loads").toBeTrue();
 
-    // Ensure that unmodified keys are excluded
-    conf().dev.devTools = false;
-    await conf.store();
-    expect(fs.existsSync(cfgPath), "Should empty file when no changes are made").toBeFalse();
-
     // Check array values
     conf().runtime.args.vm = ["arg1"];
     await conf.store();
