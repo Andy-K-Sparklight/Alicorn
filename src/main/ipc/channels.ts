@@ -35,6 +35,7 @@ export type IpcMessageEvents = {
  */
 export type IpcPushEvents = {
     gameChanged: () => void;
+    accountChanged: () => void;
     appUpgraded: (version: string) => void;
 }
 

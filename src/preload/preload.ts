@@ -141,13 +141,6 @@ const native = {
          */
         onChange(fn: () => void) {
             internalEvents.on("gameChanged", fn);
-        },
-
-        /**
-         * Removes previously added listener.
-         */
-        offChange(fn: () => void) {
-            internalEvents.off("gameChanged", fn);
         }
     },
 
@@ -174,6 +167,13 @@ const native = {
          */
         createVanilla(): Promise<DetailedAccountProps | null> {
             return ipcRenderer.invoke("createVanillaAccount");
+        },
+
+        /**
+         * Gets notified when accounts have changed.
+         */
+        onAccountChange(fn: () => void) {
+            internalEvents.off("accountChanged", fn);
         }
     },
 
@@ -265,7 +265,7 @@ const native = {
 };
 
 // Unwraps IPC events as internal events
-(["gameChanged"] as const).forEach(ch => {
+(["gameChanged", "accountChanged"] as const).forEach(ch => {
     ipcRenderer.on(ch, (_, ...args) => {
         void internalEvents.emit(ch, args);
     });

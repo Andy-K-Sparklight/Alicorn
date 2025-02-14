@@ -6,6 +6,8 @@ import { useSyncExternalStore } from "react";
 // This setup only runs once
 native.game.onChange(load);
 
+void load();
+
 const emitter = new Emittery();
 
 let games: GameProfile[] | null = null;
