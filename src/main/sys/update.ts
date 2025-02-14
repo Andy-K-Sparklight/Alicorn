@@ -51,7 +51,7 @@ function findCompatibleAsset(meta: ReleaseMeta[]): [AssetMeta, string] | null {
         if (!m.tag_name.startsWith("v")) continue;
         const cv = semver.clean(m.tag_name, { loose: true });
 
-        if (cv && semver.satisfies(cv, "^" + pkg.version)) {
+        if (cv && semver.satisfies(cv, "^" + pkg.version) && semver.gt(cv, pkg.version)) {
             const a = m.assets.find(a => a.name === appBundleName);
             if (a) return [a, cv];
         }

@@ -18,7 +18,7 @@ async function findModulePath(): Promise<string | null> {
     const files = await fs.readdir(d);
 
     for (const v of files) {
-        if (semver.satisfies(v, "^" + pkg.version)) {
+        if (semver.satisfies(v, "^" + pkg.version) && semver.gt(v, pkg.version)) {
             try {
                 const lock = await fs.readFile(path.join(d, v, "install.lock"));
 
