@@ -25,10 +25,12 @@ jobs:
         with:
           name: win32-x64-msi
           path: "./dist/Alicorn.x64.msi"
+          compression-level: 0
       - uses: actions/upload-artifact@v4
         with:
           name: win32-arm64-msi
           path: "./dist/Alicorn.arm64.msi"
+          compression-level: 0
 
   build-macos:
     runs-on: macos-latest
@@ -49,23 +51,29 @@ jobs:
         with:
           name: win32-x64
           path: "./dist/Alicorn Launcher-win32-x64.zip"
+          compression-level: 0
       - uses: actions/upload-artifact@v4
         with:
           name: win32-arm64
           path: "./dist/Alicorn Launcher-win32-arm64.zip"
+          compression-level: 0
       - uses: actions/upload-artifact@v4
         with:
           name: darwin-x64
           path: "./dist/Alicorn Launcher-darwin-x64.dmg"
+          compression-level: 0
       - uses: actions/upload-artifact@v4
         with:
           name: darwin-arm64
           path: "./dist/Alicorn Launcher-darwin-arm64.dmg"
+          compression-level: 0
       - uses: actions/upload-artifact@v4
         with:
           name: linux-x64
           path: "./dist/Alicorn Launcher-linux-x64.tar.gz"
+          compression-level: 0
       - uses: actions/upload-artifact@v4
         with:
           name: linux-arm64
           path: "./dist/Alicorn Launcher-linux-arm64.tar.gz"
+          compression-level: 0
