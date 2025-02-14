@@ -64,11 +64,11 @@ const LogLineMemo = React.memo(LogLine, (prevProps, nextProps) => {
 function LogLine({ log }: { log: GameProcessLog }) {
     const { time, level, message, throwable } = log;
 
-    return <div className="flex flex-col">
+    return <div className="flex flex-col text-sm pb-1">
         <div className="flex gap-3">
-            <div className="text-foreground-400">
+            <pre className="text-foreground-400">
                 {new Date(time).toLocaleTimeString()}
-            </div>
+            </pre>
             <div
                 className={
                     clsx("break-all whitespace-pre-line", {
@@ -78,8 +78,12 @@ function LogLine({ log }: { log: GameProcessLog }) {
                     })
                 }
             >
-                {message}
-                <pre className="whitespace-pre-wrap">{throwable}</pre>
+
+                <pre className="whitespace-pre-wrap">
+                    {message}
+                    <br/>
+                    {throwable && <><br/>{throwable}</>}
+                </pre>
             </div>
         </div>
     </div>;
