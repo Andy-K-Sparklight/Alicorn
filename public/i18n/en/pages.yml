@@ -60,6 +60,9 @@ games:
   game-card:
     ready: Ready
     unready: Not Installed
+  empty-hint:
+    title: Nothing Here
+    sub: Click the "Create" button to start your new game.
 
 game-detail:
   header:

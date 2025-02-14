@@ -37,13 +37,18 @@ export function GamesView() {
             <SortMethodControl sortMethod={sortMethod!} onChange={setSortMethod}/>
         </div>
 
-        <div className="mt-4 w-full h-full overflow-y-auto">
-            <div className="flex flex-col gap-3 w-full">
-                {
-                    sortedGames.map(g => <GameCard key={g.id} game={g}/>)
-                }
-            </div>
-        </div>
+        {
+            games.length > 0 ?
+                <div className="mt-4 w-full h-full overflow-y-auto">
+                    <div className="flex flex-col gap-3 w-full">
+                        {
+                            sortedGames.map(g => <GameCard key={g.id} game={g}/>)
+                        }
+                    </div>
+                </div>
+                :
+                <EmptyHint/>
+        }
     </div>;
 }
 
@@ -94,6 +99,16 @@ function SortMethodControl({ sortMethod, onChange }: SortMethodControlProps) {
             )
         }
     </ButtonGroup>;
+}
+
+function EmptyHint() {
+    const { t } = useTranslation("pages", { keyPrefix: "games.empty-hint" });
+    return <div className="w-full h-full flex justify-center items-center gap-6">
+        <div className="text-foreground-400 text-center">
+            <div className="text-xl font-bold">{t("title")}</div>
+            <div className="text-medium">{t("sub")}</div>
+        </div>
+    </div>;
 }
 
 function LoadingSpinner() {

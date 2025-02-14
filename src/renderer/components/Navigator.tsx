@@ -1,3 +1,4 @@
+import { useGameProcList } from "@/renderer/services/proc";
 import { Button, Tab, Tabs } from "@heroui/react";
 import { type PageInfo, pages } from "@pages/pages";
 import { MinusIcon, SparklesIcon, XIcon } from "lucide-react";
@@ -24,8 +25,12 @@ export function Navigator() {
 }
 
 function PageTabs() {
-    const { t } = useTranslation("pages");
     const [pathname, navigate] = useLocation();
+    const procs = useGameProcList();
+
+    const hideMonitor = procs.length === 0;
+
+    const activePages = pages.filter(p => !(p.id === "monitor" && hideMonitor));
 
     const isSetup = pathname.startsWith("/setup");
 
@@ -57,7 +62,7 @@ function PageTabs() {
 
                 </Tab>
                 :
-                pages.map(p =>
+                activePages.map(p =>
                     // Tabs cannot be extracted as separated components or HeroUI will complain
                     // Upstream issue: https://github.com/heroui-inc/heroui/issues/729
                     <Tab
