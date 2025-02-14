@@ -2,18 +2,46 @@ create-game:
   title: Create New Game
   name-input-title: Game Name
   version-select-title: Version
+  include-snapshots: Show Snapshots
   storage-title: Storage
+  assets-title: Assets
   container-select-title: Choose a game to share storage with
   container-select-placeholder: N/A
   version-select-placeholder: N/A
   storage-policy:
-    new: Dedicated
-    share: Share With Existing
+    new:
+      label: Dedicated
+      sub: Make resources (saves, resource packs, mods, etc.) separated from others.
+    share:
+      label: Share With Existing
+      sub: Share the resources (saves, resource packs, mods, etc.) shared with another game.
+  container-link:
+    label: Reuse Existing Files
+    sub: Reuse existing files to reduce space consumption. This might not be compatible with certain clients.
+
   account-title: Account
   default-name: New Game
   loading-versions: Retrieving Version Manifest
 
-  account-tip: Re-login is required for each game for now. Existing accounts can be reused in the future.
+  account:
+    select:
+      label: Select Account
+      placeholder: N/A
+    new:
+      label: Log in Later
+      sub: You'll be prompted to log in when launching.
+    reuse:
+      label: Use Existing Account
+      sub: Use an existing account for launching.
+
+  assets-level:
+    full:
+      label: Download Full Resources
+      sub: Access full gameplay experience. Need to download more files.
+    video-only:
+      label: Video Assets Only
+      sub: Exclude audio assets. Fast at the cost of missing audio output.
+
   create-btn: Create
   toast-created: Game created.
 
@@ -33,10 +61,91 @@ games:
     ready: Ready
     unready: Not Installed
 
+game-detail:
+  header:
+    installed: INSTALLED
+    not-installed: NOT INSTALLED
+    container: At {{containerId}}
+    profile: Profile {{profileId}}
+    reveal: Reveal Game Directory
+  manage:
+    advanced:
+      title: Advanced
+      danger-warn: DANGER ZONE - Are you expecting to lose your game?
+      unlink:
+        label: Unlink
+        sub: Removes the game from the list, but keeps its data.
+        btn: Unlink "{{name}}"
+        confirm:
+          title: Unlink game?
+          sub: It will be removed from the game list.
+          btn: I know what I'm doing!
+      reinstall:
+        label: Reinstall
+        sub: Retry downloading and installing the game.
+        btn: Reinstall "{{name}}"
+      install-full:
+        label: Download Full Resources
+        sub: Download missing resources to unlock the full gameplay experience.
+        btn: Download Full Resources
+      destroy:
+        label: Destroy
+        sub: Destroy the game and remove its data. This is irrevocable.
+        sub-disabled: |-
+          This game is currently being shared with other games, making it not applicable for destroying.
+          To destroy, unlink {{sharedGames}} first.
+        btn: Destroy "{{name}}"
+        confirm:
+          title: Wait a minute!
+          sub: |-
+            This operation removes ALL data associated with "{{name}}".
+            This includes game files, libraries, saves, mods, resource packs, etc..
+            You won't be able to undo this — even with recycle bin.
+            ABSOLUTELY SURE?
+          input-hint: "Enter the game ID (starts with #) to confirm."
+          btn: Destroy "{{name}}" and all of its content
+        challenge:
+          title: What Happens if You Remove "{{name}}"?
+          wrong-1:
+            label: I'll still be able to launch it
+            sub: NO! It will be removed with no possibility of accessing.
+          wrong-2:
+            label: I can still view my saves
+            sub: NO! Saves will be deleted forever with no possibility of recovering.
+          wrong-3:
+            label: I can get my files back from recycle bin
+            sub: NO! The deletion is permanent. Recycle bin won't help.
+          correct:
+            label: I'll lose access to any content of the game forever
+            sub: That's true — assets, libraries, saves, mods, resource packs and all other content will be deleted. Forever.
+          btn:
+            0: I'm sure to destroy everything of "{{name}}"
+            1: I know I won't be able to recover "{{name}}" in any way
+            2: I know what I'm doing!
+
+    launch:
+      title: Launch
+      alter-jrt:
+        label: Use This JRT for Launching
+        sub: Alicorn chooses JRT for the game. Override it by changing this option.
+      vm-args:
+        label: JVM Flags
+        sub: Additional JVM flags to append.
+      game-args:
+        label: Game Flags
+        sub: Additional game flags to append.
+
+
+
 monitor:
   title: Processes
   log-view: Logs
   perf-view: Performance Inspector
+  label:
+    status: Status
+    uptime: Uptime
+    pid: PID
+    profile: Profile
   status:
     running: Running
     exited: Exited
@@ -47,7 +156,18 @@ monitor:
     stop-title: Abort the game?
     stop-sub: Data loss may happen.
     stop-confirm: I know what I'm doing!
+    reveal-root: Reveal Game Directory
     reveal-rsp: Reveal Resource Packs
+  memory:
+    title: Memory
+    sub: Memory usage in MiB. Value may be slightly bigger.
+    sub-link: Why?
+    now: Now
+  ping:
+    title: Network Latency
+    sub: PING to {{server}} in milliseconds. Data might be inaccurate. Zero values indicate banned PING protocol.
+    no-server: No server detected. Latency values will be updated when connected to a server.
+    now: Now
 
 settings:
   title: Settings
@@ -57,6 +177,7 @@ settings:
     launch: Launch
     storage: Storage
     network: Network
+    privacy: Privacy
     dev: Dev
 
   dev-warn: Do not modify these unless for development!
@@ -75,12 +196,20 @@ settings:
           dark: Yoru (Factory)
           sakura-light: Sakura (Day)
           sakura-dark: Sakura (Night)
+          overworld: Overworld (Colorized)
+          twikie: Friendship Is Magic (Alicorn Souvenir)
+          amazing-grace: Yune (Alicorn 2.x Impression)
       language:
         title: Language
         sub: Select the language for UI.
         items:
           zh-CN: 简体中文
           en: English
+      hot-update:
+        title: Hot Update
+        sub: |-
+          Fetches and installs updates available.
+          This should not affect game launching.
 
     store:
       store-path:
@@ -130,6 +259,17 @@ settings:
       validate:
         title: Validate Files
         sub: Check file integrity after download.
+
+    privacy:
+      crash-report:
+        title: Send Crash Reports
+        sub: Send crash reports when errors occur.
+      performance-report:
+        title: Send Performance Reports
+        sub: Send performance reports of certain features.
+      ping:
+        title: Alicorn Ping
+        sub: Help us to estimate number of active users.
 
     dev:
       frame:
@@ -188,3 +328,6 @@ about:
         Fast, yet not widely supported.
     enabled: Available
     disabled: Not Available
+
+setup:
+  title: Welcome to Alicorn

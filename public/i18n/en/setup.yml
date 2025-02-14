@@ -1,0 +1,100 @@
+welcome:
+  title: Another place. Another way.
+  sub: |-
+    "The sun sets but will always rise."
+
+    Redesigned. Recreated. Refactored.
+    Alicorn is now more powerful than it has ever been.
+
+  is-dev: This is a development build.
+  continue: Press to Continue
+
+license:
+  title: About the License
+  sub: |-
+    Alicorn is released under the GNU General Public License (version 3.0 or later).
+    Accept the license to start using Alicorn.
+
+  btn-hint: By clicking the button below you accept the terms and conditions declared in the license.
+  btn: Accept License
+  confirm:
+    title: Accept the license？
+    sub: I understand and accept the terms and conditions.
+    btn: Yes, I accept the license
+
+game-path:
+  title: Where do you want to store Minecraft?
+  sub: |-
+    Game assets, saves, mods and resource packs will be stored at this location.
+    Prefer a path with enough space.
+  btn: Looks Good!
+
+account-init:
+  title: Start With Your Account
+  sub: |-
+    Log in to Minecraft to access online features.
+    Use the account when purchasing the game.
+  sub-ok: |-
+    Welcome back, {{playerName}}!
+    Your UUID: {{uuid}}
+  btn-login: Log in With Microsoft
+  btn-next: Continue With This Account
+  btn-skip: I'm not able to login
+  warranty: Account tokens will be stored safely on your device. Passwords won't be stored.
+  skip-confirm:
+    title: What blocks you from log in?
+    alt-account:
+      label: The server I intend to play does not use online mode.
+      sub: Log in using your Microsoft account first. You'll be able to choose the authenticate method later.
+    no-account:
+      label: I didn't purchase Minecraft
+      sub: It's mandatory to purchase and register before launching the game.
+    offline:
+      label: I failed to complete the login
+      sub: Try again later. At the mean time, you can move ahead and install the game first.
+    btn: Continue Without Logging in
+
+analytics:
+  title: Alicorn Needs You
+  sub: |-
+    Errors might occur when using Alicorn.
+    You may think it's unavoidable - well, not really.
+
+    You can choose to share some data with us.
+    This will help in improving Alicorn.
+
+  options:
+    crash:
+      label: Send Crash Reports
+      sub: |-
+        By gathering information about crashes we may reduce it from happening.
+        You'll be able to check the data to send before each report.
+    performance:
+      label: Send Performance Reports
+      sub: |-
+        Send data about time of certain features.
+        This will help us to further optimize Alicorn.
+    ping:
+      label: Alicorn Ping
+      sub: |-
+        Help us to estimate the number of active users.
+
+  btn: Send These Data
+  btn-none: Do Not Send Anything
+
+  warranty: |-
+    We collect these data use libre software developed for Alicorn. Check how we use them at the project homepage.
+    The data to be sent is completely anonymous. We will NEVER share them.
+
+  warranty-none: |-
+    We value your choice. No data will be sent if you disable all these options.
+    (While not likely, but) you can alter these settings if you've changed the decision.
+
+finish:
+  title: That's All
+  sub: |-
+    "We'll paint the sky all the colors."
+    Survival, creative or adventure. The world is infinite.
+    Start your own way today!
+
+  btn: Enter Alicorn

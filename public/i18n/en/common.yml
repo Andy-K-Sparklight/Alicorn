@@ -21,4 +21,7 @@ input:
     blur-to-add: Click outside to add
 
 toast:
+  app-upgraded: Updated to {{version}}
   game-installed: Game installed. Have fun!
+  game-destroyed: Destroyed "{{name}}".
+  login-failed: Unable to log in. (Maybe try again later?)
