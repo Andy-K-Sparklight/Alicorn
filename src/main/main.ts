@@ -7,7 +7,8 @@ import { registry } from "@/main/registry/registry";
 import { getOSName } from "@/main/sys/os";
 import { update } from "@/main/sys/update";
 import { windowControl } from "@/main/sys/window-control";
-import { app, BrowserWindow, Menu, net, protocol } from "electron";
+import { app, BrowserWindow, Menu, net, protocol, session } from "electron";
+import { installExtension, REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 import { randomUUID } from "node:crypto";
 import events from "node:events";
 import os from "node:os";
@@ -71,23 +72,12 @@ async function main() {
     // Register IPC handlers
     await import("@/main/api/loader");
 
-    // React DevTools seems unable to load starting from Electron v33
-    // This can only be enabled when https://github.com/electron/electron/issues/41613 is solved
-    // Reinstall electron-devtools-installer and uncomment things below if then
+    if (import.meta.env.AL_DEV) {
+        console.log("Installing React DevTools for development...");
 
-    // if (import.meta.env.AL_DEV) {
-    //     console.log("Installing React DevTools for development...");
-    //     const { installExtension, REACT_DEVELOPER_TOOLS } = await unwrapESM(import("electron-devtools-installer"));
-    //     await installExtension(REACT_DEVELOPER_TOOLS);
-    //
-    //     // https://github.com/MarshallOfSound/electron-devtools-installer/issues/244
-    //     // A reload is needed for the extensions to work
-    //     console.log("Reloading extensions...");
-    //
-    //     for (const ex of session.defaultSession.getAllExtensions()) {
-    //         await session.defaultSession.loadExtension(ex.path);
-    //     }
-    // }
+        await installExtension(REACT_DEVELOPER_TOOLS);
+        await launchExtServiceWorker();
+    }
 
     if (!import.meta.env.AL_TEST) {
         await setupMainWindow();
@@ -318,4 +308,19 @@ function getIconPath(): string {
         rel = "icon.ico";
     }
     return paths.app.to("icons", rel);
+}
+
+/**
+ * A workaround to load React DevTools.
+ * https://github.com/electron/electron/issues/41613
+ */
+function launchExtServiceWorker() {
+    return Promise.all(
+        session.defaultSession.getAllExtensions().map(async ext => {
+            const manifest = ext.manifest;
+            if (manifest.manifest_version === 3 && manifest?.background?.service_worker) {
+                await session.defaultSession.serviceWorkers.startWorkerForScope(ext.url);
+            }
+        })
+    );
 }
