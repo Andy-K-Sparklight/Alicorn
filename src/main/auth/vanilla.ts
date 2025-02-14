@@ -1,5 +1,6 @@
 import { Account, type AccountProps, AuthCredentials } from "@/main/auth/types";
 import { vanillaOAuth } from "@/main/auth/vanilla-oauth";
+import { doDecrypt, doEncrypt } from "@/main/security/encrypt";
 import { net } from "electron";
 import { nanoid } from "nanoid";
 
@@ -31,6 +32,12 @@ export class VanillaAccount implements Account {
         a.#playerName = props.playerName;
         a.#accessToken = props.accessToken;
         a.#refreshToken = props.refreshToken;
+
+        if (props.encrypted) {
+            a.#accessToken = doDecrypt(a.#accessToken);
+            a.#refreshToken = doDecrypt(a.#refreshToken);
+        }
+
         a.#accessTokenExpiresAt = props.accessTokenExpirationTime;
         a.#refreshTokenExpiresAt = props.refreshTokenExpirationTime;
         return a;
@@ -85,11 +92,12 @@ export class VanillaAccount implements Account {
     toProps(): AccountProps {
         return {
             type: "vanilla",
+            encrypted: true,
             uuid: this.uuid,
             partitionId: this.#partId,
             playerName: this.#playerName,
-            accessToken: this.#accessToken,
-            refreshToken: this.#refreshToken,
+            accessToken: doEncrypt(this.#accessToken),
+            refreshToken: doEncrypt(this.#refreshToken),
             accessTokenExpirationTime: this.#accessTokenExpiresAt,
             refreshTokenExpirationTime: this.#refreshTokenExpiresAt
         };
@@ -270,6 +278,7 @@ export class VanillaAccount implements Account {
 
 export interface VanillaAccountProps {
     type: "vanilla";
+    encrypted?: boolean;
     uuid: string;
     partitionId: string;
     playerName: string;
