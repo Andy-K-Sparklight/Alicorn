@@ -84,7 +84,7 @@ You can build Alicorn for **preview** on any platform it runs on.
 For **packaging**, however, there are several limitations:
 
 - ARM64 platforms other than macOS cannot be used for packaging.
-- DMG images can only be generated on macOS. It's skipped on other platforms.
+- Platform-specific installers (`.msi` on Windows, `.dmg` on macOS, etc.) require the corresponding OS.
 
 The following tools are required:
 
@@ -95,9 +95,11 @@ The following tools are required:
 
 - Git
 
+- Wine, when building on non-Windows platforms.
+
 - Node.js (v23 or later), when packaging. (**NOT** needed for development)
 
-- Wine, when building on non-Windows platforms.
+- WiX Toolset v3, when packaging for Windows. (The version matters!)
 
 > [!IMPORTANT]
 > There is a known bug with Bun 1.2.1 and 1.2.2 that causes Vite to fail the build process.
@@ -163,7 +165,9 @@ npm run dist
 The output files locate at `dist`, including:
 
 - Unpacked (directory) files of the app.
-- Corresponding archives (`.dmg` must be built on macOS).
+- Archives of these directories.
+- Hot update bundles (useful when building a custom release channel).
+- Platform-specific installers.
 
 ## License
 
