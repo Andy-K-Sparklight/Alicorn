@@ -23,11 +23,6 @@ export function createBuildConfig(variant: BuildVariant) {
         // By changing the option to 'true' you agree the terms and conditions listed at <https://bmclapi2.bangbang93.com>.
         enableBMCLAPI: false,
 
-        // Local accounts are used to test the launcher features in development only.
-        // Launching the game without a valid account is not supported and therefore not included by default.
-        // By changing the option to 'true' you are at your own risk of breaking the EULA.
-        enableLocalAccount: false,
-
         // Decompression of LZMA is handled by lzma-native by default, yet not available on all platforms.
         // Disabling this option enforces Alicorn to fall back to a pure JavaScript implementation.
         // JavaScript version can be slower and does not support streaming.

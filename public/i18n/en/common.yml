@@ -19,6 +19,9 @@ progress:
 input:
   string-array:
     blur-to-add: Click outside to add
+  player-name:
+    label: Enter Player Name
+    hint: Player name contains 3-16 characters (letters, digits and underscores).
 
 toast:
   app-upgraded: Updated to {{version}}

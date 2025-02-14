@@ -19,6 +19,9 @@ progress:
 input:
   string-array:
     blur-to-add: 在输入框外单击即可添加
+  player-name:
+    label: 输入玩家名
+    hint: 玩家名须为 3 至 16 个字符，只能包含大小写英文字母、数字以及下划线（_）。
 
 toast:
   app-upgraded: 已安装更新：{{version}}

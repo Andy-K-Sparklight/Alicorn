@@ -1,4 +1,4 @@
-import { LocalAccount } from "@/main/auth/local";
+import { TemporalAccount } from "@/main/auth/temp";
 import type { Account, AccountProps } from "@/main/auth/types";
 import { VanillaAccount } from "@/main/auth/vanilla";
 import { reg } from "@/main/registry/registry";
@@ -8,7 +8,7 @@ function loadFromProps(props: AccountProps): Account {
         case "vanilla":
             return VanillaAccount.fromProps(props);
         case "local":
-            return LocalAccount.fromProps(props);
+            return TemporalAccount.fromProps(props);
     }
 }
 

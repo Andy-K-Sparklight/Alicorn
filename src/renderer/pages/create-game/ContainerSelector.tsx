@@ -3,12 +3,11 @@ import { Select, SelectItem, type SharedSelection } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 
 interface ContainerSelectorProps {
-    enabled: boolean;
     containerId?: string;
     onChange: (containerId?: string) => void;
 }
 
-export function ContainerSelector({ enabled, containerId, onChange }: ContainerSelectorProps) {
+export function ContainerSelector({ containerId, onChange }: ContainerSelectorProps) {
     const { t } = useTranslation("pages", { keyPrefix: "create-game" });
 
     const games = useGameList() ?? [];
@@ -27,7 +26,6 @@ export function ContainerSelector({ enabled, containerId, onChange }: ContainerS
     }
 
     return <Select
-        isDisabled={!enabled}
         label={t("container-select-title")}
         placeholder={t("version-select-placeholder")}
         selectedKeys={sid ? [sid] : []}

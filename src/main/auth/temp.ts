@@ -1,12 +1,18 @@
 import { Account, type AccountProps, AuthCredentials } from "@/main/auth/types";
 import crypto from "node:crypto";
 
-export class LocalAccount implements Account {
+/**
+ * Provided to the user as an alternative authenticate method when failed to log-in.
+ *
+ * We can assume that the user owns a valid premium account as it's already checked during setup.
+ * Therefore, this class simply emulates the behavior from the vanilla launcher (so-called "offline mode").
+ */
+export class TemporalAccount implements Account {
     uuid;
     #name: string;
 
-    static fromProps(props: LocalAccountProps): LocalAccount {
-        return new LocalAccount(props.playerName);
+    static fromProps(props: TemporalAccountProps): TemporalAccount {
+        return new TemporalAccount(props.playerName);
     }
 
     constructor(name: string) {
@@ -15,16 +21,12 @@ export class LocalAccount implements Account {
     }
 
     credentials(): AuthCredentials {
-        if (import.meta.env.AL_ENABLE_LOCAL_ACCOUNT) {
-            return {
-                playerName: this.#name,
-                uuid: this.uuid,
-                accessToken: "0",
-                xboxId: "0"
-            };
-        }
-
-        throw "Local account is not enabled in this build";
+        return {
+            playerName: this.#name,
+            uuid: this.uuid,
+            accessToken: "0",
+            xboxId: "0"
+        };
     }
 
     async refresh(): Promise<boolean> {
@@ -51,7 +53,7 @@ function offlineUUIDOf(name: string): string {
     return bytes.toString("hex").toLowerCase();
 }
 
-export interface LocalAccountProps {
+export interface TemporalAccountProps {
     type: "local";
     playerName: string;
 }

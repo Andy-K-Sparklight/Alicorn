@@ -3,12 +3,11 @@ import { Select, SelectItem, type SharedSelection } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 
 interface AccountSelectorProps {
-    enabled: boolean;
     accountId: string | null;
     onChange: (accountId: string | null) => void;
 }
 
-export function AccountSelector({ enabled, accountId, onChange }: AccountSelectorProps) {
+export function AccountSelector({ accountId, onChange }: AccountSelectorProps) {
     const { t } = useTranslation("pages", { keyPrefix: "create-game" });
     const accounts = useAccounts();
 
@@ -21,7 +20,6 @@ export function AccountSelector({ enabled, accountId, onChange }: AccountSelecto
     return <Select
         label={t("account.select.label")}
         placeholder={t("account.select.placeholder")}
-        isDisabled={!enabled}
         selectedKeys={accountId ? [accountId] : []}
         onSelectionChange={handleSelectionChange}
     >

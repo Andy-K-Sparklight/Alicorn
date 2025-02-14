@@ -5,7 +5,6 @@ export type OSName = "windows" | "osx" | "linux"
 function genBuildDefines(config: BuildConfig) {
     const {
         enableBMCLAPI,
-        enableLocalAccount,
         enableNativeLZMA,
         enableBundledAria2,
         devServerPort,
@@ -25,7 +24,6 @@ function genBuildDefines(config: BuildConfig) {
         AL_OS: osNames[platform],
         AL_ARCH: arch,
         AL_ENABLE_BMCLAPI: enableBMCLAPI,
-        AL_ENABLE_LOCAL_ACCOUNT: enableLocalAccount,
         AL_DEV_SERVER_PORT: devServerPort,
         AL_ENABLE_NATIVE_LZMA: enableNativeLZMA,
         AL_ENABLE_BUNDLED_ARIA2: enableBundledAria2

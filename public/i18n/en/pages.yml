@@ -27,9 +27,12 @@ create-game:
     select:
       label: Select Account
       placeholder: N/A
-    new:
+    new-vanilla:
       label: Log in Later
       sub: You'll be prompted to log in when launching.
+    manual:
+      label: Set Player Name Manually
+      sub: Manually enter player name if online verification has failed.
     reuse:
       label: Use Existing Account
       sub: Use an existing account for launching.
@@ -314,11 +317,6 @@ about:
     bmclapi:
       name: BMCLAPI
       tip: Add BMCLAPI as alternative mirror.
-    local-account:
-      name: Local Account
-      tip: |-
-        Allow launching the game with offline account.
-        This breaks the EULA and will not supported.
     aria2:
       name: Bundled aria2
       tip: |-

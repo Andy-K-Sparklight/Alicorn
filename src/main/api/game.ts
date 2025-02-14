@@ -1,3 +1,4 @@
+import { TemporalAccount } from "@/main/auth/temp";
 import { containerInspector } from "@/main/container/inspect";
 import { containers } from "@/main/container/manage";
 import type { ContainerProps } from "@/main/container/spec";
@@ -29,6 +30,8 @@ ipcMain.on("revealGameContent", async (_, gameId, scope) => {
 export interface CreateGameInit {
     name: string;
     profileId: string;
+    authType: "new-vanilla" | "manual" | "reuse";
+    playerName: string;
     accountId: string | null;
     assetsLevel: "full" | "video-only";
     containerId?: string;
@@ -62,6 +65,20 @@ ipcMain.handle("addGame", async (_, init) => {
         "old_beta": "vanilla-old-beta"
     } as const)[p.type] ?? "unknown";
 
+    let accountId = "";
+    switch (init.authType) {
+        case "manual": {
+            const a = new TemporalAccount(init.playerName);
+            reg.accounts.add(a.uuid, a.toProps());
+            accountId = a.uuid;
+            break;
+        }
+
+        case "reuse": {
+            accountId = init.accountId ?? "";
+        }
+    }
+
     const g: GameProfile = {
         id: genGameId(),
         name,
@@ -70,7 +87,7 @@ ipcMain.handle("addGame", async (_, init) => {
             type: "vanilla"
         },
         launchHint: {
-            accountId: init.accountId ?? "",
+            accountId,
             containerId: cid,
             profileId,
             pref: {} // TODO allow user to choose pref

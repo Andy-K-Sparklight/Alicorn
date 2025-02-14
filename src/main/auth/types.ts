@@ -1,4 +1,4 @@
-import type { LocalAccountProps } from "@/main/auth/local";
+import type { TemporalAccountProps } from "@/main/auth/temp";
 import type { VanillaAccountProps } from "@/main/auth/vanilla";
 import type { RegistryTransformer } from "@/main/registry/registry";
 
@@ -28,7 +28,7 @@ export interface Account {
     toProps(): AccountProps;
 }
 
-export type AccountProps = LocalAccountProps | VanillaAccountProps;
+export type AccountProps = TemporalAccountProps | VanillaAccountProps;
 
 export type DetailedAccountProps = AccountProps & { uuid: string; }
 

@@ -1,4 +1,5 @@
 import { useNav } from "@/renderer/util/nav";
+import { PlayerNameInput } from "@components/PlayerNameInput";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { Button, Input, Switch } from "@heroui/react";
 import { AccountSelector } from "@pages/create-game/AccountSelector";
@@ -21,15 +22,21 @@ export function CreateGameView() {
     const [containerShouldLink, setContainerShouldLink] = useState(true);
     const [shareContainer, setShareContainer] = useState(false);
 
-    const [newAccount, setNewAccount] = useState<boolean>(true);
+    const [authType, setAuthType] = useState<"new-vanilla" | "manual" | "reuse">("new-vanilla");
     const [accountId, setAccountId] = useState<string | null>(null);
+    const [playerName, setPlayerName] = useState<string>("Player");
 
     const [assetsLevel, setAssetsLevel] = useState<"full" | "video-only">("full");
 
     const [creating, setCreating] = useState(false);
     const nav = useNav();
 
-    const valid = gameVersion && (!shareContainer || (shareContainer && containerId));
+    const valid = [
+        gameVersion,
+        !(shareContainer && !containerId),
+        !(authType === "manual" && !playerName),
+        !(authType === "reuse" && !accountId)
+    ].every(Boolean);
 
     async function handleCreate() {
         if (valid) {
@@ -39,7 +46,9 @@ export function CreateGameView() {
                 name: gameName,
                 containerId,
                 accountId,
-                profileId: gameVersion,
+                authType,
+                playerName,
+                profileId: gameVersion!,
                 assetsLevel,
                 containerShouldLink
             });
@@ -81,18 +90,25 @@ export function CreateGameView() {
                             )
                         }
                     </RadioGroup>
-                    <Switch
-                        size="sm"
-                        isSelected={containerShouldLink}
-                        onValueChange={setContainerShouldLink}
-                        isDisabled={shareContainer}
-                    >
-                        <div className="flex flex-col">
-                            <div className="text-medium">{t("container-link.label")}</div>
-                            <div className="text-foreground-400 text-sm">{t("container-link.sub")}</div>
-                        </div>
-                    </Switch>
-                    <ContainerSelector enabled={shareContainer} containerId={containerId} onChange={setContainerId}/>
+
+                    {
+                        !shareContainer &&
+                        <Switch
+                            size="sm"
+                            isSelected={containerShouldLink}
+                            onValueChange={setContainerShouldLink}
+                            isDisabled={shareContainer}
+                        >
+                            <div className="flex flex-col">
+                                <div className="text-medium">{t("container-link.label")}</div>
+                                <div className="text-foreground-400 text-sm">{t("container-link.sub")}</div>
+                            </div>
+                        </Switch>
+                    }
+
+                    {
+                        shareContainer && <ContainerSelector containerId={containerId} onChange={setContainerId}/>
+                    }
                 </div>
 
 
@@ -100,24 +116,30 @@ export function CreateGameView() {
                     <div className="font-bold text-xl">{t("account-title")}</div>
 
                     <RadioGroup
-                        value={newAccount ? "new" : "reuse"}
-                        onValueChange={v => setNewAccount(v === "new")}
+                        value={authType}
+                        onValueChange={(s) => setAuthType(s as any)}
                     >
-                        {
-                            ["new", "reuse"].map(lv =>
-                                <Radio key={lv} value={lv} description={t(`account.${lv}.sub`)}>
-                                    {t(`account.${lv}.label`)}
-                                </Radio>
-                            )
-                        }
+                        <Radio value="new-vanilla" description={t("account.new-vanilla.sub")}>
+                            {t("account.new-vanilla.label")}
+                        </Radio>
+
+                        <Radio value="manual" description={t("account.manual.sub")}>
+                            {t("account.manual.label")}
+                        </Radio>
+
+                        <Radio value="reuse" description={t("account.reuse.sub")}>
+                            {t("account.reuse.label")}
+                        </Radio>
+
                     </RadioGroup>
 
-                    <AccountSelector enabled={!newAccount} accountId={accountId} onChange={setAccountId}/>
+                    {
+                        authType === "reuse" && <AccountSelector accountId={accountId} onChange={setAccountId}/>
+                    }
 
-                    {/*<Alert*/}
-                    {/*    classNames={{ title: "font-bold" }}*/}
-                    {/*    title={t("account-tip")}*/}
-                    {/*/>*/}
+                    {
+                        authType === "manual" && <PlayerNameInput onChange={setPlayerName}/>
+                    }
                 </div>
 
                 <div className="flex flex-col gap-4">

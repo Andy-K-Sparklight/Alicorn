@@ -27,9 +27,12 @@ create-game:
     select:
       label: 选择一个帐户
       placeholder: 未选取
-    new:
+    new-vanilla:
       label: 登录新帐户
       sub: 当启动游戏时，将提示你进行登录。
+    manual:
+      label: 手动输入玩家名
+      sub: 如果无法登录，你可以手动提供玩家名。
     reuse:
       label: 使用已有帐户
       sub: 选择一个已经创建的帐户。
@@ -313,11 +316,6 @@ about:
     bmclapi:
       name: BMCLAPI 镜像加速
       tip: 在可用时使用 BMCLAPI 加速下载。
-    local-account:
-      name: 本地帐户
-      tip: |-
-        允许使用未验证的离线帐户启动游戏。
-        这违反 EULA，所以不受支持。
     aria2:
       name: aria2 下载工具
       tip: |-

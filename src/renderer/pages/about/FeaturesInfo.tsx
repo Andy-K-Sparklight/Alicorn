@@ -34,7 +34,6 @@ function RebuildNote() {
 
 const FEATURES = {
     bmclapi: import.meta.env.AL_ENABLE_BMCLAPI,
-    "local-account": import.meta.env.AL_ENABLE_LOCAL_ACCOUNT,
     aria2: import.meta.env.AL_ENABLE_BUNDLED_ARIA2,
     "lzma-native": import.meta.env.AL_ENABLE_NATIVE_LZMA
 };
