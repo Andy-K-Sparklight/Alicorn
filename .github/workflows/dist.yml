@@ -18,7 +18,7 @@ jobs:
         run: |-
           npm install
       - name: Pack
-        run: npm run dist
+        run: npx cross-env ALICORN_PACK_PLATFORMS=win32 npm run dist
       - name: List Contents
         run: dir dist
       - uses: actions/upload-artifact@v4

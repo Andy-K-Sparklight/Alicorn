@@ -9,11 +9,15 @@ import { MSICreator } from "electron-wix-msi";
 import fs from "fs-extra";
 import os from "node:os";
 import path from "node:path";
+import * as process from "node:process";
 import { build } from "~/build-src/run-build";
 import pkg from "~/package.json";
 
-const platforms = ["win32", "darwin", "linux"];
-const arches = ["x64", "arm64"];
+const platformSpec = process.env.ALICORN_PACK_PLATFORMS || "win32,darwin,linux";
+const archesSpec = process.env.ALICORN_PACK_ARCHES || "x64,arm64";
+
+const platforms = ["win32", "darwin", "linux"].filter(p => platformSpec.includes(p));
+const arches = ["x64", "arm64"].filter(a => archesSpec.includes(a));
 
 consola.info(`Start cross-packaging for ${platforms.join(",")} x ${arches.join(",")}`);
 
