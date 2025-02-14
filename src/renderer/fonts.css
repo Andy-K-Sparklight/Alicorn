@@ -1,7 +1,8 @@
-.lang-zh, .lang-zh-CN {
-    font-family: "Ubuntu Mono", "Noto Sans SC", sans-serif;
+.lang-zh, .lang-zh-CN, .lang-en {
+    font-family: "Nunito SemiBold", "Noto Sans SC Variable", sans-serif;
 }
 
-.lang-en {
-    font-family: "Ubuntu Mono", sans-serif;
+
+pre {
+    font-family: "JetBrains Mono Variable", monospace;
 }

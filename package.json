@@ -46,8 +46,9 @@
         "xvfb-maybe": "^0.2.1"
     },
     "dependencies": {
-        "@fontsource/noto-sans-sc": "^5.1.1",
-        "@fontsource/ubuntu-mono": "^5.1.1",
+        "@fontsource-variable/jetbrains-mono": "^5.1.2",
+        "@fontsource-variable/noto-sans-sc": "^5.1.1",
+        "@fontsource-variable/nunito": "^5.1.1",
         "@heroui/react": "^2.6.14",
         "clsx": "^2.1.1",
         "deep-freeze-es6": "^4.0.0",

@@ -13,8 +13,9 @@ import pkg from "~/package.json";
 // Styles and fonts
 import "./global.css";
 import "./fonts.css";
-import "@fontsource/ubuntu-mono";
-import "@fontsource/noto-sans-sc";
+import "@fontsource-variable/nunito";
+import "@fontsource-variable/jetbrains-mono";
+import "@fontsource-variable/noto-sans-sc";
 
 /**
  * Renderer main entry.
