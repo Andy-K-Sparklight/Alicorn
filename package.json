@@ -4,7 +4,7 @@
     "description": "That launcher of the block game, once with the magic of friendship.",
     "author": "skjsjhb",
     "codename": "Amazing Grace",
-    "version": "2.0.0-beta.1",
+    "version": "2.0.0-candy",
     "type": "module",
     "scripts": {
         "dev": "bun build.ts",
