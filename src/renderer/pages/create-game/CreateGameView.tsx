@@ -1,3 +1,4 @@
+import { useAccounts } from "@/renderer/services/auth";
 import { useNav } from "@/renderer/util/nav";
 import { PlayerNameInput } from "@components/PlayerNameInput";
 import { Radio, RadioGroup } from "@heroui/radio";
@@ -15,6 +16,8 @@ import { toast } from "react-toastify";
  */
 export function CreateGameView() {
     const { t } = useTranslation("pages", { keyPrefix: "create-game" });
+    const accounts = useAccounts();
+
 
     const [gameName, setGameName] = useState(t("default-name"));
     const [gameVersion, setGameVersion] = useState<string>();
@@ -22,8 +25,10 @@ export function CreateGameView() {
     const [containerShouldLink, setContainerShouldLink] = useState(true);
     const [shareContainer, setShareContainer] = useState(false);
 
-    const [authType, setAuthType] = useState<"new-vanilla" | "manual" | "reuse">("new-vanilla");
-    const [accountId, setAccountId] = useState<string | null>(null);
+    const hasAccount = accounts.length > 0;
+
+    const [authType, setAuthType] = useState<"new-vanilla" | "manual" | "reuse">(hasAccount ? "reuse" : "new-vanilla");
+    const [accountId, setAccountId] = useState<string | null>(accounts[0]?.uuid ?? null);
     const [playerName, setPlayerName] = useState<string>("Player");
 
     const [assetsLevel, setAssetsLevel] = useState<"full" | "video-only">("full");
