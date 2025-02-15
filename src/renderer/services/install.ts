@@ -5,7 +5,6 @@ import Emittery from "emittery";
 import { t } from "i18next";
 import { useCallback, useSyncExternalStore } from "react";
 import { toast } from "react-toastify";
-import throttle from "throttleit";
 
 // Maps game ID to its event target
 const globalEmitter = new Emittery();
@@ -15,7 +14,17 @@ async function install(gameId: string): Promise<void> {
     native.install.installVanilla(gameId);
     const port = await retrievePort(gameId);
 
-    const emitChange = throttle(() => globalEmitter.emit(`change:${gameId}`), 100);
+    // Emits change event at most once per idle callback
+    // This does not block the render operations, while making the status to update as fast as possible
+    let shouldEmitChange = false;
+
+    function emitChange() {
+        if (shouldEmitChange) return;
+        requestIdleCallback(() => {
+            globalEmitter.emit(`change:${gameId}`);
+            shouldEmitChange = false;
+        });
+    }
 
     // TODO add rej error handler
     return new Promise(res => {
