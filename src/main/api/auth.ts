@@ -20,7 +20,7 @@ ipcMain.handle("gameAuth", async (_, gameId) => {
     }
 
     // Update account
-    reg.accounts.add(a.uuid, a.toProps());
+    accounts.add(a);
 
     return true;
 });
@@ -30,7 +30,7 @@ ipcMain.handle("listAccounts", () => reg.accounts.entries().map(([k, v]) => ({ .
 ipcMain.handle("createVanillaAccount", async () => {
     const a = new VanillaAccount();
     if (await a.refresh()) {
-        reg.accounts.add(a.uuid, a.toProps());
+        accounts.add(a);
         return a.toProps() as VanillaAccountProps;
     }
 

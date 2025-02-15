@@ -1,3 +1,4 @@
+import { accounts } from "@/main/auth/manage";
 import { TemporalAccount } from "@/main/auth/temp";
 import { containerInspector } from "@/main/container/inspect";
 import { containers } from "@/main/container/manage";
@@ -69,7 +70,7 @@ ipcMain.handle("addGame", async (_, init) => {
     switch (init.authType) {
         case "manual": {
             const a = new TemporalAccount(init.playerName);
-            reg.accounts.add(a.uuid, a.toProps());
+            accounts.add(a);
             accountId = a.uuid;
             break;
         }
