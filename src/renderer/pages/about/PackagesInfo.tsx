@@ -16,7 +16,7 @@ function Packages() {
 
     const { t } = useTranslation("pages", { keyPrefix: "about" });
 
-    return <Table isHeaderSticky aria-label="Packages" classNames={{ base: "overflow-y-scroll" }}>
+    return <Table className="p-3" isHeaderSticky aria-label="Packages" classNames={{ base: "overflow-y-scroll" }}>
         <TableHeader>
             <TableColumn>
                 {t("packages.name")}

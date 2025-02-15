@@ -23,8 +23,9 @@ export function GamesView() {
 
     const sortedGames = toSortedGames(games, sortMethod!);
 
-    return <div className="flex flex-col w-full h-full">
-        <div className="flex gap-2">
+    return <div className="flex flex-col w-full h-full px-5">
+        <div className="flex gap-2 px-3">
+            {/* The px-3 above is necessary to align the button with the cards. */}
             <Button
                 onPress={() => nav("/create-game")}
                 fullWidth
@@ -39,8 +40,9 @@ export function GamesView() {
 
         {
             games.length > 0 ?
-                <div className="mt-4 w-full h-full overflow-y-auto">
-                    <div className="flex flex-col gap-3 w-full">
+                <div className="mt-4 w-full h-full overflow-y-auto px-3">
+                    {/* The px-3 and py-3 are necessary to reserve space for the card shadow. */}
+                    <div className="flex flex-col gap-3 w-full py-3">
                         {
                             sortedGames.map(g => <GameCard key={g.id} game={g}/>)
                         }

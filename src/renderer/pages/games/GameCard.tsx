@@ -26,7 +26,7 @@ export function GameCard({ game }: GameCardProps) {
         await remoteInstaller.install(id);
     }
 
-    return <Card>
+    return <Card shadow="sm">
         <CardBody>
             <div className="flex gap-4 items-center h-16 px-3">
                 <div className="h-full p-3 bg-content2 rounded-full">
