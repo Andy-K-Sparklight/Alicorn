@@ -52,9 +52,6 @@ games:
   loading: 正在读取游戏列表……
   title: 游戏库
   new: 创建新游戏
-  auth-failed:
-    title: 帐户验证失败
-    sub: 请修复此问题，然后再尝试启动游戏。
   sorting:
     az: 名称升序
     za: 名称降序

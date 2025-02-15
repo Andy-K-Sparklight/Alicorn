@@ -9,7 +9,7 @@ import { useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
 import { CloudDownloadIcon, RefreshCwIcon, TrashIcon, UnlinkIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 export function AdvancedPanel() {
     const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage.advanced" });
@@ -124,7 +124,7 @@ function DestroyEntry() {
         if (res) {
             native.game.destroy(id);
             nav("/games");
-            toast(tc("toast.game-destroyed", { name }), { type: "success" });
+            toast.success(tc("toast.game-destroyed", { name }));
         }
     }
 

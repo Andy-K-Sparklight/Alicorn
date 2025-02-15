@@ -1,4 +1,4 @@
-.lang-zh, .lang-zh-CN, .lang-en {
+.lang-zh, .lang-zh-CN, .lang-en, :where([data-sonner-toaster]) {
     font-family: "Nunito SemiBold", "Noto Sans SC Variable", sans-serif;
 }
 

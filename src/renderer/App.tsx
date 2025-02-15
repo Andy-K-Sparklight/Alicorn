@@ -14,8 +14,8 @@ import { SettingsView } from "@pages/settings/SettingsView";
 import { SetupView } from "@pages/setup/SetupView";
 import { t } from "i18next";
 import React, { useEffect } from "react";
-import { toast, ToastContainer } from "react-toastify";
 import { useLocalStorage } from "react-use";
+import { toast, Toaster } from "sonner";
 import { Redirect } from "wouter";
 import pkg from "~/package.json";
 
@@ -26,17 +26,17 @@ export function App() {
     const nav = useNav();
 
     useAutoTheme();
+
     const { theme } = useTheme();
 
     useAutoFontClass();
 
-    // Toasts use the opposite theme
-    const toastTheme = themeManager.isDark(theme) ? "light" : "dark";
-
     useEffect(() => {
-        native.app.onUpgraded(version => toast(t("toast.app-upgraded", { version }), { type: "info" }));
+        native.app.onUpgraded(version => toast.info(t("toast.app-upgraded", { version })));
     }, []);
 
+    // Use an opposite theme for toasts
+    const toastTheme = themeManager.isDark(theme) ? "light" : "dark";
 
     return <HeroUIProvider navigate={nav}>
         <main className="fixed inset-0 text-foreground bg-background">
@@ -45,12 +45,7 @@ export function App() {
                 <MainArea/>
             </div>
             <VersionOverlay/>
-            <ToastContainer
-                theme={toastTheme}
-                position="bottom-left"
-                newestOnTop
-                pauseOnFocusLoss={false}
-            />
+            <Toaster position="bottom-left" richColors theme={toastTheme}/>
         </main>
     </HeroUIProvider>;
 }

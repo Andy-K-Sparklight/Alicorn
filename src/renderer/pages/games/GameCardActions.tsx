@@ -4,7 +4,7 @@ import { Button } from "@heroui/react";
 import { CirclePlayIcon, DownloadIcon, EllipsisIcon } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 type InstallStatus = "installed" | "installing" | "not-installed";
 
@@ -17,6 +17,7 @@ interface GameActionsProps {
 export function GameCardActions({ installStatus, gameId, onInstall }: GameActionsProps) {
     const [launching, setLaunching] = useState(false);
     const nav = useNav();
+    const { t } = useTranslation("common");
 
     function handleShowDetails() {
         nav(`/game-detail/${gameId}`);
@@ -27,7 +28,7 @@ export function GameCardActions({ installStatus, gameId, onInstall }: GameAction
         const authed = await native.auth.forGame(gameId);
 
         if (!authed) {
-            toast(<AuthFailedToast/>, { type: "error" });
+            toast.error(t("toast.login-failed"));
             setLaunching(false);
             return;
         }
@@ -59,14 +60,5 @@ export function GameCardActions({ installStatus, gameId, onInstall }: GameAction
         <Button isIconOnly onPress={handleShowDetails}>
             <EllipsisIcon/>
         </Button>
-    </div>;
-}
-
-function AuthFailedToast() {
-    const { t } = useTranslation("pages", { keyPrefix: "games.auth-failed" });
-
-    return <div className="flex flex-col gap-1 mx-4">
-        <div className="font-bold text-xl">{t("title")}</div>
-        <div className="text-medium">{t("sub")}</div>
     </div>;
 }

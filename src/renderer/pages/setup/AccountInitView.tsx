@@ -6,7 +6,7 @@ import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader 
 import { ArrowRightIcon, UserRoundPlusIcon, UserSquareIcon } from "lucide-react";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 export function AccountInitView() {
     const { t } = useTranslation("setup", { keyPrefix: "account-init" });
@@ -28,7 +28,7 @@ export function AccountInitView() {
         if (props) {
             setAccountProps(props);
         } else {
-            toast(tc("toast.login-failed"), { type: "error" });
+            toast.error(tc("toast.login-failed"));
         }
 
         setLoginActive(false);

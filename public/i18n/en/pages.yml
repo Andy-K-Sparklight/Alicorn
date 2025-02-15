@@ -52,9 +52,6 @@ games:
   loading: Reading game list...
   title: Games
   new: Create
-  auth-failed:
-    title: Failed to Authenticate
-    sub: Please fix that before launching.
   sorting:
     az: A to Z
     za: Z to A

@@ -4,7 +4,7 @@ import { retrievePort } from "@/preload/message";
 import Emittery from "emittery";
 import { t } from "i18next";
 import { useCallback, useSyncExternalStore } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 // Maps game ID to its event target
 const globalEmitter = new Emittery();
@@ -36,7 +36,7 @@ async function install(gameId: string): Promise<void> {
                 case "finish":
                     port.close();
                     progressMap.delete(gameId);
-                    toast(t("toast.game-installed"), { type: "success" });
+                    toast.success(t("toast.game-installed"));
                     res();
                     break;
             }

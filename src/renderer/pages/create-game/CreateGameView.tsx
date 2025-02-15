@@ -8,7 +8,7 @@ import { ContainerSelector } from "@pages/create-game/ContainerSelector";
 import { VersionSelector } from "@pages/create-game/VersionSelector";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 
 /**
@@ -58,7 +58,7 @@ export function CreateGameView() {
                 containerShouldLink
             });
             setCreating(false);
-            toast(t("toast-created"), { type: "success" });
+            toast.success(t("toast-created"));
             nav("/games");
         }
     }
