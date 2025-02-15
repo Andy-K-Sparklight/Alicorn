@@ -146,8 +146,13 @@ async function setupMainWindow() {
         mainWindow.webContents.openDevTools();
     }
 
-    mainWindow.on("resized", () => conf().app.window.size = mainWindow!.getSize());
-    mainWindow.on("moved", () => conf().app.window.pos = mainWindow!.getPosition());
+    mainWindow.on("resized", () => {
+        conf.alter(c => c.app.window.size = mainWindow!.getSize());
+    });
+
+    mainWindow.on("moved", () => {
+        conf.alter(c => c.app.window.pos = mainWindow!.getPosition());
+    });
 
     mainWindow.setMenu(null);
 
