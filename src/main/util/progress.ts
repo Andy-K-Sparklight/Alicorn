@@ -8,6 +8,7 @@
 export type ProgressStateName =
     "generic.download" |
     "generic.count" |
+    "cache.compact-link" |
     "jrt.download" |
     "jrt.unpack" |
     "jrt.verify" |
@@ -89,4 +90,3 @@ export const progress = {
     makeNamed,
     indefinite
 };
-

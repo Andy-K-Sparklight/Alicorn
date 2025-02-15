@@ -8,7 +8,7 @@ import { nativeLib } from "@/main/profile/native-lib";
 import { filterRules } from "@/main/profile/rules";
 import type { AssetIndex, VersionProfile } from "@/main/profile/version-profile";
 import { i18nMain } from "@/main/util/i18n";
-import { progress, type ProgressController } from "@/main/util/progress";
+import { progress, type ProgressController, type ProgressHandler } from "@/main/util/progress";
 import fs from "fs-extra";
 import path from "node:path";
 
@@ -159,7 +159,7 @@ async function installLibraries(
     await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "vanilla.download-libs") });
 
     if (shouldLink) {
-        await linkTasks(tasks);
+        await linkTasks(tasks, onProgress);
     }
 
     onProgress?.(progress.indefinite("vanilla.unpack-libs"));
@@ -224,7 +224,7 @@ async function installAssets(
     await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "vanilla.download-assets") });
 
     if (shouldLink) {
-        await linkTasks(tasks);
+        await linkTasks(tasks, onProgress);
     }
 
     console.debug(`Linking ${objects.length} assets...`);
@@ -278,8 +278,11 @@ async function makeAssetLink(src: string, dst: string) {
 /**
  * Utility function to link all downloaded files from the task set.
  */
-async function linkTasks(tasks: DlxDownloadRequest[]): Promise<void> {
-    await Promise.all(tasks.map(t => cache.link(t.path, t.sha1)));
+async function linkTasks(tasks: DlxDownloadRequest[], onProgress?: ProgressHandler): Promise<void> {
+    await Promise.all(progress.countPromises(
+        tasks.map(t => cache.link(t.path, t.sha1)),
+        progress.makeNamed(onProgress, "cache.compact-link")
+    ));
 }
 
 export const vanillaInstaller = {
