@@ -234,6 +234,10 @@ const native = {
 
         update(conf: UserConfig): void {
             ipcRenderer.send("updateConfig", conf);
+        },
+
+        onChange(cb: (c: UserConfig) => void): void {
+            internalEvents.on("configChanged", args => cb(args[0]));
         }
     },
 
@@ -265,7 +269,7 @@ const native = {
 };
 
 // Unwraps IPC events as internal events
-(["gameChanged", "accountChanged"] as const).forEach(ch => {
+(["gameChanged", "accountChanged", "configChanged"] as const).forEach(ch => {
     ipcRenderer.on(ch, (_, ...args) => {
         void internalEvents.emit(ch, args);
     });

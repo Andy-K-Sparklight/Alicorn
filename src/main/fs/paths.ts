@@ -88,17 +88,17 @@ function setup(init?: Partial<PathsInit>): void {
     initPrompt = init ?? null;
 
     if (!conf().paths.store) {
-        conf().paths.store = optimalStoreRoot();
+        conf.alter(c => c.paths.store = optimalStoreRoot());
         console.log(`Store path set to ${conf().paths.store}`);
     }
 
     if (!conf().paths.game) {
-        conf().paths.game = optimalGameRoot();
+        conf.alter(c => c.paths.game = optimalGameRoot());
         console.log(`Game path set to ${conf().paths.game}`);
     }
 
     if (!conf().paths.temp) {
-        conf().paths.temp = path.resolve(app.getPath("temp"), "Alicorn");
+        conf.alter(c => c.paths.temp = path.resolve(app.getPath("temp"), "Alicorn"));
         console.log(`Temp path set to ${conf().paths.temp}`);
     }
 }

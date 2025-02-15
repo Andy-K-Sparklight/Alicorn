@@ -100,7 +100,9 @@ async function main() {
     console.log(`Done (${deltaTime}s)! Alicorn is now fully initialized.`);
 
     // Generate a random client ID if it's not configured
-    conf().client.id = randomUUID().replaceAll("-", "");
+    if (!conf().client.id) {
+        conf.alter(c => c.client.id = randomUUID().replaceAll("-", ""));
+    }
 
     if (import.meta.env.AL_TEST) {
         void runInstrumentedTest();

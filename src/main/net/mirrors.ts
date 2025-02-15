@@ -89,7 +89,7 @@ async function bench(): Promise<void> {
     }
     speed.sort((a, b) => b[1] - a[1]);
     activeMirrors = speed.map(it => it[0]);
-    conf().net.mirror.prefer = activeMirrors[0].name;
+    conf.alter(c => c.net.mirror.prefer = activeMirrors[0].name);
 }
 
 async function testMirrorSpeed(url: string): Promise<number> {

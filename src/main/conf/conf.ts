@@ -1,4 +1,6 @@
 import { isENOENT } from "@/main/util/fs";
+import deepFreeze from "deep-freeze-es6";
+import { BrowserWindow } from "electron";
 import fs from "fs-extra";
 import os from "node:os";
 import path from "node:path";
@@ -273,7 +275,7 @@ async function load(): Promise<void> {
     try {
         const d = (await fs.readFile(getConfigPath())).toString();
         if (d.trim().length > 0) {
-            config = applyPatch(DEFAULT_CONFIG, JSON.parse(d));
+            config = deepFreeze(applyPatch(DEFAULT_CONFIG, JSON.parse(d)));
         }
     } catch (e) {
         if (isENOENT(e)) {
@@ -371,10 +373,17 @@ function createPatch(origin: ConfigSection, user: ConfigSection): ConfigSection 
     return null;
 }
 
-let config: UserConfig = structuredClone(DEFAULT_CONFIG);
+let config: UserConfig = deepFreeze(structuredClone(DEFAULT_CONFIG));
 
-function updateWith(c: UserConfig) {
-    Object.assign(config, c);
+function update(c: UserConfig) {
+    config = c;
+    BrowserWindow.getAllWindows().forEach(w => w.webContents.send("configChanged", c));
+}
+
+function alter(fn: (c: UserConfig) => void) {
+    const nc = structuredClone(config);
+    fn(nc);
+    update(nc);
 }
 
 /**
@@ -382,6 +391,6 @@ function updateWith(c: UserConfig) {
  *
  * A direct call to the constant gets the active configuration object.
  */
-export const conf = Object.assign(() => config, { load, store, updateWith });
+export const conf = Object.assign(() => config, { load, store, update, alter });
 
 export type UserConfig = typeof DEFAULT_CONFIG;

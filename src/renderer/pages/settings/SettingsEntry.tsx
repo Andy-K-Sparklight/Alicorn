@@ -4,7 +4,7 @@
 import { DirInput } from "@components/DirInput";
 import { StringArrayInput } from "@components/StringArrayInput";
 import { Input, Select, SelectItem, type SharedSelection, Slider, Switch } from "@heroui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface SettingsEntryProps<T> {
@@ -45,9 +45,15 @@ function EntryLabel({ id, icon }: { id: string; icon?: React.ComponentType }) {
 }
 
 export function TextEntry({ id, icon, value, onChange }: SettingsEntryProps<string>) {
+    const [internalValue, setInternalValue] = useState(value);
+
+    useEffect(() => {
+        setInternalValue(value);
+    }, [value]);
+
     return <div className="flex flex-col gap-2 w-full">
         <EntryLabel id={id} icon={icon}/>
-        <Input fullWidth value={value} onValueChange={onChange}/>
+        <Input fullWidth value={internalValue} onValueChange={setInternalValue} onBlur={() => onChange(internalValue)}/>
     </div>;
 }
 

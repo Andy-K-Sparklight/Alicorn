@@ -1,17 +1,19 @@
-import { useConfig } from "@components/ConfigProvider";
+import { useConfig } from "@/renderer/services/conf";
 import { Divider } from "@heroui/react";
 import { StringArrayEntry } from "@pages/settings/SettingsEntry";
 import { TerminalIcon } from "lucide-react";
 
 export function LaunchTab() {
-    const [config, makeReduce] = useConfig();
+    const { config, alterConfig } = useConfig();
+
+    if (!config) return null;
 
     return <>
         <StringArrayEntry
             icon={TerminalIcon}
             id="launch.jvm-args"
             value={config.runtime.args.vm}
-            onChange={makeReduce((c, a) => c.runtime.args.vm = a)}
+            onChange={v => alterConfig(c => c.runtime.args.vm = v)}
         />
 
         <Divider/>
@@ -20,7 +22,7 @@ export function LaunchTab() {
             icon={TerminalIcon}
             id="launch.game-args"
             value={config.runtime.args.game}
-            onChange={makeReduce((c, a) => c.runtime.args.game = a)}
+            onChange={v => alterConfig(c => c.runtime.args.game = v)}
         />
     </>;
 }

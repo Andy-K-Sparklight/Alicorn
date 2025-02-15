@@ -1,7 +1,11 @@
 import { mock } from "bun:test";
 import path from "node:path";
 
-class BrowserWindow {}
+class BrowserWindow {
+    static getAllWindows() {
+        return [];
+    }
+}
 
 mock.module("electron", () => {
     return {

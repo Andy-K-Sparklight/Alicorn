@@ -1,10 +1,9 @@
 import { App } from "@/renderer/App";
 import { i18n } from "@/renderer/i18n/i18n";
 import { ThemeSwitchProvider } from "@/renderer/theme";
-import { ConfigProvider } from "@components/ConfigProvider";
 import { t } from "i18next";
 import { pEvent } from "p-event";
-import React from "react";
+import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Router } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
@@ -46,22 +45,22 @@ async function main() {
 }
 
 function Root() {
-    return <React.StrictMode>
-        <Router hook={useHashLocation}>
-            <ThemeSwitchProvider>
-                <ConfigProvider>
-                    <App/>
-                </ConfigProvider>
-            </ThemeSwitchProvider>
-        </Router>
-    </React.StrictMode>;
+    return <Router hook={useHashLocation}>
+        <ThemeSwitchProvider>
+            <App/>
+        </ThemeSwitchProvider>
+    </Router>;
 }
 
 function render() {
     const rootEle = document.createElement("div");
     document.body.appendChild(rootEle);
     const root = createRoot(rootEle);
-    root.render(<Root/>);
+    root.render(
+        <StrictMode>
+            <Root/>
+        </StrictMode>
+    );
 }
 
 /**

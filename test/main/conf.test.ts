@@ -11,13 +11,13 @@ test("Config Read & Write", async () => {
     await conf.load();
     expect(conf().dev.devTools, "Should use default config when missing").toBeFalse();
 
-    conf().dev.devTools = true;
+    conf.alter(c => c.dev.devTools = true);
     await conf.store();
     await conf.load();
     expect(conf().dev.devTools, "Should keep changes between saves & loads").toBeTrue();
 
     // Check array values
-    conf().runtime.args.vm = ["arg1"];
+    conf.alter(c => c.runtime.args.vm = ["arg1"]);
     await conf.store();
     await conf.load();
     expect(conf().runtime.args.vm.length, "Should save array values").toEqual(1);

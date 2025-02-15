@@ -1,5 +1,5 @@
+import { useConfig } from "@/renderer/services/conf";
 import { Alert } from "@components/Alert";
-import { useConfig } from "@components/ConfigProvider";
 import { Divider } from "@heroui/react";
 import { DirEntry } from "@pages/settings/SettingsEntry";
 import { HardDriveIcon } from "lucide-react";
@@ -9,7 +9,9 @@ import { useTranslation } from "react-i18next";
 export function StorageTab() {
     const { t } = useTranslation("pages", { keyPrefix: "settings" });
 
-    const [config, makeReduce] = useConfig();
+    const { config, alterConfig } = useConfig();
+
+    if (!config) return null;
 
     return <>
         <Alert
@@ -22,7 +24,7 @@ export function StorageTab() {
             icon={HardDriveIcon}
             id="store.store-path"
             value={config.paths.store}
-            onChange={makeReduce((c, pt) => c.paths.store = pt)}
+            onChange={v => alterConfig(c => c.paths.store = v)}
         />
 
         <Divider/>
@@ -31,7 +33,7 @@ export function StorageTab() {
             icon={HardDriveIcon}
             id="store.game-path"
             value={config.paths.game}
-            onChange={makeReduce((c, pt) => c.paths.game = pt)}
+            onChange={v => alterConfig(c => c.paths.game = v)}
         />
 
         <Divider/>
@@ -40,7 +42,7 @@ export function StorageTab() {
             icon={HardDriveIcon}
             id="store.temp-path"
             value={config.paths.temp}
-            onChange={makeReduce((c, pt) => c.paths.temp = pt)}
+            onChange={v => alterConfig(c => c.paths.temp = v)}
         />
     </>;
 }

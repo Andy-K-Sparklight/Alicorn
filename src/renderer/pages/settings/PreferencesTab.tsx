@@ -1,6 +1,6 @@
 import { i18n } from "@/renderer/i18n/i18n";
+import { useConfig } from "@/renderer/services/conf";
 import { themeManager, useTheme } from "@/renderer/theme";
-import { useConfig } from "@components/ConfigProvider";
 import { Divider } from "@heroui/react";
 import { OnOffEntry, SelectEntry, TextEntry } from "@pages/settings/SettingsEntry";
 import { FileUserIcon, HardDriveUploadIcon, LanguagesIcon, PaletteIcon } from "lucide-react";
@@ -11,17 +11,19 @@ import { useTranslation } from "react-i18next";
  * User preferences page.
  */
 export function PreferencesTab() {
-    const [config, makeReduce] = useConfig();
+    const { config, alterConfig } = useConfig();
 
     const { theme, setTheme } = useTheme();
     const { i18n: i18next } = useTranslation();
+
+    if (!config) return null;
 
     return <>
         <TextEntry
             icon={FileUserIcon}
             id="pref.username"
             value={config.pref.username}
-            onChange={makeReduce((c, v) => c.pref.username = v)}
+            onChange={v => alterConfig(c => c.pref.username = v)}
         />
 
         <Divider/>
@@ -50,7 +52,7 @@ export function PreferencesTab() {
             icon={HardDriveUploadIcon}
             id="pref.hot-update"
             value={config.app.hotUpdate}
-            onChange={makeReduce((c, v) => c.app.hotUpdate = v)}
+            onChange={v => alterConfig(c => c.app.hotUpdate = v)}
         />
     </>;
 }
