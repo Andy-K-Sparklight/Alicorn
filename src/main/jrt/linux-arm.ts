@@ -16,6 +16,11 @@ async function installComponent(component: string) {
 
     const root = jrt.getInstallPath(component);
 
+    try {
+        await jrt.verify(root);
+        return;
+    } catch {}
+
     if (!(component in urls)) throw `Unsupported component: ${component}`;
 
     const u = urls[component];
