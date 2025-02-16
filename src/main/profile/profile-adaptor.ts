@@ -2,6 +2,7 @@
  * Converts and patches non-standard profile models.
  */
 
+import { lwjglARMPatch } from "@/main/profile/lwjgl-arm-patch";
 import { unwrapESM } from "@/main/util/module";
 
 /**
@@ -61,4 +62,8 @@ async function transformLegacy(src: Record<string, unknown>): Promise<void> {
 export async function patchProfile(src: Record<string, unknown>): Promise<void> {
     await patchComplianceLevel(src);
     await transformLegacy(src);
+
+    if ("libraries" in src && Array.isArray(src["libraries"])) {
+        await lwjglARMPatch.patchLibraries(src["libraries"]);
+    }
 }
