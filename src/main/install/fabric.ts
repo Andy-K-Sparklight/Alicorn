@@ -24,6 +24,13 @@ async function queryLoaderVersions(gameVersion: string): Promise<FabricLoaderVer
 }
 
 async function retrieveProfile(gameVersion: string, loaderVersion: string, container: Container): Promise<string> {
+    if (!loaderVersion) {
+        const versions = await queryLoaderVersions(gameVersion);
+        const sv = versions.find(v => v.stable)?.version;
+        if (!sv) throw `Unable to select Fabric version for ${gameVersion}`;
+        loaderVersion = sv;
+    }
+
     console.debug(`Fetching Fabric profile for ${gameVersion} / ${loaderVersion}`);
     const url = FABRIC_META_API + `/versions/loader/${gameVersion}/${loaderVersion}/profile/json`;
 

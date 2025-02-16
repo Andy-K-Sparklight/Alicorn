@@ -50,7 +50,6 @@ ipcMain.on("installGame", async (e, gameId) => {
         case "fabric": {
             const fid = await fabricInstaller.retrieveProfile(gameVersion, game.installProps.loaderVersion, c);
             p = await profileLoader.fromContainer(fid, c);
-            game.type = "fabric"; // Override default type
             break;
         }
     }

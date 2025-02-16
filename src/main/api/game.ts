@@ -5,7 +5,7 @@ import { containers } from "@/main/container/manage";
 import type { ContainerProps } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import { games } from "@/main/game/manage";
-import type { GameProfile } from "@/main/game/spec";
+import type { GameCoreType, GameInstallProps, GameProfile } from "@/main/game/spec";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { ipcMain } from "@/main/ipc/typed";
 import { reg } from "@/main/registry/registry";
@@ -32,6 +32,7 @@ export interface CreateGameInit {
     name: string;
     gameVersion: string;
     authType: "new-vanilla" | "manual" | "reuse";
+    installProps: GameInstallProps;
     playerName: string;
     accountId: string | null;
     assetsLevel: "full" | "video-only";
@@ -40,7 +41,7 @@ export interface CreateGameInit {
 }
 
 ipcMain.handle("addGame", async (_, init) => {
-    const { name, gameVersion, containerId, assetsLevel, containerShouldLink } = init;
+    const { name, gameVersion, containerId, assetsLevel, containerShouldLink, installProps } = init;
 
     const vm = await vanillaInstaller.getManifest();
 
@@ -59,12 +60,16 @@ ipcMain.handle("addGame", async (_, init) => {
         reg.containers.add(cid, props);
     }
 
-    const type = ({
+    let type: GameCoreType = ({
         "release": "vanilla-release",
         "snapshot": "vanilla-snapshot",
         "old_alpha": "vanilla-old-alpha",
         "old_beta": "vanilla-old-beta"
     } as const)[p.type] ?? "unknown";
+
+    if (installProps.type === "fabric") {
+        type = "fabric";
+    }
 
     let accountId = "";
     switch (init.authType) {
@@ -84,10 +89,7 @@ ipcMain.handle("addGame", async (_, init) => {
         id: genGameId(),
         name,
         installed: false,
-        installProps: {
-            type: "vanilla",
-            gameVersion
-        },
+        installProps,
         launchHint: {
             accountId,
             containerId: cid,

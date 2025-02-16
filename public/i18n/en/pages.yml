@@ -48,6 +48,23 @@ create-game:
   create-btn: Create
   toast-created: Game created.
 
+  mod-loader-title: Mod Loader
+  mod-loader:
+    vanilla:
+      label: No Loader
+      sub: PLay the game without mods support. (Resource packs and data packs will be available)
+    fabric:
+      label: Fabric
+      sub: Play Fabric mods. Powered by the Fabric loader.
+
+  fabric-version:
+    title: Fabric Version
+    auto: Let Alicorn Decide
+    manual: Let Me Choose
+    label: Fabric Version
+    alert: It's better to let Alicorn decide if you aren't clear of what version you need.
+    placeholder: Auto
+
 games:
   loading: Reading game list...
   title: Games

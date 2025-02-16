@@ -48,6 +48,23 @@ create-game:
   create-btn: 创建
   toast-created: 已创建游戏。
 
+  mod-loader-title: 模组平台
+  mod-loader:
+    vanilla:
+      label: 不安装模组平台
+      sub: 你将无法安装模组，但仍能使用资源包和数据包等内容。
+    fabric:
+      label: 使用 Fabric
+      sub: 设置并安装 Fabric 模组平台，这可以支持 Fabric 模组。
+
+  fabric-version:
+    title: Fabric 版本号
+    auto: 让 Alicorn 选择
+    manual: 让我选择
+    label: 目标 Fabric 版本号
+    alert: 除非需要使用某个特定的 Fabric 版本，否则让 Alicorn 选择会比较好。
+    placeholder: 自动
+
 games:
   loading: 正在读取游戏列表……
   title: 游戏库

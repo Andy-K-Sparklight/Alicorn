@@ -1,5 +1,7 @@
+import type { GameInstallProps } from "@/main/game/spec";
 import { useAccounts } from "@/renderer/services/auth";
 import { useNav } from "@/renderer/util/nav";
+import { Alert } from "@components/Alert";
 import { PlayerNameInput } from "@components/PlayerNameInput";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { Button, Input, Switch } from "@heroui/react";
@@ -18,7 +20,6 @@ export function CreateGameView() {
     const { t } = useTranslation("pages", { keyPrefix: "create-game" });
     const accounts = useAccounts();
 
-
     const [gameName, setGameName] = useState(t("default-name"));
     const [gameVersion, setGameVersion] = useState<string>();
     const [containerId, setContainerId] = useState<string>();
@@ -33,15 +34,34 @@ export function CreateGameView() {
 
     const [assetsLevel, setAssetsLevel] = useState<"full" | "video-only">("full");
 
+    const [installType, setInstallType] = useState<SupportedModLoaders>("vanilla");
+    const [fabricVersion, setFabricVersion] = useState<string>("");
+
     const [creating, setCreating] = useState(false);
     const nav = useNav();
 
-    const valid = [
-        gameVersion,
-        !(shareContainer && !containerId),
-        !(authType === "manual" && !playerName),
-        !(authType === "reuse" && !accountId)
-    ].every(Boolean);
+    const valid = gameVersion &&
+        !(shareContainer && !containerId) &&
+        !(authType === "manual" && !playerName) &&
+        !(authType === "reuse" && !accountId);
+
+    function buildInstallProps(): GameInstallProps {
+        if (!valid) throw "Cannot create game with incomplete install props";
+
+        switch (installType) {
+            case "vanilla":
+                return {
+                    type: "vanilla",
+                    gameVersion
+                };
+            case "fabric":
+                return {
+                    type: "fabric",
+                    gameVersion,
+                    loaderVersion: fabricVersion
+                };
+        }
+    }
 
     async function handleCreate() {
         if (valid) {
@@ -53,7 +73,8 @@ export function CreateGameView() {
                 accountId,
                 authType,
                 playerName,
-                gameVersion: gameVersion!,
+                installProps: buildInstallProps(),
+                gameVersion,
                 assetsLevel,
                 containerShouldLink
             });
@@ -78,7 +99,7 @@ export function CreateGameView() {
                 </div>
 
 
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-4">
                     <div className="font-bold text-xl">{t("storage-title")}</div>
 
                     <RadioGroup
@@ -165,6 +186,17 @@ export function CreateGameView() {
                     </RadioGroup>
                 </div>
 
+                <div className="flex flex-col gap-4">
+                    <div className="font-bold text-xl">{t("mod-loader-title")}</div>
+
+                    <ModLoaderSelector value={installType} onChange={setInstallType}/>
+
+                    {
+                        installType === "fabric" &&
+                        <FabricVersionSelector value={fabricVersion} onChange={setFabricVersion}/>
+                    }
+                </div>
+
                 <Button
                     fullWidth
                     color="primary"
@@ -177,5 +209,70 @@ export function CreateGameView() {
                 </Button>
             </div>
         </div>
+    </div>;
+}
+
+type SupportedModLoaders = "vanilla" | "fabric";
+
+interface ModLoaderSelectorProps {
+    value: SupportedModLoaders;
+    onChange: (v: SupportedModLoaders) => void;
+}
+
+function ModLoaderSelector({ value, onChange }: ModLoaderSelectorProps) {
+    const { t } = useTranslation("pages", { keyPrefix: "create-game.mod-loader" });
+
+    return <RadioGroup
+        value={value}
+        onValueChange={v => onChange(v as SupportedModLoaders)}
+    >
+        {
+            ["vanilla", "fabric"].map(lv =>
+                <Radio key={lv} value={lv} description={t(`${lv}.sub`)}>
+                    {t(`${lv}.label`)}
+                </Radio>
+            )
+        }
+    </RadioGroup>;
+}
+
+interface FabricVersionSelectorProps {
+    value: string;
+    onChange: (v: string) => void;
+}
+
+function FabricVersionSelector({ value, onChange }: FabricVersionSelectorProps) {
+    const { t } = useTranslation("pages", { keyPrefix: "create-game.fabric-version" });
+    const [isAuto, setIsAuto] = useState(true);
+
+    function handleSelectionChange(v: string) {
+        if (v === "auto") {
+            onChange("");
+        }
+        setIsAuto(v !== "manual");
+    }
+
+    return <div className="p-4 border-solid border-2 border-foreground-400 rounded-xl flex flex-col gap-4">
+        <div className="font-bold text-medium">{t("title")}</div>
+
+        <RadioGroup
+            value={isAuto ? "auto" : "manual"}
+            color={isAuto ? "primary" : "warning"}
+            onValueChange={handleSelectionChange}
+        >
+            {
+                ["auto", "manual"].map(lv =>
+                    <Radio key={lv} value={lv}>{t(lv)}</Radio>
+                )
+            }
+        </RadioGroup>
+
+        {
+            !isAuto &&
+            <>
+                <Alert classNames={{ title: "font-bold" }} title={t("alert")} color="warning"/>
+                <Input value={value} onValueChange={onChange} label={t("label")} placeholder={t("placeholder")}/>
+            </>
+        }
     </div>;
 }
