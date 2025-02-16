@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
-import { useLocation, useRoute } from "wouter";
+import { useRoute } from "wouter";
 
 interface AnimatedRouteProps {
     path: string;
@@ -11,7 +11,6 @@ export type PropsWithParams<T> = { params: T }
 
 export function AnimatedRoute({ path, component }: AnimatedRouteProps) {
     const [matched, params] = useRoute(path);
-    const [pathname] = useLocation();
 
     const Component = component;
 
@@ -28,7 +27,7 @@ export function AnimatedRoute({ path, component }: AnimatedRouteProps) {
                     type: "spring"
                 }}
             >
-                <Component key={pathname} params={params}/>
+                <Component params={params}/>
             </motion.div>
         }
     </AnimatePresence>;
