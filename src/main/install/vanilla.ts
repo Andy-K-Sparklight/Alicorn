@@ -4,6 +4,7 @@ import { nativesLint } from "@/main/install/natives-lint";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { netx } from "@/main/net/netx";
 import { profileLoader } from "@/main/profile/loader";
+import { MavenName } from "@/main/profile/maven-name";
 import { nativeLib } from "@/main/profile/native-lib";
 import { filterRules } from "@/main/profile/rules";
 import type { AssetIndex, VersionProfile } from "@/main/profile/version-profile";
@@ -128,6 +129,22 @@ async function installLibraries(
                     fastLink: shouldLink
                 });
             }
+        } else if (lib.url) {
+            // Refer to the `url` field if the artifact is missing
+            const m = new MavenName(lib.name);
+            let baseUrl = lib.url;
+            if (!baseUrl.endsWith("/")) baseUrl += "/";
+
+            const url = baseUrl + m.toPath();
+            const fp = container.library(lib.name);
+
+            tasks.push({
+                url,
+                path: fp,
+                sha1: lib.sha1,
+                size: lib.size,
+                fastLink: shouldLink
+            });
         }
     }
 

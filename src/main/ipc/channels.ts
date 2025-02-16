@@ -26,7 +26,7 @@ export type IpcCallEvents = {
  * Events sent from renderer to main with message port forwarding.
  */
 export type IpcMessageEvents = {
-    installVanilla: (gameId: string) => void;
+    installGame: (gameId: string) => void;
     subscribeGameEvents: (gid: string) => void;
 }
 

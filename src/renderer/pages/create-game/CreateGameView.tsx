@@ -53,7 +53,7 @@ export function CreateGameView() {
                 accountId,
                 authType,
                 playerName,
-                profileId: gameVersion!,
+                gameVersion: gameVersion!,
                 assetsLevel,
                 containerShouldLink
             });

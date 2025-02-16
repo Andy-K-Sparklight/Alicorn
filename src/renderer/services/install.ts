@@ -11,7 +11,7 @@ const globalEmitter = new Emittery();
 const progressMap = new Map<string, Progress>();
 
 async function install(gameId: string): Promise<void> {
-    native.install.installVanilla(gameId);
+    native.install.installGame(gameId);
     const port = await retrievePort(gameId);
 
     // Emits change event at most once per idle callback

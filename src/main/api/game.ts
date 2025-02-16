@@ -30,7 +30,7 @@ ipcMain.on("revealGameContent", async (_, gameId, scope) => {
 
 export interface CreateGameInit {
     name: string;
-    profileId: string;
+    gameVersion: string;
     authType: "new-vanilla" | "manual" | "reuse";
     playerName: string;
     accountId: string | null;
@@ -40,11 +40,11 @@ export interface CreateGameInit {
 }
 
 ipcMain.handle("addGame", async (_, init) => {
-    const { name, profileId, containerId, assetsLevel, containerShouldLink } = init;
+    const { name, gameVersion, containerId, assetsLevel, containerShouldLink } = init;
 
     const vm = await vanillaInstaller.getManifest();
 
-    const p = vm.versions.find(v => v.id === profileId)!;
+    const p = vm.versions.find(v => v.id === gameVersion)!;
 
     let cid = containerId;
 
@@ -85,12 +85,13 @@ ipcMain.handle("addGame", async (_, init) => {
         name,
         installed: false,
         installProps: {
-            type: "vanilla"
+            type: "vanilla",
+            gameVersion
         },
         launchHint: {
             accountId,
             containerId: cid,
-            profileId,
+            profileId: "", // Will be re-assigned after installation
             pref: {} // TODO allow user to choose pref
         },
         assetsLevel,

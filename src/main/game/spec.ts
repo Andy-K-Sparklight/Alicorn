@@ -25,10 +25,7 @@ export interface GameProfile {
     /**
      * Props for installing the game.
      */
-    installProps: {
-        // TODO add other types when supporting mod loader
-        type: "vanilla";
-    };
+    installProps: GameInstallProps;
 
     /**
      * Game related versions.
@@ -62,13 +59,33 @@ export type GameCoreType =
     "neoforged" |
     "unknown"
 
-export const GAME_REG_VERSION = 1;
+export type GameInstallProps =
+    {
+        type: "vanilla";
+        gameVersion: string;
+    } |
+    {
+        type: "fabric";
+        gameVersion: string;
+        loaderVersion: string;
+    }
+
+export const GAME_REG_VERSION = 2;
 export const GAME_REG_TRANS: RegistryTransformer[] = [
     // v1: patch the `installerProps` key
     (s) => {
         s.installProps = {
             type: "vanilla"
         };
+
+        return s;
+    },
+
+    // v2: copy `profileId` to `installProps`
+    (s) => {
+        if (!s.installProps.gameVersion) {
+            s.installProps.gameVersion = s.launchHint.profileId;
+        }
 
         return s;
     }

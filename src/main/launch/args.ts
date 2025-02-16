@@ -3,15 +3,35 @@
  */
 import { conf } from "@/main/conf/conf";
 import { LaunchInit } from "@/main/launch/types";
+import { MavenName } from "@/main/profile/maven-name";
 import { filterRules } from "@/main/profile/rules";
+import type { Library } from "@/main/profile/version-profile";
 import { isTruthy } from "@/main/util/misc";
 import path from "node:path";
 import pkg from "~/package.json";
 
 function createClasspath(init: LaunchInit): string {
-    const libs = init.profile.libraries
-        .filter(lib => filterRules(lib.rules, init.enabledFeatures))
-        .map(lib => init.container.library(lib.name));
+    const validLibs = init.profile.libraries.filter(lib => filterRules(lib.rules, init.enabledFeatures));
+
+    // Mod loaders can override existing libraries by providing a later version
+    // If there appears two libraries with the same name except the version
+    // We'll ignore the second one as libraries are prepended
+    const existingNames = new Set<string>();
+
+    const uniqueLibs: Library[] = [];
+    for (const lib of validLibs) {
+        const m = new MavenName(lib.name);
+        const identifyTriple = [m.group, m.artifact, m.classifier].join(":");
+        if (existingNames.has(identifyTriple)) {
+            continue;
+        }
+
+        existingNames.add(identifyTriple);
+        uniqueLibs.push(lib);
+    }
+
+
+    const libs = uniqueLibs.map(lib => init.container.library(lib.name));
 
     // Add client.jar
     libs.push(init.container.client(init.profile.id));
