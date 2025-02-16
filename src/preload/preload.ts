@@ -58,6 +58,13 @@ const native = {
          */
         minimize(): void {
             ipcRenderer.send("minimizeWindow");
+        },
+
+        /**
+         * Sets the zoom factor.
+         */
+        setZoom(v: number): void {
+            ipcRenderer.send("setZoom", v);
         }
     },
 

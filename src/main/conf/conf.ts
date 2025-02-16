@@ -212,7 +212,12 @@ const DEFAULT_CONFIG = {
             /**
              * Window position.
              */
-            pos: [] as number[]
+            pos: [] as number[],
+
+            /**
+             * Zoom factor.
+             */
+            zoom: 1.0
         },
 
         /**

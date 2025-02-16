@@ -130,7 +130,8 @@ async function setupMainWindow() {
             spellcheck: false,
             defaultEncoding: "UTF-8",
             preload: paths.app.to("preload.js"),
-            devTools: hasDevTools
+            devTools: hasDevTools,
+            zoomFactor: conf().app.window.zoom / 100
         },
         x: isNaN(px) ? undefined : Math.floor(px),
         y: isNaN(py) ? undefined : Math.floor(py),

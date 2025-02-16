@@ -231,6 +231,10 @@ settings:
           Fetches and installs updates available.
           This should not affect game launching.
 
+      zoom:
+        title: Zoom Factor
+        sub: Adjust zoom factor of the UI.
+
     store:
       store-path:
         title: Store Path

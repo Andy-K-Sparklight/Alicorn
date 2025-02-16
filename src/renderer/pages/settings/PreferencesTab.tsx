@@ -2,8 +2,8 @@ import { i18n } from "@/renderer/i18n/i18n";
 import { useConfig } from "@/renderer/services/conf";
 import { themeManager, useTheme } from "@/renderer/theme";
 import { Divider } from "@heroui/react";
-import { OnOffEntry, SelectEntry, TextEntry } from "@pages/settings/SettingsEntry";
-import { FileUserIcon, HardDriveUploadIcon, LanguagesIcon, PaletteIcon } from "lucide-react";
+import { NumberTuningEntry, OnOffEntry, SelectEntry, TextEntry } from "@pages/settings/SettingsEntry";
+import { FileUserIcon, HardDriveUploadIcon, LanguagesIcon, PaletteIcon, ZoomInIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -34,6 +34,22 @@ export function PreferencesTab() {
             value={theme}
             onChange={t => setTheme(t)}
             items={themeManager.getThemes()}
+        />
+
+        <Divider/>
+
+        <NumberTuningEntry
+            icon={ZoomInIcon}
+            id="pref.zoom"
+            value={config.app.window.zoom}
+            max={1000}
+            min={10}
+            step={10}
+            toLabel={v => v + "%"}
+            onChange={v => {
+                alterConfig(c => c.app.window.zoom = v);
+                native.bwctl.setZoom(v);
+            }}
         />
 
         <Divider/>

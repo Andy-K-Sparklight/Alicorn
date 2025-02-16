@@ -3,7 +3,8 @@
  */
 import { DirInput } from "@components/DirInput";
 import { StringArrayInput } from "@components/StringArrayInput";
-import { Input, Select, SelectItem, type SharedSelection, Slider, Switch } from "@heroui/react";
+import { Button, Input, Select, SelectItem, type SharedSelection, Slider, Switch } from "@heroui/react";
+import { MinusIcon, PlusIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -64,12 +65,54 @@ export function DirEntry({ id, icon, value, onChange }: SettingsEntryProps<strin
     </div>;
 }
 
-type NumberSliderEntryProps = SettingsEntryProps<number> & { max: number; min: number; }
+type NumberTuningEntryProps = SettingsEntryProps<number> & {
+    max: number;
+    min: number;
+    step?: number;
+    toLabel?: (v: number) => string;
+}
 
-export function NumberSliderEntry({ id, icon, value, onChange, max, min }: NumberSliderEntryProps) {
+export function NumberTuningEntry({ id, icon, value, onChange, max, min, step, toLabel }: NumberTuningEntryProps) {
+    function handleAdd() {
+        const nv = value + (step ?? 1);
+        if (nv <= max) {
+            onChange(nv);
+        }
+    }
+
+    function handleSubtract() {
+        const nv = value - (step ?? 1);
+        if (nv >= min) {
+            onChange(nv);
+        }
+    }
+
+    return <div className="flex flex-col gap-4 w-full">
+        <EntryLabel id={id} icon={icon}/>
+
+        <div className="flex gap-4 items-center">
+            <Button isIconOnly size="sm" onPress={handleSubtract}>
+                <MinusIcon/>
+            </Button>
+            {toLabel ? toLabel(value) : value}
+            <Button isIconOnly size="sm" onPress={handleAdd}>
+                <PlusIcon/>
+            </Button>
+        </div>
+    </div>;
+}
+
+type NumberSliderEntryProps = SettingsEntryProps<number> & {
+    max: number;
+    min: number;
+    step?: number;
+}
+
+export function NumberSliderEntry({ id, icon, value, onChange, max, min, step }: NumberSliderEntryProps) {
     return <div className="flex flex-col gap-4 w-full">
         <EntryLabel id={id} icon={icon}/>
         <Slider
+            step={step ?? 1}
             maxValue={max}
             minValue={min}
             value={value}

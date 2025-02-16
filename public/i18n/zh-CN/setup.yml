@@ -8,6 +8,29 @@ welcome:
   is-dev: 此 Alicorn 是开发版本
   continue: 按任意位置继续
 
+zoom:
+  title: 这样的界面大小合适吗？
+  sub: |-
+    调整窗口大小，或使用下方的按钮调整缩放比例。
+
+    合适的比例应使右侧框线内所有内容都完整显示。
+    卡片、按钮不应溢出框外，文字不应有换行。
+  btn: 看上去不错！
+
+  example:
+    title: 这是 Alicorn 启动器
+    text-1: 我能吞下玻璃而不伤身体。
+    text-2: 希望有一天，不需要呼救，就有人帮忙。—— 混乱
+    fabric:
+      title: 这是 Fabric 模组平台
+      sub: 高效、安全、轻便。游玩模组的不二之选。
+    alert: ……你是因为，有所失，才决定，不要再失去。
+    input: 在这里输入你要输入的内容
+    btn-1: 如果被点击
+    btn-2: 那么就
+    btn-3: 什么也不做
+
+
 license:
   title: 了解我们的许可证
   sub: |-

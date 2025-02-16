@@ -230,6 +230,10 @@ settings:
           自动获取和安装可用的更新。
           更新包很小，这通常不会影响游戏下载和运行。
 
+      zoom:
+        title: 界面缩放
+        sub: 设置界面显示的大小。
+
     store:
       store-path:
         title: 存储库路径

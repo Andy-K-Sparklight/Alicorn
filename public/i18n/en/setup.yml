@@ -9,6 +9,29 @@ welcome:
   is-dev: This is a development build.
   continue: Press to Continue
 
+zoom:
+  title: Is this zoom factor fine?
+  sub: |-
+    Adjust window size or the zoom factor below.
+
+    Make sure the content at the right display fully.
+    No content should overflow and none should wrap.
+
+  btn: Looks Good!
+
+  example:
+    title: The Alicorn Launcher
+    text-1: Above the sky, beneath the sea.
+    text-2: A quick brown fox jumps over a lazy dog.
+    fabric:
+      title: This is the Fabric loader
+      sub: Fast, safe, lightweight. Best for mods.
+    alert: Only miss the sun when it starts to snow.
+    input: Enter some text here to enter those text
+    btn-1: Clicked
+    btn-2: Then
+    btn-3: No Op
+
 license:
   title: About the License
   sub: |-
@@ -42,9 +65,9 @@ account-init:
   btn-skip: I'm not able to login
   warranty: Account tokens will be stored safely on your device. Passwords won't be stored.
   skip-confirm:
-    title: What blocks you from log in?
+    title: What blocks you from logging in?
     alt-account:
-      label: The server I intend to play does not use online mode.
+      label: The server I intend to play does not use online mode
       sub: Log in using your Microsoft account first. You'll be able to choose the authenticate method later.
     no-account:
       label: I didn't purchase Minecraft

@@ -14,6 +14,7 @@ export type IpcCallEvents = {
     hideWindow: () => void;
     closeWindow: () => void;
     minimizeWindow: () => void;
+    setZoom: (value: number) => void;
     openUrl: (url: string) => void;
     stopGame: (id: string) => void;
     removeGame: (id: string) => void;
