@@ -23,7 +23,7 @@ function StatusDisplay({ id, name, profileId, type, status, uptime, pid }: Statu
 
     return <Card className="h-full">
         <CardBody>
-            <div className="flex flex-col gap-6 p-6 items-center my-auto">
+            <div className="flex flex-col h-full px-6 items-center justify-evenly">
                 <div className="w-full flex gap-6 justify-center items-center">
                     <div
                         className={
@@ -55,9 +55,9 @@ function StatusDisplay({ id, name, profileId, type, status, uptime, pid }: Statu
 }
 
 function DataSlot({ label, value }: { label: string, value: string }) {
-    return <div className="flex text-sm flex-wrap">
-        <div className="grow text-foreground-400">{label}</div>
-        <div>{value}</div>
+    return <div className="flex text-sm flex-wrap gap-1">
+        <div className="text-foreground-400">{label}</div>
+        <div className="ml-auto">{value}</div>
     </div>;
 }
 
