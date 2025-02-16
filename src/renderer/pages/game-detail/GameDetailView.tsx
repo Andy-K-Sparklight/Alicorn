@@ -70,9 +70,12 @@ function Header() {
                 <DotIcon/>
                 {t("container", { containerId })}
             </div>
-            <div className="flex text-foreground-400 items-center">
-                {t("profile", { profileId })}
-            </div>
+            {
+                profileId && <div className="flex text-foreground-400 items-center">
+                    {t("profile", { profileId })}
+                </div>
+            }
+
         </div>
 
         <div className="flex gap-1 items-center">

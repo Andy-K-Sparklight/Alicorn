@@ -87,7 +87,7 @@ game-detail:
     installed: 已安装
     not-installed: 未安装
     container: 位于空间 {{containerId}} 中
-    profile: 版本 {{profileId}}
+    profile: 核心 {{profileId}}
     reveal: 打开游戏目录
   manage:
     advanced:
