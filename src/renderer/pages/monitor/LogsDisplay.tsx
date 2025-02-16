@@ -1,12 +1,11 @@
 import type { GameProcessLog } from "@/main/launch/log-parser";
 import { useCurrentProc } from "@pages/monitor/GameProcessProvider";
 import { clsx } from "clsx";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, type WheelEvent } from "react";
 import { VList, type VListHandle } from "virtua";
 
 export function LogsDisplay() {
     const autoScroll = useRef(true);
-    const prevOffset = useRef(0);
     const ref = useRef<VListHandle | null>(null);
     const { id: procId, logs } = useCurrentProc();
 
@@ -20,30 +19,26 @@ export function LogsDisplay() {
         }
     }, [logs]);
 
-    function updateAutoScroll(offset: number) {
+    function handleWheel(e: WheelEvent) {
+        // Cancels when user input happens
+        if (e.deltaY < 0) {
+            autoScroll.current = false;
+            return;
+        }
+
         if (ref.current) {
-            if (offset < prevOffset.current) {
-                // Cancel auto scroll when scrolling up
-                autoScroll.current = false;
-                return;
-            } else if (ref.current.scrollOffset - ref.current.scrollSize + ref.current.viewportSize >= -10) {
-                // Enable auto scroll when not scrolling up & reached the bottom
-                // But does not cancel it if not at the bottom (due to smooth scrolling)
+            // Adding e.deltaY makes it possible to detect that user "will" scroll to the bottom
+            // Even before this actually happens
+            if (ref.current.scrollOffset + e.deltaY - ref.current.scrollSize + ref.current.viewportSize >= -10) {
                 autoScroll.current = true;
             }
-
-            prevOffset.current = offset;
         }
     }
 
     return <VList
         ref={ref}
+        onWheel={handleWheel}
         className="h-full p-2"
-        onScroll={updateAutoScroll}
-        onScrollEnd={() => {
-            // Prevent misjudged scroll up when layout shifts
-            prevOffset.current = 0;
-        }}
     >
         {
             logs.map(log =>

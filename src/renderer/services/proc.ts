@@ -8,6 +8,7 @@ import type { GameProcessLog } from "@/main/launch/log-parser";
 import { retrievePort } from "@/preload/message";
 import Emittery from "emittery";
 import { useCallback, useSyncExternalStore } from "react";
+import throttle from "throttleit";
 
 /**
  * Contains a slice of game information at the renderer side.
@@ -86,6 +87,8 @@ async function create(id: string): Promise<string> {
 
     console.log("Established event stream.");
 
+    const emitDetailedChange = throttle(() => detailedEmitter.emit(`change:${meta.id}`), 500);
+
     port.onmessage = (e: MessageEvent<GameProcEvent>) => {
         const currentProc = procs.get(meta.id);
         if (!currentProc) return;
@@ -136,7 +139,7 @@ async function create(id: string): Promise<string> {
         }
 
         procs.set(meta.id, np);
-        detailedEmitter.emit(`change:${meta.id}`);
+        emitDetailedChange();
     };
 
     procs.set(meta.id, proc);
