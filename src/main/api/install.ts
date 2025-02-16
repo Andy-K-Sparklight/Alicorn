@@ -37,7 +37,6 @@ ipcMain.on("installVanilla", async (e, gameId) => {
     await jrt.installRuntime(p.javaVersion?.component ?? "jre-legacy", { onProgress });
     await vanillaInstaller.installLibraries(p, c, new Set(), { onProgress });
 
-    // TODO add selection for assets installation
     await vanillaInstaller.installAssets(p, c, game.assetsLevel, { onProgress });
 
     await vanillaInstaller.emitOptions(c);

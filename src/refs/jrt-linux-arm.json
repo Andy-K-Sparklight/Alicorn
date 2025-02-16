@@ -1,0 +1,8 @@
+{
+    "jre-legacy": "https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u442-b06/OpenJDK8U-jre_aarch64_linux_hotspot_8u442b06.tar.gz",
+    "java-runtime-alpha": "reuse:java-runtime-gamma",
+    "java-runtime-beta": "reuse:java-runtime-gamma",
+    "java-runtime-delta": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.6%2B7/OpenJDK21U-jre_aarch64_linux_hotspot_21.0.6_7.tar.gz",
+    "java-runtime-gamma": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14%2B7/OpenJDK17U-jre_aarch64_linux_hotspot_17.0.14_7.tar.gz",
+    "java-runtime-gamma-snapshot": "reuse:java-runtime-gamma"
+}

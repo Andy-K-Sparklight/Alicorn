@@ -20,6 +20,7 @@ export interface DlxDownloadRequest {
      * Whether to link the file (instead of copying) when found in cache.
      */
     fastLink?: boolean;
+    noCache?: true;
 }
 
 /**

@@ -6,6 +6,7 @@ import { cache } from "@/main/cache/cache";
 import { conf } from "@/main/conf/conf";
 import { paths } from "@/main/fs/paths";
 import { dlchk } from "@/main/net/dlchk";
+import type { DlxDownloadRequest } from "@/main/net/dlx";
 import { WebSocketJsonRpcClient } from "@/main/net/rpc";
 import { getExecutableExt } from "@/main/sys/os";
 import { net } from "electron";
@@ -24,14 +25,10 @@ let aria2cPort: number | null = null;
 let aria2cRpcClient: WebSocketJsonRpcClient | null = null;
 let isAvailable = false;
 
-export interface Aria2DownloadRequest {
+export interface Aria2DownloadRequest extends DlxDownloadRequest {
     urls: string[];
     origin: string;
-    path: string;
-    sha1?: string;
-    size?: number;
     signal?: AbortSignal;
-    fastLink?: boolean;
 }
 
 const gidEmitters = new Map<string, Emittery>();
@@ -44,7 +41,7 @@ const gidEmitters = new Map<string, Emittery>();
 async function resolve(req: Aria2DownloadRequest): Promise<void> {
     console.debug(`Aria2 Get: ${req.origin}`);
 
-    if (req.sha1) {
+    if (req.sha1 && !req.noCache) {
         await cache.deploy(req.path, req.sha1, !!req.fastLink);
     }
 
@@ -106,7 +103,9 @@ async function sendRequest(req: Aria2DownloadRequest): Promise<void> {
 
     await pEvent(emitter, "finish");
 
-    await cache.enroll(req.path, req.sha1);
+    if (!req.noCache) {
+        await cache.enroll(req.path, req.sha1);
+    }
 }
 
 

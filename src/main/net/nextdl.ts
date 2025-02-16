@@ -7,6 +7,7 @@
 import { cache } from "@/main/cache/cache";
 import { conf } from "@/main/conf/conf";
 import { dlchk } from "@/main/net/dlchk";
+import type { DlxDownloadRequest } from "@/main/net/dlx";
 import { isTruthy } from "@/main/util/misc";
 import { net } from "electron";
 import fs from "fs-extra";
@@ -25,14 +26,10 @@ export enum NextDownloadStatus {
 /**
  * A network-level download request for fetching the given resources and save them to the given path.
  */
-export interface NextDownloadRequest {
+export interface NextDownloadRequest extends DlxDownloadRequest {
     urls: string[];
     origin: string;
-    path: string;
-    sha1?: string;
-    size?: number;
     signal?: AbortSignal;
-    fastLink?: boolean;
 }
 
 export interface NextDownloadTask {
@@ -63,7 +60,7 @@ async function get(req: NextDownloadRequest): Promise<void> {
     console.debug(`NextDL Get: ${task.req.origin}`);
 
     // First try to reuse existing files
-    if (task.req.sha1) {
+    if (task.req.sha1 && !task.req.noCache) {
         await cache.deploy(task.req.path, task.req.sha1, !!task.req.fastLink);
     }
 
@@ -93,8 +90,10 @@ async function get(req: NextDownloadRequest): Promise<void> {
                 console.debug(`NextDL Got: ${task.req.origin} (Using ${task.activeURL})`);
                 task.status = NextDownloadStatus.DONE;
 
-                // Add file for reusing
-                await cache.enroll(task.req.path, task.req.sha1);
+                if (!task.req.noCache) {
+                    // Add file for reusing
+                    await cache.enroll(task.req.path, task.req.sha1);
+                }
 
                 return;
             }

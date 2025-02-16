@@ -1,6 +1,7 @@
 import { lzma } from "@/main/compress/lzma";
 import { conf } from "@/main/conf/conf";
 import { paths } from "@/main/fs/paths";
+import { jrtLinuxArm } from "@/main/jrt/linux-arm";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { netx } from "@/main/net/netx";
 import { getOSName } from "@/main/sys/os";
@@ -105,6 +106,13 @@ async function installRuntime(component: string, control?: ProgressController): 
     } catch {}
 
     console.log(`Installing JRT runtime ${component} to ${root}`);
+
+    if (os.arch() === "arm64" && getOSName() === "linux") {
+        console.log(`Delegated component install: ${component}`);
+        await jrtLinuxArm.installComponent(component);
+        return;
+    }
+
     const profile = await getProfile(component);
     console.debug(`Picked up profile ${profile.manifest.url}`);
 
@@ -230,4 +238,4 @@ function executable(component: string): string {
     return path.join(getInstallPath(component), getExecPath());
 }
 
-export const jrt = { installRuntime, executable };
+export const jrt = { installRuntime, executable, verify, getInstallPath };
