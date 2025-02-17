@@ -1,10 +1,5 @@
 # Alicorn Launcher
 
-> [!NOTE]
-> The developers behind Alicorn have shifted since early 2023.
-> We're now planning to commit major changes to Alicorn for new features, improved stability,
-> optimized code and better user-experience.
-
 That launcher of the block game, once with the magic of friendship.
 
 ![Alicorn Badge](https://img.shields.io/badge/Alicorn-2.x-df307f)
@@ -42,21 +37,15 @@ The development of Alicorn is based on the following vision:
 
   Create hundreds of game experiences while storing only one copy of game assets.
 
-- **Not Opinionated**
+- **User First**
 
   Play the game in the way you like. It's never a crime to fly in your own world.[^3]
 
 - **Privacy Aware**
 
-  We collect no data for analysis. There's no option to enable it.
+  We collect limited anonymous data only for improving Alicorn. This will only happen under your approval.
 
 ## Supported Platforms
-
-> [!NOTE]
-> Platforms that do not have corresponding LWJGL artifacts are unsupported.
-
-> [!IMPORTANT]
-> Certain game experiences may not be available on platforms that Alicorn runs on.
 
 Systems:
 
@@ -70,110 +59,65 @@ Architectures:
 - `x64` (`amd64`)
 - `arm64` (`aarch64`)
 
+> [!NOTE]
+> Official support for `arm64` on major platforms was only added recently (since 1.19). We're planning to provide
+> addition support for earlier versions, but it's not prioritized.
+
 ## Build Instructions
 
-> [!NOTE]
-> **You may not need to build Alicorn yourself.**
-> For production usages, use stable releases can help to avoid potential bugs and pitfalls.
-> To access the latest features, update from the beta channel to get tested builds.
-> Only build from source for development.
-
-### Prerequisites
-
-You can build Alicorn for **preview** on any platform it runs on.
-For **packaging**, however, there are several limitations:
-
-- ARM64 platforms other than macOS cannot be used for packaging.
-- Platform-specific installers (`.msi` on Windows, `.dmg` on macOS, etc.) require the corresponding OS.
-
-The following tools are required:
-
-- Bun (v1.1 or later)
-
-  We use Bun to run our build tools for performance reasons.
-  The Bun version for building will not affect the Node.js version bundled with Electron.
-
-- Git
-
-- Wine, when building on non-Windows platforms.
-
-- Node.js (v23 or later), when packaging. (**NOT** needed for development)
-
-- WiX Toolset v3, when packaging for Windows. (The version matters!)
-
-> [!IMPORTANT]
-> There is a known bug with Bun 1.2.1 and 1.2.2 that causes Vite to fail the build process.
-> Avoid these versions when installing.
-
-### Get the Source Code
-
-```shell
-git clone --filter=tree:0 https://github.com/Andy-K-Sparklight/Alicorn.git
-```
-
-Flag `--filter=tree:0` reduces the amount of files to receive, yet preserves the commits.
-
-### Build and Preview
-
-Install dependencies:
-
-```shell
-bun install
-```
-
-> [!TIP]
-> Alicorn has a set of customizable build options which toggles or adjusts certain features.
-> These options can help when building Alicorn with different "flavors".
-> See `config.ts` for details.
-
-> [!IMPORTANT]
-> Additional files (known as "vendors") may need to be downloaded during the build process.
-> Keep online when building.
-
-Preview for production:
-
-```shell
-bun prod
-bun start
-```
-
-Preview for development (with live reload):
-
-```shell
-bun dev
-```
-
-> [!NOTE]
-> There is a [known issue](https://github.com/electron/electron/issues/42510) related to sandboxing on Ubuntu 24.x (and
-> likely later versions) that makes Alicorn fail to launch. Use the command below as a workaround while waiting for a
-> fix:
->
-> ```shell
-> sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-> ```
-
-### Create Packaged Binaries
-
-This is a bit tricky as Bun skips "untrusted" post-install scripts, which are needed for modules like
-`electron-installer-dmg`. Hence, it's required to reinstall the modules using `npm` before building:
-
-```shell
-npm install
-npm run dist
-```
-
-The output files locate at `dist`, including:
-
-- Unpacked (directory) files of the app.
-- Archives of these directories.
-- Hot update bundles (useful when building a custom release channel).
-- Platform-specific installers.
+See [BUILDING.md](docs/BUILDING.md).
 
 ## License
 
-![GPL-3.0 Logo](https://www.gnu.org/graphics/gplv3-or-later.png)
+![GPL-3.0 Logo](https://www.gnu.org/graphics/gplv3-or-later.svg)
 
 [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html) (or any later version)
+
+## FAQs
+
+<details>
+<summary>Click to Expand</summary>
+
+> Is this project related to *[name of a company / organization]*?
+
+No. Alicorn is an independent project. It's made by the players, for the players.
+
+> Is it a cracked launcher? / Can I play the game without an account?
+
+No. We provide no support for that. Note that it breaks the EULA by doing so.
+
+> My system says that Alicorn contains virus / cannot be trusted.
+
+Our released binaries are pulled directly from the CI artifacts which are built automatically from publicly visible
+build scripts. You can always check the source code (or ask someone experienced to do so) to be convinced that our
+program doesn't contain malicious code. You'll understand why we're not signing the binaries (and that's why your system
+complains) if you know that it's not a process which happens for free.
+
+> I've found a bug. / I want a new feature that's not included.
+
+You're welcome to [open an issue](https://github.com/Andy-K-Sparklight/Alicorn/issues/new) for that.
+
+> Electron is *[names of downsides]*. It's 2025 now, why not just use *[name of an alternative]*?
+
+We choose Electron for its easiness in web integration,
+security and the exclusion of the necessity of writing platform-dependent code.
+We want to provide a software based on a framework built by a large team of experienced engineers,
+limiting the bugs and pitfalls that may happen if we were inventing wheels by ourselves.
+
+> 100+ MiBs is too large!
+
+Anyone who creates more than one game will notice that the size of their game folders grows at the speed of hundreds of
+MiBs. Even a resource pack can often be larger than Alicorn. If you're running out of available space, it's generally
+suggested to start cleaning up something (e.g. temporary files, recycle bin, etc.).
+
+> Why is Alicorn taking up GBs of memory?
+
+Applications that perform heavy I/O operations (like Alicorn) usually ask the system for more memory to improve the
+throughput. The allocated memory space will be left unused after those operations are finished, yet not being reclaimed
+(actively) until the system decides to divert them to other processes. That is to say, the GBs of memory can be reused
+by the game (or other apps) once needed. It shall not impact the game performance.
+
+</details>
 
 ## Disclaimer
 
