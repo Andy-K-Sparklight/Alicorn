@@ -158,7 +158,7 @@ const native = {
         /**
          * Authenticate the account of the specified game.
          */
-        forGame(id: string): Promise<boolean> {
+        forGame(id: string): Promise<void> {
             return ipcRenderer.invoke("gameAuth", id);
         },
 
@@ -271,16 +271,24 @@ const native = {
          */
         updateLanguage(lang: string): void {
             ipcRenderer.send("languageChange", lang);
+        },
+
+        /**
+         * Gets notified when DevTools is opened.
+         */
+        onDevToolsOpened(handler: () => void) {
+            internalEvents.on("devToolsOpened", handler);
         }
     }
 };
 
 // Unwraps IPC events as internal events
-(["gameChanged", "accountChanged", "configChanged"] as const).forEach(ch => {
+(["gameChanged", "accountChanged", "configChanged", "devToolsOpened"] as const).forEach(ch => {
     ipcRenderer.on(ch, (_, ...args) => {
         void internalEvents.emit(ch, args);
     });
 });
+
 
 contextBridge.exposeInMainWorld("native", native);
 

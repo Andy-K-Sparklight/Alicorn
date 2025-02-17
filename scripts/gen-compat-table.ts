@@ -1,9 +1,10 @@
+import { exceptions } from "@/main/util/exception";
 import fs from "fs-extra";
 import path from "node:path";
 
 async function fetchJSON(url: string): Promise<unknown> {
     const res = await fetch(url, { cache: "no-cache" });
-    if (!res.ok) throw `Unable to fetch: ${url}`;
+    if (!res.ok) throw exceptions.create("network", { url, code: res.status });
     return await res.json();
 }
 

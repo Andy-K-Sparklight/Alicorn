@@ -14,6 +14,10 @@ export type VanillaInstallEvent =
         type: "finish"
     } |
     {
+        type: "error",
+        err: unknown
+    } |
+    {
         type: "progress",
         progress: Progress;
     }
@@ -21,8 +25,6 @@ export type VanillaInstallEvent =
 ipcMain.on("installGame", async (e, gameId) => {
     const [port] = e.ports;
     console.debug(`Starting installation of ${gameId}`);
-
-    // TODO check game installer type
 
     const game = structuredClone(reg.games.get(gameId));
     const c = containers.get(game.launchHint.containerId);
@@ -37,45 +39,50 @@ ipcMain.on("installGame", async (e, gameId) => {
 
     // TODO add signal control to stop the action
 
-    const installType = game.installProps.type;
-    const { gameVersion } = game.installProps;
+    try {
+        const installType = game.installProps.type;
+        const { gameVersion } = game.installProps;
 
-    let p: VersionProfile;
-    const vanillaProfile = await vanillaInstaller.installProfile(gameVersion, c, { onProgress });
+        let p: VersionProfile;
+        const vanillaProfile = await vanillaInstaller.installProfile(gameVersion, c, { onProgress });
 
-    switch (installType) {
-        case "vanilla":
-            p = vanillaProfile;
-            break;
-        case "fabric": {
-            const fid = await fabricInstaller.retrieveProfile(
-                gameVersion,
-                game.installProps.loaderVersion,
-                c,
-                { onProgress }
-            );
-            p = await profileLoader.fromContainer(fid, c);
-            break;
+        switch (installType) {
+            case "vanilla":
+                p = vanillaProfile;
+                break;
+            case "fabric": {
+                const fid = await fabricInstaller.retrieveProfile(
+                    gameVersion,
+                    game.installProps.loaderVersion,
+                    c,
+                    { onProgress }
+                );
+                p = await profileLoader.fromContainer(fid, c);
+                break;
+            }
         }
+
+        game.launchHint.profileId = p.id;
+
+        // TODO patch `javaVersion` for legacy profiles without such key
+        await jrt.installRuntime(p.javaVersion?.component ?? "jre-legacy", { onProgress });
+
+        await vanillaInstaller.installLibraries(p, c, new Set(), { onProgress });
+
+        await vanillaInstaller.installAssets(p, c, game.assetsLevel, { onProgress });
+
+        await vanillaInstaller.emitOptions(c);
+
+        game.installed = true;
+        games.add(game);
+
+        console.debug(`Completed installation of ${gameId}`);
+        send({ type: "finish" });
+
+        port.close();
+    } catch (e) {
+        send({ type: "error", err: e });
+
+        port.close();
     }
-
-    game.launchHint.profileId = p.id;
-
-    // TODO patch `javaVersion` for legacy profiles without such key
-    await jrt.installRuntime(p.javaVersion?.component ?? "jre-legacy", { onProgress });
-
-    await vanillaInstaller.installLibraries(p, c, new Set(), { onProgress });
-
-    await vanillaInstaller.installAssets(p, c, game.assetsLevel, { onProgress });
-
-    await vanillaInstaller.emitOptions(c);
-
-    game.installed = true;
-    games.add(game);
-
-    console.debug(`Completed installation of ${gameId}`);
-    // TODO add error handler
-    send({ type: "finish" });
-
-    port.close();
 });

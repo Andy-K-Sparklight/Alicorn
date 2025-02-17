@@ -66,7 +66,6 @@ export function CreateGameView() {
     async function handleCreate() {
         if (valid) {
             setCreating(true);
-            // TODO add error handler
             await native.game.add({
                 name: gameName,
                 containerId,

@@ -4,9 +4,10 @@
 import { accounts } from "@/main/auth/manage";
 import { jrt } from "@/main/jrt/install";
 import { launchArgs } from "@/main/launch/args";
-import { gameProc, GameProcess } from "@/main/launch/proc";
+import { GameProcess } from "@/main/launch/proc";
 import { LaunchHint, LaunchInit } from "@/main/launch/types";
 import { profileLoader } from "@/main/profile/loader";
+import { exceptions } from "@/main/util/exception";
 import { containers } from "../container/manage";
 
 const games = new Map<string, GameProcess>();
@@ -44,14 +45,14 @@ async function launch(hint: LaunchHint): Promise<GameProcess> {
     console.log(`Launching game ${hint.profileId} on ${hint.containerId}`);
     const init = await prepare(hint);
     const args = launchArgs.createArguments(init);
-    const g = gameProc.create(init.jrtExec, args, init.container.gameDir());
+    const g = await GameProcess.create(init.jrtExec, args, init.container.gameDir());
     games.set(g.id, g);
     return g;
 }
 
 function getInstance(gid: string): GameProcess {
     const g = games.get(gid);
-    if (!g) throw `No such instance: ${gid}`;
+    if (!g) throw exceptions.create("no-entry", { id: gid });
     return g;
 }
 

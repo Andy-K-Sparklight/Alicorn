@@ -39,6 +39,7 @@ export type IpcPushEvents = {
     accountChanged: () => void;
     configChanged: (c: UserConfig) => void;
     appUpgraded: (version: string) => void;
+    devToolsOpened: () => void;
 }
 
 export type IpcCommands = {
@@ -49,7 +50,7 @@ export type IpcCommands = {
     removeGame: (gameId: string) => void;
     querySharedGames: (id: string) => string[];
     launch: (id: string) => LaunchGameResult;
-    gameAuth: (gameId: string) => boolean;
+    gameAuth: (gameId: string) => void;
     listAccounts: () => DetailedAccountProps[];
     createVanillaAccount: () => DetailedAccountProps | null;
     addGame: (game: CreateGameInit) => void;

@@ -15,7 +15,7 @@ export interface Account {
     /**
      * Refresh the account.
      */
-    refresh(): Promise<boolean>;
+    refresh(): Promise<void>;
 
     /**
      * Export credentials.

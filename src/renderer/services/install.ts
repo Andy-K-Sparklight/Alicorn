@@ -27,7 +27,7 @@ async function install(gameId: string): Promise<void> {
     }
 
     // TODO add rej error handler
-    return new Promise(res => {
+    return new Promise((res, rej) => {
         port.onmessage = (e: MessageEvent<VanillaInstallEvent>) => {
             switch (e.data.type) {
                 case "progress":
@@ -38,6 +38,11 @@ async function install(gameId: string): Promise<void> {
                     progressMap.delete(gameId);
                     toast.success(t("toast.game-installed"));
                     res();
+                    break;
+                case "error":
+                    port.close();
+                    progressMap.delete(gameId);
+                    rej(e.data.err);
                     break;
             }
 

@@ -8,6 +8,7 @@ import { MavenName } from "@/main/profile/maven-name";
 import { nativeLib } from "@/main/profile/native-lib";
 import { filterRules } from "@/main/profile/rules";
 import type { AssetIndex, VersionProfile } from "@/main/profile/version-profile";
+import { exceptions } from "@/main/util/exception";
 import { i18nMain } from "@/main/util/i18n";
 import { progress, type ProgressController, type ProgressHandler } from "@/main/util/progress";
 import fs from "fs-extra";
@@ -39,7 +40,7 @@ let versionManifest: VersionManifest;
 async function getManifest(): Promise<VersionManifest> {
     if (!versionManifest) {
         const r = await netx.get(VERSION_MANIFEST);
-        if (!r.ok) throw `Unable to get version manifest: ${r.status}`;
+        if (!r.ok) throw exceptions.create("network", { url: VERSION_MANIFEST, code: r.status });
         const d = await r.json() as VersionManifest;
         if (!versionManifest) {
             versionManifest = d;
@@ -78,6 +79,7 @@ async function installProfile(id: string | "latest-release" | "latest-snapshot",
 
     const v = mf.versions.find(ent => ent.id === id);
 
+    // The profile ID is provided by the renderer, guaranteed to be included in the version list
     if (!v) throw `No such profile: ${id}`;
 
     const fp = container.profile(id);

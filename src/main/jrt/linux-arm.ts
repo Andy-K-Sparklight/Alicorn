@@ -4,6 +4,7 @@
 import { paths } from "@/main/fs/paths";
 import { jrt } from "@/main/jrt/install";
 import { dlx } from "@/main/net/dlx";
+import { exceptions } from "@/main/util/exception";
 import { unwrapESM } from "@/main/util/module";
 import fs from "fs-extra";
 import path from "node:path";
@@ -21,7 +22,9 @@ async function installComponent(component: string) {
         return;
     } catch {}
 
-    if (!(component in urls)) throw `Unsupported component: ${component}`;
+    if (!(component in urls)) {
+        throw exceptions.create("jrt-not-available", { component });
+    }
 
     const u = urls[component];
 

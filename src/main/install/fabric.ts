@@ -1,5 +1,6 @@
 import type { Container } from "@/main/container/spec";
 import { netx } from "@/main/net/netx";
+import { exceptions } from "@/main/util/exception";
 import { progress, type ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
 
@@ -18,7 +19,7 @@ async function queryLoaderVersions(gameVersion: string): Promise<FabricLoaderVer
     const url = FABRIC_META_API + `/versions/loader/${gameVersion}`;
 
     const res = await netx.get(url);
-    if (!res.ok) throw `Failed to query versions for ${gameVersion}: ${res.status}`;
+    if (!res.ok) throw exceptions.create("network", { url, code: res.status });
 
     const entries = await res.json() as LoaderEntry[];
     return entries.map(e => e.loader);
@@ -35,7 +36,7 @@ async function retrieveProfile(
     if (!loaderVersion) {
         const versions = await queryLoaderVersions(gameVersion);
         const sv = versions.find(v => v.stable)?.version;
-        if (!sv) throw `Unable to select Fabric version for ${gameVersion}`;
+        if (!sv) throw exceptions.create("fabric-no-version", { gameVersion });
         loaderVersion = sv;
     }
 
@@ -44,12 +45,11 @@ async function retrieveProfile(
 
     controller?.signal?.throwIfAborted();
 
-    // TODO add progress handler
     const res = await netx.get(url);
-    if (!res.ok) throw `Unable to fetch Fabric profile for ${gameVersion} / ${loaderVersion}: ${res.status}`;
+    if (!res.ok) throw exceptions.create("network", { url, code: res.status });
 
     const fbp = await res.json();
-    if (!("id" in fbp) || typeof fbp.id !== "string") throw "Malformed Fabric profile received";
+    if (!("id" in fbp) || typeof fbp.id !== "string") throw exceptions.create("fabric-no-version", { gameVersion });
 
     console.debug(`Writing profile with ID: ${fbp.id}`);
     await fs.outputJSON(container.profile(fbp.id), fbp);

@@ -37,6 +37,9 @@ async function init(): Promise<void> {
             },
             react: {
                 useSuspense: false
+            },
+            missingInterpolationHandler(_, value) {
+                return i18next.t("common:undefined");
             }
         });
 

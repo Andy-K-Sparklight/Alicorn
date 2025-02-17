@@ -2,6 +2,7 @@ import { useAutoFontClass } from "@/renderer/i18n/i18n";
 import { themeManager, useAutoTheme, useTheme } from "@/renderer/theme";
 import { useNav } from "@/renderer/util/nav";
 import { AnimatedRoute } from "@components/AnimatedRoute";
+import { ExceptionDisplay } from "@components/ExceptionDisplay";
 import { Navigator } from "@components/Navigator";
 import { HeroUIProvider } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
@@ -45,6 +46,7 @@ export function App() {
                 <MainArea/>
             </div>
             <VersionOverlay/>
+            <ExceptionDisplay/>
             <Toaster position="bottom-left" richColors theme={toastTheme}/>
         </main>
     </HeroUIProvider>;

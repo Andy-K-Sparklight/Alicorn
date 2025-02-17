@@ -2,6 +2,7 @@
  * Utilities related to network access.
  */
 import { mirror } from "@/main/net/mirrors";
+import { exceptions } from "@/main/util/exception";
 import { net } from "electron";
 
 /**
@@ -20,7 +21,7 @@ async function get(url: string): Promise<Response> {
         }
     }
 
-    throw `No available mirror for ${url}`;
+    throw exceptions.create("network", { url });
 }
 
 export const netx = {

@@ -4,10 +4,15 @@
 import { Container } from "@/main/container/spec";
 import { linkProfile } from "@/main/profile/linker";
 import { VersionProfile } from "@/main/profile/version-profile";
+import { exceptions } from "@/main/util/exception";
 import fs from "fs-extra";
 
 async function fromContainer(id: string, container: Container): Promise<VersionProfile> {
-    return await linkProfile(id, (i) => fs.readJSON(container.profile(i)));
+    try {
+        return await linkProfile(id, (i) => fs.readJSON(container.profile(i)));
+    } catch (e) {
+        throw exceptions.create("profile-link", { id, error: String(e) });
+    }
 }
 
 

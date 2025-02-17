@@ -9,6 +9,7 @@ import { dlchk } from "@/main/net/dlchk";
 import type { DlxDownloadRequest } from "@/main/net/dlx";
 import { WebSocketJsonRpcClient } from "@/main/net/rpc";
 import { getExecutableExt } from "@/main/sys/os";
+import { exceptions } from "@/main/util/exception";
 import { net } from "electron";
 import Emittery from "emittery";
 import fs from "fs-extra";
@@ -88,11 +89,22 @@ async function sendRequest(req: Aria2DownloadRequest): Promise<void> {
         }
     ]) as Promise<string>;
 
+    let gid: string;
+
     if (req.signal) {
-        Promise.all([getGid, pEvent(req.signal, "abort")]).then(([lateGID]) => remove(lateGID));
+        req.signal.addEventListener("abort", () => {
+            if (gid) {
+                remove(gid);
+            }
+        }, { once: true });
     }
 
-    const gid = await getGid;
+    gid = await getGid;
+
+    if (req.signal?.aborted) {
+        void remove(gid);
+        req.signal.throwIfAborted();
+    }
 
     if (!gid) {
         throw "Unable to commit task (empty GID received)";
@@ -101,7 +113,12 @@ async function sendRequest(req: Aria2DownloadRequest): Promise<void> {
     const emitter = new Emittery();
     gidEmitters.set(gid, emitter);
 
-    await pEvent(emitter, "finish");
+    try {
+        await pEvent(emitter, "finish");
+    } catch {
+        // Re-warp the error event
+        throw exceptions.create("download", { url: req.url });
+    }
 
     if (!req.noCache) {
         await cache.enroll(req.path, req.sha1);

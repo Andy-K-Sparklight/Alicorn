@@ -155,6 +155,10 @@ async function setupMainWindow() {
         conf.alter(c => c.app.window.pos = mainWindow!.getPosition());
     });
 
+    mainWindow.webContents.on("devtools-opened", () => {
+        mainWindow?.webContents?.send("devToolsOpened");
+    });
+
     mainWindow.setMenu(null);
 
     // Exit app once main window closed

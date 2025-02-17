@@ -29,9 +29,7 @@ export class TemporalAccount implements Account {
         };
     }
 
-    async refresh(): Promise<boolean> {
-        return true;
-    }
+    async refresh(): Promise<void> {}
 
     toProps(): AccountProps {
         return {

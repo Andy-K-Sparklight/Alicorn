@@ -39,9 +39,9 @@ async function main() {
 
     console.log(`Done (${duration}s)! Showing window.`);
 
-    printDevToolsWarn();
-
     native.bwctl.show();
+
+    native.ext.onDevToolsOpened(printDevToolsWarn);
 }
 
 function Root() {
@@ -67,13 +67,12 @@ function render() {
  * Warns the user when DevTools is opened in production mode.
  */
 function printDevToolsWarn() {
-    if (!import.meta.env.AL_DEV) {
-        const tr = (s: string) => t(`devtools-warn.${s}`);
+    const tr = (s: string) => t(`devtools-warn.${s}`);
 
-        console.log("%c" + tr("title"), "font-size: xxx-large; font-weight: bold; color: orange;");
-        console.log("%c" + tr("sub-1"), "font-size: large; font-weight: bold; color: red;");
-        console.log("%c" + tr("sub-2"), "font-size: x-large; font-weight: bold; color: red;");
-    }
+    console.log("%c" + tr("title"), "font-size: xxx-large; font-weight: bold; color: orange;");
+    console.log("%c" + tr("sub-1"), "font-size: large; font-weight: bold; color: red;");
+    console.log("%c" + tr("sub-2"), "font-size: xx-large; font-weight: bold; color: #ee4b2b;");
+    console.log("%c" + tr("sub-3"), "color: orange;");
 }
 
 void main();

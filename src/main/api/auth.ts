@@ -9,9 +9,7 @@ ipcMain.handle("gameAuth", async (_, gameId) => {
 
     const a = g.launchHint.accountId ? accounts.get(g.launchHint.accountId) : new VanillaAccount();
 
-    const success = await a.refresh();
-
-    if (!success) return false;
+    await a.refresh();
 
     if (!g.launchHint.accountId) {
         const gs = structuredClone(g);
@@ -21,18 +19,13 @@ ipcMain.handle("gameAuth", async (_, gameId) => {
 
     // Update account
     accounts.add(a);
-
-    return true;
 });
 
 ipcMain.handle("listAccounts", () => reg.accounts.entries().map(([k, v]) => ({ ...v, uuid: k })));
 
 ipcMain.handle("createVanillaAccount", async () => {
     const a = new VanillaAccount();
-    if (await a.refresh()) {
-        accounts.add(a);
-        return a.toProps() as VanillaAccountProps;
-    }
-
-    return null;
+    await a.refresh();
+    accounts.add(a);
+    return a.toProps() as VanillaAccountProps;
 });

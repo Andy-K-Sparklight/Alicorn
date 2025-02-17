@@ -1,7 +1,13 @@
 devtools-warn:
   title: 等一下！
   sub-1: 如果有人要你在这里输入一些东西，110% 你被骗了。
-  sub-2: 别听他们的 —— 这非常危险！
+  sub-2: 别碰 —— 会出事的 —— 别碰！
+  sub-3: |-
+    在这里所输入的命令与 Alicorn 有同样的权限。
+    Alicorn 能做的一切（包括删除你的游戏），它们都能做。
+    甚至，Alicorn 设计中不能做的事情，它们也能做。
+    这无异于引狼入室！
+    别让它们有机可乘。关掉这个窗口，你就安全了。
 
 progress:
   jrt:
@@ -31,4 +37,31 @@ toast:
   app-upgraded: 已安装更新：{{version}}
   game-installed: 已安装游戏，开始游玩吧！
   game-destroyed: 已删除「{{name}}」。
-  login-failed: 无法登录帐户。（或许稍后再试试？）
+
+exceptions:
+  title: 哎呀呀，糟糕！
+  btn: 好
+  detail: 详细的错误消息：
+  types:
+    unknown: 出现了一些意料之外的情况。
+    cancelled: 已取消操作。
+    no-entry: 没有名为 {{id}} 的记录。
+    network: 试图访问 {{url}} 时出现错误，状态码为：{{code}}
+    download: 下载文件 {{url}} 时出错。
+    auth: 验证帐户的过程中出现错误。
+    fabric-no-version: 此游戏版本（{{gameVersion}}）不支持 Fabric。
+    profile-link: 无法读取核心 {{id}} 的信息。
+    jrt-not-available: 所需的 Java 运行环境 {{component}} 不可用。
+    jrt-not-verified: 无法启动 Java 虚拟机：{{bin}}
+    launch-spawn: 启动游戏进程失败。
+
+undefined: 未知
+
+tips:
+  error: |-
+    ……为什么会变成这样呢？
+    路漫漫其修远兮，吾将上下而求索。
+    好吧，振作点 —— 至少错误消息还能正常显示，不是吗？
+    噢不，不用，先别急着重启！
+    我知道了……别担心，我来想办法。
+    这是有些麻烦，确实有些麻烦。

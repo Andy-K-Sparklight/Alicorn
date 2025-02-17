@@ -1,7 +1,13 @@
 devtools-warn:
   title: Wait!
   sub-1: You're 110% fooled if someone asks you to type anything here.
-  sub-2: DON'T DO THIS - THIS IS DANGER!
+  sub-2: STOP — DO NOT TOUCH — STOP!
+  sub-3: |-
+    Anything you've entered here will have the same permission level as Alicorn.
+    What Alicorn can do (including destroying ANY game), so can they.
+    What's more, they can do things that Alicorn does not intend to provide.
+    You're bringing in a Trojan!
+    Don't give them the chance. Close this window. Stay safe.
 
 progress:
   jrt:
@@ -31,4 +37,31 @@ toast:
   app-upgraded: Updated to {{version}}
   game-installed: Game installed. Have fun!
   game-destroyed: Destroyed "{{name}}".
-  login-failed: Unable to log in. (Maybe try again later?)
+
+exceptions:
+  title: Oops! That's...
+  btn: Close
+  detail: "Error message:"
+  types:
+    unknown: Something unexpected happened.
+    cancelled: The operation was cancelled.
+    no-entry: "Entry not found: {{id}}"
+    network: "Unable to access {{url}}. Status: {{code}}"
+    download: "Failed to download {{url}}"
+    auth: Failed to authenticate the account.
+    fabric-no-version: Fabric does not support {{gameVersion}}
+    profile-link: "Unable to read game profile: {{id}}"
+    jrt-not-available: "Java runtime unavailable: {{component}}"
+    jrt-not-verified: "Failed to execute Java binary: {{bin}}"
+    launch-spawn: Failed to spawn game process.
+
+undefined: Unknown
+
+tips:
+  error: |-
+    How did we get here?
+    Well, easiness does not come with ease.
+    Easy, breathe — at least this dialog is still working.
+    It's, well, not time to restart yet.
+    I get it... Don't worry, I'll work it out.
+    Oh no. Oh no no no no no!

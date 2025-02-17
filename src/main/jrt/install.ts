@@ -5,6 +5,7 @@ import { jrtLinuxArm } from "@/main/jrt/linux-arm";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { netx } from "@/main/net/netx";
 import { getOSName } from "@/main/sys/os";
+import { exceptions } from "@/main/util/exception";
 import { progress, type ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
 import * as child_process from "node:child_process";
@@ -49,10 +50,10 @@ function osPair(): string {
 
 async function getProfile(componentName: string): Promise<JavaRuntimeProfile> {
     const d = await (await netx.get(JRT_MANIFEST)).json();
-    const availableProfiles = d[osPair()][componentName];
+    const availableProfiles = d?.[osPair()]?.[componentName];
 
     if (!Array.isArray(availableProfiles) || availableProfiles.length < 1) {
-        throw `Could not find available JRT profiles for ${componentName}`;
+        throw exceptions.create("jrt-not-available", { component: componentName });
     }
 
     // Gets the latest release
@@ -221,7 +222,9 @@ async function verify(root: string): Promise<void> {
 
     const code = await pEvent(proc, "exit", { timeout: 5000 });
 
-    if (code !== 0) throw `Unexpected exit code ${code}: ${bin}`;
+    if (code !== 0) {
+        throw exceptions.create("jrt-not-verified", { bin });
+    }
 }
 
 /**

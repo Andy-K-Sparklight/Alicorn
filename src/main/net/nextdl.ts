@@ -8,6 +8,7 @@ import { cache } from "@/main/cache/cache";
 import { conf } from "@/main/conf/conf";
 import { dlchk } from "@/main/net/dlchk";
 import type { DlxDownloadRequest } from "@/main/net/dlx";
+import { exceptions } from "@/main/util/exception";
 import { isTruthy } from "@/main/util/misc";
 import { net } from "electron";
 import fs from "fs-extra";
@@ -104,7 +105,8 @@ async function get(req: NextDownloadRequest): Promise<void> {
 
     console.debug(`NextDL Err: ${task.req.origin}`);
     task.status = NextDownloadStatus.FAILED;
-    throw `Task failed: ${task.req.origin}`;
+
+    throw exceptions.create("download", { url: task.req.origin });
 }
 
 /**

@@ -1,5 +1,6 @@
 import { conf } from "@/main/conf/conf";
 import { type GameProcessLog, logParser } from "@/main/launch/log-parser";
+import { exceptions } from "@/main/util/exception";
 import isValidHostname from "is-valid-hostname";
 import { nanoid } from "nanoid";
 import * as child_process from "node:child_process";
@@ -8,6 +9,7 @@ import EventEmitter from "node:events";
 import os from "node:os";
 import { Readable } from "node:stream";
 import { promisify } from "node:util";
+import { pEvent } from "p-event";
 import ping from "ping";
 import type TypedEmitter from "typed-emitter";
 
@@ -69,6 +71,8 @@ export class GameProcess {
         stderr: [] as string[]
     };
     logs: GameProcessLog[] = [];
+
+    #readyPromise: Promise<void> | null = null;
     #proc: ChildProcess | null = null;
     #memMonitTimer: NodeJS.Timer | null = null;
     #netMonitTimer: NodeJS.Timer | null = null;
@@ -81,6 +85,8 @@ export class GameProcess {
         });
 
         this.#proc = proc;
+
+        this.#readyPromise = pEvent(proc, "spawn");
 
         proc.once("spawn", () => {
             this.status = "running";
@@ -230,14 +236,14 @@ export class GameProcess {
             this.emitter.emit("serverChange", null);
         }
     }
+
+    static async create(...args: ConstructorParameters<typeof GameProcess>): Promise<GameProcess> {
+        const proc = new GameProcess(...args);
+        try {
+            await proc.#readyPromise;
+        } catch (e) {
+            throw exceptions.create("launch-spawn", { error: String(e) });
+        }
+        return proc;
+    }
 }
-
-
-/**
- * Creates a new game process and saves it for lookups.
- */
-function create(...args: ConstructorParameters<typeof GameProcess>): GameProcess {
-    return new GameProcess(...args);
-}
-
-export const gameProc = { create };

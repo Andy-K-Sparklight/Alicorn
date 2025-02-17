@@ -6,11 +6,9 @@ import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader 
 import { ArrowRightIcon, UserRoundPlusIcon, UserSquareIcon } from "lucide-react";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 
 export function AccountInitView() {
     const { t } = useTranslation("setup", { keyPrefix: "account-init" });
-    const { t: tc } = useTranslation("common");
     const [loginActive, setLoginActive] = useState(false);
     const [accountProps, setAccountProps] = useState<DetailedAccountProps | null>(null);
     const nav = useNav();
@@ -22,16 +20,13 @@ export function AccountInitView() {
     }
 
     async function handleAuth() {
-        setLoginActive(true);
-        const props = await native.auth.createVanilla();
-
-        if (props) {
+        try {
+            setLoginActive(true);
+            const props = await native.auth.createVanilla();
             setAccountProps(props);
-        } else {
-            toast.error(tc("toast.login-failed"));
+        } finally {
+            setLoginActive(false);
         }
-
-        setLoginActive(false);
     }
 
     return <div className="flex flex-col w-5/6 h-full mx-auto items-center">
