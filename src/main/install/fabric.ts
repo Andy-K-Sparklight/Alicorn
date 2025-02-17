@@ -1,5 +1,6 @@
 import type { Container } from "@/main/container/spec";
 import { netx } from "@/main/net/netx";
+import { progress, type ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
 
 const FABRIC_META_API = "https://meta.fabricmc.net/v2";
@@ -23,7 +24,14 @@ async function queryLoaderVersions(gameVersion: string): Promise<FabricLoaderVer
     return entries.map(e => e.loader);
 }
 
-async function retrieveProfile(gameVersion: string, loaderVersion: string, container: Container): Promise<string> {
+async function retrieveProfile(
+    gameVersion: string,
+    loaderVersion: string,
+    container: Container,
+    controller?: ProgressController
+): Promise<string> {
+    controller?.onProgress?.(progress.indefinite("fabric.resolve"));
+
     if (!loaderVersion) {
         const versions = await queryLoaderVersions(gameVersion);
         const sv = versions.find(v => v.stable)?.version;
@@ -33,6 +41,8 @@ async function retrieveProfile(gameVersion: string, loaderVersion: string, conta
 
     console.debug(`Fetching Fabric profile for ${gameVersion} / ${loaderVersion}`);
     const url = FABRIC_META_API + `/versions/loader/${gameVersion}/${loaderVersion}/profile/json`;
+
+    controller?.signal?.throwIfAborted();
 
     // TODO add progress handler
     const res = await netx.get(url);

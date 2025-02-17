@@ -17,6 +17,8 @@ progress:
     download-asset-index: Resolving Asset Index
     download-assets: Downloading Assets {{current}} / {{total}}
     link-assets: Processing Assets {{current}} / {{total}}
+  fabric:
+    resolve: Syncing Fabric Versions
 
 input:
   string-array:

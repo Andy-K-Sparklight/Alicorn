@@ -48,7 +48,12 @@ ipcMain.on("installGame", async (e, gameId) => {
             p = vanillaProfile;
             break;
         case "fabric": {
-            const fid = await fabricInstaller.retrieveProfile(gameVersion, game.installProps.loaderVersion, c);
+            const fid = await fabricInstaller.retrieveProfile(
+                gameVersion,
+                game.installProps.loaderVersion,
+                c,
+                { onProgress }
+            );
             p = await profileLoader.fromContainer(fid, c);
             break;
         }
