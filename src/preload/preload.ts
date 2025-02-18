@@ -79,6 +79,10 @@ const native = {
             const ch = new MessageChannel();
             ipcRenderer.postMessage("installGame", gameId, [ch.port2]);
             exposePort(gameId, ch.port1);
+        },
+
+        queryAvailableModLoaders(gameVersion: string): Promise<string[]> {
+            return ipcRenderer.invoke("queryAvailableModLoaders", gameVersion);
         }
     },
 

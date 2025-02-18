@@ -1,10 +1,9 @@
 import type { GameProfile } from "@/main/game/spec";
 import { remoteInstaller, useInstallProgress } from "@/renderer/services/install";
 import { GameTypeImage } from "@components/GameTypeImage";
-import { Card, CardBody, Chip, Tooltip } from "@heroui/react";
+import { Card, CardBody, Chip } from "@heroui/react";
 import { GameCardActions } from "@pages/games/GameCardActions";
-import { clsx } from "clsx";
-import { CheckCircleIcon, CloudDownloadIcon, DotIcon } from "lucide-react";
+import { DotIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface GameCardProps {
@@ -50,8 +49,6 @@ export function GameCard({ game }: GameCardProps) {
                     <Chip color="primary" variant="flat">{gameVersion}</Chip>
                 </div>
 
-                <GameStatusBadge installed={installed}/>
-
                 <div className="ml-4">
                     <GameCardActions
                         gameId={id}
@@ -62,23 +59,4 @@ export function GameCard({ game }: GameCardProps) {
             </div>
         </CardBody>
     </Card>;
-}
-
-function GameStatusBadge({ installed }: { installed: boolean }) {
-    const { t } = useTranslation("pages", { keyPrefix: "games.game-card" });
-
-    return <div
-        className={
-            clsx({
-                "text-success": installed,
-                "text-warning": !installed
-            })
-        }
-    >
-        <Tooltip content={t(installed ? "ready" : "unready")} color="foreground">
-            {
-                installed ? <CheckCircleIcon/> : <CloudDownloadIcon/>
-            }
-        </Tooltip>
-    </div>;
 }

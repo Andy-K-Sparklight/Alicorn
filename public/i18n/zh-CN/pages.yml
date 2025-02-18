@@ -15,6 +15,7 @@ create-game:
     share:
       label: 与已有游戏共享
       sub: 与已有游戏共同安装，它们将共享存档、资源包、模组等内容。
+  share-alert: 共享游戏可能会导致部分游戏内容冲突。除非你有处理此类问题的经验，否则最好将游戏独立分配。
   container-link:
     label: 重用已有文件
     sub: 重新使用已经安装的文件，减少空间占用。这项技术可能与部分客户端不兼容。
@@ -50,6 +51,8 @@ create-game:
 
   mod-loader-title: 模组平台
   mod-loader:
+    loading: 正在获取可用模组平台……
+    missing: 找不到想要的模组平台？或许你所选的游戏版本不受其支持。
     vanilla:
       label: 不安装模组平台
       sub: 你将无法安装模组，但仍能使用资源包和数据包等内容。
@@ -74,9 +77,6 @@ games:
     za: 名称降序
     earliest: 最早创建
     latest: 最近创建
-  game-card:
-    ready: 准备就绪
-    unready: 需要安装
   empty-hint:
     title: 这里没有任何游戏。
     sub: 点按「创建新游戏」按钮，建立新游戏。

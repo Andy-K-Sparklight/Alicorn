@@ -4,11 +4,11 @@ import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/Alert";
 import { PlayerNameInput } from "@components/PlayerNameInput";
 import { Radio, RadioGroup } from "@heroui/radio";
-import { Button, Input, Switch } from "@heroui/react";
+import { Button, Input, Spinner, Switch } from "@heroui/react";
 import { AccountSelector } from "@pages/create-game/AccountSelector";
 import { ContainerSelector } from "@pages/create-game/ContainerSelector";
 import { VersionSelector } from "@pages/create-game/VersionSelector";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -34,11 +34,22 @@ export function CreateGameView() {
 
     const [assetsLevel, setAssetsLevel] = useState<"full" | "video-only">("full");
 
-    const [installType, setInstallType] = useState<SupportedModLoaders>("vanilla");
+    const [installType, setInstallType] = useState<string>("vanilla");
     const [fabricVersion, setFabricVersion] = useState<string>("");
 
     const [creating, setCreating] = useState(false);
     const nav = useNav();
+
+    const [availableModLoaders, setAvailableModLoaders] = useState<string[] | null>(null);
+
+    useEffect(() => {
+        if (gameVersion) {
+            setAvailableModLoaders(null);
+            native.install.queryAvailableModLoaders(gameVersion).then(setAvailableModLoaders);
+        } else {
+            setAvailableModLoaders([]);
+        }
+    }, [gameVersion]);
 
     const valid = gameVersion &&
         !(shareContainer && !containerId) &&
@@ -61,6 +72,8 @@ export function CreateGameView() {
                     loaderVersion: fabricVersion
                 };
         }
+
+        throw `Unsupported mod loader: ${installType}`;
     }
 
     async function handleCreate() {
@@ -108,7 +121,11 @@ export function CreateGameView() {
                         {
                             ["new", "share"].map(lv =>
                                 <div key={lv} className="flex flex-col gap-2">
-                                    <Radio value={lv} description={t(`storage-policy.${lv}.sub`)}>
+                                    <Radio
+                                        value={lv}
+                                        color={lv === "share" ? "warning" : "primary"}
+                                        description={t(`storage-policy.${lv}.sub`)}
+                                    >
                                         {t(`storage-policy.${lv}.label`)}
                                     </Radio>
                                 </div>
@@ -132,7 +149,11 @@ export function CreateGameView() {
                     }
 
                     {
-                        shareContainer && <ContainerSelector containerId={containerId} onChange={setContainerId}/>
+                        shareContainer &&
+                        <>
+                            <Alert color="warning" classNames={{ title: "font-bold" }} title={t("share-alert")}/>
+                            <ContainerSelector containerId={containerId} onChange={setContainerId}/>
+                        </>
                     }
                 </div>
 
@@ -188,7 +209,11 @@ export function CreateGameView() {
                 <div className="flex flex-col gap-4">
                     <div className="font-bold text-xl">{t("mod-loader-title")}</div>
 
-                    <ModLoaderSelector value={installType} onChange={setInstallType}/>
+                    <ModLoaderSelector
+                        availableModLoaders={availableModLoaders}
+                        value={installType}
+                        onChange={setInstallType}
+                    />
 
                     {
                         installType === "fabric" &&
@@ -211,28 +236,45 @@ export function CreateGameView() {
     </div>;
 }
 
-type SupportedModLoaders = "vanilla" | "fabric";
 
 interface ModLoaderSelectorProps {
-    value: SupportedModLoaders;
-    onChange: (v: SupportedModLoaders) => void;
+    availableModLoaders: string[] | null;
+    value: string;
+    onChange: (v: string) => void;
 }
 
-function ModLoaderSelector({ value, onChange }: ModLoaderSelectorProps) {
+function ModLoaderSelector({ availableModLoaders, value, onChange }: ModLoaderSelectorProps) {
     const { t } = useTranslation("pages", { keyPrefix: "create-game.mod-loader" });
 
-    return <RadioGroup
-        value={value}
-        onValueChange={v => onChange(v as SupportedModLoaders)}
-    >
-        {
-            ["vanilla", "fabric"].map(lv =>
-                <Radio key={lv} value={lv} description={t(`${lv}.sub`)}>
-                    {t(`${lv}.label`)}
-                </Radio>
-            )
-        }
-    </RadioGroup>;
+    const loaders = availableModLoaders ?? [];
+
+    loaders.unshift("vanilla");
+
+    return <>
+        <RadioGroup
+            value={value}
+            onValueChange={onChange}
+        >
+            {
+                availableModLoaders ?
+                    ["vanilla", "fabric"].map(lv => {
+                        if (!loaders.includes(lv)) return null;
+
+                        return <Radio key={lv} value={lv} description={t(`${lv}.sub`)}>
+                            {t(`${lv}.label`)}
+                        </Radio>;
+                    }) :
+                    <div className="w-full h-full flex justify-center items-center gap-6">
+                        <Spinner/>
+                        {t("loading")}
+                    </div>
+            }
+        </RadioGroup>
+
+        <div className="text-sm text-foreground-400">{t("missing")}</div>
+    </>;
+
+
 }
 
 interface FabricVersionSelectorProps {

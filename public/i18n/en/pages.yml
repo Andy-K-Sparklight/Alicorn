@@ -15,6 +15,7 @@ create-game:
     share:
       label: Share With Existing
       sub: Share the resources (saves, resource packs, mods, etc.) shared with another game.
+  share-alert: Resource conflict may happen when sharing games. Keep the game dedicated, unless you're experienced.
   container-link:
     label: Reuse Existing Files
     sub: Reuse existing files to reduce space consumption. This might not be compatible with certain clients.
@@ -50,6 +51,8 @@ create-game:
 
   mod-loader-title: Mod Loader
   mod-loader:
+    loading: Querying available mod loaders...
+    missing: Not seeing what you're looking for? Try to choose another game version.
     vanilla:
       label: No Loader
       sub: PLay the game without mods support. (Resource packs and data packs will be available)
@@ -74,9 +77,6 @@ games:
     za: Z to A
     earliest: Earliest First
     latest: Latest First
-  game-card:
-    ready: Ready
-    unready: Not Installed
   empty-hint:
     title: Nothing Here
     sub: Click the "Create" button to start your new game.

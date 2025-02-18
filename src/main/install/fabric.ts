@@ -15,6 +15,19 @@ export interface FabricLoaderVersion {
     stable: boolean;
 }
 
+let availableGameVersions: string[];
+
+async function getAvailableGameVersions() {
+    if (!availableGameVersions) {
+        const url = FABRIC_META_API + "/versions/game";
+        const res = await netx.get(url);
+        if (!res.ok) throw exceptions.create("network", { url, code: res.status });
+        availableGameVersions = (await res.json()).map((v: { version: string }) => v.version);
+    }
+
+    return availableGameVersions;
+}
+
 async function queryLoaderVersions(gameVersion: string): Promise<FabricLoaderVersion[]> {
     const url = FABRIC_META_API + `/versions/loader/${gameVersion}`;
 
@@ -59,5 +72,6 @@ async function retrieveProfile(
 
 export const fabricInstaller = {
     queryLoaderVersions,
+    getAvailableGameVersions,
     retrieveProfile
 };

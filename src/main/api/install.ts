@@ -86,3 +86,17 @@ ipcMain.on("installGame", async (e, gameId) => {
         port.close();
     }
 });
+
+ipcMain.handle("queryAvailableModLoaders", async (_, gameVersion) => {
+    const supported: string[] = [];
+
+    const fabricVersions = await fabricInstaller.getAvailableGameVersions();
+
+    if (fabricVersions.includes(gameVersion)) {
+        supported.push("fabric");
+    }
+
+    // TODO add other mod loaders
+
+    return supported;
+});

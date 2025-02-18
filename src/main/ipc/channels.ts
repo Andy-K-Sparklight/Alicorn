@@ -56,4 +56,5 @@ export type IpcCommands = {
     addGame: (game: CreateGameInit) => void;
     updateGame: (game: GameProfile) => void;
     getVersionManifest: () => VersionManifest;
+    queryAvailableModLoaders: (gameVersion: string) => string[];
 }
