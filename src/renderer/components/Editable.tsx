@@ -1,5 +1,5 @@
 import { Input } from "@heroui/react";
-import { type PropsWithChildren, useEffect, useRef, useState } from "react";
+import React, { type PropsWithChildren, useEffect, useRef, useState } from "react";
 
 interface EditableProps {
     value: string;
@@ -8,7 +8,6 @@ interface EditableProps {
 }
 
 export function Editable({ value, onValueChange, children, inputProps }: PropsWithChildren<EditableProps>) {
-    const [innerValue, setInnerValue] = useState(value);
     const [editing, setEditing] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -18,8 +17,8 @@ export function Editable({ value, onValueChange, children, inputProps }: PropsWi
         }
     }, [inputRef, editing]);
 
-    function handleBlur() {
-        onValueChange(innerValue);
+    function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
+        onValueChange(e.target.value);
         setEditing(false);
     }
 
@@ -31,8 +30,7 @@ export function Editable({ value, onValueChange, children, inputProps }: PropsWi
         ref={inputRef}
         autoFocus
         variant="bordered"
-        value={innerValue}
-        onValueChange={setInnerValue}
+        defaultValue={value}
         onBlur={handleBlur}
         {...inputProps}
     />;

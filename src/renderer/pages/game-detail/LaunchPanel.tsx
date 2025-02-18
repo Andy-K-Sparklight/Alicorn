@@ -25,8 +25,8 @@ export function LaunchPanel() {
             </div>
 
             <Input
-                value={game.launchHint.pref.alterJRTExec}
-                onValueChange={makeGameReducer((g, fp) => g.launchHint.pref.alterJRTExec = fp)}
+                defaultValue={game.launchHint.pref.alterJRTExec}
+                onBlur={e => makeGameReducer<string>((g, fp) => g.launchHint.pref.alterJRTExec = fp)(e.target.value)}
             />
         </div>
 
