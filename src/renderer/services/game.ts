@@ -2,15 +2,13 @@ import type { GameProfile } from "@/main/game/spec";
 import Emittery from "emittery";
 import { useSyncExternalStore } from "react";
 
+const emitter = new Emittery();
+let games: GameProfile[] | null = null;
+
 // Forward change events
 // This setup only runs once
 native.game.onChange(load);
-
 void load();
-
-const emitter = new Emittery();
-
-let games: GameProfile[] | null = null;
 
 async function load() {
     games = await native.game.list();

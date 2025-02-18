@@ -2,13 +2,11 @@ import type { DetailedAccountProps } from "@/main/auth/types";
 import Emittery from "emittery";
 import { useSyncExternalStore } from "react";
 
-native.auth.onAccountChange(load);
-
-void load();
-
 let accounts: DetailedAccountProps[] = [];
-
 const emitter = new Emittery();
+
+native.auth.onAccountChange(load);
+void load();
 
 async function load() {
     accounts = await native.auth.getAccounts();

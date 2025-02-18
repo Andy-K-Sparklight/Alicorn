@@ -20,6 +20,8 @@ async function install(gameId: string): Promise<void> {
 
     function emitChange() {
         if (shouldEmitChange) return;
+
+        shouldEmitChange = true;
         requestIdleCallback(() => {
             globalEmitter.emit(`change:${gameId}`);
             shouldEmitChange = false;

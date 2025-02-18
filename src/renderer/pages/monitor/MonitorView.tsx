@@ -60,7 +60,7 @@ function ContentArea() {
 function ControlPanel() {
     const proc = useCurrentProc();
     const {
-        profile: { id, name, type, launchHint: { containerId, profileId } },
+        profile: { id, name, type, launchHint: { profileId } },
         status,
         startTime,
         pid,

@@ -13,7 +13,6 @@ interface GameCardProps {
 
 export function GameCard({ game }: GameCardProps) {
     const { id, name, versions: { game: gameVersion }, installed, type } = game;
-    const { t } = useTranslation("pages", { keyPrefix: "games.game-card" });
     const { t: tc } = useTranslation("common", { keyPrefix: "progress" });
     const installProgress = useInstallProgress(id);
 
