@@ -59,7 +59,7 @@ async function getAll(req: DlxDownloadRequest[], control?: ProgressController): 
 
         promises = aria2Tasks.map(t => limit(() => aria2.resolve(t)));
 
-    } else if (dl === "next") {
+    } else if (dl === "nextdl") {
         const nextTasks: NextDownloadRequest[] = req.map(r => ({
             ...r,
             urls: mirror.apply(r.url),
