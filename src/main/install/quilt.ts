@@ -4,13 +4,16 @@ import { exceptions } from "@/main/util/exception";
 import { progress, type ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
 
-const FABRIC_META_API = "https://meta.fabricmc.net/v2";
+// Quilt installer works quite similar to Fabric
+// We're copy-pasting these code in case Quilt make incompatible changes in the future
+
+const QUILT_META_API = "https://meta.quiltmc.org/v3";
 
 interface LoaderEntry {
-    loader: FabricLoaderVersion;
+    loader: QuiltLoaderVersion;
 }
 
-interface FabricLoaderVersion {
+interface QuiltLoaderVersion {
     version: string;
     stable: boolean;
 }
@@ -19,7 +22,7 @@ let availableGameVersions: string[];
 
 async function getAvailableGameVersions() {
     if (!availableGameVersions) {
-        const url = FABRIC_META_API + "/versions/game";
+        const url = QUILT_META_API + "/versions/game";
         const res = await netx.get(url);
         if (!res.ok) throw exceptions.create("network", { url, code: res.status });
         availableGameVersions = (await res.json()).map((v: { version: string }) => v.version);
@@ -28,8 +31,8 @@ async function getAvailableGameVersions() {
     return availableGameVersions;
 }
 
-async function queryLoaderVersions(gameVersion: string): Promise<FabricLoaderVersion[]> {
-    const url = FABRIC_META_API + `/versions/loader/${gameVersion}`;
+async function queryLoaderVersions(gameVersion: string): Promise<QuiltLoaderVersion[]> {
+    const url = QUILT_META_API + `/versions/loader/${gameVersion}`;
 
     const res = await netx.get(url);
     if (!res.ok) throw exceptions.create("network", { url, code: res.status });
@@ -44,7 +47,7 @@ async function retrieveProfile(
     container: Container,
     controller?: ProgressController
 ): Promise<string> {
-    controller?.onProgress?.(progress.indefinite("fabric.resolve"));
+    controller?.onProgress?.(progress.indefinite("quilt.resolve"));
 
     if (!loaderVersion) {
         const versions = await queryLoaderVersions(gameVersion);
@@ -58,8 +61,8 @@ async function retrieveProfile(
         loaderVersion = sv;
     }
 
-    console.debug(`Fetching Fabric profile for ${gameVersion} / ${loaderVersion}`);
-    const url = FABRIC_META_API + `/versions/loader/${gameVersion}/${loaderVersion}/profile/json`;
+    console.debug(`Fetching Quilt profile for ${gameVersion} / ${loaderVersion}`);
+    const url = QUILT_META_API + `/versions/loader/${gameVersion}/${loaderVersion}/profile/json`;
 
     controller?.signal?.throwIfAborted();
 
@@ -67,7 +70,7 @@ async function retrieveProfile(
     if (!res.ok) throw exceptions.create("network", { url, code: res.status });
 
     const fbp = await res.json();
-    if (!("id" in fbp) || typeof fbp.id !== "string") throw exceptions.create("fabric-no-version", { gameVersion });
+    if (!("id" in fbp) || typeof fbp.id !== "string") throw exceptions.create("quilt-no-version", { gameVersion });
 
     console.debug(`Writing profile with ID: ${fbp.id}`);
     await fs.outputJSON(container.profile(fbp.id), fbp);
@@ -75,7 +78,7 @@ async function retrieveProfile(
     return fbp.id;
 }
 
-export const fabricInstaller = {
+export const quiltInstaller = {
     queryLoaderVersions,
     getAvailableGameVersions,
     retrieveProfile

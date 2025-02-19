@@ -49,16 +49,19 @@ create-game:
   create-btn: 创建
   toast-created: 已创建游戏。
 
-  mod-loader-title: 模组平台
+  mod-loader-title: 模组系统
   mod-loader:
-    loading: 正在获取可用模组平台……
-    missing: 找不到想要的模组平台？或许你所选的游戏版本不受其支持。
+    loading: 正在获取可用模组系统……
+    missing: 找不到想要的模组系统？或许你所选的游戏版本不受其支持。
     vanilla:
-      label: 不安装模组平台
+      label: 不安装模组系统
       sub: 你将无法安装模组，但仍能使用资源包和数据包等内容。
     fabric:
       label: 使用 Fabric
-      sub: 设置并安装 Fabric 模组平台，这可以支持 Fabric 模组。
+      sub: 快速、轻便、模块化，当下最流行的模组系统。仅支持专用的 Fabric 模组。
+    quilt:
+      label: 使用 Quilt
+      sub: 基于 Fabric 的改进版。能支持 Quilt 模组和相当一部分 Fabric 模组（但不是全部）。
 
   fabric-version:
     title: Fabric 版本号

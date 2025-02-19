@@ -59,6 +59,9 @@ create-game:
     fabric:
       label: Fabric
       sub: Play Fabric mods. Powered by the Fabric loader.
+    quilt:
+      label: Quilt
+      sub: Play Quilt mods and most (but not all) Fabric mods. Powered by the Quilt loader.
 
   fabric-version:
     title: Fabric Version

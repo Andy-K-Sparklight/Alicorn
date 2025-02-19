@@ -1,6 +1,7 @@
 import { containers } from "@/main/container/manage";
 import { games } from "@/main/game/manage";
 import { fabricInstaller } from "@/main/install/fabric";
+import { quiltInstaller } from "@/main/install/quilt";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { ipcMain } from "@/main/ipc/typed";
 import { jrt } from "@/main/jrt/install";
@@ -60,6 +61,18 @@ ipcMain.on("installGame", async (e, gameId) => {
                 p = await profileLoader.fromContainer(fid, c);
                 break;
             }
+
+            case "quilt": {
+                const qid = await quiltInstaller.retrieveProfile(
+                    gameVersion,
+                    game.installProps.loaderVersion,
+                    c,
+                    { onProgress }
+                );
+                p = await profileLoader.fromContainer(qid, c);
+                break;
+            }
+
         }
 
         game.launchHint.profileId = p.id;
@@ -90,10 +103,20 @@ ipcMain.on("installGame", async (e, gameId) => {
 ipcMain.handle("queryAvailableModLoaders", async (_, gameVersion) => {
     const supported: string[] = [];
 
-    const fabricVersions = await fabricInstaller.getAvailableGameVersions();
+    const [
+        fabricVersions,
+        quiltVersions
+    ] = await Promise.all([
+        fabricInstaller.getAvailableGameVersions(),
+        quiltInstaller.getAvailableGameVersions()
+    ]);
 
     if (fabricVersions.includes(gameVersion)) {
         supported.push("fabric");
+    }
+
+    if (quiltVersions.includes(gameVersion)) {
+        supported.push("quilt");
     }
 
     // TODO add other mod loaders

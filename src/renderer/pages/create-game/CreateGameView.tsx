@@ -66,8 +66,9 @@ export function CreateGameView() {
                     gameVersion
                 };
             case "fabric":
+            case "quilt":
                 return {
-                    type: "fabric",
+                    type: installType,
                     gameVersion,
                     loaderVersion: fabricVersion
                 };
@@ -257,7 +258,7 @@ function ModLoaderSelector({ availableModLoaders, value, onChange }: ModLoaderSe
         >
             {
                 availableModLoaders ?
-                    ["vanilla", "fabric"].map(lv => {
+                    ["vanilla", "fabric", "quilt"].map(lv => {
                         if (!loaders.includes(lv)) return null;
 
                         return <Radio key={lv} value={lv} description={t(`${lv}.sub`)}>

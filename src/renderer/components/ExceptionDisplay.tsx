@@ -20,7 +20,13 @@ export function ExceptionDisplay() {
             e = ev.reason;
         }
 
+        console.error("Received error event:");
+        console.error(e);
+
         e = restoreError(e);
+
+        console.log("Restored error");
+        console.log(e);
 
         // For cancellation, we only show a toast
         if (isKnownException(e) && (e as ExceptionProps<any>).type === "cancelled" || String(e).includes("AbortError")) {
@@ -71,13 +77,13 @@ export function ExceptionDisplay() {
                 {t("title")}
             </ModalHeader>
             <ModalBody>
+                <p className="whitespace-pre-line">
+                    {t(`types.${type}`, { ...detail })}
+                </p>
+
                 {
                     !!detail.error &&
                     <>
-                        <p className="whitespace-pre-line">
-                            {t(`types.${type}`, { ...detail })}
-                        </p>
-
                         <div className="text-sm mt-2 text-foreground-400">{t("detail")}</div>
 
                         <div className="p-4 rounded-2xl border-solid border-2 border-danger text-sm">
@@ -109,8 +115,6 @@ function isKnownException(e: unknown): boolean {
 function restoreError(e: unknown) {
     try {
         const se = String(e);
-        console.log("Stringify: ");
-        console.log(se);
 
         // Restore the error previously serialized
         if (se.includes("\0\0\0")) {

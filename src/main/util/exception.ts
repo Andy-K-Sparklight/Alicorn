@@ -6,6 +6,7 @@ export type ExceptionType = {
     download: { url: string }
     auth: {}
     "fabric-no-version": { gameVersion: string }
+    "quilt-no-version": { gameVersion: string }
     "profile-link": { id: string }
     "jrt-not-available": { component: string }
     "jrt-not-verified": { bin: string }

@@ -65,7 +65,7 @@ export type GameInstallProps =
         gameVersion: string;
     } |
     {
-        type: "fabric";
+        type: "fabric" | "quilt";
         gameVersion: string;
         loaderVersion: string;
     }

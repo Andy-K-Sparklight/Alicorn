@@ -18,7 +18,8 @@ export type ProgressStateName =
     "vanilla.download-asset-index" |
     "vanilla.download-assets" |
     "vanilla.link-assets" |
-    "fabric.resolve"
+    "fabric.resolve" |
+    "quilt.resolve"
 
 /**
  * Interface describing generic progress.

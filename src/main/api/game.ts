@@ -67,8 +67,8 @@ ipcMain.handle("addGame", async (_, init) => {
         "old_beta": "vanilla-old-beta"
     } as const)[p.type] ?? "unknown";
 
-    if (installProps.type === "fabric") {
-        type = "fabric";
+    if (installProps.type === "fabric" || installProps.type === "quilt") {
+        type = installProps.type;
     }
 
     let accountId = "";
