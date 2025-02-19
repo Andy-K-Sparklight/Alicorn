@@ -138,11 +138,9 @@ const DEFAULT_CONFIG = {
             bench: true,
 
             /**
-             * The preferred mirror.
-             *
-             * This option can be changed when benching.
+             * Mirrors in use.
              */
-            prefer: "vanilla"
+            picked: [] as string[]
         },
 
         /**

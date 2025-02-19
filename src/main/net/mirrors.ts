@@ -4,20 +4,53 @@ import { net } from "electron";
 
 interface Mirror {
     name: string;
-    test: string;
+    test?: {
+        url: string;
+        challenge: string;
+    };
 
     apply(origin: string): string;
 }
 
 const vanilla = {
     name: "vanilla",
-    test: "https://libraries.minecraft.net/com/google/guava/guava/21.0/guava-21.0.jar",
+    test: undefined,
     apply: o => o
 } satisfies Mirror;
 
+const aliyun = {
+    name: "aliyun",
+    test: {
+        url: "https://maven.aliyun.com/nexus/content/groups/public/com/google/guava/guava/21.0/guava-21.0.jar",
+        challenge: "https://libraries.minecraft.net/com/google/guava/guava/21.0/guava-21.0.jar"
+    },
+
+    apply(origin: string): string {
+        const u = URL.parse(origin);
+        if (!u) return origin;
+
+        if (u.host === "repo1.maven.org" && u.pathname.startsWith("/maven2")) {
+            u.host = "maven.aliyun.com";
+            u.pathname = "/nexus/content/groups/public" + u.pathname.slice("/maven2".length);
+        }
+
+        // It's not surprising that most libraries that the game / loaders use can be found in the central repo
+        // This shall reduce the number of requests to other mirrors
+        if (["maven.minecraftforge.net", "libraries.minecraft.net", "maven.fabricmc.net"].includes(u.host)) {
+            u.host = "maven.aliyun.com";
+            u.pathname = "/nexus/content/groups/public" + u.pathname;
+        }
+
+        return u.toString();
+    }
+};
+
 const bmclapi = import.meta.env.AL_ENABLE_BMCLAPI && {
     name: "bmclapi",
-    test: "https://bmclapi2.bangbang93.com/maven/com/google/guava/guava/21.0/guava-21.0.jar",
+    test: {
+        url: "https://bmclapi2.bangbang93.com/maven/com/google/guava/guava/21.0/guava-21.0.jar",
+        challenge: "https://libraries.minecraft.net/com/google/guava/guava/21.0/guava-21.0.jar"
+    },
     apply(origin: string): string {
         const u = URL.parse(origin);
         if (!u) return origin; // Possibly malformed URL
@@ -26,6 +59,7 @@ const bmclapi = import.meta.env.AL_ENABLE_BMCLAPI && {
             u.host = "bmclapi2.bangbang93.com";
         }
 
+        // We're not including Quilt here as it seems not included
         if (["maven.minecraftforge.net", "libraries.minecraft.net", "maven.fabricmc.net"].includes(u.host)) {
             u.host = "bmclapi2.bangbang93.com";
             u.pathname = "/maven" + u.pathname;
@@ -54,50 +88,51 @@ const bmclapi = import.meta.env.AL_ENABLE_BMCLAPI && {
     }
 } satisfies Mirror;
 
-const mirrorList = [bmclapi, vanilla].filter(isTruthy);
+const mirrorList = [aliyun, bmclapi, vanilla].filter(isTruthy);
 
-let activeMirrors: Mirror[];
-
-function setInitialMirrors() {
-    if (!activeMirrors) {
-        const preferMirror = mirrorList.find(m => m.name === conf().net.mirror.prefer);
-        activeMirrors = [...new Set([preferMirror, ...mirrorList].filter(isTruthy))];
-    }
+function getMirrors() {
+    return mirrorList.filter(m => conf().net.mirror.picked.includes(m.name) || m.name === "vanilla");
 }
 
 function apply(url: string): string[] {
-    setInitialMirrors();
-    const sources = [...activeMirrors.map(m => m.apply(url)), url];
+    const sources = [...getMirrors().map(m => m.apply(url)), url];
     return [...new Set(sources)];
 }
 
 async function bench(): Promise<void> {
-    setInitialMirrors();
-
-    const mirrors = [bmclapi, vanilla].filter(isTruthy);
-
-    if (mirrors.length < 2 || !conf().net.mirror.bench) {
+    if (!conf().net.mirror.bench || mirrorList.length < 2) {
         return;
     }
 
-    const speed: [Mirror, number][] = [];
-    for (const m of mirrors) {
-        console.log(`Testing URL: ${m.test}`);
-        const s = await testMirrorSpeed(m.test);
-        console.log(`Estimated speed: ${s} (KB/s)`);
-        speed.push([m, s]);
+    const enabledMirrors: string[] = [];
+
+    for (const m of mirrorList) {
+        if (m.test) {
+            const s1 = await testSpeed(m.test.url);
+            const s2 = await testSpeed(m.test.challenge);
+
+            if (s1 <= s2) {
+                // The mirror is not faster, ignore it
+                continue;
+            }
+        }
+
+        console.log(`Enabling mirror: ${m.name}`);
+        enabledMirrors.push(m.name);
     }
-    speed.sort((a, b) => b[1] - a[1]);
-    activeMirrors = speed.map(it => it[0]);
-    conf.alter(c => c.net.mirror.prefer = activeMirrors[0].name);
+
+    conf.alter(c => c.net.mirror.picked = enabledMirrors);
 }
 
-async function testMirrorSpeed(url: string): Promise<number> {
+async function testSpeed(url: string): Promise<number> {
+    console.log(`Testing URL: ${url}`);
     const t = Date.now();
-    const res = await net.fetch(url, { cache: "no-cache" });
+    const res = await net.fetch(url, { cache: "reload" });
     if (!res.ok) return -1;
     const arr = await res.arrayBuffer();
-    return arr.byteLength / (Date.now() - t);
+    const speed = arr.byteLength / (Date.now() - t);
+    console.log(`Estimated speed: ${speed} (KB/s)`);
+    return speed;
 }
 
 export const mirror = {
