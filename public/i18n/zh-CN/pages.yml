@@ -232,6 +232,10 @@ settings:
         sub: |-
           自动获取和安装可用的更新。
           更新包很小，这通常不会影响游戏下载和运行。
+      rerun-setup:
+        title: 重新开始
+        sub: 重新执行首次启动 Alicorn 时的引导程序。
+        action: 立即重新开始
 
       zoom:
         title: 界面缩放

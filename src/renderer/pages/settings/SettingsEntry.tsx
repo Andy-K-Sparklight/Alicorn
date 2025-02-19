@@ -59,6 +59,23 @@ export function DirEntry({ id, icon, value, onChange }: SettingsEntryProps<strin
     </div>;
 }
 
+interface ActionEntryProps {
+    id: string;
+    icon?: React.ComponentType;
+    onClick: () => void;
+}
+
+export function ActionEntry({ id, icon, onClick }: ActionEntryProps) {
+    const { t } = useEntriesTrans();
+
+    return <div className="flex flex-col gap-2 w-full">
+        <EntryLabel id={id} icon={icon}/>
+        <div>
+            <Button onPress={() => onClick()}>{t(`${id}.action`)}</Button>
+        </div>
+    </div>;
+}
+
 type NumberTuningEntryProps = SettingsEntryProps<number> & {
     max: number;
     min: number;
@@ -81,7 +98,7 @@ export function NumberTuningEntry({ id, icon, value, onChange, max, min, step, t
         }
     }
 
-    return <div className="flex flex-col gap-4 w-full">
+    return <div className="flex flex-col gap-2 w-full">
         <EntryLabel id={id} icon={icon}/>
 
         <div className="flex gap-4 items-center">
@@ -138,7 +155,6 @@ export function OnOffEntry({ id, icon, value, onChange }: SettingsEntryProps<boo
         </div>
     </div>;
 }
-
 
 type SelectEntryProps<T> = SettingsEntryProps<T> & { items: T[] }
 

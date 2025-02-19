@@ -233,6 +233,10 @@ settings:
         sub: |-
           Fetches and installs updates available.
           This should not affect game launching.
+      rerun-setup:
+        title: Re-run Setup Program
+        sub: Re-run the setup program at the first time running Alicorn.
+        action: Re-run Now
 
       zoom:
         title: Zoom Factor

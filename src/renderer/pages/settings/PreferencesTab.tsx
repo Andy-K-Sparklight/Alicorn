@@ -1,9 +1,10 @@
 import { i18n } from "@/renderer/i18n/i18n";
 import { useConfig } from "@/renderer/services/conf";
 import { themeManager, useTheme } from "@/renderer/theme";
+import { useNav } from "@/renderer/util/nav";
 import { Divider } from "@heroui/react";
-import { NumberTuningEntry, OnOffEntry, SelectEntry, TextEntry } from "@pages/settings/SettingsEntry";
-import { FileUserIcon, HardDriveUploadIcon, LanguagesIcon, PaletteIcon, ZoomInIcon } from "lucide-react";
+import { ActionEntry, NumberTuningEntry, OnOffEntry, SelectEntry, TextEntry } from "@pages/settings/SettingsEntry";
+import { FileUserIcon, HardDriveUploadIcon, LanguagesIcon, PaletteIcon, UserCogIcon, ZoomInIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -16,7 +17,14 @@ export function PreferencesTab() {
     const { theme, setTheme } = useTheme();
     const { i18n: i18next } = useTranslation();
 
+    const nav = useNav();
+
     if (!config) return null;
+
+    function rerunSetup() {
+        localStorage.removeItem("setup.done");
+        nav("/setup");
+    }
 
     return <>
         <TextEntry
@@ -70,5 +78,10 @@ export function PreferencesTab() {
             value={config.app.hotUpdate}
             onChange={v => alterConfig(c => c.app.hotUpdate = v)}
         />
+
+
+        <Divider/>
+
+        <ActionEntry id="pref.rerun-setup" icon={UserCogIcon} onClick={rerunSetup}/>
     </>;
 }
