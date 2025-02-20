@@ -10,7 +10,6 @@ import { isTruthy } from "@/main/util/misc";
 import { progress, type ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
 import path from "node:path";
-import pLimit from "p-limit";
 
 export interface DlxDownloadRequest {
     url: string;
@@ -58,9 +57,7 @@ async function getAll(req: DlxDownloadRequest[], control?: ProgressController): 
         validate: conf().net.validate
     }));
 
-    console.debug(`Using concurrency level ${conf().net.concurrency}`);
-    let limit = pLimit(conf().net.concurrency);
-    const promises = nextTasks.map(t => limit(() => nextdl.get(t)));
+    const promises = nextTasks.map(t => nextdl.get(t));
 
     try {
         await Promise.all(progress.countPromises(

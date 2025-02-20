@@ -26,8 +26,8 @@ export function NetworkTab() {
             icon={ArrowLeftRightIcon}
             id="network.concurrency"
             value={config.net.concurrency}
-            max={32}
-            min={1}
+            max={128}
+            min={4}
             onChange={v => alterConfig(c => c.net.concurrency = v)}
         />
 

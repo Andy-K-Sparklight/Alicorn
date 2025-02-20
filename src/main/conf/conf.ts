@@ -66,7 +66,7 @@ const DEFAULT_CONFIG = {
         /**
          * The maximum concurrency.
          */
-        concurrency: 16,
+        concurrency: 32,
 
         /**
          * Maximum tries for each download task.

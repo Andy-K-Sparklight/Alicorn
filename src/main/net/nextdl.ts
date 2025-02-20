@@ -10,17 +10,11 @@ import { hash } from "@/main/security/hash";
 import { exceptions } from "@/main/util/exception";
 import { isTruthy } from "@/main/util/misc";
 import { net } from "electron";
+import Emittery from "emittery";
 import fs from "fs-extra";
 import path from "node:path";
 import { Stream } from "node:stream";
-
-export enum NextDownloadStatus {
-    PENDING,
-    RETRIEVING,
-    VALIDATING,
-    DONE,
-    FAILED
-}
+import { pEvent } from "p-event";
 
 /**
  * A network-level download request for fetching the given resources and save them to the given path.
@@ -34,11 +28,12 @@ export interface NextDownloadRequest extends DlxDownloadRequest {
 
 export interface NextDownloadTask {
     req: NextDownloadRequest;
-    status: NextDownloadStatus;
     signal?: AbortSignal;
+    emitter: Emittery;
 
     // The current active URL
     activeURL: string;
+    tries: number;
 }
 
 /**
@@ -50,38 +45,68 @@ enum NextRequestStatus {
     FATAL
 }
 
+const pendingTasks: NextDownloadTask[] = [];
+const runningTasks = new Set<NextDownloadTask>();
+
 /**
  * Resolves the download task for the maximum number of tries specified.
  */
 async function get(req: NextDownloadRequest): Promise<void> {
     const task = createTask(req);
+    pendingTasks.push(task);
+    pollTasks();
 
-    console.debug(`NextDL Get: ${task.req.origin}`);
+    await pEvent(task.emitter, "finish");
+}
 
-    for (const url of task.req.urls) {
-        let tries = conf().net.tries;
+function pollTasks() {
+    while (runningTasks.size < conf().net.concurrency) {
+        const t = pendingTasks.shift();
+        if (!t) break;
+
+        runningTasks.add(t);
+        beginWork(t).then(pollTasks);
+    }
+}
+
+async function beginWork(task: NextDownloadTask) {
+    if (task.tries >= conf().net.tries) {
+        // Choose the next URL
+        const url = task.req.urls.shift();
+        if (!url) {
+            // Failed
+            console.warn(`NextDL Err: ${task.req.origin}`);
+            const ex = exceptions.create("download", { url: task.req.origin });
+            void task.emitter.emit("error", ex);
+            return;
+        }
 
         task.activeURL = url;
-
-        while (tries > 0) {
-            const st = await resolveOnce(task);
-            if (st === NextRequestStatus.FATAL) {
-                tries = 0;
-            }
-            if (st === NextRequestStatus.SUCCESS) {
-                console.debug(`NextDL Got: ${task.req.origin} (Using ${task.activeURL})`);
-                task.status = NextDownloadStatus.DONE;
-                return;
-            }
-
-            tries--;
-        }
+    } else {
+        task.tries++;
     }
 
-    console.debug(`NextDL Err: ${task.req.origin}`);
-    task.status = NextDownloadStatus.FAILED;
+    console.debug(`NextDL Get: ${task.req.origin} (Using ${task.activeURL})`);
 
-    throw exceptions.create("download", { url: task.req.origin });
+    const st = await resolveOnce(task);
+
+    runningTasks.delete(task);
+
+    if (st === NextRequestStatus.SUCCESS) {
+        // Resolved
+        console.debug(`NextDL Got: ${task.req.origin} (Using ${task.activeURL})`);
+        void task.emitter.emit("finish");
+        return;
+    } else if (st === NextRequestStatus.FATAL) {
+        // Skip the tries
+        console.debug(`NextDL Ign: ${task.req.origin} (Skipping ${task.activeURL})`);
+        task.tries = Number.MAX_SAFE_INTEGER;
+    } else {
+        console.debug(`NextDL Try: ${task.req.origin} (Tried ${task.activeURL}, ${task.tries}x)`);
+    }
+
+    // Add the task to the pending queue
+    pendingTasks.push(task);
 }
 
 /**
@@ -90,12 +115,10 @@ async function get(req: NextDownloadRequest): Promise<void> {
 async function resolveOnce(task: NextDownloadTask): Promise<NextRequestStatus> {
     if (task.signal?.aborted) return NextRequestStatus.FATAL;
 
-    task.status = NextDownloadStatus.RETRIEVING;
     const res = await retrieve(task);
 
     if (res === NextRequestStatus.SUCCESS) {
         if (task.req.validate && task.req.sha1) {
-            task.status = NextDownloadStatus.VALIDATING;
 
             return await hash.checkFile(task.req.path, "sha1", task.req.sha1) ? NextRequestStatus.SUCCESS : NextRequestStatus.RETRY;
         } else {
@@ -119,7 +142,8 @@ function createTask(req: NextDownloadRequest): NextDownloadTask {
         },
         activeURL: req.urls[0],
         signal: req.signal,
-        status: NextDownloadStatus.PENDING
+        emitter: new Emittery(),
+        tries: 0
     };
 }
 
@@ -129,17 +153,27 @@ function createTask(req: NextDownloadRequest): NextDownloadTask {
 async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
     const { requestTimeout, minSpeed } = conf().net;
 
-    const timeoutSignal = requestTimeout > 0 ? AbortSignal.timeout(requestTimeout) : null;
+    const ac = new AbortController();
 
-    const signal = AbortSignal.any([task.signal, timeoutSignal].filter(isTruthy));
+    const signal = AbortSignal.any([task.signal, ac.signal].filter(isTruthy));
 
     let res: Response | null = null;
+
+    const timer = requestTimeout > 0 && setTimeout(() => {
+        if (!res) { // Avoid aborting the request too early
+            ac.abort("Request timed out");
+        }
+    }, requestTimeout);
 
     try {
         res = await net.fetch(task.activeURL, {
             credentials: "omit",
             signal
         });
+
+        if (timer) {
+            clearTimeout(timer);
+        }
 
         if (!res.ok || !res.body) {
             if (res.status >= 400 && res.status < 500) {
