@@ -37,6 +37,22 @@ async function patchComplianceLevel(src: Record<string, unknown>) {
     src.complianceLevel = level;
 }
 
+/**
+ * Patches `javaVersion` property in-place.
+ */
+async function patchJRTVersion(src: Record<string, unknown>) {
+    if ("javaVersion" in src) return;
+
+    if ("id" in src && typeof src["id"] === "string") {
+        const jrtVersions = await unwrapESM(import("@/refs/jrt-versions.json"));
+        for (const [k, v] of Object.entries(jrtVersions)) {
+            if (Array.isArray(v) && v.includes(src.id)) {
+                src["javaVersion"] = { component: k };
+                return;
+            }
+        }
+    }
+}
 
 /**
  * Transforms legacy profile into standard profile if applicable.
@@ -61,6 +77,7 @@ async function transformLegacy(src: Record<string, unknown>): Promise<void> {
  */
 export async function patchProfile(src: Record<string, unknown>): Promise<void> {
     await patchComplianceLevel(src);
+    await patchJRTVersion(src);
     await transformLegacy(src);
 
     if ("libraries" in src && Array.isArray(src["libraries"])) {
