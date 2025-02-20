@@ -14,8 +14,6 @@ progress:
     download: Downloading Java Files {{current}} / {{total}}
     unpack: Unpacking Java Files {{current}} / {{total}}
     verify: Verifying Java Installation
-  cache:
-    compact-link: Compacting {{current}} / {{total}}
   vanilla:
     resolve: Resolving Version Profile
     download-libs: Downloading Libraries {{current}} / {{total}}

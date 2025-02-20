@@ -272,20 +272,12 @@ settings:
           此选项对所有游戏生效。若要配置特定的游戏，请转到其设置页面。
 
     network:
-      aria2:
-        title: aria2 下载器
-        sub: |-
-          启用此选项以自动使用随附或系统中的 aria2 以改进下载性能。
-          若禁用，Alicorn 将使用内置的下载程序。
       concurrency:
         title: 并行数
         sub: 最多可同时下载的任务个数。
       mirror:
         title: 镜像
         sub: 使用可用的镜像以加快下载速度。
-      aria2-args:
-        title: aria2 启动选项
-        sub: 在启动 aria2 时添加以下命令行选项。
       validate:
         title: 下载后验证
         sub: 在下载后验证文件完整性。
@@ -341,11 +333,6 @@ about:
     bmclapi:
       name: BMCLAPI 镜像加速
       tip: 在可用时使用 BMCLAPI 加速下载。
-    aria2:
-      name: aria2 下载工具
-      tip: |-
-        使用随附的 aria2 进行下载。
-        未携带 aria2 的 Alicorn 会使用系统中安装的 aria2。
     lzma-native:
       name: LZMA 原生库
       tip: |-

@@ -273,20 +273,12 @@ settings:
           Applies to all games. To configure certain game, use its option tab.
 
     network:
-      aria2:
-        title: aria2
-        sub: |-
-          Use aria2 to improve download performance.
-          Default downloader will be used if disabled.
       concurrency:
         title: Concurrency
         sub: Max number of parallel tasks.
       mirror:
         title: Mirror
         sub: Pick up available mirrors.
-      aria2-args:
-        title: Startup Arguments for aria2
-        sub: Arguments appended when aria2 starts up.
       validate:
         title: Validate Files
         sub: Check file integrity after download.
@@ -342,11 +334,6 @@ about:
     bmclapi:
       name: BMCLAPI
       tip: Add BMCLAPI as alternative mirror.
-    aria2:
-      name: Bundled aria2
-      tip: |-
-        Pick up bundled aria2 binary.
-        aria2 installed in the system will be picked up anyway.
     lzma-native:
       name: Native LZMA Library
       tip: |-

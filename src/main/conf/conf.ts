@@ -59,13 +59,6 @@ const DEFAULT_CONFIG = {
      */
     net: {
         /**
-         * The preferred downloader.
-         *
-         * Values: aria2, next
-         */
-        downloader: "aria2",
-
-        /**
          * Whether to validate files after download.
          */
         validate: true,
@@ -76,52 +69,19 @@ const DEFAULT_CONFIG = {
         concurrency: 16,
 
         /**
-         * Options for aria2.
+         * Maximum tries for each download task.
          */
-        aria2: {
-            /**
-             * Maximum tries for each download task.
-             */
-            tries: 3,
-
-            /**
-             * Extra arguments passed to aria2c during startup.
-             *
-             * Values are separated by line breaks.
-             */
-            args: [] as string[],
-
-            /**
-             * Maximum wait time (sec) before aborting a request. 0 or negative values are not accepted.
-             */
-            requestTimeout: 5,
-
-            /**
-             * Maximum wait time (sec) when the stream is halted (i.e. no bytes are transferred) before aborting
-             * the download.
-             */
-            transferTimeout: 10
-        },
+        tries: 3,
 
         /**
-         * Options for the next downloader.
+         * Maximum wait time (ms) before aborting a request. 0 or negative value indicates infinite wait time.
          */
-        next: {
-            /**
-             * Maximum tries for each download task.
-             */
-            tries: 3,
+        requestTimeout: 5000,
 
-            /**
-             * Maximum wait time (ms) before aborting a request. 0 or negative value indicates infinite wait time.
-             */
-            requestTimeout: 5000,
-
-            /**
-             * Minimum acceptable transfer speed when downloading files.
-             */
-            minSpeed: 64 * 1024
-        },
+        /**
+         * Minimum acceptable transfer speed when downloading files.
+         */
+        minSpeed: 64 * 1024,
 
         /**
          * Mirror related operations.

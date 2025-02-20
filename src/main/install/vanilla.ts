@@ -1,4 +1,3 @@
-import { cache } from "@/main/cache/cache";
 import type { Container } from "@/main/container/spec";
 import { nativesLint } from "@/main/install/natives-lint";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
@@ -10,9 +9,11 @@ import { filterRules } from "@/main/profile/rules";
 import type { AssetIndex, VersionProfile } from "@/main/profile/version-profile";
 import { exceptions } from "@/main/util/exception";
 import { i18nMain } from "@/main/util/i18n";
-import { progress, type ProgressController, type ProgressHandler } from "@/main/util/progress";
+import { progress, type ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
+import os from "node:os";
 import path from "node:path";
+import pLimit from "p-limit";
 
 const VERSION_MANIFEST = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
 
@@ -177,10 +178,6 @@ async function installLibraries(
 
     await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "vanilla.download-libs") });
 
-    if (shouldLink) {
-        await linkTasks(tasks, onProgress);
-    }
-
     onProgress?.(progress.indefinite("vanilla.unpack-libs"));
 
     await nativesLint.unpack(profile, container, features);
@@ -242,26 +239,28 @@ async function installAssets(
 
     await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "vanilla.download-assets") });
 
-    if (shouldLink) {
-        await linkTasks(tasks, onProgress);
+    if (await profileLoader.isLegacyAssets(profile.assets)) {
+        console.debug(`Linking ${objects.length} assets...`);
+
+        const limit = pLimit(os.availableParallelism());
+
+        await Promise.all(progress.countPromises(
+            objects.map(([name, { hash }]) =>
+                limit(async () => {
+                    const src = container.asset(hash);
+                    const dst = container.assetLegacy(profile.assetIndex.id, name);
+                    await makeAssetLink(src, dst);
+
+                    if (assetIndex.map_to_resources) {
+                        // Also link to the resources dir
+                        const dst = container.assetMapped(name);
+                        await makeAssetLink(src, dst);
+                    }
+                })
+            ),
+            progress.makeNamed(onProgress, "vanilla.link-assets")
+        ));
     }
-
-    console.debug(`Linking ${objects.length} assets...`);
-
-    await Promise.all(progress.countPromises(
-        objects.map(async ([name, { hash }]) => {
-            const src = container.asset(hash);
-            const dst = container.assetLegacy(profile.assetIndex.id, name);
-            await makeAssetLink(src, dst);
-
-            if (assetIndex.map_to_resources) {
-                // Also link to the resources dir
-                const dst = container.assetMapped(name);
-                await makeAssetLink(src, dst);
-            }
-        }),
-        progress.makeNamed(onProgress, "vanilla.link-assets")
-    ));
 }
 
 /**
@@ -288,20 +287,17 @@ async function emitOptions(container: Container) {
  * Link game assets for legacy versions. Assets are always linked regardless of the `link` flag.
  */
 async function makeAssetLink(src: string, dst: string) {
+    try {
+        // Skip the target file, if it exists (it was previously linked by Alicorn, or managed externally)
+        await fs.access(dst);
+        return;
+    } catch {}
+
+    console.debug(`Linking asset ${src} -> ${dst}.`);
+
     await fs.ensureDir(path.dirname(dst));
     await fs.remove(dst); // This is required for updating links
     await fs.link(src, dst);
-    console.debug(`Linking asset ${src} -> ${dst}`);
-}
-
-/**
- * Utility function to link all downloaded files from the task set.
- */
-async function linkTasks(tasks: DlxDownloadRequest[], onProgress?: ProgressHandler): Promise<void> {
-    await Promise.all(progress.countPromises(
-        tasks.map(t => cache.link(t.path, t.sha1)),
-        progress.makeNamed(onProgress, "cache.compact-link")
-    ));
 }
 
 export const vanillaInstaller = {

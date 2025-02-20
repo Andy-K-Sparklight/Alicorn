@@ -14,8 +14,6 @@ progress:
     download: 正在下载 Java 运行环境：{{current}} / {{total}}
     unpack: 正在解包 Java 运行环境：{{current}} / {{total}}
     verify: 正在验证 Java 安装
-  cache:
-    compact-link: 正在合并文件：{{current}} / {{total}}
   vanilla:
     resolve: 正在获取版本信息
     download-libs: 正在下载运行库：{{current}} / {{total}}

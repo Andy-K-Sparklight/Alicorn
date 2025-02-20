@@ -6,7 +6,6 @@ function genBuildDefines(config: BuildConfig) {
     const {
         enableBMCLAPI,
         enableNativeLZMA,
-        enableBundledAria2,
         devServerPort,
         variant: { mode, platform, arch }
     } = config;
@@ -25,8 +24,7 @@ function genBuildDefines(config: BuildConfig) {
         AL_ARCH: arch,
         AL_ENABLE_BMCLAPI: enableBMCLAPI,
         AL_DEV_SERVER_PORT: devServerPort,
-        AL_ENABLE_NATIVE_LZMA: enableNativeLZMA,
-        AL_ENABLE_BUNDLED_ARIA2: enableBundledAria2
+        AL_ENABLE_NATIVE_LZMA: enableNativeLZMA
     };
 }
 

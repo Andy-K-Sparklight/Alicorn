@@ -1,7 +1,6 @@
 import { conf } from "@/main/conf/conf";
 import { paths } from "@/main/fs/paths";
 import { vanillaInstaller } from "@/main/install/vanilla";
-import { aria2 } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
 import { registry } from "@/main/registry/registry";
 import { getOSName } from "@/main/sys/os";
@@ -88,7 +87,6 @@ async function main() {
     setAutoSave();
 
     const tasks = [
-        conf().net.downloader === "aria2" && aria2.init(),
         mirror.bench(),
         vanillaInstaller.prefetch()
     ].filter(Boolean);
@@ -282,7 +280,6 @@ async function shutdownApp() {
 
     clearInterval(autoSaveInterval);
     await saveContents();
-    aria2.shutdown();
 
     console.log("Exiting.");
     app.quit();

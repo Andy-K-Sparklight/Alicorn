@@ -4,15 +4,13 @@
  * Comparing to the wrapped downloader, the next downloader runs on the main process and utilizes the net module from
  * Electron. This is expected to bypass the connection limit in the browser window and maximize the throughput.
  */
-import { cache } from "@/main/cache/cache";
 import { conf } from "@/main/conf/conf";
-import { dlchk } from "@/main/net/dlchk";
 import type { DlxDownloadRequest } from "@/main/net/dlx";
+import { hash } from "@/main/security/hash";
 import { exceptions } from "@/main/util/exception";
 import { isTruthy } from "@/main/util/misc";
 import { net } from "electron";
 import fs from "fs-extra";
-import { nanoid } from "nanoid";
 import path from "node:path";
 import { Stream } from "node:stream";
 
@@ -30,11 +28,11 @@ export enum NextDownloadStatus {
 export interface NextDownloadRequest extends DlxDownloadRequest {
     urls: string[];
     origin: string;
+    validate?: boolean;
     signal?: AbortSignal;
 }
 
 export interface NextDownloadTask {
-    id: string;
     req: NextDownloadRequest;
     status: NextDownloadStatus;
     signal?: AbortSignal;
@@ -60,25 +58,8 @@ async function get(req: NextDownloadRequest): Promise<void> {
 
     console.debug(`NextDL Get: ${task.req.origin}`);
 
-    // First try to reuse existing files
-    if (task.req.sha1 && !task.req.noCache) {
-        await cache.deploy(task.req.path, task.req.sha1, !!task.req.fastLink);
-    }
-
-    // Preflight validate
-    // For files that cannot be validated, re-downloading is suggested and therefore not skipped
-    const valid = await dlchk.validate({ ...task.req }) === "checked";
-
-    if (valid) {
-        console.debug(`NextDL Hit: ${task.req.origin}`);
-        task.status = NextDownloadStatus.DONE;
-        return;
-    }
-
-    task.req.signal?.throwIfAborted();
-
     for (const url of task.req.urls) {
-        let tries = conf().net.next.tries;
+        let tries = conf().net.tries;
 
         task.activeURL = url;
 
@@ -90,12 +71,6 @@ async function get(req: NextDownloadRequest): Promise<void> {
             if (st === NextRequestStatus.SUCCESS) {
                 console.debug(`NextDL Got: ${task.req.origin} (Using ${task.activeURL})`);
                 task.status = NextDownloadStatus.DONE;
-
-                if (!task.req.noCache) {
-                    // Add file for reusing
-                    await cache.enroll(task.req.path, task.req.sha1);
-                }
-
                 return;
             }
 
@@ -119,12 +94,10 @@ async function resolveOnce(task: NextDownloadTask): Promise<NextRequestStatus> {
     const res = await retrieve(task);
 
     if (res === NextRequestStatus.SUCCESS) {
-        if (conf().net.validate) {
+        if (task.req.validate && task.req.sha1) {
             task.status = NextDownloadStatus.VALIDATING;
-            // Here we accept both 'checked' and 'unknown'
-            // As we have no clue to reject a file when we cannot determine it's corrupted
-            const valid = await dlchk.validate({ ...task.req }) !== "failed";
-            return valid ? NextRequestStatus.SUCCESS : NextRequestStatus.RETRY;
+
+            return await hash.checkFile(task.req.path, "sha1", task.req.sha1) ? NextRequestStatus.SUCCESS : NextRequestStatus.RETRY;
         } else {
             return NextRequestStatus.SUCCESS;
         }
@@ -140,7 +113,6 @@ function createTask(req: NextDownloadRequest): NextDownloadTask {
     if (req.urls.length === 0) throw "No URL specified";
 
     return {
-        id: nanoid(),
         req: {
             ...req,
             path: path.resolve(req.path)
@@ -155,9 +127,7 @@ function createTask(req: NextDownloadRequest): NextDownloadTask {
  * Starts a request to the task URL and tries to fetch its content.
  */
 async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
-    console.debug(`Get: ${task.activeURL}`);
-
-    const { requestTimeout, minSpeed } = conf().net.next;
+    const { requestTimeout, minSpeed } = conf().net;
 
     const timeoutSignal = requestTimeout > 0 ? AbortSignal.timeout(requestTimeout) : null;
 
@@ -168,7 +138,6 @@ async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
     try {
         res = await net.fetch(task.activeURL, {
             credentials: "omit",
-            keepalive: true,
             signal
         });
 
