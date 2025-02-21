@@ -33,7 +33,7 @@ export function CreateGameView() {
     const [assetsLevel, setAssetsLevel] = useState<"full" | "video-only">("full");
 
     const [installType, setInstallType] = useState<string>("vanilla");
-    const [fabricVersion, setFabricVersion] = useState<string>("");
+    const [fabricOrQuiltVersion, setFabricOrQuiltVersion] = useState<string>("");
 
     const [creating, setCreating] = useState(false);
     const nav = useNav();
@@ -68,7 +68,7 @@ export function CreateGameView() {
                 return {
                     type: installType,
                     gameVersion,
-                    loaderVersion: fabricVersion
+                    loaderVersion: fabricOrQuiltVersion
                 };
         }
 
@@ -218,8 +218,10 @@ export function CreateGameView() {
                     />
 
                     {
-                        installType === "fabric" &&
-                        <FabricVersionSelector value={fabricVersion} onChange={setFabricVersion}/>
+                        (installType === "fabric" || installType === "quilt") &&
+                        <FabricOrQuiltVersionSelector
+                            type={installType} value={fabricOrQuiltVersion} onChange={setFabricOrQuiltVersion}
+                        />
                     }
                 </div>
 
@@ -280,12 +282,13 @@ function ModLoaderSelector({ availableModLoaders, value, onChange }: ModLoaderSe
 }
 
 interface FabricVersionSelectorProps {
+    type: "fabric" | "quilt";
     value: string;
     onChange: (v: string) => void;
 }
 
-function FabricVersionSelector({ value, onChange }: FabricVersionSelectorProps) {
-    const { t } = useTranslation("pages", { keyPrefix: "create-game.fabric-version" });
+function FabricOrQuiltVersionSelector({ type, value, onChange }: FabricVersionSelectorProps) {
+    const { t } = useTranslation("pages", { keyPrefix: `create-game.${type}-version` });
     const [isAuto, setIsAuto] = useState(true);
 
     function handleSelectionChange(v: string) {

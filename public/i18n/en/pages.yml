@@ -71,6 +71,14 @@ create-game:
     alert: It's better to let Alicorn decide if you aren't clear of what version you need.
     placeholder: Auto
 
+  quilt-version:
+    title: Quilt Version
+    auto: Let Alicorn Decide
+    manual: Let Me Choose
+    label: Quilt Version
+    alert: It's better to let Alicorn decide if you aren't clear of what version you need.
+    placeholder: Auto
+
 games:
   loading: Reading game list...
   title: Games

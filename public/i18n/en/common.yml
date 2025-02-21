@@ -49,8 +49,8 @@ exceptions:
     network: "Unable to access {{url}}. Status: {{code}}"
     download: "Failed to download {{url}}"
     auth: Failed to authenticate the account.
-    fabric-no-version: Fabric does not support {{gameVersion}}
-    quilt-no-version: Quilt does not support {{gameVersion}}
+    fabric-no-version: Fabric does not support {{gameVersion}}, or the its version specified is invalid.
+    quilt-no-version: Quilt does not support {{gameVersion}}, or the its version specified is invalid.
     profile-link: "Unable to read game profile: {{id}}"
     jrt-not-available: "Java runtime unavailable: {{component}}"
     jrt-not-verified: "Failed to execute Java binary: {{bin}}"

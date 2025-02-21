@@ -53,7 +53,7 @@ async function retrieveProfile(
             // There are no stable versions, use the first one instead
             sv = versions[0]?.version;
         }
-        if (!sv) throw exceptions.create("quilt-no-version", { gameVersion });
+        if (!sv) throw exceptions.create("fabric-no-version", { gameVersion });
 
         loaderVersion = sv;
     }

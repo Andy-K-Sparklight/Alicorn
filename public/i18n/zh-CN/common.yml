@@ -49,8 +49,8 @@ exceptions:
     network: 试图访问 {{url}} 时出现错误，状态码为：{{code}}
     download: 下载文件 {{url}} 时出错。
     auth: 验证帐户的过程中出现错误。
-    fabric-no-version: 此游戏版本（{{gameVersion}}）不支持 Fabric。
-    quilt-no-version: 此游戏版本（{{gameVersion}}）不支持 Quilt。
+    fabric-no-version: 此游戏版本（{{gameVersion}}）不支持 Fabric，或所选 Fabric 版本无效。
+    quilt-no-version: 此游戏版本（{{gameVersion}}）不支持 Quilt，或所选 Quilt 版本无效。
     profile-link: 无法读取核心 {{id}} 的信息。
     jrt-not-available: 所需的 Java 运行环境 {{component}} 不可用。
     jrt-not-verified: 无法启动 Java 虚拟机：{{bin}}
