@@ -3,6 +3,7 @@ import { AccountInitView } from "@pages/setup/AccountInitView";
 import { AnalyticsView } from "@pages/setup/AnalyticsView";
 import { FinishView } from "@pages/setup/FinishView";
 import { GamePathSetupView } from "@pages/setup/GamePathSetupView";
+import { LanguageView } from "@pages/setup/LanguageView";
 import { LicenseView } from "@pages/setup/LicenseView";
 import { MirrorView } from "@pages/setup/MirrorView";
 import { WelcomeView } from "@pages/setup/WelcomeView";
@@ -11,6 +12,7 @@ import { Redirect } from "wouter";
 
 export function SetupView() {
     return <div className="p-8 w-full h-full">
+        <AnimatedRoute path="/setup/lang" component={LanguageView}/>
         <AnimatedRoute path="/setup/welcome" component={WelcomeView}/>
         <AnimatedRoute path="/setup/zoom" component={ZoomFactorView}/>
         <AnimatedRoute path="/setup/license" component={LicenseView}/>
@@ -24,5 +26,5 @@ export function SetupView() {
 }
 
 function DefaultPageRedirect() {
-    return <Redirect to="/setup/welcome"/>;
+    return <Redirect to="/setup/lang"/>;
 }
