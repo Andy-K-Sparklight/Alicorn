@@ -110,12 +110,17 @@ async function bench(): Promise<void> {
 
     for (const m of mirrorList) {
         if (m.test) {
-            const s1 = await testSpeed(m.test.url);
-            const s2 = await testSpeed(m.test.challenge);
+            try {
+                const s1 = await testSpeed(m.test.url);
+                const s2 = await testSpeed(m.test.challenge);
 
-            if (s1 <= s2) {
-                // The mirror is not faster, ignore it
-                continue;
+                if (s1 <= s2) {
+                    // The mirror is not faster, ignore it
+                    continue;
+                }
+            } catch (e) {
+                console.warn(`Unable to test mirror ${m.name}, skipped.`);
+                continue; // Mirror downed
             }
         }
 
