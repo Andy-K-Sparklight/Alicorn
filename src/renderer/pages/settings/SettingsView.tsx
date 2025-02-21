@@ -71,7 +71,7 @@ function SettingsContent() {
         isVertical
         selectedKey={tab}
         onSelectionChange={(s) => setTab(s.toString())}
-        classNames={{ wrapper: "h-full" }}
+        classNames={{ tabWrapper: "h-full" }}
     >
         {
             settingsTabs.map(({ id, icon: Icon, content: Content }) => {

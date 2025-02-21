@@ -25,7 +25,7 @@ export function Navigator() {
 }
 
 function PageTabs() {
-    const [pathname, navigate] = useLocation();
+    const [pathname] = useLocation();
     const procs = useGameProcList();
 
     const hideMonitor = procs.length === 0;
@@ -36,24 +36,16 @@ function PageTabs() {
 
     const activeTab = isSetup ? "setup" : pages.find(p => pathname.startsWith("/" + p.id))?.id ?? pages[0].id;
 
-    function handleSelectionChange(id: string | number) {
-        if (!isSetup) {
-            navigate("/" + id);
-        }
-    }
-
     return <Tabs
         color="primary"
         variant="light"
         radius="full"
         selectedKey={activeTab}
-
-        // A workaround for https://github.com/heroui-inc/heroui/issues/4598
-        onSelectionChange={handleSelectionChange}
     >
         {
             isSetup ?
                 <Tab
+                    href="/setup"
                     key="setup"
                     title={
                         <PageTitle page={{ id: "setup", icon: SparklesIcon }}/>
@@ -66,6 +58,7 @@ function PageTabs() {
                     // Tabs cannot be extracted as separated components or HeroUI will complain
                     // Upstream issue: https://github.com/heroui-inc/heroui/issues/729
                     <Tab
+                        href={"/" + p.id}
                         title={
                             <PageTitle page={p}/>
                         }
