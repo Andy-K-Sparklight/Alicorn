@@ -1,7 +1,6 @@
 import { conf } from "@/main/conf/conf";
 import { type GameProcessLog, logParser } from "@/main/launch/log-parser";
 import { exceptions } from "@/main/util/exception";
-import isValidHostname from "is-valid-hostname";
 import { nanoid } from "nanoid";
 import * as child_process from "node:child_process";
 import { ChildProcess } from "node:child_process";
@@ -10,7 +9,6 @@ import os from "node:os";
 import { Readable } from "node:stream";
 import { promisify } from "node:util";
 import { pEvent } from "p-event";
-import ping from "ping";
 import type TypedEmitter from "typed-emitter";
 
 type GameProcessEvents = {
@@ -45,19 +43,9 @@ type GameProcessEvents = {
     log: (log: GameProcessLog) => void
 
     /**
-     * New ping value received from network monitor.
-     */
-    serverPingUpdate: (ping: number) => void;
-
-    /**
      * Memory usage value updated.
      */
     memUsageUpdate: (bytes: number) => void;
-
-    /**
-     * Server changes.
-     */
-    serverChange: (server: string | null) => void;
 }
 
 type GameProcessStatus = "created" | "running" | "exited" | "crashed"
@@ -76,7 +64,6 @@ export class GameProcess {
     #proc: ChildProcess | null = null;
     #memMonitTimer: NodeJS.Timer | null = null;
     #netMonitTimer: NodeJS.Timer | null = null;
-    #currentServer: string | null = null;
 
     constructor(bin: string, args: string[], gameDir: string) {
         const proc = child_process.spawn(bin, args, {
@@ -153,13 +140,6 @@ export class GameProcess {
             } catch {
             }
         }, 1000);
-
-        this.#netMonitTimer = setInterval(async () => {
-            if (this.#currentServer) {
-                const res = await ping.promise.probe(this.#currentServer, { timeout: 1 });
-                this.emitter.emit("serverPingUpdate", typeof res.time === "number" ? res.time : 0);
-            }
-        }, 1000);
     }
 
     /**
@@ -219,22 +199,7 @@ export class GameProcess {
     #handleLogExtensions(s: string) {
         if (s.includes("[CHAT]")) return; // Prevent chat message injection
 
-        const ss = s.toLowerCase();
-
-        if (ss.startsWith("connecting to")) {
-            const [rawHost] = ss.replaceAll("connecting to", "").split(",");
-            const host = rawHost.trim();
-            if (isValidHostname(host)) {
-                this.#currentServer = host;
-                this.emitter.emit("serverChange", host);
-            }
-        }
-
-        if (ss.startsWith("starting integrated minecraft server")) {
-            // User went single-player, remove server information
-            this.#currentServer = null;
-            this.emitter.emit("serverChange", null);
-        }
+        // TODO detect messages from the logs
     }
 
     static async create(...args: ConstructorParameters<typeof GameProcess>): Promise<GameProcess> {

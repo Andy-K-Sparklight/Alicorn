@@ -186,11 +186,6 @@ monitor:
     sub: Memory usage in MiB. Value may be slightly bigger.
     sub-link: Why?
     now: Now
-  ping:
-    title: Network Latency
-    sub: PING to {{server}} in milliseconds. Data might be inaccurate. Zero values indicate banned PING protocol.
-    no-server: No server detected. Latency values will be updated when connected to a server.
-    now: Now
 
 settings:
   title: Settings

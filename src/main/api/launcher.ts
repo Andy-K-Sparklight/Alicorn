@@ -52,14 +52,6 @@ export type GameProcEvent =
     {
         type: "memUsageUpdate",
         mem: number
-    } |
-    {
-        type: "serverChange",
-        server: string | null
-    } |
-    {
-        type: "serverPingUpdate",
-        ping: number
     }
 
 function forwardGameEvents(src: EventEmitter, dst: MessagePortMain) {
@@ -74,6 +66,4 @@ function forwardGameEvents(src: EventEmitter, dst: MessagePortMain) {
     src.on("stderr", data => send({ type: "stderr", data }));
     src.on("log", log => send({ type: "log", log }));
     src.on("memUsageUpdate", mem => send({ type: "memUsageUpdate", mem }));
-    src.on("serverChange", server => send({ type: "serverChange", server }));
-    src.on("serverPingUpdate", ping => send({ type: "serverPingUpdate", ping }));
 }
