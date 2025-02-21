@@ -12,6 +12,52 @@ interface Mirror {
     apply(origin: string): string | null;
 }
 
+const bgithub: Mirror = {
+    name: "bgithub",
+    test: {
+        url: "https://bgithub.xyz/aria2/aria2/releases/download/release-1.37.0/aria2-1.37.0.tar.xz",
+        challenge: "https://github.com/aria2/aria2/releases/download/release-1.37.0/aria2-1.37.0.tar.xz"
+    },
+
+    apply(origin: string): string | null {
+        const u = URL.parse(origin);
+        if (!u) return null;
+
+        if (u.host === "github.com") {
+            u.host = "bgithub.xyz";
+            return u.toString();
+        }
+
+        return null;
+    }
+};
+
+const ghfast: Mirror = {
+    name: "ghfast",
+    test: {
+        url: "https://ghfast.top/https://github.com/aria2/aria2/releases/download/release-1.37.0/aria2-1.37.0.tar.xz",
+        challenge: "https://github.com/aria2/aria2/releases/download/release-1.37.0/aria2-1.37.0.tar.xz"
+    },
+
+    apply(origin: string): string | null {
+        const u = URL.parse(origin);
+        if (!u) return null;
+
+        const githubHosts = [
+            "github.com",
+            "raw.githubusercontent.com",
+            "gist.github.com",
+            "gist.githubusercontent.com"
+        ];
+
+        if (githubHosts.includes(u.host)) {
+            return `https://ghfast.top/${u}`;
+        }
+
+        return null;
+    }
+};
+
 const aliyun: Mirror = {
     name: "aliyun",
     test: {
@@ -90,7 +136,7 @@ const bmclapi: Mirror | false = import.meta.env.AL_ENABLE_BMCLAPI && {
     }
 } satisfies Mirror;
 
-const mirrorList = [aliyun, bmclapi].filter(isTruthy);
+const mirrorList = [aliyun, bmclapi, ghfast, bgithub].filter(isTruthy);
 
 function getMirrors() {
     return mirrorList.filter(m => conf().net.mirror.picked.includes(m.name));
@@ -110,17 +156,12 @@ async function bench(): Promise<void> {
 
     for (const m of mirrorList) {
         if (m.test) {
-            try {
-                const s1 = await testSpeed(m.test.url);
-                const s2 = await testSpeed(m.test.challenge);
+            const s1 = await testSpeed(m.test.url);
+            const s2 = await testSpeed(m.test.challenge);
 
-                if (s1 <= s2) {
-                    // The mirror is not faster, ignore it
-                    continue;
-                }
-            } catch (e) {
-                console.warn(`Unable to test mirror ${m.name}, skipped.`);
-                continue; // Mirror downed
+            if (s1 <= s2) {
+                // The mirror is not faster, ignore it
+                continue;
             }
         }
 
@@ -132,14 +173,20 @@ async function bench(): Promise<void> {
 }
 
 async function testSpeed(url: string): Promise<number> {
-    console.log(`Testing URL: ${url}`);
-    const t = Date.now();
-    const res = await net.fetch(url, { cache: "reload" });
-    if (!res.ok) return -1;
-    const arr = await res.arrayBuffer();
-    const speed = arr.byteLength / (Date.now() - t);
-    console.log(`Estimated speed: ${speed} (KB/s)`);
-    return speed;
+    try {
+        console.log(`Testing URL: ${url}`);
+        const signal = AbortSignal.timeout(10e3); // Wait for at most 10s (this should be enough for most mirrors)
+        const t = Date.now();
+        const res = await net.fetch(url, { cache: "reload", signal });
+        if (!res.ok) return -1;
+        const arr = await res.arrayBuffer();
+        const speed = arr.byteLength / (Date.now() - t);
+        console.log(`Estimated speed: ${speed} (KB/s)`);
+        return speed;
+    } catch (e) {
+        console.warn(`Unreachable URL: ${url}`);
+        return -1;
+    }
 }
 
 export const mirror = {

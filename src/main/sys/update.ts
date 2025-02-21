@@ -1,3 +1,4 @@
+import { netx } from "@/main/net/netx";
 import { app, BrowserWindow, net } from "electron";
 import fs from "fs-extra";
 import { nanoid } from "nanoid";
@@ -29,15 +30,10 @@ interface AssetMeta {
     browser_download_url: string;
 }
 
-const RELEASES_URL = "https://api.github.com/repos/Andy-K-Sparklight/Alicorn/releases";
+const RELEASES_URL = "https://get-alicorn-release.skjsjhb.workers.dev";
 
 async function queryReleases(): Promise<ReleaseMeta[]> {
-    const res = await net.fetch(RELEASES_URL, {
-        headers: {
-            Accept: "application/vnd.github+json",
-            "X-GitHub-Api-Version": "2022-11-28"
-        }
-    });
+    const res = await net.fetch(RELEASES_URL);
 
     if (!res.ok) throw `Unable to query releases: ${res.status}`;
 
@@ -60,28 +56,12 @@ function findCompatibleAsset(meta: ReleaseMeta[]): [AssetMeta, string] | null {
     return null;
 }
 
-async function testUrl(url: string): Promise<boolean> {
-    try {
-        const res = await net.fetch(url, { method: "HEAD" });
-        return res.ok;
-    } catch {
-        return false;
-    }
-}
-
 async function installAsset(am: AssetMeta, ver: string): Promise<void> {
-    let url: string;
-
-    if (await testUrl(am.browser_download_url)) {
-        url = am.browser_download_url;
-    } else {
-        // Use a known mirror
-        url = "https://ghfast.top/" + am.browser_download_url;
-    }
+    const url = am.browser_download_url;
 
     console.log("Installing asset from: " + url);
 
-    const res = await net.fetch(url);
+    const res = await netx.get(url);
 
     if (!res.ok || !res.body) throw `Unable to fetch asset content: ${res.status}`;
 
