@@ -1,7 +1,7 @@
 import type { GameProfile } from "@/main/game/spec";
 import { useGameList } from "@/renderer/services/game";
 import { useNav } from "@/renderer/util/nav";
-import { Button, ButtonGroup, Spinner, Tooltip } from "@heroui/react";
+import { Button, Spinner, Tab, Tabs, Tooltip } from "@heroui/react";
 import { GameCard } from "@pages/games/GameCard";
 import { ArrowDownAZIcon, ArrowUpAZIcon, ClockArrowDownIcon, ClockArrowUpIcon, PlusIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -86,21 +86,28 @@ function SortMethodControl({ sortMethod, onChange }: SortMethodControlProps) {
         latest: <ClockArrowDownIcon/>
     };
 
-    return <ButtonGroup>
+    function handleSelectionChange(k: string | number) {
+        onChange(k.toString() as SortMethod);
+    }
+
+    return <Tabs
+        selectedKey={sortMethod}
+        onSelectionChange={handleSelectionChange}
+        classNames={{ tab: "px-2" }}
+    >
         {
             (["az", "za", "earliest", "latest"] as const).map(m =>
-                <Tooltip content={t(m)} key={m} color="foreground">
-                    <Button
-                        isIconOnly
-                        color={sortMethod === m ? "primary" : "default"}
-                        onPress={() => onChange(m)}
-                    >
-                        {iconMap[m]}
-                    </Button>
-                </Tooltip>
+                <Tab
+                    key={m}
+                    title={
+                        <Tooltip content={t(m)} color="foreground">
+                            {iconMap[m]}
+                        </Tooltip>
+                    }
+                />
             )
         }
-    </ButtonGroup>;
+    </Tabs>;
 }
 
 function EmptyHint() {
