@@ -1,7 +1,7 @@
 import { useConfig } from "@/renderer/services/conf";
 import { Divider } from "@heroui/react";
 import { NumberSliderEntry, OnOffEntry } from "@pages/settings/SettingsEntry";
-import { ArrowLeftRightIcon, DatabaseBackupIcon, FileDiffIcon } from "lucide-react";
+import { ArrowLeftRightIcon, DatabaseBackupIcon, FileDiffIcon, ZapIcon } from "lucide-react";
 import React from "react";
 
 /**
@@ -18,6 +18,15 @@ export function NetworkTab() {
             id="network.validate"
             value={config.net.validate}
             onChange={v => alterConfig(c => c.net.validate = v)}
+        />
+
+        <Divider/>
+
+        <OnOffEntry
+            icon={ZapIcon}
+            id="network.aria2"
+            value={config.net.allowAria2}
+            onChange={v => alterConfig(c => c.net.allowAria2 = v)}
         />
 
         <Divider/>

@@ -275,7 +275,15 @@ settings:
     network:
       concurrency:
         title: Concurrency
-        sub: Max number of parallel tasks.
+        sub: |-
+          Max number of parallel tasks.
+          Has no effect for aria2 as it will be adjusted automatically.
+      aria2:
+        title: Enable aria2
+        sub: |-
+          Use aria2 to improve download performance.
+          Alicorn favors an internal download module if disabled.
+          Currently, "System Proxy" settings are not honored on Windows.
       mirror:
         title: Mirror
         sub: Pick up available mirrors.

@@ -64,6 +64,11 @@ const DEFAULT_CONFIG = {
         validate: true,
 
         /**
+         * Whether to use aria2 for download whenever available.
+         */
+        allowAria2: true,
+
+        /**
          * The maximum concurrency.
          */
         concurrency: 32,

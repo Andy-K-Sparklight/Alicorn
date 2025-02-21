@@ -1,6 +1,7 @@
 import { conf } from "@/main/conf/conf";
 import { paths } from "@/main/fs/paths";
 import { vanillaInstaller } from "@/main/install/vanilla";
+import { aria2 } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
 import { registry } from "@/main/registry/registry";
 import { getOSName } from "@/main/sys/os";
@@ -86,6 +87,25 @@ async function main() {
 
     setAutoSave();
 
+    if (conf().net.allowAria2) {
+        await aria2.init();
+    }
+
+    // Generate a random client ID if it's not configured
+    if (!conf().client.id) {
+        conf.alter(c => c.client.id = randomUUID().replaceAll("-", ""));
+    }
+
+    const deltaTime = Math.round(performance.now() - beginTime) / 1000;
+
+    console.log(`Done (${deltaTime}s)! Alicorn is now fully initialized.`);
+
+    if (import.meta.env.AL_TEST) {
+        void runInstrumentedTest();
+    }
+
+    console.log("Running optional tasks...");
+
     const tasks = [
         mirror.bench(),
         vanillaInstaller.prefetch()
@@ -93,23 +113,12 @@ async function main() {
 
     await Promise.all(tasks);
 
-    const deltaTime = Math.round(performance.now() - beginTime) / 1000;
-
-    console.log(`Done (${deltaTime}s)! Alicorn is now fully initialized.`);
-
-    // Generate a random client ID if it's not configured
-    if (!conf().client.id) {
-        conf.alter(c => c.client.id = randomUUID().replaceAll("-", ""));
-    }
-
-    if (import.meta.env.AL_TEST) {
-        void runInstrumentedTest();
-    }
-
     // Delay update check after app initialization
     if (conf().app.hotUpdate) {
         await update.runUpdate();
     }
+
+    console.log("All jobs have been done.");
 }
 
 async function setupMainWindow() {
@@ -280,6 +289,8 @@ async function shutdownApp() {
 
     clearInterval(autoSaveInterval);
     await saveContents();
+
+    aria2.shutdown();
 
     console.log("Exiting.");
     app.quit();

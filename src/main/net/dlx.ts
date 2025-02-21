@@ -3,13 +3,16 @@
  */
 import { cache } from "@/main/cache/cache";
 import { conf } from "@/main/conf/conf";
+import { aria2, type Aria2DownloadRequest } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
 import { nextdl, type NextDownloadRequest } from "@/main/net/nextdl";
 import { hash } from "@/main/security/hash";
 import { isTruthy } from "@/main/util/misc";
 import { progress, type ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
+import os from "node:os";
 import path from "node:path";
+import pLimit from "p-limit";
 
 export interface DlxDownloadRequest {
     url: string;
@@ -49,15 +52,29 @@ async function getAll(req: DlxDownloadRequest[], control?: ProgressController): 
 
     // Make the requests
     console.debug(`Preflight complete, need to resolve ${effectiveReq.length} tasks.`);
-    const nextTasks: NextDownloadRequest[] = effectiveReq.map(r => ({
-        ...r,
-        urls: mirror.apply(r.url),
-        origin: r.url,
-        signal: mixedSignal,
-        validate: conf().net.validate
-    }));
 
-    const promises = nextTasks.map(t => nextdl.get(t));
+    let promises: Promise<void>[];
+
+    if (aria2.available() && conf().net.allowAria2) {
+        const aria2Tasks: Aria2DownloadRequest[] = effectiveReq.map(r => ({
+            ...r,
+            urls: mirror.apply(r.url),
+            origin: r.url,
+            signal: mixedSignal
+        }));
+
+        promises = aria2Tasks.map(t => aria2.resolve(t));
+    } else {
+        const nextTasks: NextDownloadRequest[] = effectiveReq.map(r => ({
+            ...r,
+            urls: mirror.apply(r.url),
+            origin: r.url,
+            signal: mixedSignal,
+            validate: conf().net.validate
+        }));
+
+        promises = nextTasks.map(t => nextdl.get(t));
+    }
 
     try {
         await Promise.all(progress.countPromises(
@@ -72,7 +89,8 @@ async function getAll(req: DlxDownloadRequest[], control?: ProgressController): 
 
     console.debug("Post-processing tasks...");
 
-    await Promise.all(effectiveReq.map(postProcess));
+    const limit = pLimit(os.availableParallelism());
+    await Promise.all(effectiveReq.map(r => limit(() => postProcess(r))));
 
     console.debug("All done.");
 }
