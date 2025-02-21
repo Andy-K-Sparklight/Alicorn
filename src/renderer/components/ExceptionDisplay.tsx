@@ -25,9 +25,6 @@ export function ExceptionDisplay() {
 
         e = restoreError(e);
 
-        console.log("Restored error");
-        console.log(e);
-
         // For cancellation, we only show a toast
         if (isKnownException(e) && (e as ExceptionProps<any>).type === "cancelled" || String(e).includes("AbortError")) {
             toast.warning(t("types.cancelled"));
@@ -77,7 +74,7 @@ export function ExceptionDisplay() {
                 {t("title")}
             </ModalHeader>
             <ModalBody>
-                <p className="whitespace-pre-line">
+                <p className="whitespace-pre-line text-wrap break-all">
                     {t(`types.${type}`, { ...detail })}
                 </p>
 
@@ -87,9 +84,9 @@ export function ExceptionDisplay() {
                         <div className="text-sm mt-2 text-foreground-400">{t("detail")}</div>
 
                         <div className="p-4 rounded-2xl border-solid border-2 border-danger text-sm">
-                                <pre className="text-wrap">
-                                    {String(detail.error)}
-                                </pre>
+                            <pre className="text-wrap break-all">
+                                {String(detail.error)}
+                            </pre>
                         </div>
                     </>
                 }
