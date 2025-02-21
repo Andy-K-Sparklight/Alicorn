@@ -1,16 +1,16 @@
 import { i18n } from "@/renderer/i18n/i18n";
-import { useNav } from "@/renderer/util/nav";
 import logo from "@assets/logo.png";
 import { Button, Divider } from "@heroui/react";
+import { useSetupNextPage } from "@pages/setup/SetupView";
 import { useTranslation } from "react-i18next";
 
 export function LanguageView() {
     const { t } = useTranslation("setup", { keyPrefix: "lang" });
-    const nav = useNav();
+    const next = useSetupNextPage();
 
     function setLang(lang: string) {
         void i18n.alterLanguage(lang);
-        nav("/setup/welcome");
+        next();
     }
 
     return <div className="w-2/3 mx-auto h-full flex flex-col justify-center gap-10">

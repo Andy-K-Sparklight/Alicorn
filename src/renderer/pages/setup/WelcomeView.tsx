@@ -1,18 +1,14 @@
-import { useNav } from "@/renderer/util/nav";
 import logoLegacy from "@assets/logo-legacy.png";
 import logo from "@assets/logo.png";
+import { useSetupNextPage } from "@pages/setup/SetupView";
 import { ChevronsRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export function WelcomeView() {
     const { t } = useTranslation("setup", { keyPrefix: "welcome" });
-    const nav = useNav();
+    const next = useSetupNextPage();
 
-    function nextPage() {
-        nav("/setup/zoom");
-    }
-
-    return <div className="flex flex-col w-5/6 h-full mx-auto items-center justify-center gap-4" onClick={nextPage}>
+    return <div className="flex flex-col w-5/6 h-full mx-auto items-center justify-center gap-4" onClick={next}>
         <div className="w-full flex items-center gap-6 grow">
             <div className="flex gap-10 h-24 items-center">
                 <img className="w-full h-full object-contain" alt="Legacy Logo" src={logoLegacy}/>

@@ -1,19 +1,15 @@
 import { useConfig } from "@/renderer/services/conf";
-import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/Alert";
 import { GameTypeImage } from "@components/GameTypeImage";
 import { Button, ButtonGroup, Card, CardBody, Input, Progress } from "@heroui/react";
+import { useSetupNextPage } from "@pages/setup/SetupView";
 import { BanIcon, CheckIcon, ChevronsRight, FlagIcon, MinusIcon, PlusIcon, ZoomInIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
 export function ZoomFactorView() {
     const { t } = useTranslation("setup", { keyPrefix: "zoom" });
-    const nav = useNav();
-
-    function nextPage() {
-        nav("/setup/license");
-    }
+    const next = useSetupNextPage();
 
     return <div className="flex flex-col w-5/6 h-full mx-auto items-center justify-center gap-4">
         <div className="w-full h-full flex items-center gap-16">
@@ -33,7 +29,7 @@ export function ZoomFactorView() {
                     color="primary"
                     className="mt-4"
                     startContent={<CheckIcon/>}
-                    onPress={nextPage}
+                    onPress={next}
                 >
                     {t("btn")}
                 </Button>

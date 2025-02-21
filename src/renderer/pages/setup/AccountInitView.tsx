@@ -1,8 +1,8 @@
 import type { DetailedAccountProps } from "@/main/auth/types";
-import { useNav } from "@/renderer/util/nav";
 import { DialogProvider, type PropsWithDialog, useOpenDialog } from "@components/DialogProvider";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+import { useSetupNextPage } from "@pages/setup/SetupView";
 import { ArrowRightIcon, UserRoundPlusIcon, UserSquareIcon } from "lucide-react";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -11,13 +11,9 @@ export function AccountInitView() {
     const { t } = useTranslation("setup", { keyPrefix: "account-init" });
     const [loginActive, setLoginActive] = useState(false);
     const [accountProps, setAccountProps] = useState<DetailedAccountProps | null>(null);
-    const nav = useNav();
+    const next = useSetupNextPage();
 
     const loggedIn = accountProps !== null;
-
-    function nextPage() {
-        nav("/setup/analytics");
-    }
 
     async function handleAuth() {
         try {
@@ -55,13 +51,13 @@ export function AccountInitView() {
                 isLoading={loginActive}
                 color="primary"
                 startContent={loginActive ? undefined : loggedIn ? <ArrowRightIcon/> : <UserRoundPlusIcon/>}
-                onPress={loggedIn ? nextPage : handleAuth}
+                onPress={loggedIn ? next : handleAuth}
             >
                 {t(loggedIn ? "btn-next" : "btn-login")}
             </Button>
 
             <DialogProvider dialogProps={{}} component={SkipLoginDialog}>
-                <SkipLoginLink onConfirm={nextPage}/>
+                <SkipLoginLink onConfirm={next}/>
             </DialogProvider>
         </div>
 

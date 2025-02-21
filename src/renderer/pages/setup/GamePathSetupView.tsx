@@ -1,19 +1,15 @@
 import { useConfig } from "@/renderer/services/conf";
-import { useNav } from "@/renderer/util/nav";
 
 import { DirInput } from "@components/DirInput";
 import { Button } from "@heroui/react";
+import { useSetupNextPage } from "@pages/setup/SetupView";
 import { CheckIcon, PackageIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export function GamePathSetupView() {
     const { t } = useTranslation("setup", { keyPrefix: "game-path" });
     const { config, alterConfig } = useConfig();
-    const nav = useNav();
-
-    function nextPage() {
-        nav("/setup/account-init");
-    }
+    const next = useSetupNextPage();
 
     if (!config) return null;
 
@@ -34,6 +30,6 @@ export function GamePathSetupView() {
             <DirInput value={config.paths.game} onChange={v => alterConfig(c => c.paths.game = v)}/>
         </div>
 
-        <Button color="primary" startContent={<CheckIcon/>} onPress={nextPage}>{t("btn")}</Button>
+        <Button color="primary" startContent={<CheckIcon/>} onPress={next}>{t("btn")}</Button>
     </div>;
 }

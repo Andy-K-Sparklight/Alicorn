@@ -1,6 +1,6 @@
 import { useConfig } from "@/renderer/services/conf";
-import { useNav } from "@/renderer/util/nav";
 import { Button, Switch } from "@heroui/react";
+import { useSetupNextPage } from "@pages/setup/SetupView";
 import { ArrowRightIcon, BanIcon, HandHelpingIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -8,11 +8,7 @@ import { useTranslation } from "react-i18next";
 export function AnalyticsView() {
     const { t } = useTranslation("setup", { keyPrefix: "analytics" });
     const { config, alterConfig } = useConfig();
-    const nav = useNav();
-
-    function nextPage() {
-        nav("/setup/finish");
-    }
+    const next = useSetupNextPage();
 
     if (!config) return;
 
@@ -61,7 +57,7 @@ export function AnalyticsView() {
             <Button
                 color={allDisabled ? "default" : "primary"}
                 startContent={allDisabled ? <BanIcon/> : <ArrowRightIcon/>}
-                onPress={nextPage}
+                onPress={next}
             >
                 {t(allDisabled ? "btn-none" : "btn")}
             </Button>

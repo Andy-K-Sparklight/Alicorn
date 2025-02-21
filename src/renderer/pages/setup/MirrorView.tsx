@@ -1,7 +1,7 @@
 import { useConfig } from "@/renderer/services/conf";
-import { useNav } from "@/renderer/util/nav";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { Button, Link } from "@heroui/react";
+import { useSetupNextPage } from "@pages/setup/SetupView";
 import { ArrowRightIcon, GaugeIcon } from "lucide-react";
 import React, { useEffect } from "react";
 import { Trans, useTranslation } from "react-i18next";
@@ -9,11 +9,7 @@ import { Trans, useTranslation } from "react-i18next";
 export function MirrorView() {
     const { t } = useTranslation("setup", { keyPrefix: "mirror" });
     const { config, alterConfig } = useConfig();
-    const nav = useNav();
-
-    function nextPage() {
-        nav("/setup/game-path");
-    }
+    const next = useSetupNextPage();
 
     function showLink() {
         native.ext.openURL("https://bmclapidoc.bangbang93.com");
@@ -21,7 +17,7 @@ export function MirrorView() {
 
     useEffect(() => {
         if (!import.meta.env.AL_ENABLE_BMCLAPI) {
-            nextPage();
+            next();
         }
     }, []);
 
@@ -60,7 +56,7 @@ export function MirrorView() {
         </p>
 
         <div>
-            <Button color="primary" onPress={nextPage} startContent={<ArrowRightIcon/>}>{t("btn")}</Button>
+            <Button color="primary" onPress={next} startContent={<ArrowRightIcon/>}>{t("btn")}</Button>
         </div>
     </div>;
 }

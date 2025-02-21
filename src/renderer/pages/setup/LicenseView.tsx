@@ -1,17 +1,13 @@
-import { useNav } from "@/renderer/util/nav";
 import { ConfirmPopup } from "@components/ConfirmPopup";
 import { Button, Card, CardBody } from "@heroui/react";
+import { useSetupNextPage } from "@pages/setup/SetupView";
 import { CircleCheckIcon, FileBadgeIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import license from "~/LICENSE?raw";
 
 export function LicenseView() {
     const { t } = useTranslation("setup", { keyPrefix: "license" });
-    const nav = useNav();
-
-    function nextPage() {
-        nav("/setup/mirror");
-    }
+    const next = useSetupNextPage();
 
     return <div className="flex flex-col w-5/6 h-full mx-auto items-center justify-center gap-4">
         <div className="w-full h-full flex flex-col items-center gap-4">
@@ -39,7 +35,7 @@ export function LicenseView() {
                     sub={t("confirm.sub")}
                     btnText={t("confirm.btn")}
                     color="primary"
-                    onConfirm={nextPage}
+                    onConfirm={next}
                 >
                     <Button color="primary" startContent={<CircleCheckIcon/>}>{t("btn")}</Button>
                 </ConfirmPopup>
