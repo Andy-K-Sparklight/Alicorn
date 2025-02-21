@@ -1,10 +1,10 @@
 import { useAutoFontClass } from "@/renderer/i18n/i18n";
-import { themeManager, useAutoTheme, useTheme } from "@/renderer/theme";
+import { useAutoTheme } from "@/renderer/theme";
 import { useNav } from "@/renderer/util/nav";
 import { AnimatedRoute } from "@components/AnimatedRoute";
 import { ExceptionDisplay } from "@components/ExceptionDisplay";
 import { Navigator } from "@components/Navigator";
-import { HeroUIProvider } from "@heroui/react";
+import { addToast, HeroUIProvider, ToastProvider } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
 import { CreateGameView } from "@pages/create-game/CreateGameView";
 import { GameDetailView } from "@pages/game-detail/GameDetailView";
@@ -16,7 +16,6 @@ import { SetupView } from "@pages/setup/SetupView";
 import { t } from "i18next";
 import React, { useEffect } from "react";
 import { useLocalStorage } from "react-use";
-import { toast, Toaster } from "sonner";
 import { Redirect } from "wouter";
 import pkg from "~/package.json";
 
@@ -27,17 +26,14 @@ export function App() {
     const nav = useNav();
 
     useAutoTheme();
-
-    const { theme } = useTheme();
-
     useAutoFontClass();
 
     useEffect(() => {
-        native.app.onUpgraded(version => toast.info(t("toast.app-upgraded", { version })));
+        native.app.onUpgraded(version => addToast({
+            color: "success",
+            title: t("toast.app-upgraded", { version })
+        }));
     }, []);
-
-    // Use an opposite theme for toasts
-    const toastTheme = themeManager.isDark(theme) ? "light" : "dark";
 
     return <HeroUIProvider navigate={nav}>
         <main className="fixed inset-0 text-foreground bg-background">
@@ -47,7 +43,7 @@ export function App() {
             </div>
             <VersionOverlay/>
             <ExceptionDisplay/>
-            <Toaster position="bottom-left" richColors theme={toastTheme}/>
+            <ToastProvider placement="bottom-left" toastOffset={4}/>
         </main>
     </HeroUIProvider>;
 }

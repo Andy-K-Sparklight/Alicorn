@@ -4,14 +4,12 @@ import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/Alert";
 import { PlayerNameInput } from "@components/PlayerNameInput";
 import { Radio, RadioGroup } from "@heroui/radio";
-import { Button, Input, Spinner, Switch } from "@heroui/react";
+import { addToast, Button, Input, Spinner, Switch } from "@heroui/react";
 import { AccountSelector } from "@pages/create-game/AccountSelector";
 import { ContainerSelector } from "@pages/create-game/ContainerSelector";
 import { VersionSelector } from "@pages/create-game/VersionSelector";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
-
 
 /**
  * Create new game without the help of the wizard.
@@ -92,7 +90,10 @@ export function CreateGameView() {
                 containerShouldLink
             });
             setCreating(false);
-            toast.success(t("toast-created"));
+            addToast({
+                color: "success",
+                title: t("toast-created")
+            });
             nav("/games");
         }
     }
@@ -266,7 +267,7 @@ function ModLoaderSelector({ availableModLoaders, value, onChange }: ModLoaderSe
                         </Radio>;
                     }) :
                     <div className="w-full h-full flex justify-center items-center gap-6">
-                        <Spinner/>
+                        <Spinner variant="wave"/>
                         {t("loading")}
                     </div>
             }

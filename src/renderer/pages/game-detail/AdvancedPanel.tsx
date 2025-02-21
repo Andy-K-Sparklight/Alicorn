@@ -4,12 +4,11 @@ import { Alert } from "@components/Alert";
 import { ConfirmPopup } from "@components/ConfirmPopup";
 import { DialogProvider, type PropsWithDialog, useOpenDialog } from "@components/DialogProvider";
 import { Radio, RadioGroup } from "@heroui/radio";
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+import { addToast, Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
 import { useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
 import { CloudDownloadIcon, RefreshCwIcon, TrashIcon, UnlinkIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 
 export function AdvancedPanel() {
     const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage.advanced" });
@@ -123,8 +122,11 @@ function DestroyEntry() {
         const res = await openDialog();
         if (res) {
             native.game.destroy(id);
+            addToast({
+                severity: "success",
+                title: tc("toast.game-destroyed", { name })
+            });
             nav("/games");
-            toast.success(tc("toast.game-destroyed", { name }));
         }
     }
 

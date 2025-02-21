@@ -1,10 +1,10 @@
 import type { VanillaInstallEvent } from "@/main/api/install";
 import type { Progress } from "@/main/util/progress";
 import { retrievePort } from "@/preload/message";
+import { addToast } from "@heroui/react";
 import Emittery from "emittery";
 import { t } from "i18next";
 import { useCallback, useSyncExternalStore } from "react";
-import { toast } from "sonner";
 
 // Maps game ID to its event target
 const globalEmitter = new Emittery();
@@ -38,7 +38,10 @@ async function install(gameId: string): Promise<void> {
                 case "finish":
                     port.close();
                     progressMap.delete(gameId);
-                    toast.success(t("toast.game-installed"));
+                    addToast({
+                        severity: "success",
+                        title: t("toast.game-installed")
+                    });
                     res();
                     break;
                 case "error":

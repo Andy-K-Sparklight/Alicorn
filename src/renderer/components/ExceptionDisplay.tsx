@@ -1,9 +1,8 @@
 import type { ExceptionProps, ExceptionType } from "@/main/util/exception";
 import { TipPicker } from "@components/TipPicker";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+import { addToast, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 
 export function ExceptionDisplay() {
     const { t } = useTranslation("common", { keyPrefix: "exceptions" });
@@ -27,7 +26,10 @@ export function ExceptionDisplay() {
 
         // For cancellation, we only show a toast
         if (isKnownException(e) && (e as ExceptionProps<any>).type === "cancelled" || String(e).includes("AbortError")) {
-            toast.warning(t("types.cancelled"));
+            addToast({
+                severity: "warning",
+                title: t("types.cancelled")
+            });
             return;
         }
 
