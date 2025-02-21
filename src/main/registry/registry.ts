@@ -23,8 +23,6 @@ export class NamedRegistry<T> {
         this.#name = name;
         this.#version = version;
         this.#transformers = transformers;
-
-        this.upgrade();
     }
 
     upgrade() {
