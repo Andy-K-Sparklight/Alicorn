@@ -178,7 +178,10 @@ async function testSpeed(url: string): Promise<number> {
         const signal = AbortSignal.timeout(10e3); // Wait for at most 10s (this should be enough for most mirrors)
         const t = Date.now();
         const res = await net.fetch(url, { cache: "reload", signal });
-        if (!res.ok) return -1;
+        if (!res.ok) {
+            console.warn(`Failed to request mirror URL ${url}: ${res.status}`);
+            return -1;
+        }
         const arr = await res.arrayBuffer();
         const speed = arr.byteLength / (Date.now() - t);
         console.log(`Estimated speed: ${speed} (KB/s)`);
