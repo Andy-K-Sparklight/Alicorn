@@ -50,7 +50,7 @@ async function createLegacyAssetsRef() {
 async function createJRTVersionRef() {
     const out: Record<string, string[]> = {}; // Maps the component to profile ID for compact storage
     for (const p of profiles) {
-        const c = p?.javaVersion?.component || "jre-legacy";
+        const c = p.javaVersion?.component || "jre-legacy";
         let arr = out[c];
         if (!arr) {
             arr = [];

@@ -64,10 +64,3 @@ export function MirrorView() {
         </div>
     </div>;
 }
-
-function SwitchLabel({ title, sub }: { title: string; sub: string }) {
-    return <div className="ml-2 text-medium flex flex-col gap-1">
-        {title}
-        <div className="text-foreground-400 text-sm whitespace-pre-line">{sub}</div>
-    </div>;
-}
