@@ -160,6 +160,8 @@ async function init() {
             "--max-connection-per-server=16",
             `--connect-timeout=${Math.round(requestTimeout / 1000)}`,
             "--enable-rpc=true",
+            "--check-integrity=true",
+            `--lowest-speed-limit=${conf().net.minSpeed}`,
             "--allow-overwrite=true",
             "--auto-file-renaming=false",
             "--optimize-concurrent-downloads=true",
