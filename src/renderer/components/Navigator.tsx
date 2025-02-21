@@ -93,7 +93,7 @@ function PageTitle({ page }: { page: PageInfo }) {
 function CloseButton() {
     return <Button
         onPress={() => native.bwctl.close()}
-        className="rounded-full bg-transparent hover:bg-danger"
+        className="rounded-full bg-transparent text-foreground hover:bg-danger"
         color="danger"
         isIconOnly
         variant="solid"
@@ -105,7 +105,7 @@ function CloseButton() {
 function MinimizeButton() {
     return <Button
         onPress={() => native.bwctl.minimize()}
-        className="rounded-full bg-transparent hover:bg-default"
+        className="rounded-full bg-transparent text-foreground hover:bg-default"
         isIconOnly
     >
         <MinusIcon/>
