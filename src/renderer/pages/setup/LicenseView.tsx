@@ -10,7 +10,7 @@ export function LicenseView() {
     const nav = useNav();
 
     function nextPage() {
-        nav("/setup/game-path");
+        nav("/setup/mirror");
     }
 
     return <div className="flex flex-col w-5/6 h-full mx-auto items-center justify-center gap-4">

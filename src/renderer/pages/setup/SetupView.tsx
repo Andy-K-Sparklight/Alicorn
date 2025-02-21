@@ -4,6 +4,7 @@ import { AnalyticsView } from "@pages/setup/AnalyticsView";
 import { FinishView } from "@pages/setup/FinishView";
 import { GamePathSetupView } from "@pages/setup/GamePathSetupView";
 import { LicenseView } from "@pages/setup/LicenseView";
+import { MirrorView } from "@pages/setup/MirrorView";
 import { WelcomeView } from "@pages/setup/WelcomeView";
 import { ZoomFactorView } from "@pages/setup/ZoomFactorView";
 import { Redirect } from "wouter";
@@ -13,6 +14,7 @@ export function SetupView() {
         <AnimatedRoute path="/setup/welcome" component={WelcomeView}/>
         <AnimatedRoute path="/setup/zoom" component={ZoomFactorView}/>
         <AnimatedRoute path="/setup/license" component={LicenseView}/>
+        <AnimatedRoute path="/setup/mirror" component={MirrorView}/>
         <AnimatedRoute path="/setup/game-path" component={GamePathSetupView}/>
         <AnimatedRoute path="/setup/account-init" component={AccountInitView}/>
         <AnimatedRoute path="/setup/analytics" component={AnalyticsView}/>

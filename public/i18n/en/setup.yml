@@ -45,6 +45,26 @@ license:
     sub: I understand and accept the terms and conditions.
     btn: Yes, I accept the license
 
+mirror:
+  title: Get the Game Faster
+  sub: |-
+    The community has built mirrors to accelerate the download.
+    Do you wish Alicorn to use them?
+  allow:
+    label: When Applicable
+    sub: Alicorn will decide the fastest mirror.
+  disallow:
+    label: Do Not Use
+    sub: Download only from the trusted official source.
+  footer: |-
+    Part of the content will be downloaded via BMCLAPI when using mirrors.
+    See <0>https://bmclapidoc.bangbang93.com</0> for details.
+
+    Note: Files provided by mirrors may be corrupted and can affect or break the gameplay.
+    Neither Alicorn nor the maintainers of the mirrors provide any warranty. Use at your own risk.
+
+  btn: Continue
+
 game-path:
   title: Where do you want to store Minecraft?
   sub: |-

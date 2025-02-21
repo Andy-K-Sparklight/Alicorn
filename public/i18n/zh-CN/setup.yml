@@ -43,6 +43,26 @@ license:
     sub: 我理解并接受许可证中的条款与条件。
     btn: 是的，我接受此许可证
 
+mirror:
+  title: 获取游戏，快人一步
+  sub: |-
+    社区的热心人士搭设了一些镜像网站，以加快游戏文件的下载。
+    你想要让 Alicorn 使用它们吗？
+  allow:
+    label: 自动使用可用的镜像
+    sub: Alicorn 将自动评估并选择合适的镜像。
+  disallow:
+    label: 不要使用镜像
+    sub: 仅从可信的官方来源下载文件。
+  footer: |-
+    当启用镜像时，部分文件内容将从 BMCLAPI 下载。
+    有关详细信息，请参阅 <0>https://bmclapidoc.bangbang93.com</0>
+
+    请注意：镜像文件可能缺失或损坏，这种情况可能导致游戏无法正常游玩。
+    无论 Alicorn 还是镜像维护者都不对此提供任何担保，您须自担风险。
+
+  btn: 使用此设置继续
+
 game-path:
   title: 你想将 Minecraft 存放在哪里？
   sub: |-
