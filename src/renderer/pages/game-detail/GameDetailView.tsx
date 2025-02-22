@@ -95,7 +95,7 @@ function ManagePanel() {
     };
 
     return <div className="w-5/6 mx-auto h-full">
-        <Tabs size="lg" classNames={{ wrapper: "h-full" }} variant="underlined">
+        <Tabs size="lg" classNames={{ tabWrapper: "h-full" }} variant="underlined">
             {
                 Object.entries(tabs).map(([id, ele]) =>
                     <Tab key={id} title={t(`${id}.title`)} className="h-full">
