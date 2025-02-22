@@ -10,6 +10,7 @@ import { ContainerSelector } from "@pages/create-game/ContainerSelector";
 import { VersionSelector } from "@pages/create-game/VersionSelector";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocalStorage } from "react-use";
 
 /**
  * Create new game without the help of the wizard.
@@ -24,10 +25,13 @@ export function CreateGameView() {
     const [containerShouldLink, setContainerShouldLink] = useState(true);
     const [shareContainer, setShareContainer] = useState(false);
 
-    const hasAccount = accounts.length > 0;
+    const [lastSelectedAccountId, setLastSelectedAccountId] = useLocalStorage<string>("create-game.account.last-selected");
 
-    const [authType, setAuthType] = useState<"new-vanilla" | "manual" | "reuse">(hasAccount ? "reuse" : "new-vanilla");
-    const [accountId, setAccountId] = useState<string | null>(accounts[0]?.uuid ?? null);
+    const [authType, setAuthType] = useState<"new-vanilla" | "manual" | "reuse">(lastSelectedAccountId ? "reuse" : "new-vanilla");
+
+    const initialAccountId = accounts.some(a => a.uuid === lastSelectedAccountId) ? lastSelectedAccountId : null;
+    const [accountId, setAccountId] = useState<string | null>(initialAccountId ?? null);
+
     const [playerName, setPlayerName] = useState<string>("Player");
 
     const [assetsLevel, setAssetsLevel] = useState<"full" | "video-only">("full");
@@ -48,6 +52,13 @@ export function CreateGameView() {
             setAvailableModLoaders([]);
         }
     }, [gameVersion]);
+
+    function handleAccountChange(id: string | null) {
+        setAccountId(id);
+        if (id) {
+            setLastSelectedAccountId(id);
+        }
+    }
 
     const valid = gameVersion &&
         !(shareContainer && !containerId) &&
@@ -182,7 +193,7 @@ export function CreateGameView() {
                     </RadioGroup>
 
                     {
-                        authType === "reuse" && <AccountSelector accountId={accountId} onChange={setAccountId}/>
+                        authType === "reuse" && <AccountSelector accountId={accountId} onChange={handleAccountChange}/>
                     }
 
                     {
