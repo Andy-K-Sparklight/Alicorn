@@ -4,9 +4,12 @@ import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/Alert";
 import { PlayerNameInput } from "@components/PlayerNameInput";
 import { Radio, RadioGroup } from "@heroui/radio";
-import { addToast, Button, Input, Spinner, Switch } from "@heroui/react";
+import { addToast, Button, Input, Switch } from "@heroui/react";
 import { AccountSelector } from "@pages/create-game/AccountSelector";
+import { AssetLevelSelector } from "@pages/create-game/AssetsLevelSelector";
 import { ContainerSelector } from "@pages/create-game/ContainerSelector";
+import { FabricOrQuiltVersionSelector } from "@pages/create-game/FabricOrQuiltVersionSelector";
+import { ModLoaderSelector } from "@pages/create-game/ModLoaderSelector";
 import { VersionSelector } from "@pages/create-game/VersionSelector";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -204,19 +207,7 @@ export function CreateGameView() {
                 <div className="flex flex-col gap-4">
                     <div className="font-bold text-xl">{t("assets-title")}</div>
 
-                    <RadioGroup
-                        color={assetsLevel === "full" ? "primary" : "warning"}
-                        value={assetsLevel}
-                        onValueChange={v => setAssetsLevel(v === "video-only" ? "video-only" : "full")}
-                    >
-                        {
-                            ["full", "video-only"].map(lv =>
-                                <Radio key={lv} value={lv} description={t(`assets-level.${lv}.sub`)}>
-                                    {t(`assets-level.${lv}.label`)}
-                                </Radio>
-                            )
-                        }
-                    </RadioGroup>
+                    <AssetLevelSelector assetsLevel={assetsLevel} onChange={setAssetsLevel}/>
                 </div>
 
                 <div className="flex flex-col gap-4">
@@ -248,88 +239,5 @@ export function CreateGameView() {
                 </Button>
             </div>
         </div>
-    </div>;
-}
-
-
-interface ModLoaderSelectorProps {
-    availableModLoaders: string[] | null;
-    value: string;
-    onChange: (v: string) => void;
-}
-
-function ModLoaderSelector({ availableModLoaders, value, onChange }: ModLoaderSelectorProps) {
-    const { t } = useTranslation("pages", { keyPrefix: "create-game.mod-loader" });
-
-    const loaders = availableModLoaders ?? [];
-
-    loaders.unshift("vanilla");
-
-    return <>
-        <RadioGroup
-            value={value}
-            onValueChange={onChange}
-        >
-            {
-                availableModLoaders ?
-                    ["vanilla", "fabric", "quilt"].map(lv => {
-                        if (!loaders.includes(lv)) return null;
-
-                        return <Radio key={lv} value={lv} description={t(`${lv}.sub`)}>
-                            {t(`${lv}.label`)}
-                        </Radio>;
-                    }) :
-                    <div className="w-full h-full flex justify-center items-center gap-6">
-                        <Spinner variant="wave"/>
-                        {t("loading")}
-                    </div>
-            }
-        </RadioGroup>
-
-        <div className="text-sm text-foreground-400">{t("missing")}</div>
-    </>;
-
-
-}
-
-interface FabricVersionSelectorProps {
-    type: "fabric" | "quilt";
-    value: string;
-    onChange: (v: string) => void;
-}
-
-function FabricOrQuiltVersionSelector({ type, value, onChange }: FabricVersionSelectorProps) {
-    const { t } = useTranslation("pages", { keyPrefix: `create-game.${type}-version` });
-    const [isAuto, setIsAuto] = useState(true);
-
-    function handleSelectionChange(v: string) {
-        if (v === "auto") {
-            onChange("");
-        }
-        setIsAuto(v !== "manual");
-    }
-
-    return <div className="p-4 border-solid border-2 border-foreground-400 rounded-xl flex flex-col gap-4">
-        <div className="font-bold text-medium">{t("title")}</div>
-
-        <RadioGroup
-            value={isAuto ? "auto" : "manual"}
-            color={isAuto ? "primary" : "warning"}
-            onValueChange={handleSelectionChange}
-        >
-            {
-                ["auto", "manual"].map(lv =>
-                    <Radio key={lv} value={lv}>{t(lv)}</Radio>
-                )
-            }
-        </RadioGroup>
-
-        {
-            !isAuto &&
-            <>
-                <Alert classNames={{ title: "font-bold" }} title={t("alert")} color="warning"/>
-                <Input value={value} onValueChange={onChange} label={t("label")} placeholder={t("placeholder")}/>
-            </>
-        }
     </div>;
 }

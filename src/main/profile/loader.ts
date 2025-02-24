@@ -9,7 +9,7 @@ import fs from "fs-extra";
 
 async function fromContainer(id: string, container: Container): Promise<VersionProfile> {
     try {
-        return await linkProfile(id, (i) => fs.readJSON(container.profile(i)));
+        return await linkProfile(id, i => fs.readJSON(container.profile(i)));
     } catch (e) {
         throw exceptions.create("profile-link", { id, error: String(e) });
     }

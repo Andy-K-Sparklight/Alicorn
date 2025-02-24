@@ -6,7 +6,7 @@
  * 3. If a bundle is found, loads main module from it.
  */
 import { update } from "@/main/sys/update";
-import fs from "node:fs/promises";
+import fs from "fs-extra";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import * as semver from "semver";

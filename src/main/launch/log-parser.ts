@@ -23,12 +23,11 @@ function compatFragment(src: string): string {
 }
 
 function isPossiblyXmlLog(src: string): boolean {
-    return src.trim().replaceAll("\n", "").startsWith("<log4j");
+    return src.replaceAll("\n", "").trim().startsWith("<log4j");
 }
 
 function parseAsRaw(src: string, index: number): GameProcessLog {
     const ss = src.toLowerCase();
-    console.log(src);
     const level = ["fatal", "error", "warn", "info", "debug", "trace"].find(lv => ss.includes(lv))?.toUpperCase() ?? "INFO";
     return {
         index,

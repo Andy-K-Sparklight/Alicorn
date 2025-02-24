@@ -7,7 +7,6 @@ import * as child_process from "node:child_process";
 import path from "node:path";
 import * as util from "node:util";
 import { pEvent } from "p-event";
-import { dedent } from "ts-dedent";
 import * as vite from "vite";
 import { processResources } from "~/build-src/resources";
 import { type BuildVariant, createBuildConfig } from "~/config";
@@ -43,8 +42,6 @@ export async function build(variant: BuildVariant) {
         external: ["electron", "original-fs"],
         define: defines,
         outdir: outputDir,
-        metafile: true,
-        drop: isProd ? ["console"] : undefined,
         alias: {
             "readable-stream": "node:stream"
         },
@@ -65,10 +62,7 @@ export async function build(variant: BuildVariant) {
         format: "esm",
         banner: {
             // A patch to make require available
-            js: dedent`
-                import { createRequire } from "node:module";
-                global.require = createRequire(import.meta.url);
-            `
+            js: "import { createRequire } from \"node:module\";\nglobal.require = createRequire(import.meta.url);\n"
         },
         ...sharedOptions
     };

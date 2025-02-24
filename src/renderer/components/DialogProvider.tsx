@@ -47,9 +47,10 @@ export function DialogProvider<T, P>(props: PropsWithChildren<DialogProviderProp
         setOpen(true);
         setMount(true);
 
-        return new Promise<T>(res => {
-            resolver.current = res;
-        });
+        const { promise, resolve } = Promise.withResolvers<T>();
+        resolver.current = resolve;
+
+        return promise;
     }
 
     const contextValue: DialogProviderContextContent<T> = { openDialog };

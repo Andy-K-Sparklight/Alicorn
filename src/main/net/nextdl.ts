@@ -36,14 +36,7 @@ export interface NextDownloadTask {
     tries: number;
 }
 
-/**
- * Internal status enum indicating the result of a transfer request.
- */
-enum NextRequestStatus {
-    SUCCESS,
-    RETRY,
-    FATAL
-}
+type NextRequestStatus = "success" | "retry" | "fatal";
 
 const pendingTasks: NextDownloadTask[] = [];
 const runningTasks = new Set<NextDownloadTask>();
@@ -92,12 +85,12 @@ async function beginWork(task: NextDownloadTask) {
 
     runningTasks.delete(task);
 
-    if (st === NextRequestStatus.SUCCESS) {
+    if (st === "success") {
         // Resolved
         console.debug(`NextDL Got: ${task.req.origin} (Using ${task.activeURL})`);
         void task.emitter.emit("finish");
         return;
-    } else if (st === NextRequestStatus.FATAL) {
+    } else if (st === "fatal") {
         // Skip the tries
         console.debug(`NextDL Ign: ${task.req.origin} (Skipping ${task.activeURL})`);
         task.tries = Number.MAX_SAFE_INTEGER;
@@ -113,16 +106,16 @@ async function beginWork(task: NextDownloadTask) {
  * Resolves the download task once.
  */
 async function resolveOnce(task: NextDownloadTask): Promise<NextRequestStatus> {
-    if (task.signal?.aborted) return NextRequestStatus.FATAL;
+    if (task.signal?.aborted) return "fatal";
 
     const res = await retrieve(task);
 
-    if (res === NextRequestStatus.SUCCESS) {
+    if (res === "success") {
         if (task.req.validate && task.req.sha1) {
 
-            return await hash.checkFile(task.req.path, "sha1", task.req.sha1) ? NextRequestStatus.SUCCESS : NextRequestStatus.RETRY;
+            return await hash.checkFile(task.req.path, "sha1", task.req.sha1) ? "success" : "retry";
         } else {
-            return NextRequestStatus.SUCCESS;
+            return "success";
         }
     }
 
@@ -160,7 +153,7 @@ async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
     let res: Response | null = null;
 
     const timer = requestTimeout > 0 && setTimeout(() => {
-        if (!res) { // Avoid aborting the request too early
+        if (!res) { // Avoid aborting the request when it has fulfilled
             ac.abort("Request timed out");
         }
     }, requestTimeout);
@@ -176,56 +169,78 @@ async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
         }
 
         if (!res.ok || !res.body) {
-            if (res.status >= 400 && res.status < 500) {
+            if (res.status >= 400 && res.status < 500 && res.status !== 429) {
                 console.warn(`Irrecoverable status code: ${res.status}`);
-                return NextRequestStatus.FATAL; // When encountering such status code a retry may only bring limited effect
+                return "fatal"; // When encountering such status code a retry may only bring limited effect
             }
             console.warn(`Unexpected status code: ${res.status}`);
-            return NextRequestStatus.RETRY;
+            return "retry";
         }
     } catch (e) {
         console.warn(`Fetch request failed: ${e}`);
-        return NextRequestStatus.RETRY;
+        return "retry";
     }
 
 
     try {
         await fs.ensureFile(task.req.path);
         const writeStream = Stream.Writable.toWeb(fs.createWriteStream(task.req.path)) as WritableStream<Uint8Array>;
-        const guardStream = createTransferGuardStream(minSpeed);
-        await res.body.pipeThrough(guardStream).pipeTo(writeStream);
-        return NextRequestStatus.SUCCESS;
+        const guard = createGuard(minSpeed);
+        const streamSignal = AbortSignal.any([task.signal, guard.signal].filter(isTruthy));
+        await res.body.pipeThrough(guard.stream).pipeTo(writeStream, { signal: streamSignal });
+        guard.clear();
+        return "success";
     } catch (e) {
         console.warn(`Error when transferring data: ${e}`);
-        return NextRequestStatus.RETRY;
+        return "retry";
     }
+}
+
+interface Guard {
+    signal: AbortSignal;
+    stream: TransformStream<Uint8Array, Uint8Array>;
+    clear: () => void;
 }
 
 /**
  * Creates a transform stream which counts bytes transferred and aborts the transfer when the speed is slower than the
  * given limit.
  */
-function createTransferGuardStream(minSpeed: number): TransformStream<Uint8Array, Uint8Array> {
+function createGuard(minSpeed: number): Guard {
     let lastUpdateTime = Date.now();
     let tries = 0;
-    return new TransformStream<Uint8Array, Uint8Array>({
-        transform(chunk, controller) {
-            const currentTime = Date.now();
-            const speed = chunk.byteLength / ((currentTime - lastUpdateTime) / 1000);
-            lastUpdateTime = currentTime;
+    let bytesSinceLastUpdate = 0;
+    const ac = new AbortController();
 
-            if (speed < minSpeed) {
-                tries++;
-                if (tries >= 3) {
-                    controller.error(`Transfer speed too slow (${minSpeed}B/s)`);
-                    return;
-                }
-            } else {
-                tries = 0;
+    const timer = setInterval(() => {
+        const currentTime = Date.now();
+        const speed = bytesSinceLastUpdate / ((currentTime - lastUpdateTime) / 1000);
+        lastUpdateTime = currentTime;
+
+        if (speed < minSpeed) {
+            tries++;
+            if (tries >= 3) {
+                ac.abort(`Transfer speed too slow (${minSpeed}B/s)`);
+                return;
             }
+        } else {
+            tries = 0;
+            bytesSinceLastUpdate = 0;
+        }
+    }, 1000);
+
+    const st = new TransformStream<Uint8Array, Uint8Array>({
+        transform(chunk, controller) {
+            bytesSinceLastUpdate += chunk.byteLength;
             controller.enqueue(chunk);
         }
     });
+
+    return {
+        signal: ac.signal,
+        stream: st,
+        clear: () => clearInterval(timer)
+    };
 }
 
 export const nextdl = { get };

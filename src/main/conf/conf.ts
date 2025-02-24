@@ -1,6 +1,6 @@
+import { windowControl } from "@/main/sys/window-control";
 import { isENOENT } from "@/main/util/fs";
 import deepFreeze from "deep-freeze-es6";
-import { BrowserWindow } from "electron";
 import fs from "fs-extra";
 import os from "node:os";
 import path from "node:path";
@@ -345,7 +345,7 @@ let config: UserConfig = deepFreeze(structuredClone(DEFAULT_CONFIG));
 
 function update(c: UserConfig) {
     config = c;
-    BrowserWindow.getAllWindows().forEach(w => w.webContents.send("configChanged", c));
+    windowControl.getMainWindow()?.webContents.send("configChanged", c);
 }
 
 function alter(fn: (c: UserConfig) => void) {

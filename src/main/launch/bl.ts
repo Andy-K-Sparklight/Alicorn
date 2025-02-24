@@ -59,9 +59,7 @@ function getInstance(gid: string): GameProcess {
 function removeInstance(gid: string): void {
     const g = games.get(gid);
     games.delete(gid);
-    if (g) {
-        g.detach();
-    }
+    g?.detach();
 }
 
 export const bl = { launch, getInstance, removeInstance };

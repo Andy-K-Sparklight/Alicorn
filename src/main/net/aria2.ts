@@ -5,7 +5,7 @@
 import { conf } from "@/main/conf/conf";
 import { paths } from "@/main/fs/paths";
 import type { DlxDownloadRequest } from "@/main/net/dlx";
-import { WebSocketJsonRpcClient } from "@/main/net/rpc";
+import { WebSocketJsonRpcClient } from "@/main/net/ws-rpc";
 import { getExecutableExt } from "@/main/sys/os";
 import { exceptions } from "@/main/util/exception";
 import { net } from "electron";
@@ -186,8 +186,8 @@ async function init() {
         console.log(`Connected to aria2c version ${version}`);
 
         // Bind event listeners
-        aria2cRpcClient.on("aria2.onDownloadComplete", ({ gid }) => notifyComplete(gid));
-        aria2cRpcClient.on("aria2.onDownloadError", ({ gid }) => void notifyError(gid));
+        aria2cRpcClient.on("aria2.onDownloadComplete", e => notifyComplete(e.gid));
+        aria2cRpcClient.on("aria2.onDownloadError", e => void notifyError(e.gid));
 
         isAvailable = true;
     } catch (e) {

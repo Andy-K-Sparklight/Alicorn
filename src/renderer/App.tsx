@@ -67,7 +67,7 @@ function MainArea() {
 }
 
 function DefaultPageRedirect() {
-    const [setupDone] = useLocalStorage("setup.done"); // TODO update the flag when setup is done
+    const [setupDone] = useLocalStorage("setup.done");
     return <Redirect to={setupDone ? "/games" : "/setup"}/>;
 }
 

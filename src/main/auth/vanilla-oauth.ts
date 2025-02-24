@@ -61,7 +61,7 @@ async function browserLogin(part: string): Promise<string> {
 
     void w.loadURL(OAUTH_URL);
 
-    await pEvent(w, "close");
+    await pEvent(w, "close", { rejectionEvents: [] });
 
     return code;
 }

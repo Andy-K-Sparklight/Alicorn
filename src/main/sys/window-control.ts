@@ -1,4 +1,4 @@
-import { screen } from "electron";
+import { type BrowserWindow, screen } from "electron";
 
 /**
  * Gets an optimal window size for the main window.
@@ -21,4 +21,14 @@ function optimalSize(): [number, number] {
     return [Math.round(width * scaleFactor), Math.round(height * scaleFactor)];
 }
 
-export const windowControl = { optimalSize };
+let mainWindow: BrowserWindow | null = null;
+
+function setMainWindow(w: typeof mainWindow) {
+    mainWindow = w;
+}
+
+function getMainWindow() {
+    return mainWindow;
+}
+
+export const windowControl = { optimalSize, setMainWindow, getMainWindow };

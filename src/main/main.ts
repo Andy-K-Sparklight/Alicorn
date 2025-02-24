@@ -14,17 +14,11 @@ import events from "node:events";
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { dedent } from "ts-dedent";
 import pkg from "~/package.json";
 import { runInstrumentedTest } from "~/test/instrumented/entry";
 import "v8-compile-cache";
 
 void main();
-
-/**
- * Main window.
- */
-let mainWindow: BrowserWindow | null = null;
 
 /**
  * Main entry point.
@@ -59,7 +53,8 @@ async function main() {
 
     if (import.meta.env.AL_TEST) {
         paths.setup({
-            storeRoot: path.resolve("emulated", "store")
+            storeRoot: path.resolve("emulated", "store"),
+            gameRoot: path.resolve("emulated", "store", "game")
         });
     } else {
         paths.setup();
@@ -130,7 +125,7 @@ async function setupMainWindow() {
     const [defWidth, defHeight] = windowControl.optimalSize();
     const hasFrame = conf().dev.showFrame;
 
-    mainWindow = new BrowserWindow({
+    const w = new BrowserWindow({
         width: Math.floor(width || defWidth),
         height: Math.floor(height || defHeight),
         webPreferences: {
@@ -148,29 +143,31 @@ async function setupMainWindow() {
         title: "Alicorn Launcher"
     });
 
+    windowControl.setMainWindow(w);
+
     // Open DevTools if applicable
     if (hasDevTools) {
-        injectDevToolsStyles(mainWindow);
-        mainWindow.webContents.openDevTools();
+        injectDevToolsStyles(w);
+        w.webContents.openDevTools();
     }
 
-    mainWindow.on("resized", () => {
-        conf.alter(c => c.app.window.size = mainWindow!.getSize());
+    w.on("resized", () => {
+        conf.alter(c => c.app.window.size = w!.getSize());
     });
 
-    mainWindow.on("moved", () => {
-        conf.alter(c => c.app.window.pos = mainWindow!.getPosition());
+    w.on("moved", () => {
+        conf.alter(c => c.app.window.pos = w!.getPosition());
     });
 
-    mainWindow.webContents.on("devtools-opened", () => {
-        mainWindow?.webContents?.send("devToolsOpened");
+    w.webContents.on("devtools-opened", () => {
+        w.webContents.send("devToolsOpened");
     });
 
-    mainWindow.setMenu(null);
+    w.setMenu(null);
 
     // Exit app once main window closed
-    mainWindow.once("closed", () => {
-        mainWindow = null;
+    w.once("closed", () => {
+        windowControl.setMainWindow(null);
         void shutdownApp();
     });
 
@@ -180,9 +177,9 @@ async function setupMainWindow() {
     if (import.meta.env.AL_DEV) {
         const devServerURL = `http://localhost:${import.meta.env.AL_DEV_SERVER_PORT}/`;
         console.log(`Picked up dev server URL: ${devServerURL}`);
-        await mainWindow.loadURL(devServerURL);
+        await w.loadURL(devServerURL);
     } else {
-        await mainWindow.loadURL("app://./index.html");
+        await w.loadURL("app://./index.html");
     }
 }
 
@@ -234,7 +231,7 @@ function injectDevToolsStyles(w: BrowserWindow) {
     if (os.platform() !== "win32") return;
 
     w.webContents.on("devtools-opened", () => {
-        const css = dedent`
+        const css = `
             :root {
                 --source-code-font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace !important;
                 --source-code-font-size: 14px !important;
@@ -243,7 +240,7 @@ function injectDevToolsStyles(w: BrowserWindow) {
                 --default-font-size: var(--source-code-font-size) !important;
             }
         `;
-        w.webContents.devToolsWebContents?.executeJavaScript(dedent`
+        w.webContents.devToolsWebContents?.executeJavaScript(`
             const s = document.createElement('style');
             s.innerHTML = '${css.replaceAll("\n", " ").replaceAll("'", "\\'")}';
             document.body.append(s);
@@ -306,8 +303,9 @@ function checkSingleInstance() {
         return false;
     } else {
         const reopenWindow = () => {
-            mainWindow?.show();
-            mainWindow?.restore();
+            const w = windowControl.getMainWindow();
+            w?.show();
+            w?.restore();
         };
         app.on("second-instance", reopenWindow);
 

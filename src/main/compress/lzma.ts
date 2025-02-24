@@ -47,14 +47,14 @@ async function inflate(src: string, dst: string) {
     } else {
         // JS impl
         const dat = await fs.readFile(src);
-        const inflated = await new Promise<Buffer>((res, rej) => {
-            lzmaJSMod.decompress(dat, (r, e) => {
-                if (e) rej(e);
-                else res(Buffer.from(r));
-            });
+        const { promise, resolve, reject } = Promise.withResolvers<Buffer>();
+
+        lzmaJSMod.decompress(dat, (r, e) => {
+            if (e) reject(e);
+            else resolve(Buffer.from(r));
         });
 
-        await fs.writeFile(dst, inflated);
+        await fs.writeFile(dst, await promise);
     }
 }
 

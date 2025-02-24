@@ -28,34 +28,35 @@ async function install(gameId: string): Promise<void> {
         });
     }
 
-    // TODO add rej error handler
-    return new Promise((res, rej) => {
-        port.onmessage = (e: MessageEvent<VanillaInstallEvent>) => {
-            switch (e.data.type) {
-                case "progress":
-                    progressMap.set(gameId, e.data.progress);
-                    break;
-                case "finish":
-                    port.close();
-                    progressMap.delete(gameId);
-                    addToast({
-                        severity: "success",
-                        title: t("toast.game-installed")
-                    });
-                    res();
-                    break;
-                case "error":
-                    port.close();
-                    progressMap.delete(gameId);
-                    rej(e.data.err);
-                    break;
-            }
+    const { promise, resolve, reject } = Promise.withResolvers<void>();
 
-            // Progress events come at a very high rate and must be throttled for acceptable performance
-            // It's guaranteed the last call ("finish") will not be ignored
-            emitChange();
-        };
-    });
+    port.onmessage = (e: MessageEvent<VanillaInstallEvent>) => {
+        switch (e.data.type) {
+            case "progress":
+                progressMap.set(gameId, e.data.progress);
+                break;
+            case "finish":
+                port.close();
+                progressMap.delete(gameId);
+                addToast({
+                    severity: "success",
+                    title: t("toast.game-installed")
+                });
+                resolve();
+                break;
+            case "error":
+                port.close();
+                progressMap.delete(gameId);
+                reject(e.data.err);
+                break;
+        }
+
+        // Progress events come at a very high rate and must be throttled for acceptable performance
+        // It's guaranteed the last call ("finish") will not be ignored
+        emitChange();
+    };
+
+    return promise;
 }
 
 function makeSubscribe(gameId: string) {

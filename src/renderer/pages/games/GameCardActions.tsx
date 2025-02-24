@@ -34,7 +34,6 @@ export function GameCardActions({ installStatus, gameId, onInstall }: GameAction
 
     return <div className="flex gap-2">
         {
-            // TODO bind button actions
             installStatus === "installed" ?
                 <Button isIconOnly isLoading={launching} color="primary" onPress={launch}>
                     <CirclePlayIcon/>

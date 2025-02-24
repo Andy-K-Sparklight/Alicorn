@@ -44,21 +44,17 @@ async function main() {
     native.ext.onDevToolsOpened(printDevToolsWarn);
 }
 
-function Root() {
-    return <Router hook={useHashLocation}>
-        <ThemeSwitchProvider>
-            <App/>
-        </ThemeSwitchProvider>
-    </Router>;
-}
-
 function render() {
     const rootEle = document.createElement("div");
     document.body.appendChild(rootEle);
     const root = createRoot(rootEle);
     root.render(
         <StrictMode>
-            <Root/>
+            <Router hook={useHashLocation}>
+                <ThemeSwitchProvider>
+                    <App/>
+                </ThemeSwitchProvider>
+            </Router>
         </StrictMode>
     );
 }

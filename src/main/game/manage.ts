@@ -1,9 +1,9 @@
 import type { GameProfile } from "@/main/game/spec";
 import { reg } from "@/main/registry/registry";
-import { BrowserWindow } from "electron";
+import { windowControl } from "@/main/sys/window-control";
 
 function emitChange() {
-    BrowserWindow.getAllWindows().forEach(w => w.webContents.send("gameChanged"));
+    windowControl.getMainWindow()?.webContents.send("gameChanged");
 }
 
 /**

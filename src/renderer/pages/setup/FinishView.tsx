@@ -3,16 +3,14 @@ import { Button } from "@heroui/react";
 import { ArrowRightIcon, CheckCircleIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useLocalStorage } from "react-use";
 
 export function FinishView() {
     const { t } = useTranslation("setup", { keyPrefix: "finish" });
-    const [, markSetupDone] = useLocalStorage("setup.done");
     const nav = useNav();
 
     function finishSetup() {
         nav("/");
-        markSetupDone("1");
+        localStorage.setItem("setup.done", "1");
     }
 
     return <div className="flex flex-col w-5/6 h-full mx-auto items-center justify-center gap-10">

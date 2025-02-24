@@ -57,11 +57,13 @@ export class WebSocketJsonRpcClient {
 
         this.#ws.send(body);
 
-        return new Promise((res, rej) => {
-            this.#callbacks.set(id, (e, d) => {
-                if (e) rej(e);
-                else res(d);
-            });
+        const { promise, resolve, reject } = Promise.withResolvers<any>();
+
+        this.#callbacks.set(id, (e, d) => {
+            if (e) reject(e);
+            else resolve(d);
         });
+
+        return promise;
     }
 }

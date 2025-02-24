@@ -77,7 +77,6 @@ ipcMain.on("installGame", async (e, gameId) => {
 
         game.launchHint.profileId = p.id;
 
-        // TODO patch `javaVersion` for legacy profiles without such key
         await jrt.installRuntime(p.javaVersion?.component ?? "jre-legacy", { onProgress });
 
         await vanillaInstaller.installLibraries(p, c, new Set(), { onProgress });

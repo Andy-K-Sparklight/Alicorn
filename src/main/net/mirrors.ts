@@ -4,7 +4,7 @@ import { net } from "electron";
 
 interface Mirror {
     name: string;
-    test?: {
+    test: {
         url: string;
         challenge: string;
     };
@@ -152,22 +152,29 @@ async function bench(): Promise<void> {
         return;
     }
 
-    const enabledMirrors: string[] = [];
+    const timeMap = new Map<string, Promise<number>>();
 
-    for (const m of mirrorList) {
-        if (m.test) {
-            const s1 = await testSpeed(m.test.url);
-            const s2 = await testSpeed(m.test.challenge);
+    async function getSpeed(url: string) {
+        let v = timeMap.get(url);
+        if (!v) {
+            v = testSpeed(url);
+            timeMap.set(url, v);
+        }
+        return await v;
+    }
 
-            if (s1 <= s2) {
-                // The mirror is not faster, ignore it
-                continue;
-            }
+    const enabledMirrors = (await Promise.all(mirrorList.map(async m => {
+        const s1 = await getSpeed(m.test.url);
+        const s2 = await getSpeed(m.test.challenge);
+
+        if (s1 <= s2) {
+            // The mirror is not faster, ignore it
+            return;
         }
 
         console.log(`Enabling mirror: ${m.name}`);
-        enabledMirrors.push(m.name);
-    }
+        return m.name;
+    }))).filter(isTruthy);
 
     conf.alter(c => c.net.mirror.picked = enabledMirrors);
 }
@@ -183,8 +190,8 @@ async function testSpeed(url: string): Promise<number> {
             return -1;
         }
         const arr = await res.arrayBuffer();
-        const speed = arr.byteLength / (Date.now() - t);
-        console.log(`Estimated speed: ${speed} (KB/s)`);
+        const speed = Math.round(arr.byteLength / (Date.now() - t));
+        console.log(`Estimated speed of ${url}: ${speed} (KB/s)`);
         return speed;
     } catch (e) {
         console.warn(`Unreachable URL: ${url}`);
