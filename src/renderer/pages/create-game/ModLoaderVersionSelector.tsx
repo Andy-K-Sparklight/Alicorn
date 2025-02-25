@@ -4,14 +4,13 @@ import { Input } from "@heroui/react";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-interface FabricVersionSelectorProps {
-    type: "fabric" | "quilt";
+interface ModLoaderVersionSelectorProps {
     value: string;
     onChange: (v: string) => void;
 }
 
-export function FabricOrQuiltVersionSelector({ type, value, onChange }: FabricVersionSelectorProps) {
-    const { t } = useTranslation("pages", { keyPrefix: `create-game.${type}-version` });
+export function ModLoaderVersionSelector({ value, onChange }: ModLoaderVersionSelectorProps) {
+    const { t } = useTranslation("pages", { keyPrefix: `create-game.loader-version` });
     const [isAuto, setIsAuto] = useState(true);
 
     function handleSelectionChange(v: string) {

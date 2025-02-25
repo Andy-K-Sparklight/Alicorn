@@ -132,10 +132,12 @@ ipcMain.handle("queryAvailableModLoaders", async (_, gameVersion) => {
 
     const [
         fabricVersions,
-        quiltVersions
+        quiltVersions,
+        neoforgedVersions
     ] = await Promise.all([
         fabricInstaller.getAvailableGameVersions(),
-        quiltInstaller.getAvailableGameVersions()
+        quiltInstaller.getAvailableGameVersions(),
+        neoforgedInstaller.queryLoaderVersions(gameVersion)
     ]);
 
     if (fabricVersions.includes(gameVersion)) {
@@ -144,6 +146,10 @@ ipcMain.handle("queryAvailableModLoaders", async (_, gameVersion) => {
 
     if (quiltVersions.includes(gameVersion)) {
         supported.push("quilt");
+    }
+
+    if (neoforgedVersions.length > 0) {
+        supported.push("neoforged");
     }
 
     // TODO add other mod loaders

@@ -67,7 +67,7 @@ ipcMain.handle("addGame", async (_, init) => {
         "old_beta": "vanilla-old-beta"
     } as const)[p.type] ?? "unknown";
 
-    if (installProps.type === "fabric" || installProps.type === "quilt") {
+    if (installProps.type === "fabric" || installProps.type === "quilt" || installProps.type === "neoforged") {
         type = installProps.type;
     }
 

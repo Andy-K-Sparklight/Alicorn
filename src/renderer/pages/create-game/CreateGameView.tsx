@@ -8,8 +8,8 @@ import { addToast, Button, Input, Switch } from "@heroui/react";
 import { AccountSelector } from "@pages/create-game/AccountSelector";
 import { AssetLevelSelector } from "@pages/create-game/AssetsLevelSelector";
 import { ContainerSelector } from "@pages/create-game/ContainerSelector";
-import { FabricOrQuiltVersionSelector } from "@pages/create-game/FabricOrQuiltVersionSelector";
 import { ModLoaderSelector } from "@pages/create-game/ModLoaderSelector";
+import { ModLoaderVersionSelector } from "@pages/create-game/ModLoaderVersionSelector";
 import { VersionSelector } from "@pages/create-game/VersionSelector";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -40,7 +40,7 @@ export function CreateGameView() {
     const [assetsLevel, setAssetsLevel] = useState<"full" | "video-only">("full");
 
     const [installType, setInstallType] = useState<string>("vanilla");
-    const [fabricOrQuiltVersion, setFabricOrQuiltVersion] = useState<string>("");
+    const [loaderVersion, setLoaderVersion] = useState<string>("");
 
     const [creating, setCreating] = useState(false);
     const nav = useNav();
@@ -79,10 +79,11 @@ export function CreateGameView() {
                 };
             case "fabric":
             case "quilt":
+            case "neoforged":
                 return {
                     type: installType,
                     gameVersion,
-                    loaderVersion: fabricOrQuiltVersion
+                    loaderVersion
                 };
         }
 
@@ -220,10 +221,8 @@ export function CreateGameView() {
                     />
 
                     {
-                        (installType === "fabric" || installType === "quilt") &&
-                        <FabricOrQuiltVersionSelector
-                            type={installType} value={fabricOrQuiltVersion} onChange={setFabricOrQuiltVersion}
-                        />
+                        (installType === "fabric" || installType === "quilt" || installType === "neoforged") &&
+                        <ModLoaderVersionSelector value={loaderVersion} onChange={setLoaderVersion}/>
                     }
                 </div>
 

@@ -62,21 +62,16 @@ create-game:
     quilt:
       label: Quilt
       sub: Play Quilt mods and most (but not all) Fabric mods. Powered by the Quilt loader.
+    neoforged:
+      label: NeoForged
+      sub: Play NeoForged mods. Powered by the NeoForged loader.
 
-  fabric-version:
-    title: Fabric Version
+  loader-version:
+    title: Mod Loader Version
     auto: Let Alicorn Decide
     manual: Let Me Choose
-    label: Fabric Version
-    alert: It's better to let Alicorn decide if you aren't clear of what version you need.
-    placeholder: Auto
-
-  quilt-version:
-    title: Quilt Version
-    auto: Let Alicorn Decide
-    manual: Let Me Choose
-    label: Quilt Version
-    alert: It's better to let Alicorn decide if you aren't clear of what version you need.
+    label: Version
+    alert: It's better to let Alicorn decide if being unclear of the version needed.
     placeholder: Auto
 
 games:

@@ -62,21 +62,16 @@ create-game:
     quilt:
       label: 使用 Quilt
       sub: 基于 Fabric 的改进版。能支持 Quilt 模组和相当一部分 Fabric 模组（但不是全部）。
+    neoforged:
+      label: 使用 NeoForged
+      sub: Forge 的后继项目。仅支持专用的 NeoForged 模组。
 
-  fabric-version:
-    title: Fabric 版本号
+  loader-version:
+    title: 模组系统版本号
     auto: 让 Alicorn 选择
     manual: 让我选择
-    label: 目标 Fabric 版本号
-    alert: 除非需要使用某个特定的 Fabric 版本，否则让 Alicorn 选择会比较好。
-    placeholder: 自动
-
-  quilt-version:
-    title: Quilt 版本号
-    auto: 让 Alicorn 选择
-    manual: 让我选择
-    label: 目标 Quilt 版本号
-    alert: 除非需要使用某个特定的 Quilt 版本，否则让 Alicorn 选择会比较好。
+    label: 目标版本号
+    alert: 除非需要使用某个特定的版本，否则让 Alicorn 选择会比较好。
     placeholder: 自动
 
 games:

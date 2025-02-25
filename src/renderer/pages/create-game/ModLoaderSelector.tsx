@@ -23,7 +23,7 @@ export function ModLoaderSelector({ availableModLoaders, value, onChange }: ModL
         >
             {
                 availableModLoaders ?
-                    ["vanilla", "fabric", "quilt"].map(lv => {
+                    ["vanilla", "fabric", "quilt", "neoforged"].map(lv => {
                         if (!loaders.includes(lv)) return null;
 
                         return <Radio key={lv} value={lv} description={t(`${lv}.sub`)}>
