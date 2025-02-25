@@ -66,7 +66,7 @@ export function ExceptionDisplay() {
         detail = exp.detail;
     } else {
         type = "unknown";
-        detail = { error: String(currentException) };
+        detail = { error: currentException };
     }
 
     return <Modal isOpen={isOpen} onOpenChange={setOpen} size="xl">
@@ -87,7 +87,10 @@ export function ExceptionDisplay() {
 
                         <div className="p-4 rounded-2xl border-solid border-2 border-danger text-sm">
                             <pre className="text-wrap break-all">
-                                {String(detail.error)}
+                                {
+                                    typeof detail.error === "object" && "stack" in detail.error ?
+                                        String(detail.error.stack) : String(detail.error)
+                                }
                             </pre>
                         </div>
                     </>
