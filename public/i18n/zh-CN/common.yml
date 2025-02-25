@@ -68,6 +68,7 @@ exceptions:
     jrt-not-available: 所需的 Java 运行环境 {{component}} 不可用。
     jrt-not-verified: 无法启动 Java 虚拟机：{{bin}}
     launch-spawn: 启动游戏进程失败。
+    forge-install-failed: 无法执行 Forge / NeoForged 安装程序包。
 
 undefined: 未知
 

@@ -68,6 +68,7 @@ exceptions:
     jrt-not-available: "Java runtime unavailable: {{component}}"
     jrt-not-verified: "Failed to execute Java binary: {{bin}}"
     launch-spawn: Failed to spawn game process.
+    forge-install-failed: Unable to execute Forge / NeoForged installer.
 
 undefined: Unknown
 
