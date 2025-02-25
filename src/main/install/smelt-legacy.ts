@@ -1,8 +1,11 @@
 import type { Container } from "@/main/container/spec";
+import { paths } from "@/main/fs/paths";
 import type { Library } from "@/main/profile/version-profile";
 import fs from "fs-extra";
+import { nanoid } from "nanoid";
 import StreamZip from "node-stream-zip";
 import path from "node:path";
+import { COMPRESSION_LEVEL, zip } from "zip-a-folder";
 
 async function dumpContent(installer: string, container: Container): Promise<string> {
     let zip: StreamZip.StreamZipAsync | null = null;
@@ -46,5 +49,37 @@ function filterLibraries(libs: Library[], libName: string) {
     }
 }
 
+async function mergeClient(src: string, fp: string): Promise<void> {
+    console.debug(`Merging client: ${src} -> ${fp}`);
 
-export const smeltLegacy = { dumpContent };
+    const workDir = paths.temp.to(`forge-merge-${nanoid()}`);
+    await fs.emptyDir(workDir);
+
+    const targetZip = new StreamZip.async({ file: fp });
+    try {
+        await targetZip.extract(null, workDir);
+    } finally {
+        await targetZip.close();
+    }
+
+    const srcZip = new StreamZip.async({ file: src });
+    try {
+        const entries = Object.values(await srcZip.entries()).filter(e => e.isFile);
+
+        for (const ent of entries) {
+            const t = path.join(workDir, ent.name);
+            await fs.ensureDir(path.dirname(t));
+            await fs.remove(t);
+            await srcZip.extract(ent, t);
+        }
+    } finally {
+        await srcZip.close();
+    }
+
+    await fs.remove(path.join(workDir, "META-INF")); // Drop signatures
+    await fs.remove(fp);
+    await zip(workDir, fp, { compression: COMPRESSION_LEVEL.uncompressed });
+    await fs.remove(workDir);
+}
+
+export const smeltLegacy = { dumpContent, mergeClient };

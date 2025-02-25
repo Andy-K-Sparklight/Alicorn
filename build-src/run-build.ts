@@ -42,9 +42,6 @@ export async function build(variant: BuildVariant) {
         external: ["electron", "original-fs"],
         define: defines,
         outdir: outputDir,
-        alias: {
-            "readable-stream": "node:stream"
-        },
         legalComments: "none"
     };
 

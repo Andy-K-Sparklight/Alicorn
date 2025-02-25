@@ -86,7 +86,8 @@
         "virtua": "^0.40.0",
         "workerpool": "^9.2.0",
         "wouter": "^3.6.0",
-        "yaml": "^2.7.0"
+        "yaml": "^2.7.0",
+        "zip-a-folder": "^3.1.8"
     },
     "trustedDependencies": [
         "@swc/core",

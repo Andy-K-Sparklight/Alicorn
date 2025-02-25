@@ -3,7 +3,6 @@ import { dlx } from "@/main/net/dlx";
 import { netx } from "@/main/net/netx";
 import { exceptions } from "@/main/util/exception";
 import { progress, type ProgressController } from "@/main/util/progress";
-import * as semver from "semver";
 
 const NEOFORGED_API = "https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge";
 
@@ -20,17 +19,16 @@ async function syncVersions(): Promise<string[]> {
 async function queryLoaderVersions(gameVersion: string, control?: ProgressController): Promise<string[]> {
     control?.onProgress?.(progress.indefinite("neoforged.resolve"));
 
-    const gv = semver.coerce(semver.valid(gameVersion));
-    if (!gv) return [];
+    // TODO fix version detection
+    const [, minor, patch] = gameVersion.split(".");
 
     const versions = await syncVersions();
 
     // NeoForged does not provide an API to query loader version for specific game
     // They name the releases using the `<minor>.<patch>` format so we'll parse it based on that
     return versions.filter(v => {
-        const sv = semver.coerce(semver.valid(v));
-        if (!sv) return false;
-        return sv.major === gv.minor && sv.minor === gv.patch;
+        const sv = v.split(".");
+        return sv[0] === (minor ?? "0") && sv[1] === (patch ?? "0");
     });
 }
 

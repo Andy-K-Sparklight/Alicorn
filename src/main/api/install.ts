@@ -51,6 +51,7 @@ ipcMain.on("installGame", async (e, gameId) => {
 
         let forgeInstallerPath: string | null = null;
         let forgeInstallerInit: SmeltInstallInit | null = null;
+        let forgeInstallerType: "installer" | "universal" | "client" = "installer";
         let forgeInstallerLegacy = "";
 
         if (installType === "neoforged") {
@@ -70,12 +71,15 @@ ipcMain.on("installGame", async (e, gameId) => {
                 loaderVersion = await forgeInstaller.pickLoaderVersion(gameVersion, { onProgress });
             }
 
-            forgeInstallerPath = await forgeInstaller.downloadInstaller(loaderVersion, { onProgress });
+            forgeInstallerType = forgeInstaller.getInstallType(gameVersion);
+            forgeInstallerPath = await forgeInstaller.downloadInstaller(loaderVersion, forgeInstallerType, { onProgress });
 
-            forgeInstallerLegacy = await smeltLegacy.dumpContent(forgeInstallerPath, c);
+            if (forgeInstallerType === "installer") {
+                forgeInstallerLegacy = await smeltLegacy.dumpContent(forgeInstallerPath, c);
+            }
         }
 
-        if (forgeInstallerPath && !forgeInstallerLegacy) {
+        if (forgeInstallerPath && !forgeInstallerLegacy && forgeInstallerType === "installer") {
             forgeInstallerInit = await smelt.readInstallProfile(forgeInstallerPath);
         }
 
@@ -111,7 +115,9 @@ ipcMain.on("installGame", async (e, gameId) => {
 
             case "neoforged":
             case "forge":
-                if (forgeInstallerLegacy) {
+                if (forgeInstallerType !== "installer") {
+                    p = vanillaProfile;
+                } else if (forgeInstallerLegacy) {
                     p = await profileLoader.fromContainer(forgeInstallerLegacy, c);
                 } else {
                     const fid = await smelt.deployVersionProfile(forgeInstallerInit!, c);
@@ -128,10 +134,13 @@ ipcMain.on("installGame", async (e, gameId) => {
         await vanillaInstaller.installLibraries(p, c, new Set(), { onProgress });
 
         if (installType === "neoforged" || installType === "forge") {
-            if (forgeInstallerInit) {
+            if (forgeInstallerInit && forgeInstallerType === "installer") {
                 await smelt.runPostInstall(forgeInstallerInit!, forgeInstallerPath!, p, c, { onProgress });
-                await fs.remove(forgeInstallerPath!);
+            } else {
+                await smeltLegacy.mergeClient(forgeInstallerPath!, c.client(p.id));
             }
+
+            await fs.remove(forgeInstallerPath!);
         }
 
         await vanillaInstaller.installAssets(p, c, game.assetsLevel, { onProgress });
