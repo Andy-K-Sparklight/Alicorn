@@ -51,7 +51,7 @@ create-game:
 
   mod-loader-title: 模组系统
   mod-loader:
-    loading: 正在获取可用模组系统……
+    loading: 正在检查模组系统兼容性……
     missing: 找不到想要的模组系统？或许你所选的游戏版本不受其支持。
     vanilla:
       label: 不安装模组系统
@@ -65,6 +65,9 @@ create-game:
     neoforged:
       label: 使用 NeoForged
       sub: Forge 的后继项目。仅支持专用的 NeoForged 模组。
+    forge:
+      label: 使用 Forge
+      sub: 适用于旧版本游戏的模组系统。仅支持专用的 Forge 模组。
 
   loader-version:
     title: 模组系统版本号

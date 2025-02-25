@@ -80,6 +80,7 @@ export function CreateGameView() {
             case "fabric":
             case "quilt":
             case "neoforged":
+            case "forge":
                 return {
                     type: installType,
                     gameVersion,
@@ -221,7 +222,7 @@ export function CreateGameView() {
                     />
 
                     {
-                        (installType === "fabric" || installType === "quilt" || installType === "neoforged") &&
+                        (["fabric", "quilt", "neoforged", "forge"].includes(installType)) &&
                         <ModLoaderVersionSelector value={loaderVersion} onChange={setLoaderVersion}/>
                     }
                 </div>

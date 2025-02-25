@@ -1,6 +1,6 @@
 import { Radio, RadioGroup } from "@heroui/radio";
 import { Spinner } from "@heroui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 interface ModLoaderSelectorProps {
@@ -16,24 +16,33 @@ export function ModLoaderSelector({ availableModLoaders, value, onChange }: ModL
 
     loaders.unshift("vanilla");
 
+    useEffect(() => {
+        if (availableModLoaders && !availableModLoaders.includes(value)) {
+            onChange("vanilla");
+        }
+    }, [availableModLoaders]);
+
     return <>
         <RadioGroup
             value={value}
             onValueChange={onChange}
         >
             {
-                availableModLoaders ?
-                    ["vanilla", "fabric", "quilt", "neoforged"].map(lv => {
-                        if (!loaders.includes(lv)) return null;
+                !availableModLoaders &&
+                <div className="w-full flex justify-center items-center gap-6 my-2">
+                    <Spinner variant="wave"/>
+                    {t("loading")}
+                </div>
+            }
 
-                        return <Radio key={lv} value={lv} description={t(`${lv}.sub`)}>
-                            {t(`${lv}.label`)}
-                        </Radio>;
-                    }) :
-                    <div className="w-full h-full flex justify-center items-center gap-6">
-                        <Spinner variant="wave"/>
-                        {t("loading")}
-                    </div>
+            {
+                ["vanilla", "fabric", "quilt", "neoforged", "forge"].map(lv => {
+                    if (!loaders.includes(lv)) return null;
+
+                    return <Radio key={lv} value={lv} description={t(`${lv}.sub`)}>
+                        {t(`${lv}.label`)}
+                    </Radio>;
+                })
             }
         </RadioGroup>
 
