@@ -27,7 +27,7 @@ export function ExceptionDisplay() {
         // For cancellation, we only show a toast
         if (isKnownException(e) && (e as ExceptionProps<any>).type === "cancelled" || String(e).includes("AbortError")) {
             addToast({
-                severity: "warning",
+                color: "warning",
                 title: t("types.cancelled")
             });
             return;

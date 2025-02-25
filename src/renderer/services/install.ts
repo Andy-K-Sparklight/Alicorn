@@ -39,7 +39,7 @@ async function install(gameId: string): Promise<void> {
                 port.close();
                 progressMap.delete(gameId);
                 addToast({
-                    severity: "success",
+                    color: "success",
                     title: t("toast.game-installed")
                 });
                 resolve();

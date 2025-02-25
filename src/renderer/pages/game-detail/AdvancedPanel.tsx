@@ -123,7 +123,7 @@ function DestroyEntry() {
         if (res) {
             native.game.destroy(id);
             addToast({
-                severity: "success",
+                color: "success",
                 title: tc("toast.game-destroyed", { name })
             });
             nav("/games");
