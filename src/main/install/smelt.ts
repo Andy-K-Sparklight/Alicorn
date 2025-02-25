@@ -55,7 +55,6 @@ async function readInstallProfile(installer: string): Promise<SmeltInstallInit> 
         zip = new StreamZip.async({ file: installer });
         const data = await zip.entryData("install_profile.json");
         const obj = JSON.parse(data.toString());
-        console.log(data.toString());
 
         // TODO add support for V0 installers
         if (typeof obj === "object" && obj) {
@@ -184,18 +183,24 @@ async function extractLibraries(
 
     try {
         zip = new StreamZip.async({ file: installer });
+        const entries = Object.keys(await zip.entries());
 
-        for (const lib of init.installProfile.libraries) {
-            if (!lib.url) {
+        const libs = [...init.installProfile.libraries, ...init.versionProfile.libraries];
+
+        for (const lib of libs) {
+            if (!lib.url && !lib.downloads?.artifact?.url) {
                 // This file is included in the archive, unpack it
                 const m = new MavenName(lib.name);
                 const src = `maven/${m.toPath()}`;
-                const dst = container.library(lib.name);
 
-                console.debug(`Extracting bundled library: ${src}`);
+                if (entries.includes(src)) {
+                    const dst = container.library(lib.name);
 
-                await fs.ensureDir(path.dirname(dst));
-                await zip.extract(src, dst);
+                    console.debug(`Extracting bundled library: ${src}`);
+
+                    await fs.ensureDir(path.dirname(dst));
+                    await zip.extract(src, dst);
+                }
             }
 
             signal?.throwIfAborted();
@@ -304,7 +309,12 @@ async function runPostInstall(
 
         signal?.throwIfAborted();
 
-        await downloadMappings(profile, values.get("MOJMAPS")!, control);
+
+        const mojmaps = values.get("MOJMAPS");
+        if (mojmaps) {
+            await downloadMappings(profile, mojmaps, control);
+        }
+
         await extractLibraries(init, installer, container);
         await downloadLibraries(init, container, control);
 
@@ -335,6 +345,7 @@ async function runPostInstall(
 
         console.debug("Forge installation completed.");
     } catch (e) {
+        console.warn(e);
         throw exceptions.create("forge-install-failed", { error: e });
     }
 }
