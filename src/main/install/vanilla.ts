@@ -150,7 +150,10 @@ async function installLibraries(
 
     // Add client file
     const ca = profile.downloads.client;
-    const clientPath = container.client(profile.id);
+
+    // The client path must be referenced using the version name instead of the profile name
+    // This is important to keep compatibility with Forge and NeoForged
+    const clientPath = container.client(profile.version || profile.id);
 
     tasks.push({
         ...ca,

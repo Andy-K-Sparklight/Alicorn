@@ -7,10 +7,12 @@ export type ExceptionType = {
     auth: {}
     "fabric-no-version": { gameVersion: string }
     "quilt-no-version": { gameVersion: string }
+    "neoforged-no-version": { gameVersion: string }
     "profile-link": { id: string }
     "jrt-not-available": { component: string }
     "jrt-not-verified": { bin: string }
     "launch-spawn": {}
+    "forge-install-failed": {}
 }
 
 export interface ExceptionProps<K extends keyof ExceptionType> {

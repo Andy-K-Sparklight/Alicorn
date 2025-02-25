@@ -1,7 +1,9 @@
 import { containers } from "@/main/container/manage";
 import { games } from "@/main/game/manage";
 import { fabricInstaller } from "@/main/install/fabric";
+import { neoforgedInstaller } from "@/main/install/neoforged";
 import { quiltInstaller } from "@/main/install/quilt";
+import { smelt } from "@/main/install/smelt";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { ipcMain } from "@/main/ipc/typed";
 import { jrt } from "@/main/jrt/install";
@@ -9,6 +11,7 @@ import { profileLoader } from "@/main/profile/loader";
 import type { VersionProfile } from "@/main/profile/version-profile";
 import { reg } from "@/main/registry/registry";
 import type { Progress } from "@/main/util/progress";
+import fs from "fs-extra";
 
 export type VanillaInstallEvent =
     {
@@ -44,6 +47,21 @@ ipcMain.on("installGame", async (e, gameId) => {
         const installType = game.installProps.type;
         const { gameVersion } = game.installProps;
 
+        let forgeInstallerPath: string | null = null;
+
+        if (installType === "neoforged") {
+            let loaderVersion = game.installProps.loaderVersion;
+
+            if (!loaderVersion) {
+                loaderVersion = await neoforgedInstaller.pickLoaderVersion(gameVersion, { onProgress });
+            }
+
+            forgeInstallerPath = await neoforgedInstaller.downloadInstaller(loaderVersion, { onProgress });
+        }
+
+        // TODO add support for legacy installers
+        const forgeInstallerInit = forgeInstallerPath ? await smelt.readInstallProfile(forgeInstallerPath) : null;
+
         let p: VersionProfile;
         const vanillaProfile = await vanillaInstaller.installProfile(gameVersion, c, { onProgress });
 
@@ -51,6 +69,7 @@ ipcMain.on("installGame", async (e, gameId) => {
             case "vanilla":
                 p = vanillaProfile;
                 break;
+
             case "fabric": {
                 const fid = await fabricInstaller.retrieveProfile(
                     gameVersion,
@@ -73,6 +92,10 @@ ipcMain.on("installGame", async (e, gameId) => {
                 break;
             }
 
+            case "neoforged":
+                const fid = await smelt.deployVersionProfile(forgeInstallerInit!, c);
+                p = await profileLoader.fromContainer(fid, c);
+                break;
         }
 
         game.launchHint.profileId = p.id;
@@ -80,6 +103,11 @@ ipcMain.on("installGame", async (e, gameId) => {
         await jrt.installRuntime(p.javaVersion?.component ?? "jre-legacy", { onProgress });
 
         await vanillaInstaller.installLibraries(p, c, new Set(), { onProgress });
+
+        if (installType === "neoforged") {
+            await smelt.runPostInstall(forgeInstallerInit!, forgeInstallerPath!, p, c, { onProgress });
+            await fs.remove(forgeInstallerPath!);
+        }
 
         await vanillaInstaller.installAssets(p, c, game.assetsLevel, { onProgress });
 

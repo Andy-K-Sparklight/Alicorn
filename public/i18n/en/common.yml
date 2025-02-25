@@ -25,6 +25,14 @@ progress:
     resolve: Syncing Fabric Versions
   quilt:
     resolve: Syncing Quilt Versions
+  neoforged:
+    resolve: Syncing NeoForged Versions
+    download: Retrieving NeoForged Installer
+  mappings: Downloading Mappings
+  forge-install:
+    extract-libraries: Extracting Installer Libraries
+    download-libraries: Downloading Installer Libraries {{current}} / {{total}}
+    processors: Executing Installer Processor {{current}} / {{total}}
 
 input:
   string-array:

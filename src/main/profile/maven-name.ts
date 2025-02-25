@@ -1,3 +1,5 @@
+import { isTruthy } from "@/main/util/misc";
+
 /**
  * Parses a library name of Maven standard.
  */
@@ -24,11 +26,8 @@ export class MavenName {
      */
     toPath(): string {
         const groupPath = this.group.replaceAll(".", "/");
+        const jarName = [this.artifact, this.version, this.classifier].filter(isTruthy).join("-") + "." + this.ext;
 
-        let jarName = `${this.artifact}-${this.version}`;
-        if (this.classifier) jarName += `-${this.classifier}`;
-        jarName += `.${this.ext}`;
-
-        return `${groupPath}/${this.artifact}/${this.version}/${jarName}`;
+        return [groupPath, this.artifact, this.version, jarName].join("/");
     }
 }

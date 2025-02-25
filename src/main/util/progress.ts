@@ -18,7 +18,13 @@ export type ProgressStateName =
     "vanilla.download-assets" |
     "vanilla.link-assets" |
     "fabric.resolve" |
-    "quilt.resolve"
+    "quilt.resolve" |
+    "mappings" |
+    "neoforged.resolve" |
+    "neoforged.download" |
+    "forge-install.extract-libraries" |
+    "forge-install.download-libraries" |
+    "forge-install.processors"
 
 /**
  * Interface describing generic progress.

@@ -68,6 +68,11 @@ export type GameInstallProps =
         type: "fabric" | "quilt";
         gameVersion: string;
         loaderVersion: string;
+    } |
+    {
+        type: "neoforged";
+        gameVersion: string;
+        loaderVersion: string;
     }
 
 export const GAME_REG_VERSION = 2;

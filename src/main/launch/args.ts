@@ -8,6 +8,7 @@ import { filterRules } from "@/main/profile/rules";
 import type { Library } from "@/main/profile/version-profile";
 import { isTruthy } from "@/main/util/misc";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import pkg from "~/package.json";
 
 function createClasspath(init: LaunchInit): string {
@@ -34,7 +35,7 @@ function createClasspath(init: LaunchInit): string {
     const libs = uniqueLibs.map(lib => init.container.library(lib.name));
 
     // Add client.jar
-    libs.push(init.container.client(init.profile.id));
+    libs.push(init.container.client(init.profile.version || init.profile.id));
 
     return libs.join(path.delimiter);
 }
@@ -120,7 +121,7 @@ function createArguments(init: LaunchInit): string[] {
     if (init.profile.logging?.client) {
         const { argument, file } = init.profile.logging.client;
         const loggingConfigPath = init.container.loggingConfig(file.id);
-        const loggingArg = argument.replaceAll("${path}", loggingConfigPath);
+        const loggingArg = argument.replaceAll("${path}", pathToFileURL(loggingConfigPath).toString());
         vmArgs.push(
             loggingArg,
             "-Dlog4j2.formatMsgNoLookups=true",
