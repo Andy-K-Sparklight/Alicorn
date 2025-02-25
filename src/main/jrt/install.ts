@@ -49,7 +49,7 @@ function osPair(): string {
 }
 
 async function getProfile(componentName: string): Promise<JavaRuntimeProfile> {
-    const d = await (await netx.get(JRT_MANIFEST)).json();
+    const d = await netx.getJSON(JRT_MANIFEST);
     const availableProfiles = d?.[osPair()]?.[componentName];
 
     if (!Array.isArray(availableProfiles) || availableProfiles.length < 1) {
@@ -117,7 +117,7 @@ async function installRuntime(component: string, control?: ProgressController): 
     const profile = await getProfile(component);
     console.debug(`Picked up profile ${profile.manifest.url}`);
 
-    const dat = await (await netx.get(profile.manifest.url)).json();
+    const dat = await netx.getJSON(profile.manifest.url);
     let files = Object.entries(dat.files)
         .map(([name, file]) => ({ name, ...(file as FileHint) } as NamedFileHint));
 

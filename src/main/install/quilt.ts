@@ -23,9 +23,8 @@ let availableGameVersions: string[];
 async function getAvailableGameVersions() {
     if (!availableGameVersions) {
         const url = QUILT_META_API + "/versions/game";
-        const res = await netx.get(url);
-        if (!res.ok) throw exceptions.create("network", { url, code: res.status });
-        availableGameVersions = (await res.json()).map((v: { version: string }) => v.version);
+        const vs = await netx.getJSON(url);
+        availableGameVersions = vs.map((v: { version: string }) => v.version);
     }
 
     return availableGameVersions;
@@ -34,10 +33,7 @@ async function getAvailableGameVersions() {
 async function queryLoaderVersions(gameVersion: string): Promise<QuiltLoaderVersion[]> {
     const url = QUILT_META_API + `/versions/loader/${gameVersion}`;
 
-    const res = await netx.get(url);
-    if (!res.ok) throw exceptions.create("network", { url, code: res.status });
-
-    const entries = await res.json() as LoaderEntry[];
+    const entries = await netx.getJSON(url) as LoaderEntry[];
     return entries.map(e => e.loader);
 }
 
@@ -66,16 +62,13 @@ async function retrieveProfile(
 
     controller?.signal?.throwIfAborted();
 
-    const res = await netx.get(url);
-    if (!res.ok) throw exceptions.create("network", { url, code: res.status });
+    const qtp = await netx.getJSON(url);
+    if (!("id" in qtp) || typeof qtp.id !== "string") throw exceptions.create("quilt-no-version", { gameVersion });
 
-    const fbp = await res.json();
-    if (!("id" in fbp) || typeof fbp.id !== "string") throw exceptions.create("quilt-no-version", { gameVersion });
+    console.debug(`Writing profile with ID: ${qtp.id}`);
+    await fs.outputJSON(container.profile(qtp.id), qtp);
 
-    console.debug(`Writing profile with ID: ${fbp.id}`);
-    await fs.outputJSON(container.profile(fbp.id), fbp);
-
-    return fbp.id;
+    return qtp.id;
 }
 
 export const quiltInstaller = {

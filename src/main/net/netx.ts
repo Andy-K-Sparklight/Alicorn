@@ -24,6 +24,20 @@ async function get(url: string): Promise<Response> {
     throw exceptions.create("network", { url });
 }
 
+async function getJSON<T = any>(url: string): Promise<T> {
+    const r = await get(url);
+    if (!r.ok) throw exceptions.create("network", { url, code: r.status });
+
+    try {
+        return await r.json();
+    } catch (e) {
+        console.error(`Unable to fetch JSON from: ${r.url}`);
+        console.error(e);
+    }
+
+    throw exceptions.create("network", { url: r.url });
+}
+
 export const netx = {
-    get
+    get, getJSON
 };
