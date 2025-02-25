@@ -3,7 +3,6 @@ import { type GameProcessLog, logParser } from "@/main/launch/log-parser";
 import { exceptions } from "@/main/util/exception";
 import { nanoid } from "nanoid";
 import * as child_process from "node:child_process";
-import { ChildProcess } from "node:child_process";
 import EventEmitter from "node:events";
 import os from "node:os";
 import { Readable } from "node:stream";
@@ -61,7 +60,7 @@ export class GameProcess {
     logs: GameProcessLog[] = [];
 
     #readyPromise: Promise<void> | null = null;
-    #proc: ChildProcess | null = null;
+    #proc: child_process.ChildProcess | null = null;
     #memMonitTimer: NodeJS.Timer | null = null;
     #netMonitTimer: NodeJS.Timer | null = null;
 

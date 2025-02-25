@@ -12,13 +12,12 @@ import { net } from "electron";
 import Emittery from "emittery";
 import fs from "fs-extra";
 import getPort from "get-port";
-import childProcess from "node:child_process";
 import child_process from "node:child_process";
 import crypto from "node:crypto";
 import path from "node:path";
 import { pEvent } from "p-event";
 
-let aria2cProcess: childProcess.ChildProcess | null = null;
+let aria2cProcess: child_process.ChildProcess | null = null;
 let aria2cToken: string | null = null;
 let aria2cPort: number | null = null;
 let aria2cRpcClient: WebSocketJsonRpcClient | null = null;
