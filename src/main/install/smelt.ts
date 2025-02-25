@@ -17,7 +17,6 @@ import path from "node:path";
 import { pEvent } from "p-event";
 
 interface InstallProfile {
-    spec: 1;
     json: string;
     minecraft: string;
     data: Record<string, { client?: string }>;
@@ -56,9 +55,10 @@ async function readInstallProfile(installer: string): Promise<SmeltInstallInit> 
         zip = new StreamZip.async({ file: installer });
         const data = await zip.entryData("install_profile.json");
         const obj = JSON.parse(data.toString());
+        console.log(data.toString());
 
         // TODO add support for V0 installers
-        if (typeof obj === "object" && obj && "spec" in obj && obj.spec === 1) {
+        if (typeof obj === "object" && obj) {
             const ip = obj as InstallProfile;
             const versionData = await zip.entryData(ip.json.startsWith("/") ? ip.json.slice(1) : ip.json);
             const vp = JSON.parse(versionData.toString());

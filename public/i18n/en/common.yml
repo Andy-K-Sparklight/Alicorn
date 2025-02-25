@@ -17,7 +17,7 @@ progress:
   vanilla:
     resolve: Resolving Version Profile
     download-libs: Downloading Libraries {{current}} / {{total}}
-    unpack-libs: Unpacking Libraries {{current}} / {{total}}
+    unpack-libs: Unpacking Libraries
     download-asset-index: Resolving Asset Index
     download-assets: Downloading Assets {{current}} / {{total}}
     link-assets: Processing Assets {{current}} / {{total}}
@@ -28,6 +28,9 @@ progress:
   neoforged:
     resolve: Syncing NeoForged Versions
     download: Retrieving NeoForged Installer
+  forge:
+    resolve: Syncing Forge Versions
+    download: Retrieving Forge Installer
   mappings: Downloading Mappings
   forge-install:
     extract-libraries: Extracting Installer Libraries
@@ -59,6 +62,8 @@ exceptions:
     auth: Failed to authenticate the account.
     fabric-no-version: Fabric does not support {{gameVersion}}, or the its version specified is invalid.
     quilt-no-version: Quilt does not support {{gameVersion}}, or the its version specified is invalid.
+    neoforged-no-version: NeoForged does not support {{gameVersion}}, or the its version specified is invalid.
+    forge-no-version: Forge does not support {{gameVersion}}, or the its version specified is invalid.
     profile-link: "Unable to read game profile: {{id}}"
     jrt-not-available: "Java runtime unavailable: {{component}}"
     jrt-not-verified: "Failed to execute Java binary: {{bin}}"

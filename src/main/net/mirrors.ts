@@ -4,13 +4,28 @@ import { net } from "electron";
 
 interface Mirror {
     name: string;
-    test: {
+    test?: {
         url: string;
         challenge: string;
     };
 
     apply(origin: string): string | null;
 }
+
+const aapi: Mirror = {
+    name: "aapi",
+    apply(origin: string): string | null {
+        if (origin === "https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml") {
+            return "https://get-forge-versions.aapi.skjsjhb.moe";
+        }
+
+        if (origin === "https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge") {
+            return "https://get-neoforged-versions.aapi.skjsjhb.moe";
+        }
+
+        return null;
+    }
+};
 
 const bgithub: Mirror = {
     name: "bgithub",
@@ -94,6 +109,13 @@ const bmclapi: Mirror | false = import.meta.env.AL_ENABLE_BMCLAPI && {
         challenge: "https://libraries.minecraft.net/com/google/guava/guava/21.0/guava-21.0.jar"
     },
     apply(origin: string) {
+        const banList = [
+            // This file seems to be outdated
+            "https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml"
+        ];
+
+        if (banList.includes(origin)) return null;
+
         const u = URL.parse(origin);
         if (!u) return null; // Possibly malformed URL
 
@@ -132,11 +154,17 @@ const bmclapi: Mirror | false = import.meta.env.AL_ENABLE_BMCLAPI && {
             return u.toString();
         }
 
+        if (u.host === "maven.neoforged.net" && u.pathname.startsWith("/releases")) {
+            u.host = "bmclapi2.bangbang93.com";
+            u.pathname = "/maven" + u.pathname.slice("/releases".length);
+            return u.toString();
+        }
+
         return null;
     }
 } satisfies Mirror;
 
-const mirrorList = [aliyun, bmclapi, ghfast, bgithub].filter(isTruthy);
+const mirrorList = [aapi, aliyun, bmclapi, ghfast, bgithub].filter(isTruthy);
 
 function getMirrors() {
     return mirrorList.filter(m => conf().net.mirror.picked.includes(m.name));
@@ -164,12 +192,14 @@ async function bench(): Promise<void> {
     }
 
     const enabledMirrors = (await Promise.all(mirrorList.map(async m => {
-        const s1 = await getSpeed(m.test.url);
-        const s2 = await getSpeed(m.test.challenge);
+        if (m.test) {
+            const s1 = await getSpeed(m.test.url);
+            const s2 = await getSpeed(m.test.challenge);
 
-        if (s1 <= s2) {
-            // The mirror is not faster, ignore it
-            return;
+            if (s1 <= s2) {
+                // The mirror is not faster, ignore it
+                return;
+            }
         }
 
         console.log(`Enabling mirror: ${m.name}`);

@@ -17,7 +17,7 @@ progress:
   vanilla:
     resolve: 正在获取版本信息
     download-libs: 正在下载运行库：{{current}} / {{total}}
-    unpack-libs: 正在解包运行库：{{current}} / {{total}}
+    unpack-libs: 正在解包运行库
     download-asset-index: 正在获取资源信息
     download-assets: 正在下载游戏资源：{{current}} / {{total}}
     link-assets: 正在处理游戏资源：{{current}} / {{total}}
@@ -28,6 +28,9 @@ progress:
   neoforged:
     resolve: 正在获取 NeoForged 版本数据
     download: 正在下载 NeoForged 安装文件
+  forge:
+    resolve: 正在获取 Forge 版本数据
+    download: 正在下载 Forge 安装文件
   mappings: 正在下载源代码映射文件
   forge-install:
     extract-libraries: 正在提取安装所需运行库
@@ -59,6 +62,8 @@ exceptions:
     auth: 验证帐户的过程中出现错误。
     fabric-no-version: 此游戏版本（{{gameVersion}}）不支持 Fabric，或所选 Fabric 版本无效。
     quilt-no-version: 此游戏版本（{{gameVersion}}）不支持 Quilt，或所选 Quilt 版本无效。
+    neoforged-no-version: 此游戏版本（{{gameVersion}}）不支持 NeoForged，或所选 NeoForged 版本无效。
+    forge-no-version: 此游戏版本（{{gameVersion}}）不支持 Forge，或所选 Forge 版本无效。
     profile-link: 无法读取核心 {{id}} 的信息。
     jrt-not-available: 所需的 Java 运行环境 {{component}} 不可用。
     jrt-not-verified: 无法启动 Java 虚拟机：{{bin}}

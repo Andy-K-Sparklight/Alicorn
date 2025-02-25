@@ -141,7 +141,7 @@ async function installLibraries(
             tasks.push({
                 url,
                 path: fp,
-                sha1: lib.sha1,
+                sha1: lib.sha1 || lib.checksums?.[0] || undefined,
                 size: lib.size,
                 fastLink: shouldLink
             });

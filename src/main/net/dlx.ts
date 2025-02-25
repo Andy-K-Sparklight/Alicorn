@@ -83,6 +83,7 @@ async function getAll(req: DlxDownloadRequest[], control?: ProgressController): 
         ));
     } catch (e) {
         console.debug("Cancelling other tasks in the same group due to previous error.");
+        console.error(e);
         abortController.abort("Error occurred in other task(s)");
         throw e;
     }
@@ -121,6 +122,8 @@ async function preflight(req: DlxDownloadRequest): Promise<boolean> {
     }
 
     // A re-download is likely required
+    await fs.remove(req.path);
+    await fs.ensureFile(req.path);
     return false;
 }
 

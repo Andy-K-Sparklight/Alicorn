@@ -8,6 +8,7 @@ export type ExceptionType = {
     "fabric-no-version": { gameVersion: string }
     "quilt-no-version": { gameVersion: string }
     "neoforged-no-version": { gameVersion: string }
+    "forge-no-version": { gameVersion: string }
     "profile-link": { id: string }
     "jrt-not-available": { component: string }
     "jrt-not-verified": { bin: string }

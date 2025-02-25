@@ -49,6 +49,9 @@ async function resolve(req: Aria2DownloadRequest): Promise<void> {
         } catch (e) {
             lastErr = e;
             console.debug(`Aria2 Try: ${req.origin} (${e})`);
+            if (req.signal?.aborted) {
+                break;
+            }
         }
     }
 
@@ -101,9 +104,9 @@ async function sendRequest(req: Aria2DownloadRequest): Promise<void> {
 
     try {
         await pEvent(emitter, "finish");
-    } catch {
+    } catch (e) {
         // Re-warp the error event
-        throw exceptions.create("download", { url: req.url });
+        throw exceptions.create("download", { url: req.url, error: e });
     }
 }
 

@@ -128,8 +128,10 @@ export interface Library {
         exclude?: string[];
     };
 
-    // Fabric-like mod loaders use the "flat" structure below to simplify the library metadata.
+    // Forge compatibility
+    checksums?: [string];
 
+    // Fabric-like mod loaders use the "flat" structure below to simplify the library metadata.
     url?: string;
     sha1?: string;
     size?: number;

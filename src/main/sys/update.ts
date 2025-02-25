@@ -31,7 +31,7 @@ interface AssetMeta {
     browser_download_url: string;
 }
 
-const RELEASES_URL = "https://get-alicorn-release.skjsjhb.workers.dev";
+const RELEASES_URL = "https://alicorn-releases.aapi.skjsjhb.moe";
 
 async function queryReleases(): Promise<ReleaseMeta[]> {
     const res = await net.fetch(RELEASES_URL);

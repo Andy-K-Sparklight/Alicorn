@@ -70,7 +70,7 @@ export type GameInstallProps =
         loaderVersion: string;
     } |
     {
-        type: "neoforged";
+        type: "neoforged" | "forge";
         gameVersion: string;
         loaderVersion: string;
     }
