@@ -278,7 +278,7 @@ async function emitOptions(container: Container) {
     }
 
     const values = {
-        lang: i18nMain.language.replaceAll("-", "_").toLowerCase()
+        lang: i18nMain.language.replaceAll("-", "_")
     };
 
     const out = Object.entries(values).map(([k, v]) => `${k}:${v}`).join("\n");
