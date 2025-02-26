@@ -118,16 +118,18 @@ async function installLibraries(
             }
         }
 
-        if (lib.downloads?.artifact) {
-            const a = lib.downloads.artifact;
-            if (a.url) {
-                const fp = container.library(lib.name);
-                tasks.push({
-                    ...a,
-                    url: a.url,
-                    path: fp,
-                    fastLink: shouldLink
-                });
+        if (lib.downloads) { // Make sure that flatten `url` key is only picked up when `downloads` is missing
+            if (lib.downloads.artifact) {
+                const a = lib.downloads.artifact;
+                if (a.url) {
+                    const fp = container.library(lib.name);
+                    tasks.push({
+                        ...a,
+                        url: a.url,
+                        path: fp,
+                        fastLink: shouldLink
+                    });
+                }
             }
         } else if (lib.url) {
             // Refer to the `url` field if the artifact is missing

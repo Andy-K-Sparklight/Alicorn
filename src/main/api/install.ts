@@ -136,8 +136,8 @@ ipcMain.on("installGame", async (e, gameId) => {
         if (installType === "neoforged" || installType === "forge") {
             if (forgeInstallerInit && forgeInstallerType === "installer") {
                 await smelt.runPostInstall(forgeInstallerInit!, forgeInstallerPath!, p, c, { onProgress });
-            } else {
-                await smeltLegacy.mergeClient(forgeInstallerPath!, c.client(p.id));
+            } else if (!forgeInstallerLegacy) {
+                await smeltLegacy.mergeClient(forgeInstallerPath!, c.client(p.version || p.id));
             }
 
             await fs.remove(forgeInstallerPath!);

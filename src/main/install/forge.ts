@@ -87,12 +87,12 @@ async function downloadInstaller(loaderVersion: string, type: "installer" | "uni
 
 
 function getInstallType(gameVersion: string): "installer" | "universal" | "client" {
-    const [major, minor] = gameVersion.split(".");
+    const [major, minor, patch] = gameVersion.split(".");
     if (!minor || major !== "1") return "installer";
 
     const mv = parseInt(minor, 10);
 
-    if (mv >= 3 && mv < 5) { // 1.3.x, 1.4.x
+    if (mv >= 3 && mv < 5 || mv === 5 && patch !== "2") { // 1.3.x, 1.4.x, 1.5.x excluding 1.5.2
         return "universal";
     }
 

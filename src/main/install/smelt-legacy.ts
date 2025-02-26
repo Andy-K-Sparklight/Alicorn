@@ -26,6 +26,11 @@ async function dumpContent(installer: string, container: Container): Promise<str
 
             // Dump version profile
             filterLibraries(ip.versionInfo.libraries, libName);
+
+            if (!ip.versionInfo.inheritsFrom) {
+                ip.versionInfo.inheritsFrom = ip.install.minecraft;
+            }
+
             console.debug(`Writing profile to ${ip.versionInfo.id}`);
             await fs.outputJSON(container.profile(ip.versionInfo.id), ip.versionInfo, { spaces: 2 });
 

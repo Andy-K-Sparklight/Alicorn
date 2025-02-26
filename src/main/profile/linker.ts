@@ -36,9 +36,32 @@ export async function linkProfile(id: string, provider: (id: string) => unknown 
 
     await patchProfile(obj);
 
+    if ("libraries" in obj && Array.isArray(obj.libraries)) {
+        obj.libraries = combineLibraries(obj.libraries);
+    }
+
     if (obj.inheritsFrom || !("id" in obj)) {
         throw `Link unsatisfied: ${id} has no complete inheritance`;
     }
 
     return obj as VersionProfile;
+}
+
+function combineLibraries(libs: unknown[]): unknown[] {
+    const out: { name: string } [] = [];
+
+    outer: for (const lib of libs.toReversed()) {
+        if (typeof lib === "object" && lib && "name" in lib && typeof lib.name === "string") {
+            for (const existingLib of out) {
+                if (existingLib.name === lib.name && existingLib !== lib) {
+                    // Merge lib -> existingLib
+                    Object.assign(existingLib, lib);
+                    continue outer;
+                }
+            }
+            out.unshift(lib as { name: string });
+        }
+    }
+
+    return out;
 }
