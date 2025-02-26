@@ -10,7 +10,6 @@ import { vanillaInstaller } from "@/main/install/vanilla";
 import { ipcMain } from "@/main/ipc/typed";
 import { jrt } from "@/main/jrt/install";
 import { profileLoader } from "@/main/profile/loader";
-import type { VersionProfile } from "@/main/profile/version-profile";
 import { reg } from "@/main/registry/registry";
 import type { Progress } from "@/main/util/progress";
 import fs from "fs-extra";
@@ -27,6 +26,8 @@ export type VanillaInstallEvent =
         type: "progress",
         progress: Progress;
     }
+
+type ForgeInstallActionType = "smelt" | "smelt-legacy" | "merge" | "none";
 
 ipcMain.on("installGame", async (e, gameId) => {
     const [port] = e.ports;
@@ -49,10 +50,33 @@ ipcMain.on("installGame", async (e, gameId) => {
         const installType = game.installProps.type;
         const { gameVersion } = game.installProps;
 
+        const vanillaProfile = await vanillaInstaller.installProfile(gameVersion, c, { onProgress });
+        let p = vanillaProfile;
+
         let forgeInstallerPath: string | null = null;
         let forgeInstallerInit: SmeltInstallInit | null = null;
-        let forgeInstallerType: "installer" | "universal" | "client" = "installer";
-        let forgeInstallerLegacy = "";
+        let forgeInstallAction: ForgeInstallActionType = "none";
+
+        // Preprocess mod loaders, retrieve profile
+        if (installType === "fabric") {
+            const fid = await fabricInstaller.retrieveProfile(
+                gameVersion,
+                game.installProps.loaderVersion,
+                c,
+                { onProgress }
+            );
+            p = await profileLoader.fromContainer(fid, c);
+        }
+
+        if (installType === "quilt") {
+            const qid = await quiltInstaller.retrieveProfile(
+                gameVersion,
+                game.installProps.loaderVersion,
+                c,
+                { onProgress }
+            );
+            p = await profileLoader.fromContainer(qid, c);
+        }
 
         if (installType === "neoforged") {
             let loaderVersion = game.installProps.loaderVersion;
@@ -62,6 +86,11 @@ ipcMain.on("installGame", async (e, gameId) => {
             }
 
             forgeInstallerPath = await neoforgedInstaller.downloadInstaller(loaderVersion, { onProgress });
+            forgeInstallAction = "smelt";
+
+            forgeInstallerInit = await smelt.readInstallProfile(forgeInstallerPath);
+            const fid = await smelt.deployVersionProfile(forgeInstallerInit, c);
+            p = await profileLoader.fromContainer(fid, c);
         }
 
         if (installType === "forge") {
@@ -71,82 +100,46 @@ ipcMain.on("installGame", async (e, gameId) => {
                 loaderVersion = await forgeInstaller.pickLoaderVersion(gameVersion, { onProgress });
             }
 
-            forgeInstallerType = forgeInstaller.getInstallType(gameVersion);
-            forgeInstallerPath = await forgeInstaller.downloadInstaller(loaderVersion, forgeInstallerType, { onProgress });
+            const installerType = forgeInstaller.getInstallType(gameVersion);
+            forgeInstallerPath = await forgeInstaller.downloadInstaller(loaderVersion, installerType, { onProgress });
 
-            if (forgeInstallerType === "installer") {
-                forgeInstallerLegacy = await smeltLegacy.dumpContent(forgeInstallerPath, c);
-            }
-        }
-
-        if (forgeInstallerPath && !forgeInstallerLegacy && forgeInstallerType === "installer") {
-            forgeInstallerInit = await smelt.readInstallProfile(forgeInstallerPath);
-        }
-
-        let p: VersionProfile;
-        const vanillaProfile = await vanillaInstaller.installProfile(gameVersion, c, { onProgress });
-
-        switch (installType) {
-            case "vanilla":
-                p = vanillaProfile;
-                break;
-
-            case "fabric": {
-                const fid = await fabricInstaller.retrieveProfile(
-                    gameVersion,
-                    game.installProps.loaderVersion,
-                    c,
-                    { onProgress }
-                );
-                p = await profileLoader.fromContainer(fid, c);
-                break;
-            }
-
-            case "quilt": {
-                const qid = await quiltInstaller.retrieveProfile(
-                    gameVersion,
-                    game.installProps.loaderVersion,
-                    c,
-                    { onProgress }
-                );
-                p = await profileLoader.fromContainer(qid, c);
-                break;
-            }
-
-            case "neoforged":
-            case "forge":
-                if (forgeInstallerType !== "installer") {
-                    p = vanillaProfile;
-                } else if (forgeInstallerLegacy) {
-                    p = await profileLoader.fromContainer(forgeInstallerLegacy, c);
+            if (installerType === "installer") {
+                const legacyProfileId = await smeltLegacy.dumpContent(forgeInstallerPath, c);
+                if (legacyProfileId) {
+                    forgeInstallAction = "smelt-legacy";
+                    p = await profileLoader.fromContainer(legacyProfileId, c);
                 } else {
-                    const fid = await smelt.deployVersionProfile(forgeInstallerInit!, c);
+                    forgeInstallAction = "smelt";
+                    forgeInstallerInit = await smelt.readInstallProfile(forgeInstallerPath);
+                    const fid = await smelt.deployVersionProfile(forgeInstallerInit, c);
                     p = await profileLoader.fromContainer(fid, c);
                 }
-
-                break;
+            } else {
+                forgeInstallAction = "merge";
+                p = vanillaProfile;
+            }
         }
 
-        game.launchHint.profileId = p.id;
-
+        // Ensure libraries
         await jrt.installRuntime(p.javaVersion?.component ?? "jre-legacy", { onProgress });
-
         await vanillaInstaller.installLibraries(p, c, new Set(), { onProgress });
 
+        // Finalize Forge
         if (installType === "neoforged" || installType === "forge") {
-            if (forgeInstallerInit && forgeInstallerType === "installer") {
+            if (forgeInstallAction === "smelt") {
                 await smelt.runPostInstall(forgeInstallerInit!, forgeInstallerPath!, p, c, { onProgress });
-            } else if (!forgeInstallerLegacy) {
+            } else if (forgeInstallAction === "merge") {
                 await smeltLegacy.mergeClient(forgeInstallerPath!, c.client(p.version || p.id));
             }
 
             await fs.remove(forgeInstallerPath!);
         }
 
+        // Game-level post install
         await vanillaInstaller.installAssets(p, c, game.assetsLevel, { onProgress });
-
         await vanillaInstaller.emitOptions(c);
 
+        game.launchHint.profileId = p.id;
         game.installed = true;
         games.add(game);
 
