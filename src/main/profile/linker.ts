@@ -52,10 +52,10 @@ function combineLibraries(libs: unknown[]): unknown[] {
 
     outer: for (const lib of libs.toReversed()) {
         if (typeof lib === "object" && lib && "name" in lib && typeof lib.name === "string") {
-            for (const existingLib of out) {
+            for (const [index, existingLib] of out.entries()) {
                 if (existingLib.name === lib.name && existingLib !== lib) {
                     // Merge lib -> existingLib
-                    Object.assign(existingLib, lib);
+                    out[index] = mergician(existingLib, lib) as { name: string };
                     continue outer;
                 }
             }
