@@ -132,8 +132,7 @@ async function setupMainWindow() {
             spellcheck: false,
             defaultEncoding: "UTF-8",
             preload: paths.app.to("preload.js"),
-            devTools: hasDevTools,
-            zoomFactor: conf().app.window.zoom / 100
+            devTools: hasDevTools
         },
         x: isNaN(px) ? undefined : Math.floor(px),
         y: isNaN(py) ? undefined : Math.floor(py),
@@ -157,6 +156,10 @@ async function setupMainWindow() {
 
     w.on("moved", () => {
         conf.alter(c => c.app.window.pos = w!.getPosition());
+    });
+
+    w.on("ready-to-show", () => {
+        w.webContents.setZoomFactor(conf().app.window.zoom / 100);
     });
 
     w.webContents.on("devtools-opened", () => {

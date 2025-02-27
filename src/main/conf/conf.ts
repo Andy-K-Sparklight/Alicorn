@@ -180,7 +180,7 @@ const DEFAULT_CONFIG = {
             /**
              * Zoom factor.
              */
-            zoom: 1.0
+            zoom: 100.0
         },
 
         /**
