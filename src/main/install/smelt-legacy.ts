@@ -10,7 +10,7 @@ import StreamZip from "node-stream-zip";
 import child_process from "node:child_process";
 import path from "node:path";
 import { pEvent } from "p-event";
-import { COMPRESSION_LEVEL, zip } from "zip-a-folder";
+import { zip } from "zip-a-folder";
 
 async function dumpContent(installer: string, container: Container): Promise<string> {
     let zip: StreamZip.StreamZipAsync | null = null;
@@ -143,7 +143,7 @@ async function mergeClient(src: string, fp: string): Promise<void> {
 
     await fs.remove(path.join(workDir, "META-INF")); // Drop signatures
     await fs.remove(fp);
-    await zip(workDir, fp, { compression: COMPRESSION_LEVEL.uncompressed });
+    await zip(workDir, fp);
     await fs.remove(workDir);
 }
 

@@ -2,6 +2,7 @@ import { containers } from "@/main/container/manage";
 import { games } from "@/main/game/manage";
 import { fabricInstaller } from "@/main/install/fabric";
 import { forgeInstaller } from "@/main/install/forge";
+import { forgeCompat } from "@/main/install/forge-compat";
 import { neoforgedInstaller } from "@/main/install/neoforged";
 import { quiltInstaller } from "@/main/install/quilt";
 import { smelt, type SmeltInstallInit } from "@/main/install/smelt";
@@ -54,6 +55,7 @@ ipcMain.on("installGame", async (e, gameId) => {
         let p = vanillaProfile;
 
         let forgeInstallerPath: string | null = null;
+        let forgeModLoaderPath: string | null = null;
         let forgeInstallerInit: SmeltInstallInit | null = null;
         let forgeInstallAction: ForgeInstallActionType = "none";
 
@@ -103,6 +105,9 @@ ipcMain.on("installGame", async (e, gameId) => {
             const installerType = forgeInstaller.getInstallType(gameVersion);
             forgeInstallerPath = await forgeInstaller.downloadInstaller(loaderVersion, installerType, { onProgress });
 
+            const modLoaderUrl = await forgeCompat.getModLoaderUrl(gameVersion);
+            forgeModLoaderPath = modLoaderUrl && await forgeCompat.downloadModLoader(modLoaderUrl);
+
             if (installerType === "installer") {
                 const legacyProfileId = await smeltLegacy.dumpContent(forgeInstallerPath, c);
                 if (legacyProfileId) {
@@ -116,7 +121,16 @@ ipcMain.on("installGame", async (e, gameId) => {
                 }
             } else {
                 forgeInstallAction = "merge";
-                p = vanillaProfile;
+                if (modLoaderUrl) {
+                    // There exists a bug with ModLoader which makes it incompatible with the directory structure
+                    // This cannot be fixed even with VENV
+                    // We're using a patch named DAMT: https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/mods-discussion/1291855-a-custom-tweaker-for-using-older-modloaders-in-the
+                    await forgeCompat.patchProfile(c, gameVersion);
+                    p = await profileLoader.fromContainer(gameVersion, c);
+                } else {
+                    p = vanillaProfile;
+                }
+
             }
         }
 
@@ -136,10 +150,16 @@ ipcMain.on("installGame", async (e, gameId) => {
                     c
                 );
 
-                await smeltLegacy.mergeClient(forgeInstallerPath!, c.client(p.version || p.id));
-                game.launchHint.venv = true;
+                const clientPath = c.client(p.version || p.id);
+
+                if (forgeModLoaderPath) {
+                    await smeltLegacy.mergeClient(forgeModLoaderPath, clientPath);
+                }
+
+                await smeltLegacy.mergeClient(forgeInstallerPath!, clientPath);
             }
 
+            game.launchHint.venv = await forgeCompat.shouldUseVenv(gameVersion);
             await fs.remove(forgeInstallerPath!);
         }
 

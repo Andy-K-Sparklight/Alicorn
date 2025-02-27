@@ -30,6 +30,11 @@ async function syncVersions(): Promise<string[]> {
 async function queryLoaderVersions(gameVersion: string, control?: ProgressController): Promise<string[]> {
     control?.onProgress?.(progress.indefinite("forge.download"));
 
+    // This is the only except in versioning
+    if (gameVersion === "1.4") {
+        gameVersion = "1.4.0";
+    }
+
     const versions = await syncVersions();
 
     // Versions of Forge are named in the format `<gameVersion>-<suffix>`
