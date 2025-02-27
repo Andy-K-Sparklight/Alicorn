@@ -136,7 +136,8 @@ function createArguments(init: LaunchInit): string[] {
     const extraVMArgs = [
         ...createMemoryArgs(init),
         ...localExtraVM,
-        ...globalExtraVM
+        ...globalExtraVM,
+        ...init.extraVMArgs ?? []
     ];
 
     const extraGameArgs = [

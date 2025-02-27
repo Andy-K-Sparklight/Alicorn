@@ -122,6 +122,7 @@ ipcMain.on("installGame", async (e, gameId) => {
 
         // Ensure libraries
         await jrt.installRuntime(p.javaVersion?.component ?? "jre-legacy", { onProgress });
+
         await vanillaInstaller.installLibraries(p, c, new Set(), { onProgress });
 
         // Finalize Forge
@@ -129,7 +130,14 @@ ipcMain.on("installGame", async (e, gameId) => {
             if (forgeInstallAction === "smelt") {
                 await smelt.runPostInstall(forgeInstallerInit!, forgeInstallerPath!, p, c, { onProgress });
             } else if (forgeInstallAction === "merge") {
+                await smeltLegacy.patchLegacyLibraries(
+                    jrt.executable(p.javaVersion?.component ?? "jre-legacy"),
+                    forgeInstallerPath!,
+                    c
+                );
+
                 await smeltLegacy.mergeClient(forgeInstallerPath!, c.client(p.version || p.id));
+                game.launchHint.venv = true;
             }
 
             await fs.remove(forgeInstallerPath!);

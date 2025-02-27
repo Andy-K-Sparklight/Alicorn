@@ -3,25 +3,13 @@ import { MavenName } from "@/main/profile/maven-name";
 import { reg } from "@/main/registry/registry";
 import path from "node:path";
 
-let cachedContainers = new Map<string, Container>();
 
 function get(id: string): Container {
-    return loadFromProps(reg.containers.get(id));
+    return create(structuredClone(reg.containers.get(id)));
 }
 
 function create(props: ContainerProps): Container {
     return new SimpleContainer(props);
-}
-
-function loadFromProps(spec: ContainerProps): Container {
-    let cc = cachedContainers.get(spec.id);
-
-    if (!cc) {
-        cc = create(spec);
-        cachedContainers.set(spec.id, cc);
-    }
-
-    return cc;
 }
 
 class SimpleContainer implements Container {

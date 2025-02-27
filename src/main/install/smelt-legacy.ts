@@ -1,10 +1,15 @@
 import type { Container } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
+import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import type { Library } from "@/main/profile/version-profile";
+import { unwrapESM } from "@/main/util/module";
+import { progress, type ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
 import { nanoid } from "nanoid";
 import StreamZip from "node-stream-zip";
+import child_process from "node:child_process";
 import path from "node:path";
+import { pEvent } from "p-event";
 import { COMPRESSION_LEVEL, zip } from "zip-a-folder";
 
 async function dumpContent(installer: string, container: Container): Promise<string> {
@@ -49,9 +54,64 @@ function filterLibraries(libs: Library[], libName: string) {
             lib.url = ""; // Drop the URL to prevent downloading universal jar
         } else if (!lib.url) {
             // This is implicitly defined only in Forge
-            lib.url = "https://libraries.minecraft.net";
+            lib.url = "https://libraries.minecraft.net/";
         }
     }
+}
+
+async function findLibraries(jrtExec: string, jarPath: string): Promise<string[]> {
+    const proc = child_process.spawn(
+        jrtExec,
+        [
+            "-cp",
+            [paths.app.to("vendor", "ffind.jar"), jarPath].join(path.delimiter),
+            "moe.skjsjhb.ffind.Main"
+        ]
+    );
+
+    let output = "";
+
+    proc.stdout.on("data", d => {
+        output += String(d);
+    });
+
+    await pEvent(proc, "exit");
+
+    const libs = output.split("\n").map(it => it.trim()).filter(it => it.endsWith(".jar"));
+    console.debug(`Detected libraries of ${jarPath}: ${libs}`);
+
+    return libs;
+}
+
+async function mapLibraries(libs: string[]): Promise<[string, string][]> {
+    const libMap = await unwrapESM(import("@/refs/legacy-forge-libs.json")) as unknown as Record<string, string>;
+    const out: [string, string][] = [];
+
+    for (const lib of libs) {
+        const url = libMap[lib];
+        if (!url) {
+            throw `Unsupported library: ${lib}`;
+        }
+
+        out.push([url, lib]);
+    }
+
+    return out;
+}
+
+async function patchLegacyLibraries(jrtExec: string, jarPath: string, container: Container, control?: ProgressController): Promise<void> {
+    const rawLibs = await findLibraries(jrtExec, jarPath);
+    const libs = await mapLibraries(rawLibs);
+
+    const tasks: DlxDownloadRequest[] = libs.map(([url, lib]) => ({
+        url,
+        path: path.join(container.gameDir(), "lib", lib)
+    }));
+
+    await dlx.getAll(tasks, {
+        signal: control?.signal,
+        onProgress: progress.makeNamed(control?.onProgress, "forge-install.download-libraries")
+    });
 }
 
 async function mergeClient(src: string, fp: string): Promise<void> {
@@ -87,4 +147,4 @@ async function mergeClient(src: string, fp: string): Promise<void> {
     await fs.remove(workDir);
 }
 
-export const smeltLegacy = { dumpContent, mergeClient };
+export const smeltLegacy = { dumpContent, mergeClient, patchLegacyLibraries };

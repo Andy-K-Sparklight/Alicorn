@@ -40,6 +40,14 @@ const contents = {
             target: "ca-cert.pem",
             sha256: "a3f328c21e39ddd1f2be1cea43ac0dec819eaa20a90425d7da901a11531b3aa5"
         }
+    },
+
+    ffind: {
+        "*": {
+            url: "https://github.com/skjsjhb/ffind/releases/download/1.0/ffind-1.0.jar",
+            target: "ffind.jar",
+            sha256: "0c6430a36610929346076d6fd58375a285034f52e8013cf6a5f79879026ec36f"
+        }
     }
 } as Record<string, Record<string, VendorFile>>;
 
@@ -57,7 +65,8 @@ function createFileList(cfg: BuildConfig): VendorFile[] {
 
     return [
         getComponent("aria2c"),
-        getComponent("certificate")
+        getComponent("certificate"),
+        getComponent("ffind")
     ].filter(isTruthy);
 }
 

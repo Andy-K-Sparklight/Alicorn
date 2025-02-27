@@ -15,6 +15,11 @@ export interface LaunchHint {
      */
     accountId: string;
     pref: Partial<LaunchPref>;
+
+    /**
+     * Whether the profile should be run in virtual environment.
+     */
+    venv?: boolean;
 }
 
 /**
@@ -62,4 +67,5 @@ export interface LaunchInit {
     enabledFeatures: Set<string>;
     assetsShouldMap: boolean;
     pref: Partial<LaunchPref>;
+    extraVMArgs?: string[];
 }

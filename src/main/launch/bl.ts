@@ -6,6 +6,7 @@ import { jrt } from "@/main/jrt/install";
 import { launchArgs } from "@/main/launch/args";
 import { GameProcess } from "@/main/launch/proc";
 import { LaunchHint, LaunchInit } from "@/main/launch/types";
+import { venv } from "@/main/launch/venv";
 import { profileLoader } from "@/main/profile/loader";
 import { exceptions } from "@/main/util/exception";
 import { containers } from "../container/manage";
@@ -44,10 +45,23 @@ async function prepare(hint: LaunchHint): Promise<LaunchInit> {
 async function launch(hint: LaunchHint): Promise<GameProcess> {
     console.log(`Launching game ${hint.profileId} on ${hint.containerId}`);
     const init = await prepare(hint);
-    const args = launchArgs.createArguments(init);
-    const g = await GameProcess.create(init.jrtExec, args, init.container.gameDir());
-    games.set(g.id, g);
-    return g;
+
+    if (hint.venv) {
+        await venv.mount(init.container);
+        init.extraVMArgs = venv.createVenvArgs(init.container);
+    }
+
+    try {
+        const args = launchArgs.createArguments(init);
+        const g = await GameProcess.create(init.jrtExec, args, init.container.gameDir());
+        games.set(g.id, g);
+
+        g.emitter.once("end", () => venv.unmount(init.container));
+        return g;
+    } catch (e) {
+        await venv.unmount(init.container);
+        throw e;
+    }
 }
 
 function getInstance(gid: string): GameProcess {

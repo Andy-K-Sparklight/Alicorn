@@ -67,7 +67,8 @@ export class GameProcess {
     constructor(bin: string, args: string[], gameDir: string) {
         const proc = child_process.spawn(bin, args, {
             cwd: gameDir,
-            detached: true
+            detached: true,
+            env: {}
         });
 
         this.#proc = proc;
