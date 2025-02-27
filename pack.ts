@@ -15,67 +15,74 @@ import pkg from "~/package.json";
 
 const platformSpec = process.env.ALICORN_PACK_PLATFORMS || "win32,darwin,linux";
 const archesSpec = process.env.ALICORN_PACK_ARCHES || "x64,arm64";
+const typesSpec = process.env.ALICORN_PACK_TYPES || "app-bundle,pkg";
 
 const platforms = ["win32", "darwin", "linux"].filter(p => platformSpec.includes(p));
 const arches = ["x64", "arm64"].filter(a => archesSpec.includes(a));
+const types = ["app-bundle", "pkg"].filter(t => typesSpec.includes(t));
 
 consola.info(`Start cross-packaging for ${platforms.join(",")} x ${arches.join(",")}`);
 
 const outRoot = path.resolve(import.meta.dirname, "dist");
 await fs.emptyDir(outRoot);
 
+const appRoot = path.join(import.meta.dirname, "build", "production");
+
 for (const platform of platforms) {
     for (const arch of arches) {
         consola.start(`build: ${platform}-${arch}...`);
         await build({ mode: "production", platform, arch });
 
-        consola.start(`hot-update bundle: ${platform}-${arch}...`);
-        const appRoot = path.join(import.meta.dirname, "build", "production");
-        await zip.compressDir(appRoot, path.resolve(outRoot, `app-bundle-${platform}-${arch}.zip`), { ignoreBase: true });
-
-        consola.start(`pack: ${platform}-${arch}...`);
-        const opts = {
-            asar: false,
-            name: "Alicorn Launcher",
-            executableName: "Alicorn",
-            appBundleId: "moe.skjsjhb.alicorn",
-            appCopyright: `Copyright (C) 2021-2022 Andy K Rarity Sparklight ("ThatRarityEG") / Copyright (C) 2024-2025 Ted Gao ("skjsjhb")`,
-            appCategoryType: "public.app-category.utilities",
-            appVersion: pkg.version,
-            icon: path.resolve(import.meta.dirname, "resources", "icons", "icon"),
-            dir: appRoot,
-            arch: arch,
-            platform: platform,
-            out: outRoot,
-            overwrite: true,
-            ignore: [".local", "node.napi.node"]
-        } satisfies Options;
-
-        const [outPath] = await packager(opts);
-
-        if (platform === "win32") {
-            consola.start(`Creating zip archive from ${outPath}`);
-            await zip.compressDir(outPath, outPath + ".zip", { ignoreBase: true });
-            consola.success(`Archive written to ${outPath + ".zip"}`);
-
-            if (os.platform() === "win32") {
-                await buildWindowsInstaller(outPath, arch);
-            } else {
-                consola.log("MSI images can only be created on Windows, skipped.");
-            }
+        if (types.includes("app-bundle")) {
+            consola.start(`hot-update bundle: ${platform}-${arch}...`);
+            await zip.compressDir(appRoot, path.resolve(outRoot, `app-bundle-${platform}-${arch}.zip`), { ignoreBase: true });
         }
 
-        if (platform === "darwin") {
-            if (os.platform() === "darwin") {
-                await buildDMG(outPath);
-            } else {
-                consola.log("DMG images can only be created on macOS, skipped.");
-            }
-        }
+        if (types.includes("pkg")) {
+            consola.start(`pack: ${platform}-${arch}...`);
+            const opts = {
+                asar: false,
+                name: "Alicorn Launcher",
+                executableName: "Alicorn",
+                appBundleId: "moe.skjsjhb.alicorn",
+                appCopyright: `Copyright (C) 2021-2022 Andy K Rarity Sparklight ("ThatRarityEG") / Copyright (C) 2024-2025 Ted Gao ("skjsjhb")`,
+                appCategoryType: "public.app-category.utilities",
+                appVersion: pkg.version,
+                icon: path.resolve(import.meta.dirname, "resources", "icons", "icon"),
+                dir: appRoot,
+                arch: arch,
+                platform: platform,
+                out: outRoot,
+                overwrite: true,
+                ignore: [".local", "node.napi.node"]
+            } satisfies Options;
 
-        if (platform === "linux") {
-            consola.start(`Creating tar.gz package from ${outPath}`);
-            await tgz.compressDir(outPath, outPath + ".tar.gz", { ignoreBase: true });
+            const [outPath] = await packager(opts);
+
+            if (platform === "win32") {
+                consola.start(`Creating zip archive from ${outPath}`);
+                await zip.compressDir(outPath, outPath + ".zip", { ignoreBase: true });
+                consola.success(`Archive written to ${outPath + ".zip"}`);
+
+                if (os.platform() === "win32") {
+                    await buildWindowsInstaller(outPath, arch);
+                } else {
+                    consola.log("MSI images can only be created on Windows, skipped.");
+                }
+            }
+
+            if (platform === "darwin") {
+                if (os.platform() === "darwin") {
+                    await buildDMG(outPath);
+                } else {
+                    consola.log("DMG images can only be created on macOS, skipped.");
+                }
+            }
+
+            if (platform === "linux") {
+                consola.start(`Creating tar.gz package from ${outPath}`);
+                await tgz.compressDir(outPath, outPath + ".tar.gz", { ignoreBase: true });
+            }
         }
     }
 }
