@@ -8,6 +8,7 @@ import { games } from "@/main/game/manage";
 import type { GameCoreType, GameInstallProps, GameProfile } from "@/main/game/spec";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { ipcMain } from "@/main/ipc/typed";
+import { venv } from "@/main/launch/venv";
 import { reg } from "@/main/registry/registry";
 import { shell } from "electron";
 import fs from "fs-extra";
@@ -23,6 +24,10 @@ ipcMain.on("revealGameContent", async (_, gameId, scope) => {
 
     const game = reg.games.get(gameId);
     const container = containers.get(game.launchHint.containerId);
+
+    if (venv.isMounted(container)) {
+        venv.setVenvRoot(container);
+    }
 
     await containerInspector.createContentDir(container, scope);
     void shell.openPath(container.content(scope));
