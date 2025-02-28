@@ -19,7 +19,6 @@ async function syncVersions(): Promise<string[]> {
 async function queryLoaderVersions(gameVersion: string, control?: ProgressController): Promise<string[]> {
     control?.onProgress?.(progress.indefinite("neoforged.resolve"));
 
-    // TODO fix version detection
     const [, minor, patch] = gameVersion.split(".");
 
     const versions = await syncVersions();
@@ -53,7 +52,7 @@ async function downloadInstaller(loaderVersion: string, control?: ProgressContro
             url: genInstallerUrl(loaderVersion),
             path: fp
         }
-    ]);
+    ], { signal: control?.signal });
 
     return fp;
 }

@@ -207,6 +207,10 @@ function extractEmitter(gid: string): Emittery | null {
     return em;
 }
 
+function notifyCancel(gid: string) {
+    extractEmitter(gid)?.emit("error", "Cancelled");
+}
+
 function notifyComplete(gid: string) {
     extractEmitter(gid)?.emit("finish");
 }
@@ -242,6 +246,7 @@ function available() {
  */
 async function remove(gid: string) {
     try {
+        notifyCancel(gid);
         await aria2cRpcClient?.request("aria2.remove", [
             "token:" + aria2cToken,
             gid

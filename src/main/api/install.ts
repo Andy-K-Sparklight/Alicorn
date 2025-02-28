@@ -12,7 +12,8 @@ import { ipcMain } from "@/main/ipc/typed";
 import { jrt } from "@/main/jrt/install";
 import { profileLoader } from "@/main/profile/loader";
 import { reg } from "@/main/registry/registry";
-import type { Progress } from "@/main/util/progress";
+import { exceptions } from "@/main/util/exception";
+import type { Progress, ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
 
 export type VanillaInstallEvent =
@@ -30,6 +31,14 @@ export type VanillaInstallEvent =
 
 type ForgeInstallActionType = "smelt" | "smelt-legacy" | "merge" | "none";
 
+const installControllers = new Map<string, AbortController>();
+
+ipcMain.on("cancelInstall", (_, gameId) => {
+    const ac = installControllers.get(gameId);
+    installControllers.delete(gameId);
+    ac?.abort(exceptions.create("cancelled", {}));
+});
+
 ipcMain.on("installGame", async (e, gameId) => {
     const [port] = e.ports;
     console.debug(`Starting installation of ${gameId}`);
@@ -45,13 +54,19 @@ ipcMain.on("installGame", async (e, gameId) => {
         send({ type: "progress", progress: p });
     }
 
-    // TODO add signal control to stop the action
+    const abortController = new AbortController();
+    installControllers.set(gameId, abortController);
 
     try {
         const installType = game.installProps.type;
         const { gameVersion } = game.installProps;
 
-        const vanillaProfile = await vanillaInstaller.installProfile(gameVersion, c, { onProgress });
+        const control: ProgressController = {
+            signal: abortController.signal,
+            onProgress
+        };
+
+        const vanillaProfile = await vanillaInstaller.installProfile(gameVersion, c, control);
         let p = vanillaProfile;
 
         let forgeInstallerPath: string | null = null;
@@ -65,7 +80,7 @@ ipcMain.on("installGame", async (e, gameId) => {
                 gameVersion,
                 game.installProps.loaderVersion,
                 c,
-                { onProgress }
+                control
             );
             p = await profileLoader.fromContainer(fid, c);
         }
@@ -75,7 +90,7 @@ ipcMain.on("installGame", async (e, gameId) => {
                 gameVersion,
                 game.installProps.loaderVersion,
                 c,
-                { onProgress }
+                control
             );
             p = await profileLoader.fromContainer(qid, c);
         }
@@ -84,10 +99,10 @@ ipcMain.on("installGame", async (e, gameId) => {
             let loaderVersion = game.installProps.loaderVersion;
 
             if (!loaderVersion) {
-                loaderVersion = await neoforgedInstaller.pickLoaderVersion(gameVersion, { onProgress });
+                loaderVersion = await neoforgedInstaller.pickLoaderVersion(gameVersion, control);
             }
 
-            forgeInstallerPath = await neoforgedInstaller.downloadInstaller(loaderVersion, { onProgress });
+            forgeInstallerPath = await neoforgedInstaller.downloadInstaller(loaderVersion, control);
             forgeInstallAction = "smelt";
 
             forgeInstallerInit = await smelt.readInstallProfile(forgeInstallerPath);
@@ -99,11 +114,11 @@ ipcMain.on("installGame", async (e, gameId) => {
             let loaderVersion = game.installProps.loaderVersion;
 
             if (!loaderVersion) {
-                loaderVersion = await forgeInstaller.pickLoaderVersion(gameVersion, { onProgress });
+                loaderVersion = await forgeInstaller.pickLoaderVersion(gameVersion, control);
             }
 
             const installerType = forgeInstaller.getInstallType(gameVersion);
-            forgeInstallerPath = await forgeInstaller.downloadInstaller(loaderVersion, installerType, { onProgress });
+            forgeInstallerPath = await forgeInstaller.downloadInstaller(loaderVersion, installerType, control);
 
             const modLoaderUrl = await forgeCompat.getModLoaderUrl(gameVersion);
             forgeModLoaderPath = modLoaderUrl && await forgeCompat.downloadModLoader(modLoaderUrl);
@@ -135,14 +150,14 @@ ipcMain.on("installGame", async (e, gameId) => {
         }
 
         // Ensure libraries
-        await jrt.installRuntime(p.javaVersion?.component ?? "jre-legacy", { onProgress });
+        await jrt.installRuntime(p.javaVersion?.component ?? "jre-legacy", control);
 
-        await vanillaInstaller.installLibraries(p, c, new Set(), { onProgress });
+        await vanillaInstaller.installLibraries(p, c, new Set(), control);
 
         // Finalize Forge
         if (installType === "neoforged" || installType === "forge") {
             if (forgeInstallAction === "smelt") {
-                await smelt.runPostInstall(forgeInstallerInit!, forgeInstallerPath!, p, c, { onProgress });
+                await smelt.runPostInstall(forgeInstallerInit!, forgeInstallerPath!, p, c, control);
             } else if (forgeInstallAction === "merge") {
                 await smeltLegacy.patchLegacyLibraries(
                     jrt.executable(p.javaVersion?.component ?? "jre-legacy"),
@@ -164,7 +179,7 @@ ipcMain.on("installGame", async (e, gameId) => {
         }
 
         // Game-level post install
-        await vanillaInstaller.installAssets(p, c, game.assetsLevel, { onProgress });
+        await vanillaInstaller.installAssets(p, c, game.assetsLevel, control);
         await vanillaInstaller.emitOptions(c);
 
         game.launchHint.profileId = p.id;
@@ -177,8 +192,9 @@ ipcMain.on("installGame", async (e, gameId) => {
         port.close();
     } catch (e) {
         send({ type: "error", err: e });
-
+    } finally {
         port.close();
+        installControllers.delete(gameId);
     }
 });
 

@@ -73,12 +73,19 @@ const native = {
      */
     install: {
         /**
-         * Install vanilla game.
+         * Run game installer.
          */
         installGame(gameId: string): void {
             const ch = new MessageChannel();
             ipcRenderer.postMessage("installGame", gameId, [ch.port2]);
             exposePort(gameId, ch.port1);
+        },
+
+        /**
+         * Cancels existing installation process.
+         */
+        cancel(gameId: string): void {
+            ipcRenderer.send("cancelInstall", gameId);
         },
 
         queryAvailableModLoaders(gameVersion: string): Promise<string[]> {

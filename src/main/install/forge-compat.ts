@@ -3,6 +3,7 @@ import { paths } from "@/main/fs/paths";
 import { dlx } from "@/main/net/dlx";
 import type { Library } from "@/main/profile/version-profile";
 import { unwrapESM } from "@/main/util/module";
+import type { ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
 import { nanoid } from "nanoid";
 
@@ -18,10 +19,10 @@ async function getModLoaderUrl(v: string): Promise<string> {
     return (await loadCompat() as any)["mod-loader"][v] ?? "";
 }
 
-async function downloadModLoader(url: string): Promise<string> {
+async function downloadModLoader(url: string, control?: ProgressController): Promise<string> {
     console.debug(`Fetching ModLoader from ${url}`);
     const fp = paths.temp.to(`mod-loader-${nanoid()}.jar`);
-    await dlx.getAll([{ url, path: fp }]);
+    await dlx.getAll([{ url, path: fp }], { signal: control?.signal });
     return fp;
 }
 

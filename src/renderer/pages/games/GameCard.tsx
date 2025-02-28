@@ -1,5 +1,5 @@
 import type { GameProfile } from "@/main/game/spec";
-import { remoteInstaller, useInstallProgress } from "@/renderer/services/install";
+import { useInstallProgress } from "@/renderer/services/install";
 import { GameTypeImage } from "@components/GameTypeImage";
 import { Card, CardBody, Chip } from "@heroui/react";
 import { GameCardActions } from "@pages/games/GameCardActions";
@@ -19,10 +19,6 @@ export function GameCard({ game }: GameCardProps) {
     const installStatus = isInstalling ? "installing" : installed ? "installed" : "not-installed";
 
     const progressText = installProgress && tc(installProgress.state, { ...installProgress.value });
-
-    async function handleInstall() {
-        await remoteInstaller.install(id);
-    }
 
     return <Card shadow="sm">
         <CardBody>
@@ -53,7 +49,6 @@ export function GameCard({ game }: GameCardProps) {
                     <GameCardActions
                         gameId={id}
                         installStatus={installStatus}
-                        onInstall={handleInstall}
                     />
                 </div>
             </div>

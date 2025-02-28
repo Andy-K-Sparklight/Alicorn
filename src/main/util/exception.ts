@@ -26,7 +26,7 @@ function create<K extends keyof ExceptionType>(type: K, detail: ExceptionType[K]
     // Electron prohibits transferring arbitrary object as errors to the renderer
     // We serialize the data, prefix it with a special placeholder, then send it to the renderer
     // It will be restored there
-    return "\0\0\0" + JSON.stringify({
+    return "\x00\x01\x02" + JSON.stringify({
         ALICORN_EXCEPTION: true,
         type,
         detail

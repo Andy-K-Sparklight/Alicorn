@@ -119,8 +119,8 @@ function restoreError(e: unknown) {
         const se = String(e);
 
         // Restore the error previously serialized
-        if (se.includes("\0\0\0")) {
-            const json = se.split("\0\0\0")[1];
+        if (se.includes("\x00\x01\x02") && se.includes("ALICORN_EXCEPTION")) {
+            const json = se.split("\x00\x01\x02")[1];
             return JSON.parse(json);
         }
     } catch {}

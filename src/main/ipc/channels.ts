@@ -21,6 +21,7 @@ export type IpcCallEvents = {
     destroyGame: (id: string) => void;
     revealGameContent: (id: string, scope: string) => void;
     languageChange: (lang: string) => void;
+    cancelInstall: (id: string) => void;
 }
 
 /**

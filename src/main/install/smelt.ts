@@ -56,7 +56,6 @@ async function readInstallProfile(installer: string): Promise<SmeltInstallInit> 
         const data = await zip.entryData("install_profile.json");
         const obj = JSON.parse(data.toString());
 
-        // TODO add support for V0 installers
         if (typeof obj === "object" && obj) {
             const ip = obj as InstallProfile;
             const versionData = await zip.entryData(ip.json.startsWith("/") ? ip.json.slice(1) : ip.json);
@@ -249,7 +248,7 @@ async function getMainClass(jar: string): Promise<string> {
 /**
  * Executes the processor JARs to finalize the installation.
  */
-async function runProcessor(jrtExec: string, p: Processor, values: Map<string, string>, container: Container) {
+async function runProcessor(jrtExec: string, p: Processor, values: Map<string, string>, container: Container, signal?: AbortSignal) {
     // Skip mappings download first
     const taskIndex = p.args.indexOf("--task");
     if (taskIndex >= 0 && p.args[taskIndex + 1] === "DOWNLOAD_MOJMAPS") {
@@ -286,7 +285,11 @@ async function runProcessor(jrtExec: string, p: Processor, values: Map<string, s
         ...args
     ], { stdio: ["ignore", "inherit", "inherit"] });
 
+    signal?.addEventListener("abort", () => proc.kill());
+
     const code = await pEvent(proc, "exit");
+
+    signal?.throwIfAborted();
 
     if (code !== 0) throw "Failed to execute processor";
 }
@@ -334,8 +337,8 @@ async function runPostInstall(
         onProgress?.(prog);
 
         for (const p of init.installProfile.processors) {
-            await runProcessor(jrtExec, p, values, container);
             signal?.throwIfAborted();
+            await runProcessor(jrtExec, p, values, container);
 
             prog.value.current++;
             onProgress?.(prog);

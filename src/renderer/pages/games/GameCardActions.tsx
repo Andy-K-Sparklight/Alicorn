@@ -1,7 +1,8 @@
+import { remoteInstaller } from "@/renderer/services/install";
 import { procService } from "@/renderer/services/proc";
 import { useNav } from "@/renderer/util/nav";
 import { Button } from "@heroui/react";
-import { CirclePlayIcon, DownloadIcon, EllipsisIcon } from "lucide-react";
+import { CirclePlayIcon, DownloadIcon, EllipsisIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 
 type InstallStatus = "installed" | "installing" | "not-installed";
@@ -9,15 +10,22 @@ type InstallStatus = "installed" | "installing" | "not-installed";
 interface GameActionsProps {
     installStatus: InstallStatus;
     gameId: string;
-    onInstall: () => void;
 }
 
-export function GameCardActions({ installStatus, gameId, onInstall }: GameActionsProps) {
+export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
     const [launching, setLaunching] = useState(false);
     const nav = useNav();
 
     function handleShowDetails() {
         nav(`/game-detail/${gameId}`);
+    }
+
+    function handleInstall() {
+        void remoteInstaller.install(gameId);
+    }
+
+    function handleCancel() {
+        void native.install.cancel(gameId);
     }
 
     async function launch() {
@@ -39,14 +47,22 @@ export function GameCardActions({ installStatus, gameId, onInstall }: GameAction
                     <CirclePlayIcon/>
                 </Button>
                 :
-                <Button
-                    isIconOnly
-                    isLoading={installStatus === "installing"}
-                    color="secondary"
-                    onPress={onInstall}
-                >
-                    <DownloadIcon/>
-                </Button>
+                installStatus === "installing" ?
+                    <Button
+                        isIconOnly
+                        color="danger"
+                        onPress={handleCancel}
+                    >
+                        <XIcon/>
+                    </Button>
+                    :
+                    <Button
+                        isIconOnly
+                        color="secondary"
+                        onPress={handleInstall}
+                    >
+                        <DownloadIcon/>
+                    </Button>
         }
 
         <Button isIconOnly onPress={handleShowDetails}>

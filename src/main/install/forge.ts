@@ -85,7 +85,7 @@ async function downloadInstaller(loaderVersion: string, type: "installer" | "uni
             url,
             path: fp
         }
-    ]);
+    ], { signal: control?.signal });
 
     return fp;
 }
