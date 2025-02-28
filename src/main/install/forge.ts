@@ -108,9 +108,16 @@ function getInstallType(gameVersion: string): "installer" | "universal" | "clien
     return "installer";
 }
 
+async function prefetch() {
+    try {
+        await syncVersions();
+    } catch {}
+}
+
 export const forgeInstaller = {
     queryLoaderVersions,
     pickLoaderVersion,
     getInstallType,
-    downloadInstaller
+    downloadInstaller,
+    prefetch
 };

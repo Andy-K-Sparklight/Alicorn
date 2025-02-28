@@ -57,8 +57,15 @@ async function downloadInstaller(loaderVersion: string, control?: ProgressContro
     return fp;
 }
 
+async function prefetch() {
+    try {
+        await syncVersions();
+    } catch {}
+}
+
 export const neoforgedInstaller = {
     queryLoaderVersions,
     pickLoaderVersion,
-    downloadInstaller
+    downloadInstaller,
+    prefetch
 };

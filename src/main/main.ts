@@ -1,5 +1,7 @@
 import { conf } from "@/main/conf/conf";
 import { paths } from "@/main/fs/paths";
+import { forgeInstaller } from "@/main/install/forge";
+import { neoforgedInstaller } from "@/main/install/neoforged";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { aria2 } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
@@ -103,7 +105,9 @@ async function main() {
 
     const tasks = [
         mirror.bench(),
-        vanillaInstaller.prefetch()
+        vanillaInstaller.prefetch(),
+        forgeInstaller.prefetch(),
+        neoforgedInstaller.prefetch()
     ].filter(Boolean);
 
     await Promise.all(tasks);
