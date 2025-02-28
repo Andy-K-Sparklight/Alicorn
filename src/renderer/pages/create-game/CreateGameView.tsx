@@ -29,10 +29,10 @@ export function CreateGameView() {
     const [shareContainer, setShareContainer] = useState(false);
 
     const [lastSelectedAccountId, setLastSelectedAccountId] = useLocalStorage<string>("create-game.account.last-selected");
-
-    const [authType, setAuthType] = useState<"new-vanilla" | "manual" | "reuse">(lastSelectedAccountId ? "reuse" : "new-vanilla");
-
     const initialAccountId = accounts.some(a => a.uuid === lastSelectedAccountId) ? lastSelectedAccountId : null;
+
+    const [authType, setAuthType] = useState<"new-vanilla" | "manual" | "reuse">(initialAccountId ? "reuse" : "new-vanilla");
+
     const [accountId, setAccountId] = useState<string | null>(initialAccountId ?? null);
 
     const [playerName, setPlayerName] = useState<string>("Player");
