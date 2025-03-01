@@ -3,6 +3,7 @@
 
 import type { ConfigThemes } from "@heroui/react";
 import amazingGrace from "./themes/amazing-grace";
+import hoshi from "./themes/hoshi";
 import overworld from "./themes/overworld";
 import sakuraDark from "./themes/sakura-dark";
 import sakuraLight from "./themes/sakura-light";
@@ -12,6 +13,7 @@ export default {
     "sakura-light": sakuraLight,
     "sakura-dark": sakuraDark,
     "overworld": overworld,
+    "hoshi": hoshi,
     "twikie": twikie,
     "amazing-grace": amazingGrace
 } satisfies ConfigThemes;
