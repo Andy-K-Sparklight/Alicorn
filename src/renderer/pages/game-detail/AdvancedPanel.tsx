@@ -6,7 +6,7 @@ import { DialogProvider, type PropsWithDialog, useOpenDialog } from "@components
 import { Radio, RadioGroup } from "@heroui/radio";
 import { addToast, Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
 import { useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
-import { CloudDownloadIcon, RefreshCwIcon, TrashIcon, UnlinkIcon } from "lucide-react";
+import { CloudDownloadIcon, PickaxeIcon, RefreshCwIcon, TrashIcon, UnlinkIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -24,6 +24,10 @@ export function AdvancedPanel() {
     function handleReinstall() {
         nav("/games");
         void remoteInstaller.install(id);
+    }
+
+    function handleRecreate() {
+        nav(`/create-game/${id}`);
     }
 
     function handleInstallFull() {
@@ -68,6 +72,20 @@ export function AdvancedPanel() {
                 onPress={handleReinstall}
             >
                 {t("reinstall.btn", { name })}
+            </Button>
+        </div>
+
+        <div className="flex items-center">
+            <div className="grow flex flex-col gap-1">
+                <div className="font-bold text-lg">{t("recreate.label")}</div>
+                <div className="text-sm text-foreground-400">{t("recreate.sub")}</div>
+            </div>
+
+            <Button
+                startContent={<PickaxeIcon/>}
+                onPress={handleRecreate}
+            >
+                {t("recreate.btn", { name })}
             </Button>
         </div>
 

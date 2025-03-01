@@ -35,6 +35,10 @@ ipcMain.on("revealGameContent", async (_, gameId, scope) => {
 });
 
 export interface CreateGameInit {
+    /**
+     * Optional ID to override existing game.
+     */
+    id?: string;
     name: string;
     gameVersion: string;
     authType: "new-vanilla" | "manual" | "reuse";
@@ -92,7 +96,7 @@ ipcMain.handle("addGame", async (_, init) => {
     }
 
     const g: GameProfile = {
-        id: genGameId(),
+        id: init.id || genGameId(),
         name,
         installed: false,
         installProps,

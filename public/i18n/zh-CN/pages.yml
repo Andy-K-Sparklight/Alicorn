@@ -1,5 +1,6 @@
 create-game:
   title: 创建新游戏
+  title-re: 重新创建游戏
   name-input-title: 游戏名称
   version-select-title: 游戏版本
   include-snapshots: 包含快照
@@ -114,6 +115,10 @@ game-detail:
         label: 重新安装
         sub: 重新下载和设置此游戏。
         btn: 重新安装「{{name}}」
+      recreate:
+        label: 重新创建
+        sub: 重新创建游戏或变更设置。
+        btn: 重新创建「{{name}}」
       install-full:
         label: 下载完整资源
         sub: 此游戏当前仅包含视觉资源。下载完整资源，获取全部游戏体验。

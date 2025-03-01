@@ -1,5 +1,6 @@
 create-game:
   title: Create New Game
+  title-re: Recreating Game
   name-input-title: Game Name
   version-select-title: Version
   include-snapshots: Show Snapshots
@@ -113,6 +114,10 @@ game-detail:
         label: Reinstall
         sub: Retry downloading and installing the game.
         btn: Reinstall "{{name}}"
+      recreate:
+        label: Recreate
+        sub: Recreate game, optionally modifying the settings.
+        btn: Recreate "{{name}}"
       install-full:
         label: Download Full Resources
         sub: Download missing resources to unlock the full gameplay experience.

@@ -2,6 +2,7 @@ import type { InstallerProps } from "@/main/install/installers";
 import { useAccounts } from "@/renderer/services/auth";
 import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/Alert";
+import type { PropsWithParams } from "@components/AnimatedRoute";
 import { PlayerNameInput } from "@components/PlayerNameInput";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { addToast, Button, Input, Switch } from "@heroui/react";
@@ -18,7 +19,7 @@ import { useLocalStorage } from "react-use";
 /**
  * Create new game without the help of the wizard.
  */
-export function CreateGameView() {
+export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?: string }>) {
     const { t } = useTranslation("pages", { keyPrefix: "create-game" });
     const accounts = useAccounts();
 
@@ -95,6 +96,7 @@ export function CreateGameView() {
         if (valid) {
             setCreating(true);
             await native.game.add({
+                id: gameId,
                 name: gameName,
                 containerId,
                 accountId,
@@ -116,7 +118,7 @@ export function CreateGameView() {
 
     return <div className="w-11/12 h-full mx-auto overflow-y-auto overflow-x-hidden">
         <div className="mx-4">
-            <div className="font-bold text-2xl">{t("title")}</div>
+            <div className="font-bold text-2xl">{t(gameId ? "title-re" : "title")}</div>
             <div className="w-full grow flex flex-col gap-6 mt-4">
                 <div className="flex flex-col gap-4">
                     <div className="font-bold text-xl">{t("name-input-title")}</div>
