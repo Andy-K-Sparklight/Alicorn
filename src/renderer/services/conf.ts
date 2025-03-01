@@ -1,4 +1,5 @@
 import type { UserConfig } from "@/main/conf/conf";
+import { alter } from "@/main/util/misc";
 import Emittery from "emittery";
 import { useSyncExternalStore } from "react";
 
@@ -29,9 +30,7 @@ export function useConfig() {
     function alterConfig(update: (c: UserConfig) => void) {
         if (!config) return;
 
-        const src = structuredClone(config);
-        update(src);
-        native.conf.update(src);
+        native.conf.update(alter(config, update));
     }
 
     return { config, alterConfig };

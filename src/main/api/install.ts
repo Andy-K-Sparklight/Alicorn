@@ -1,11 +1,9 @@
-import { containers } from "@/main/container/manage";
 import { fabricInstaller } from "@/main/install/fabric";
 import { forgeInstaller } from "@/main/install/forge";
 import { installers } from "@/main/install/installers";
 import { neoforgedInstaller } from "@/main/install/neoforged";
 import { quiltInstaller } from "@/main/install/quilt";
 import { ipcMain } from "@/main/ipc/typed";
-import { reg } from "@/main/registry/registry";
 import { exceptions } from "@/main/util/exception";
 import type { Progress, ProgressController } from "@/main/util/progress";
 
@@ -22,8 +20,6 @@ export type VanillaInstallEvent =
         progress: Progress;
     }
 
-type ForgeInstallActionType = "smelt" | "smelt-legacy" | "merge" | "none";
-
 const installControllers = new Map<string, AbortController>();
 
 ipcMain.on("cancelInstall", (_, gameId) => {
@@ -35,9 +31,6 @@ ipcMain.on("cancelInstall", (_, gameId) => {
 ipcMain.on("installGame", async (e, gameId) => {
     const [port] = e.ports;
     console.debug(`Starting installation of ${gameId}`);
-
-    const game = structuredClone(reg.games.get(gameId));
-    const container = containers.get(game.launchHint.containerId);
 
     function send(e: VanillaInstallEvent) {
         port.postMessage(e);
@@ -62,8 +55,8 @@ ipcMain.on("installGame", async (e, gameId) => {
         send({ type: "finish" });
 
         port.close();
-    } catch (e) {
-        send({ type: "error", err: e });
+    } catch (err) {
+        send({ type: "error", err });
     } finally {
         port.close();
         installControllers.delete(gameId);
@@ -100,8 +93,6 @@ ipcMain.handle("queryAvailableModLoaders", async (_, gameVersion) => {
     if (forgeVersions.length > 0) {
         supported.push("forge");
     }
-
-    // TODO add other mod loaders
 
     return supported;
 });

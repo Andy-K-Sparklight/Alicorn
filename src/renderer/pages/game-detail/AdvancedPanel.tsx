@@ -1,3 +1,4 @@
+import { alter } from "@/main/util/misc";
 import { remoteInstaller } from "@/renderer/services/install";
 import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/Alert";
@@ -31,12 +32,10 @@ export function AdvancedPanel() {
     }
 
     function handleInstallFull() {
-        const ng = structuredClone(game);
-        ng.assetsLevel = "full";
         nav("/games");
 
         (async () => {
-            await native.game.update(ng);
+            await native.game.update(alter(game, g => g.assetsLevel = "full"));
             await remoteInstaller.install(id);
         })();
     }

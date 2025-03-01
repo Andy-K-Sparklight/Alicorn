@@ -1,7 +1,7 @@
+import { games } from "@/main/game/manage";
 import { ipcMain } from "@/main/ipc/typed";
 import { bl } from "@/main/launch/bl";
 import type { GameProcessLog } from "@/main/launch/log-parser";
-import { reg } from "@/main/registry/registry";
 import { MessagePortMain } from "electron";
 import type EventEmitter from "node:events";
 
@@ -11,7 +11,7 @@ export interface LaunchGameResult {
 }
 
 ipcMain.handle("launch", async (_, gameId: string) => {
-    const launchHint = reg.games.get(gameId).launchHint;
+    const launchHint = games.get(gameId).launchHint;
 
     const g = await bl.launch(launchHint);
 

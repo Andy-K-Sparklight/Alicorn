@@ -1,5 +1,6 @@
 import { windowControl } from "@/main/sys/window-control";
 import { isENOENT } from "@/main/util/fs";
+import { alter as alt } from "@/main/util/misc";
 import deepFreeze from "deep-freeze-es6";
 import fs from "fs-extra";
 import os from "node:os";
@@ -349,9 +350,7 @@ function update(c: UserConfig) {
 }
 
 function alter(fn: (c: UserConfig) => void) {
-    const nc = structuredClone(config);
-    fn(nc);
-    update(nc);
+    update(alt(config, fn));
 }
 
 /**

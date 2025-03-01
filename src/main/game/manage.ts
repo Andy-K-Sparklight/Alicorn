@@ -23,7 +23,7 @@ function remove(id: string) {
  * Checks whether the specified game is being installed on the same container with at least one other game.
  */
 function queryShared(id: string): string[] {
-    const g = reg.games.get(id);
+    const g = get(id);
 
     if (!g) return [];
 
@@ -32,6 +32,10 @@ function queryShared(id: string): string[] {
         .map(gp => gp.id);
 }
 
+function get(id: string) {
+    return reg.games.get(id);
+}
+
 export const games = {
-    add, remove, queryShared
+    add, remove, queryShared, get
 };

@@ -1,4 +1,5 @@
 import type { GameProfile } from "@/main/game/spec";
+import { alter } from "@/main/util/misc";
 import { StringArrayInput } from "@components/StringArrayInput";
 import { Input } from "@heroui/react";
 import { useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
@@ -11,9 +12,7 @@ export function LaunchPanel() {
 
     function makeGameReducer<T>(update: (g: GameProfile, a: T) => void) {
         return (a: T) => {
-            const ng = structuredClone(game);
-            update(ng, a);
-            void native.game.update(ng);
+            void native.game.update(alter(game, g => update(g, a)));
         };
     }
 

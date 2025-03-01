@@ -16,14 +16,14 @@ import fs from "fs-extra";
 
 ipcMain.handle("listGames", () => reg.games.getAll());
 ipcMain.handle("removeGame", (_, gameId) => games.remove(gameId));
-ipcMain.handle("getGameProfile", (_, id) => reg.games.get(id));
+ipcMain.handle("getGameProfile", (_, id) => games.get(id));
 
 const allowedContentScopes = new Set(["resourcepacks", "."]);
 
 ipcMain.on("revealGameContent", async (_, gameId, scope) => {
     if (!allowedContentScopes.has(scope)) return;
 
-    const game = reg.games.get(gameId);
+    const game = games.get(gameId);
     const container = containers.get(game.launchHint.containerId);
 
     if (venv.isMounted(container)) {
@@ -67,7 +67,7 @@ ipcMain.handle("addGame", async (_, init) => {
             link: containerShouldLink
         };
 
-        reg.containers.add(cid, props);
+        containers.add(props);
     }
 
     let type: GameCoreType = ({
@@ -117,12 +117,12 @@ ipcMain.handle("addGame", async (_, init) => {
     games.add(g);
 });
 
-ipcMain.handle("updateGame", (_, g) => games.add(structuredClone(g)));
+ipcMain.handle("updateGame", (_, g) => games.add(g));
 
 ipcMain.on("destroyGame", async (_, id) => {
     if (games.queryShared(id).length > 0) return;
 
-    const g = reg.games.get(id);
+    const g = games.get(id);
 
     if (g) {
         games.remove(g.id);

@@ -1,3 +1,4 @@
+import { alter } from "@/main/util/misc";
 import { useGameProfile } from "@/renderer/services/game";
 import type { PropsWithParams } from "@components/AnimatedRoute";
 import { Editable } from "@components/Editable";
@@ -37,9 +38,7 @@ function Header() {
     }
 
     function handleNameChange(newName: string) {
-        const ng = structuredClone(game);
-        ng.name = newName;
-        void native.game.update(ng);
+        void native.game.update(alter(game, g => g.name = newName));
     }
 
     return <div className="p-4 h-32 flex gap-8">

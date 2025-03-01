@@ -13,7 +13,6 @@ import { vanillaInstaller } from "@/main/install/vanilla";
 import { jrt } from "@/main/jrt/install";
 import { profileLoader } from "@/main/profile/loader";
 import type { VersionProfile } from "@/main/profile/version-profile";
-import { reg } from "@/main/registry/registry";
 import type { ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
 
@@ -204,7 +203,7 @@ const internalInstallers = {
 } as const;
 
 async function runInstall(gameId: string, control?: ProgressController) {
-    const game = reg.games.get(gameId);
+    const game = games.get(gameId);
     const props = game.installProps;
     const container = containers.get(game.launchHint.containerId);
 

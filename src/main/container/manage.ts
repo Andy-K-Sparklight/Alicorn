@@ -12,6 +12,15 @@ function create(props: ContainerProps): Container {
     return new SimpleContainer(props);
 }
 
+function add(c: Container | ContainerProps) {
+    if ("props" in c) {
+        reg.containers.add(c.props.id, c.props);
+    } else {
+        reg.containers.add(c.id, c);
+    }
+}
+
+
 class SimpleContainer implements Container {
     props;
 
@@ -95,5 +104,5 @@ class SimpleContainer implements Container {
 }
 
 export const containers = {
-    create, get
+    create, get, add
 };

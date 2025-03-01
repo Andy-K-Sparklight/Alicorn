@@ -100,6 +100,7 @@ async function create(id: string): Promise<string> {
             case "crash":
                 np.status = "crashed";
                 np.exitTime = Date.now();
+                np.memUsage = [];
                 restrictedEmitter.emit("change");
                 break;
             case "stdout":
@@ -110,8 +111,7 @@ async function create(id: string): Promise<string> {
                 clearLogs(buf);
                 break;
             case "log":
-                const log = e.data.log;
-                np.logs.push(log);
+                np.logs.push(e.data.log);
                 clearLogs(np.logs);
                 break;
             case "memUsageUpdate":
