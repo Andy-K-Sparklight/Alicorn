@@ -11,13 +11,10 @@ export function ExceptionDisplay() {
     const [isOpen, setOpen] = useState(false);
 
     function handleException(ev: ErrorEvent | PromiseRejectionEvent) {
-        let e: unknown;
+        // @ts-expect-error Unclear property definition in error events
+        let e = ev.error || ev.reason || ev.message;
 
-        if ("error" in ev) {
-            e = ev.error;
-        } else {
-            e = ev.reason;
-        }
+        if (!shouldSuppressError(e)) return;
 
         console.error("Received error event:");
         console.error(e);
@@ -126,4 +123,9 @@ function restoreError(e: unknown) {
     } catch {}
 
     return e;
+}
+
+function shouldSuppressError(e: unknown): boolean {
+    // https://github.com/inokawa/virtua?tab=readme-ov-file#what-is-resizeobserver-loop-completed-with-undelivered-notifications-error
+    return e !== "ResizeObserver loop completed with undelivered notifications.";
 }
