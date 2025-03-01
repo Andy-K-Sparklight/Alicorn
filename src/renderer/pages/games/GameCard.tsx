@@ -3,6 +3,7 @@ import { useInstallProgress } from "@/renderer/services/install";
 import { GameTypeImage } from "@components/GameTypeImage";
 import { Card, CardBody, Chip } from "@heroui/react";
 import { GameCardActions } from "@pages/games/GameCardActions";
+import { clsx } from "clsx";
 import { DotIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -14,21 +15,22 @@ export function GameCard({ game }: GameCardProps) {
     const { id, name, versions: { game: gameVersion }, installed, type } = game;
     const { t: tc } = useTranslation("common", { keyPrefix: "progress" });
     const installProgress = useInstallProgress(id);
+    const pinned = game.user.pinTime && game.user.pinTime > 0;
 
     const isInstalling = installProgress !== null;
     const installStatus = isInstalling ? "installing" : installed ? "installed" : "not-installed";
 
     const progressText = installProgress && tc(installProgress.state, { ...installProgress.value });
 
-    return <Card shadow="sm">
+    return <Card shadow="sm" className={clsx(pinned && "outline-2 outline-default-500")}>
         <CardBody>
-            <div className="flex gap-4 items-center h-16 px-3">
-                <div className="h-full p-3 bg-content2 rounded-full">
+            <div className="flex gap-6 items-center px-3">
+                <div className="h-12 p-2 bg-content2 rounded-full">
                     <GameTypeImage type={type}/>
                 </div>
 
-                <div className="flex flex-col gap-1">
-                    <div className="font-bold text-xl">{name}</div>
+                <div className="flex flex-col">
+                    <div className="font-bold text-lg">{name}</div>
                     <div className="flex items-center text-foreground-400">
                         {id}
                         {

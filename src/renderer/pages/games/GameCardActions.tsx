@@ -1,8 +1,11 @@
+import { alter } from "@/main/util/misc";
+import { useGameProfile } from "@/renderer/services/game";
 import { remoteInstaller } from "@/renderer/services/install";
 import { procService } from "@/renderer/services/proc";
 import { useNav } from "@/renderer/util/nav";
 import { Button } from "@heroui/react";
-import { CirclePlayIcon, DownloadIcon, EllipsisIcon, XIcon } from "lucide-react";
+import { clsx } from "clsx";
+import { CirclePlayIcon, DownloadIcon, EllipsisIcon, PinIcon, PinOffIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 
 type InstallStatus = "installed" | "installing" | "not-installed";
@@ -14,7 +17,12 @@ interface GameActionsProps {
 
 export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
     const [launching, setLaunching] = useState(false);
+    const game = useGameProfile(gameId);
     const nav = useNav();
+
+    if (!game) throw "Game actions cannot be used without corresponding game profile";
+
+    const pinned = game.user.pinTime && game.user.pinTime > 0;
 
     function handleShowDetails() {
         nav(`/game-detail/${gameId}`);
@@ -26,6 +34,16 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
 
     function handleCancel() {
         void native.install.cancel(gameId);
+    }
+
+    function togglePin() {
+        void native.game.update(alter(game!, g => {
+            if (g.user.pinTime && g.user.pinTime > 0) {
+                g.user.pinTime = undefined;
+            } else {
+                g.user.pinTime = Date.now();
+            }
+        }));
     }
 
     async function launch() {
@@ -65,7 +83,15 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
                     </Button>
         }
 
-        <Button isIconOnly onPress={handleShowDetails}>
+        <Button variant="light" isIconOnly onPress={togglePin}>
+            <span className={clsx("duration-200", !pinned && "rotate-45")}>
+                 {
+                     pinned ? <PinOffIcon/> : <PinIcon/>
+                 }
+            </span>
+        </Button>
+
+        <Button variant="light" isIconOnly onPress={handleShowDetails}>
             <EllipsisIcon/>
         </Button>
     </div>;

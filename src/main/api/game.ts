@@ -111,6 +111,7 @@ ipcMain.handle("addGame", async (_, init) => {
         versions: {
             game: p.id
         },
+        user: {},
         type
     };
 

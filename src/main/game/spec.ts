@@ -44,6 +44,16 @@ export interface GameProfile {
     launchHint: LaunchHint;
 
     /**
+     * User preference object.
+     */
+    user: {
+        /**
+         * The priority of the pinned game.
+         */
+        pinTime?: number;
+    };
+
+    /**
      * Type of the game core.
      */
     type: GameCoreType;
@@ -60,7 +70,7 @@ export type GameCoreType =
     "neoforged" |
     "unknown"
 
-export const GAME_REG_VERSION = 2;
+export const GAME_REG_VERSION = 3;
 export const GAME_REG_TRANS: RegistryTransformer[] = [
     // v1: patch the `installerProps` key
     (s) => {
@@ -75,6 +85,15 @@ export const GAME_REG_TRANS: RegistryTransformer[] = [
     (s) => {
         if (!s.installProps.gameVersion) {
             s.installProps.gameVersion = s.launchHint.profileId;
+        }
+
+        return s;
+    },
+
+    // v3: append `user` key
+    (s) => {
+        if (!s.user) {
+            s.user = {};
         }
 
         return s;

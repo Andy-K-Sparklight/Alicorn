@@ -56,6 +56,16 @@ export function GamesView() {
 
 function toSortedGames(games: GameProfile[], sortMethod: SortMethod): GameProfile[] {
     return games.toSorted((a, b) => {
+        const pa = a.user.pinTime;
+        const pb = b.user.pinTime;
+
+        if (pa && pb) {
+            return pb - pa;
+        }
+
+        if (pa) return -1;
+        if (pb) return 1;
+
         switch (sortMethod) {
             case "az" :
                 return a.name.localeCompare(b.name);
