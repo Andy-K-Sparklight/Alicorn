@@ -52,6 +52,8 @@ async function patchJRTVersion(src: Record<string, unknown>) {
             }
         }
     }
+
+    src["javaVersion"] = { component: "jre-legacy" };
 }
 
 /**

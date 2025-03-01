@@ -5,7 +5,8 @@ import { containers } from "@/main/container/manage";
 import type { ContainerProps } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import { games } from "@/main/game/manage";
-import type { GameCoreType, GameInstallProps, GameProfile } from "@/main/game/spec";
+import type { GameCoreType, GameProfile } from "@/main/game/spec";
+import type { InstallerProps } from "@/main/install/installers";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { ipcMain } from "@/main/ipc/typed";
 import { venv } from "@/main/launch/venv";
@@ -37,7 +38,7 @@ export interface CreateGameInit {
     name: string;
     gameVersion: string;
     authType: "new-vanilla" | "manual" | "reuse";
-    installProps: GameInstallProps;
+    installProps: InstallerProps;
     playerName: string;
     accountId: string | null;
     assetsLevel: "full" | "video-only";

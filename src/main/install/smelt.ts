@@ -321,7 +321,7 @@ async function runPostInstall(
         await extractLibraries(init, installer, container);
         await downloadLibraries(init, container, control);
 
-        const jrtExec = jrt.executable(profile.javaVersion?.component ?? "jre-legacy");
+        const jrtExec = jrt.executable(profile.javaVersion.component);
 
         signal?.throwIfAborted();
 

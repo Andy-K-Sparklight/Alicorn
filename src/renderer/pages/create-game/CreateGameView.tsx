@@ -1,4 +1,4 @@
-import type { GameInstallProps } from "@/main/game/spec";
+import type { InstallerProps } from "@/main/install/installers";
 import { useAccounts } from "@/renderer/services/auth";
 import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/Alert";
@@ -68,7 +68,7 @@ export function CreateGameView() {
         !(authType === "manual" && !playerName) &&
         !(authType === "reuse" && !accountId);
 
-    function buildInstallProps(): GameInstallProps {
+    function buildInstallProps(): InstallerProps {
         if (!valid) throw "Cannot create game with incomplete install props";
 
         switch (installType) {

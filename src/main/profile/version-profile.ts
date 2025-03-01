@@ -48,7 +48,7 @@ export interface VersionProfile {
      *
      * This key is missing in some early versions.
      */
-    javaVersion?: JRTVersionPrompt;
+    javaVersion: JRTVersionPrompt;
 
     libraries: Library[];
 
@@ -108,8 +108,8 @@ export interface DownloadsArtifact {
 }
 
 export interface JRTVersionPrompt {
-    component: string;
-    majorVersion: number;
+    component: string; // Will be patched when linking
+    majorVersion?: number;
 }
 
 export interface Library {

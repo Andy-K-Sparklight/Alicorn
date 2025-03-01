@@ -1,3 +1,4 @@
+import type { InstallerProps } from "@/main/install/installers";
 import type { LaunchHint } from "@/main/launch/types";
 import type { RegistryTransformer } from "@/main/registry/registry";
 
@@ -25,7 +26,7 @@ export interface GameProfile {
     /**
      * Props for installing the game.
      */
-    installProps: GameInstallProps;
+    installProps: InstallerProps;
 
     /**
      * Game related versions.
@@ -58,22 +59,6 @@ export type GameCoreType =
     "quilt" |
     "neoforged" |
     "unknown"
-
-export type GameInstallProps =
-    {
-        type: "vanilla";
-        gameVersion: string;
-    } |
-    {
-        type: "fabric" | "quilt";
-        gameVersion: string;
-        loaderVersion: string;
-    } |
-    {
-        type: "neoforged" | "forge";
-        gameVersion: string;
-        loaderVersion: string;
-    }
 
 export const GAME_REG_VERSION = 2;
 export const GAME_REG_TRANS: RegistryTransformer[] = [
