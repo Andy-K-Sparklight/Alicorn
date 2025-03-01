@@ -3,6 +3,7 @@ import { paths } from "@/main/fs/paths";
 import { forgeInstaller } from "@/main/install/forge";
 import { neoforgedInstaller } from "@/main/install/neoforged";
 import { vanillaInstaller } from "@/main/install/vanilla";
+import { venv } from "@/main/launch/venv";
 import { aria2 } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
 import { registry } from "@/main/registry/registry";
@@ -104,6 +105,7 @@ async function main() {
     console.log("Running optional tasks...");
 
     const tasks = [
+        venv.recover(),
         mirror.bench(),
         vanillaInstaller.prefetch(),
         forgeInstaller.prefetch(),
