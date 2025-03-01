@@ -208,7 +208,7 @@ function extractEmitter(gid: string): Emittery | null {
 }
 
 function notifyCancel(gid: string) {
-    extractEmitter(gid)?.emit("error", "Cancelled");
+    extractEmitter(gid)?.emit("error", "AbortError");
 }
 
 function notifyComplete(gid: string) {
