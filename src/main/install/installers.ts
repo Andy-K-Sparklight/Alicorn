@@ -203,7 +203,7 @@ const internalInstallers = {
 } as const;
 
 async function runInstall(gameId: string, control?: ProgressController) {
-    const game = games.get(gameId);
+    const game = structuredClone(games.get(gameId));
     const props = game.installProps;
     const container = containers.get(game.launchHint.containerId);
 
