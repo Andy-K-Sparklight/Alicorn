@@ -2,6 +2,7 @@
  * The bootloader system.
  */
 import { accounts } from "@/main/auth/manage";
+import { paths } from "@/main/fs/paths";
 import { jrt } from "@/main/jrt/install";
 import { launchArgs } from "@/main/launch/args";
 import { GameProcess } from "@/main/launch/proc";
@@ -46,17 +47,31 @@ async function launch(hint: LaunchHint): Promise<GameProcess> {
     console.log(`Launching game ${hint.profileId} on ${hint.containerId}`);
     const init = await prepare(hint);
 
+    const alxNonce = crypto.randomUUID();
+    init.extraVMArgs = [
+        `-Dalicorn.alx.nonce=${alxNonce}`,
+        `-Dalicorn.alx.mainClass=${init.profile.mainClass}`
+    ];
+
+    init.extraClasspath = [paths.app.to("vendor", "alx-1.0.jar")];
+
+    init.altMainClass = "moe.skjsjhb.alx.AltLauncher";
+
     if (hint.venv) {
         await venv.mount(init.container);
-        init.extraVMArgs = venv.createVenvArgs(init.container);
+        init.extraVMArgs.push(...venv.createVenvArgs(init.container));
     }
 
     try {
         const args = launchArgs.createArguments(init);
-        const g = await GameProcess.create(init.jrtExec, args, init.container.gameDir());
+        const g = await GameProcess.create(init.jrtExec, args, init.container.gameDir(), alxNonce);
         games.set(g.id, g);
 
-        g.emitter.once("end", () => venv.unmount(init.container));
+        if (hint.venv) {
+            g.emitter.once("end", () => venv.unmount(init.container));
+            g.emitter.once("alxAttached", () => venv.placeMarker(init.container, g.alxPort!, alxNonce));
+        }
+
         return g;
     } catch (e) {
         await venv.unmount(init.container);

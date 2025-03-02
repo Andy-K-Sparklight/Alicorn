@@ -183,6 +183,10 @@ monitor:
     uptime: Uptime
     pid: PID
     profile: Profile
+    alx: ALX
+  alx-status:
+    connected: Online
+    disconnected: Offline
   status:
     running: Running
     exited: Exited

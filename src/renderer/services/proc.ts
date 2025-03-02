@@ -18,6 +18,7 @@ export interface RemoteGameProcess {
     pid: number;
     status: RemoteGameStatus;
     profile: GameProfile;
+    alxConnected: boolean;
     memUsage: number[];
     startTime: number;
     exitTime?: number;
@@ -64,6 +65,7 @@ async function create(id: string): Promise<string> {
         id: meta.id,
         pid: meta.pid,
         profile,
+        alxConnected: false,
         memUsage: [],
         status: "running",
         startTime: Date.now(), // Time measurement is done at the front end
@@ -119,6 +121,9 @@ async function create(id: string): Promise<string> {
                 if (np.memUsage.length > 30) {
                     np.memUsage.splice(0, 10);
                 }
+                break;
+            case "alxAttached":
+                np.alxConnected = true;
                 break;
         }
 

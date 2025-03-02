@@ -37,6 +37,8 @@ function createClasspath(init: LaunchInit): string {
     // Add client.jar
     libs.push(init.container.client(init.profile.version || init.profile.id));
 
+    libs.unshift(...init.extraClasspath ?? []);
+
     return libs.join(path.delimiter);
 }
 
@@ -149,7 +151,7 @@ function createArguments(init: LaunchInit): string[] {
     return [
         ...vmArgs,
         ...extraVMArgs,
-        init.profile.mainClass,
+        init.altMainClass || init.profile.mainClass,
         ...gameArgs,
         ...extraGameArgs
     ].map(a => {

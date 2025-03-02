@@ -182,6 +182,10 @@ monitor:
     uptime: 运行时间
     pid: 进程号
     profile: 核心名称
+    alx: ALX
+  alx-status:
+    connected: 已连接
+    disconnected: 未连接
   status:
     running: 正常运行中
     exited: 已停止

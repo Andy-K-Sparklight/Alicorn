@@ -64,7 +64,8 @@ function ControlPanel() {
         status,
         startTime,
         pid,
-        exitTime
+        exitTime,
+        alxConnected
     } = proc;
     const [time, setTime] = useState(Date.now());
 
@@ -83,6 +84,7 @@ function ControlPanel() {
                 status={status}
                 uptime={(exitTime ?? time) - startTime}
                 pid={pid}
+                alxConnected={alxConnected}
             />
         </div>
         <MonitorActionsMemo procId={proc.id} gameId={id} status={status}/>

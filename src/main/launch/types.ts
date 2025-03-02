@@ -68,4 +68,6 @@ export interface LaunchInit {
     assetsShouldMap: boolean;
     pref: Partial<LaunchPref>;
     extraVMArgs?: string[];
+    extraClasspath?: string[];
+    altMainClass?: string;
 }

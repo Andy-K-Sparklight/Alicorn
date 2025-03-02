@@ -48,6 +48,14 @@ const contents = {
             target: "ffind.jar",
             sha256: "0c6430a36610929346076d6fd58375a285034f52e8013cf6a5f79879026ec36f"
         }
+    },
+
+    alx: {
+        "*": {
+            url: "https://github.com/skjsjhb/alx/releases/download/v1.0/alx-1.0.jar",
+            target: "alx-1.0.jar",
+            sha256: "027db3600afdd5ff4b9d6a62ed291977c6475fca10c216587e363545e979bd35"
+        }
     }
 } as Record<string, Record<string, VendorFile>>;
 
@@ -66,7 +74,8 @@ function createFileList(cfg: BuildConfig): VendorFile[] {
     return [
         getComponent("aria2c"),
         getComponent("certificate"),
-        getComponent("ffind")
+        getComponent("ffind"),
+        getComponent("alx")
     ].filter(isTruthy);
 }
 

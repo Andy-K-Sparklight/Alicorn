@@ -15,9 +15,10 @@ interface StatusDisplayProps {
     status: RemoteGameStatus;
     uptime: number;
     pid: number;
+    alxConnected: boolean;
 }
 
-function StatusDisplay({ id, name, profileId, type, status, uptime, pid }: StatusDisplayProps) {
+function StatusDisplay({ id, name, profileId, type, status, uptime, pid, alxConnected }: StatusDisplayProps) {
     const { t } = useTranslation("pages", { keyPrefix: "monitor" });
 
     return <Card className="h-full">
@@ -47,6 +48,10 @@ function StatusDisplay({ id, name, profileId, type, status, uptime, pid }: Statu
                     <DataSlot label={t("label.uptime")} value={formatTime(uptime)}/>
                     <DataSlot label={t("label.pid")} value={pid.toString()}/>
                     <DataSlot label={t("label.profile")} value={profileId}/>
+                    <DataSlot
+                        label={t("label.alx")}
+                        value={t("alx-status." + (alxConnected ? "connected" : "disconnected"))}
+                    />
                 </div>
             </div>
         </CardBody>
