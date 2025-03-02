@@ -7,6 +7,7 @@ import { venv } from "@/main/launch/venv";
 import { aria2 } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
 import { registry } from "@/main/registry/registry";
+import { cleaner } from "@/main/sys/cleaner";
 import { getOSName } from "@/main/sys/os";
 import { update } from "@/main/sys/update";
 import { windowControl } from "@/main/sys/window-control";
@@ -106,6 +107,7 @@ async function main() {
 
     const tasks = [
         venv.recover(),
+        cleaner.removeUnusedOAuthPartitions(),
         mirror.bench(),
         vanillaInstaller.prefetch(),
         forgeInstaller.prefetch(),
