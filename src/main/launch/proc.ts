@@ -5,6 +5,7 @@ import { nanoid } from "nanoid";
 import * as child_process from "node:child_process";
 import EventEmitter from "node:events";
 import os from "node:os";
+import * as process from "node:process";
 import { Readable } from "node:stream";
 import { promisify } from "node:util";
 import { pEvent } from "p-event";
@@ -65,10 +66,14 @@ export class GameProcess {
     #netMonitTimer: NodeJS.Timer | null = null;
 
     constructor(bin: string, args: string[], gameDir: string) {
+        const env = { ...process.env };
+
+        delete env.APPDATA; // Prevent legacy versions from reading
+
         const proc = child_process.spawn(bin, args, {
             cwd: gameDir,
             detached: true,
-            env: {},
+            env,
             stdio: ["ignore", "overlapped", "overlapped"]
         });
 
