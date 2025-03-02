@@ -61,11 +61,8 @@ export interface DetailedInstallerContext {
     control?: ProgressController;
 }
 
-async function installVanilla(props: VanillaInstallerProps, context: DetailedInstallerContext) {
+async function finalizeVanilla(p: VersionProfile, context: DetailedInstallerContext) {
     const { game, container, control } = context;
-    const { gameVersion } = props;
-
-    const p = await vanillaInstaller.installProfile(gameVersion, container, control);
 
     await jrt.installRuntime(p.javaVersion.component, control);
     await vanillaInstaller.installLibraries(p, container, new Set(), control);
@@ -76,8 +73,17 @@ async function installVanilla(props: VanillaInstallerProps, context: DetailedIns
     game.launchHint.profileId = p.id;
 }
 
+async function installVanilla(props: VanillaInstallerProps, context: DetailedInstallerContext) {
+    const { container, control } = context;
+    const { gameVersion } = props;
+
+    const p = await vanillaInstaller.installProfile(gameVersion, container, control);
+
+    await finalizeVanilla(p, context);
+}
+
 async function installFabricOrQuilt(props: FabricInstallerProps | QuiltInstallerProps, context: DetailedInstallerContext) {
-    const { game, container, control } = context;
+    const { container, control } = context;
     const { gameVersion, loaderVersion } = props;
 
     await vanillaInstaller.installProfile(gameVersion, container, control);
@@ -86,32 +92,20 @@ async function installFabricOrQuilt(props: FabricInstallerProps | QuiltInstaller
     const fid = await installer.retrieveProfile(gameVersion, loaderVersion, container, control);
     const p = await profileLoader.fromContainer(fid, container);
 
-    await jrt.installRuntime(p.javaVersion.component, control);
-    await vanillaInstaller.installLibraries(p, container, new Set(), control);
-
-    await vanillaInstaller.installAssets(p, container, game.assetsLevel, control);
-    await vanillaInstaller.emitOptions(container);
-
-    game.launchHint.profileId = p.id;
+    await finalizeVanilla(p, context);
 }
 
 async function installRift(props: RiftInstallerProps, context: DetailedInstallerContext) {
-    const { game, container, control } = context;
+    const { container, control } = context;
     const { gameVersion, loaderVersion } = props;
 
     await vanillaInstaller.installProfile(gameVersion, container, control);
 
-    const installer = await riftInstaller.downloadInstaller(props.loaderVersion, control);
+    const installer = await riftInstaller.downloadInstaller(loaderVersion, control);
     const rid = await riftInstaller.deployContents(installer, container);
     const p = await profileLoader.fromContainer(rid, container);
 
-    await jrt.installRuntime(p.javaVersion.component, control);
-    await vanillaInstaller.installLibraries(p, container, new Set(), control);
-
-    await vanillaInstaller.installAssets(p, container, game.assetsLevel, control);
-    await vanillaInstaller.emitOptions(container);
-
-    game.launchHint.profileId = p.id;
+    await finalizeVanilla(p, context);
 }
 
 async function installNeoForged(props: NeoForgedInstallerProps, context: DetailedInstallerContext) {
