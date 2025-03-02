@@ -114,37 +114,37 @@ async function patchLegacyLibraries(jrtExec: string, jarPath: string, container:
     });
 }
 
-async function mergeClient(src: string, fp: string): Promise<void> {
-    console.debug(`Merging client: ${src} -> ${fp}`);
-
+async function updateJar(fp: string, ...sources: string[]) {
     const workDir = paths.temp.to(`forge-merge-${nanoid()}`);
     await fs.emptyDir(workDir);
 
-    const targetZip = new StreamZip.async({ file: fp });
-    try {
-        await targetZip.extract(null, workDir);
-    } finally {
-        await targetZip.close();
-    }
+    for (const src of [fp, ...sources]) {
+        console.debug(`Unpacking ${src}`);
+        const srcZip = new StreamZip.async({ file: src });
+        try {
+            const entries = Object.values(await srcZip.entries()).filter(e => e.isFile);
 
-    const srcZip = new StreamZip.async({ file: src });
-    try {
-        const entries = Object.values(await srcZip.entries()).filter(e => e.isFile);
-
-        for (const ent of entries) {
-            const t = path.join(workDir, ent.name);
-            await fs.ensureDir(path.dirname(t));
-            await fs.remove(t);
-            await srcZip.extract(ent, t);
+            for (const ent of entries) {
+                const t = path.join(workDir, ent.name);
+                await fs.ensureDir(path.dirname(t));
+                await fs.remove(t);
+                await srcZip.extract(ent, t);
+            }
+        } finally {
+            await srcZip.close();
         }
-    } finally {
-        await srcZip.close();
     }
 
+    console.debug(`Rebuilding ${fp}`);
     await fs.remove(path.join(workDir, "META-INF")); // Drop signatures
     await fs.remove(fp);
-    await zip(workDir, fp);
+
+    // ModLoader requires that the client jar is compressed using DEFLATE
+    // We're passing level 1 to minimum the compression time
+    // This is not documented in zip-a-folder while it works
+    // @ts-expect-error
+    await zip(workDir, fp, { compression: 1 });
     await fs.remove(workDir);
 }
 
-export const smeltLegacy = { dumpContent, mergeClient, patchLegacyLibraries };
+export const smeltLegacy = { dumpContent, updateJar, patchLegacyLibraries };

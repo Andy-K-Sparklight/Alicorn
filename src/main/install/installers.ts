@@ -178,12 +178,12 @@ async function installForge(props: ForgeInstallerProps, context: DetailedInstall
 
         const clientPath = container.client(p.version || p.id);
 
+        const clientPatches = [forgeModLoaderPath, forgeInstallerPath].filter(Boolean);
+        await smeltLegacy.updateJar(clientPath, ...clientPatches);
+
         if (forgeModLoaderPath) {
-            await smeltLegacy.mergeClient(forgeModLoaderPath, clientPath);
             await fs.remove(forgeModLoaderPath);
         }
-
-        await smeltLegacy.mergeClient(forgeInstallerPath!, clientPath);
     }
 
     game.launchHint.venv = await forgeCompat.shouldUseVenv(gameVersion);
