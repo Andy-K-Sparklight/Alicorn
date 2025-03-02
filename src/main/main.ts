@@ -72,10 +72,15 @@ async function main() {
     await import("@/main/api/loader");
 
     if (import.meta.env.AL_DEV) {
-        console.log("Installing React DevTools for development...");
+        try {
+            console.log("Installing React DevTools for development...");
 
-        await installExtension(REACT_DEVELOPER_TOOLS);
-        await launchExtServiceWorker();
+            await installExtension(REACT_DEVELOPER_TOOLS);
+            await launchExtServiceWorker();
+        } catch (e) {
+            console.error("Could not install React DevTools");
+            console.error(e);
+        }
     }
 
     if (!import.meta.env.AL_TEST) {
