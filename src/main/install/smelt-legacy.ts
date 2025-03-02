@@ -12,7 +12,7 @@ import path from "node:path";
 import { pEvent } from "p-event";
 import { zip } from "zip-a-folder";
 
-async function dumpContent(installer: string, container: Container): Promise<string> {
+async function dumpContent(installer: string, container: Container): Promise<[string, string] | null> {
     let zip: StreamZip.StreamZipAsync | null = null;
 
     try {
@@ -39,13 +39,13 @@ async function dumpContent(installer: string, container: Container): Promise<str
             console.debug(`Writing profile to ${ip.versionInfo.id}`);
             await fs.outputJSON(container.profile(ip.versionInfo.id), ip.versionInfo, { spaces: 2 });
 
-            return ip.versionInfo.id;
+            return [ip.versionInfo.id, fp];
         }
     } finally {
         await zip?.close();
     }
 
-    return "";
+    return null;
 }
 
 function filterLibraries(libs: Library[], libName: string) {
@@ -59,12 +59,13 @@ function filterLibraries(libs: Library[], libName: string) {
     }
 }
 
-async function findLibraries(jrtExec: string, jarPath: string): Promise<string[]> {
+async function findLibraries(jrtExec: string, jarPath: string, gameVersion: string): Promise<string[]> {
     const proc = child_process.spawn(
         jrtExec,
         [
+            `-Dffind.mcv=${gameVersion}`,
             "-cp",
-            [paths.app.to("vendor", "ffind.jar"), jarPath].join(path.delimiter),
+            [paths.app.to("vendor", "ffind-1.1.jar"), jarPath].join(path.delimiter),
             "moe.skjsjhb.ffind.Main"
         ]
     );
@@ -77,7 +78,7 @@ async function findLibraries(jrtExec: string, jarPath: string): Promise<string[]
 
     await pEvent(proc, "exit");
 
-    const libs = output.split("\n").map(it => it.trim()).filter(it => it.endsWith(".jar"));
+    const libs = output.split("\n").map(it => it.trim()).filter(it => it.endsWith(".jar") || it.endsWith(".zip"));
     console.debug(`Detected libraries of ${jarPath}: ${libs}`);
 
     return libs;
@@ -99,8 +100,8 @@ async function mapLibraries(libs: string[]): Promise<[string, string][]> {
     return out;
 }
 
-async function patchLegacyLibraries(jrtExec: string, jarPath: string, container: Container, control?: ProgressController): Promise<void> {
-    const rawLibs = await findLibraries(jrtExec, jarPath);
+async function patchLegacyLibraries(jrtExec: string, jarPath: string, gameVersion: string, container: Container, control?: ProgressController): Promise<void> {
+    const rawLibs = await findLibraries(jrtExec, jarPath, gameVersion);
     const libs = await mapLibraries(rawLibs);
 
     const tasks: DlxDownloadRequest[] = libs.map(([url, lib]) => ({

@@ -6,6 +6,9 @@ import { unwrapESM } from "@/main/util/module";
 import type { ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
 import { nanoid } from "nanoid";
+import StreamZip from "node-stream-zip";
+import path from "node:path";
+import { zip } from "zip-a-folder";
 
 async function loadCompat() {
     return await unwrapESM(import("@/refs/legacy-forge-compat.json"));
@@ -42,9 +45,36 @@ async function patchProfile(container: Container, id: string) {
     await fs.writeJSON(container.profile(id), prof);
 }
 
+async function shouldStripSignature(gameVersion: string): Promise<boolean> {
+    return (await loadCompat()).stripSignature.includes(gameVersion);
+}
+
+async function stripSignature(fp: string): Promise<void> {
+    console.debug(`Stripping signature of ${fp}`);
+
+    const workDir = paths.temp.to(`forge-strip-sig-${nanoid()}`);
+    let f: StreamZip.StreamZipAsync | null = null;
+    try {
+        f = new StreamZip.async({ file: fp });
+        await fs.emptyDir(workDir);
+        await f.extract(null, workDir);
+    } finally {
+        await f?.close();
+    }
+    await fs.remove(path.join(workDir, "META-INF"));
+
+    await fs.remove(fp);
+
+    // @ts-expect-error
+    await zip(workDir, fp, { compression: 1 });
+    await fs.remove(workDir);
+}
+
 export const forgeCompat = {
     shouldUseVenv,
     getModLoaderUrl,
     downloadModLoader,
-    patchProfile
+    patchProfile,
+    shouldStripSignature,
+    stripSignature
 };

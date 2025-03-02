@@ -39,10 +39,7 @@ let versionManifest: VersionManifest;
  */
 async function getManifest(): Promise<VersionManifest> {
     if (!versionManifest) {
-        const d = await netx.getJSON(VERSION_MANIFEST) as VersionManifest;
-        if (!versionManifest) {
-            versionManifest = d;
-        }
+        versionManifest = await netx.getJSON(VERSION_MANIFEST) as VersionManifest;
     }
 
     return versionManifest;

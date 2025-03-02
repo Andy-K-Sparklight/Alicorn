@@ -171,6 +171,10 @@ function getMirrors() {
 }
 
 function apply(url: string): string[] {
+    if (!conf().net.mirror.enable) {
+        return [url];
+    }
+
     const sources = [...getMirrors().map(m => m.apply(url)), url].filter(isTruthy);
     return [...new Set(sources)];
 }

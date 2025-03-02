@@ -158,8 +158,12 @@ async function installForge(props: ForgeInstallerProps, context: DetailedInstall
     const modLoaderUrl = await forgeCompat.getModLoaderUrl(gameVersion);
     const forgeModLoaderPath = modLoaderUrl && await forgeCompat.downloadModLoader(modLoaderUrl);
 
+    let universalJarPath: string | null = null;
+
     if (installerType === "installer") {
-        const legacyProfileId = await smeltLegacy.dumpContent(forgeInstallerPath, container);
+        const [legacyProfileId, internalJarPath] = await smeltLegacy.dumpContent(forgeInstallerPath, container) ?? [];
+        universalJarPath = internalJarPath ?? null;
+
         if (legacyProfileId) {
             forgeInstallAction = "smelt-legacy";
             p = await profileLoader.fromContainer(legacyProfileId, container);
@@ -186,15 +190,27 @@ async function installForge(props: ForgeInstallerProps, context: DetailedInstall
     await jrt.installRuntime(p.javaVersion.component, control);
     await vanillaInstaller.installLibraries(p, container, new Set(), control);
 
+    if (universalJarPath) {
+        await smeltLegacy.patchLegacyLibraries(
+            jrt.executable(p.javaVersion.component),
+            universalJarPath,
+            gameVersion,
+            container
+        );
+    }
+
+    if (forgeInstallerPath) {
+        await smeltLegacy.patchLegacyLibraries(
+            jrt.executable(p.javaVersion.component),
+            forgeInstallerPath,
+            gameVersion,
+            container
+        );
+    }
+
     if (forgeInstallAction === "smelt") {
         await smelt.runPostInstall(forgeInstallerInit!, forgeInstallerPath!, p, container, control);
     } else if (forgeInstallAction === "merge") {
-        await smeltLegacy.patchLegacyLibraries(
-            jrt.executable(p.javaVersion.component),
-            forgeInstallerPath!,
-            container
-        );
-
         const clientPath = container.client(p.version || p.id);
 
         const clientPatches = [forgeModLoaderPath, forgeInstallerPath].filter(Boolean);
@@ -203,6 +219,10 @@ async function installForge(props: ForgeInstallerProps, context: DetailedInstall
         if (forgeModLoaderPath) {
             await fs.remove(forgeModLoaderPath);
         }
+    }
+
+    if (await forgeCompat.shouldStripSignature(gameVersion)) {
+        await forgeCompat.stripSignature(container.client(p.version || p.id));
     }
 
     game.launchHint.venv = await forgeCompat.shouldUseVenv(gameVersion);

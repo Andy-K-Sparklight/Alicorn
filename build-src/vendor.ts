@@ -44,9 +44,9 @@ const contents = {
 
     ffind: {
         "*": {
-            url: "https://github.com/skjsjhb/ffind/releases/download/1.0/ffind-1.0.jar",
-            target: "ffind.jar",
-            sha256: "0c6430a36610929346076d6fd58375a285034f52e8013cf6a5f79879026ec36f"
+            url: "https://github.com/skjsjhb/ffind/releases/download/1.1/ffind-1.1.jar",
+            target: "ffind-1.1.jar",
+            sha256: "0be7de6c61fc666bb38c94a2b7ccf77b62d78e8825cabc4baa0fd323c1b46e93"
         }
     },
 
@@ -54,7 +54,7 @@ const contents = {
         "*": {
             url: "https://github.com/skjsjhb/alx/releases/download/v1.0/alx-1.0.jar",
             target: "alx-1.0.jar",
-            sha256: "027db3600afdd5ff4b9d6a62ed291977c6475fca10c216587e363545e979bd35"
+            sha256: "a9da09de282d0b2c58cd265866a1c508950ff0291960ab783709d6f27ff6c3ae"
         }
     }
 } as Record<string, Record<string, VendorFile>>;

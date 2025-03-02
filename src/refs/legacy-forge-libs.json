@@ -1,6 +1,14 @@
 {
+    "argo-small-3.2.jar": "https://github.com/skjsjhb/ffind/releases/download/1.0/argo-small-3.2.jar",
+    "guava-14.0-rc3.jar": "https://repo1.maven.org/maven2/com/google/guava/guava/14.0-rc3/guava-14.0-rc3.jar",
+    "asm-all-4.1.jar": "https://github.com/skjsjhb/ffind/releases/download/1.0/asm-all-4.1.jar",
     "argo-2.25.jar": "https://repo1.maven.org/maven2/net/sourceforge/argo/argo/2.25/argo-2.25.jar",
     "guava-12.0.1.jar": "https://repo1.maven.org/maven2/com/google/guava/guava/12.0.1/guava-12.0.1.jar",
     "asm-all-4.0.jar": "https://github.com/skjsjhb/ffind/releases/download/1.0/asm-all-4.0.jar",
-    "bcprov-jdk15on-147.jar": "https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.47/bcprov-jdk15on-1.47.jar"
+    "bcprov-jdk15on-147.jar": "https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.47/bcprov-jdk15on-1.47.jar",
+    "bcprov-jdk15on-148.jar": "https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.48/bcprov-jdk15on-1.48.jar",
+    "scala-library.jar": "https://github.com/skjsjhb/ffind/releases/download/1.0/scala-library.jar",
+    "deobfuscation_data_1.5.zip": "https://github.com/skjsjhb/ffind/releases/download/1.0/deobfuscation_data_1.5.zip",
+    "deobfuscation_data_1.5.1.zip": "https://github.com/skjsjhb/ffind/releases/download/1.0/deobfuscation_data_1.5.1.zip",
+    "deobfuscation_data_1.5.2.zip": "https://github.com/skjsjhb/ffind/releases/download/1.0/deobfuscation_data_1.5.2.zip"
 }
