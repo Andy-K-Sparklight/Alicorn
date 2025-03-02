@@ -26,7 +26,7 @@ async function unpackOne(lib: string, out: string, exclude?: string[]): Promise<
 }
 
 async function unpack(profile: VersionProfile, container: Container, features: Set<string>): Promise<void> {
-    const nativesRoot = container.nativesRoot(profile.id);
+    const nativesRoot = container.nativesRoot(profile.version || profile.id);
     const sources = profile.libraries.filter(l => filterRules(l.rules, features) && nativeLib.isNative(l));
 
     await Promise.all(sources.map(async s => {
