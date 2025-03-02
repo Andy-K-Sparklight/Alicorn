@@ -12,6 +12,9 @@ let versions: string[] | null = null;
 async function syncVersions(): Promise<string[]> {
     if (!versions) {
         const res = await netx.get(FORGE_VERSIONS);
+
+        if (!res.ok) throw exceptions.create("network", { url: res.url });
+
         const xml = await res.text();
         const parser = new XMLParser();
         const doc = parser.parse(xml);
