@@ -50,8 +50,14 @@ async function inflate(src: string, dst: string) {
         const { promise, resolve, reject } = Promise.withResolvers<Buffer>();
 
         lzmaJSMod.decompress(dat, (r, e) => {
-            if (e) reject(e);
-            else resolve(Buffer.from(r));
+            if (e) {
+                reject(e);
+            } else {
+                // False positive type error
+                // It would be valid to write `typeof r === "string" ? Buffer.from(r) : Buffer.from(r)` but that's pointless
+                // @ts-expect-error False positive type error
+                resolve(Buffer.from(r));
+            }
         });
 
         await fs.writeFile(dst, await promise);
