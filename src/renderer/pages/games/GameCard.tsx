@@ -1,9 +1,8 @@
 import type { GameProfile } from "@/main/game/spec";
 import { useInstallProgress } from "@/renderer/services/install";
 import { GameTypeImage } from "@components/GameTypeImage";
-import { Card, CardBody, Chip } from "@heroui/react";
+import { Card, CardBody, Chip, cn } from "@heroui/react";
 import { GameCardActions } from "@pages/games/GameCardActions";
-import { clsx } from "clsx";
 import { DotIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -22,7 +21,7 @@ export function GameCard({ game }: GameCardProps) {
 
     const progressText = installProgress && tc(installProgress.state, { ...installProgress.value });
 
-    return <Card shadow="sm" className={clsx(pinned && "outline-2 outline-default-500")}>
+    return <Card shadow="sm" className={cn(pinned && "outline-2 outline-default-500")}>
         <CardBody>
             <div className="flex gap-6 items-center px-3">
                 <div className="h-12 p-2 bg-content2 rounded-full">

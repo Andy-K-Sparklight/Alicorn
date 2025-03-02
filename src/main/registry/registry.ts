@@ -108,9 +108,11 @@ async function init() {
         }
 
         // Freeze to prevent uncaught modification
-        for (const tb of Object.values(registryContent)) {
-            for (const v of Object.values(tb)) {
-                deepFreeze(v);
+        if (import.meta.env.AL_DEV) {
+            for (const tb of Object.values(registryContent)) {
+                for (const v of Object.values(tb)) {
+                    deepFreeze(v);
+                }
             }
         }
     } catch (e) {

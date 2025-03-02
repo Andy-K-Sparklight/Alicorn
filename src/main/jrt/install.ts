@@ -108,7 +108,8 @@ async function installRuntime(component: string, control?: ProgressController): 
 
     console.log(`Installing JRT runtime ${component} to ${root}`);
 
-    if (os.arch() === "arm64" && getOSName() === "linux") {
+    // Static OS identification makes it possible to tree-shake the large installer module
+    if (import.meta.env.AL_OS === "linux" && import.meta.env.AL_ARCH === "arm64") {
         console.log(`Delegated component install: ${component}`);
         await jrtLinuxArm.installComponent(component);
         return;

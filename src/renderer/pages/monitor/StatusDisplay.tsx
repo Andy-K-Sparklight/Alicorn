@@ -1,8 +1,7 @@
 import type { GameCoreType } from "@/main/game/spec";
 import type { RemoteGameStatus } from "@/renderer/services/proc";
 import { GameTypeImage } from "@components/GameTypeImage";
-import { Card, CardBody } from "@heroui/react";
-import { clsx } from "clsx";
+import { Card, CardBody, cn } from "@heroui/react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -27,7 +26,7 @@ function StatusDisplay({ id, name, profileId, type, status, uptime, pid }: Statu
                 <div className="w-full flex gap-6 justify-center items-center">
                     <div
                         className={
-                            clsx("h-16 aspect-square p-2 bg-content2 rounded-full outline outline-2 outline-offset-4", {
+                            cn("h-16 aspect-square p-2 bg-content2 rounded-full outline outline-2 outline-offset-4", {
                                 "outline-success": status === "running",
                                 "outline-default": status === "exited",
                                 "outline-danger": status === "crashed"

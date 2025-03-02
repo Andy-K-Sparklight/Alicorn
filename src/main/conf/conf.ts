@@ -244,7 +244,10 @@ async function load(): Promise<void> {
     try {
         const d = (await fs.readFile(getConfigPath())).toString();
         if (d.trim().length > 0) {
-            config = deepFreeze(applyPatch(DEFAULT_CONFIG, JSON.parse(d)));
+            config = applyPatch(DEFAULT_CONFIG, JSON.parse(d));
+            if (import.meta.env.AL_DEV) {
+                deepFreeze(config);
+            }
         }
     } catch (e) {
         if (isENOENT(e)) {
@@ -342,7 +345,7 @@ function createPatch(origin: ConfigSection, user: ConfigSection): ConfigSection 
     return null;
 }
 
-let config: UserConfig = deepFreeze(structuredClone(DEFAULT_CONFIG));
+let config: UserConfig = import.meta.env.AL_DEV ? deepFreeze(structuredClone(DEFAULT_CONFIG)) : structuredClone(DEFAULT_CONFIG);
 
 function update(c: UserConfig) {
     config = c;

@@ -2,7 +2,6 @@
  * Packages the application for supported platforms.
  */
 import { type Options, packager } from "@electron/packager";
-import { tgz, zip } from "compressing";
 import consola from "consola";
 import { createDMG } from "electron-installer-dmg";
 import { MSICreator } from "electron-wix-msi";
@@ -10,6 +9,7 @@ import fs from "fs-extra";
 import os from "node:os";
 import path from "node:path";
 import * as process from "node:process";
+import { tar, zip } from "zip-a-folder";
 import { build } from "~/build-src/run-build";
 import pkg from "~/package.json";
 
@@ -35,7 +35,7 @@ for (const platform of platforms) {
 
         if (types.includes("app-bundle")) {
             consola.start(`hot-update bundle: ${platform}-${arch}...`);
-            await zip.compressDir(appRoot, path.resolve(outRoot, `app-bundle-${platform}-${arch}.zip`), { ignoreBase: true });
+            await zip(appRoot, path.resolve(outRoot, `app-bundle-${platform}-${arch}.zip`));
         }
 
         if (types.includes("pkg")) {
@@ -61,7 +61,7 @@ for (const platform of platforms) {
 
             if (platform === "win32") {
                 consola.start(`Creating zip archive from ${outPath}`);
-                await zip.compressDir(outPath, outPath + ".zip", { ignoreBase: true });
+                await zip(outPath, outPath + ".zip");
                 consola.success(`Archive written to ${outPath + ".zip"}`);
 
                 if (os.platform() === "win32") {
@@ -81,7 +81,7 @@ for (const platform of platforms) {
 
             if (platform === "linux") {
                 consola.start(`Creating tar.gz package from ${outPath}`);
-                await tgz.compressDir(outPath, outPath + ".tar.gz", { ignoreBase: true });
+                await tar(outPath, outPath + ".tar.gz");
             }
         }
     }

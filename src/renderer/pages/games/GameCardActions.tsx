@@ -3,8 +3,7 @@ import { useGameProfile } from "@/renderer/services/game";
 import { remoteInstaller } from "@/renderer/services/install";
 import { procService } from "@/renderer/services/proc";
 import { useNav } from "@/renderer/util/nav";
-import { Button } from "@heroui/react";
-import { clsx } from "clsx";
+import { Button, cn } from "@heroui/react";
 import { CirclePlayIcon, DownloadIcon, EllipsisIcon, PinIcon, PinOffIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -84,7 +83,7 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
         }
 
         <Button variant="light" isIconOnly onPress={togglePin}>
-            <span className={clsx("duration-200", !pinned && "rotate-45")}>
+            <span className={cn("duration-200", !pinned && "rotate-45")}>
                  {
                      pinned ? <PinOffIcon/> : <PinIcon/>
                  }

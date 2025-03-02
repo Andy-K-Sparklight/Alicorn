@@ -1,6 +1,6 @@
 import type { GameProcessLog } from "@/main/launch/log-parser";
+import { cn } from "@heroui/react";
 import { useCurrentProc } from "@pages/monitor/GameProcessProvider";
-import { clsx } from "clsx";
 import React, { useEffect, useRef, type WheelEvent } from "react";
 import { VList, type VListHandle } from "virtua";
 
@@ -66,7 +66,7 @@ function LogLine({ log }: { log: GameProcessLog }) {
             </pre>
             <div
                 className={
-                    clsx("break-all whitespace-pre-line", {
+                    cn("break-all whitespace-pre-line", {
                         "font-bold text-danger": level === "FATAL" || level === "ERROR",
                         "font-bold text-warning": level === "WARN",
                         "text-foreground-400": level === "DEBUG"

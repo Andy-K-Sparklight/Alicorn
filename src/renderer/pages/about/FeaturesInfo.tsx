@@ -1,6 +1,5 @@
 import { Alert } from "@components/Alert";
-import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from "@heroui/react";
-import { clsx } from "clsx";
+import { Button, cn, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from "@heroui/react";
 import { ArrowRightIcon, CheckIcon, InfoIcon, XIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -79,7 +78,7 @@ function Availability({ available }: { available: boolean }) {
     const { t } = useTranslation("pages", { keyPrefix: "about.features" });
 
     return <div
-        className={clsx("flex items-center gap-2",
+        className={cn("flex items-center gap-2",
             {
                 "text-success": available,
                 "text-warning": !available
