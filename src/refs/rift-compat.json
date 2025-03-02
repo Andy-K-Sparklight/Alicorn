@@ -1,0 +1,17 @@
+{
+    "defaultVersion": "1.0.4-87",
+    "versions": [
+        "1.13"
+    ],
+    "libs": [
+        {
+            "name": "org.dimdev:mixin:0.7.11-SNAPSHOT",
+            "downloads": {
+                "artifact": {
+                    "url": "https://github.com/skjsjhb/lost-libraries/releases/download/1.0/mixin-0.7.11-evil.jar",
+                    "sha1": "64f9be9dcab3fec97fe4d571f5a602ede704ff49"
+                }
+            }
+        }
+    ]
+}

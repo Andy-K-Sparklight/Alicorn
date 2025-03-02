@@ -48,7 +48,7 @@ function createTemplateValues(init: LaunchInit): Map<string, string> {
         container.assetsRootMapped() :
         container.assetsRootLegacy(profile.assets);
 
-    const nativesRoot = container.nativesRoot(profile.id);
+    const nativesRoot = container.nativesRoot(profile.version || profile.id);
 
     va.set("version_name", profile.version);
     va.set("game_directory", container.gameDir());

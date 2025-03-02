@@ -26,7 +26,8 @@ export type ProgressStateName =
     "forge.download" |
     "forge-install.extract-libraries" |
     "forge-install.download-libraries" |
-    "forge-install.processors"
+    "forge-install.processors" |
+    "rift.download"
 
 /**
  * Interface describing generic progress.

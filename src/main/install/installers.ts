@@ -7,6 +7,7 @@ import { forgeInstaller } from "@/main/install/forge";
 import { forgeCompat } from "@/main/install/forge-compat";
 import { neoforgedInstaller } from "@/main/install/neoforged";
 import { quiltInstaller } from "@/main/install/quilt";
+import { riftInstaller } from "@/main/install/rift";
 import { smelt, type SmeltInstallInit } from "@/main/install/smelt";
 import { smeltLegacy } from "@/main/install/smelt-legacy";
 import { vanillaInstaller } from "@/main/install/vanilla";
@@ -42,12 +43,17 @@ interface ForgeInstallerProps extends ModLoaderInstallerProps {
     type: "forge";
 }
 
+interface RiftInstallerProps extends ModLoaderInstallerProps {
+    type: "rift";
+}
+
 export type InstallerProps =
     VanillaInstallerProps
     | FabricInstallerProps
     | QuiltInstallerProps
     | NeoForgedInstallerProps
-    | ForgeInstallerProps;
+    | ForgeInstallerProps
+    | RiftInstallerProps;
 
 export interface DetailedInstallerContext {
     game: GameProfile;
@@ -79,6 +85,25 @@ async function installFabricOrQuilt(props: FabricInstallerProps | QuiltInstaller
     const installer = props.type === "fabric" ? fabricInstaller : quiltInstaller;
     const fid = await installer.retrieveProfile(gameVersion, loaderVersion, container, control);
     const p = await profileLoader.fromContainer(fid, container);
+
+    await jrt.installRuntime(p.javaVersion.component, control);
+    await vanillaInstaller.installLibraries(p, container, new Set(), control);
+
+    await vanillaInstaller.installAssets(p, container, game.assetsLevel, control);
+    await vanillaInstaller.emitOptions(container);
+
+    game.launchHint.profileId = p.id;
+}
+
+async function installRift(props: RiftInstallerProps, context: DetailedInstallerContext) {
+    const { game, container, control } = context;
+    const { gameVersion, loaderVersion } = props;
+
+    await vanillaInstaller.installProfile(gameVersion, container, control);
+
+    const installer = await riftInstaller.downloadInstaller(props.loaderVersion, control);
+    const rid = await riftInstaller.deployContents(installer, container);
+    const p = await profileLoader.fromContainer(rid, container);
 
     await jrt.installRuntime(p.javaVersion.component, control);
     await vanillaInstaller.installLibraries(p, container, new Set(), control);
@@ -200,7 +225,8 @@ const internalInstallers = {
     fabric: installFabricOrQuilt,
     quilt: installFabricOrQuilt,
     neoforged: installNeoForged,
-    forge: installForge
+    forge: installForge,
+    rift: installRift
 } as const;
 
 async function runInstall(gameId: string, control?: ProgressController) {

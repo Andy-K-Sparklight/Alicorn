@@ -31,6 +31,8 @@ progress:
   forge:
     resolve: 正在获取 Forge 版本数据
     download: 正在下载 Forge 安装文件
+  rift:
+    download: 正在下载 Rift 安装文件
   mappings: 正在下载源代码映射文件
   forge-install:
     extract-libraries: 正在提取安装所需运行库

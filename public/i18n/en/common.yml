@@ -31,6 +31,8 @@ progress:
   forge:
     resolve: Syncing Forge Versions
     download: Retrieving Forge Installer
+  rift:
+    download: Retrieving Rift Installer
   mappings: Downloading Mappings
   forge-install:
     extract-libraries: Extracting Installer Libraries
