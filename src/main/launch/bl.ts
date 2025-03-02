@@ -76,4 +76,9 @@ function removeInstance(gid: string): void {
     g?.detach();
 }
 
-export const bl = { launch, getInstance, removeInstance };
+function removeAll(): void {
+    games.forEach(g => g.detach());
+    games.clear();
+}
+
+export const bl = { launch, getInstance, removeInstance, removeAll };
