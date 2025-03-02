@@ -274,6 +274,16 @@ settings:
           Path to store temp files.
 
     launch:
+      disable-alx:
+        label: Disable ALX Probe
+        sub: |-
+          Launch the main class directly without ALX. Only consider altering when the game fails to launch.
+          ALX will be enabled anyway if compatibility mode is enabled.
+      venv:
+        label: Compatibility Mode
+        sub: |-
+          A workaround for legacy Forge versions.
+          This downgrades game performance and has known flaws. Only consider altering when the game fails to launch.
       jvm-args:
         title: Launch Args (JVM)
         sub: |-

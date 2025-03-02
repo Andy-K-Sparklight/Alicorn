@@ -39,7 +39,9 @@ async function prepare(hint: LaunchHint): Promise<LaunchInit> {
         credentials: account.credentials(),
         enabledFeatures,
         assetsShouldMap,
-        pref: hint.pref
+        pref: hint.pref,
+        extraVMArgs: [],
+        extraClasspath: []
     };
 }
 
@@ -48,14 +50,16 @@ async function launch(hint: LaunchHint): Promise<GameProcess> {
     const init = await prepare(hint);
 
     const alxNonce = crypto.randomUUID();
-    init.extraVMArgs = [
-        `-Dalicorn.alx.nonce=${alxNonce}`,
-        `-Dalicorn.alx.mainClass=${init.profile.mainClass}`
-    ];
+    const hasALX = hint.venv || !hint.pref.noALX;
 
-    init.extraClasspath = [paths.app.to("vendor", "alx-1.0.jar")];
-
-    init.altMainClass = "moe.skjsjhb.alx.AltLauncher";
+    if (hasALX) {
+        init.extraVMArgs.push(
+            `-Dalicorn.alx.nonce=${alxNonce}`,
+            `-Dalicorn.alx.mainClass=${init.profile.mainClass}`
+        );
+        init.extraClasspath.unshift(paths.app.to("vendor", "alx-1.0.jar"));
+        init.altMainClass = "moe.skjsjhb.alx.AltLauncher";
+    }
 
     if (hint.venv) {
         await venv.mount(init.container);
@@ -64,17 +68,22 @@ async function launch(hint: LaunchHint): Promise<GameProcess> {
 
     try {
         const args = launchArgs.createArguments(init);
-        const g = await GameProcess.create(init.jrtExec, args, init.container.gameDir(), alxNonce);
+        const g = await GameProcess.create(init.jrtExec, args, init.container.gameDir(), hasALX ? alxNonce : null);
         games.set(g.id, g);
 
         if (hint.venv) {
             g.emitter.once("end", () => venv.unmount(init.container));
+        }
+
+        if (hasALX) {
             g.emitter.once("alxAttached", () => venv.placeMarker(init.container, g.alxPort!, alxNonce));
         }
 
         return g;
     } catch (e) {
-        await venv.unmount(init.container);
+        if (hint.venv) {
+            await venv.unmount(init.container);
+        }
         throw e;
     }
 }

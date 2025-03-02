@@ -9,10 +9,18 @@ export class ALXClient {
     #resolvers = new Map<string, (r: string) => void>();
     #error: unknown = null;
     #nonce: string;
+    #readyPromise: Promise<void>;
 
     constructor(addr: string, nonce: string) {
         this.#ws = new WebSocket(addr);
         this.#nonce = nonce;
+
+        const { promise, resolve, reject } = Promise.withResolvers<void>();
+        this.#readyPromise = promise;
+
+        this.#ws.addEventListener("open", () => resolve(), { once: true });
+        this.#ws.addEventListener("error", () => reject(), { once: true });
+        this.#ws.addEventListener("close", () => reject(), { once: true });
 
         this.#ws.addEventListener("message", e => {
             const data = e.data.toString();
@@ -20,6 +28,10 @@ export class ALXClient {
             this.#resolvers.get(eid)?.(res);
             this.#resolvers.delete(eid);
         });
+    }
+
+    ready(): Promise<void> {
+        return this.#readyPromise;
     }
 
     /**

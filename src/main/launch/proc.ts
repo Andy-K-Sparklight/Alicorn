@@ -71,7 +71,7 @@ export class GameProcess {
      * This value will be assigned once the port is sent over stdout.
      */
     alxPort: number | null = null;
-    alxNonce: string;
+    alxNonce: string | null = null;
     alxClient: ALXClient | null = null;
 
     #readyPromise: Promise<void> | null = null;
@@ -79,7 +79,7 @@ export class GameProcess {
     #memMonitTimer: NodeJS.Timer | null = null;
     #netMonitTimer: NodeJS.Timer | null = null;
 
-    constructor(bin: string, args: string[], gameDir: string, alxNonce: string) {
+    constructor(bin: string, args: string[], gameDir: string, alxNonce: string | null) {
         const env = { ...process.env };
 
         delete env.APPDATA; // Prevent legacy versions from reading
@@ -141,7 +141,7 @@ export class GameProcess {
 
                     for (const l of logs) {
                         this.logs.push(l);
-                        this.#handleLogExtensions(l.message.trim());
+                        void this.#handleLogExtensions(l.message.trim());
                         this.emitter.emit("log", l);
                     }
 
@@ -233,12 +233,15 @@ export class GameProcess {
         return parseInt(stdout.toString().match(/[1-9][0-9]*/)?.[0] ?? "0", 10) * factor || 0;
     }
 
-    #handleLogExtensions(s: string) {
-        if (s.startsWith("ALX-Server-Port: ") && !this.alxPort) {
-            this.alxPort = parseInt(s.slice("ALX-Server-Port: ".length), 10);
-            this.alxClient = new ALXClient(`ws://localhost:${this.alxPort}`, this.alxNonce);
-            console.log("Attached ALX server at port " + this.alxPort);
-            this.emitter.emit("alxAttached");
+    async #handleLogExtensions(s: string) {
+        if (this.alxNonce) {
+            if (s.startsWith("ALX-Server-Port: ") && !this.alxPort) {
+                this.alxPort = parseInt(s.slice("ALX-Server-Port: ".length), 10);
+                this.alxClient = new ALXClient(`ws://localhost:${this.alxPort}`, this.alxNonce);
+                await this.alxClient.ready();
+                console.log("Attached ALX server at port " + this.alxPort);
+                this.emitter.emit("alxAttached");
+            }
         }
     }
 

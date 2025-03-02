@@ -57,6 +57,11 @@ export interface LaunchPref {
      * Alternative JRT executable.
      */
     alterJRTExec: string;
+
+    /**
+     * Disable ALX.
+     */
+    noALX: boolean;
 }
 
 export interface LaunchInit {
@@ -67,7 +72,7 @@ export interface LaunchInit {
     enabledFeatures: Set<string>;
     assetsShouldMap: boolean;
     pref: Partial<LaunchPref>;
-    extraVMArgs?: string[];
-    extraClasspath?: string[];
+    extraVMArgs: string[];
+    extraClasspath: string[];
     altMainClass?: string;
 }

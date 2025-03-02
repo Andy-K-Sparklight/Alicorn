@@ -162,6 +162,16 @@ game-detail:
 
     launch:
       title: 启动
+      disable-alx:
+        label: 禁用 ALX 探针
+        sub: |-
+          不通过 Alicorn 代理，直接启动游戏主类。请仅在游戏无法启动时考虑调整。
+          如果兼容模式启用，不论如何设置 ALX 都将开启。
+      venv:
+        label: 兼容模式
+        sub: |-
+          针对旧版本 Forge 路径解析问题的解决方案。
+          此选项会降低游戏性能，并且有已知的缺陷，请仅在游戏无法启动时考虑调整。
       alter-jrt:
         label: 手动指定 Java 主程序
         sub: Alicorn 将自动设定用于启动游戏的 Java 运行环境，但你可以覆盖此设置。

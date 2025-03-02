@@ -81,7 +81,9 @@ async function queryMarker(c: Container): Promise<boolean> {
         const [nonce, port] = (await fs.readFile(f)).toString().split("@");
         if (!nonce || !port) return false;
         const alx = new ALXClient(`ws://localhost:${port}`, nonce);
+        await alx.ready();
         const alive = await alx.isAlive();
+
         alx.close();
 
         return alive;
@@ -101,6 +103,7 @@ async function recover(): Promise<void> {
             if (reg.containers.has(d)) {
                 const vc = containers.get(d);
                 vc.props.root = getVenvPath(d);
+                console.log(vc.props.root);
 
                 if (!(await queryMarker(vc))) {
                     try {

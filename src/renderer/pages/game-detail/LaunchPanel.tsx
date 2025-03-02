@@ -1,7 +1,7 @@
 import type { GameProfile } from "@/main/game/spec";
 import { alter } from "@/main/util/misc";
 import { StringArrayInput } from "@components/StringArrayInput";
-import { Input } from "@heroui/react";
+import { Input, Switch } from "@heroui/react";
 import { useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -65,6 +65,32 @@ export function LaunchPanel() {
                     })
                 }
             />
+        </div>
+
+        <div className="grow flex flex-col gap-1">
+            <div className="font-bold text-lg">{t("disable-alx.label")}</div>
+
+            <div className="flex gap-2 items-center">
+                <Switch
+                    size="sm"
+                    isSelected={game.launchHint.pref.noALX}
+                    onValueChange={makeGameReducer<boolean>((g, b) => g.launchHint.pref.noALX = b)}
+                />
+                <div className="text-sm text-foreground-400 whitespace-pre-line">{t("disable-alx.sub")}</div>
+            </div>
+        </div>
+
+        <div className="grow flex flex-col gap-1">
+            <div className="font-bold text-lg">{t("venv.label")}</div>
+
+            <div className="flex gap-2 items-center">
+                <Switch
+                    size="sm"
+                    isSelected={game.launchHint.venv}
+                    onValueChange={makeGameReducer<boolean>((g, b) => g.launchHint.venv = b)}
+                />
+                <div className="text-sm text-foreground-400 whitespace-pre-line">{t("venv.sub")}</div>
+            </div>
         </div>
     </div>;
 }
