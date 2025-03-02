@@ -68,7 +68,8 @@ export class GameProcess {
         const proc = child_process.spawn(bin, args, {
             cwd: gameDir,
             detached: true,
-            env: {}
+            env: {},
+            stdio: ["ignore", "overlapped", "overlapped"]
         });
 
         this.#proc = proc;
@@ -97,6 +98,9 @@ export class GameProcess {
             this.emitter.emit("end");
             this.detach();
         });
+
+        // Prevent the child process from blocking the app to exit
+        proc.unref();
 
         let logIndex = 0;
 
@@ -165,8 +169,13 @@ export class GameProcess {
             clearInterval(this.#netMonitTimer);
         }
 
-        this.#proc?.stdout?.removeAllListeners();
-        this.#proc?.stderr?.removeAllListeners();
+        if (this.#proc) {
+            this.#proc.stdout?.removeAllListeners();
+            this.#proc.stderr?.removeAllListeners();
+            this.#proc.stdout?.destroy();
+            this.#proc.stderr?.destroy();
+        }
+
         this.emitter.removeAllListeners();
         this.#proc = null;
     }
