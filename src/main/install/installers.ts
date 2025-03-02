@@ -180,6 +180,7 @@ async function installForge(props: ForgeInstallerProps, context: DetailedInstall
 
         if (forgeModLoaderPath) {
             await smeltLegacy.mergeClient(forgeModLoaderPath, clientPath);
+            await fs.remove(forgeModLoaderPath);
         }
 
         await smeltLegacy.mergeClient(forgeInstallerPath!, clientPath);
