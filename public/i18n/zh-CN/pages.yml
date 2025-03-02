@@ -9,6 +9,7 @@ create-game:
   container-select-title: 选择要共享存储空间的游戏
   container-select-placeholder: 未选取
   version-select-placeholder: 未选取
+  version-select-empty: 无结果。
   storage-policy:
     new:
       label: 独立分配

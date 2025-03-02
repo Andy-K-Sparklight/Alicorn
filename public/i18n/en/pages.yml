@@ -9,6 +9,7 @@ create-game:
   container-select-title: Choose a game to share storage with
   container-select-placeholder: N/A
   version-select-placeholder: N/A
+  version-select-empty: Nothing here.
   storage-policy:
     new:
       label: Dedicated

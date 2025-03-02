@@ -1,7 +1,7 @@
 import type { VersionEntry } from "@/main/install/vanilla";
 import { useVersionManifest } from "@/renderer/services/sources";
 import { GameTypeImage } from "@components/GameTypeImage";
-import { Checkbox, Select, SelectItem, type SharedSelection, Spinner } from "@heroui/react";
+import { Autocomplete, AutocompleteItem, Checkbox, Spinner } from "@heroui/react";
 import { DotIcon } from "lucide-react";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -29,21 +29,21 @@ export function VersionSelector({ version, onChange }: VersionSelectorProps) {
         versions = vm.versions.filter(v => v.type !== "snapshot");
     }
 
-    function handleSelectionChange(sel: SharedSelection) {
-        if (sel instanceof Set) {
-            const s = [...sel];
-            onChange(s[0]?.toString() ?? null); // Might be null when no selection
-        }
+    function handleSelectionChange(k: string | number | null) {
+        onChange(k?.toString() ?? undefined);
     }
 
     return <div className="items-center flex gap-4">
         <div className="grow">
-            <Select
+            <Autocomplete
                 isVirtualized
                 aria-label="Select Version"
                 selectedKeys={version ? [version] : []}
                 placeholder={t("version-select-placeholder")}
                 onSelectionChange={handleSelectionChange}
+                listboxProps={{
+                    emptyContent: t("version-select-empty")
+                }}
                 scrollShadowProps={{
                     style: {
                         // @ts-expect-error Non-standard properties
@@ -54,12 +54,12 @@ export function VersionSelector({ version, onChange }: VersionSelectorProps) {
             >
                 {
                     versions.map(v =>
-                        <SelectItem key={v.id} textValue={v.id}>
+                        <AutocompleteItem key={v.id} textValue={v.id}>
                             <VersionContent version={v}/>
-                        </SelectItem>
+                        </AutocompleteItem>
                     )
                 }
-            </Select>
+            </Autocomplete>
         </div>
 
         <div>
