@@ -19,6 +19,14 @@ const games = new Map<string, GameProcess>();
  */
 async function prepare(hint: LaunchHint): Promise<LaunchInit> {
     const container = containers.get(hint.containerId);
+
+    let originalRoot = container.props.root;
+
+    // In case this container has already been mounted when launching
+    if (hint.venv) {
+        container.props.root = await venv.getCurrentRoot(container);
+    }
+
     const profile = await profileLoader.fromContainer(hint.profileId, container);
     const account = accounts.get(hint.accountId);
     const assetsShouldMap = await profileLoader.assetIndexShouldMap(profile.assetIndex.id, container);
@@ -31,6 +39,8 @@ async function prepare(hint: LaunchHint): Promise<LaunchInit> {
     }
 
     const jrtExec = hint.pref.alterJRTExec || jrt.executable(profile.javaVersion?.component || "jre-legacy");
+
+    container.props.root = originalRoot;
 
     return {
         profile,
