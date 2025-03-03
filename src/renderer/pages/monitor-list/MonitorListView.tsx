@@ -1,8 +1,8 @@
-import { type RemoteGameProcess, type RemoteGameStatus, useGameProcList } from "@/renderer/services/proc";
+import { procService, type RemoteGameProcess, type RemoteGameStatus, useGameProcList } from "@/renderer/services/proc";
 import { useNav } from "@/renderer/util/nav";
 import { GameTypeImage } from "@components/GameTypeImage";
 import { Button, Card, CardBody, Chip } from "@heroui/react";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon, XIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export function MonitorListView() {
@@ -35,11 +35,15 @@ function StatusChip({ status }: { status: RemoteGameStatus }) {
 }
 
 function MonitorItem({ proc }: { proc: RemoteGameProcess }) {
-    const { profile: { type, name }, status } = proc;
+    const { id, profile: { type, name }, status } = proc;
     const nav = useNav();
 
     function revealProc() {
         nav(`/monitor/${proc.id}`);
+    }
+
+    function removeProc() {
+        procService.remove(id);
     }
 
     return <Card>
@@ -56,10 +60,18 @@ function MonitorItem({ proc }: { proc: RemoteGameProcess }) {
                 </div>
 
 
-                <div className="ml-4">
+                <div className="ml-4 flex gap-2">
                     <Button isIconOnly color="primary" onPress={revealProc}>
                         <ArrowRightIcon/>
                     </Button>
+
+                    {
+                        status !== "running" &&
+                        <Button isIconOnly variant="light" onPress={removeProc}>
+                            <XIcon/>
+                        </Button>
+                    }
+
                 </div>
             </div>
         </CardBody>

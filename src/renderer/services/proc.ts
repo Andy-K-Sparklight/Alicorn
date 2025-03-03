@@ -134,6 +134,11 @@ async function create(id: string): Promise<string> {
     return meta.id;
 }
 
+function remove(id: string) {
+    procs.delete(id);
+    void restrictedEmitter.emit("change");
+}
+
 /**
  * Subscribes to the game process detail.
  *
@@ -170,5 +175,5 @@ export function useGameProcList(): RemoteGameProcess[] {
 }
 
 export const procService = {
-    create
+    create, remove
 };
