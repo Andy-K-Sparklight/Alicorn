@@ -26,9 +26,7 @@ ipcMain.on("revealGameContent", async (_, gameId, scope) => {
     const game = games.get(gameId);
     const container = containers.get(game.launchHint.containerId);
 
-    if (venv.isMounted(container)) {
-        venv.setVenvRoot(container);
-    }
+    container.props.root = await venv.getCurrentRoot(container);
 
     await containerInspector.createContentDir(container, scope);
     void shell.openPath(container.content(scope));

@@ -1,4 +1,3 @@
-import { ALXClient } from "@/main/alx/ALXClient";
 import { containers } from "@/main/container/manage";
 import type { Container } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
@@ -7,42 +6,62 @@ import { getOSName } from "@/main/sys/os";
 import fs from "fs-extra";
 import path from "node:path";
 
-const mounted = new Set<string>();
 
-function setVenvRoot(c: Container) {
-    c.props.root = getVenvPath(c.props.id);
+async function hasContent(fp: string): Promise<boolean> {
+    try {
+        return await fs.pathExists(fp) && (await fs.readdir(fp)).length > 0;
+    } catch {
+        return false;
+    }
 }
 
-function isMounted(c: Container) {
-    return mounted.has(c.props.id);
-}
-
+/**
+ * Tries to mount a virtual container, fails silently if it can't be done.
+ */
 async function mount(c: Container) {
-    if (isMounted(c)) return;
-
     console.log(`Mounting virtual container ${c.props.id}`);
     const vp = getVenvPath(c.props.id);
-    await fs.remove(vp);
-    await fs.ensureDir(path.dirname(vp));
-    await fs.move(c.props.root, vp);
-    setVenvRoot(c);
 
-    mounted.add(c.props.id);
+    if (!await hasContent(vp) && await hasContent(c.props.root)) {
+        try {
+            await fs.remove(vp);
+            await fs.ensureDir(path.dirname(vp));
+            await fs.move(c.props.root, vp);
+        } catch (e) {
+            console.log(`Could not mount ${c.props.id} (Maybe it's still in use?)`);
+            console.log(e);
+        }
+    }
+
+    c.props.root = vp;
 }
 
+/**
+ * Tries to unmount a virtual container, fails silently if it can't be done.
+ */
 async function unmount(c: Container) {
-    if (!isMounted(c)) return;
-
     console.log(`Unmounting virtual container ${c.props.id}`);
-    const rp = paths.game.to(c.props.id);
-    await removeMarker(c);
-    await fs.remove(rp);
-    await fs.ensureDir(path.dirname(rp));
-    await fs.move(c.props.root, rp);
-    await fs.remove(paths.game.to(".venv", c.props.id));
-    c.props.root = rp;
+    const rp = containers.get(c.props.id).props.root;
 
-    mounted.delete(c.props.id);
+    if (!await hasContent(rp) && await hasContent(c.props.root)) {
+        try {
+            await fs.remove(rp);
+            await fs.ensureDir(path.dirname(rp));
+            await fs.move(c.props.root, rp);
+            await fs.remove(paths.game.to(".venv", c.props.id));
+        } catch (e) {
+            console.log(`Could not unmount ${c.props.id} (Maybe it's still in use?)`);
+            console.log(e);
+        }
+    }
+
+    c.props.root = rp;
+}
+
+async function getCurrentRoot(c: Container): Promise<string> {
+    const vp = getVenvPath(c.props.id);
+    if (await hasContent(vp)) return vp;
+    return c.props.root;
 }
 
 function getVenvPath(cid: string) {
@@ -63,62 +82,27 @@ function createVenvArgs(c: Container): string[] {
 }
 
 /**
- * Places a marker in the VENV storing the ALX server port of the process which owns it.
- * By querying the marker we can determine whether the VENV is still in use when recovering.
- */
-async function placeMarker(c: Container, port: number, nonce: string) {
-    const f = path.join(c.gameDir(), "venv.lock");
-    await fs.outputFile(f, `${nonce}@${port}`);
-}
-
-async function removeMarker(c: Container) {
-    await fs.remove(path.join(c.gameDir(), "venv.lock"));
-}
-
-async function queryMarker(c: Container): Promise<boolean> {
-    try {
-        const f = path.join(c.gameDir(), "venv.lock");
-        const [nonce, port] = (await fs.readFile(f)).toString().split("@");
-        if (!nonce || !port) return false;
-        const alx = new ALXClient(`ws://localhost:${port}`, nonce);
-        await alx.ready();
-        const alive = await alx.isAlive();
-
-        alx.close();
-
-        return alive;
-
-    } catch {
-        return false;
-    }
-}
-
-/**
  * Recover virtual environments that's in use when Alicorn was closed last time.
  */
 async function recover(): Promise<void> {
     try {
         const dirs = await fs.readdir(paths.game.to(".venv"));
-        for (const d of dirs) {
+
+        await Promise.allSettled(dirs.map(async d => {
             if (reg.containers.has(d)) {
                 const vc = containers.get(d);
                 vc.props.root = getVenvPath(d);
 
-                if (!(await queryMarker(vc))) {
-                    try {
-                        console.debug(`Recovering VENV for ${d}`);
-                        mounted.add(d);
-                        await unmount(vc);
-                    } catch (e) {
-                        console.error(`Failed to unmount VENV ${d}`);
-                        console.error(e);
-                    }
-                } else {
-                    console.debug(`VENV for ${d} is still in use, skipped.`);
+                try {
+                    console.debug(`Recovering VENV for ${d}`);
+                    await unmount(vc);
+                } catch (e) {
+                    console.log(`Failed to unmount VENV ${d} (Maybe it's still in use?)`);
+                    console.log(e);
                 }
             }
-        }
+        }));
     } catch {}
 }
 
-export const venv = { createVenvArgs, mount, unmount, setVenvRoot, isMounted, recover, placeMarker };
+export const venv = { createVenvArgs, mount, unmount, recover, getCurrentRoot };

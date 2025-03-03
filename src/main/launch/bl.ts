@@ -73,10 +73,6 @@ async function launch(hint: LaunchHint): Promise<GameProcess> {
 
         if (hint.venv) {
             g.emitter.once("end", () => venv.unmount(init.container));
-
-            if (hasALX) {
-                g.emitter.once("alxAttached", () => venv.placeMarker(init.container, g.alxPort!, alxNonce));
-            }
         }
 
         return g;
