@@ -116,6 +116,10 @@ const bmclapi: Mirror | false = import.meta.env.AL_ENABLE_BMCLAPI && {
 
         if (banList.includes(origin)) return null;
 
+        if (origin === "https://dl.liteloader.com/versions/versions.json") {
+            return "https://bmclapi2.bangbang93.com/maven/com/mumfrey/liteloader/versions.json";
+        }
+
         const u = URL.parse(origin);
         if (!u) return null; // Possibly malformed URL
 
@@ -124,7 +128,7 @@ const bmclapi: Mirror | false = import.meta.env.AL_ENABLE_BMCLAPI && {
             return u.toString();
         }
 
-        // We're not including Quilt here as it seems not included
+        // Seems that Quilt is not included in the mirror
         if (["maven.minecraftforge.net", "libraries.minecraft.net", "maven.fabricmc.net"].includes(u.host)) {
             u.host = "bmclapi2.bangbang93.com";
             u.pathname = "/maven" + u.pathname;
@@ -157,6 +161,12 @@ const bmclapi: Mirror | false = import.meta.env.AL_ENABLE_BMCLAPI && {
         if (u.host === "maven.neoforged.net" && u.pathname.startsWith("/releases")) {
             u.host = "bmclapi2.bangbang93.com";
             u.pathname = "/maven" + u.pathname.slice("/releases".length);
+            return u.toString();
+        }
+
+        if (u.host === "dl.liteloader.com" && u.pathname.startsWith("/versions")) {
+            u.host = "bmclapi2.bangbang93.com";
+            u.pathname = "/maven" + u.pathname.slice("/versions".length);
             return u.toString();
         }
 

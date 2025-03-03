@@ -70,6 +70,9 @@ create-game:
     forge:
       label: Forge
       sub: Play Forge mods in legacy versions.
+    liteloader:
+      label: LiteLoader
+      sub: Play LiteLoader mods in legacy versions.
     rift:
       label: Rift
       sub: Play Rift mods in the loader which was once popular at 1.13.

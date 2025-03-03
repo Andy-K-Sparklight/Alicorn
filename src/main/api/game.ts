@@ -82,7 +82,8 @@ ipcMain.handle("addGame", async (_, init) => {
         installProps.type === "quilt" ||
         installProps.type === "neoforged" ||
         installProps.type === "forge" ||
-        installProps.type === "rift"
+        installProps.type === "rift" ||
+        installProps.type === "liteloader"
     ) {
         type = installProps.type;
     }

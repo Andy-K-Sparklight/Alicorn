@@ -1,6 +1,7 @@
 import { fabricInstaller } from "@/main/install/fabric";
 import { forgeInstaller } from "@/main/install/forge";
 import { installers } from "@/main/install/installers";
+import { liteloaderInstaller } from "@/main/install/liteloader";
 import { neoforgedInstaller } from "@/main/install/neoforged";
 import { quiltInstaller } from "@/main/install/quilt";
 import { riftInstaller } from "@/main/install/rift";
@@ -72,13 +73,15 @@ ipcMain.handle("queryAvailableModLoaders", async (_, gameVersion) => {
         quiltVersions,
         neoforgedVersions,
         forgeVersions,
-        riftAvailable
+        riftAvailable,
+        liteloaderVersions
     ] = await Promise.all([
         fabricInstaller.getAvailableGameVersions(),
         quiltInstaller.getAvailableGameVersions(),
         neoforgedInstaller.queryLoaderVersions(gameVersion),
         forgeInstaller.queryLoaderVersions(gameVersion),
-        riftInstaller.isAvailable(gameVersion)
+        riftInstaller.isAvailable(gameVersion),
+        liteloaderInstaller.getAvailableVersions()
     ]);
 
     if (fabricVersions.includes(gameVersion)) {
@@ -99,6 +102,10 @@ ipcMain.handle("queryAvailableModLoaders", async (_, gameVersion) => {
 
     if (riftAvailable) {
         supported.push("rift");
+    }
+
+    if (liteloaderVersions.includes(gameVersion)) {
+        supported.push("liteloader");
     }
 
     return supported;

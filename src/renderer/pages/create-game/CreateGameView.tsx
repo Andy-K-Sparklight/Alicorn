@@ -78,6 +78,11 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
                     type: "vanilla",
                     gameVersion
                 };
+            case "liteloader":
+                return {
+                    type: "liteloader",
+                    gameVersion
+                };
             case "fabric":
             case "quilt":
             case "neoforged":

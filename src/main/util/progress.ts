@@ -27,7 +27,8 @@ export type ProgressStateName =
     "forge-install.extract-libraries" |
     "forge-install.download-libraries" |
     "forge-install.processors" |
-    "rift.download"
+    "rift.download" |
+    "liteloader.resolve"
 
 /**
  * Interface describing generic progress.

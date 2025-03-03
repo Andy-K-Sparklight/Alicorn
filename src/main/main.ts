@@ -1,6 +1,7 @@
 import { conf } from "@/main/conf/conf";
 import { paths } from "@/main/fs/paths";
 import { forgeInstaller } from "@/main/install/forge";
+import { liteloaderInstaller } from "@/main/install/liteloader";
 import { neoforgedInstaller } from "@/main/install/neoforged";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { bl } from "@/main/launch/bl";
@@ -117,7 +118,8 @@ async function main() {
         mirror.bench(),
         vanillaInstaller.prefetch(),
         forgeInstaller.prefetch(),
-        neoforgedInstaller.prefetch()
+        neoforgedInstaller.prefetch(),
+        liteloaderInstaller.prefetch()
     ].filter(Boolean);
 
     await Promise.all(tasks);

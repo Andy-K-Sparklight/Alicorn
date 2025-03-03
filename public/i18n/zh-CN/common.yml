@@ -38,6 +38,8 @@ progress:
     extract-libraries: 正在提取安装所需运行库
     download-libraries: 正在下载安装所需运行库：{{current}} / {{total}}
     processors: 正在执行安装程序包：{{current}} / {{total}}
+  liteloader:
+    resolve: 正在获取 Liteloader 版本数据
 
 input:
   string-array:

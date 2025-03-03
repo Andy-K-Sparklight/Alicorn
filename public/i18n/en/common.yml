@@ -38,6 +38,8 @@ progress:
     extract-libraries: Extracting Installer Libraries
     download-libraries: Downloading Installer Libraries {{current}} / {{total}}
     processors: Executing Installer Processor {{current}} / {{total}}
+  liteloader:
+    resolve: Syncing Liteloader Versions
 
 input:
   string-array:

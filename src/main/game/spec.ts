@@ -69,6 +69,7 @@ export type GameCoreType =
     "quilt" |
     "neoforged" |
     "rift" |
+    "liteloader" |
     "unknown"
 
 export const GAME_REG_VERSION = 3;

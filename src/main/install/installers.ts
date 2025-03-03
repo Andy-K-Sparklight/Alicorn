@@ -5,6 +5,7 @@ import type { GameProfile } from "@/main/game/spec";
 import { fabricInstaller } from "@/main/install/fabric";
 import { forgeInstaller } from "@/main/install/forge";
 import { forgeCompat } from "@/main/install/forge-compat";
+import { liteloaderInstaller } from "@/main/install/liteloader";
 import { neoforgedInstaller } from "@/main/install/neoforged";
 import { quiltInstaller } from "@/main/install/quilt";
 import { riftInstaller } from "@/main/install/rift";
@@ -47,13 +48,19 @@ interface RiftInstallerProps extends ModLoaderInstallerProps {
     type: "rift";
 }
 
+interface LiteloaderInstallerProps {
+    type: "liteloader";
+    gameVersion: string;
+}
+
 export type InstallerProps =
     VanillaInstallerProps
     | FabricInstallerProps
     | QuiltInstallerProps
     | NeoForgedInstallerProps
     | ForgeInstallerProps
-    | RiftInstallerProps;
+    | RiftInstallerProps
+    | LiteloaderInstallerProps;
 
 export interface DetailedInstallerContext {
     game: GameProfile;
@@ -91,6 +98,18 @@ async function installFabricOrQuilt(props: FabricInstallerProps | QuiltInstaller
     const installer = props.type === "fabric" ? fabricInstaller : quiltInstaller;
     const fid = await installer.retrieveProfile(gameVersion, loaderVersion, container, control);
     const p = await profileLoader.fromContainer(fid, container);
+
+    await finalizeVanilla(p, context);
+}
+
+async function installLiteloader(props: LiteloaderInstallerProps, context: DetailedInstallerContext) {
+    const { container, control } = context;
+    const { gameVersion } = props;
+
+    await vanillaInstaller.installProfile(gameVersion, container, control);
+
+    const lid = await liteloaderInstaller.fetchProfile(gameVersion, container);
+    const p = await profileLoader.fromContainer(lid, container);
 
     await finalizeVanilla(p, context);
 }
@@ -240,7 +259,8 @@ const internalInstallers = {
     quilt: installFabricOrQuilt,
     neoforged: installNeoForged,
     forge: installForge,
-    rift: installRift
+    rift: installRift,
+    liteloader: installLiteloader
 } as const;
 
 async function runInstall(gameId: string, control?: ProgressController) {

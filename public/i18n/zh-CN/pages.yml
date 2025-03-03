@@ -70,6 +70,9 @@ create-game:
     forge:
       label: 使用 Forge
       sub: 适用于旧版本游戏的模组系统。仅支持专用的 Forge 模组。
+    liteloader:
+      label: 使用 Liteloader
+      sub: 适用于旧版本游戏的轻量级模组系统。仅支持专用的 Liteloader 模组。
     rift:
       label: 使用 Rift
       sub: 曾于 1.13 时短暂流行的模组系统。仅支持专用的 Rift 模组。
