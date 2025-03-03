@@ -4,6 +4,7 @@ import crafter from "@assets/img/crafter.webp";
 import craftingTable from "@assets/img/crafting-table.png";
 import fabric from "@assets/img/fabric.webp";
 import forge from "@assets/img/forge.svg";
+import liteloader from "@assets/img/liteloader.webp";
 import neoforged from "@assets/img/neoforged.webp";
 import oakPlanks from "@assets/img/oak-planks.webp";
 import quilt from "@assets/img/quilt.webp";
@@ -16,7 +17,7 @@ const imageMap: Record<string, string> = {
     "vanilla-snapshot": crafter,
     "vanilla-old-alpha": oakPlanks,
     "vanilla-old-beta": cobblestone,
-    forge, fabric, quilt, rift, neoforged,
+    forge, fabric, quilt, rift, neoforged, liteloader,
     "unknown": tnt
 };
 
