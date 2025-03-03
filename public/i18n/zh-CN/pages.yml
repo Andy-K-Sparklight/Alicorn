@@ -169,11 +169,6 @@ game-detail:
 
     launch:
       title: 启动
-      disable-alx:
-        label: 禁用 ALX 探针
-        sub: |-
-          不通过 Alicorn 代理，直接启动游戏主类。请仅在游戏无法启动时考虑调整。
-          如果兼容模式启用，不论如何设置 ALX 都将开启。
       venv:
         label: 兼容模式
         sub: |-
@@ -199,10 +194,6 @@ monitor:
     uptime: 运行时间
     pid: 进程号
     profile: 核心名称
-    alx: ALX
-  alx-status:
-    connected: 已连接
-    disconnected: 未连接
   status:
     running: 正常运行中
     exited: 已停止

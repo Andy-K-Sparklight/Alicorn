@@ -57,11 +57,6 @@ export interface LaunchPref {
      * Alternative JRT executable.
      */
     alterJRTExec: string;
-
-    /**
-     * Disable ALX.
-     */
-    noALX: boolean;
 }
 
 export interface LaunchInit {

@@ -1,4 +1,3 @@
-import { ALXClient } from "@/main/alx/ALXClient";
 import { conf } from "@/main/conf/conf";
 import { type GameProcessLog, logParser } from "@/main/launch/log-parser";
 import { exceptions } from "@/main/util/exception";
@@ -47,11 +46,6 @@ type GameProcessEvents = {
      * Memory usage value updated.
      */
     memUsageUpdate: (bytes: number) => void;
-
-    /**
-     * ALX server attached.
-     */
-    alxAttached: () => void;
 }
 
 type GameProcessStatus = "created" | "running" | "exited" | "crashed"
@@ -66,20 +60,12 @@ export class GameProcess {
     };
     logs: GameProcessLog[] = [];
 
-    /**
-     * Processes started with Alicorn AltLauncher will have a query port.
-     * This value will be assigned once the port is sent over stdout.
-     */
-    alxPort: number | null = null;
-    alxNonce: string | null = null;
-    alxClient: ALXClient | null = null;
-
     #readyPromise: Promise<void> | null = null;
     #proc: child_process.ChildProcess | null = null;
     #memMonitTimer: NodeJS.Timer | null = null;
     #netMonitTimer: NodeJS.Timer | null = null;
 
-    constructor(bin: string, args: string[], gameDir: string, alxNonce: string | null) {
+    constructor(bin: string, args: string[], gameDir: string) {
         const env = { ...process.env };
 
         delete env.APPDATA; // Prevent legacy versions from reading
@@ -94,8 +80,6 @@ export class GameProcess {
         this.#proc = proc;
 
         this.#readyPromise = pEvent(proc, "spawn");
-
-        this.alxNonce = alxNonce;
 
         proc.once("spawn", () => {
             this.status = "running";
@@ -182,8 +166,6 @@ export class GameProcess {
     }
 
     detach() {
-        this.alxClient?.close();
-
         if (this.#memMonitTimer) {
             clearInterval(this.#memMonitTimer);
         }
@@ -212,11 +194,6 @@ export class GameProcess {
     async getMemoryUsage(): Promise<number> {
         if (!this.#proc) return -1;
 
-        // Gets memory usage from ALX server if available
-        if (this.alxClient) {
-            return await this.alxClient.getMemoryUsage();
-        }
-
         let cmdLine: string;
         let factor = 1;
 
@@ -233,17 +210,7 @@ export class GameProcess {
         return parseInt(stdout.toString().match(/[1-9][0-9]*/)?.[0] ?? "0", 10) * factor || 0;
     }
 
-    async #handleLogExtensions(s: string) {
-        if (this.alxNonce) {
-            if (s.startsWith("ALX-Server-Port: ") && !this.alxPort) {
-                this.alxPort = parseInt(s.slice("ALX-Server-Port: ".length), 10);
-                this.alxClient = new ALXClient(`ws://localhost:${this.alxPort}`, this.alxNonce);
-                await this.alxClient.ready();
-                console.log("Attached ALX server at port " + this.alxPort);
-                this.emitter.emit("alxAttached");
-            }
-        }
-    }
+    async #handleLogExtensions(_: string) {}
 
     static async create(...args: ConstructorParameters<typeof GameProcess>): Promise<GameProcess> {
         const proc = new GameProcess(...args);

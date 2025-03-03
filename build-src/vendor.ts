@@ -56,14 +56,6 @@ const contents = {
             target: "unfine-1.0.jar",
             sha256: "6dc5297f1b83e7daeb29b7f153d54f797fd5c715cfe736d55ad0d98846c9352d"
         }
-    },
-
-    alx: {
-        "*": {
-            url: "https://github.com/skjsjhb/alx/releases/download/v1.0/alx-1.0.jar",
-            target: "alx-1.0.jar",
-            sha256: "a9da09de282d0b2c58cd265866a1c508950ff0291960ab783709d6f27ff6c3ae"
-        }
     }
 } as Record<string, Record<string, VendorFile>>;
 
@@ -83,8 +75,7 @@ function createFileList(cfg: BuildConfig): VendorFile[] {
         getComponent("aria2c"),
         getComponent("certificate"),
         getComponent("ffind"),
-        getComponent("unfine"),
-        getComponent("alx")
+        getComponent("unfine")
     ].filter(isTruthy);
 }
 

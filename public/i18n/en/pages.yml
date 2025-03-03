@@ -190,10 +190,6 @@ monitor:
     uptime: Uptime
     pid: PID
     profile: Profile
-    alx: ALX
-  alx-status:
-    connected: Online
-    disconnected: Offline
   status:
     running: Running
     exited: Exited
@@ -281,11 +277,6 @@ settings:
           Path to store temp files.
 
     launch:
-      disable-alx:
-        label: Disable ALX Probe
-        sub: |-
-          Launch the main class directly without ALX. Only consider altering when the game fails to launch.
-          ALX will be enabled anyway if compatibility mode is enabled.
       venv:
         label: Compatibility Mode
         sub: |-

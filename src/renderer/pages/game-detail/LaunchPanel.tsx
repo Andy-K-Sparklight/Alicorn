@@ -68,19 +68,6 @@ export function LaunchPanel() {
         </div>
 
         <div className="grow flex flex-col gap-1">
-            <div className="font-bold text-lg">{t("disable-alx.label")}</div>
-
-            <div className="flex gap-2 items-center">
-                <Switch
-                    size="sm"
-                    isSelected={game.launchHint.pref.noALX}
-                    onValueChange={makeGameReducer<boolean>((g, b) => g.launchHint.pref.noALX = b)}
-                />
-                <div className="text-sm text-foreground-400 whitespace-pre-line">{t("disable-alx.sub")}</div>
-            </div>
-        </div>
-
-        <div className="grow flex flex-col gap-1">
             <div className="font-bold text-lg">{t("venv.label")}</div>
 
             <div className="flex gap-2 items-center">

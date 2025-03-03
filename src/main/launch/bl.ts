@@ -2,7 +2,6 @@
  * The bootloader system.
  */
 import { accounts } from "@/main/auth/manage";
-import { paths } from "@/main/fs/paths";
 import { jrt } from "@/main/jrt/install";
 import { launchArgs } from "@/main/launch/args";
 import { GameProcess } from "@/main/launch/proc";
@@ -59,18 +58,6 @@ async function launch(hint: LaunchHint): Promise<GameProcess> {
     console.log(`Launching game ${hint.profileId} on ${hint.containerId}`);
     const init = await prepare(hint);
 
-    const alxNonce = crypto.randomUUID();
-    const hasALX = hint.venv || !hint.pref.noALX;
-
-    if (hasALX) {
-        init.extraVMArgs.push(
-            `-Dalicorn.alx.nonce=${alxNonce}`,
-            `-Dalicorn.alx.mainClass=${init.profile.mainClass}`
-        );
-        init.extraClasspath.unshift(paths.app.to("vendor", "alx-1.0.jar"));
-        init.altMainClass = "moe.skjsjhb.alx.AltLauncher";
-    }
-
     if (hint.venv) {
         await venv.mount(init.container);
         init.extraVMArgs.push(...venv.createVenvArgs(init.container));
@@ -78,7 +65,7 @@ async function launch(hint: LaunchHint): Promise<GameProcess> {
 
     try {
         const args = launchArgs.createArguments(init);
-        const g = await GameProcess.create(init.jrtExec, args, init.container.gameDir(), hasALX ? alxNonce : null);
+        const g = await GameProcess.create(init.jrtExec, args, init.container.gameDir());
         games.set(g.id, g);
 
         if (hint.venv) {

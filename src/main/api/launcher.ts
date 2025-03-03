@@ -39,7 +39,7 @@ ipcMain.on("removeGame", (_, procId: string) => {
 
 export type GameProcEvent =
     {
-        type: "end" | "crash" | "exit" | "alxAttached";
+        type: "end" | "crash" | "exit";
     } |
     {
         type: "stdout" | "stderr";
@@ -62,7 +62,6 @@ function forwardGameEvents(src: EventEmitter, dst: MessagePortMain) {
     src.on("end", () => send({ type: "end" }));
     src.on("crash", () => send({ type: "crash" }));
     src.on("exit", () => send({ type: "exit" }));
-    src.on("alxAttached", () => send({ type: "alxAttached" }));
     src.on("stdout", data => send({ type: "stdout", data }));
     src.on("stderr", data => send({ type: "stderr", data }));
     src.on("log", log => send({ type: "log", log }));
