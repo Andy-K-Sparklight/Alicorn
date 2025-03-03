@@ -76,6 +76,9 @@ create-game:
     rift:
       label: Rift
       sub: Play Rift mods in the loader which was once popular at 1.13.
+    optifine:
+      label: OptiFine
+      sub: Use shaders in this loader. Getting replaced by Iris yet still owns its place.
 
   loader-version:
     title: Mod Loader Version

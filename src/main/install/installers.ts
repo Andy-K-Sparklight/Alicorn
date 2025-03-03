@@ -11,6 +11,7 @@ import { quiltInstaller } from "@/main/install/quilt";
 import { riftInstaller } from "@/main/install/rift";
 import { smelt, type SmeltInstallInit } from "@/main/install/smelt";
 import { smeltLegacy } from "@/main/install/smelt-legacy";
+import { unfine } from "@/main/install/unfine";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { jrt } from "@/main/jrt/install";
 import { profileLoader } from "@/main/profile/loader";
@@ -48,6 +49,10 @@ interface RiftInstallerProps extends ModLoaderInstallerProps {
     type: "rift";
 }
 
+interface OptiFineInstallerProps extends ModLoaderInstallerProps {
+    type: "optifine";
+}
+
 interface LiteloaderInstallerProps {
     type: "liteloader";
     gameVersion: string;
@@ -60,7 +65,8 @@ export type InstallerProps =
     | NeoForgedInstallerProps
     | ForgeInstallerProps
     | RiftInstallerProps
-    | LiteloaderInstallerProps;
+    | LiteloaderInstallerProps
+    | OptiFineInstallerProps;
 
 export interface DetailedInstallerContext {
     game: GameProfile;
@@ -112,6 +118,32 @@ async function installLiteloader(props: LiteloaderInstallerProps, context: Detai
     const p = await profileLoader.fromContainer(lid, container);
 
     await finalizeVanilla(p, context);
+}
+
+async function installOptiFine(props: OptiFineInstallerProps, context: DetailedInstallerContext) {
+    const { game, container, control } = context;
+    const { gameVersion, loaderVersion } = props;
+
+    const vp = await vanillaInstaller.installProfile(gameVersion, container, control);
+
+    await jrt.installRuntime(vp.javaVersion.component, control);
+
+    // Ensure that client jar exists since OptiFine needs it
+    // We're unable to know the profile in advance, so it has to install twice
+    // Cache module will speed this up, though
+    await vanillaInstaller.installLibraries(vp, container, new Set(), control);
+
+    const [url, oid] = await unfine.pickVersion(gameVersion, loaderVersion);
+    const installer = await unfine.downloadInstaller(url, control);
+    await unfine.runInstaller(jrt.executable(vp.javaVersion.component), installer, container, control);
+
+    const p = await profileLoader.fromContainer(oid, container);
+
+    await vanillaInstaller.installLibraries(p, container, new Set(), control);
+    await vanillaInstaller.installAssets(p, container, game.assetsLevel, control);
+    await vanillaInstaller.emitOptions(container);
+
+    game.launchHint.profileId = p.id;
 }
 
 async function installRift(props: RiftInstallerProps, context: DetailedInstallerContext) {
@@ -260,7 +292,8 @@ const internalInstallers = {
     neoforged: installNeoForged,
     forge: installForge,
     rift: installRift,
-    liteloader: installLiteloader
+    liteloader: installLiteloader,
+    optifine: installOptiFine
 } as const;
 
 async function runInstall(gameId: string, control?: ProgressController) {

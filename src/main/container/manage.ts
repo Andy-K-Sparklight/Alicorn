@@ -98,6 +98,10 @@ class SimpleContainer implements Container {
         return this.#resolve("options.txt");
     }
 
+    launcherProfiles(): string {
+        return this.#resolve("launcher_profiles.json");
+    }
+
     #resolve(...rel: string[]): string {
         return path.normalize(path.resolve(this.props.root, ...rel));
     }

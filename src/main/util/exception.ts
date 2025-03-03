@@ -9,11 +9,13 @@ export type ExceptionType = {
     "quilt-no-version": { gameVersion: string }
     "neoforged-no-version": { gameVersion: string }
     "forge-no-version": { gameVersion: string }
+    "optifine-no-version": { gameVersion: string }
     "profile-link": { id: string }
     "jrt-not-available": { component: string }
     "jrt-not-verified": { bin: string }
     "launch-spawn": {}
     "forge-install-failed": {}
+    "optifine-install-failed": {}
 }
 
 export interface ExceptionProps<K extends keyof ExceptionType> {

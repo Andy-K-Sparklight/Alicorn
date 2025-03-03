@@ -164,6 +164,15 @@ const bmclapi: Mirror | false = import.meta.env.AL_ENABLE_BMCLAPI && {
             return u.toString();
         }
 
+        if (u.host === "optifine.net" && u.pathname === "/downloadx" && u.searchParams.has("f")) {
+            const f = u.searchParams.get("f") || "";
+            const gameVersion = f.split("OptiFine_")[1]?.split("_")[0];
+
+            if (gameVersion) {
+                return `https://bmclapi2.bangbang93.com/maven/com/optifine/${gameVersion}/${f}`;
+            }
+        }
+
         if (u.host === "dl.liteloader.com" && u.pathname.startsWith("/versions")) {
             u.host = "bmclapi2.bangbang93.com";
             u.pathname = "/maven" + u.pathname.slice("/versions".length);

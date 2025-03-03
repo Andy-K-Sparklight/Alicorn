@@ -68,6 +68,7 @@
         "lzma-native": "^8.0.6",
         "mergician": "^2.0.2",
         "nanoid": "^5.1.2",
+        "node-html-parser": "^7.0.1",
         "node-stream-zip": "^1.15.0",
         "p-event": "^6.0.1",
         "p-limit": "^6.2.0",

@@ -88,6 +88,7 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
             case "neoforged":
             case "forge":
             case "rift":
+            case "optifine":
                 return {
                     type: installType,
                     gameVersion,
@@ -230,7 +231,7 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
                     />
 
                     {
-                        (["fabric", "quilt", "neoforged", "forge", "rift"].includes(installType)) &&
+                        (["fabric", "quilt", "neoforged", "forge", "rift", "optifine"].includes(installType)) &&
                         <ModLoaderVersionSelector value={loaderVersion} onChange={setLoaderVersion}/>
                     }
                 </div>

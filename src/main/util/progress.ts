@@ -28,7 +28,10 @@ export type ProgressStateName =
     "forge-install.download-libraries" |
     "forge-install.processors" |
     "rift.download" |
-    "liteloader.resolve"
+    "liteloader.resolve" |
+    "optifine.resolve" |
+    "optifine.download" |
+    "optifine.install"
 
 /**
  * Interface describing generic progress.

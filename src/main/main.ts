@@ -3,6 +3,7 @@ import { paths } from "@/main/fs/paths";
 import { forgeInstaller } from "@/main/install/forge";
 import { liteloaderInstaller } from "@/main/install/liteloader";
 import { neoforgedInstaller } from "@/main/install/neoforged";
+import { unfine } from "@/main/install/unfine";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { bl } from "@/main/launch/bl";
 import { venv } from "@/main/launch/venv";
@@ -115,11 +116,13 @@ async function main() {
     const tasks = [
         venv.recover(),
         cleaner.removeUnusedOAuthPartitions(),
+        cleaner.removeTempPath(),
         mirror.bench(),
         vanillaInstaller.prefetch(),
         forgeInstaller.prefetch(),
         neoforgedInstaller.prefetch(),
-        liteloaderInstaller.prefetch()
+        liteloaderInstaller.prefetch(),
+        unfine.prefetch()
     ].filter(Boolean);
 
     await Promise.all(tasks);

@@ -60,7 +60,7 @@ export class WebSocketJsonRpcClient {
         const { promise, resolve, reject } = Promise.withResolvers<any>();
 
         this.#callbacks.set(id, (e, d) => {
-            if (e) reject(e);
+            if (e) reject(JSON.stringify(e));
             else resolve(d);
         });
 

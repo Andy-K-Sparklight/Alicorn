@@ -123,6 +123,11 @@ export interface Container {
      * Gets the path to the options file.
      */
     options(): string;
+
+    /**
+     * Gets the path to the `launcher_profiles.json` file.
+     */
+    launcherProfiles(): string;
 }
 
 export const CONTAINER_REG_VERSION = 0;

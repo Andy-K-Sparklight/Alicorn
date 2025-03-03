@@ -70,6 +70,7 @@ export type GameCoreType =
     "neoforged" |
     "rift" |
     "liteloader" |
+    "optifine" |
     "unknown"
 
 export const GAME_REG_VERSION = 3;

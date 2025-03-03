@@ -103,7 +103,6 @@ async function recover(): Promise<void> {
             if (reg.containers.has(d)) {
                 const vc = containers.get(d);
                 vc.props.root = getVenvPath(d);
-                console.log(vc.props.root);
 
                 if (!(await queryMarker(vc))) {
                     try {

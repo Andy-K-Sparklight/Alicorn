@@ -128,10 +128,18 @@ async function installLibraries(
                     });
                 }
             }
-        } else if (lib.url) {
+        } else {
             // Refer to the `url` field if the artifact is missing
             const m = new MavenName(lib.name);
             let baseUrl = lib.url;
+
+            // A special patch for Mojang launchwrapper
+            if (!baseUrl && m.group === "net.minecraft" && m.artifact === "launchwrapper") {
+                baseUrl = "https://libraries.minecraft.net/";
+            }
+
+            if (!baseUrl) continue;
+
             if (!baseUrl.endsWith("/")) baseUrl += "/";
 
             const url = baseUrl + m.toPath();

@@ -1,3 +1,4 @@
+import { paths } from "@/main/fs/paths";
 import { reg } from "@/main/registry/registry";
 import { app } from "electron";
 import fs from "fs-extra";
@@ -17,4 +18,9 @@ async function removeUnusedOAuthPartitions() {
     } catch {}
 }
 
-export const cleaner = { removeUnusedOAuthPartitions };
+async function removeTempPath() {
+    const fp = paths.temp.to(".");
+    await fs.remove(fp);
+}
+
+export const cleaner = { removeUnusedOAuthPartitions, removeTempPath };

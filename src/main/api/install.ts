@@ -5,6 +5,7 @@ import { liteloaderInstaller } from "@/main/install/liteloader";
 import { neoforgedInstaller } from "@/main/install/neoforged";
 import { quiltInstaller } from "@/main/install/quilt";
 import { riftInstaller } from "@/main/install/rift";
+import { unfine } from "@/main/install/unfine";
 import { ipcMain } from "@/main/ipc/typed";
 import { exceptions } from "@/main/util/exception";
 import type { Progress, ProgressController } from "@/main/util/progress";
@@ -74,14 +75,16 @@ ipcMain.handle("queryAvailableModLoaders", async (_, gameVersion) => {
         neoforgedVersions,
         forgeVersions,
         riftAvailable,
-        liteloaderVersions
+        liteloaderVersions,
+        hasOptiFine
     ] = await Promise.all([
         fabricInstaller.getAvailableGameVersions(),
         quiltInstaller.getAvailableGameVersions(),
         neoforgedInstaller.queryLoaderVersions(gameVersion),
         forgeInstaller.queryLoaderVersions(gameVersion),
         riftInstaller.isAvailable(gameVersion),
-        liteloaderInstaller.getAvailableVersions()
+        liteloaderInstaller.getAvailableVersions(),
+        unfine.hasVersion(gameVersion)
     ]);
 
     if (fabricVersions.includes(gameVersion)) {
@@ -106,6 +109,10 @@ ipcMain.handle("queryAvailableModLoaders", async (_, gameVersion) => {
 
     if (liteloaderVersions.includes(gameVersion)) {
         supported.push("liteloader");
+    }
+
+    if (hasOptiFine) {
+        supported.push("optifine");
     }
 
     return supported;

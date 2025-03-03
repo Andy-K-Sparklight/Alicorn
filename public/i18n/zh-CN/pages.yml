@@ -76,6 +76,9 @@ create-game:
     rift:
       label: 使用 Rift
       sub: 曾于 1.13 时短暂流行的模组系统。仅支持专用的 Rift 模组。
+    optifine:
+      label: 使用 OptiFine
+      sub: 曾经的光影加载器，即使在逐渐被 Iris 取代的今天仍有一席之地。
 
   loader-version:
     title: 模组系统版本号
