@@ -26,6 +26,7 @@ export class VanillaAccount implements Account {
     #xboxId = "";
     #userHash = "";
     #code = "";
+    #existingRefreshPromise: Promise<void> | null = null;
 
     static fromProps(props: VanillaAccountProps): VanillaAccount {
         const a = new VanillaAccount(props.partitionId);
@@ -63,6 +64,21 @@ export class VanillaAccount implements Account {
             return;
         }
 
+        if (this.#existingRefreshPromise) {
+            console.debug("A refresh is already in progress. Linking to it.");
+            await this.#existingRefreshPromise;
+            return;
+        }
+
+        try {
+            this.#existingRefreshPromise = this.#doRefresh();
+            await this.#existingRefreshPromise;
+        } finally {
+            this.#existingRefreshPromise = null;
+        }
+    }
+
+    async #doRefresh() {
         if (this.#isOAuthTokenExpired()) {
             console.log("Obtaining new OAuth code.");
             await this.#getCode();
@@ -82,7 +98,6 @@ export class VanillaAccount implements Account {
         ]);
 
         console.log(`Login complete. Welcome back, ${this.#playerName}!`);
-
     }
 
     toProps(): AccountProps {

@@ -4,6 +4,8 @@ import { VanillaAccount } from "@/main/auth/vanilla";
 import { reg } from "@/main/registry/registry";
 import { windowControl } from "@/main/sys/window-control";
 
+const accountMap = new Map<string, Account>();
+
 function loadFromProps(props: AccountProps): Account {
     switch (props.type) {
         case "vanilla":
@@ -14,7 +16,14 @@ function loadFromProps(props: AccountProps): Account {
 }
 
 function get(accountId: string): Account {
-    return loadFromProps(reg.accounts.get(accountId));
+    // Single-instance of accounts are important to avoid conflict during authentication
+    let a = accountMap.get(accountId);
+    if (!a) {
+        a = loadFromProps(reg.accounts.get(accountId));
+        accountMap.set(accountId, a);
+    }
+
+    return a;
 }
 
 function add(account: Account) {
