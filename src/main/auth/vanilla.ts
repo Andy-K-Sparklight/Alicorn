@@ -46,7 +46,7 @@ export class VanillaAccount implements Account {
     }
 
     constructor(partId?: string) {
-        this.#partId = partId || ("ms-auth-" + nanoid());
+        this.#partId = partId || ("ms-auth-" + nanoid()).toLowerCase();
     }
 
     credentials(): AuthCredentials {
