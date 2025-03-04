@@ -83,10 +83,10 @@ exceptions:
 undefined: Unknown
 
 tips:
-  error: |-
-    How did we get here?
-    Well, easiness does not come with ease.
-    Easy, breathe — at least this dialog is still working.
-    It's, well, not time to restart yet.
-    I get it... Don't worry, I'll work it out.
-    Oh no. Oh no no no no no!
+  error:
+    - How did we get here?
+    - Well, easiness does not come with ease.
+    - Easy, breathe — at least this dialog is still working.
+    - It's, well, not time to restart yet.
+    - I get it... Don't worry, I'll work it out.
+    - Oh no. Oh no no no no no!
