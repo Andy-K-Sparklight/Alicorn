@@ -1,6 +1,7 @@
 /**
  * Utilities related to network access.
  */
+import { conf } from "@/main/conf/conf";
 import { mirror } from "@/main/net/mirrors";
 import { exceptions } from "@/main/util/exception";
 import { net } from "electron";
@@ -13,7 +14,8 @@ async function get(url: string): Promise<Response> {
 
     for (const u of urls) {
         try {
-            const r = await net.fetch(u);
+            const signal = AbortSignal.timeout(conf().net.requestTimeout);
+            const r = await net.fetch(u, { signal });
             if (r.ok) return r;
         } catch (e) {
             console.error(`Mirror unreachable: ${u}`);

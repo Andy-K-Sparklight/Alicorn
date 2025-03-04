@@ -40,7 +40,8 @@ export function ModLoaderSelector({ availableModLoaders, value, onChange }: ModL
             {
                 (["vanilla", "fabric", "quilt", "neoforged", "forge", "rift", "liteloader", "optifine"] as const)
                     .map(lv => {
-                        if (!loaders.includes(lv)) return null;
+                        // Allow mod loaders to be chosen before availability check in case the network is slow
+                        if (availableModLoaders !== null && !loaders.includes(lv)) return null;
 
                         const iconType: GameCoreType = lv === "vanilla" ? "vanilla-release" : lv;
 
