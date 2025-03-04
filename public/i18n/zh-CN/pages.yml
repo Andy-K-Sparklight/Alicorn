@@ -101,6 +101,21 @@ games:
     title: 这里没有任何游戏。
     sub: 点按「创建新游戏」按钮，建立新游戏。
 
+game-card:
+  launch: 启动
+  type:
+    vanilla-release: 正式版
+    vanilla-snapshot: 开发版
+    vanilla-old-alpha: Alpha
+    vanilla-old-beta: Beta
+    fabric: Fabric
+    quilt: Quilt
+    neoforged: NeoForged
+    forge: Forge
+    liteloader: Liteloader
+    optifine: OptiFine
+    rift: Rift
+
 
 game-detail:
   header:

@@ -6,6 +6,7 @@ import { useNav } from "@/renderer/util/nav";
 import { Button, cn } from "@heroui/react";
 import { CirclePlayIcon, DownloadIcon, EllipsisIcon, PinIcon, PinOffIcon, XIcon } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type InstallStatus = "installed" | "installing" | "not-installed";
 
@@ -15,6 +16,7 @@ interface GameActionsProps {
 }
 
 export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
+    const { t } = useTranslation("pages", { keyPrefix: "game-card" });
     const [launching, setLaunching] = useState(false);
     const game = useGameProfile(gameId);
     const nav = useNav();
@@ -60,8 +62,8 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
     return <div className="flex gap-2">
         {
             installStatus === "installed" ?
-                <Button isIconOnly isLoading={launching} color="primary" onPress={launch}>
-                    <CirclePlayIcon/>
+                <Button startContent={<CirclePlayIcon/>} isLoading={launching} color="primary" onPress={launch}>
+                    {t("launch")}
                 </Button>
                 :
                 installStatus === "installing" ?
@@ -82,16 +84,18 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
                     </Button>
         }
 
-        <Button variant="light" isIconOnly onPress={togglePin}>
+        <div className="flex gap-1">
+            <Button variant="light" isIconOnly onPress={togglePin}>
             <span className={cn("duration-200", !pinned && "rotate-45")}>
                  {
                      pinned ? <PinOffIcon/> : <PinIcon/>
                  }
             </span>
-        </Button>
+            </Button>
 
-        <Button variant="light" isIconOnly onPress={handleShowDetails}>
-            <EllipsisIcon/>
-        </Button>
+            <Button variant="light" isIconOnly onPress={handleShowDetails}>
+                <EllipsisIcon/>
+            </Button>
+        </div>
     </div>;
 }

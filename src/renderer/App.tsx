@@ -35,7 +35,7 @@ export function App() {
         }));
     }, []);
 
-    return <HeroUIProvider navigate={nav}>
+    return <HeroUIProvider navigate={nav} spinnerVariant="wave">
         <main className="fixed inset-0 text-foreground bg-background">
             <div className="flex flex-col w-full h-full">
                 <Navigator/>

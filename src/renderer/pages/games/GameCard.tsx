@@ -11,6 +11,8 @@ interface GameCardProps {
 }
 
 export function GameCard({ game }: GameCardProps) {
+    const { t } = useTranslation("pages", { keyPrefix: "game-card" });
+
     const { id, name, versions: { game: gameVersion }, installed, type } = game;
     const { t: tc } = useTranslation("common", { keyPrefix: "progress" });
     const installProgress = useInstallProgress(id);
@@ -44,6 +46,7 @@ export function GameCard({ game }: GameCardProps) {
 
                 <div className="ml-auto flex gap-2 items-center">
                     <Chip color="primary" variant="flat">{gameVersion}</Chip>
+                    <Chip color="default" variant="flat">{t(`type.${type}`)}</Chip>
                 </div>
 
                 <div className="ml-4">

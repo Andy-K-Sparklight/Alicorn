@@ -99,7 +99,7 @@ function VersionLoading() {
     const t = useTrans();
 
     return <div className="flex gap-4 justify-center items-center">
-        <Spinner variant="wave" size="sm"/>
+        <Spinner size="sm"/>
         <span className="text-foreground-400">
             {t("loading-versions")}
         </span>

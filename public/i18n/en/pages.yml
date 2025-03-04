@@ -101,6 +101,21 @@ games:
     title: Nothing Here
     sub: Click the "Create" button to start your new game.
 
+game-card:
+  launch: Play
+  type:
+    vanilla-release: Release
+    vanilla-snapshot: Snapshot
+    vanilla-old-alpha: Alpha
+    vanilla-old-beta: Beta
+    fabric: Fabric
+    quilt: Quilt
+    neoforged: NeoForged
+    forge: Forge
+    liteloader: Liteloader
+    optifine: OptiFine
+    rift: Rift
+
 game-detail:
   header:
     installed: INSTALLED

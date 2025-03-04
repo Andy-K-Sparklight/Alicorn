@@ -30,7 +30,7 @@ export function ModLoaderSelector({ availableModLoaders, value, onChange }: ModL
             {
                 !availableModLoaders &&
                 <div className="w-full flex justify-center items-center gap-6 my-2">
-                    <Spinner variant="wave"/>
+                    <Spinner/>
                     {t("loading")}
                 </div>
             }
