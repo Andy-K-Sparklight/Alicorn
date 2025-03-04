@@ -26,7 +26,7 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
     const pinned = game.user.pinTime && game.user.pinTime > 0;
 
     function handleShowDetails() {
-        nav(`/game-detail/${gameId}`);
+        nav(`/games/detail/${gameId}`);
     }
 
     function handleInstall() {

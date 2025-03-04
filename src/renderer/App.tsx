@@ -57,9 +57,9 @@ function MainArea() {
     return <div className="grow min-h-0 w-11/12 mb-8 mt-4 mx-auto relative">
         <AnimatedRoute path="/about" component={AboutView}/>
         <AnimatedRoute path="/settings" component={SettingsView}/>
-        <AnimatedRoute path="/create-game/:gameId?" component={CreateGameView}/>
+        <AnimatedRoute path="/games/new/:gameId?" component={CreateGameView}/>
         <AnimatedRoute path="/games" component={GamesView}/>
-        <AnimatedRoute path="/game-detail/:gameId" component={GameDetailView}/>
+        <AnimatedRoute path="/games/detail/:gameId" component={GameDetailView}/>
         <AnimatedRoute path="/monitor/:procId" component={MonitorView}/>
         <AnimatedRoute path="/monitor" component={MonitorListView}/>
         <AnimatedRoute path="/setup/*?" component={SetupView}/>

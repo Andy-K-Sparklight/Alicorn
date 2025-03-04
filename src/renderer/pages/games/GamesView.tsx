@@ -27,7 +27,7 @@ export function GamesView() {
         <div className="flex gap-2 px-3">
             {/* The px-3 above is necessary to align the button with the cards. */}
             <Button
-                onPress={() => nav("/create-game")}
+                onPress={() => nav("/games/new")}
                 fullWidth
                 color="primary"
                 startContent={<PlusIcon/>}

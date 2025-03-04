@@ -28,7 +28,7 @@ export function AdvancedPanel() {
     }
 
     function handleRecreate() {
-        nav(`/create-game/${id}`);
+        nav(`/games/new/${id}`);
     }
 
     function handleInstallFull() {
