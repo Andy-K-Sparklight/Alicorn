@@ -1,4 +1,7 @@
-import { Radio, RadioGroup } from "@heroui/radio";
+import type { GameCoreType } from "@/main/game/spec";
+import { CardRadio } from "@components/CardRadio";
+import { GameTypeImage } from "@components/GameTypeImage";
+import { RadioGroup } from "@heroui/radio";
 import { Spinner } from "@heroui/react";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -34,15 +37,26 @@ export function ModLoaderSelector({ availableModLoaders, value, onChange }: ModL
                     {t("loading")}
                 </div>
             }
-
             {
-                ["vanilla", "fabric", "quilt", "neoforged", "forge", "rift", "liteloader", "optifine"].map(lv => {
-                    if (!loaders.includes(lv)) return null;
+                (["vanilla", "fabric", "quilt", "neoforged", "forge", "rift", "liteloader", "optifine"] as const)
+                    .map(lv => {
+                        if (!loaders.includes(lv)) return null;
 
-                    return <Radio key={lv} value={lv} description={t(`${lv}.sub`)}>
-                        {t(`${lv}.label`)}
-                    </Radio>;
-                })
+                        const iconType: GameCoreType = lv === "vanilla" ? "vanilla-release" : lv;
+
+                        return <CardRadio key={lv} value={lv}>
+                            <div className="flex gap-4 items-center">
+                                <div className="h-12 p-1.5 aspect-square bg-content2 rounded-full">
+                                    <GameTypeImage type={iconType}/>
+                                </div>
+
+                                <div className="flex flex-col gap-1">
+                                    <div>{t(`${lv}.label`)}</div>
+                                    <div className="text-sm text-foreground-400"> {t(`${lv}.sub`)}</div>
+                                </div>
+                            </div>
+                        </CardRadio>;
+                    })
             }
         </RadioGroup>
 

@@ -59,25 +59,25 @@ create-game:
       label: 不安装模组系统
       sub: 你将无法安装模组，但仍能使用资源包和数据包等内容。
     fabric:
-      label: 使用 Fabric
+      label: Fabric
       sub: 快速、轻便、模块化，当下最流行的模组系统。仅支持专用的 Fabric 模组。
     quilt:
-      label: 使用 Quilt
+      label: Quilt
       sub: 基于 Fabric 的改进版。能支持 Quilt 模组和相当一部分 Fabric 模组（但不是全部）。
     neoforged:
-      label: 使用 NeoForged
+      label: NeoForged
       sub: Forge 的后继项目。仅支持专用的 NeoForged 模组。
     forge:
-      label: 使用 Forge
+      label: Forge
       sub: 适用于旧版本游戏的模组系统。仅支持专用的 Forge 模组。
     liteloader:
-      label: 使用 Liteloader
+      label: Liteloader
       sub: 适用于旧版本游戏的轻量级模组系统。仅支持专用的 Liteloader 模组。
     rift:
-      label: 使用 Rift
+      label: Rift
       sub: 曾于 1.13 时短暂流行的模组系统。仅支持专用的 Rift 模组。
     optifine:
-      label: 使用 OptiFine
+      label: OptiFine
       sub: 曾经的光影加载器，即使在逐渐被 Iris 取代的今天仍有一席之地。
 
   loader-version:
