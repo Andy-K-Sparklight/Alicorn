@@ -62,7 +62,10 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
     return <div className="flex gap-2">
         {
             installStatus === "installed" ?
-                <Button startContent={<CirclePlayIcon/>} isLoading={launching} color="primary" onPress={launch}>
+                <Button
+                    startContent={!launching && <CirclePlayIcon/>} isLoading={launching} color="primary"
+                    onPress={launch}
+                >
                     {t("launch")}
                 </Button>
                 :
