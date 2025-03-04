@@ -64,7 +64,7 @@ async function crawlVersions(): Promise<VersionMeta[]> {
             const gameVersion = name?.split("_")[1];
             const edition = name?.split("_").slice(2).join("_");
 
-            if (!gameVersion || !htmlUrl || !name || !edition) continue;
+            if (!gameVersion || !name || !edition) continue;
 
             v.push({ gameVersion, name, htmlUrl, edition, stable });
         }
