@@ -3,7 +3,7 @@ import { useGameProfile } from "@/renderer/services/game";
 import { remoteInstaller } from "@/renderer/services/install";
 import { procService } from "@/renderer/services/proc";
 import { useNav } from "@/renderer/util/nav";
-import { Button, cn } from "@heroui/react";
+import { Button, cn, Spinner } from "@heroui/react";
 import { CirclePlayIcon, DownloadIcon, EllipsisIcon, PinIcon, PinOffIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -63,7 +63,9 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
         {
             installStatus === "installed" ?
                 <Button
-                    startContent={!launching && <CirclePlayIcon/>} isLoading={launching} color="primary"
+                    startContent={launching ? <Spinner variant="wave"/> : <CirclePlayIcon/>}
+                    isDisabled={launching}
+                    color="primary"
                     onPress={launch}
                 >
                     {t("launch")}

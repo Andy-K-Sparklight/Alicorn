@@ -1,7 +1,7 @@
 import type { DetailedAccountProps } from "@/main/auth/types";
 import { DialogProvider, type PropsWithDialog, useOpenDialog } from "@components/DialogProvider";
 import { Radio, RadioGroup } from "@heroui/radio";
-import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";
 import { ArrowRightIcon, UserRoundPlusIcon, UserSquareIcon } from "lucide-react";
 import React, { useState } from "react";
@@ -48,9 +48,13 @@ export function AccountInitView() {
             </div>
 
             <Button
-                isLoading={loginActive}
+                isDisabled={loginActive}
                 color="primary"
-                startContent={loginActive ? undefined : loggedIn ? <ArrowRightIcon/> : <UserRoundPlusIcon/>}
+                startContent={
+                    loginActive ?
+                        <Spinner variant="wave"/> :
+                        loggedIn ? <ArrowRightIcon/> : <UserRoundPlusIcon/>
+                }
                 onPress={loggedIn ? next : handleAuth}
             >
                 {t(loggedIn ? "btn-next" : "btn-login")}

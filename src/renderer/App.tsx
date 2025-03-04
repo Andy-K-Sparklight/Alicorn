@@ -34,8 +34,9 @@ export function App() {
             title: t("toast.app-upgraded", { version })
         }));
     }, []);
-
-    return <HeroUIProvider navigate={nav} spinnerVariant="wave">
+    // Spinner styles need to be set manually for each one until the following issue gets solved
+    // https://github.com/heroui-inc/heroui/issues/4906
+    return <HeroUIProvider navigate={nav}>
         <main className="fixed inset-0 text-foreground bg-background">
             <div className="flex flex-col w-full h-full">
                 <Navigator/>

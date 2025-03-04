@@ -5,7 +5,7 @@ import { Alert } from "@components/Alert";
 import type { PropsWithParams } from "@components/AnimatedRoute";
 import { PlayerNameInput } from "@components/PlayerNameInput";
 import { Radio, RadioGroup } from "@heroui/radio";
-import { addToast, Button, Input, Switch } from "@heroui/react";
+import { addToast, Button, Input, Spinner, Switch } from "@heroui/react";
 import { AccountSelector } from "@pages/create-game/AccountSelector";
 import { AssetLevelSelector } from "@pages/create-game/AssetsLevelSelector";
 import { ContainerSelector } from "@pages/create-game/ContainerSelector";
@@ -240,9 +240,9 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
                     fullWidth
                     color="primary"
                     size="lg"
-                    isDisabled={!valid}
+                    isDisabled={!valid || creating}
                     onPress={handleCreate}
-                    isLoading={creating}
+                    startContent={creating && <Spinner variant="wave"/>}
                 >
                     {t("create-btn")}
                 </Button>
