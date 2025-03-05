@@ -50,9 +50,17 @@ function osPair(): string {
 
 async function getProfile(componentName: string): Promise<JavaRuntimeProfile> {
     const d = await netx.getJSON(JRT_MANIFEST);
-    const availableProfiles = d?.[osPair()]?.[componentName];
+    const osp = osPair();
 
-    if (!Array.isArray(availableProfiles) || availableProfiles.length < 1) {
+    let availableProfiles = d?.[osp]?.[componentName];
+
+    // Mojang provides ARM64 native builds only for recent versions of JRT
+    // For earlier versions the x86 variant can be used. They shall run with Rosetta 2.
+    if (osp === "mac-os-arm64" && (!Array.isArray(availableProfiles) || availableProfiles.length === 0)) {
+        availableProfiles = d?.["mac-os"]?.[componentName];
+    }
+
+    if (!Array.isArray(availableProfiles) || availableProfiles.length === 0) {
         throw exceptions.create("jrt-not-available", { component: componentName });
     }
 
