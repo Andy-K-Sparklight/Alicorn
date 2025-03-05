@@ -6,6 +6,7 @@ import { ExceptionDisplay } from "@components/ExceptionDisplay";
 import { Navigator } from "@components/Navigator";
 import { addToast, HeroUIProvider, ToastProvider } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
+import { CreateGameWizardView } from "@pages/create-game-wizard/CreateGameWizardView";
 import { CreateGameView } from "@pages/create-game/CreateGameView";
 import { GameDetailView } from "@pages/game-detail/GameDetailView";
 import { GamesView } from "@pages/games/GamesView";
@@ -57,6 +58,7 @@ function MainArea() {
     return <div className="grow min-h-0 w-11/12 mb-8 mt-4 mx-auto relative">
         <AnimatedRoute path="/about" component={AboutView}/>
         <AnimatedRoute path="/settings" component={SettingsView}/>
+        <AnimatedRoute path="/games/new-wizard/*?" component={CreateGameWizardView}/>
         <AnimatedRoute path="/games/new/:gameId?" component={CreateGameView}/>
         <AnimatedRoute path="/games" component={GamesView}/>
         <AnimatedRoute path="/games/detail/:gameId" component={GameDetailView}/>

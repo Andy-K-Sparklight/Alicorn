@@ -122,6 +122,8 @@ ipcMain.handle("addGame", async (_, init) => {
     };
 
     games.add(g);
+
+    return g.id;
 });
 
 ipcMain.handle("updateGame", (_, g) => games.add(g));

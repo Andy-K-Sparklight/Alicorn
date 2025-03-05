@@ -88,10 +88,42 @@ create-game:
     alert: 除非需要使用某个特定的版本，否则让 Alicorn 选择会比较好。
     placeholder: 自动
 
+create-game-wizard:
+  pick-version:
+    title: 选择一个游戏版本
+    sub: |-
+      游戏版本决定了可玩的游戏内容。
+      不同的游戏版本在外观和机制上会有不同。
+    hint: 不确定选择哪个？试试<0>最新版本</0>如何？
+    include-snapshot: 包含快照
+    btn: 就这个了！
+
+  pick-mod-loader:
+    title: 选择模组系统
+    sub: |-
+      若要游玩模组，你就需要一个模组系统。
+      不同的模组系统所支持的模组不尽相同。
+
+    hint: 不确定选择哪个？不如就先试试<0>原版游戏</0>吧！
+    btn: 就这个了！
+
+  finish:
+    title: 这就 OK 了！
+    sub: |-
+      游戏已就绪，现在就可以开始游玩了！
+      或者，你可以稍后再安装并启动游戏。
+
+      高级游戏选项可以在游戏详情中进一步调整。
+    hint: 启动游戏时将需要你登录。
+    btn:
+      install: 现在游玩
+      create-only: 稍后再安装
+
 games:
   loading: 正在读取游戏列表……
   title: 游戏库
   new: 创建新游戏
+  new-advanced: 快速创建
   sorting:
     az: 名称升序
     za: 名称降序

@@ -57,7 +57,7 @@ create-game:
     missing: Not seeing what you're looking for? Try to choose another game version.
     vanilla:
       label: No Loader
-      sub: PLay the game without mods support. (Resource packs and data packs will be available)
+      sub: Play the game without mods support. (Resource packs and data packs will be available)
     fabric:
       label: Fabric
       sub: Play Fabric mods. Powered by the Fabric loader.
@@ -88,10 +88,43 @@ create-game:
     alert: It's better to let Alicorn decide if being unclear of the version needed.
     placeholder: Auto
 
+create-game-wizard:
+  pick-version:
+    title: Pick Game Version
+    sub: |-
+      Game content vary among versions.
+      They differs in appearances and mechanisms.
+
+    hint: Not sure? What about <0>the latest</0>?
+    include-snapshot: Show Snapshots
+    btn: Looks Good!
+
+  pick-mod-loader:
+    title: Pick Mod Loader
+    sub: |-
+      You'll need a mod loader to play mods.
+      Mod loaders usually support different mods.
+
+    hint: Not sure? What about <0>vanilla game</0>?
+    btn: Looks Good!
+
+  finish:
+    title: That's All!
+    sub: |-
+      The game is ready for play now!
+      Or, you can install it later.
+
+      Options can be toggled in game details.
+    hint: Login required when launching.
+    btn:
+      install: Play Now!
+      create-only: Install Later
+
 games:
   loading: Reading game list...
   title: Games
   new: Create
+  new-advanced: Directly Create
   sorting:
     az: A to Z
     za: Z to A

@@ -122,7 +122,7 @@ const native = {
         /**
          * Adds the specified game to registry.
          */
-        add(game: CreateGameInit): Promise<void> {
+        add(game: CreateGameInit): Promise<string> {
             return ipcRenderer.invoke("addGame", game);
         },
 

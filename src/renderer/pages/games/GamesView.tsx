@@ -27,12 +27,16 @@ export function GamesView() {
         <div className="flex gap-2 px-3">
             {/* The px-3 above is necessary to align the button with the cards. */}
             <Button
-                onPress={() => nav("/games/new")}
-                fullWidth
+                onPress={() => nav("/games/new-wizard")}
+                className="grow"
                 color="primary"
                 startContent={<PlusIcon/>}
             >
                 {t("new")}
+            </Button>
+
+            <Button onPress={() => nav("/games/new")} startContent={<PlusIcon/>}>
+                {t("new-advanced")}
             </Button>
 
             <SortMethodControl sortMethod={sortMethod!} onChange={setSortMethod}/>
