@@ -1,5 +1,6 @@
 import type { InstallerProps } from "@/main/install/installers";
 import { useAccounts } from "@/renderer/services/auth";
+import { useGameProfile } from "@/renderer/services/game";
 import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/Alert";
 import type { PropsWithParams } from "@components/AnimatedRoute";
@@ -22,15 +23,19 @@ import { useLocalStorage } from "react-use";
 export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?: string }>) {
     const { t } = useTranslation("pages", { keyPrefix: "create-game" });
     const accounts = useAccounts();
+    const profile = useGameProfile(gameId ?? "");
 
-    const [gameName, setGameName] = useState(t("default-name"));
-    const [gameVersion, setGameVersion] = useState<string>();
-    const [containerId, setContainerId] = useState<string>();
+    const [gameName, setGameName] = useState(profile?.name || t("default-name"));
+    const [gameVersion, setGameVersion] = useState<string | undefined>(profile?.installProps.gameVersion);
+    const [containerId, setContainerId] = useState<string | undefined>(profile?.launchHint.containerId);
     const [containerShouldLink, setContainerShouldLink] = useState(true);
-    const [shareContainer, setShareContainer] = useState(false);
+    const [shareContainer, setShareContainer] = useState(!!profile?.launchHint.containerId);
+
 
     const [lastSelectedAccountId, setLastSelectedAccountId] = useLocalStorage<string>("create-game.account.last-selected");
-    const initialAccountId = accounts.some(a => a.uuid === lastSelectedAccountId) ? lastSelectedAccountId : null;
+    const initialAccountId =
+        profile?.launchHint.accountId ||
+        accounts.some(a => a.uuid === lastSelectedAccountId) ? lastSelectedAccountId : null;
 
     const [authType, setAuthType] = useState<"new-vanilla" | "manual" | "reuse">(initialAccountId ? "reuse" : "new-vanilla");
 
@@ -38,9 +43,9 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
 
     const [playerName, setPlayerName] = useState<string>("Player");
 
-    const [assetsLevel, setAssetsLevel] = useState<"full" | "video-only">("full");
+    const [assetsLevel, setAssetsLevel] = useState<"full" | "video-only">(profile?.assetsLevel || "full");
 
-    const [installType, setInstallType] = useState<string>("vanilla");
+    const [installType, setInstallType] = useState<string>(profile?.installProps.type || "vanilla");
     const [loaderVersion, setLoaderVersion] = useState<string>("");
 
     const [creating, setCreating] = useState(false);

@@ -38,7 +38,7 @@ export function VersionSelector({ version, onChange }: VersionSelectorProps) {
             <Autocomplete
                 isVirtualized
                 aria-label="Select Version"
-                selectedKeys={version ? [version] : []}
+                selectedKey={version || null}
                 placeholder={t("version-select-placeholder")}
                 onSelectionChange={handleSelectionChange}
                 listboxProps={{
