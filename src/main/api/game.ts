@@ -18,7 +18,7 @@ ipcMain.handle("listGames", () => reg.games.getAll());
 ipcMain.handle("removeGame", (_, gameId) => games.remove(gameId));
 ipcMain.handle("getGameProfile", (_, id) => games.get(id));
 
-const allowedContentScopes = new Set(["resourcepacks", "."]);
+const allowedContentScopes = new Set(["resourcepacks", ".", "logs/latest.log"]);
 
 ipcMain.on("revealGameContent", async (_, gameId, scope) => {
     if (!allowedContentScopes.has(scope)) return;
@@ -28,7 +28,9 @@ ipcMain.on("revealGameContent", async (_, gameId, scope) => {
 
     container.props.root = await venv.getCurrentRoot(container);
 
-    await containerInspector.createContentDir(container, scope);
+    if (scope !== "logs/latest.log") {
+        await containerInspector.createContentDir(container, scope);
+    }
     void shell.openPath(container.content(scope));
 });
 

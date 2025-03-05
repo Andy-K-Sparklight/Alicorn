@@ -245,6 +245,7 @@ monitor:
     crashed: Crashed
   actions:
     back-to-list: Back to List
+    reveal-logs: Show Logs File
     stop: Abort
     stop-title: Abort the game?
     stop-sub: Data loss may happen.

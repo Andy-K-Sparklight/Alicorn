@@ -248,6 +248,7 @@ monitor:
     crashed: 发生错误
   actions:
     back-to-list: 返回总览
+    reveal-logs: 查看日志文件
     stop: 停止
     stop-title: 停止游戏，确定吗？
     stop-sub: 游戏数据可能丢失。

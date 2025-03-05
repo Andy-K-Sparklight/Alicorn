@@ -2,7 +2,7 @@ import type { RemoteGameStatus } from "@/renderer/services/proc";
 import { useNav } from "@/renderer/util/nav";
 import { ConfirmPopup } from "@components/ConfirmPopup";
 import { Button } from "@heroui/react";
-import { ArrowLeftIcon, FolderArchiveIcon, FolderIcon, OctagonXIcon } from "lucide-react";
+import { ArrowLeftIcon, FolderArchiveIcon, FolderIcon, OctagonXIcon, ScrollTextIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -27,6 +27,9 @@ function MonitorActions({ procId, gameId, status }: MonitorActionsProps) {
     return <div className="flex flex-col gap-4">
         <Button startContent={<ArrowLeftIcon/>} onPress={() => nav("/monitor")}>
             {t("back-to-list")}
+        </Button>
+        <Button startContent={<ScrollTextIcon/>} onPress={() => native.game.reveal(gameId, "logs/latest.log")}>
+            {t("reveal-logs")}
         </Button>
         <Button startContent={<FolderIcon/>} onPress={() => native.game.reveal(gameId, ".")}>
             {t("reveal-root")}
