@@ -81,11 +81,11 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
                     </Button>
                     :
                     <Button
-                        isIconOnly
                         color="secondary"
                         onPress={handleInstall}
+                        startContent={<DownloadIcon/>}
                     >
-                        <DownloadIcon/>
+                        {t("download")}
                     </Button>
         }
 

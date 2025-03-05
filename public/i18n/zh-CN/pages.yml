@@ -135,6 +135,7 @@ games:
 
 game-card:
   launch: 启动
+  download: 安装
   type:
     vanilla-release: 正式版
     vanilla-snapshot: 开发版
