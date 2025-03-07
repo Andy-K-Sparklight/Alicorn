@@ -128,6 +128,11 @@ export interface Container {
      * Gets the path to the `launcher_profiles.json` file.
      */
     launcherProfiles(): string;
+
+    /**
+     * Gets the path to a mod.
+     */
+    mod(name: string): string;
 }
 
 export const CONTAINER_REG_VERSION = 0;

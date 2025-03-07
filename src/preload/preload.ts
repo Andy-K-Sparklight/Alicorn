@@ -6,6 +6,7 @@ import type { GameProfile } from "@/main/game/spec";
 import type { VersionManifest } from "@/main/install/vanilla";
 import { type IpcCallEvents, type IpcCommands, type IpcMessageEvents, type IpcPushEvents } from "@/main/ipc/channels";
 import type { TypedIpcRenderer } from "@/main/ipc/typed";
+import type { MpmAddonMeta } from "@/main/mpm/spec";
 import { contextBridge, ipcRenderer as ipcRendererRaw } from "electron";
 import Emittery from "emittery";
 import { exposePort } from "./message";
@@ -239,6 +240,18 @@ const native = {
          */
         getVersionManifest(): Promise<VersionManifest> {
             return ipcRenderer.invoke("getVersionManifest");
+        }
+    },
+
+    /**
+     * Addon resolving operations.
+     */
+    mpm: {
+        /**
+         * Searches for mods.
+         */
+        searchMods(query: string, gameId: string, offset: number): Promise<MpmAddonMeta[]> {
+            return ipcRenderer.invoke("searchMods", query, gameId, offset);
         }
     },
 

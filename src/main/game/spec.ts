@@ -1,5 +1,6 @@
 import type { InstallerProps } from "@/main/install/installers";
 import type { LaunchHint } from "@/main/launch/types";
+import type { MpmManifest } from "@/main/mpm/manifest";
 import type { RegistryTransformer } from "@/main/registry/registry";
 
 export interface GameProfile {
@@ -27,6 +28,11 @@ export interface GameProfile {
      * Props for installing the game.
      */
     installProps: InstallerProps;
+
+    /**
+     * Manifest of mods and other addons.
+     */
+    mpm: MpmManifest;
 
     /**
      * Game related versions.
@@ -73,7 +79,7 @@ export type GameCoreType =
     "optifine" |
     "unknown"
 
-export const GAME_REG_VERSION = 3;
+export const GAME_REG_VERSION = 4;
 export const GAME_REG_TRANS: RegistryTransformer[] = [
     // v1: patch the `installerProps` key
     (s) => {
@@ -99,6 +105,14 @@ export const GAME_REG_TRANS: RegistryTransformer[] = [
             s.user = {};
         }
 
+        return s;
+    },
+
+    // v4: append `mpm` key
+    (s) => {
+        if (!s.mpm) {
+            s.mpm = { contents: [], localFiles: [] };
+        }
         return s;
     }
 ];

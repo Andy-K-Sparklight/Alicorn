@@ -228,7 +228,8 @@ game-detail:
         label: Game Flags
         sub: Additional game flags to append.
 
-
+    mods:
+      title: Mods
 
 monitor:
   title: Processes

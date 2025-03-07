@@ -215,6 +215,9 @@ game-detail:
             1: 我明白我将没有任何方法找回「{{name}}」的任何内容
             2: 我知道我在做什么！
 
+    mods:
+      title: 模组
+
     launch:
       title: 启动
       venv:

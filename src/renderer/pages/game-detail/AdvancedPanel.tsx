@@ -40,80 +40,84 @@ export function AdvancedPanel() {
         })();
     }
 
-    return <div className="flex flex-col gap-6">
-        {
-            assetsLevel !== "full" &&
-            <div className="flex items-center">
-                <div className="grow flex flex-col gap-1">
-                    <div className="font-bold text-lg">{t("install-full.label")}</div>
-                    <div className="text-sm text-foreground-400">{t("install-full.sub")}</div>
-                </div>
+    return <div className="w-full h-full overflow-y-auto">
+        <div className="px-4 py-2">
+            <div className="flex flex-col gap-6">
+                {
+                    assetsLevel !== "full" &&
+                    <div className="flex items-center">
+                        <div className="grow flex flex-col gap-1">
+                            <div className="font-bold text-lg">{t("install-full.label")}</div>
+                            <div className="text-sm text-foreground-400">{t("install-full.sub")}</div>
+                        </div>
 
-                <Button
-                    startContent={<CloudDownloadIcon/>}
-                    onPress={handleInstallFull}
-                    color="primary"
-                >
-                    {t("install-full.btn")}
-                </Button>
-            </div>
-        }
+                        <Button
+                            startContent={<CloudDownloadIcon/>}
+                            onPress={handleInstallFull}
+                            color="primary"
+                        >
+                            {t("install-full.btn")}
+                        </Button>
+                    </div>
+                }
 
 
-        <div className="flex items-center">
-            <div className="grow flex flex-col gap-1">
-                <div className="font-bold text-lg">{t("reinstall.label")}</div>
-                <div className="text-sm text-foreground-400">{t("reinstall.sub")}</div>
-            </div>
+                <div className="flex items-center">
+                    <div className="grow flex flex-col gap-1">
+                        <div className="font-bold text-lg">{t("reinstall.label")}</div>
+                        <div className="text-sm text-foreground-400">{t("reinstall.sub")}</div>
+                    </div>
 
-            <Button
-                startContent={<RefreshCwIcon/>}
-                onPress={handleReinstall}
-            >
-                {t("reinstall.btn", { name })}
-            </Button>
-        </div>
-
-        <div className="flex items-center">
-            <div className="grow flex flex-col gap-1">
-                <div className="font-bold text-lg">{t("recreate.label")}</div>
-                <div className="text-sm text-foreground-400">{t("recreate.sub")}</div>
-            </div>
-
-            <Button
-                startContent={<PickaxeIcon/>}
-                onPress={handleRecreate}
-            >
-                {t("recreate.btn", { name })}
-            </Button>
-        </div>
-
-        <div className="mt-6 w-full flex flex-col gap-6 rounded-xl border-2 border-danger border-solid p-4">
-            <Alert classNames={{ title: "font-bold" }} color="danger" title={t("danger-warn")}/>
-
-            <div className="flex items-center">
-                <div className="grow flex flex-col gap-1">
-                    <div className="font-bold text-lg">{t("unlink.label")}</div>
-                    <div className="text-sm text-foreground-400">{t("unlink.sub")}</div>
-                </div>
-
-                <ConfirmPopup
-                    placement="right"
-                    title={t("unlink.confirm.title")}
-                    sub={t("unlink.confirm.sub")}
-                    btnText={t("unlink.confirm.btn")}
-                    onConfirm={handleUnlink}
-                    color="danger"
-                >
-                    <Button startContent={<UnlinkIcon/>} color="danger">
-                        {t("unlink.btn", { name })}
+                    <Button
+                        startContent={<RefreshCwIcon/>}
+                        onPress={handleReinstall}
+                    >
+                        {t("reinstall.btn", { name })}
                     </Button>
-                </ConfirmPopup>
-            </div>
+                </div>
 
-            <DialogProvider dialogProps={{ name, id }} component={DestroyCompoundDialog}>
-                <DestroyEntry/>
-            </DialogProvider>
+                <div className="flex items-center">
+                    <div className="grow flex flex-col gap-1">
+                        <div className="font-bold text-lg">{t("recreate.label")}</div>
+                        <div className="text-sm text-foreground-400">{t("recreate.sub")}</div>
+                    </div>
+
+                    <Button
+                        startContent={<PickaxeIcon/>}
+                        onPress={handleRecreate}
+                    >
+                        {t("recreate.btn", { name })}
+                    </Button>
+                </div>
+
+                <div className="mt-6 w-full flex flex-col gap-6 rounded-xl border-2 border-danger border-solid p-4">
+                    <Alert classNames={{ title: "font-bold" }} color="danger" title={t("danger-warn")}/>
+
+                    <div className="flex items-center">
+                        <div className="grow flex flex-col gap-1">
+                            <div className="font-bold text-lg">{t("unlink.label")}</div>
+                            <div className="text-sm text-foreground-400">{t("unlink.sub")}</div>
+                        </div>
+
+                        <ConfirmPopup
+                            placement="right"
+                            title={t("unlink.confirm.title")}
+                            sub={t("unlink.confirm.sub")}
+                            btnText={t("unlink.confirm.btn")}
+                            onConfirm={handleUnlink}
+                            color="danger"
+                        >
+                            <Button startContent={<UnlinkIcon/>} color="danger">
+                                {t("unlink.btn", { name })}
+                            </Button>
+                        </ConfirmPopup>
+                    </div>
+
+                    <DialogProvider dialogProps={{ name, id }} component={DestroyCompoundDialog}>
+                        <DestroyEntry/>
+                    </DialogProvider>
+                </div>
+            </div>
         </div>
     </div>;
 }

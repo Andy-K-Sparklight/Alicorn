@@ -102,6 +102,10 @@ class SimpleContainer implements Container {
         return this.#resolve("launcher_profiles.json");
     }
 
+    mod(name: string): string {
+        return this.#resolve("mods", name);
+    }
+
     #resolve(...rel: string[]): string {
         return path.normalize(path.resolve(this.props.root, ...rel));
     }

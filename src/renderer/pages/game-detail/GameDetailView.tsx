@@ -7,6 +7,7 @@ import { Button, Tab, Tabs } from "@heroui/react";
 import { AdvancedPanel } from "@pages/game-detail/AdvancedPanel";
 import { GameProfileProvider, useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
 import { LaunchPanel } from "@pages/game-detail/LaunchPanel";
+import { ModsPanel } from "@pages/game-detail/ModsPanel";
 import { DotIcon, EditIcon, FolderIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -41,7 +42,7 @@ function Header() {
         void native.game.update(alter(game, g => g.name = newName));
     }
 
-    return <div className="p-4 h-32 flex gap-8">
+    return <div className="p-4 h-32 flex gap-8 shrink-0">
         <div className="h-full rounded-full bg-content2 p-4">
             <GameTypeImage type={type}/>
         </div>
@@ -90,19 +91,16 @@ function ManagePanel() {
 
     const tabs = {
         launch: <LaunchPanel/>,
+        mods: <ModsPanel/>,
         advanced: <AdvancedPanel/>
     };
 
     return <div className="w-5/6 mx-auto h-full">
-        <Tabs classNames={{ tabWrapper: "h-full" }} className="mx-4" fullWidth>
+        <Tabs classNames={{ tabWrapper: "h-full" }} className="px-4" fullWidth>
             {
                 Object.entries(tabs).map(([id, ele]) =>
                     <Tab key={id} title={t(`${id}.title`)} className="h-full">
-                        <div className="w-full h-full overflow-y-auto">
-                            <div className="px-4 py-2">
-                                {ele}
-                            </div>
-                        </div>
+                        {ele}
                     </Tab>
                 )
             }

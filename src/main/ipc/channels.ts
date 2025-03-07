@@ -4,6 +4,7 @@ import type { DetailedAccountProps } from "@/main/auth/types";
 import type { UserConfig } from "@/main/conf/conf";
 import type { GameProfile } from "@/main/game/spec";
 import type { VersionManifest } from "@/main/install/vanilla";
+import type { MpmAddonMeta } from "@/main/mpm/spec";
 
 /**
  * Events sent from renderer to main.
@@ -58,4 +59,5 @@ export type IpcCommands = {
     updateGame: (game: GameProfile) => void;
     getVersionManifest: () => VersionManifest;
     queryAvailableModLoaders: (gameVersion: string) => string[];
+    searchMods: (query: string, gameId: string, offset: number) => MpmAddonMeta[];
 }
