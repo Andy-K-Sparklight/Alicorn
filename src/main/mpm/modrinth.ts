@@ -3,7 +3,6 @@ import type { Container } from "@/main/container/spec";
 import type { MpmManifest } from "@/main/mpm/manifest";
 import { type DlxDownloadRequest } from "@/main/net/dlx";
 import { exceptions } from "@/main/util/exception";
-import { isTruthy } from "@/main/util/misc";
 import { session } from "electron";
 import lazyValue from "lazy-value";
 import { nanoid } from "nanoid";
@@ -105,14 +104,10 @@ async function resolveCandidateVersion(projId: string, gameVersion: string, load
     );
 
     if (v.length === 0) {
-        console.warn(`No version available for entry ${projId}, skipped. (This may cause problems)`);
         return null;
     }
 
-    const vid = v[0].id;
-
-    console.debug(`Resolved candidate version ${vid} for ${projId}`);
-    return vid;
+    return v[0].id;
 }
 
 /**
@@ -121,73 +116,108 @@ async function resolveCandidateVersion(projId: string, gameVersion: string, load
  * The manifest may get modified when resolving.
  */
 async function resolve(manifest: MpmManifest, gameVersion: string, loader: string, container: Container): Promise<DlxDownloadRequest[]> {
-    const ent = manifest.contents;
-    const versions = new Set(ent.filter(e => !!e.version).map(e => e.version) as string[]);
+    const projectDependencies = new Map<string, Set<string>>();
 
-    // Query version information for unresolved entries
-    await Promise.all(ent.map(async e => {
-        if (!e.version) {
-            const v = await resolveCandidateVersion(e.id, gameVersion, loader);
-            if (v) {
-                versions.add(v);
-            }
+    function addDependency(srcId: string, depId: string) {
+        const deps = projectDependencies.get(srcId);
+        if (deps) {
+            deps.add(depId);
+        } else {
+            projectDependencies.set(srcId, new Set([depId]));
+        }
+    }
+
+    const userPromptVersions = await Promise.all(manifest.userPrompt.map(async p => {
+        if (p.version) {
+            console.debug(`Picked up user-defined version ${p.version} for ${p.id}`);
+            addDependency(p.id, p.version);
+            return p.version;
+        } else {
+            const v = await resolveCandidateVersion(p.id, gameVersion, loader);
+            if (!v) throw `No version available for ${p.id}`;
+
+            console.debug(`Resolved candidate version ${v} for ${p.id}`);
+            addDependency(p.id, v);
+            return v;
         }
     }));
 
+
+    const allVersions = new Set(userPromptVersions);
+
     // Resolve dependencies
-    let currentCandidate = [...versions];
+    let currentCandidate = new Set(userPromptVersions);
 
-    const files: ModrinthFile[] = [];
+    const versionFiles = new Map<string, ModrinthFile[]>();
 
-    while (currentCandidate.length > 0) {
-        const vs = makeJSONParam(currentCandidate);
+    while (currentCandidate.size > 0) {
+        const vs = makeJSONParam([...currentCandidate]);
         const versionMeta = await apiGet<ModrinthVersion[]>(`${API_URL}/versions?ids=${vs}`);
 
+        // Collect files while resolving dependencies
+        for (const vm of versionMeta) {
+            versionFiles.set(vm.id, vm.files);
+        }
+
+        const depVersions = new Set<{ id: string, parent: string }>();
+        const depProjects = new Set<{ id: string, parent: string }>();
+
         // TODO the dependency may specify a different file name
-        const deps = versionMeta
-            .flatMap(v => v.dependencies)
-            .filter(d => d.dependency_type === "required"); // TODO block incompatible
-
-        const depVersions = deps
-            .map(d => d.version_id)
-            .filter(isTruthy)
-            .filter(v => !versions.has(v)); // Prevent circular dependencies
-
-        const depProjects = deps
-            .map(d => d.project_id)
-            .filter(isTruthy);
-
-        if (depProjects.length > 0) {
-            for (const projId of depProjects) {
-                // TODO perhaps add dependency project to manifest
-                console.debug(`Resolving dependency project: ${projId}`);
-
-                const v = await resolveCandidateVersion(projId, gameVersion, loader);
-                if (v && !versions.has(v)) {
-                    depVersions.push(v);
+        for (const vm of versionMeta) {
+            for (const d of vm.dependencies) {
+                if (d.dependency_type === "required") {
+                    if (d.version_id) {
+                        depVersions.add({ id: d.version_id, parent: vm.id });
+                    } else if (d.project_id) {
+                        depProjects.add({ id: d.project_id, parent: vm.id });
+                    }
                 }
             }
         }
 
-        // Collect files while resolving dependencies
-        files.push(...versionMeta.flatMap(v => v.files));
+        // Resolve dependencies without a specific version
+
+        await Promise.all(depProjects.values().map(async d => {
+            // TODO perhaps add dependency project to manifest
+
+            const { id: projId, parent } = d;
+
+            const v = await resolveCandidateVersion(projId, gameVersion, loader);
+            if (!v) throw `No version available for ${projId}`;
+
+            if (!allVersions.has(v)) {
+                depVersions.add({ id: v, parent });
+            }
+        }));
 
         for (const d of depVersions) {
-            console.debug(`Adding dependency: ${d}`);
-            versions.add(d);
+            console.debug(`Adding dependency: ${d.id}`);
+            addDependency(d.parent, d.id);
+            allVersions.add(d.id);
         }
-        currentCandidate = depVersions;
+
+        currentCandidate = new Set(depVersions.values().map(d => d.id));
     }
 
-    console.debug(`Confirmed ${files.length} files from Modrinth.`);
+    const flattenFiles = [...versionFiles.values()].flatMap(v => v);
 
-    manifest.localFiles = files.map(f => ({
-        path: container.mod(f.filename), // TODO support other addon types
-        sha1: f.hashes.sha1
-    }));
+    console.debug(`Confirmed ${flattenFiles.length} files from Modrinth.`);
+
+    manifest.resolved = [...versionFiles.entries()].map(([v, f]) => {
+        return {
+            version: v,
+            vendor: "modrinth",
+            files: f.map(f => ({
+                path: container.mod(f.filename), // TODO support other addon types
+                sha1: f.hashes.sha1
+            }))
+        };
+    });
+
+    manifest.dependencies = Object.fromEntries(projectDependencies.entries().map(([src, deps]) => [src, [...deps]]));
 
     // Download files
-    return files.map(f => ({
+    return flattenFiles.map(f => ({
         url: f.url,
         path: container.mod(f.filename), // TODO support other addon types
         sha1: f.hashes.sha1,

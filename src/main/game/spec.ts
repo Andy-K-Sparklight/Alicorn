@@ -111,7 +111,11 @@ export const GAME_REG_TRANS: RegistryTransformer[] = [
     // v4: append `mpm` key
     (s) => {
         if (!s.mpm) {
-            s.mpm = { contents: [], localFiles: [] };
+            s.mpm = {
+                userPrompt: [],
+                resolved: [],
+                dependencies: {}
+            } satisfies MpmManifest;
         }
         return s;
     }

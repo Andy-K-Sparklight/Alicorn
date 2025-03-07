@@ -115,8 +115,9 @@ ipcMain.handle("addGame", async (_, init) => {
             pref: {} // TODO allow user to choose pref
         },
         mpm: {
-            contents: [],
-            localFiles: []
+            userPrompt: [],
+            resolved: [],
+            dependencies: {}
         },
         assetsLevel,
         time: Date.now(),

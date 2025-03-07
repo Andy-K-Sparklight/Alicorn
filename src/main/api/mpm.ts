@@ -26,23 +26,29 @@ ipcMain.handle("addMod", async (_, gameId, id) => {
     const container = containers.get(game.launchHint.containerId);
 
     const pseudoManifest: MpmManifest = {
-        contents: [{ id, vendor: "modrinth" }],
-        localFiles: []
+        userPrompt: [{ id, vendor: "modrinth" }],
+        resolved: [],
+        dependencies: {}
     };
 
     const tasks = await modrinth.resolve(pseudoManifest, game.versions.game, game.installProps.type, container);
     await dlx.getAll(tasks);
 
     games.add(alter(game, g => {
-        g.mpm.contents = uniqueBy(
-            g.mpm.contents.concat(pseudoManifest.contents),
+        g.mpm.userPrompt = uniqueBy(
+            g.mpm.userPrompt.concat(pseudoManifest.userPrompt),
             e => e.id
         );
 
-        g.mpm.localFiles = uniqueBy(
-            g.mpm.localFiles.concat(pseudoManifest.localFiles),
-            f => f.path
+        g.mpm.resolved = uniqueBy(
+            g.mpm.resolved.concat(pseudoManifest.resolved),
+            f => f.version
         );
+
+        g.mpm.dependencies = {
+            ...g.mpm.dependencies,
+            ...pseudoManifest.dependencies
+        };
     }));
 
     console.debug(`Mod ${id} added for ${gameId}.`);
