@@ -294,6 +294,7 @@ settings:
           twikie: 友谊与魔法之歌（Alicorn 纪念）
           amazing-grace: 悠音（Alicorn 2.x 印象）
           hoshi: 星（原厂）
+          advanced: Alicorn Software
       language:
         title: 语言
         sub: 设置 Alicorn 使用的语言。
