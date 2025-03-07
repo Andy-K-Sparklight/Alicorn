@@ -1,19 +1,21 @@
 import { App } from "@/renderer/App";
 import { i18n } from "@/renderer/i18n/i18n";
+import { globalStore } from "@/renderer/store/store";
 import { ThemeSwitchProvider } from "@/renderer/theme";
 import { t } from "i18next";
 import { pEvent } from "p-event";
 import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { Router } from "wouter";
-import { useHashLocation } from "wouter/use-hash-location";
-import pkg from "~/package.json";
+import { Provider as ReduxProvider } from "react-redux";
 
 // Styles and fonts
 import "./global.css";
 import "./fonts.css";
 import "@fontsource-variable/nunito";
 import "@fontsource-variable/jetbrains-mono";
+import { Router } from "wouter";
+import { useHashLocation } from "wouter/use-hash-location";
+import pkg from "~/package.json";
 import "@fontsource-variable/noto-sans-sc";
 
 /**
@@ -52,7 +54,9 @@ function render() {
         <StrictMode>
             <Router hook={useHashLocation}>
                 <ThemeSwitchProvider>
-                    <App/>
+                    <ReduxProvider store={globalStore}>
+                        <App/>
+                    </ReduxProvider>
                 </ThemeSwitchProvider>
             </Router>
         </StrictMode>

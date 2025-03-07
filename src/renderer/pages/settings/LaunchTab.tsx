@@ -1,4 +1,4 @@
-import { useConfig } from "@/renderer/services/conf";
+import { useConfig } from "@/renderer/store/conf";
 import { Divider } from "@heroui/react";
 import { StringArrayEntry } from "@pages/settings/SettingsEntry";
 import { TerminalIcon } from "lucide-react";

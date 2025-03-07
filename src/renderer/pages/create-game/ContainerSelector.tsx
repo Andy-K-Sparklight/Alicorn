@@ -1,4 +1,4 @@
-import { useGameList } from "@/renderer/services/game";
+import { useGameList } from "@/renderer/store/games";
 import { Select, SelectItem, type SharedSelection } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 
@@ -10,7 +10,7 @@ interface ContainerSelectorProps {
 export function ContainerSelector({ containerId, onChange }: ContainerSelectorProps) {
     const { t } = useTranslation("pages", { keyPrefix: "create-game" });
 
-    const games = useGameList() ?? [];
+    const games = useGameList();
 
     const sid = games.find(g => g.launchHint.containerId === containerId)?.id;
 

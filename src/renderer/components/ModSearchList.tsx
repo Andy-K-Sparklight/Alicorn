@@ -1,5 +1,6 @@
 import type { MpmAddonMeta } from "@/main/mpm/spec";
-import { useGameProfile } from "@/renderer/services/game";
+
+import { useGameProfile } from "@/renderer/store/games";
 import { Button, Input } from "@heroui/react";
 import { PlusIcon, SearchIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";

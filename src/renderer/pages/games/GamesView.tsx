@@ -1,7 +1,8 @@
 import type { GameProfile } from "@/main/game/spec";
-import { useGameList } from "@/renderer/services/game";
+
+import { useGameList } from "@/renderer/store/games";
 import { useNav } from "@/renderer/util/nav";
-import { Button, Spinner, Tab, Tabs, Tooltip } from "@heroui/react";
+import { Button, Tab, Tabs, Tooltip } from "@heroui/react";
 import { GameCard } from "@pages/games/GameCard";
 import { ArrowDownAZIcon, ArrowUpAZIcon, ClockArrowDownIcon, ClockArrowUpIcon, PlusIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -16,10 +17,6 @@ export function GamesView() {
     const nav = useNav();
 
     const { t } = useTranslation("pages", { keyPrefix: "games" });
-
-    if (!games) {
-        return <LoadingSpinner/>;
-    }
 
     const sortedGames = toSortedGames(games, sortMethod!);
 
@@ -131,13 +128,5 @@ function EmptyHint() {
             <div className="text-xl font-bold">{t("title")}</div>
             <div className="text-medium">{t("sub")}</div>
         </div>
-    </div>;
-}
-
-function LoadingSpinner() {
-    const { t } = useTranslation("pages", { keyPrefix: "games" });
-    return <div className="w-full h-full flex justify-center items-center gap-6">
-        <Spinner variant="wave"/>
-        {t("loading")}
     </div>;
 }

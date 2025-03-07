@@ -1,5 +1,6 @@
 import { alter } from "@/main/util/misc";
-import { useGameProfile } from "@/renderer/services/game";
+
+import { useGameProfile } from "@/renderer/store/games";
 import type { PropsWithParams } from "@components/AnimatedRoute";
 import { Editable } from "@components/Editable";
 import { GameTypeImage } from "@components/GameTypeImage";

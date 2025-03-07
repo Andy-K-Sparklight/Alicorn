@@ -1,5 +1,6 @@
 import { i18n } from "@/renderer/i18n/i18n";
-import { useConfig } from "@/renderer/services/conf";
+
+import { useConfig } from "@/renderer/store/conf";
 import { themeManager, useTheme } from "@/renderer/theme";
 import { useNav } from "@/renderer/util/nav";
 import { Divider } from "@heroui/react";

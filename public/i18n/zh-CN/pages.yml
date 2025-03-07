@@ -120,7 +120,6 @@ create-game-wizard:
       create-only: 稍后再安装
 
 games:
-  loading: 正在读取游戏列表……
   title: 游戏库
   new: 创建新游戏
   new-advanced: 快速创建

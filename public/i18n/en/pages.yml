@@ -121,7 +121,6 @@ create-game-wizard:
       create-only: Install Later
 
 games:
-  loading: Reading game list...
   title: Games
   new: Create
   new-advanced: Directly Create

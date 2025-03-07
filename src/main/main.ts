@@ -15,7 +15,7 @@ import { getOSName } from "@/main/sys/os";
 import { update } from "@/main/sys/update";
 import { windowControl } from "@/main/sys/window-control";
 import { app, BrowserWindow, Menu, net, protocol, session } from "electron";
-import { installExtension, REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
+import { installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } from "electron-devtools-installer";
 import { randomUUID } from "node:crypto";
 import events from "node:events";
 import os from "node:os";
@@ -76,9 +76,10 @@ async function main() {
 
     if (import.meta.env.AL_DEV) {
         try {
-            console.log("Installing React DevTools for development...");
+            console.log("Installing DevTools extensions for development...");
 
             await installExtension(REACT_DEVELOPER_TOOLS);
+            await installExtension(REDUX_DEVTOOLS);
             await launchExtServiceWorker();
         } catch (e) {
             console.error("Could not install React DevTools");

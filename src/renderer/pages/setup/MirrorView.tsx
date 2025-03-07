@@ -1,4 +1,4 @@
-import { useConfig } from "@/renderer/services/conf";
+import { useConfig } from "@/renderer/store/conf";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { Button, Link } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";

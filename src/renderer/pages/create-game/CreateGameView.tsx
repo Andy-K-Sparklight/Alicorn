@@ -1,6 +1,8 @@
 import type { InstallerProps } from "@/main/install/installers";
-import { useAccounts } from "@/renderer/services/auth";
-import { useGameProfile } from "@/renderer/services/game";
+
+import { useAccounts } from "@/renderer/store/accounts";
+
+import { useGameProfile } from "@/renderer/store/games";
 import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/Alert";
 import type { PropsWithParams } from "@components/AnimatedRoute";
