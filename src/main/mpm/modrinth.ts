@@ -3,6 +3,7 @@ import type { Container } from "@/main/container/spec";
 import type { MpmManifest } from "@/main/mpm/manifest";
 import { type DlxDownloadRequest } from "@/main/net/dlx";
 import { exceptions } from "@/main/util/exception";
+import { isTruthy } from "@/main/util/misc";
 import { session } from "electron";
 import lazyValue from "lazy-value";
 import { nanoid } from "nanoid";
@@ -56,7 +57,9 @@ interface ModrinthVersion {
 }
 
 interface ModrinthDependency {
-    version_id: string;
+    version_id: string | null;
+    project_id: string | null;
+    dependency_type: "incompatible" | "required" | "optional" | "embedded";
 }
 
 interface ModrinthFile {
@@ -93,6 +96,25 @@ async function search(query: string, gameVersion: string, loader: string, offset
     return res.hits ?? [];
 }
 
+async function resolveCandidateVersion(projId: string, gameVersion: string, loader: string): Promise<string | null> {
+    const loaders = makeJSONParam([loader]);
+    const gameVersions = makeJSONParam([gameVersion]);
+
+    const v = await apiGet<ModrinthVersion[]>(
+        `${API_URL}/project/${projId}/version?loaders=${loaders}&game_versions=${gameVersions}`
+    );
+
+    if (v.length === 0) {
+        console.warn(`No version available for entry ${projId}, skipped. (This may cause problems)`);
+        return null;
+    }
+
+    const vid = v[0].id;
+
+    console.debug(`Resolved candidate version ${vid} for ${projId}`);
+    return vid;
+}
+
 /**
  * Resolve the given MPM entries and returns files to download.
  *
@@ -105,19 +127,10 @@ async function resolve(manifest: MpmManifest, gameVersion: string, loader: strin
     // Query version information for unresolved entries
     await Promise.all(ent.map(async e => {
         if (!e.version) {
-            const loaders = makeJSONParam([loader]);
-            const gameVersions = makeJSONParam([gameVersion]);
-            const v = await apiGet<ModrinthVersion[]>(
-                `${API_URL}/project/${e.id}/version?loaders=${loaders}&game_versions=${gameVersions}`
-            );
-
-            if (v.length === 0) {
-                console.warn(`No version available for entry ${e.id}, skipped. (This may cause problems)`);
-                return;
+            const v = await resolveCandidateVersion(e.id, gameVersion, loader);
+            if (v) {
+                versions.add(v);
             }
-
-            console.debug(`Resolved candidate version ${v[0].id} for ${e.id}`);
-            versions.add(v[0].id);
         }
     }));
 
@@ -129,16 +142,41 @@ async function resolve(manifest: MpmManifest, gameVersion: string, loader: strin
     while (currentCandidate.length > 0) {
         const vs = makeJSONParam(currentCandidate);
         const versionMeta = await apiGet<ModrinthVersion[]>(`${API_URL}/versions?ids=${vs}`);
-        const deps = versionMeta.flatMap(v => v.dependencies.map(d => d.version_id));
+
+        // TODO the dependency may specify a different file name
+        const deps = versionMeta
+            .flatMap(v => v.dependencies)
+            .filter(d => d.dependency_type === "required"); // TODO block incompatible
+
+        const depVersions = deps
+            .map(d => d.version_id)
+            .filter(isTruthy)
+            .filter(v => !versions.has(v)); // Prevent circular dependencies
+
+        const depProjects = deps
+            .map(d => d.project_id)
+            .filter(isTruthy);
+
+        if (depProjects.length > 0) {
+            for (const projId of depProjects) {
+                // TODO perhaps add dependency project to manifest
+                console.debug(`Resolving dependency project: ${projId}`);
+
+                const v = await resolveCandidateVersion(projId, gameVersion, loader);
+                if (v && !versions.has(v)) {
+                    depVersions.push(v);
+                }
+            }
+        }
 
         // Collect files while resolving dependencies
         files.push(...versionMeta.flatMap(v => v.files));
 
-        for (const d of deps) {
+        for (const d of depVersions) {
             console.debug(`Adding dependency: ${d}`);
             versions.add(d);
         }
-        currentCandidate = deps;
+        currentCandidate = depVersions;
     }
 
     console.debug(`Confirmed ${files.length} files from Modrinth.`);

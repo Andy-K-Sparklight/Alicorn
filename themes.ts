@@ -2,7 +2,7 @@
 // Must use relative path
 
 import type { ConfigThemes } from "@heroui/react";
-import advanced from "~/themes/advanced";
+import advanced from "./themes/advanced";
 import amazingGrace from "./themes/amazing-grace";
 import hoshi from "./themes/hoshi";
 import overworld from "./themes/overworld";

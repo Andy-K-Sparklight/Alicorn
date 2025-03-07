@@ -60,4 +60,5 @@ export type IpcCommands = {
     getVersionManifest: () => VersionManifest;
     queryAvailableModLoaders: (gameVersion: string) => string[];
     searchMods: (query: string, gameId: string, offset: number) => MpmAddonMeta[];
+    addMod: (gameId: string, id: string) => void;
 }

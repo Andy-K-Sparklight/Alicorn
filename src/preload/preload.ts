@@ -252,6 +252,13 @@ const native = {
          */
         searchMods(query: string, gameId: string, offset: number): Promise<MpmAddonMeta[]> {
             return ipcRenderer.invoke("searchMods", query, gameId, offset);
+        },
+
+        /**
+         * Adds the specified mod.
+         */
+        addMod(gameId: string, id: string): Promise<void> {
+            return ipcRenderer.invoke("addMod", gameId, id);
         }
     },
 

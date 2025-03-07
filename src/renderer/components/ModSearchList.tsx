@@ -1,9 +1,11 @@
 import type { MpmAddonMeta } from "@/main/mpm/spec";
-
-import { useGameProfile } from "@/renderer/store/games";
+import { uniqueBy } from "@/main/util/misc";
+import { remoteMpm } from "@/renderer/services/mpm";
+import { useModInstallStatus } from "@/renderer/store/mpm";
 import { Button, Input } from "@heroui/react";
-import { PlusIcon, SearchIcon } from "lucide-react";
+import { CheckIcon, PlusIcon, SearchIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { VList, type VListHandle } from "virtua";
 
 interface ModSearchListProps {
@@ -11,7 +13,6 @@ interface ModSearchListProps {
 }
 
 export function ModSearchList({ gameId }: ModSearchListProps) {
-    const game = useGameProfile(gameId);
     const [query, setQuery] = useState("");
     const transactionId = useRef(0);
     const fetching = useRef(false);
@@ -38,7 +39,7 @@ export function ModSearchList({ gameId }: ModSearchListProps) {
         const res = await native.mpm.searchMods(query, gameId, fresh ? 0 : results.length);
 
         if (id === transactionId.current) {
-            setResults(fresh ? res : results.concat(res));
+            setResults(fresh ? res : uniqueBy(results.concat(res), r => r.id));
             fetching.current = false;
         }
     }
@@ -47,16 +48,23 @@ export function ModSearchList({ gameId }: ModSearchListProps) {
         <Input startContent={<SearchIcon/>} value={query} onValueChange={setQuery}/>
         <VList ref={vlistRef} onScroll={onScroll} className="pr-2">
             {
-                results.map(r => <ModDisplay key={r.id} meta={r}/>)
+                results.map(r => <ModDisplay key={r.id} gameId={gameId} meta={r}/>)
             }
         </VList>
     </div>;
 }
 
-function ModDisplay({ meta }: { meta: MpmAddonMeta }) {
+function ModDisplay({ gameId, meta }: { gameId: string, meta: MpmAddonMeta }) {
     const { id, vendor, title, author, description, icon } = meta;
+    const installStatus = useModInstallStatus(gameId, id);
+    const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage.mods" });
 
     const effectiveIcon = icon || "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+
+    function runInstall() {
+        if (installStatus !== "not-installed") return;
+        void remoteMpm.addMod(gameId, id);
+    }
 
     return <div className="px-4 py-2 rounded-xl bg-content1 w-full flex items-center gap-4 mt-2">
         <div className="h-12 m-1 aspect-square rounded-xl overflow-hidden">
@@ -69,9 +77,21 @@ function ModDisplay({ meta }: { meta: MpmAddonMeta }) {
         </div>
 
         <div>
-            <Button isIconOnly color="primary">
-                <PlusIcon/>
-            </Button>
+            {
+                installStatus === "installed" ?
+                    <div className="text-foreground-400">
+                        <CheckIcon/>
+                    </div>
+                    :
+                    <Button
+                        isLoading={installStatus === "installing"}
+                        isIconOnly
+                        color="primary"
+                        onPress={runInstall}
+                    >
+                        <PlusIcon/>
+                    </Button>
+            }
         </div>
     </div>;
 }
