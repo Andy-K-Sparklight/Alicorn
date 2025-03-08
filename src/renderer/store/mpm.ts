@@ -35,7 +35,7 @@ const selectModInstallStatus = createSelector(
     }
 );
 
-export type ModInstallStatus = "installed" | "installing" | "not-installed";
+export type ModInstallStatus = "installed" | "auto-installed" | "installing" | "not-installed";
 
 export function useModInstallStatus(gameId: string, id: string): ModInstallStatus {
     const game = useGameProfile(gameId);
@@ -44,7 +44,14 @@ export function useModInstallStatus(gameId: string, id: string): ModInstallStatu
 
     if (!game) throw `Could not find corresponding game: ${gameId}`;
 
-    if (game.mpm.resolved.some(p => p.id === id)) return "installed";
+    if (game.mpm.userPrompt.some(spec => {
+        const ss = spec.split(":", 2);
+        return ss[0] === "modrinth" && ss[1] === id;
+    })) {
+        return "installed";
+    }
+
+    if (game.mpm.resolved.some(p => p.id === id)) return "auto-installed";
 
     return isInstalling ? "installing" : "not-installed";
 }

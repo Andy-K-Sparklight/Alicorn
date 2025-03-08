@@ -25,3 +25,7 @@ ipcMain.handle("updateMods", async (_, gameId) => {
 ipcMain.handle("addMods", async (_, gameId, specs) => {
     await mpm.addPackages(gameId, specs);
 });
+
+ipcMain.handle("removeMods", async (_, gameId, specs) => {
+    await mpm.removePackages(gameId, specs);
+});

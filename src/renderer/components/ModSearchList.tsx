@@ -3,7 +3,7 @@ import { uniqueBy } from "@/main/util/misc";
 import { remoteMpm } from "@/renderer/services/mpm";
 import { useModInstallStatus } from "@/renderer/store/mpm";
 import { Button, Image, Input } from "@heroui/react";
-import { CheckIcon, PlusIcon, SearchIcon } from "lucide-react";
+import { CheckIcon, PlusIcon, SearchIcon, XIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { VList, type VListHandle } from "virtua";
@@ -66,6 +66,11 @@ function ModDisplay({ gameId, meta }: { gameId: string, meta: MpmAddonMeta }) {
         void remoteMpm.addMod(gameId, id);
     }
 
+    function runRemove() {
+        if (installStatus !== "installed") return;
+        void remoteMpm.removeMod(gameId, id);
+    }
+
     return <div className="px-4 py-2 rounded-xl bg-content1 w-full flex items-center gap-4 mt-2">
         <div className="h-12 aspect-square m-1 rounded-lg overflow-hidden bg-content2 shrink-0">
             <Image src={effectiveIcon} alt={title}/>
@@ -78,22 +83,30 @@ function ModDisplay({ gameId, meta }: { gameId: string, meta: MpmAddonMeta }) {
 
         <div className="w-12 shrink-0">
             {
-                installStatus === "installed" ?
-                    <Button
-                        isDisabled
-                        isIconOnly
-                    >
-                        <CheckIcon/>
-                    </Button>
-                    :
-                    <Button
-                        isLoading={installStatus === "installing"}
-                        isIconOnly
-                        color="primary"
-                        onPress={runInstall}
-                    >
-                        <PlusIcon/>
-                    </Button>
+                installStatus === "installed" &&
+                <Button color="danger" isIconOnly onPress={runRemove}>
+                    <XIcon/>
+                </Button>
+            }
+
+            {
+                installStatus === "auto-installed" &&
+                <Button isDisabled isIconOnly>
+                    <CheckIcon/>
+                </Button>
+            }
+
+            {
+                (installStatus === "installing" || installStatus === "not-installed")
+                &&
+                <Button
+                    isLoading={installStatus === "installing"}
+                    isIconOnly
+                    color="primary"
+                    onPress={runInstall}
+                >
+                    <PlusIcon/>
+                </Button>
             }
         </div>
     </div>;

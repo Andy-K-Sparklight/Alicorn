@@ -216,7 +216,7 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
 
     if (!sln) return null;
 
-    const upgradableSpecs = specs.filter(s => s.endsWith(":")); // Filter out user specs with no versions defined
+    const upgradableSpecs = resolved.keys().filter(s => s.endsWith(":")); // Filter out specs with no versions defined
     let lastSln = sln;
 
     for (const spec of upgradableSpecs) {
@@ -340,7 +340,55 @@ async function addPackages(gameId: string, specs: string[]): Promise<void> {
     await fullResolve(gameId);
 }
 
+function findActualPackage(spec: string, pkgs: MpmPackage[]) {
+    return pkgs.find(p => matchPackageSpecifier(spec, getPackageSpecifier(p)));
+}
+
+async function removePackages(gameId: string, specs: string[]): Promise<void> {
+    const game = games.get(gameId);
+
+    const newSpecs = game.mpm.userPrompt.filter(sp => !specs.includes(sp));
+
+    // Collect dependencies
+    const checkedSpecs = new Set<string>();
+    let toCheckSpecs = new Set(newSpecs);
+    const neededPackages = new Set<string>();
+
+    while (toCheckSpecs.size > 0) {
+        const nt = new Set<string>();
+        for (const spec of toCheckSpecs) {
+            if (!checkedSpecs.has(spec)) {
+                checkedSpecs.add(spec);
+
+                const pkg = findActualPackage(spec, game.mpm.resolved);
+                if (pkg) {
+                    neededPackages.add(getPackageSpecifier(pkg));
+                    for (const dep of pkg.dependencies) {
+                        if (dep.type === "require") {
+                            nt.add(dep.spec);
+                        }
+                    }
+                }
+            }
+        }
+
+        toCheckSpecs = nt;
+    }
+
+    const newPkgs = game.mpm.resolved.filter(p => neededPackages.has(getPackageSpecifier(p)));
+    console.log(`Original pkgs size: ${game.mpm.resolved.length}`);
+    console.log("New pkgs size: " + newPkgs.length);
+
+    await flashPackages(game.mpm.resolved, newPkgs, containers.get(game.launchHint.containerId));
+
+    games.add(alter(game, g => {
+        g.mpm.userPrompt = newSpecs;
+        g.mpm.resolved = newPkgs;
+    }));
+}
+
 export const mpm = {
     fullResolve,
-    addPackages
+    addPackages,
+    removePackages
 };

@@ -62,4 +62,5 @@ export type IpcCommands = {
     searchMods: (query: string, gameId: string, offset: number) => MpmAddonMeta[];
     updateMods: (gameId: string) => void;
     addMods: (gameId: string, specs: string[]) => void;
+    removeMods: (gameId: string, specs: string[]) => void;
 }
