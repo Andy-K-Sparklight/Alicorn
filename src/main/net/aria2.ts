@@ -7,6 +7,7 @@ import { paths } from "@/main/fs/paths";
 import type { DlxDownloadRequest } from "@/main/net/dlx";
 import { WebSocketJsonRpcClient } from "@/main/net/ws-rpc";
 import { getExecutableExt } from "@/main/sys/os";
+import { ALICORN_CANONICAL_UA } from "@/main/sys/ua";
 import { exceptions } from "@/main/util/exception";
 import { net } from "electron";
 import Emittery from "emittery";
@@ -170,7 +171,8 @@ async function init() {
             `--rpc-listen-port=${aria2cPort}`,
             "--rpc-max-request-size=32M",
             `--rpc-secret=${aria2cToken}`,
-            `--ca-certificate=${cert}`
+            `--ca-certificate=${cert}`,
+            `--user-agent=${ALICORN_CANONICAL_UA}`
         ], { stdio: "ignore" });
 
         console.debug("Connecting to aria2 RPC interface...");
