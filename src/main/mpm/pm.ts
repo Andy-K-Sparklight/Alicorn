@@ -5,8 +5,6 @@ import { ModrinthProvider } from "@/main/mpm/modrinth";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { alter } from "@/main/util/misc";
 import fs from "fs-extra";
-// @ts-expect-error No types available
-import Logic from "logic-solver";
 
 export interface MpmManifest {
     userPrompt: string[];
@@ -118,6 +116,9 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
 
     // Dependency resolution
     console.debug("Resolving dependencies...");
+
+    // @ts-expect-error No type definitions
+    const { default: Logic } = await import("logic-solver");
     const solver = new Logic.Solver();
 
     const allPackages = resolved.values().flatMap(pkgs => pkgs).toArray();

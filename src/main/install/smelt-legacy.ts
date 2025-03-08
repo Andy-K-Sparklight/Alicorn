@@ -10,7 +10,6 @@ import StreamZip from "node-stream-zip";
 import child_process from "node:child_process";
 import path from "node:path";
 import { pEvent } from "p-event";
-import { zip } from "zip-a-folder";
 
 async function dumpContent(installer: string, container: Container): Promise<[string, string] | null> {
     let zip: StreamZip.StreamZipAsync | null = null;
@@ -140,11 +139,12 @@ async function updateJar(fp: string, ...sources: string[]) {
     await fs.remove(path.join(workDir, "META-INF")); // Drop signatures
     await fs.remove(fp);
 
+    const { default: { zip } } = await import("zip-a-folder");
+
     // ModLoader requires that the client jar is compressed using DEFLATE
     // We're passing level 1 to minimum the compression time
     // This is not documented in zip-a-folder while it works
-    // @ts-expect-error
-    await zip(workDir, fp, { compression: 1 });
+    await zip(workDir, fp, { compression: 1 as any });
     await fs.remove(workDir);
 }
 

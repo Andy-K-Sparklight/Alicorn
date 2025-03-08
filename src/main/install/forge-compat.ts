@@ -8,7 +8,6 @@ import fs from "fs-extra";
 import { nanoid } from "nanoid";
 import StreamZip from "node-stream-zip";
 import path from "node:path";
-import { zip } from "zip-a-folder";
 
 async function loadCompat() {
     return await unwrapESM(import("@/refs/legacy-forge-compat.json"));
@@ -65,8 +64,9 @@ async function stripSignature(fp: string): Promise<void> {
 
     await fs.remove(fp);
 
-    // @ts-expect-error
-    await zip(workDir, fp, { compression: 1 });
+    const { default: { zip } } = await import("zip-a-folder");
+
+    await zip(workDir, fp, { compression: 1 as any });
     await fs.remove(workDir);
 }
 
