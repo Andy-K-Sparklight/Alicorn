@@ -2,7 +2,7 @@ import type { MpmAddonMeta } from "@/main/mpm/spec";
 import { uniqueBy } from "@/main/util/misc";
 import { remoteMpm } from "@/renderer/services/mpm";
 import { useModInstallStatus } from "@/renderer/store/mpm";
-import { Button, Input } from "@heroui/react";
+import { Button, Image, Input } from "@heroui/react";
 import { CheckIcon, PlusIcon, SearchIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -67,8 +67,8 @@ function ModDisplay({ gameId, meta }: { gameId: string, meta: MpmAddonMeta }) {
     }
 
     return <div className="px-4 py-2 rounded-xl bg-content1 w-full flex items-center gap-4 mt-2">
-        <div className="h-12 m-1 aspect-square rounded-xl overflow-hidden">
-            <img src={effectiveIcon} alt={title} className="w-full h-full object-contain"/>
+        <div className="h-12 aspect-square m-1 rounded-lg overflow-hidden bg-content2 shrink-0">
+            <Image src={effectiveIcon} alt={title}/>
         </div>
 
         <div className="flex flex-col overflow-hidden grow">
@@ -76,12 +76,15 @@ function ModDisplay({ gameId, meta }: { gameId: string, meta: MpmAddonMeta }) {
             <div className="text-sm text-foreground-500">{description}</div>
         </div>
 
-        <div>
+        <div className="w-12 shrink-0">
             {
                 installStatus === "installed" ?
-                    <div className="text-foreground-400">
+                    <Button
+                        isDisabled
+                        isIconOnly
+                    >
                         <CheckIcon/>
-                    </div>
+                    </Button>
                     :
                     <Button
                         isLoading={installStatus === "installing"}
