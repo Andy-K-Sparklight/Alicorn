@@ -6,6 +6,7 @@ import { Button, Chip, Image, Input, Tooltip } from "@heroui/react";
 import { CheckIcon, PlusIcon, SearchIcon, TrashIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSessionStorage } from "react-use";
 import { VList, type VListHandle } from "virtua";
 
 interface ModSearchListProps {
@@ -16,7 +17,7 @@ export function ModSearchList({ gameId }: ModSearchListProps) {
     const [query, setQuery] = useState("");
     const transactionId = useRef(0);
     const fetching = useRef(false);
-    const [results, setResults] = useState<MpmAddonMeta[]>([]);
+    const [results, setResults] = useSessionStorage<MpmAddonMeta[]>(`mod-search-results.${gameId}`, []);
     const vlistRef = useRef<VListHandle | null>(null);
 
     useEffect(() => {
