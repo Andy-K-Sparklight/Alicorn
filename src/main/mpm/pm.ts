@@ -3,7 +3,7 @@ import type { Container } from "@/main/container/spec";
 import { games } from "@/main/game/manage";
 import { ModrinthProvider } from "@/main/mpm/modrinth";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
-import { alter } from "@/main/util/misc";
+import { alter, uniqueBy } from "@/main/util/misc";
 import fs from "fs-extra";
 
 export interface MpmManifest {
@@ -84,6 +84,43 @@ async function resolvePackages(specs: string[], ctx: MpmContext): Promise<MpmPac
 
 function getPackageSpecifier(pkg: MpmPackage): string {
     return `${pkg.vendor}:${pkg.id}:${pkg.version}`;
+}
+
+function matchPackageSpecifier(spec: string, spec1: string) {
+    const sp = new MpmPackageSpecifier(spec);
+    const sp1 = new MpmPackageSpecifier(spec1);
+
+    if (sp.vendor === sp1.vendor) {
+        if (sp.id && sp.version) {
+            return sp1.id === sp.id && sp1.version === sp.version;
+        }
+
+        if (sp.id) {
+            return sp1.id === sp.id;
+        }
+
+        if (sp.version) {
+            return sp1.version === sp.version;
+        }
+    }
+
+    return false;
+}
+
+function isDependencySatisfied(pkg: MpmPackage, pkgs: string[]): boolean {
+    for (const dep of pkg.dependencies) {
+        if (dep.type === "require") {
+            if (!pkgs.some(p => matchPackageSpecifier(dep.spec, p))) {
+                return false; // Required dependency not found
+            }
+        } else if (dep.type === "conflict") {
+            if (pkgs.some(p => matchPackageSpecifier(dep.spec, p))) {
+                return false; // Conflicting dependency found
+            }
+        }
+    }
+
+    return true;
 }
 
 /**
@@ -229,7 +266,7 @@ async function flashPackages(original: MpmPackage[], current: MpmPackage[], cont
     await dlx.getAll(toAppendFiles); // TODO progress and signal
 }
 
-async function doInstall(gameId: string): Promise<void> {
+async function fullResolve(gameId: string): Promise<void> {
     console.debug(`Installing mods for ${gameId}...`);
     const game = games.get(gameId);
 
@@ -257,6 +294,53 @@ async function doInstall(gameId: string): Promise<void> {
     games.add(alter(game, g => g.mpm.resolved = newPkgs));
 }
 
+async function addPackages(gameId: string, specs: string[]): Promise<void> {
+    const game = games.get(gameId);
+    const ctx = {
+        gameVersion: game.versions.game,
+        loader: game.installProps.type
+    };
+
+    const pkgs = await resolve(specs, ctx);
+
+    const existingPackagesMap = new Map(
+        game.mpm.resolved.map(p => {
+            return [p.vendor + ":" + p.id, p];
+        })
+    );
+
+
+    if (pkgs) {
+        // First, for all the new packages, replace each one with installed version (regardless of compatibility)
+        for (const [i, p] of pkgs.entries()) {
+            const pu = p.vendor + ":" + p.id;
+            if (existingPackagesMap.has(pu)) {
+                pkgs[i] = existingPackagesMap.get(pu)!;
+            }
+        }
+
+        // Check dependency compatibility of existing packages
+        const allPkgs = uniqueBy([...game.mpm.resolved, ...pkgs], getPackageSpecifier);
+        const allPkgNames = allPkgs.map(getPackageSpecifier);
+
+        if (allPkgs.every(p => isDependencySatisfied(p, allPkgNames))) {
+            console.debug("Incremental resolution successful.");
+            await flashPackages(game.mpm.resolved, allPkgs, containers.get(game.launchHint.containerId));
+
+            games.add(alter(game, g => {
+                g.mpm.userPrompt.push(...specs);
+                g.mpm.resolved = allPkgs;
+            }));
+            return;
+        }
+    }
+
+    // Fallback to full installation
+    games.add(alter(game, g => g.mpm.userPrompt.push(...specs)));
+    await fullResolve(gameId);
+}
+
 export const mpm = {
-    doInstall
+    fullResolve,
+    addPackages
 };

@@ -17,6 +17,11 @@ ipcMain.handle("searchMods", async (_, query, gameId, offset) => {
     }));
 });
 
+
 ipcMain.handle("updateMods", async (_, gameId) => {
-    await mpm.doInstall(gameId);
+    await mpm.fullResolve(gameId);
+});
+
+ipcMain.handle("addMods", async (_, gameId, specs) => {
+    await mpm.addPackages(gameId, specs);
 });

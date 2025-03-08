@@ -259,6 +259,13 @@ const native = {
          */
         updateMods(gameId: string): Promise<void> {
             return ipcRenderer.invoke("updateMods", gameId);
+        },
+
+        /**
+         * Adds the specified mods to the game.
+         */
+        addMods(gameId: string, specs: string[]): Promise<void> {
+            return ipcRenderer.invoke("addMods", gameId, specs);
         }
     },
 
