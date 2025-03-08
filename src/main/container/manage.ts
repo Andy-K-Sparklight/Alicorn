@@ -107,7 +107,7 @@ class SimpleContainer implements Container {
     }
 
     mpmLockfile(): string {
-        return this.#resolve("mpm.lock");
+        return this.#resolve("mpm.v2.lock");
     }
 
     #resolve(...rel: string[]): string {

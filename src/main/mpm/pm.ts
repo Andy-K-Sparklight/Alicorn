@@ -3,6 +3,7 @@ import type { Container } from "@/main/container/spec";
 import { games } from "@/main/game/manage";
 import { mpmLock } from "@/main/mpm/lockfile";
 import { ModrinthProvider } from "@/main/mpm/modrinth";
+import type { MpmAddonMeta } from "@/main/mpm/spec";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { uniqueBy } from "@/main/util/misc";
 import fs from "fs-extra";
@@ -46,9 +47,11 @@ export interface MpmPackage {
     id: string;
     vendor: string;
     version: string;
+    versionName: string;
     spec: string;
     files: MpmFile[];
     dependencies: MpmPackageDependency[];
+    meta: MpmAddonMeta;
 }
 
 export interface MpmContext {
