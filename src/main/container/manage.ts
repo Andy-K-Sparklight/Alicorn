@@ -106,6 +106,10 @@ class SimpleContainer implements Container {
         return this.#resolve("mods", name);
     }
 
+    mpmLockfile(): string {
+        return this.#resolve("mpm.lock");
+    }
+
     #resolve(...rel: string[]): string {
         return path.normalize(path.resolve(this.props.root, ...rel));
     }

@@ -6,6 +6,7 @@ import type { GameProfile } from "@/main/game/spec";
 import type { VersionManifest } from "@/main/install/vanilla";
 import { type IpcCallEvents, type IpcCommands, type IpcMessageEvents, type IpcPushEvents } from "@/main/ipc/channels";
 import type { TypedIpcRenderer } from "@/main/ipc/typed";
+import type { MpmManifest } from "@/main/mpm/pm";
 import type { MpmAddonMeta } from "@/main/mpm/spec";
 import { contextBridge, ipcRenderer as ipcRendererRaw } from "electron";
 import Emittery from "emittery";
@@ -273,6 +274,20 @@ const native = {
          */
         removeMods(gameId: string, specs: string[]): Promise<void> {
             return ipcRenderer.invoke("removeMods", gameId, specs);
+        },
+
+        /**
+         * Loads MPM manifest.
+         */
+        loadManifest(gameId: string): Promise<MpmManifest> {
+            return ipcRenderer.invoke("loadMpmManifest", gameId);
+        },
+
+        /**
+         * Gets notified when MPM manifest changes.
+         */
+        onManifestChange(fn: (gameId: string, manifest: MpmManifest) => void) {
+            internalEvents.on("mpmManifestChanged", ({ id, mf }) => fn(id, mf));
         }
     },
 
@@ -332,6 +347,10 @@ const native = {
     ipcRenderer.on(ch, (_, ...args) => {
         void internalEvents.emit(ch, args);
     });
+});
+
+ipcRenderer.on("mpmManifestChanged", (_, id, mf) => {
+    void internalEvents.emit("mpmManifestChanged", { id, mf });
 });
 
 

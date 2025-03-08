@@ -1,5 +1,6 @@
 import { games } from "@/main/game/manage";
 import { ipcMain } from "@/main/ipc/typed";
+import { mpmLock } from "@/main/mpm/lockfile";
 import { modrinth } from "@/main/mpm/modrinth";
 import { mpm } from "@/main/mpm/pm";
 
@@ -28,4 +29,8 @@ ipcMain.handle("addMods", async (_, gameId, specs) => {
 
 ipcMain.handle("removeMods", async (_, gameId, specs) => {
     await mpm.removePackages(gameId, specs);
+});
+
+ipcMain.handle("loadMpmManifest", async (_, gameId) => {
+    return await mpmLock.loadManifest(gameId);
 });

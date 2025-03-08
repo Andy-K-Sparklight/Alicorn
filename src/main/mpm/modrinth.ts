@@ -172,6 +172,7 @@ export class ModrinthProvider implements MpmPackageProvider {
                 id: version.project_id,
                 version: version.id,
                 vendor: "modrinth",
+                spec: `modrinth:${version.project_id}:${version.id}`,
                 files: version.files.map(toMpmFile),
                 dependencies: version.dependencies
                     .filter(d => d.project_id || d.version_id)

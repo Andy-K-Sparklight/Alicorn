@@ -4,6 +4,7 @@ import type { DetailedAccountProps } from "@/main/auth/types";
 import type { UserConfig } from "@/main/conf/conf";
 import type { GameProfile } from "@/main/game/spec";
 import type { VersionManifest } from "@/main/install/vanilla";
+import type { MpmManifest } from "@/main/mpm/pm";
 import type { MpmAddonMeta } from "@/main/mpm/spec";
 
 /**
@@ -42,6 +43,7 @@ export type IpcPushEvents = {
     configChanged: (c: UserConfig) => void;
     appUpgraded: (version: string) => void;
     devToolsOpened: () => void;
+    mpmManifestChanged: (id: string, mf: MpmManifest) => void;
 }
 
 export type IpcCommands = {
@@ -59,6 +61,7 @@ export type IpcCommands = {
     updateGame: (game: GameProfile) => void;
     getVersionManifest: () => VersionManifest;
     queryAvailableModLoaders: (gameVersion: string) => string[];
+    loadMpmManifest: (gameId: string) => MpmManifest;
     searchMods: (query: string, gameId: string, offset: number) => MpmAddonMeta[];
     updateMods: (gameId: string) => void;
     addMods: (gameId: string, specs: string[]) => void;

@@ -133,6 +133,11 @@ export interface Container {
      * Gets the path to a mod.
      */
     mod(name: string): string;
+
+    /**
+     * Gets the path to the MPM lockfile.
+     */
+    mpmLockfile(): string;
 }
 
 export const CONTAINER_REG_VERSION = 0;

@@ -1,9 +1,10 @@
 import { containers } from "@/main/container/manage";
 import type { Container } from "@/main/container/spec";
 import { games } from "@/main/game/manage";
+import { mpmLock } from "@/main/mpm/lockfile";
 import { ModrinthProvider } from "@/main/mpm/modrinth";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
-import { alter, uniqueBy } from "@/main/util/misc";
+import { uniqueBy } from "@/main/util/misc";
 import fs from "fs-extra";
 
 export interface MpmManifest {
@@ -44,6 +45,7 @@ export interface MpmPackage {
     id: string;
     vendor: string;
     version: string;
+    spec: string;
     files: MpmFile[];
     dependencies: MpmPackageDependency[];
 }
@@ -65,7 +67,6 @@ export interface MpmPackageProvider {
     resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[][]>;
 }
 
-
 function getProvider(vendor: string): MpmPackageProvider {
     switch (vendor) {
         case "modrinth":
@@ -80,10 +81,6 @@ async function resolvePackages(specs: string[], ctx: MpmContext): Promise<MpmPac
 
     const provider = getProvider(new MpmPackageSpecifier(specs[0]).vendor);
     return provider.resolve(specs, ctx);
-}
-
-function getPackageSpecifier(pkg: MpmPackage): string {
-    return `${pkg.vendor}:${pkg.id}:${pkg.version}`;
 }
 
 function matchPackageSpecifier(spec: string, spec1: string) {
@@ -162,12 +159,12 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
     const allPackagesMap = new Map<string, MpmPackage>();
 
     for (const pkg of allPackages) {
-        allPackagesMap.set(getPackageSpecifier(pkg), pkg);
+        allPackagesMap.set(pkg.spec, pkg);
     }
 
     for (const sp of specs) {
         const pkgs = resolved.get(sp)!;
-        solver.require(Logic.exactlyOne(...pkgs.map(getPackageSpecifier)));
+        solver.require(Logic.exactlyOne(...pkgs.map(p => p.spec)));
     }
 
     for (const pkg of allPackages) {
@@ -177,7 +174,7 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
                 solver.require(
                     Logic.implies(
                         `${pkg.vendor}:${pkg.id}:${pkg.version}`,
-                        Logic.exactlyOne(...candidates.map(getPackageSpecifier))
+                        Logic.exactlyOne(...candidates.map(p => p.spec))
                     )
                 );
             } else if (dep.type === "conflict") {
@@ -201,12 +198,7 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
                 });
 
                 for (const c of candidates) {
-                    solver.require(
-                        Logic.implies(
-                            getPackageSpecifier(pkg),
-                            Logic.not(getPackageSpecifier(c))
-                        )
-                    );
+                    solver.require(Logic.implies(pkg.spec, Logic.not(c.spec)));
                 }
             }
         }
@@ -222,15 +214,14 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
     for (const spec of upgradableSpecs) {
         const pkgs = resolved.get(spec)!;
         for (const p of pkgs) {
-            const pn = getPackageSpecifier(p);
-            if (lastSln.getTrueVars().includes(pn)) {
+            if (lastSln.getTrueVars().includes(p.spec)) {
                 break; // Already the latest version
             }
 
             // Try to upgrade the version
-            const ns = solver.solveAssuming(pn);
+            const ns = solver.solveAssuming(p.spec);
             if (ns) {
-                solver.require(pn); // Make the upgrade permanent
+                solver.require(p.spec); // Make the upgrade permanent
                 lastSln = ns;
                 break;
             }
@@ -243,11 +234,11 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
 }
 
 async function flashPackages(original: MpmPackage[], current: MpmPackage[], container: Container): Promise<void> {
-    const originalSet = new Set<string>(original.map(getPackageSpecifier));
-    const currentSet = new Set<string>(current.map(getPackageSpecifier));
+    const originalSet = new Set<string>(original.map(p => p.spec));
+    const currentSet = new Set<string>(current.map(p => p.spec));
 
-    const toRemove = original.filter(p => !currentSet.has(getPackageSpecifier(p)));
-    const toAppend = current.filter(p => !originalSet.has(getPackageSpecifier(p)));
+    const toRemove = original.filter(p => !currentSet.has(p.spec));
+    const toAppend = current.filter(p => !originalSet.has(p.spec));
 
     console.debug(`Need to remove ${toRemove.length} packages and add ${toAppend.length} packages.`);
 
@@ -270,7 +261,7 @@ async function fullResolve(gameId: string): Promise<void> {
     console.debug(`Installing mods for ${gameId}...`);
     const game = games.get(gameId);
 
-    const manifest = game.mpm;
+    const manifest = await mpmLock.loadManifest(gameId);
 
     console.debug("Resolving packages...");
     const prevPkgs = manifest.resolved.concat();
@@ -291,7 +282,8 @@ async function fullResolve(gameId: string): Promise<void> {
     console.debug("Flashing packages...");
     await flashPackages(prevPkgs, newPkgs, container);
 
-    games.add(alter(game, g => g.mpm.resolved = newPkgs));
+    manifest.resolved = newPkgs;
+    await mpmLock.saveManifest(gameId, manifest);
 }
 
 async function addPackages(gameId: string, specs: string[]): Promise<void> {
@@ -301,14 +293,11 @@ async function addPackages(gameId: string, specs: string[]): Promise<void> {
         loader: game.installProps.type
     };
 
+    const manifest = await mpmLock.loadManifest(gameId);
+
     const pkgs = await resolve(specs, ctx);
 
-    const existingPackagesMap = new Map(
-        game.mpm.resolved.map(p => {
-            return [p.vendor + ":" + p.id, p];
-        })
-    );
-
+    const existingPackagesMap = new Map(manifest.resolved.map(p => [p.vendor + ":" + p.id, p]));
 
     if (pkgs) {
         // First, for all the new packages, replace each one with installed version (regardless of compatibility)
@@ -320,34 +309,36 @@ async function addPackages(gameId: string, specs: string[]): Promise<void> {
         }
 
         // Check dependency compatibility of existing packages
-        const allPkgs = uniqueBy([...game.mpm.resolved, ...pkgs], getPackageSpecifier);
-        const allPkgNames = allPkgs.map(getPackageSpecifier);
+        const allPkgs = uniqueBy([...manifest.resolved, ...pkgs], p => p.spec);
+        const allPkgNames = allPkgs.map(p => p.spec);
 
         if (allPkgs.every(p => isDependencySatisfied(p, allPkgNames))) {
             console.debug("Incremental resolution successful.");
-            await flashPackages(game.mpm.resolved, allPkgs, containers.get(game.launchHint.containerId));
+            await flashPackages(manifest.resolved, allPkgs, containers.get(game.launchHint.containerId));
 
-            games.add(alter(game, g => {
-                g.mpm.userPrompt.push(...specs);
-                g.mpm.resolved = allPkgs;
-            }));
+            manifest.userPrompt.push(...specs);
+            manifest.resolved = allPkgs;
+            await mpmLock.saveManifest(gameId, manifest);
             return;
         }
     }
 
     // Fallback to full installation
-    games.add(alter(game, g => g.mpm.userPrompt.push(...specs)));
+    manifest.userPrompt.push(...specs);
+    await mpmLock.saveManifest(gameId, manifest);
     await fullResolve(gameId);
 }
 
 function findActualPackage(spec: string, pkgs: MpmPackage[]) {
-    return pkgs.find(p => matchPackageSpecifier(spec, getPackageSpecifier(p)));
+    return pkgs.find(p => matchPackageSpecifier(spec, p.spec));
 }
 
 async function removePackages(gameId: string, specs: string[]): Promise<void> {
     const game = games.get(gameId);
 
-    const newSpecs = game.mpm.userPrompt.filter(sp => !specs.includes(sp));
+    const manifest = await mpmLock.loadManifest(gameId);
+
+    const newSpecs = manifest.userPrompt.filter(sp => !specs.includes(sp));
 
     // Collect dependencies
     const checkedSpecs = new Set<string>();
@@ -360,9 +351,9 @@ async function removePackages(gameId: string, specs: string[]): Promise<void> {
             if (!checkedSpecs.has(spec)) {
                 checkedSpecs.add(spec);
 
-                const pkg = findActualPackage(spec, game.mpm.resolved);
+                const pkg = findActualPackage(spec, manifest.resolved);
                 if (pkg) {
-                    neededPackages.add(getPackageSpecifier(pkg));
+                    neededPackages.add(pkg.spec);
                     for (const dep of pkg.dependencies) {
                         if (dep.type === "require") {
                             nt.add(dep.spec);
@@ -375,16 +366,15 @@ async function removePackages(gameId: string, specs: string[]): Promise<void> {
         toCheckSpecs = nt;
     }
 
-    const newPkgs = game.mpm.resolved.filter(p => neededPackages.has(getPackageSpecifier(p)));
-    console.log(`Original pkgs size: ${game.mpm.resolved.length}`);
+    const newPkgs = manifest.resolved.filter(p => neededPackages.has(p.spec));
+    console.log(`Original pkgs size: ${manifest.resolved.length}`);
     console.log("New pkgs size: " + newPkgs.length);
 
-    await flashPackages(game.mpm.resolved, newPkgs, containers.get(game.launchHint.containerId));
+    await flashPackages(manifest.resolved, newPkgs, containers.get(game.launchHint.containerId));
 
-    games.add(alter(game, g => {
-        g.mpm.userPrompt = newSpecs;
-        g.mpm.resolved = newPkgs;
-    }));
+    manifest.userPrompt = newSpecs;
+    manifest.resolved = newPkgs;
+    await mpmLock.saveManifest(gameId, manifest);
 }
 
 export const mpm = {
