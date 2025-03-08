@@ -126,6 +126,8 @@ function isDependencySatisfied(pkg: MpmPackage, pkgs: string[]): boolean {
 async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] | null> {
     const resolved = new Map<string, MpmPackage[]>();
 
+    specs = uniqueBy(specs);
+
     let deps = new Set(specs);
 
     // Resolve all possible deps
@@ -294,6 +296,9 @@ async function addPackages(gameId: string, specs: string[]): Promise<void> {
     };
 
     const manifest = await mpmLock.loadManifest(gameId);
+
+    // Filter already-installed packages
+    specs = specs.filter(s => !manifest.userPrompt.includes(s));
 
     const pkgs = await resolve(specs, ctx);
 

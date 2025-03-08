@@ -16,6 +16,6 @@ export function alter<T>(obj: T, fn: (o: T) => void): T {
 /**
  * Removes duplicates from the given array based on the given key selector.
  */
-export function uniqueBy<T>(arr: T[], keySelector: (o: T) => unknown): T[] {
-    return Array.from(new Map(arr.map(o => [keySelector(o), o])).values());
+export function uniqueBy<T>(arr: T[], keySelector?: (o: T) => unknown): T[] {
+    return Array.from(new Map(arr.map(o => [keySelector ? keySelector(o) : o, o])).values());
 }
