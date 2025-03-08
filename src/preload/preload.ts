@@ -255,10 +255,10 @@ const native = {
         },
 
         /**
-         * Adds the specified mod.
+         * Updates the mods installed.
          */
-        addMod(gameId: string, id: string): Promise<void> {
-            return ipcRenderer.invoke("addMod", gameId, id);
+        updateMods(gameId: string): Promise<void> {
+            return ipcRenderer.invoke("updateMods", gameId);
         }
     },
 

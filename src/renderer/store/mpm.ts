@@ -44,7 +44,7 @@ export function useModInstallStatus(gameId: string, id: string): ModInstallStatu
 
     if (!game) throw `Could not find corresponding game: ${gameId}`;
 
-    if (game.mpm.userPrompt.some(ent => ent.id === id)) return "installed";
+    if (game.mpm.resolved.some(p => p.id === id)) return "installed";
 
     return isInstalling ? "installing" : "not-installed";
 }

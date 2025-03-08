@@ -1,10 +1,7 @@
-import { containers } from "@/main/container/manage";
 import { games } from "@/main/game/manage";
 import { ipcMain } from "@/main/ipc/typed";
-import type { MpmManifest } from "@/main/mpm/manifest";
 import { modrinth } from "@/main/mpm/modrinth";
-import { dlx } from "@/main/net/dlx";
-import { alter, uniqueBy } from "@/main/util/misc";
+import { mpm } from "@/main/mpm/pm";
 
 ipcMain.handle("searchMods", async (_, query, gameId, offset) => {
     const game = games.get(gameId);
@@ -20,36 +17,6 @@ ipcMain.handle("searchMods", async (_, query, gameId, offset) => {
     }));
 });
 
-ipcMain.handle("addMod", async (_, gameId, id) => {
-    console.debug(`Adding mod ${id} for ${gameId}.`);
-    const game = games.get(gameId);
-    const container = containers.get(game.launchHint.containerId);
-
-    const pseudoManifest: MpmManifest = {
-        userPrompt: [{ id, vendor: "modrinth" }],
-        resolved: [],
-        dependencies: {}
-    };
-
-    const tasks = await modrinth.resolve(pseudoManifest, game.versions.game, game.installProps.type, container);
-    await dlx.getAll(tasks);
-
-    games.add(alter(game, g => {
-        g.mpm.userPrompt = uniqueBy(
-            g.mpm.userPrompt.concat(pseudoManifest.userPrompt),
-            e => e.id
-        );
-
-        g.mpm.resolved = uniqueBy(
-            g.mpm.resolved.concat(pseudoManifest.resolved),
-            f => f.version
-        );
-
-        g.mpm.dependencies = {
-            ...g.mpm.dependencies,
-            ...pseudoManifest.dependencies
-        };
-    }));
-
-    console.debug(`Mod ${id} added for ${gameId}.`);
+ipcMain.handle("updateMods", async (_, gameId) => {
+    await mpm.doInstall(gameId);
 });

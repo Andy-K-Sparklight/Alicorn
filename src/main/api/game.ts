@@ -116,8 +116,7 @@ ipcMain.handle("addGame", async (_, init) => {
         },
         mpm: {
             userPrompt: [],
-            resolved: [],
-            dependencies: {}
+            resolved: []
         },
         assetsLevel,
         time: Date.now(),

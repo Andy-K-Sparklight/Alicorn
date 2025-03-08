@@ -1,6 +1,6 @@
 import type { InstallerProps } from "@/main/install/installers";
 import type { LaunchHint } from "@/main/launch/types";
-import type { MpmManifest } from "@/main/mpm/manifest";
+import type { MpmManifest } from "@/main/mpm/pm";
 import type { RegistryTransformer } from "@/main/registry/registry";
 
 export interface GameProfile {
@@ -113,8 +113,7 @@ export const GAME_REG_TRANS: RegistryTransformer[] = [
         if (!s.mpm) {
             s.mpm = {
                 userPrompt: [],
-                resolved: [],
-                dependencies: {}
+                resolved: []
             } satisfies MpmManifest;
         }
         return s;

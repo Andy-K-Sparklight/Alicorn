@@ -1,8 +1,8 @@
 import { conf } from "@/main/conf/conf";
-import type { Container } from "@/main/container/spec";
-import type { MpmManifest } from "@/main/mpm/manifest";
-import { type DlxDownloadRequest } from "@/main/net/dlx";
+import type { MpmContext, MpmFile, MpmPackage, MpmPackageDependency, MpmPackageProvider } from "@/main/mpm/pm";
+import { MpmPackageSpecifier } from "@/main/mpm/pm";
 import { exceptions } from "@/main/util/exception";
+import { isTruthy } from "@/main/util/misc";
 import { session } from "electron";
 import lazyValue from "lazy-value";
 import { nanoid } from "nanoid";
@@ -50,6 +50,7 @@ interface ModrinthProject {
 
 interface ModrinthVersion {
     id: string;
+    project_id: string;
     version_number: string;
     dependencies: ModrinthDependency[];
     files: ModrinthFile[];
@@ -95,134 +96,103 @@ async function search(query: string, gameVersion: string, loader: string, offset
     return res.hits ?? [];
 }
 
-async function resolveCandidateVersion(projId: string, gameVersion: string, loader: string): Promise<string | null> {
-    const loaders = makeJSONParam([loader]);
-    const gameVersions = makeJSONParam([gameVersion]);
-
-    const v = await apiGet<ModrinthVersion[]>(
-        `${API_URL}/project/${projId}/version?loaders=${loaders}&game_versions=${gameVersions}`
-    );
-
-    if (v.length === 0) {
-        return null;
-    }
-
-    return v[0].id;
+async function requestVersions(versionIds: string[]): Promise<ModrinthVersion[]> {
+    const vs = makeJSONParam(versionIds);
+    return apiGet<ModrinthVersion[]>(`${API_URL}/versions?ids=${vs}`);
 }
 
-/**
- * Resolve the given MPM entries and returns files to download.
- *
- * The manifest may get modified when resolving.
- */
-async function resolve(manifest: MpmManifest, gameVersion: string, loader: string, container: Container): Promise<DlxDownloadRequest[]> {
-    const projectDependencies = new Map<string, Set<string>>();
+async function requestProjectVersions(projId: string, gameVersion: string, loader: string): Promise<ModrinthVersion[]> {
+    const loadersParam = makeJSONParam([loader]);
+    const gameVersionsParam = makeJSONParam([gameVersion]);
 
-    function addDependency(srcId: string, depId: string) {
-        const deps = projectDependencies.get(srcId);
-        if (deps) {
-            deps.add(depId);
-        } else {
-            projectDependencies.set(srcId, new Set([depId]));
-        }
-    }
+    return await apiGet<ModrinthVersion[]>(
+        `${API_URL}/project/${projId}/version?loaders=${loadersParam}&game_versions=${gameVersionsParam}`
+    );
+}
 
-    const userPromptVersions = await Promise.all(manifest.userPrompt.map(async p => {
-        if (p.version) {
-            console.debug(`Picked up user-defined version ${p.version} for ${p.id}`);
-            addDependency(p.id, p.version);
-            return p.version;
-        } else {
-            const v = await resolveCandidateVersion(p.id, gameVersion, loader);
-            if (!v) throw `No version available for ${p.id}`;
+function toMpmFile(f: ModrinthFile): MpmFile {
+    return {
+        url: f.url,
+        fileName: f.filename,
+        size: f.size,
+        sha1: f.hashes.sha1
+    };
+}
 
-            console.debug(`Resolved candidate version ${v} for ${p.id}`);
-            addDependency(p.id, v);
-            return v;
-        }
-    }));
+export class ModrinthProvider implements MpmPackageProvider {
+    vendorName = "modrinth";
 
+    async resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[][]> {
+        const cachedVersions = new Map<string, ModrinthVersion>();
 
-    const allVersions = new Set(userPromptVersions);
-
-    // Resolve dependencies
-    let currentCandidate = new Set(userPromptVersions);
-
-    const versionFiles = new Map<string, ModrinthFile[]>();
-
-    while (currentCandidate.size > 0) {
-        const vs = makeJSONParam([...currentCandidate]);
-        const versionMeta = await apiGet<ModrinthVersion[]>(`${API_URL}/versions?ids=${vs}`);
-
-        // Collect files while resolving dependencies
-        for (const vm of versionMeta) {
-            versionFiles.set(vm.id, vm.files);
-        }
-
-        const depVersions = new Set<{ id: string, parent: string }>();
-        const depProjects = new Set<{ id: string, parent: string }>();
-
-        // TODO the dependency may specify a different file name
-        for (const vm of versionMeta) {
-            for (const d of vm.dependencies) {
-                if (d.dependency_type === "required") {
-                    if (d.version_id) {
-                        depVersions.add({ id: d.version_id, parent: vm.id });
-                    } else if (d.project_id) {
-                        depProjects.add({ id: d.project_id, parent: vm.id });
-                    }
-                }
+        function getCachedVersion(versionId: string): ModrinthVersion {
+            const v = cachedVersions.get(versionId);
+            if (!v) {
+                throw `Version ${versionId} not found in cache`;
             }
+            return v!;
         }
 
-        // Resolve dependencies without a specific version
+        function cacheVersion(v: ModrinthVersion) {
+            cachedVersions.set(v.id, v);
+        }
 
-        await Promise.all(depProjects.values().map(async d => {
-            // TODO perhaps add dependency project to manifest
+        // Enumerate possible versions
+        const possibleVersions: {
+            spec: string,
+            versions: string[]
+        }[] = await Promise.all(specs.map(async spec => {
+            const s = new MpmPackageSpecifier(spec);
+            if (s.version) {
+                return { spec, versions: [s.version] };
+            } else {
+                const versions = await requestProjectVersions(s.id, ctx.gameVersion, ctx.loader);
+                versions.forEach(cacheVersion);
 
-            const { id: projId, parent } = d;
-
-            const v = await resolveCandidateVersion(projId, gameVersion, loader);
-            if (!v) throw `No version available for ${projId}`;
-
-            if (!allVersions.has(v)) {
-                depVersions.add({ id: v, parent });
+                return { spec, versions: versions.map(v => v.id) };
             }
         }));
 
-        for (const d of depVersions) {
-            console.debug(`Adding dependency: ${d.id}`);
-            addDependency(d.parent, d.id);
-            allVersions.add(d.id);
+        // Process unresolved versions
+        const missingVersions = possibleVersions.flatMap(v => v.versions).filter(vi => !cachedVersions.has(vi));
+
+        (await requestVersions(missingVersions)).forEach(cacheVersion);
+
+        // Collect dependencies
+        const allDeps = cachedVersions.values().flatMap(v => v.dependencies).filter(d => d.dependency_type === "required");
+        const versionOnlyDeps = allDeps.filter(d => d.version_id && !d.project_id)
+            .map(d => d.version_id!)
+            .filter(v => !cachedVersions.has(v));
+
+
+        (await requestVersions([...versionOnlyDeps])).forEach(cacheVersion);
+
+        function toMpmPackage(version: ModrinthVersion): MpmPackage {
+            return {
+                id: version.project_id,
+                version: version.id,
+                vendor: "modrinth",
+                files: version.files.map(toMpmFile),
+                dependencies: version.dependencies
+                    .filter(d => d.project_id || d.version_id)
+                    .filter(d => d.dependency_type === "required" || d.dependency_type === "incompatible")
+                    .map(d => {
+                        const projId = d.project_id || getCachedVersion(d.version_id!)?.project_id || "";
+                        const versionId = d.version_id || ""; // Arbitrary version
+
+                        return {
+                            type: d.dependency_type === "required" ? "require" : "conflict",
+                            spec: `modrinth:${projId}:${versionId}`
+                        } satisfies MpmPackageDependency;
+                    }).filter(isTruthy)
+            };
         }
 
-        currentCandidate = new Set(depVersions.values().map(d => d.id));
+        return possibleVersions.map(({ versions }) => versions
+            .map(v => getCachedVersion(v)) // All versions have been resolved above
+            .map(toMpmPackage)
+        );
     }
-
-    const flattenFiles = [...versionFiles.values()].flatMap(v => v);
-
-    console.debug(`Confirmed ${flattenFiles.length} files from Modrinth.`);
-
-    manifest.resolved = [...versionFiles.entries()].map(([v, f]) => {
-        return {
-            version: v,
-            vendor: "modrinth",
-            files: f.map(f => ({
-                path: container.mod(f.filename), // TODO support other addon types
-                sha1: f.hashes.sha1
-            }))
-        };
-    });
-
-    manifest.dependencies = Object.fromEntries(projectDependencies.entries().map(([src, deps]) => [src, [...deps]]));
-
-    // Download files
-    return flattenFiles.map(f => ({
-        url: f.url,
-        path: container.mod(f.filename), // TODO support other addon types
-        sha1: f.hashes.sha1,
-        size: f.size
-    }));
 }
 
-export const modrinth = { search, resolve };
+export const modrinth = { search };
