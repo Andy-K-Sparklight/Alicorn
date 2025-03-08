@@ -143,7 +143,7 @@ async function downloadInstaller(htmlUrl: string, control?: ProgressController):
     console.debug(`Fetching OptiFine installer from: ${url}`);
 
     const fp = paths.temp.to(`optifine-installer-${nanoid()}.jar`);
-    await dlx.getAll([{ url, path: fp }], { signal: control?.signal });
+    await dlx.getAll([{ url, path: fp, noCache: true }], { signal: control?.signal });
 
     return fp;
 }

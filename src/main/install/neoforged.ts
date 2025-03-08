@@ -50,7 +50,8 @@ async function downloadInstaller(loaderVersion: string, control?: ProgressContro
     await dlx.getAll([
         {
             url: genInstallerUrl(loaderVersion),
-            path: fp
+            path: fp,
+            noCache: true
         }
     ], { signal: control?.signal });
 

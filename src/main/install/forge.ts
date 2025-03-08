@@ -86,7 +86,8 @@ async function downloadInstaller(loaderVersion: string, type: "installer" | "uni
     await dlx.getAll([
         {
             url,
-            path: fp
+            path: fp,
+            noCache: true
         }
     ], { signal: control?.signal });
 

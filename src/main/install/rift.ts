@@ -22,7 +22,7 @@ async function downloadInstaller(loaderVersion: string, control?: ProgressContro
     const url = `https://github.com/DimensionalDevelopment/Rift/releases/download/v${loaderVersion}/Rift-${loaderVersion}.jar`;
     const fp = paths.temp.to(`rift-${loaderVersion}.jar`);
 
-    await dlx.getAll([{ url, path: fp }], { signal: control?.signal });
+    await dlx.getAll([{ url, path: fp, noCache: true }], { signal: control?.signal });
     return fp;
 }
 
