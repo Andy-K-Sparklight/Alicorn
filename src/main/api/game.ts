@@ -114,10 +114,6 @@ ipcMain.handle("addGame", async (_, init) => {
             profileId: "", // Will be re-assigned after installation
             pref: {} // TODO allow user to choose pref
         },
-        mpm: {
-            userPrompt: [],
-            resolved: []
-        },
         assetsLevel,
         time: Date.now(),
         versions: {
