@@ -257,7 +257,8 @@ async function flashPackages(original: MpmPackage[], current: MpmPackage[], cont
         url: f.url,
         path: container.mod(f.fileName),// TODO support other addon types
         size: f.size,
-        sha1: f.sha1
+        sha1: f.sha1,
+        fastLink: container.props.flags.link
     }));
 
     await dlx.getAll(toAppendFiles); // TODO progress and signal
