@@ -6,6 +6,7 @@ import { ModrinthProvider } from "@/main/mpm/modrinth";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { uniqueBy } from "@/main/util/misc";
 import fs from "fs-extra";
+import PQueue from "p-queue";
 
 export interface MpmManifest {
     userPrompt: string[];
@@ -259,7 +260,7 @@ async function flashPackages(original: MpmPackage[], current: MpmPackage[], cont
     await dlx.getAll(toAppendFiles); // TODO progress and signal
 }
 
-async function fullResolve(gameId: string): Promise<void> {
+async function doFullResolve(gameId: string): Promise<void> {
     console.debug(`Installing mods for ${gameId}...`);
     const game = games.get(gameId);
 
@@ -288,7 +289,8 @@ async function fullResolve(gameId: string): Promise<void> {
     await mpmLock.saveManifest(gameId, manifest);
 }
 
-async function addPackages(gameId: string, specs: string[]): Promise<void> {
+async function doAddPackages(gameId: string, specs: string[]): Promise<void> {
+    console.debug(`Adding packages to ${gameId}: ${specs.join(",")}`);
     const game = games.get(gameId);
     const ctx = {
         gameVersion: game.versions.game,
@@ -331,14 +333,15 @@ async function addPackages(gameId: string, specs: string[]): Promise<void> {
     // Fallback to full installation
     manifest.userPrompt.push(...specs);
     await mpmLock.saveManifest(gameId, manifest);
-    await fullResolve(gameId);
+    await doFullResolve(gameId);
 }
 
 function findActualPackage(spec: string, pkgs: MpmPackage[]) {
     return pkgs.find(p => matchPackageSpecifier(spec, p.spec));
 }
 
-async function removePackages(gameId: string, specs: string[]): Promise<void> {
+async function doRemovePackages(gameId: string, specs: string[]): Promise<void> {
+    console.debug(`Removing packages from ${gameId}: ${specs.join(",")}`);
     const game = games.get(gameId);
 
     const manifest = await mpmLock.loadManifest(gameId);
@@ -372,14 +375,35 @@ async function removePackages(gameId: string, specs: string[]): Promise<void> {
     }
 
     const newPkgs = manifest.resolved.filter(p => neededPackages.has(p.spec));
-    console.log(`Original pkgs size: ${manifest.resolved.length}`);
-    console.log("New pkgs size: " + newPkgs.length);
 
     await flashPackages(manifest.resolved, newPkgs, containers.get(game.launchHint.containerId));
 
     manifest.userPrompt = newSpecs;
     manifest.resolved = newPkgs;
     await mpmLock.saveManifest(gameId, manifest);
+}
+
+const queues = new Map<string, PQueue>();
+
+function getQueue(gameId: string): PQueue {
+    let q = queues.get(gameId);
+    if (!q) {
+        q = new PQueue({ concurrency: 1 });
+        queues.set(gameId, q);
+    }
+    return q;
+}
+
+async function fullResolve(gameId: string) {
+    await getQueue(gameId).add(() => doFullResolve(gameId));
+}
+
+async function addPackages(gameId: string, specs: string[]) {
+    await getQueue(gameId).add(() => doAddPackages(gameId, specs));
+}
+
+async function removePackages(gameId: string, specs: string[]) {
+    await getQueue(gameId).add(() => doRemovePackages(gameId, specs));
 }
 
 export const mpm = {

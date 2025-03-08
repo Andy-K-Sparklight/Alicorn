@@ -216,6 +216,9 @@ game-detail:
 
     mods:
       title: 模组
+      auto-install-tip: 此模组由于被其它模组依赖而自动安装。
+      vendor:
+        modrinth: Modrinth
 
     launch:
       title: 启动

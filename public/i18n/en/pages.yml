@@ -215,6 +215,12 @@ game-detail:
             1: I know I won't be able to recover "{{name}}" in any way
             2: I know what I'm doing!
 
+    mods:
+      title: Mods
+      auto-install-tip: This mod is installed as a dependency of other mods.
+      vendor:
+        modrinth: Modrinth
+
     launch:
       title: Launch
       alter-jrt:
@@ -226,9 +232,6 @@ game-detail:
       game-args:
         label: Game Flags
         sub: Additional game flags to append.
-
-    mods:
-      title: Mods
 
 monitor:
   title: Processes

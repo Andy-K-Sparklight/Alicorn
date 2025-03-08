@@ -2,8 +2,8 @@ import type { MpmAddonMeta } from "@/main/mpm/spec";
 import { uniqueBy } from "@/main/util/misc";
 import { remoteMpm } from "@/renderer/services/mpm";
 import { useModInstallStatus } from "@/renderer/store/mpm";
-import { Button, Image, Input } from "@heroui/react";
-import { CheckIcon, PlusIcon, SearchIcon, XIcon } from "lucide-react";
+import { Button, Chip, Image, Input, Tooltip } from "@heroui/react";
+import { CheckIcon, PlusIcon, SearchIcon, TrashIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { VList, type VListHandle } from "virtua";
@@ -81,19 +81,25 @@ function ModDisplay({ gameId, meta }: { gameId: string, meta: MpmAddonMeta }) {
             <div className="text-sm text-foreground-500">{description}</div>
         </div>
 
-        <div className="w-12 shrink-0">
+        <Chip size="sm" className="bg-green-800 text-green-200">{t(`vendor.${vendor}`)}</Chip>
+
+        <div className="shrink-0">
             {
                 installStatus === "installed" &&
                 <Button color="danger" isIconOnly onPress={runRemove}>
-                    <XIcon/>
+                    <TrashIcon/>
                 </Button>
             }
 
             {
                 installStatus === "auto-installed" &&
-                <Button isDisabled isIconOnly>
-                    <CheckIcon/>
-                </Button>
+                <Tooltip color="foreground" content={t("auto-install-tip")}>
+                    <div>
+                        <Button isDisabled isIconOnly>
+                            <CheckIcon/>
+                        </Button>
+                    </div>
+                </Tooltip>
             }
 
             {
