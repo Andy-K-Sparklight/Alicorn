@@ -82,6 +82,17 @@ exceptions:
 
 undefined: Unknown
 
+loader:
+  vanilla: None
+  fabric: Fabric
+  quilt: Quilt
+  neoforged: NeoForged
+  forge: Forge
+  liteloader: Liteloader
+  optifine: OptiFine
+  rift: Rift
+  unknown: Unknown
+
 tips:
   error:
     - How did we get here?

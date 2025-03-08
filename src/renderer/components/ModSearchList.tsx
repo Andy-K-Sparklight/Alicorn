@@ -56,7 +56,7 @@ export function ModSearchList({ gameId }: ModSearchListProps) {
 }
 
 function ModDisplay({ gameId, meta }: { gameId: string, meta: MpmAddonMeta }) {
-    const { id, vendor, title, author, description, icon } = meta;
+    const { id, vendor, title, description, icon } = meta;
     const installStatus = useModInstallStatus(gameId, id);
     const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage.mods" });
 
@@ -79,7 +79,7 @@ function ModDisplay({ gameId, meta }: { gameId: string, meta: MpmAddonMeta }) {
 
         <div className="flex flex-col overflow-hidden grow">
             <div className="font-bold text-lg">{title}</div>
-            <div className="text-sm text-foreground-500">{description}</div>
+            <div className="text-sm text-foreground-500 break-normal">{description}</div>
         </div>
 
         <Chip size="sm" className="bg-green-800 text-green-200">{t(`vendor.${vendor}`)}</Chip>

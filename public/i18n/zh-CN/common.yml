@@ -82,6 +82,17 @@ exceptions:
 
 undefined: 未知
 
+loader:
+  vanilla: 无
+  fabric: Fabric
+  quilt: Quilt
+  neoforged: NeoForged
+  forge: Forge
+  liteloader: Liteloader
+  optifine: OptiFine
+  rift: Rift
+  unknown: 未知
+
 tips:
   error:
     - ……为什么会变成这样呢？

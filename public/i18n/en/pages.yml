@@ -150,13 +150,17 @@ game-card:
     rift: Rift
 
 game-detail:
-  header:
-    installed: INSTALLED
-    not-installed: NOT INSTALLED
-    container: At {{containerId}}
-    profile: Profile {{profileId}}
-    reveal: Reveal Game Directory
   manage:
+    profile:
+      title: Game Info
+      install-status: Install Status
+      installed: Installed
+      not-installed: Not Installed
+      container: Container
+      profile: Profile
+      version: Game Version
+      loader: Mod Loader
+      reveal: Reveal Game Directory
     advanced:
       title: Advanced
       danger-warn: DANGER ZONE — Are you expecting to lose your game?
