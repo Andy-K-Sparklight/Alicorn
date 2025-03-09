@@ -12,21 +12,6 @@ interface Mirror {
     apply(origin: string): string | null;
 }
 
-const aapi: Mirror = {
-    name: "aapi",
-    apply(origin: string): string | null {
-        if (origin === "https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml") {
-            return "https://get-forge-versions.aapi.skjsjhb.moe";
-        }
-
-        if (origin === "https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge") {
-            return "https://get-neoforged-versions.aapi.skjsjhb.moe";
-        }
-
-        return null;
-    }
-};
-
 const bgithub: Mirror = {
     name: "bgithub",
     test: {
@@ -183,7 +168,7 @@ const bmclapi: Mirror | false = import.meta.env.AL_ENABLE_BMCLAPI && {
     }
 } satisfies Mirror;
 
-const mirrorList = [aapi, aliyun, bmclapi, ghfast, bgithub].filter(isTruthy);
+const mirrorList = [aliyun, bmclapi, ghfast, bgithub].filter(isTruthy);
 
 function getMirrors() {
     return mirrorList.filter(m => conf().net.mirror.picked.includes(m.name));
