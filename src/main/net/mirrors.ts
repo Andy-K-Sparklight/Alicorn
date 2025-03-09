@@ -102,28 +102,6 @@ const aliyun: Mirror = {
     }
 };
 
-const mcim: Mirror | false = {
-    name: "mcim",
-    test: {
-        // MCIM redirects files to the source site
-        // We can only test the API response
-        url: "https://mod.mcimirror.top/modrinth/v2/project/YL57xq9U",
-        challenge: "https://api.modrinth.com/v2/project/YL57xq9U"
-    },
-    apply(origin: string): string | null {
-        const u = URL.parse(origin);
-        if (!u) return null;
-
-        if (u.host === "api.modrinth.com") {
-            u.host = "mod.mcimirror.top";
-            u.pathname = "/modrinth" + u.pathname;
-            return u.toString();
-        }
-
-        return null;
-    }
-};
-
 const bmclapi: Mirror | false = import.meta.env.AL_ENABLE_BMCLAPI && {
     name: "bmclapi",
     test: {
@@ -205,7 +183,7 @@ const bmclapi: Mirror | false = import.meta.env.AL_ENABLE_BMCLAPI && {
     }
 } satisfies Mirror;
 
-const mirrorList = [aapi, aliyun, bmclapi, mcim, ghfast, bgithub].filter(isTruthy);
+const mirrorList = [aapi, aliyun, bmclapi, ghfast, bgithub].filter(isTruthy);
 
 function getMirrors() {
     return mirrorList.filter(m => conf().net.mirror.picked.includes(m.name));
