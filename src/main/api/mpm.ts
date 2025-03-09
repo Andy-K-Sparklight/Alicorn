@@ -4,30 +4,21 @@ import { mpmLock } from "@/main/mpm/lockfile";
 import { modrinth } from "@/main/mpm/modrinth";
 import { mpm } from "@/main/mpm/pm";
 
-ipcMain.handle("searchMods", async (_, query, gameId, offset) => {
+ipcMain.handle("searchAddons", async (_, scope, query, gameId, offset) => {
     const game = games.get(gameId);
-    const res = await modrinth.search(query, game.versions.game, game.installProps.type, offset);
-
-    return res.map(r => ({
-        id: r.project_id,
-        vendor: "modrinth",
-        title: r.title,
-        author: r.author,
-        description: r.description,
-        icon: r.icon_url || ""
-    }));
+    return await modrinth.search(scope, query, game.versions.game, game.installProps.type, offset);
 });
 
 
-ipcMain.handle("updateMods", async (_, gameId) => {
+ipcMain.handle("updateAddons", async (_, gameId) => {
     await mpm.fullResolve(gameId);
 });
 
-ipcMain.handle("addMods", async (_, gameId, specs) => {
+ipcMain.handle("addAddons", async (_, gameId, specs) => {
     await mpm.addPackages(gameId, specs);
 });
 
-ipcMain.handle("removeMods", async (_, gameId, specs) => {
+ipcMain.handle("removeAddons", async (_, gameId, specs) => {
     await mpm.removePackages(gameId, specs);
 });
 

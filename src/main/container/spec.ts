@@ -130,9 +130,9 @@ export interface Container {
     launcherProfiles(): string;
 
     /**
-     * Gets the path to a mod.
+     * Gets the path to an addon.
      */
-    mod(name: string): string;
+    addon(scope: string, name: string): string;
 
     /**
      * Gets the path to the MPM lockfile.

@@ -7,7 +7,7 @@ import type { VersionManifest } from "@/main/install/vanilla";
 import { type IpcCallEvents, type IpcCommands, type IpcMessageEvents, type IpcPushEvents } from "@/main/ipc/channels";
 import type { TypedIpcRenderer } from "@/main/ipc/typed";
 import type { MpmManifest } from "@/main/mpm/pm";
-import type { MpmAddonMeta } from "@/main/mpm/spec";
+import type { MpmAddonMeta, MpmAddonType } from "@/main/mpm/spec";
 import { contextBridge, ipcRenderer as ipcRendererRaw } from "electron";
 import Emittery from "emittery";
 import { exposePort } from "./message";
@@ -249,31 +249,31 @@ const native = {
      */
     mpm: {
         /**
-         * Searches for mods.
+         * Searches for addons.
          */
-        searchMods(query: string, gameId: string, offset: number): Promise<MpmAddonMeta[]> {
-            return ipcRenderer.invoke("searchMods", query, gameId, offset);
+        searchAddons(scope: MpmAddonType, query: string, gameId: string, offset: number): Promise<MpmAddonMeta[]> {
+            return ipcRenderer.invoke("searchAddons", scope, query, gameId, offset);
         },
 
         /**
-         * Updates the mods installed.
+         * Updates the addons installed.
          */
-        updateMods(gameId: string): Promise<void> {
-            return ipcRenderer.invoke("updateMods", gameId);
+        updateAddons(gameId: string): Promise<void> {
+            return ipcRenderer.invoke("updateAddons", gameId);
         },
 
         /**
-         * Adds the specified mods to the game.
+         * Adds the specified addons to the game.
          */
-        addMods(gameId: string, specs: string[]): Promise<void> {
-            return ipcRenderer.invoke("addMods", gameId, specs);
+        addAddons(gameId: string, specs: string[]): Promise<void> {
+            return ipcRenderer.invoke("addAddons", gameId, specs);
         },
 
         /**
-         * Removes the specified mods from the game.
+         * Removes the specified addons from the game.
          */
-        removeMods(gameId: string, specs: string[]): Promise<void> {
-            return ipcRenderer.invoke("removeMods", gameId, specs);
+        removeAddons(gameId: string, specs: string[]): Promise<void> {
+            return ipcRenderer.invoke("removeAddons", gameId, specs);
         },
 
         /**

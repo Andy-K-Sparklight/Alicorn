@@ -3,7 +3,7 @@ import type { Container } from "@/main/container/spec";
 import { games } from "@/main/game/manage";
 import { mpmLock } from "@/main/mpm/lockfile";
 import { ModrinthProvider } from "@/main/mpm/modrinth";
-import type { MpmAddonMeta } from "@/main/mpm/spec";
+import type { MpmAddonMeta, MpmAddonType } from "@/main/mpm/spec";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { uniqueBy } from "@/main/util/misc";
 import fs from "fs-extra";
@@ -16,18 +16,20 @@ export interface MpmManifest {
 
 export class MpmPackageSpecifier {
     id: string;
+    type: MpmAddonType;
     vendor: string;
     version: string; // An empty string for arbitrary version
 
     constructor(s: string) {
-        const [vendor, id, version] = s.split(":");
+        const [vendor, type, id, version] = s.split(":");
         this.id = id || "";
+        this.type = type as MpmAddonType || "mods";
         this.vendor = vendor || "";
         this.version = version || "";
     }
 
     toString() {
-        return `${this.vendor}:${this.id}:${this.version}`;
+        return `${this.vendor}:${this.type}:${this.id}:${this.version}`;
     }
 }
 
@@ -248,18 +250,22 @@ async function flashPackages(original: MpmPackage[], current: MpmPackage[], cont
 
     console.debug(`Need to remove ${toRemove.length} packages and add ${toAppend.length} packages.`);
 
-    const toRemoveFiles = toRemove.flatMap(p => p.files).map(f => container.mod(f.fileName));
+    const toRemoveFiles = toRemove.flatMap(p => p.files.map(f => container.addon(p.meta.type, f.fileName)));
 
     // TODO validate before removing & other addon types
     await Promise.all(toRemoveFiles.map(f => fs.remove(f)));
 
-    const toAppendFiles: DlxDownloadRequest[] = toAppend.flatMap(p => p.files).map(f => ({
-        url: f.url,
-        path: container.mod(f.fileName),// TODO support other addon types
-        size: f.size,
-        sha1: f.sha1,
-        fastLink: container.props.flags.link
-    }));
+    const toAppendFiles: DlxDownloadRequest[] = toAppend.flatMap(p =>
+        p.files.map(
+            f => ({
+                url: f.url,
+                path: container.addon(p.meta.type, f.fileName),
+                size: f.size,
+                sha1: f.sha1,
+                fastLink: container.props.flags.link
+            })
+        )
+    );
 
     await dlx.getAll(toAppendFiles); // TODO progress and signal
 }

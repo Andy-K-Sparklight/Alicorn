@@ -1,10 +1,10 @@
-import { ModSearchList } from "@components/ModSearchList";
+import { AddonSearchList } from "@components/AddonSearchList";
 import { useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
 
-export function ModsPanel() {
+export function AddonsPanel() {
     const game = useCurrentGameProfile();
 
     return <div className="h-full px-4">
-        <ModSearchList gameId={game.id}/>
+        <AddonSearchList gameId={game.id}/>
     </div>;
 }

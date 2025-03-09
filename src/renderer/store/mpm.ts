@@ -5,7 +5,7 @@ import { createSelector, createSlice, type PayloadAction } from "@reduxjs/toolki
 import { useEffect } from "react";
 
 interface MpmSliceState {
-    installingMods: { gameId: string, id: string }[];
+    installingAddons: { gameId: string, id: string }[];
     manifests: Record<string, MpmManifest>;
 }
 
@@ -16,17 +16,17 @@ native.mpm.onManifestChange((gameId, manifest) => {
 export const mpmSlice = createSlice({
     name: "mpm",
     initialState: {
-        installingMods: [],
+        installingAddons: [],
         manifests: {}
     } as MpmSliceState,
     reducers: {
         markInstalling: (state, action: PayloadAction<{ gameId: string, id: string }>) => {
-            state.installingMods.push(action.payload);
+            state.installingAddons.push(action.payload);
         },
 
         unmarkInstalling: (state, action: PayloadAction<{ gameId: string, id: string }>) => {
             const { gameId, id } = action.payload;
-            state.installingMods = state.installingMods
+            state.installingAddons = state.installingAddons
                 .filter(m => !(m.gameId === gameId && m.id === id));
         },
 
@@ -37,9 +37,9 @@ export const mpmSlice = createSlice({
     }
 });
 
-const selectModInstallStatus = createSelector(
+const selectAddonInstallStatus = createSelector(
     [
-        (s: AppState) => s.mpm.installingMods,
+        (s: AppState) => s.mpm.installingAddons,
         (_, gameId: string, __: string) => gameId,
         (_, __: string, id: string) => id
     ],
@@ -48,7 +48,7 @@ const selectModInstallStatus = createSelector(
     }
 );
 
-export type ModInstallStatus = "installed" | "auto-installed" | "installing" | "not-installed";
+export type AddonInstallStatus = "installed" | "auto-installed" | "installing" | "not-installed";
 
 export function useMpmManifest(gameId: string): MpmManifest | null {
     useEffect(() => {
@@ -63,10 +63,10 @@ export function useMpmManifest(gameId: string): MpmManifest | null {
     return useAppSelector(s => s.mpm.manifests[gameId]) ?? null;
 }
 
-export function useModInstallStatus(gameId: string, id: string): ModInstallStatus {
+export function useAddonInstallStatus(gameId: string, id: string): AddonInstallStatus {
     const game = useGameProfile(gameId);
 
-    const isInstalling = useAppSelector(s => selectModInstallStatus(s, gameId, id));
+    const isInstalling = useAppSelector(s => selectAddonInstallStatus(s, gameId, id));
 
     if (!game) throw `Could not find corresponding game: ${gameId}`;
 
@@ -75,8 +75,8 @@ export function useModInstallStatus(gameId: string, id: string): ModInstallStatu
     if (!manifest) return "not-installed";
 
     if (manifest.userPrompt.some(spec => {
-        const ss = spec.split(":", 2);
-        return ss[0] === "modrinth" && ss[1] === id;
+        const ss = spec.split(":");
+        return ss[0] === "modrinth" && ss[2] === id;
     })) {
         return "installed";
     }

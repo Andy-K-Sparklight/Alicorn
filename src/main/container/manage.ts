@@ -102,8 +102,8 @@ class SimpleContainer implements Container {
         return this.#resolve("launcher_profiles.json");
     }
 
-    mod(name: string): string {
-        return this.#resolve("mods", name);
+    addon(scope: string, name: string): string {
+        return this.#resolve(scope, name);
     }
 
     mpmLockfile(): string {

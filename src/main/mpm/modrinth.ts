@@ -1,6 +1,6 @@
 import type { MpmContext, MpmFile, MpmPackage, MpmPackageDependency, MpmPackageProvider } from "@/main/mpm/pm";
 import { MpmPackageSpecifier } from "@/main/mpm/pm";
-import type { MpmAddonMeta } from "@/main/mpm/spec";
+import type { MpmAddonMeta, MpmAddonType } from "@/main/mpm/spec";
 import { netx } from "@/main/net/netx";
 import { session } from "electron";
 import lazyValue from "lazy-value";
@@ -76,18 +76,24 @@ function makeJSONParam(obj: any): string {
     return encodeURIComponent(JSON.stringify(obj));
 }
 
-async function search(query: string, gameVersion: string, loader: string, offset = 0): Promise<ModrinthProjectSlim[]> {
+async function search(
+    scope: MpmAddonType,
+    query: string,
+    gameVersion: string,
+    loader: string,
+    offset = 0
+): Promise<MpmAddonMeta[]> {
     const facets = makeJSONParam([
         [`versions:${gameVersion}`],
-        [`categories:${loader}`],
-        [`project_type:mod`] // TODO support other addons
-    ]);
+        scope === "mods" && [`categories:${loader}`],
+        [`project_type:${toModrinthType(scope)}`]
+    ].filter(Boolean));
 
     const res = await apiGet<{ hits?: ModrinthProjectSlim[] }>(
         `${API_URL}/search?query=${query}&facets=${facets}&limit=50&offset=${offset}`
     );
 
-    return res.hits ?? [];
+    return (res.hits ?? []).map(toMpmAddonMeta);
 }
 
 async function requestProjects(projIds: string[]): Promise<ModrinthProject[]> {
@@ -102,13 +108,16 @@ async function requestVersions(versionIds: string[]): Promise<ModrinthVersion[]>
     return apiGet<ModrinthVersion[]>(`${API_URL}/versions?ids=${vs}`);
 }
 
-async function requestProjectVersions(projId: string, gameVersion: string, loader: string): Promise<ModrinthVersion[]> {
-    const loadersParam = makeJSONParam([loader]);
+async function requestProjectVersions(projId: string, gameVersion: string, loader: string | null): Promise<ModrinthVersion[]> {
+    const loadersParam = loader && makeJSONParam([loader]);
     const gameVersionsParam = makeJSONParam([gameVersion]);
 
-    return await apiGet<ModrinthVersion[]>(
-        `${API_URL}/project/${projId}/version?loaders=${loadersParam}&game_versions=${gameVersionsParam}`
-    );
+    let url = `${API_URL}/project/${projId}/version?game_versions=${gameVersionsParam}`;
+    if (loadersParam) {
+        url += `&loaders=${loadersParam}`;
+    }
+
+    return await apiGet<ModrinthVersion[]>(url);
 }
 
 function toMpmFile(f: ModrinthFile): MpmFile {
@@ -120,14 +129,41 @@ function toMpmFile(f: ModrinthFile): MpmFile {
     };
 }
 
-function toMpmAddonMeta(proj: ModrinthProject): MpmAddonMeta {
+function toMpmType(t: ModrinthProjectType): MpmAddonType {
+    switch (t) {
+        case "mod":
+            return "mods";
+        case "resourcepack":
+            return "resourcepacks";
+        case "shader":
+            return "shaderpacks";
+        case "modpack":
+            return "modpack";
+    }
+}
+
+function toModrinthType(t: MpmAddonType): ModrinthProjectType {
+    switch (t) {
+        case "mods":
+            return "mod";
+        case "resourcepacks":
+            return "resourcepack";
+        case "shaderpacks":
+            return "shader";
+        case "modpack":
+            return "modpack";
+    }
+}
+
+function toMpmAddonMeta(proj: ModrinthProject | ModrinthProjectSlim): MpmAddonMeta {
     return {
         title: proj.title,
-        id: proj.id,
+        id: "id" in proj ? proj.id : proj.project_id,
         vendor: "modrinth",
         author: proj.author,
         description: proj.description,
-        icon: proj.icon_url ?? ""
+        icon: proj.icon_url ?? "",
+        type: toMpmType(proj.project_type)
     };
 }
 
@@ -159,7 +195,8 @@ export class ModrinthProvider implements MpmPackageProvider {
             if (s.version) {
                 return { spec, versions: [s.version] };
             } else {
-                const versions = await requestProjectVersions(s.id, ctx.gameVersion, ctx.loader);
+                const shouldIncludeLoader = s.type === "mods" || s.type === "modpack";
+                const versions = await requestProjectVersions(s.id, ctx.gameVersion, shouldIncludeLoader ? ctx.loader : null);
                 versions.forEach(cacheVersion);
 
                 return { spec, versions: versions.map(v => v.id) };
@@ -188,12 +225,13 @@ export class ModrinthProvider implements MpmPackageProvider {
         }
 
         function toMpmPackage(version: ModrinthVersion): MpmPackage {
+            const proj = projectMeta.get(version.project_id)!;
             return {
                 id: version.project_id,
                 version: version.id,
                 versionName: version.version_number,
                 vendor: "modrinth",
-                spec: `modrinth:${version.project_id}:${version.id}`,
+                spec: `modrinth:${toMpmType(proj.project_type)}:${version.project_id}:${version.id}`,
                 files: version.files.map(toMpmFile),
                 dependencies: version.dependencies
                     .filter(d => d.project_id || d.version_id)
@@ -201,10 +239,13 @@ export class ModrinthProvider implements MpmPackageProvider {
                     .map(d => {
                         const projId = d.project_id || getCachedVersion(d.version_id!)?.project_id || "";
                         const versionId = d.version_id || ""; // Arbitrary version
+                        const proj = projectMeta.get(projId);
+                        const type = proj ? toMpmType(proj.project_type) : "mods";
+
 
                         return {
                             type: d.dependency_type === "required" ? "require" : "conflict",
-                            spec: `modrinth:${projId}:${versionId}`
+                            spec: `modrinth:${type}:${projId}:${versionId}`
                         } satisfies MpmPackageDependency;
                     }),
                 meta: toMpmAddonMeta(projectMeta.get(version.project_id)!)

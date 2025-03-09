@@ -162,8 +162,8 @@ game-detail:
       loader: 模组系统
       reveal: 打开游戏目录
 
-    local-mods:
-      title: 已安装模组
+    local-addons:
+      title: 已安装扩展
 
     advanced:
       title: 高级
@@ -222,9 +222,13 @@ game-detail:
             1: 我明白我将没有任何方法找回「{{name}}」的任何内容
             2: 我知道我在做什么！
 
-    mods:
-      title: 模组
-      auto-install-tip: 此模组由于被其它模组依赖而自动安装。
+    addons:
+      title: 获取扩展
+      auto-install-tip: 此扩展由于被其它扩展依赖而自动安装。
+      type:
+        mods: 模组
+        resourcepacks: 资源包
+        shaderpacks: 光影
       vendor:
         modrinth: Modrinth
 

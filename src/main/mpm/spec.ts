@@ -5,4 +5,7 @@ export interface MpmAddonMeta {
     author: string;
     description: string;
     icon: string;
+    type: MpmAddonType;
 }
+
+export type MpmAddonType = "mods" | "resourcepacks" | "shaderpacks" | "modpack";
