@@ -162,6 +162,9 @@ game-detail:
       loader: 模组系统
       reveal: 打开游戏目录
 
+    local-mods:
+      title: 已安装模组
+
     advanced:
       title: 高级
       danger-warn: 以下的操作可能会损坏你的游戏！请三思而后行。

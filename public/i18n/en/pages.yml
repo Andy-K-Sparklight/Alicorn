@@ -161,6 +161,10 @@ game-detail:
       version: Game Version
       loader: Mod Loader
       reveal: Reveal Game Directory
+
+    local-mods:
+      title: Installed Mods
+
     advanced:
       title: Advanced
       danger-warn: DANGER ZONE — Are you expecting to lose your game?

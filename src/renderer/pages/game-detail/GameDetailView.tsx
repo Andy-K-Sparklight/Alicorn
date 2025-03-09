@@ -5,6 +5,7 @@ import { Tab, Tabs } from "@heroui/react";
 import { AdvancedPanel } from "@pages/game-detail/AdvancedPanel";
 import { GameProfileProvider, useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
 import { LaunchPanel } from "@pages/game-detail/LaunchPanel";
+import { LocalModsPanel } from "@pages/game-detail/LocalModsPanel";
 import { ModsPanel } from "@pages/game-detail/ModsPanel";
 import { ProfilePanel } from "@pages/game-detail/ProfilePanel";
 import React from "react";
@@ -49,6 +50,7 @@ function ManagePanel() {
         profile: <ProfilePanel/>,
         launch: <LaunchPanel/>,
         mods: <ModsPanel/>,
+        "local-mods": <LocalModsPanel/>,
         advanced: <AdvancedPanel/>
     };
 

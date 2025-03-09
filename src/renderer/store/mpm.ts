@@ -50,7 +50,7 @@ const selectModInstallStatus = createSelector(
 
 export type ModInstallStatus = "installed" | "auto-installed" | "installing" | "not-installed";
 
-function useMpmManifest(gameId: string): MpmManifest | null {
+export function useMpmManifest(gameId: string): MpmManifest | null {
     useEffect(() => {
         if (globalStore.getState().mpm.manifests[gameId]) return;
 
