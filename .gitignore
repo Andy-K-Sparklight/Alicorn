@@ -111,7 +111,6 @@ vendor
 
 # Build output
 build
-dist
 out
 
 # IDEs
@@ -124,9 +123,11 @@ out
 # Test Env
 emulated
 
-# Coverage
-coverage
-
 # Scratch Files
 .scratch/
 .vite-cache/
+
+# Vim temporary files
+*~
+*.swp
+*.swo
