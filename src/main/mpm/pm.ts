@@ -270,11 +270,12 @@ async function flashPackages(original: MpmPackage[], current: MpmPackage[], cont
     await dlx.getAll(toAppendFiles); // TODO progress and signal
 }
 
-async function doFullResolve(gameId: string): Promise<void> {
+async function doFullResolve(gameId: string, additionalPrompts: string[] = []): Promise<void> {
     console.debug(`Installing mods for ${gameId}...`);
     const game = games.get(gameId);
 
     const manifest = await mpmLock.loadManifest(gameId);
+    manifest.userPrompt = uniqueBy([...manifest.userPrompt, ...additionalPrompts]);
 
     console.debug("Resolving packages...");
     const prevPkgs = manifest.resolved.concat();
@@ -341,9 +342,7 @@ async function doAddPackages(gameId: string, specs: string[]): Promise<void> {
     }
 
     // Fallback to full installation
-    manifest.userPrompt.push(...specs);
-    await mpmLock.saveManifest(gameId, manifest);
-    await doFullResolve(gameId);
+    await doFullResolve(gameId, specs);
 }
 
 function findActualPackage(spec: string, pkgs: MpmPackage[]) {
