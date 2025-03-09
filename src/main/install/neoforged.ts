@@ -1,5 +1,6 @@
 import { paths } from "@/main/fs/paths";
 import { dlx } from "@/main/net/dlx";
+import { mirror } from "@/main/net/mirrors";
 import { netx } from "@/main/net/netx";
 import { exceptions } from "@/main/util/exception";
 import { progress, type ProgressController } from "@/main/util/progress";
@@ -8,9 +9,24 @@ const NEOFORGED_API = "https://maven.neoforged.net/api/maven/versions/releases/n
 
 let versions: string[] | null = null;
 
+interface BMCLAPINeoForgedFile {
+    name: string;
+    type: string;
+}
+
+async function syncVersionsFromBMCLAPI() {
+    const url = "https://bmclapi2.bangbang93.com/neoforge/meta/api/maven/details/releases/net/neoforged/neoforge";
+    const releases = await netx.getJSON(url) as { files: BMCLAPINeoForgedFile[] };
+    return releases.files.filter(r => r.type === "DIRECTORY").map(r => r.name);
+}
+
 async function syncVersions(): Promise<string[]> {
     if (!versions) {
-        versions = (await netx.getJSON(NEOFORGED_API)).versions as string[];
+        if (mirror.isMirrorEnabled("bmclapi")) {
+            versions = await syncVersionsFromBMCLAPI();
+        } else {
+            versions = (await netx.getJSON(NEOFORGED_API)).versions as string[];
+        }
     }
 
     return versions;

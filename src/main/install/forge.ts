@@ -1,5 +1,6 @@
 import { paths } from "@/main/fs/paths";
 import { dlx } from "@/main/net/dlx";
+import { mirror } from "@/main/net/mirrors";
 import { netx } from "@/main/net/netx";
 import { exceptions } from "@/main/util/exception";
 import { progress, type ProgressController } from "@/main/util/progress";
@@ -9,21 +10,49 @@ const FORGE_VERSIONS = "https://maven.minecraftforge.net/net/minecraftforge/forg
 
 let versions: string[] | null = null;
 
+interface BMCLAPIForgeVersion {
+    version: string;
+    mcversion: string;
+    branch: string;
+}
+
+async function syncVersionFromBMCLAPI(): Promise<string[]> {
+    console.debug("Requesting Forge version info from BMCLAPI...");
+
+    const vs: string[] = [];
+
+    let offset = 0;
+    while (true) {
+        const results = await netx.getJSON(`https://bmclapi2.bangbang93.com/forge/list/${offset}/500`) as BMCLAPIForgeVersion[];
+        const rv = results.map(r => [r.mcversion, r.version, r.branch].join("-"));
+        vs.push(...rv);
+
+        if (rv.length < 500) break;
+        offset += 500;
+    }
+
+    return vs.toReversed();
+}
+
 async function syncVersions(): Promise<string[]> {
     if (!versions) {
-        const res = await netx.get(FORGE_VERSIONS);
-
-        if (!res.ok) throw exceptions.create("network", { url: res.url });
-
-        const xml = await res.text();
-        const parser = new XMLParser();
-        const doc = parser.parse(xml);
-        const arr = doc?.metadata?.versioning?.versions?.version;
-
-        if (Array.isArray(arr)) {
-            versions = arr;
+        if (mirror.isMirrorEnabled("bmclapi")) {
+            versions = await syncVersionFromBMCLAPI();
         } else {
-            throw "Malformed Forge version metadata";
+            const res = await netx.get(FORGE_VERSIONS);
+
+            if (!res.ok) throw exceptions.create("network", { url: res.url });
+
+            const xml = await res.text();
+            const parser = new XMLParser();
+            const doc = parser.parse(xml);
+            const arr = doc?.metadata?.versioning?.versions?.version;
+
+            if (Array.isArray(arr)) {
+                versions = arr;
+            } else {
+                throw "Malformed Forge version metadata";
+            }
         }
     }
 

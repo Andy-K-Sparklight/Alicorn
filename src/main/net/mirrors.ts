@@ -274,6 +274,10 @@ async function testSpeed(url: string): Promise<number> {
     }
 }
 
+function isMirrorEnabled(name: string): boolean {
+    return conf().net.mirror.picked.includes(name) && mirrorList.some(m => m.name === name);
+}
+
 export const mirror = {
-    bench, apply
+    bench, apply, isMirrorEnabled
 };
