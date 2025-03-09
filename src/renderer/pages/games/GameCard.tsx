@@ -26,7 +26,7 @@ export function GameCard({ game }: GameCardProps) {
     return <Card shadow="sm" className={cn(pinned && "outline-2 outline-default-500")}>
         <CardBody>
             <div className="flex gap-6 items-center px-3">
-                <div className="h-12 p-2 bg-content2 rounded-full">
+                <div className="w-12 h-12 p-2 bg-content2 rounded-full">
                     <GameTypeImage type={type}/>
                 </div>
 

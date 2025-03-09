@@ -49,7 +49,7 @@ function MonitorItem({ proc }: { proc: RemoteGameProcess }) {
     return <Card>
         <CardBody>
             <div className="flex gap-4 items-center h-16 px-3">
-                <div className="h-full p-3 bg-content2 rounded-full">
+                <div className="h-full aspect-square p-3 bg-content2 rounded-full">
                     <GameTypeImage type={type}/>
                 </div>
 

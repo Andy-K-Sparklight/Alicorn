@@ -82,7 +82,7 @@ function ExampleContent() {
         <Card>
             <CardBody>
                 <div className="flex items-center gap-4">
-                    <div className="rounded-full p-3 bg-content2 h-16">
+                    <div className="rounded-full p-3 bg-content2 w-16 h-16">
                         <GameTypeImage type="fabric"/>
                     </div>
 

@@ -123,7 +123,7 @@ function VersionContent({ version: { id, type, sha1, releaseTime } }: { version:
     } as const)[type] ?? "unknown";
 
     return <div className="flex h-[48px] items-center gap-4 py-1">
-        <div className="h-full rounded-full bg-content2 p-1.5">
+        <div className="h-full aspect-square rounded-full bg-content2 p-1.5">
             <GameTypeImage type={gameType}/>
         </div>
 

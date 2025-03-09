@@ -26,7 +26,7 @@ function StatusDisplay({ id, name, profileId, type, status, uptime, pid }: Statu
                 <div className="w-full flex gap-6 justify-center items-center">
                     <div
                         className={
-                            cn("h-16 aspect-square p-2 bg-content2 rounded-full outline outline-2 outline-offset-4", {
+                            cn("w-16 h-16 p-2 bg-content2 rounded-full outline outline-2 outline-offset-4", {
                                 "outline-success": status === "running",
                                 "outline-default": status === "exited",
                                 "outline-danger": status === "crashed"
