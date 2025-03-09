@@ -21,19 +21,14 @@ function getVariableAppDir() {
     }
 }
 
-interface ReleaseMeta {
-    tag_name: string;
-    assets: AssetMeta[];
+interface ReleasesMeta {
+    latest: string;
+    versions: Record<string, unknown>;
 }
 
-interface AssetMeta {
-    name: string;
-    browser_download_url: string;
-}
+const RELEASES_URL = " https://jsr.io/@skjsjhb/alicorn-launcher/meta.json";
 
-const RELEASES_URL = "https://alicorn-releases.aapi.skjsjhb.moe";
-
-async function queryReleases(): Promise<ReleaseMeta[]> {
+async function queryReleases(): Promise<ReleasesMeta> {
     const res = await net.fetch(RELEASES_URL);
 
     if (!res.ok) throw `Unable to query releases: ${res.status}`;
@@ -41,25 +36,24 @@ async function queryReleases(): Promise<ReleaseMeta[]> {
     return await res.json();
 }
 
-function findCompatibleAsset(meta: ReleaseMeta[]): [AssetMeta, string] | null {
+function findCompatibleAsset(meta: ReleasesMeta): [string, string] | null {
     const appBundleName = `app-bundle-${os.platform()}-${os.arch()}.zip`;
 
-    for (const m of meta) {
-        if (!m.tag_name.startsWith("v")) continue;
-        const cv = semver.clean(m.tag_name, { loose: true });
+    const versions = Object.keys(meta.versions);
+
+    for (const v of versions) {
+        const cv = semver.clean(v, { loose: true });
 
         if (cv && semver.satisfies(cv, "^" + pkg.version) && semver.gt(cv, pkg.version)) {
-            const a = m.assets.find(a => a.name === appBundleName);
-            if (a) return [a, cv];
+            const url = `https://github.com/Andy-K-Sparklight/Alicorn/releases/download/v${v}/${appBundleName}`;
+            return [url, cv];
         }
     }
 
     return null;
 }
 
-async function installAsset(am: AssetMeta, ver: string): Promise<void> {
-    const url = am.browser_download_url;
-
+async function installAsset(url: string, ver: string): Promise<void> {
     console.log("Installing asset from: " + url);
 
     const res = await netx.get(url);
