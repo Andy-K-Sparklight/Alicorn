@@ -4,18 +4,18 @@
 import { conf } from "@/main/conf/conf";
 import { mirror } from "@/main/net/mirrors";
 import { exceptions } from "@/main/util/exception";
-import { net } from "electron";
+import { net, Session } from "electron";
 
 /**
  * Fetches the content of the given URL using any available mirror.
  */
-async function get(url: string): Promise<Response> {
+async function get(url: string, session?: Session): Promise<Response> {
     const urls = mirror.apply(url);
 
     for (const u of urls) {
         try {
             const signal = AbortSignal.timeout(conf().net.requestTimeout);
-            const r = await net.fetch(u, { signal });
+            const r = await (session ?? net).fetch(u, { signal });
             if (r.ok) return r;
         } catch (e) {
             console.error(`Mirror unreachable: ${u}`);
@@ -26,8 +26,8 @@ async function get(url: string): Promise<Response> {
     throw exceptions.create("network", { url });
 }
 
-async function getJSON<T = any>(url: string): Promise<T> {
-    const r = await get(url);
+async function getJSON<T = any>(url: string, session?: Session): Promise<T> {
+    const r = await get(url, session);
     if (!r.ok) throw exceptions.create("network", { url, code: r.status });
 
     try {

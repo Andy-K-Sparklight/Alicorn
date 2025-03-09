@@ -1,8 +1,7 @@
-import { conf } from "@/main/conf/conf";
 import type { MpmContext, MpmFile, MpmPackage, MpmPackageDependency, MpmPackageProvider } from "@/main/mpm/pm";
 import { MpmPackageSpecifier } from "@/main/mpm/pm";
 import type { MpmAddonMeta } from "@/main/mpm/spec";
-import { exceptions } from "@/main/util/exception";
+import { netx } from "@/main/net/netx";
 import { session } from "electron";
 import lazyValue from "lazy-value";
 import { nanoid } from "nanoid";
@@ -70,12 +69,7 @@ interface ModrinthFile {
 }
 
 async function apiGet<T = any>(url: string): Promise<T> {
-    const signal = AbortSignal.timeout(conf().net.requestTimeout);
-    const res = await getSession().fetch(url, { signal });
-
-    if (!res.ok) throw exceptions.create("network", { url, code: res.status });
-
-    return await res.json() as T;
+    return await netx.getJSON(url, getSession());
 }
 
 function makeJSONParam(obj: any): string {
