@@ -2,7 +2,7 @@
 
 That launcher of the block game, once with the magic of friendship.
 
-![Alicorn Badge](https://img.shields.io/badge/Alicorn-2.x-df307f)
+![Alicorn Badge](https://img.shields.io/badge/Alicorn-3.x-df307f)
 ![Node.js CI](https://github.com/Andy-K-Sparklight/Alicorn/actions/workflows/build.yml/badge.svg)
 ![CodeQL](https://github.com/Andy-K-Sparklight/Alicorn/actions/workflows/codeql.yml/badge.svg)
 ![Creation Date](https://img.shields.io/github/created-at/Andy-K-Sparklight/Alicorn?label=since)
@@ -52,7 +52,7 @@ Systems:
 - Microsoft Windows 10 / 11
 - Apple macOS (Big Sur or later)
 - GNU/Linux
-    - There are no detailed compatibility metrics, but recent releases should work.
+  - There are no detailed compatibility metrics, but recent releases should work.
 
 Architectures:
 

@@ -1,6 +1,6 @@
 {
     "name": "@skjsjhb/alicorn-launcher",
-    "version": "2.3.0",
+    "version": "3.0.0-beta",
     "license": "GPL-3.0-or-later",
     "exports": "./jsr-export.ts"
 }
