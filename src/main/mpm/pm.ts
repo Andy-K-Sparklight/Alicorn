@@ -8,7 +8,6 @@ import { type MpmContext, type MpmPackage, MpmPackageSpecifier } from "@/main/mp
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { uniqueBy } from "@/main/util/misc";
 import fs from "fs-extra";
-import * as util from "node:util";
 import PQueue from "p-queue";
 
 export interface MpmPackageProvider {
@@ -108,13 +107,6 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
         deps = new Set(nd);
     }
 
-    console.log(
-        util.inspect(
-            resolved,
-            { depth: 10 }
-        )
-    );
-
     // Dependency resolution
     console.debug("Resolving dependencies...");
 
@@ -175,12 +167,8 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
 
     if (!sln) return null;
 
-    console.log("Initial solution");
-    console.log(sln.getTrueVars());
     const upgradableSpecs = resolved.keys().filter(s => s.endsWith(":")).toArray(); // Filter out specs with no versions defined
     let lastSln = sln;
-
-    console.log(`Upgradable specs: ${upgradableSpecs}`);
 
     for (const spec of upgradableSpecs) {
         if (!lastSln.getTrueVars().some((p: string) => matchPackageSpecifier(spec, p))) {
@@ -204,8 +192,6 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
     }
 
     const finalPkgs = lastSln.getTrueVars() as string[];
-    console.log("Final pkgs");
-    console.log(finalPkgs);
 
     return finalPkgs.map(p => allPackagesMap.get(p)!);
 }
