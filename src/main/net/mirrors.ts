@@ -209,24 +209,23 @@ async function bench(): Promise<void> {
         return;
     }
 
-    const timeMap = new Map<string, Promise<number>>();
-
-    async function getSpeed(url: string) {
-        let v = timeMap.get(url);
-        if (!v) {
-            v = testSpeed(url);
-            timeMap.set(url, v);
-        }
-        return await v;
-    }
-
     const enabledMirrors = (await Promise.all(mirrorList.map(async m => {
         if (m.test) {
-            const s1 = await getSpeed(m.test.url);
-            const s2 = await getSpeed(m.test.challenge);
+            try {
+                const ac = new AbortController();
+                const effectiveUrl = await Promise.any([
+                    digUrl(m.test.url, ac.signal),
+                    digUrl(m.test.challenge, ac.signal)
+                ]);
+                ac.abort();
 
-            if (s1 <= s2) {
-                // The mirror is not faster, ignore it
+                console.debug(`Faster mirror URL: ${effectiveUrl}`);
+
+                if (effectiveUrl === m.test.challenge) {
+                    // The mirror is not faster, ignore it
+                    return;
+                }
+            } catch {
                 return;
             }
         }
@@ -238,24 +237,16 @@ async function bench(): Promise<void> {
     conf.alter(c => c.net.mirror.picked = enabledMirrors);
 }
 
-async function testSpeed(url: string): Promise<number> {
-    try {
-        console.log(`Testing URL: ${url}`);
-        const signal = AbortSignal.timeout(10e3); // Wait for at most 10s (this should be enough for most mirrors)
-        const t = Date.now();
-        const res = await net.fetch(url, { cache: "reload", signal });
-        if (!res.ok) {
-            console.warn(`Failed to request mirror URL ${url}: ${res.status}`);
-            return -1;
-        }
-        const arr = await res.arrayBuffer();
-        const speed = Math.round(arr.byteLength / (Date.now() - t));
-        console.log(`Estimated speed of ${url}: ${speed} (KB/s)`);
-        return speed;
-    } catch (e) {
-        console.warn(`Unreachable URL: ${url}`);
-        return -1;
+async function digUrl(url: string, signal: AbortSignal): Promise<string> {
+    console.log(`Testing URL: ${url}`);
+    const timeSignal = AbortSignal.timeout(10e3); // Wait for at most 10s (this should be enough for most mirrors)
+    const compoundSignal = AbortSignal.any([timeSignal, signal]);
+    const res = await net.fetch(url, { cache: "reload", signal: compoundSignal });
+    if (!res.ok || !res.body) {
+        throw `Failed to request mirror URL ${url}: ${res.status}`;
     }
+    await res.arrayBuffer();
+    return url;
 }
 
 function isMirrorEnabled(name: string): boolean {
