@@ -57,6 +57,7 @@
         "@reduxjs/toolkit": "^2.6.1",
         "emittery": "^1.1.0",
         "fast-xml-parser": "^5.0.8",
+        "fastest-levenshtein": "^1.0.16",
         "framer-motion": "^12.4.10",
         "fs-extra": "^11.3.0",
         "get-port": "^7.1.0",

@@ -1,25 +1,25 @@
 import type { MpmAddonMeta } from "@/main/mpm/spec";
 import { remoteMpm } from "@/renderer/services/mpm";
 import { useAddonInstallStatus } from "@/renderer/store/mpm";
-import { Button, Chip, Image, Tooltip } from "@heroui/react";
+import { Button, Chip, cn, Image, Tooltip } from "@heroui/react";
 import { CheckIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export function AddonMetaDisplay({ gameId, meta }: { gameId: string, meta: MpmAddonMeta }) {
     const { id, vendor, title, description, icon, type } = meta;
-    const installStatus = useAddonInstallStatus(gameId, id);
+    const installStatus = useAddonInstallStatus(gameId, id, vendor);
     const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage.addons" });
 
     const effectiveIcon = icon || "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 
     function runInstall() {
         if (installStatus !== "not-installed") return;
-        void remoteMpm.addAddon(gameId, type, id);
+        void remoteMpm.addAddon(gameId, type, vendor, id);
     }
 
     function runRemove() {
         if (installStatus !== "installed") return;
-        void remoteMpm.removeAddon(gameId, type, id);
+        void remoteMpm.removeAddon(gameId, type, vendor, id);
     }
 
     return <div className="px-4 py-2 rounded-xl bg-content1 w-full flex items-center gap-4 mt-2">
@@ -32,7 +32,19 @@ export function AddonMetaDisplay({ gameId, meta }: { gameId: string, meta: MpmAd
             <div className="text-sm text-foreground-500 break-normal">{description}</div>
         </div>
 
-        <Chip size="sm" className="bg-green-800 text-green-200">{t(`vendor.${vendor}`)}</Chip>
+        <Chip
+            size="sm"
+            className={
+                cn({
+                    "bg-green-800 text-green-200": vendor === "modrinth",
+                    "bg-orange-800 text-orange-200": vendor === "curse"
+                })
+            }
+        >
+            {
+                t(`vendor.${vendor}`)
+            }
+        </Chip>
 
         <div className="shrink-0">
             {

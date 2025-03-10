@@ -158,6 +158,7 @@ async function init() {
 
         aria2cProcess = child_process.spawn(pt, [
             `--quiet=true`, // If not added, the download will stop once the log reaches the limit
+            "--no-want-digest-header", // Stop serves from blocking us
             `--max-concurrent-downloads=1024`,
             "--min-split-size=5M",
             "--max-connection-per-server=16",

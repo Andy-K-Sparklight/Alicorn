@@ -1,65 +1,14 @@
 import { containers } from "@/main/container/manage";
 import type { Container } from "@/main/container/spec";
 import { games } from "@/main/game/manage";
+import { CurseProvider } from "@/main/mpm/curse";
 import { mpmLock } from "@/main/mpm/lockfile";
 import { ModrinthProvider } from "@/main/mpm/modrinth";
-import type { MpmAddonMeta, MpmAddonType } from "@/main/mpm/spec";
+import { type MpmContext, type MpmPackage, MpmPackageSpecifier } from "@/main/mpm/spec";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { uniqueBy } from "@/main/util/misc";
 import fs from "fs-extra";
 import PQueue from "p-queue";
-
-export interface MpmManifest {
-    userPrompt: string[];
-    resolved: MpmPackage[];
-}
-
-export class MpmPackageSpecifier {
-    id: string;
-    type: MpmAddonType;
-    vendor: string;
-    version: string; // An empty string for arbitrary version
-
-    constructor(s: string) {
-        const [vendor, type, id, version] = s.split(":");
-        this.id = id || "";
-        this.type = type as MpmAddonType || "mods";
-        this.vendor = vendor || "";
-        this.version = version || "";
-    }
-
-    toString() {
-        return `${this.vendor}:${this.type}:${this.id}:${this.version}`;
-    }
-}
-
-export interface MpmPackageDependency {
-    type: "require" | "conflict";
-    spec: string;
-}
-
-export interface MpmFile {
-    url: string;
-    sha1?: string;
-    size?: number;
-    fileName: string;
-}
-
-export interface MpmPackage {
-    id: string;
-    vendor: string;
-    version: string;
-    versionName: string;
-    spec: string;
-    files: MpmFile[];
-    dependencies: MpmPackageDependency[];
-    meta: MpmAddonMeta;
-}
-
-export interface MpmContext {
-    gameVersion: string;
-    loader: string;
-}
 
 export interface MpmPackageProvider {
     /**
@@ -77,6 +26,8 @@ function getProvider(vendor: string): MpmPackageProvider {
     switch (vendor) {
         case "modrinth":
             return new ModrinthProvider();
+        case "curse":
+            return new CurseProvider();
         default:
             throw `No resolver supports vendor ${vendor}`;
     }
@@ -220,6 +171,10 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
     let lastSln = sln;
 
     for (const spec of upgradableSpecs) {
+        if (!lastSln.getTrueVars().some((p: string) => matchPackageSpecifier(spec, p))) {
+            continue; // Package not included, no need to upgrade
+        }
+
         const pkgs = resolved.get(spec)!;
         for (const p of pkgs) {
             if (lastSln.getTrueVars().includes(p.spec)) {

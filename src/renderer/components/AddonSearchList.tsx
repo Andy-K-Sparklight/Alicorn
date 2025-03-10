@@ -18,11 +18,17 @@ export function AddonSearchList({ gameId }: AddonSearchListProps) {
     const [scope, setScope] = useState<MpmAddonType>("mods");
     const transactionId = useRef(0);
     const fetching = useRef(false);
+    const paginationRef = useRef<unknown>(null);
     const [results, setResults] = useSessionStorage<MpmAddonMeta[]>(`mod-search-results.${gameId}`, []);
     const vlistRef = useRef<VListHandle | null>(null);
+    const searchDelayTimer = useRef<number | null>(null);
 
     useEffect(() => {
-        void fetchItems(true);
+        if (searchDelayTimer.current !== null) {
+            window.clearTimeout(searchDelayTimer.current);
+        }
+
+        searchDelayTimer.current = window.setTimeout(() => fetchItems(true), 500);
     }, [query, scope]);
 
     function onScroll() {
@@ -38,10 +44,15 @@ export function AddonSearchList({ gameId }: AddonSearchListProps) {
         transactionId.current++;
         const id = transactionId.current;
 
-        const res = await native.mpm.searchAddons(scope, query, gameId, fresh ? 0 : results.length);
+        const {
+            contents,
+            pagination
+        } = await native.mpm.searchAddons(scope, query, gameId, fresh ? null : paginationRef.current);
+
+        paginationRef.current = pagination;
 
         if (id === transactionId.current) {
-            setResults(fresh ? res : uniqueBy(results.concat(res), r => r.id));
+            setResults(fresh ? contents : uniqueBy(results.concat(contents), r => r.id));
             fetching.current = false;
         }
     }

@@ -1,4 +1,4 @@
-import type { MpmManifest } from "@/main/mpm/pm";
+import { type MpmManifest, MpmPackageSpecifier } from "@/main/mpm/spec";
 import { useGameProfile } from "@/renderer/store/games";
 import { type AppState, globalStore, useAppSelector } from "@/renderer/store/store";
 import { createSelector, createSlice, type PayloadAction } from "@reduxjs/toolkit";
@@ -63,7 +63,7 @@ export function useMpmManifest(gameId: string): MpmManifest | null {
     return useAppSelector(s => s.mpm.manifests[gameId]) ?? null;
 }
 
-export function useAddonInstallStatus(gameId: string, id: string): AddonInstallStatus {
+export function useAddonInstallStatus(gameId: string, id: string, vendor: string): AddonInstallStatus {
     const game = useGameProfile(gameId);
 
     const isInstalling = useAppSelector(s => selectAddonInstallStatus(s, gameId, id));
@@ -75,8 +75,8 @@ export function useAddonInstallStatus(gameId: string, id: string): AddonInstallS
     if (!manifest) return "not-installed";
 
     if (manifest.userPrompt.some(spec => {
-        const ss = spec.split(":");
-        return ss[0] === "modrinth" && ss[2] === id;
+        const ss = new MpmPackageSpecifier(spec);
+        return ss.vendor === vendor && ss.id === id;
     })) {
         return "installed";
     }

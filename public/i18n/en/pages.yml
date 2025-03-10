@@ -232,6 +232,7 @@ game-detail:
         shaderpacks: Shaders
       vendor:
         modrinth: Modrinth
+        curse: Curseforge
 
     launch:
       title: Launch

@@ -1,11 +1,11 @@
 import type { CreateGameInit } from "@/main/api/game";
 import type { LaunchGameResult } from "@/main/api/launcher";
+import type { MpmAddonSearchResult } from "@/main/api/mpm";
 import type { DetailedAccountProps } from "@/main/auth/types";
 import type { UserConfig } from "@/main/conf/conf";
 import type { GameProfile } from "@/main/game/spec";
 import type { VersionManifest } from "@/main/install/vanilla";
-import type { MpmManifest } from "@/main/mpm/pm";
-import type { MpmAddonMeta, MpmAddonType } from "@/main/mpm/spec";
+import type { MpmAddonType, MpmManifest } from "@/main/mpm/spec";
 
 /**
  * Events sent from renderer to main.
@@ -62,7 +62,7 @@ export type IpcCommands = {
     getVersionManifest: () => VersionManifest;
     queryAvailableModLoaders: (gameVersion: string) => string[];
     loadMpmManifest: (gameId: string) => MpmManifest;
-    searchAddons: (scope: MpmAddonType, query: string, gameId: string, offset: number) => MpmAddonMeta[];
+    searchAddons: (scope: MpmAddonType, query: string, gameId: string, pagination: any) => MpmAddonSearchResult;
     updateAddons: (gameId: string) => void;
     addAddons: (gameId: string, specs: string[]) => void;
     removeAddons: (gameId: string, specs: string[]) => void;

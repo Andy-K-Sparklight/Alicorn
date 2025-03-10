@@ -1,13 +1,13 @@
 import type { CreateGameInit } from "@/main/api/game";
 import type { LaunchGameResult } from "@/main/api/launcher";
+import type { MpmAddonSearchResult } from "@/main/api/mpm";
 import type { DetailedAccountProps } from "@/main/auth/types";
 import type { UserConfig } from "@/main/conf/conf";
 import type { GameProfile } from "@/main/game/spec";
 import type { VersionManifest } from "@/main/install/vanilla";
 import { type IpcCallEvents, type IpcCommands, type IpcMessageEvents, type IpcPushEvents } from "@/main/ipc/channels";
 import type { TypedIpcRenderer } from "@/main/ipc/typed";
-import type { MpmManifest } from "@/main/mpm/pm";
-import type { MpmAddonMeta, MpmAddonType } from "@/main/mpm/spec";
+import type { MpmAddonType, MpmManifest } from "@/main/mpm/spec";
 import { contextBridge, ipcRenderer as ipcRendererRaw } from "electron";
 import Emittery from "emittery";
 import { exposePort } from "./message";
@@ -251,8 +251,8 @@ const native = {
         /**
          * Searches for addons.
          */
-        searchAddons(scope: MpmAddonType, query: string, gameId: string, offset: number): Promise<MpmAddonMeta[]> {
-            return ipcRenderer.invoke("searchAddons", scope, query, gameId, offset);
+        searchAddons(scope: MpmAddonType, query: string, gameId: string, pg?: unknown): Promise<MpmAddonSearchResult> {
+            return ipcRenderer.invoke("searchAddons", scope, query, gameId, pg);
         },
 
         /**

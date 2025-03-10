@@ -231,6 +231,7 @@ game-detail:
         shaderpacks: 光影
       vendor:
         modrinth: Modrinth
+        curse: Curseforge
 
     launch:
       title: 启动

@@ -1,6 +1,13 @@
-import type { MpmContext, MpmFile, MpmPackage, MpmPackageDependency, MpmPackageProvider } from "@/main/mpm/pm";
-import { MpmPackageSpecifier } from "@/main/mpm/pm";
-import type { MpmAddonMeta, MpmAddonType } from "@/main/mpm/spec";
+import type { MpmPackageProvider } from "@/main/mpm/pm";
+import {
+    type MpmAddonMeta,
+    type MpmAddonType,
+    type MpmContext,
+    type MpmFile,
+    type MpmPackage,
+    type MpmPackageDependency,
+    MpmPackageSpecifier
+} from "@/main/mpm/spec";
 import { netx } from "@/main/net/netx";
 import { session } from "electron";
 import lazyValue from "lazy-value";
@@ -69,7 +76,7 @@ interface ModrinthFile {
 }
 
 async function apiGet<T = any>(url: string): Promise<T> {
-    return await netx.getJSON(url, getSession());
+    return await netx.getJSON(url, undefined, getSession());
 }
 
 function makeJSONParam(obj: any): string {
@@ -83,17 +90,26 @@ async function search(
     loader: string,
     offset = 0
 ): Promise<MpmAddonMeta[]> {
+    const q = encodeURIComponent(query);
     const facets = makeJSONParam([
         [`versions:${gameVersion}`],
         scope === "mods" && [`categories:${loader}`],
         [`project_type:${toModrinthType(scope)}`]
     ].filter(Boolean));
 
-    const res = await apiGet<{ hits?: ModrinthProjectSlim[] }>(
-        `${API_URL}/search?query=${query}&facets=${facets}&limit=50&offset=${offset}`
-    );
+    try {
+        const res = await apiGet<{ hits?: ModrinthProjectSlim[] }>(
+            `${API_URL}/search?query=${q}&facets=${facets}&limit=50&offset=${offset}`
+        );
 
-    return (res.hits ?? []).map(toMpmAddonMeta);
+        res.hits?.forEach(p => projectMetaCache.set(p.project_id, p));
+
+        return (res.hits ?? []).map(toMpmAddonMeta);
+    } catch (e) {
+        console.error("Unable to generate search result");
+        console.error(e);
+        return [];
+    }
 }
 
 async function requestProjects(projIds: string[]): Promise<ModrinthProject[]> {
@@ -167,12 +183,13 @@ function toMpmAddonMeta(proj: ModrinthProject | ModrinthProjectSlim): MpmAddonMe
     };
 }
 
+const projectMetaCache = new Map<string, ModrinthProjectSlim | ModrinthProject>();
+
 export class ModrinthProvider implements MpmPackageProvider {
     vendorName = "modrinth";
 
     async resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[][]> {
         const cachedVersions = new Map<string, ModrinthVersion>();
-        const projectMeta = new Map<string, ModrinthProject>();
 
         function getCachedVersion(versionId: string): ModrinthVersion {
             const v = cachedVersions.get(versionId);
@@ -218,14 +235,16 @@ export class ModrinthProvider implements MpmPackageProvider {
         (await requestVersions([...versionOnlyDeps])).forEach(cacheVersion);
 
         // Collect projects
-        const allProjects = await requestProjects([...new Set(cachedVersions.values().map(v => v.project_id))]);
+        const allProjects = await requestProjects(Array.from(new Set(
+            cachedVersions.values().map(v => v.project_id).filter(p => !projectMetaCache.has(p))
+        )));
 
         for (const proj of allProjects) {
-            projectMeta.set(proj.id, proj);
+            projectMetaCache.set(proj.id, proj);
         }
 
         function toMpmPackage(version: ModrinthVersion): MpmPackage {
-            const proj = projectMeta.get(version.project_id)!;
+            const proj = projectMetaCache.get(version.project_id)!;
             return {
                 id: version.project_id,
                 version: version.id,
@@ -239,7 +258,7 @@ export class ModrinthProvider implements MpmPackageProvider {
                     .map(d => {
                         const projId = d.project_id || getCachedVersion(d.version_id!)?.project_id || "";
                         const versionId = d.version_id || ""; // Arbitrary version
-                        const proj = projectMeta.get(projId);
+                        const proj = projectMetaCache.get(projId);
                         const type = proj ? toMpmType(proj.project_type) : "mods";
 
 
@@ -248,7 +267,7 @@ export class ModrinthProvider implements MpmPackageProvider {
                             spec: `modrinth:${type}:${projId}:${versionId}`
                         } satisfies MpmPackageDependency;
                     }),
-                meta: toMpmAddonMeta(projectMeta.get(version.project_id)!)
+                meta: toMpmAddonMeta(projectMetaCache.get(version.project_id)!)
             };
         }
 

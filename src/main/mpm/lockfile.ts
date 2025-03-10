@@ -1,6 +1,6 @@
 import { containers } from "@/main/container/manage";
 import { games } from "@/main/game/manage";
-import type { MpmManifest } from "@/main/mpm/pm";
+import type { MpmManifest } from "@/main/mpm/spec";
 import { windowControl } from "@/main/sys/window-control";
 import { isENOENT } from "@/main/util/fs";
 import fs from "fs-extra";
