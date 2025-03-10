@@ -34,7 +34,7 @@ ipcMain.handle("searchAddons", async (_, scope, query, gameId, pg?: AddonSearchP
 
     if (scope === "mods") {
         const curseRes = await curse.search(query, game.versions.game, game.type, pg.offset.curse);
-        pg.offset.curse += res.length;
+        pg.offset.curse += 50; // Fixed offset as we'll filter out some modpack results
         res.unshift(...curseRes);
         sortResults(res, query);
     }

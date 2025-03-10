@@ -6,6 +6,9 @@ const API_BASE = "https://api.curse.tools/v1/cf";
 
 interface CurseProject {
     id: number;
+    links: {
+        websiteUrl: string; // Used to identify and filter out modpacks
+    };
     name: string;
     slug: string;
     authors: { name: string }[];
@@ -123,6 +126,11 @@ function toMpmAddonMeta(proj: CurseProject): MpmAddonMeta {
 
 const projectMetaCache = new Map<number, CurseProject>();
 
+function isModpack(proj: CurseProject) {
+    // A naive way to check for modpacks as the category is not included in the API
+    return proj.links.websiteUrl.includes("modpacks");
+}
+
 async function search(query: string, gameVersion: string, loader: string, index = 0): Promise<MpmAddonMeta[]> {
     const cl = toCurseLoader(loader);
     const q = encodeURIComponent(query);
@@ -130,6 +138,8 @@ async function search(query: string, gameVersion: string, loader: string, index 
 
     try {
         const rp = await netx.getJSON(url) as { data: CurseProject[] };
+        rp.data = rp.data.filter(p => !isModpack(p));
+
         rp.data.forEach(p => projectMetaCache.set(p.id, p));
         return rp.data.map(toMpmAddonMeta);
     } catch (e) {
