@@ -84,6 +84,11 @@ function makeJSONParam(obj: any): string {
     return encodeURIComponent(JSON.stringify(obj));
 }
 
+function toModrinthLoaderType(loader: string): string {
+    if (loader === "neoforged") return "neoforge";
+    return loader;
+}
+
 async function search(
     scope: MpmAddonType,
     query: string,
@@ -94,7 +99,7 @@ async function search(
     const q = encodeURIComponent(query);
     const facets = makeJSONParam([
         [`versions:${gameVersion}`],
-        scope === "mods" && [`categories:${loader}`],
+        scope === "mods" && [`categories:${toModrinthLoaderType(loader)}`],
         [`project_type:${toModrinthType(scope)}`]
     ].filter(Boolean));
 
@@ -225,7 +230,11 @@ export class ModrinthProvider implements MpmPackageProvider {
                 return { spec, versions: [s.version] };
             } else {
                 const shouldIncludeLoader = s.type === "mods" || s.type === "modpack";
-                const versions = await requestProjectVersions(s.id, ctx.gameVersion, shouldIncludeLoader ? ctx.loader : null);
+                const versions = await requestProjectVersions(
+                    s.id,
+                    ctx.gameVersion,
+                    shouldIncludeLoader ? toModrinthLoaderType(ctx.loader) : null
+                );
                 versions.forEach(cacheVersion);
 
                 return { spec, versions: versions.map(v => v.id) };
