@@ -7,15 +7,15 @@ export default {
             "50": "#0f0f0f",
             "100": "#181818",
             "200": "#212121",
-            "300": "#2a2a2a",
-            "400": "#333333",
-            "500": "#575757",
+            "300": "#333333",
+            "400": "#505050",
+            "500": "#696969",
             "600": "#7a7a7a",
             "700": "#9e9e9e",
             "800": "#c2c2c2",
             "900": "#e6e6e6",
             foreground: "#fff",
-            DEFAULT: "#333333"
+            DEFAULT: "#505050"
         },
         primary: {
             "50": "#42000f",
@@ -88,20 +88,6 @@ export default {
             DEFAULT: "#f65f07"
         },
         background: "#000000",
-        foreground: {
-            "50": "#4d4d4d",
-            "100": "#797979",
-            "200": "#a6a6a6",
-            "300": "#d2d2d2",
-            "400": "#ffffff",
-            "500": "#ffffff",
-            "600": "#ffffff",
-            "700": "#ffffff",
-            "800": "#ffffff",
-            "900": "#ffffff",
-            foreground: "#000",
-            DEFAULT: "#ffffff"
-        },
         content1: {
             DEFAULT: "#242424",
             foreground: "#fff"

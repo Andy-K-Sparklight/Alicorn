@@ -28,7 +28,7 @@ export default {
             "700": "#2d6d8d",
             "800": "#215067",
             "900": "#153241",
-            "foreground": "#000",
+            "foreground": "#fff",
             "DEFAULT": "#45a8d9"
         },
         "secondary": {
