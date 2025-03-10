@@ -26,10 +26,14 @@ interface ReleasesMeta {
     versions: Record<string, unknown>;
 }
 
-const RELEASES_URL = " https://jsr.io/@skjsjhb/alicorn-launcher/meta.json";
+const RELEASES_URL = "https://jsr.io/@skjsjhb/alicorn-launcher/meta.json";
 
 async function queryReleases(): Promise<ReleasesMeta> {
-    const res = await net.fetch(RELEASES_URL);
+    const res = await net.fetch(RELEASES_URL, {
+        headers: {
+            "Accept": "application/json"
+        }
+    });
 
     if (!res.ok) throw `Unable to query releases: ${res.status}`;
 
