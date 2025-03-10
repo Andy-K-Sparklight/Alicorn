@@ -1,6 +1,7 @@
 import type { Container } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import { dlx } from "@/main/net/dlx";
+import { netx } from "@/main/net/netx";
 import { exceptions } from "@/main/util/exception";
 import { progress, type ProgressController } from "@/main/util/progress";
 import { session } from "electron";
@@ -14,15 +15,16 @@ import { pEvent } from "p-event";
 
 const VERSIONS_HTML = "https://optifine.net/downloads";
 
-interface VersionMeta {
+export interface OptiFineVersionMeta {
     gameVersion: string;
     name: string;
     htmlUrl: string;
+    url: string;
     edition: string;
     stable: boolean;
 }
 
-let versions: VersionMeta[] | null = null;
+let versions: OptiFineVersionMeta[] | null = null;
 
 const FAKE_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36";
 
@@ -32,9 +34,36 @@ const crawlSession = lazyValue(() => {
     return s;
 });
 
-async function crawlVersions(): Promise<VersionMeta[]> {
+interface BMCLAPIOptiFineVersion {
+    mcversion: string;
+    patch: string;
+    type: string;
+    filename: string;
+}
+
+async function syncVersionsFromBMCLAPI(): Promise<OptiFineVersionMeta[]> {
+    const url = "https://bmclapi2.bangbang93.com/optifine/versionList";
+    const vs = await netx.getJSON(url) as BMCLAPIOptiFineVersion[];
+    return vs.map(v => ({
+        gameVersion: v.mcversion,
+        htmlUrl: "",
+        url: `https://bmclapi2.bangbang93.com/maven/com/optifine/1.21.4/${v.filename}`,
+        name: v.filename.replaceAll("preview_", "").replaceAll(".jar", ""),
+        edition: v.type + "_" + v.patch,
+        stable: v.filename.includes("preview")
+    }));
+}
+
+async function crawlVersions(): Promise<OptiFineVersionMeta[]> {
     if (!versions) {
-        const v: VersionMeta[] = [];
+        try {
+            versions = await syncVersionsFromBMCLAPI();
+            return versions;
+        } catch (e) {
+            console.error(`Unable to sync OptiFine versions from BMCLAPI: ${e}`);
+        }
+
+        const v: OptiFineVersionMeta[] = [];
 
         const res = await crawlSession().fetch(VERSIONS_HTML);
         if (!res.ok) throw exceptions.create("network", { url: VERSIONS_HTML, code: res.status });
@@ -66,7 +95,7 @@ async function crawlVersions(): Promise<VersionMeta[]> {
 
             if (!gameVersion || !name || !edition) continue;
 
-            v.push({ gameVersion, name, htmlUrl, edition, stable });
+            v.push({ gameVersion, name, htmlUrl, edition, stable, url: "" });
         }
 
         versions = v;
@@ -108,7 +137,7 @@ async function hasVersion(gameVersion: string): Promise<boolean> {
     return versions.some(v => v.gameVersion === gameVersion);
 }
 
-async function pickVersion(gameVersion: string, version: string): Promise<[string, string]> {
+async function pickVersion(gameVersion: string, version: string): Promise<[OptiFineVersionMeta, string]> {
     const versions = await crawlVersions();
 
     if (!version) {
@@ -118,7 +147,7 @@ async function pickVersion(gameVersion: string, version: string): Promise<[strin
         if (!v) throw exceptions.create("optifine-no-version", { gameVersion });
 
         console.debug(`Picked OptiFine version ${v.name}`);
-        return [v.htmlUrl, genProfileId(v.name)];
+        return [v, genProfileId(v.name)];
     }
 
     const uv = version.replaceAll("_", "").replaceAll(" ", "");
@@ -133,13 +162,13 @@ async function pickVersion(gameVersion: string, version: string): Promise<[strin
     if (!v) throw exceptions.create("optifine-no-version", { gameVersion });
 
     console.debug(`Picked OptiFine version ${v.name}`);
-    return [v.htmlUrl, genProfileId(v.name)];
+    return [v, genProfileId(v.name)];
 }
 
-async function downloadInstaller(htmlUrl: string, control?: ProgressController): Promise<string> {
+async function downloadInstaller(meta: OptiFineVersionMeta, control?: ProgressController): Promise<string> {
     control?.onProgress?.(progress.indefinite("optifine.download"));
 
-    const url = await getRealUrl(htmlUrl);
+    const url = meta.url || await getRealUrl(meta.htmlUrl);
     console.debug(`Fetching OptiFine installer from: ${url}`);
 
     const fp = paths.temp.to(`optifine-installer-${nanoid()}.jar`);

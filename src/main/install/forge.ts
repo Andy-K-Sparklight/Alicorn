@@ -37,22 +37,27 @@ async function syncVersionFromBMCLAPI(): Promise<string[]> {
 async function syncVersions(): Promise<string[]> {
     if (!versions) {
         if (mirror.isMirrorEnabled("bmclapi")) {
-            versions = await syncVersionFromBMCLAPI();
-        } else {
-            const res = await netx.get(FORGE_VERSIONS);
-
-            if (!res.ok) throw exceptions.create("network", { url: res.url });
-
-            const xml = await res.text();
-            const parser = new XMLParser();
-            const doc = parser.parse(xml);
-            const arr = doc?.metadata?.versioning?.versions?.version;
-
-            if (Array.isArray(arr)) {
-                versions = arr;
-            } else {
-                throw "Malformed Forge version metadata";
+            try {
+                versions = await syncVersionFromBMCLAPI();
+                return versions;
+            } catch (e) {
+                console.error(`Unable to sync Forge versions from BMCLAPI: ${e}`);
             }
+        }
+
+        const res = await netx.get(FORGE_VERSIONS);
+
+        if (!res.ok) throw exceptions.create("network", { url: res.url });
+
+        const xml = await res.text();
+        const parser = new XMLParser();
+        const doc = parser.parse(xml);
+        const arr = doc?.metadata?.versioning?.versions?.version;
+
+        if (Array.isArray(arr)) {
+            versions = arr;
+        } else {
+            throw "Malformed Forge version metadata";
         }
     }
 

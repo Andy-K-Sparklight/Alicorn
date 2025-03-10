@@ -23,10 +23,14 @@ async function syncVersionsFromBMCLAPI() {
 async function syncVersions(): Promise<string[]> {
     if (!versions) {
         if (mirror.isMirrorEnabled("bmclapi")) {
-            versions = await syncVersionsFromBMCLAPI();
-        } else {
-            versions = (await netx.getJSON(NEOFORGED_API)).versions as string[];
+            try {
+                versions = await syncVersionsFromBMCLAPI();
+                return versions;
+            } catch (e) {
+                console.error(`Unable to sync NeoForged versions from BMCLAPI: ${e}`);
+            }
         }
+        versions = (await netx.getJSON(NEOFORGED_API)).versions as string[];
     }
 
     return versions;

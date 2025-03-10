@@ -133,8 +133,8 @@ async function installOptiFine(props: OptiFineInstallerProps, context: DetailedI
     // Cache module will speed this up, though
     await vanillaInstaller.installLibraries(vp, container, new Set(), control);
 
-    const [url, oid] = await unfine.pickVersion(gameVersion, loaderVersion);
-    const installer = await unfine.downloadInstaller(url, control);
+    const [versionMeta, oid] = await unfine.pickVersion(gameVersion, loaderVersion);
+    const installer = await unfine.downloadInstaller(versionMeta, control);
     await unfine.runInstaller(jrt.executable(vp.javaVersion.component), installer, container, control);
 
     const p = await profileLoader.fromContainer(oid, container);
