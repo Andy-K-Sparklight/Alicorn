@@ -24,7 +24,9 @@ interface CurseDependency {
 interface CurseVersion {
     id: number;
     modId: number;
+    displayName: string;
     fileName: string;
+    fileDate: string;
     downloadUrl: string;
     gameVersions: string[];
     dependencies: CurseDependency[];
@@ -47,6 +49,14 @@ function toCurseLoader(loader: string): number {
     return 0;
 }
 
+function sortVersions(arr: CurseVersion[]) {
+    arr.sort((a, b) => {
+        const d1 = new Date(a.fileDate);
+        const d2 = new Date(b.fileDate);
+        return d2.getTime() - d1.getTime();
+    });
+}
+
 async function requestProjectVersions(projId: number, gameVersion: string, loader: string): Promise<CurseVersion[]> {
     const cl = toCurseLoader(loader);
 
@@ -63,6 +73,9 @@ async function requestProjectVersions(projId: number, gameVersion: string, loade
         index += 50;
     }
 
+    // API mirrors may return the data in any order
+    // MPM requires the latest version on the very top
+    sortVersions(out);
     return out;
 }
 
@@ -179,7 +192,7 @@ export class CurseProvider implements MpmPackageProvider {
             return {
                 id: v.modId.toString(),
                 version: v.id.toString(),
-                versionName: v.fileName,
+                versionName: v.displayName,
                 vendor: "curse",
                 spec: `curse:mods:${v.modId}:${v.id}`,
                 meta: toMpmAddonMeta(proj),

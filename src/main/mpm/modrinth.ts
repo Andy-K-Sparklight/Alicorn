@@ -57,6 +57,7 @@ interface ModrinthProject {
 interface ModrinthVersion {
     id: string;
     project_id: string;
+    date_published: string;
     version_number: string;
     dependencies: ModrinthDependency[];
     files: ModrinthFile[];
@@ -124,6 +125,15 @@ async function requestVersions(versionIds: string[]): Promise<ModrinthVersion[]>
     return apiGet<ModrinthVersion[]>(`${API_URL}/versions?ids=${vs}`);
 }
 
+
+function sortVersions(arr: ModrinthVersion[]) {
+    arr.sort((a, b) => {
+        const d1 = new Date(a.date_published);
+        const d2 = new Date(b.date_published);
+        return d2.getTime() - d1.getTime();
+    });
+}
+
 async function requestProjectVersions(projId: string, gameVersion: string, loader: string | null): Promise<ModrinthVersion[]> {
     const loadersParam = loader && makeJSONParam([loader]);
     const gameVersionsParam = makeJSONParam([gameVersion]);
@@ -133,7 +143,9 @@ async function requestProjectVersions(projId: string, gameVersion: string, loade
         url += `&loaders=${loadersParam}`;
     }
 
-    return await apiGet<ModrinthVersion[]>(url);
+    const vs = await apiGet<ModrinthVersion[]>(url);
+    sortVersions(vs);
+    return vs;
 }
 
 function toMpmFile(f: ModrinthFile): MpmFile {

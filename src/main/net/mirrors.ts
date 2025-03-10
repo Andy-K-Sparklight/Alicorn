@@ -168,7 +168,28 @@ const bmclapi: Mirror | false = import.meta.env.AL_ENABLE_BMCLAPI && {
     }
 } satisfies Mirror;
 
-const mirrorList = [aliyun, bmclapi, ghfast, bgithub].filter(isTruthy);
+const mcim: Mirror = {
+    name: "mcim",
+    test: {
+        url: "https://mod.mcimirror.top/curseforge/v1/mods/search?gameId=432",
+        challenge: "https://api.curse.tools/v1/cf/mods/search?gameId=432"
+    },
+    apply(origin: string): string | null {
+        const u = URL.parse(origin);
+        if (!u) return null;
+
+        if (u.host === "api.curse.tools" && u.pathname.startsWith("/v1/cf")) {
+            const p = u.pathname.slice("/v1/cf".length);
+            u.host = "mod.mcimirror.top";
+            u.pathname = "/curseforge/v1" + p;
+            return u.toString();
+        }
+
+        return null;
+    }
+};
+
+const mirrorList = [mcim, aliyun, bmclapi, ghfast, bgithub].filter(isTruthy);
 
 function getMirrors() {
     return mirrorList.filter(m => conf().net.mirror.picked.includes(m.name));
