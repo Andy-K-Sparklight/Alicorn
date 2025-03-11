@@ -131,6 +131,10 @@ export function NumberSliderEntry({ id, icon, value, onChange, max, min, step }:
             showTooltip
             aria-label="Number Slider"
             tooltipProps={{ size: "lg", radius: "full" }}
+            classNames={{
+                startContent: "text-nowrap",
+                endContent: "text-nowrap"
+            }}
             startContent={min}
             endContent={max}
             onChange={(v) => onChange(Array.isArray(v) ? v[0] : v)}
