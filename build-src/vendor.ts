@@ -44,9 +44,9 @@ const contents = {
 
     ffind: {
         "*": {
-            url: "https://github.com/skjsjhb/ffind/releases/download/1.1/ffind-1.1.jar",
-            target: "ffind-1.1.jar",
-            sha256: "0be7de6c61fc666bb38c94a2b7ccf77b62d78e8825cabc4baa0fd323c1b46e93"
+            url: "https://github.com/skjsjhb/ffind/releases/download/1.2/ffind-1.2.jar",
+            target: "ffind-1.2.jar",
+            sha256: "74e47751ce9ae0fde412af400b1a45058a543c1e77a8c137deb24d209aa53d78"
         }
     },
 

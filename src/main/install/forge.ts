@@ -3,6 +3,7 @@ import { dlx } from "@/main/net/dlx";
 import { mirror } from "@/main/net/mirrors";
 import { netx } from "@/main/net/netx";
 import { exceptions } from "@/main/util/exception";
+import { isTruthy } from "@/main/util/misc";
 import { progress, type ProgressController } from "@/main/util/progress";
 import { XMLParser } from "fast-xml-parser";
 
@@ -24,7 +25,7 @@ async function syncVersionFromBMCLAPI(): Promise<string[]> {
     let offset = 0;
     while (true) {
         const results = await netx.getJSON(`https://bmclapi2.bangbang93.com/forge/list/${offset}/500`) as BMCLAPIForgeVersion[];
-        const rv = results.map(r => [r.mcversion, r.version, r.branch].join("-"));
+        const rv = results.map(r => [r.mcversion, r.version, r.branch].filter(isTruthy).join("-"));
         vs.push(...rv);
 
         if (rv.length < 500) break;

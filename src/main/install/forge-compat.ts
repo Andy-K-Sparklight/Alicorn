@@ -64,7 +64,7 @@ async function stripSignature(fp: string): Promise<void> {
 
     await fs.remove(fp);
 
-    const { default: { zip } } = await import("zip-a-folder");
+    const { zip } = await import("zip-a-folder");
 
     await zip(workDir, fp, { compression: 1 as any });
     await fs.remove(workDir);

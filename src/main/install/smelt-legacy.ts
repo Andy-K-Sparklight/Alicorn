@@ -64,7 +64,7 @@ async function findLibraries(jrtExec: string, jarPath: string, gameVersion: stri
         [
             `-Dffind.mcv=${gameVersion}`,
             "-cp",
-            [paths.app.to("vendor", "ffind-1.1.jar"), jarPath].join(path.delimiter),
+            [paths.app.to("vendor", "ffind-1.2.jar"), jarPath].join(path.delimiter),
             "moe.skjsjhb.ffind.Main"
         ]
     );
@@ -139,7 +139,7 @@ async function updateJar(fp: string, ...sources: string[]) {
     await fs.remove(path.join(workDir, "META-INF")); // Drop signatures
     await fs.remove(fp);
 
-    const { default: { zip } } = await import("zip-a-folder");
+    const { zip } = await import("zip-a-folder");
 
     // ModLoader requires that the client jar is compressed using DEFLATE
     // We're passing level 1 to minimum the compression time
