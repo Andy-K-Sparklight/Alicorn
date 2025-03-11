@@ -1,7 +1,7 @@
 import { alter } from "@/main/util/misc";
+import { useGameProfile } from "@/renderer/services/games";
 import { remoteInstaller } from "@/renderer/services/install";
 import { procService } from "@/renderer/services/proc";
-import { useGameProfile } from "@/renderer/store/games";
 import { useNav } from "@/renderer/util/nav";
 import { Button, cn } from "@heroui/react";
 import { CirclePlayIcon, DownloadIcon, EllipsisIcon, PinIcon, PinOffIcon, XIcon } from "lucide-react";

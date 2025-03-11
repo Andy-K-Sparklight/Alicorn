@@ -1,6 +1,6 @@
-import { useConfig } from "@/renderer/store/conf";
+import { useConfig } from "@/renderer/services/conf";
 import { Alert } from "@components/Alert";
-import { GameTypeImage } from "@components/GameTypeImage";
+import { GameTypeIcon } from "@components/GameTypeIcon";
 import { Button, ButtonGroup, Card, CardBody, Input, Progress } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";
 import { BanIcon, CheckIcon, ChevronsRight, FlagIcon, MinusIcon, PlusIcon, ZoomInIcon } from "lucide-react";
@@ -82,9 +82,7 @@ function ExampleContent() {
         <Card>
             <CardBody>
                 <div className="flex items-center gap-4">
-                    <div className="rounded-full p-3 bg-content2 w-16 h-16">
-                        <GameTypeImage type="fabric"/>
-                    </div>
+                    <GameTypeIcon className="w-16" gameType="fabric"/>
 
                     <div className="flex flex-col">
                         <div className="text-medium font-bold">{t("fabric.title")}</div>

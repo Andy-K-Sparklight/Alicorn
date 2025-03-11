@@ -42,6 +42,10 @@ svg.lucide {
     padding: 3px;
 }
 
+svg:focus {
+    outline: none;
+}
+
 pre {
     font-family: "Ubuntu Mono", monospace;
 }

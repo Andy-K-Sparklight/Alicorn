@@ -11,7 +11,13 @@ import optifine from "@assets/img/optifine.webp";
 import quilt from "@assets/img/quilt.webp";
 import rift from "@assets/img/rift.webp";
 import tnt from "@assets/img/tnt.webp";
+import { cn } from "@heroui/react";
 import React from "react";
+
+interface GameTypeIconProps extends React.HTMLProps<HTMLDivElement> {
+    gameType: GameCoreType;
+    wrapperClassName?: string;
+}
 
 const imageMap: Record<string, string> = {
     "vanilla-release": craftingTable,
@@ -22,11 +28,16 @@ const imageMap: Record<string, string> = {
     "unknown": tnt
 };
 
-/**
- * Picks a suitable image for the given game loader type.
- */
-export function GameTypeImage({ type }: { type: GameCoreType }) {
-    const src = imageMap[type] ?? tnt;
 
-    return <img src={src} alt={type} className="w-full h-full object-contain"/>;
+/**
+ * Displays a suitable icon for the given game loader type.
+ */
+export function GameTypeIcon({ gameType, className, wrapperClassName, ...rest }: GameTypeIconProps) {
+    const src = imageMap[gameType] ?? tnt;
+
+    return <div className={cn("aspect-square flex", className)} {...rest}>
+        <div className={cn("w-full aspect-square rounded-xl bg-content2 p-[15%]", wrapperClassName)}>
+            <img src={src} alt={gameType} className="w-full h-full object-contain"/>
+        </div>
+    </div>;
 }

@@ -1,4 +1,4 @@
-import { useConfig } from "@/renderer/store/conf";
+import { useConfig } from "@/renderer/services/conf";
 import { Button, Switch } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";
 import { ArrowRightIcon, BanIcon, HandHelpingIcon } from "lucide-react";

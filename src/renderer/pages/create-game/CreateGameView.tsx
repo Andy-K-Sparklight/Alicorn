@@ -1,8 +1,6 @@
 import type { InstallerProps } from "@/main/install/installers";
-
-import { useAccounts } from "@/renderer/store/accounts";
-
-import { useGameProfile } from "@/renderer/store/games";
+import { useAccounts } from "@/renderer/services/accounts";
+import { useGameProfile } from "@/renderer/services/games";
 import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/Alert";
 import type { PropsWithParams } from "@components/AnimatedRoute";
@@ -50,7 +48,6 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
     const [installType, setInstallType] = useState<string>(profile?.installProps.type || "vanilla");
     const [loaderVersion, setLoaderVersion] = useState<string>("");
 
-    const [creating, setCreating] = useState(false);
     const nav = useNav();
 
     const [availableModLoaders, setAvailableModLoaders] = useState<string[] | null>(null);
@@ -76,39 +73,8 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
         !(authType === "manual" && !playerName) &&
         !(authType === "reuse" && !accountId);
 
-    function buildInstallProps(): InstallerProps {
-        if (!valid) throw "Cannot create game with incomplete install props";
-
-        switch (installType) {
-            case "vanilla":
-                return {
-                    type: "vanilla",
-                    gameVersion
-                };
-            case "liteloader":
-                return {
-                    type: "liteloader",
-                    gameVersion
-                };
-            case "fabric":
-            case "quilt":
-            case "neoforged":
-            case "forge":
-            case "rift":
-            case "optifine":
-                return {
-                    type: installType,
-                    gameVersion,
-                    loaderVersion
-                };
-        }
-
-        throw `Unsupported mod loader: ${installType}`;
-    }
-
     async function handleCreate() {
         if (valid) {
-            setCreating(true);
             await native.game.add({
                 id: gameId,
                 name: gameName,
@@ -116,12 +82,11 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
                 accountId,
                 authType,
                 playerName,
-                installProps: buildInstallProps(),
+                installProps: buildInstallProps(installType, gameVersion, loaderVersion),
                 gameVersion,
                 assetsLevel,
                 containerShouldLink
             });
-            setCreating(false);
             addToast({
                 color: "success",
                 title: t("toast-created")
@@ -247,7 +212,6 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
                     fullWidth
                     color="primary"
                     size="lg"
-                    isLoading={creating}
                     isDisabled={!valid}
                     onPress={handleCreate}
                 >
@@ -256,4 +220,32 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
             </div>
         </div>
     </div>;
+}
+
+function buildInstallProps(type: string, gameVersion: string, loaderVersion: string): InstallerProps {
+    switch (type) {
+        case "vanilla":
+            return {
+                type: "vanilla",
+                gameVersion
+            };
+        case "liteloader":
+            return {
+                type: "liteloader",
+                gameVersion
+            };
+        case "fabric":
+        case "quilt":
+        case "neoforged":
+        case "forge":
+        case "rift":
+        case "optifine":
+            return {
+                type,
+                gameVersion,
+                loaderVersion
+            };
+    }
+
+    throw `Unsupported mod loader: ${type}`;
 }

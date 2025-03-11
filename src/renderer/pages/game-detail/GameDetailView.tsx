@@ -1,6 +1,6 @@
-import { useGameProfile } from "@/renderer/store/games";
+import { useGameProfile } from "@/renderer/services/games";
 import type { PropsWithParams } from "@components/AnimatedRoute";
-import { GameTypeImage } from "@components/GameTypeImage";
+import { GameTypeIcon } from "@components/GameTypeIcon";
 import { Tab, Tabs } from "@heroui/react";
 import { AddonsPanel } from "@pages/game-detail/AddonsPanel";
 import { AdvancedPanel } from "@pages/game-detail/AdvancedPanel";
@@ -33,9 +33,7 @@ function CompactHeader() {
     const { id, name, type } = game;
 
     return <div className="w-full flex items-center gap-4 justify-center">
-        <div className="h-10 aspect-square rounded-full bg-content2 p-1">
-            <GameTypeImage type={type}/>
-        </div>
+        <GameTypeIcon className="h-10" gameType={type}/>
 
         <div className="font-bold text-xl">{name}</div>
 

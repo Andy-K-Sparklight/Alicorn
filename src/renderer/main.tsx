@@ -2,6 +2,7 @@ import { App } from "@/renderer/App";
 import { i18n } from "@/renderer/i18n/i18n";
 import { globalStore } from "@/renderer/store/store";
 import { ThemeSwitchProvider } from "@/renderer/theme";
+import { addToast } from "@heroui/react";
 import { t } from "i18next";
 import { pEvent } from "p-event";
 import React, { StrictMode } from "react";
@@ -44,6 +45,11 @@ async function main() {
     native.bwctl.show();
 
     native.ext.onDevToolsOpened(printDevToolsWarn);
+
+    native.app.onUpgraded(version => addToast({
+        color: "success",
+        title: t("toast.app-upgraded", { version })
+    }));
 }
 
 function render() {

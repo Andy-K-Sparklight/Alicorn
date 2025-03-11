@@ -1,6 +1,6 @@
 import type { OverlayPlacement } from "@heroui/aria-utils";
 import { Button, Popover, PopoverContent, PopoverTrigger } from "@heroui/react";
-import { ArrowRightIcon, CircleHelpIcon } from "lucide-react";
+import { ArrowRightIcon } from "lucide-react";
 import React, { type PropsWithChildren, useState } from "react";
 
 interface ConfirmPopupProps {
@@ -36,11 +36,8 @@ export function ConfirmPopup(
             {children}
         </PopoverTrigger>
         <PopoverContent>
-            <div className="flex flex-col gap-2 py-2 px-4 items-center">
-                <div className="flex items-center gap-2">
-                    <CircleHelpIcon/>
-                    <div className="text-lg font-bold">{title}</div>
-                </div>
+            <div className="flex flex-col gap-1 py-2 px-4 items-center">
+                <div className="text-lg font-bold">{title}</div>
 
                 <div className="text-sm text-foreground-400">{sub}</div>
                 <Button

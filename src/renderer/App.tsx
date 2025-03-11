@@ -4,7 +4,7 @@ import { useNav } from "@/renderer/util/nav";
 import { AnimatedRoute } from "@components/AnimatedRoute";
 import { ExceptionDisplay } from "@components/ExceptionDisplay";
 import { Navigator } from "@components/Navigator";
-import { addToast, HeroUIProvider, ToastProvider } from "@heroui/react";
+import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
 import { CreateGameWizardView } from "@pages/create-game-wizard/CreateGameWizardView";
 import { CreateGameView } from "@pages/create-game/CreateGameView";
@@ -14,8 +14,7 @@ import { MonitorListView } from "@pages/monitor-list/MonitorListView";
 import { MonitorView } from "@pages/monitor/MonitorView";
 import { SettingsView } from "@pages/settings/SettingsView";
 import { SetupView } from "@pages/setup/SetupView";
-import { t } from "i18next";
-import React, { useEffect } from "react";
+import React from "react";
 import { useLocalStorage } from "react-use";
 import { Redirect } from "wouter";
 import pkg from "~/package.json";
@@ -29,12 +28,6 @@ export function App() {
     useAutoTheme();
     useAutoFontClass();
 
-    useEffect(() => {
-        native.app.onUpgraded(version => addToast({
-            color: "success",
-            title: t("toast.app-upgraded", { version })
-        }));
-    }, []);
     // Spinner styles need to be set manually for each one until the following issue gets solved
     // https://github.com/heroui-inc/heroui/issues/4906
     return <HeroUIProvider navigate={nav}>

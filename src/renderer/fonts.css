@@ -2,7 +2,6 @@
     font-family: "Nunito SemiBold", "Noto Sans SC Variable", sans-serif;
 }
 
-
-pre {
+pre, code {
     font-family: "JetBrains Mono Variable", monospace;
 }

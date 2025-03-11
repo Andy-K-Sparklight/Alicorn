@@ -1,6 +1,6 @@
 import type { GameCoreType } from "@/main/game/spec";
 import { CardRadio } from "@components/CardRadio";
-import { GameTypeImage } from "@components/GameTypeImage";
+import { GameTypeIcon } from "@components/GameTypeIcon";
 import { RadioGroup } from "@heroui/radio";
 import { Spinner } from "@heroui/react";
 import React, { useEffect } from "react";
@@ -47,9 +47,7 @@ export function ModLoaderSelector({ availableModLoaders, value, onChange }: ModL
 
                         return <CardRadio key={lv} value={lv}>
                             <div className="flex gap-4 items-center">
-                                <div className="h-12 p-1.5 aspect-square bg-content2 rounded-full">
-                                    <GameTypeImage type={iconType}/>
-                                </div>
+                                <GameTypeIcon className="h-12" gameType={iconType}/>
 
                                 <div className="flex flex-col gap-1">
                                     <div>{t(`${lv}.label`)}</div>

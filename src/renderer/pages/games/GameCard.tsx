@@ -1,6 +1,7 @@
 import type { GameProfile } from "@/main/game/spec";
 import { useInstallProgress } from "@/renderer/services/install";
-import { GameTypeImage } from "@components/GameTypeImage";
+
+import { GameTypeIcon } from "@components/GameTypeIcon";
 import { Card, CardBody, Chip, cn } from "@heroui/react";
 import { GameCardActions } from "@pages/games/GameCardActions";
 import { DotIcon } from "lucide-react";
@@ -15,20 +16,16 @@ export function GameCard({ game }: GameCardProps) {
 
     const { id, name, versions: { game: gameVersion }, installed, type } = game;
     const { t: tc } = useTranslation("common", { keyPrefix: "progress" });
-    const installProgress = useInstallProgress(id);
+    const { isInstalling, progress } = useInstallProgress(id);
     const pinned = game.user.pinTime && game.user.pinTime > 0;
 
-    const isInstalling = installProgress !== null;
     const installStatus = isInstalling ? "installing" : installed ? "installed" : "not-installed";
-
-    const progressText = installProgress && tc(installProgress.state, { ...installProgress.value });
+    const progressText = progress && tc(progress.state, { ...progress.value });
 
     return <Card shadow="sm" className={cn(pinned && "outline-2 outline-default-500")}>
         <CardBody>
             <div className="flex gap-6 items-center px-3">
-                <div className="w-12 h-12 p-2 bg-content2 rounded-full">
-                    <GameTypeImage type={type}/>
-                </div>
+                <GameTypeIcon className="w-12" gameType={type}/>
 
                 <div className="flex flex-col">
                     <div className="font-bold text-lg">{name}</div>

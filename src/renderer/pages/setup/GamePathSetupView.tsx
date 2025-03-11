@@ -1,4 +1,4 @@
-import { useConfig } from "@/renderer/store/conf";
+import { useConfig } from "@/renderer/services/conf";
 
 import { DirInput } from "@components/DirInput";
 import { Button } from "@heroui/react";

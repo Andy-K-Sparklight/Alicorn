@@ -1,4 +1,4 @@
-import { useGameList } from "@/renderer/store/games";
+import { useGameList } from "@/renderer/services/games";
 import { Select, SelectItem, type SharedSelection } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 
@@ -35,8 +35,8 @@ export function ContainerSelector({ containerId, onChange }: ContainerSelectorPr
             games.map(g =>
                 <SelectItem key={g.id} textValue={g.id}>
                     <div className="flex items-center gap-2">
-                        <div>{g.name}</div>
-                        <div className="text-foreground-400 text-sm">{g.id}</div>
+                        {g.name}
+                        <span className="text-foreground-400 text-sm">{g.id}</span>
                     </div>
                 </SelectItem>
             )

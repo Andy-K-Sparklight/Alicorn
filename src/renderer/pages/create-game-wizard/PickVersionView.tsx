@@ -2,7 +2,7 @@ import type { VersionEntry } from "@/main/install/vanilla";
 import { useVersionManifest } from "@/renderer/services/sources";
 import { useNav } from "@/renderer/util/nav";
 import { CardRadio } from "@components/CardRadio";
-import { GameTypeImage } from "@components/GameTypeImage";
+import { GameTypeIcon } from "@components/GameTypeIcon";
 import { WizardCard } from "@components/WizardCard";
 import { RadioGroup } from "@heroui/radio";
 import { Button, Input, Link, Spinner, Switch } from "@heroui/react";
@@ -123,9 +123,7 @@ function VersionContent({ version: { id, type, sha1, releaseTime } }: { version:
     } as const)[type] ?? "unknown";
 
     return <div className="flex h-[48px] items-center gap-4 py-1">
-        <div className="h-full aspect-square rounded-full bg-content2 p-1.5">
-            <GameTypeImage type={gameType}/>
-        </div>
+        <GameTypeIcon className="h-full" gameType={gameType}/>
 
         <div className="flex flex-col">
             <div className="font-bold text-lg">{id}</div>

@@ -10,6 +10,10 @@ async function install(gameId: string): Promise<void> {
     native.install.installGame(gameId);
     const port = await retrievePort(gameId);
 
+    globalStore.dispatch(
+        installProgressSlice.actions.markInstalling({ gameId })
+    );
+
     const { promise, resolve, reject } = Promise.withResolvers<void>();
 
     let dispatched = false;
@@ -27,8 +31,9 @@ async function install(gameId: string): Promise<void> {
         });
     }
 
-
-    function dispatchReset() {
+    function finalize() {
+        finished = true;
+        port.close();
         globalStore.dispatch(
             installProgressSlice.actions.reset({ gameId })
         );
@@ -40,9 +45,7 @@ async function install(gameId: string): Promise<void> {
                 throttledDispatchUpdate(e.data.progress);
                 break;
             case "finish":
-                finished = true;
-                port.close();
-                dispatchReset();
+                finalize();
                 addToast({
                     color: "success",
                     title: t("toast.game-installed")
@@ -50,9 +53,7 @@ async function install(gameId: string): Promise<void> {
                 resolve();
                 break;
             case "error":
-                finished = true;
-                port.close();
-                dispatchReset();
+                finalize();
                 reject(e.data.err);
                 break;
         }
@@ -61,11 +62,17 @@ async function install(gameId: string): Promise<void> {
     return promise;
 }
 
-export function useInstallProgress(gameId: string): Progress | null {
-    const progress = useAppSelector(s => s.installProgress[gameId]);
-    return progress ?? null;
-}
-
 export const remoteInstaller = {
     install
 };
+
+export interface InstallProgressSlim {
+    isInstalling: boolean;
+    progress?: Progress;
+}
+
+export function useInstallProgress(gameId: string): InstallProgressSlim {
+    const isInstalling = useAppSelector(s => s.installProgress.installing.includes(gameId));
+    const progress = useAppSelector(s => s.installProgress.progress[gameId]);
+    return { isInstalling, progress };
+}

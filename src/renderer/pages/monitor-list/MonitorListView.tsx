@@ -1,6 +1,6 @@
 import { procService, type RemoteGameProcess, type RemoteGameStatus, useGameProcList } from "@/renderer/services/proc";
 import { useNav } from "@/renderer/util/nav";
-import { GameTypeImage } from "@components/GameTypeImage";
+import { GameTypeIcon } from "@components/GameTypeIcon";
 import { Button, Card, CardBody, Chip } from "@heroui/react";
 import { ArrowRightIcon, XIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -49,9 +49,7 @@ function MonitorItem({ proc }: { proc: RemoteGameProcess }) {
     return <Card>
         <CardBody>
             <div className="flex gap-4 items-center h-16 px-3">
-                <div className="h-full aspect-square p-3 bg-content2 rounded-full">
-                    <GameTypeImage type={type}/>
-                </div>
+                <GameTypeIcon className="h-full" gameType={type}/>
 
                 <div className="font-bold text-xl">{name}</div>
 

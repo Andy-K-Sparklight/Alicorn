@@ -1,4 +1,4 @@
-import { useConfig } from "@/renderer/store/conf";
+import { useConfig } from "@/renderer/services/conf";
 import { Alert } from "@components/Alert";
 import { Divider } from "@heroui/react";
 import { DirEntry } from "@pages/settings/SettingsEntry";

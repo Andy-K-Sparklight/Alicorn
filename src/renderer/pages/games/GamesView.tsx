@@ -1,6 +1,6 @@
 import type { GameProfile } from "@/main/game/spec";
 
-import { useGameList } from "@/renderer/store/games";
+import { useGameList } from "@/renderer/services/games";
 import { useNav } from "@/renderer/util/nav";
 import { Button, Tab, Tabs, Tooltip } from "@heroui/react";
 import { GameCard } from "@pages/games/GameCard";

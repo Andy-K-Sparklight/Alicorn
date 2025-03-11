@@ -1,4 +1,4 @@
-import { useConfig } from "@/renderer/store/conf";
+import { useConfig } from "@/renderer/services/conf";
 import { Divider } from "@heroui/react";
 import { NumberSliderEntry, OnOffEntry } from "@pages/settings/SettingsEntry";
 import { ArrowLeftRightIcon, DatabaseBackupIcon, FileDiffIcon, ZapIcon } from "lucide-react";

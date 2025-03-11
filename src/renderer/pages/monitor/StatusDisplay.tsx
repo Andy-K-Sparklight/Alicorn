@@ -1,6 +1,6 @@
 import type { GameCoreType } from "@/main/game/spec";
 import type { RemoteGameStatus } from "@/renderer/services/proc";
-import { GameTypeImage } from "@components/GameTypeImage";
+import { GameTypeIcon } from "@components/GameTypeIcon";
 import { Card, CardBody, cn } from "@heroui/react";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -24,17 +24,16 @@ function StatusDisplay({ id, name, profileId, type, status, uptime, pid }: Statu
         <CardBody>
             <div className="flex flex-col h-full px-6 items-center justify-evenly">
                 <div className="w-full flex gap-6 justify-center items-center">
-                    <div
+                    <GameTypeIcon
                         className={
-                            cn("w-16 h-16 p-2 bg-content2 rounded-full outline outline-2 outline-offset-4", {
+                            cn("w-12 outline outline-2 outline-offset-4 rounded-xl", {
                                 "outline-success": status === "running",
                                 "outline-default": status === "exited",
                                 "outline-danger": status === "crashed"
                             })
                         }
-                    >
-                        <GameTypeImage type={type}/>
-                    </div>
+                        gameType={type}
+                    />
 
                     <div className="flex flex-col gap-1">
                         <div className="font-bold text-lg break-normal">{name}</div>

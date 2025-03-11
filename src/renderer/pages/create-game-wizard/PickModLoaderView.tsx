@@ -69,8 +69,10 @@ export function PickModLoaderView() {
             </div>
         }
     >
-        <div className="flex flex-col w-full h-full gap-2 justify-center">
-            <ModLoaderSelector availableModLoaders={availableModLoaders} value={loader} onChange={setLoader}/>
+        <div className="w-full h-full overflow-y-auto flex">
+            <div className="flex flex-col w-full gap-2 justify-center my-auto">
+                <ModLoaderSelector availableModLoaders={availableModLoaders} value={loader} onChange={setLoader}/>
+            </div>
         </div>
     </WizardCard>;
 }

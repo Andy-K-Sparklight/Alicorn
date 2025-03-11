@@ -1,4 +1,4 @@
-import { useAccounts } from "@/renderer/store/accounts";
+import { useAccounts } from "@/renderer/services/accounts";
 import { Select, SelectItem, type SharedSelection } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 

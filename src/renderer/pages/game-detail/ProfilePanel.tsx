@@ -1,7 +1,7 @@
 import type { GameCoreType } from "@/main/game/spec";
 import { alter } from "@/main/util/misc";
 import { Editable } from "@components/Editable";
-import { GameTypeImage } from "@components/GameTypeImage";
+import { GameTypeIcon } from "@components/GameTypeIcon";
 import { Button, ButtonGroup } from "@heroui/react";
 import { useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
 import { EditIcon, FolderIcon } from "lucide-react";
@@ -38,9 +38,7 @@ export function ProfilePanel() {
     return <div className="mx-auto py-8 w-5/6 h-full overflow-y-auto">
         <div className="flex flex-col gap-12 px-8 py-10 w-full h-full rounded-xl bg-content1">
             <div className="flex gap-8 justify-center">
-                <div className="w-16 h-16 rounded-full bg-content2 p-2">
-                    <GameTypeImage type={type}/>
-                </div>
+                <GameTypeIcon className="w-16" gameType={type}/>
 
                 <div className="flex flex-col gap-1 justify-center">
                     <Editable
