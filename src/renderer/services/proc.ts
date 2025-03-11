@@ -5,6 +5,7 @@
 import type { GameProcEvent } from "@/main/api/launcher";
 import type { GameProfile } from "@/main/game/spec";
 import type { GameProcessLog } from "@/main/launch/log-parser";
+import { alter } from "@/main/util/misc";
 import { retrievePort } from "@/preload/message";
 import Emittery from "emittery";
 import { useCallback, useSyncExternalStore } from "react";
@@ -89,38 +90,39 @@ async function create(id: string): Promise<string> {
         const currentProc = procs.get(meta.id);
         if (!currentProc) return;
 
-        const np = structuredClone(currentProc); // Process objects should be immutable
-        switch (e.data.type) {
-            case "exit":
-                np.status = "exited";
-                np.exitTime = Date.now();
-                np.memUsage = [];
-                restrictedEmitter.emit("change");
-                break;
-            case "crash":
-                np.status = "crashed";
-                np.exitTime = Date.now();
-                np.memUsage = [];
-                restrictedEmitter.emit("change");
-                break;
-            case "stdout":
-            case "stderr":
-                const s = e.data.data;
-                const buf = np.outputs[e.data.type]; // The channels and the buffers share the same names
-                buf.push(s);
-                clearLogs(buf);
-                break;
-            case "log":
-                np.logs.push(e.data.log);
-                clearLogs(np.logs);
-                break;
-            case "memUsageUpdate":
-                np.memUsage.push(e.data.mem);
-                if (np.memUsage.length > 30) {
-                    np.memUsage.splice(0, 10);
-                }
-                break;
-        }
+        const np = alter(currentProc, pr => {
+            switch (e.data.type) {
+                case "exit":
+                    pr.status = "exited";
+                    pr.exitTime = Date.now();
+                    pr.memUsage = [];
+                    restrictedEmitter.emit("change");
+                    break;
+                case "crash":
+                    pr.status = "crashed";
+                    pr.exitTime = Date.now();
+                    pr.memUsage = [];
+                    restrictedEmitter.emit("change");
+                    break;
+                case "stdout":
+                case "stderr":
+                    const s = e.data.data;
+                    const buf = pr.outputs[e.data.type]; // The channels and the buffers share the same names
+                    buf.push(s);
+                    clearLogs(buf);
+                    break;
+                case "log":
+                    pr.logs.push(e.data.log);
+                    clearLogs(pr.logs);
+                    break;
+                case "memUsageUpdate":
+                    pr.memUsage.push(e.data.mem);
+                    if (pr.memUsage.length > 30) {
+                        pr.memUsage.splice(0, 10);
+                    }
+                    break;
+            }
+        });
 
         procs.set(meta.id, np);
         emitDetailedChange();
