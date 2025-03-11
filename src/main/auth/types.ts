@@ -1,5 +1,6 @@
 import type { TemporalAccountProps } from "@/main/auth/temp";
 import type { VanillaAccountProps } from "@/main/auth/vanilla";
+import type { YggdrasilAccountProps } from "@/main/auth/yggdrasil";
 import type { RegistryTransformer } from "@/main/registry/registry";
 
 export interface AuthCredentials {
@@ -28,7 +29,7 @@ export interface Account {
     toProps(): AccountProps;
 }
 
-export type AccountProps = TemporalAccountProps | VanillaAccountProps;
+export type AccountProps = TemporalAccountProps | VanillaAccountProps | YggdrasilAccountProps;
 
 export type DetailedAccountProps = AccountProps & { uuid: string; }
 

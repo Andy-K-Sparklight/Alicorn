@@ -2,6 +2,7 @@
  * The bootloader system.
  */
 import { accounts } from "@/main/auth/manage";
+import { YggdrasilAccount } from "@/main/auth/yggdrasil";
 import { jrt } from "@/main/jrt/install";
 import { launchArgs } from "@/main/launch/args";
 import { GameProcess } from "@/main/launch/proc";
@@ -9,6 +10,7 @@ import { LaunchHint, LaunchInit } from "@/main/launch/types";
 import { venv } from "@/main/launch/venv";
 import { profileLoader } from "@/main/profile/loader";
 import { exceptions } from "@/main/util/exception";
+import { net } from "electron";
 import { containers } from "../container/manage";
 
 const games = new Map<string, GameProcess>();
@@ -30,6 +32,9 @@ async function prepare(hint: LaunchHint): Promise<LaunchInit> {
     const account = accounts.get(hint.accountId);
     const assetsShouldMap = await profileLoader.assetIndexShouldMap(profile.assetIndex.id, container);
 
+    const authlibInjectorHost = account instanceof YggdrasilAccount ? account.host : undefined;
+    const authlibInjectorPrefetch = authlibInjectorHost && await prefetchAuthlibInjectorMeta(authlibInjectorHost);
+
     const enabledFeatures = new Set<string>();
     // Add custom resolution flag if applicable
     const window = hint.pref.window;
@@ -50,7 +55,9 @@ async function prepare(hint: LaunchHint): Promise<LaunchInit> {
         assetsShouldMap,
         pref: hint.pref,
         extraVMArgs: [],
-        extraClasspath: []
+        extraClasspath: [],
+        authlibInjectorHost,
+        authlibInjectorPrefetch
     };
 }
 
@@ -78,6 +85,15 @@ async function launch(hint: LaunchHint): Promise<GameProcess> {
             await venv.unmount(init.container);
         }
         throw e;
+    }
+}
+
+async function prefetchAuthlibInjectorMeta(url: string): Promise<string> {
+    try {
+        const res = await net.fetch(url);
+        return Buffer.from(await res.arrayBuffer()).toString("base64");
+    } catch {
+        return "";
     }
 }
 

@@ -2,6 +2,7 @@
  * Argument creation module.
  */
 import { conf } from "@/main/conf/conf";
+import { paths } from "@/main/fs/paths";
 import { LaunchInit } from "@/main/launch/types";
 import { MavenName } from "@/main/profile/maven-name";
 import { filterRules } from "@/main/profile/rules";
@@ -111,6 +112,26 @@ function createWindowSizeArgs(init: LaunchInit): string[] {
     return [];
 }
 
+function createAuthlibInjectorArgs(init: LaunchInit): string[] {
+    const out: string[] = [];
+
+    if (init.authlibInjectorHost) {
+        const libPt = paths.app.to("vendor", "authlib-injector-1.2.5.jar");
+        out.push(
+            `-javaagent:${libPt}=${init.authlibInjectorHost}`
+        );
+
+        if (init.authlibInjectorPrefetch) {
+            out.push(
+                `-Dauthlibinjector.yggdrasil.prefetched=${init.authlibInjectorPrefetch}`
+            );
+        }
+    }
+
+
+    return out;
+}
+
 function createArguments(init: LaunchInit): string[] {
     const va = createTemplateValues(init);
 
@@ -137,15 +158,16 @@ function createArguments(init: LaunchInit): string[] {
 
     const extraVMArgs = [
         ...createMemoryArgs(init),
-        ...localExtraVM,
+        ...createAuthlibInjectorArgs(init),
+        ...init.extraVMArgs ?? [],
         ...globalExtraVM,
-        ...init.extraVMArgs ?? []
+        ...localExtraVM
     ];
 
     const extraGameArgs = [
         ...createWindowSizeArgs(init),
-        ...localExtraGame,
-        ...globalExtraGame
+        ...globalExtraGame,
+        ...localExtraGame
     ];
 
     return [

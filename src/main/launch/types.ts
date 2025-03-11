@@ -70,4 +70,6 @@ export interface LaunchInit {
     extraVMArgs: string[];
     extraClasspath: string[];
     altMainClass?: string;
+    authlibInjectorHost?: string;
+    authlibInjectorPrefetch?: string;
 }

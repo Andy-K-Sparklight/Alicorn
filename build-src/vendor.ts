@@ -56,6 +56,14 @@ const contents = {
             target: "unfine-1.0.jar",
             sha256: "6dc5297f1b83e7daeb29b7f153d54f797fd5c715cfe736d55ad0d98846c9352d"
         }
+    },
+
+    "authlib-injector": {
+        "*": {
+            url: "https://github.com/yushijinhun/authlib-injector/releases/download/v1.2.5/authlib-injector-1.2.5.jar",
+            target: "authlib-injector-1.2.5.jar",
+            sha256: "3bc9ebdc583b36abd2a65b626c4b9f35f21177fbf42a851606eaaea3fd42ee0f"
+        }
     }
 } as Record<string, Record<string, VendorFile>>;
 
@@ -75,7 +83,8 @@ function createFileList(cfg: BuildConfig): VendorFile[] {
         getComponent("aria2c"),
         getComponent("certificate"),
         getComponent("ffind"),
-        getComponent("unfine")
+        getComponent("unfine"),
+        getComponent("authlib-injector")
     ].filter(isTruthy);
 }
 

@@ -1,6 +1,7 @@
 import { TemporalAccount } from "@/main/auth/temp";
 import type { Account, AccountProps } from "@/main/auth/types";
 import { VanillaAccount } from "@/main/auth/vanilla";
+import { YggdrasilAccount } from "@/main/auth/yggdrasil";
 import { reg } from "@/main/registry/registry";
 import { windowControl } from "@/main/sys/window-control";
 
@@ -12,6 +13,8 @@ function loadFromProps(props: AccountProps): Account {
             return VanillaAccount.fromProps(props);
         case "local":
             return TemporalAccount.fromProps(props);
+        case "yggdrasil":
+            return YggdrasilAccount.fromProps(props);
     }
 }
 
