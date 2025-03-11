@@ -17,8 +17,8 @@ export function FinishView() {
         const gid = await native.game.add({
             name: tc("default-name"),
             containerId: undefined,
-            accountId: null,
-            authType: "new-vanilla",
+            accountId: ctx.value.accountId ?? "",
+            authType: ctx.value.authType ?? "online",
             gameVersion: ctx.value.gameVersion!,
             assetsLevel: "full",
             installProps: {
@@ -42,9 +42,6 @@ export function FinishView() {
         sub={t("sub")}
         content={
             <div className="flex flex-col h-full gap-4">
-                <div className="text-sm text-foreground-500">
-                    {t("hint")}
-                </div>
                 <div className="mt-auto flex flex-col gap-2">
                     <Button
                         fullWidth

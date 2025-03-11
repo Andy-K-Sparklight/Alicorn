@@ -33,7 +33,7 @@ export function PickModLoaderView() {
 
     function onConfirm() {
         ctx.setValue({ ...ctx.value, installProps: { type: loader as any, gameVersion: gameVersion! } });
-        nav("/games/new-wizard/finish");
+        nav("/games/new-wizard/pick-account");
     }
 
 

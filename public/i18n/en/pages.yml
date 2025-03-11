@@ -109,10 +109,20 @@ create-game-wizard:
       Or, you can install it later.
 
       Options can be toggled in game details.
-    hint: Login required when launching.
     btn:
       install: Play Now!
       create-only: Install Later
+
+  pick-account:
+    title: Get Logged In
+    sub: |-
+      Log in with your account to play online.
+      Make sure to choose the account used to purchase.
+
+    hint: |-
+      Not listed? Go with "Add New Microsoft Account".
+      You'll be prompted to log in when launching.
+    btn: Next Step
 
 games:
   title: Games

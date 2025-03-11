@@ -1,6 +1,7 @@
 import type { CreateGameInit } from "@/main/api/game";
 import { AnimatedRoute } from "@components/AnimatedRoute";
 import { FinishView } from "@pages/create-game-wizard/FinishView";
+import { PickAccountView } from "@pages/create-game-wizard/PickAccountView";
 import { PickModLoaderView } from "@pages/create-game-wizard/PickModLoaderView";
 import { PickVersionView } from "@pages/create-game-wizard/PickVersionView";
 import React, { useState } from "react";
@@ -18,6 +19,7 @@ export function CreateGameWizardView() {
     return <CreateGameWizardContext.Provider value={{ value, setValue }}>
         <AnimatedRoute path="/games/new-wizard/pick-version" component={PickVersionView}/>
         <AnimatedRoute path="/games/new-wizard/pick-mod-loader" component={PickModLoaderView}/>
+        <AnimatedRoute path="/games/new-wizard/pick-account" component={PickAccountView}/>
         <AnimatedRoute path="/games/new-wizard/finish" component={FinishView}/>
         <AnimatedRoute path="/games/new-wizard" component={DefaultPageRedirect}/>
     </CreateGameWizardContext.Provider>;
