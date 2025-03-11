@@ -190,6 +190,20 @@ const native = {
         },
 
         /**
+         * Queries the skin of the given account.
+         */
+        getSkin(accountId: string): Promise<string> {
+            return ipcRenderer.invoke("getAccountSkin", accountId);
+        },
+
+        /**
+         * Like `getSkin`, but crops the section corresponding to the avatar for displaying.
+         */
+        getSkinAvatar(accountId: string): Promise<[string, string]> {
+            return ipcRenderer.invoke("getAccountSkinAvatar", accountId);
+        },
+
+        /**
          * Gets notified when accounts have changed.
          */
         onAccountChange(fn: () => void) {

@@ -41,7 +41,7 @@ export interface CreateGameInit {
     id?: string;
     name: string;
     gameVersion: string;
-    authType: "new-vanilla" | "manual" | "reuse";
+    authType: "online" | "manual";
     installProps: InstallerProps;
     playerName: string;
     accountId: string | null;
@@ -98,7 +98,7 @@ ipcMain.handle("addGame", async (_, init) => {
             break;
         }
 
-        case "reuse": {
+        case "online": {
             accountId = init.accountId ?? "";
         }
     }

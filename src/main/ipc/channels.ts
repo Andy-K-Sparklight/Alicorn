@@ -66,4 +66,6 @@ export type IpcCommands = {
     updateAddons: (gameId: string) => void;
     addAddons: (gameId: string, specs: string[]) => void;
     removeAddons: (gameId: string, specs: string[]) => void;
+    getAccountSkin: (accountId: string) => string;
+    getAccountSkinAvatar: (accountId: string) => [string, string];
 }

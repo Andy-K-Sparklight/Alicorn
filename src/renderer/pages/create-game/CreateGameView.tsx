@@ -2,12 +2,12 @@ import type { InstallerProps } from "@/main/install/installers";
 import { useAccounts } from "@/renderer/services/accounts";
 import { useGameProfile } from "@/renderer/services/games";
 import { useNav } from "@/renderer/util/nav";
+import { AccountPicker } from "@components/AccountPicker";
 import { Alert } from "@components/Alert";
 import type { PropsWithParams } from "@components/AnimatedRoute";
 import { PlayerNameInput } from "@components/PlayerNameInput";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { addToast, Button, Input, Switch } from "@heroui/react";
-import { AccountSelector } from "@pages/create-game/AccountSelector";
 import { AssetLevelSelector } from "@pages/create-game/AssetsLevelSelector";
 import { ContainerSelector } from "@pages/create-game/ContainerSelector";
 import { ModLoaderSelector } from "@pages/create-game/ModLoaderSelector";
@@ -37,7 +37,7 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
         profile?.launchHint.accountId ||
         accounts.some(a => a.uuid === lastSelectedAccountId) ? lastSelectedAccountId : null;
 
-    const [authType, setAuthType] = useState<"new-vanilla" | "manual" | "reuse">(initialAccountId ? "reuse" : "new-vanilla");
+    const [authType, setAuthType] = useState<"online" | "manual">("online");
 
     const [accountId, setAccountId] = useState<string | null>(initialAccountId ?? null);
 
@@ -70,8 +70,7 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
 
     const valid = gameVersion &&
         !(shareContainer && !containerId) &&
-        !(authType === "manual" && !playerName) &&
-        !(authType === "reuse" && !accountId);
+        !(authType === "manual" && !playerName);
 
     async function handleCreate() {
         if (valid) {
@@ -164,22 +163,18 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
                         value={authType}
                         onValueChange={(s) => setAuthType(s as any)}
                     >
-                        <Radio value="new-vanilla" description={t("account.new-vanilla.sub")}>
-                            {t("account.new-vanilla.label")}
-                        </Radio>
-
-                        <Radio value="manual" description={t("account.manual.sub")}>
-                            {t("account.manual.label")}
-                        </Radio>
-
-                        <Radio value="reuse" description={t("account.reuse.sub")}>
-                            {t("account.reuse.label")}
-                        </Radio>
-
+                        {
+                            ["online", "manual"].map(tp =>
+                                <Radio key={tp} value={tp} description={t(`account.${tp}.sub`)}>
+                                    {t(`account.${tp}.label`)}
+                                </Radio>
+                            )
+                        }
                     </RadioGroup>
 
                     {
-                        authType === "reuse" && <AccountSelector accountId={accountId} onChange={handleAccountChange}/>
+                        authType === "online" &&
+                        <AccountPicker allowCreation accountId={accountId} onChange={handleAccountChange}/>
                     }
 
                     {

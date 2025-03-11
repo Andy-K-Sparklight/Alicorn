@@ -27,18 +27,12 @@ create-game:
   loading-versions: Retrieving Version Manifest
 
   account:
-    select:
-      label: Select Account
-      placeholder: N/A
-    new-vanilla:
-      label: Log in Later
-      sub: You'll be prompted to log in when launching.
+    online:
+      label: Authenticate Online
+      sub: Pick an account or add a new Microsoft account.
     manual:
       label: Set Player Name Manually
       sub: Manually enter player name if online verification has failed.
-    reuse:
-      label: Use Existing Account
-      sub: Use an existing account for launching.
 
   assets-level:
     full:

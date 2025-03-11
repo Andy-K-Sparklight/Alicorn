@@ -82,6 +82,11 @@ exceptions:
 
 undefined: Unknown
 
+account-picker:
+  new:
+    title: Add New Microsoft Account
+    sub: You'll be prompted to log in your Microsoft account when launching.
+
 loader:
   vanilla: None
   fabric: Fabric

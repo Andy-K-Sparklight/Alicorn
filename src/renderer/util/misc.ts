@@ -14,3 +14,7 @@ export function hslToHex(str: string): string {
 
     return `#${fmt(0)}${fmt(8)}${fmt(4)}`;
 }
+
+export function getEmptyImage() {
+    return "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+}

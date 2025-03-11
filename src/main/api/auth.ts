@@ -1,4 +1,5 @@
 import { accounts } from "@/main/auth/manage";
+import { skin } from "@/main/auth/skin";
 import { VanillaAccount, type VanillaAccountProps } from "@/main/auth/vanilla";
 import { games } from "@/main/game/manage";
 import { ipcMain } from "@/main/ipc/typed";
@@ -27,4 +28,26 @@ ipcMain.handle("createVanillaAccount", async () => {
     await a.refresh();
     accounts.add(a);
     return a.toProps() as VanillaAccountProps;
+});
+
+ipcMain.handle("getAccountSkin", async (_, accountId) => {
+    try {
+        const a = accounts.get(accountId);
+        return await skin.getSkin(a);
+    } catch (e) {
+        console.error("Unable to query skin");
+        console.error(e);
+        return "";
+    }
+});
+
+ipcMain.handle("getAccountSkinAvatar", async (_, accountId) => {
+    try {
+        const a = accounts.get(accountId);
+        return await skin.getSkinAvatar(a);
+    } catch (e) {
+        console.error("Unable to query skin");
+        console.error(e);
+        return ["", ""] as const;
+    }
 });

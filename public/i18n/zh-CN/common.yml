@@ -82,6 +82,11 @@ exceptions:
 
 undefined: 未知
 
+account-picker:
+  new:
+    title: 添加新微软帐户
+    sub: 启动游戏时将提示你登录微软帐户。
+
 loader:
   vanilla: 无
   fabric: Fabric

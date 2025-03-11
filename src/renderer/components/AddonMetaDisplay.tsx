@@ -1,5 +1,6 @@
 import type { MpmAddonMeta } from "@/main/mpm/spec";
 import { remoteMpm, useAddonInstallStatus } from "@/renderer/services/mpm";
+import { getEmptyImage } from "@/renderer/util/misc";
 import { Button, Chip, cn, Image, Tooltip } from "@heroui/react";
 import { CheckIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -9,7 +10,7 @@ export function AddonMetaDisplay({ gameId, meta }: { gameId: string, meta: MpmAd
     const installStatus = useAddonInstallStatus(gameId, id, vendor);
     const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage.addons" });
 
-    const effectiveIcon = icon || "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+    const effectiveIcon = icon || getEmptyImage();
 
     function runInstall() {
         if (installStatus !== "not-installed") return;
