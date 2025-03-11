@@ -1,7 +1,7 @@
 import { useConfig } from "@/renderer/services/conf";
 import { Divider } from "@heroui/react";
 import { OnOffEntry } from "@pages/settings/SettingsEntry";
-import { FileClockIcon, FileHeartIcon, FileX2Icon } from "lucide-react";
+import { FileClockIcon, FileHeartIcon, FileLock2Icon, FileX2Icon } from "lucide-react";
 import React from "react";
 
 export function PrivacyTab() {
@@ -33,6 +33,15 @@ export function PrivacyTab() {
             id="privacy.ping"
             value={config.analytics.ping}
             onChange={v => alterConfig(c => c.analytics.ping = v)}
+        />
+
+        <Divider/>
+
+        <OnOffEntry
+            icon={FileLock2Icon}
+            id="privacy.hide-ua"
+            value={config.analytics.hideUA}
+            onChange={v => alterConfig(c => c.analytics.hideUA = v)}
         />
     </>;
 }

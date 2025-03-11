@@ -390,6 +390,9 @@ settings:
       ping:
         title: Alicorn Ping
         sub: Help us to estimate number of active users.
+      hide-ua:
+        title: Hide User Agent
+        sub: Hide user agent to mirrors and APIs in order to prevent them from accessing device or launcher information.
 
     dev:
       frame:

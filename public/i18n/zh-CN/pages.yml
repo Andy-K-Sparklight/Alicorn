@@ -390,6 +390,9 @@ settings:
       ping:
         title: 发送 Ping 信息
         sub: 这些信息将用于估计 Alicorn 的活跃用户数。
+      hide-ua:
+        title: 隐藏用户代理信息
+        sub: 向下载源和各类接口报告虚假的用户代理，阻止它们追踪设备或启动器信息。
 
     dev:
       frame:

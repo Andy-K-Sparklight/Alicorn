@@ -1,3 +1,4 @@
+import { getCanonicalUA } from "@/main/sys/ua";
 import { windowControl } from "@/main/sys/window-control";
 import { BrowserWindow } from "electron";
 import { pEvent } from "p-event";
@@ -29,6 +30,8 @@ async function browserLogin(part: string): Promise<string> {
     let code = "";
 
     let isShowing = false;
+
+    w.webContents.session.setUserAgent(getCanonicalUA());
 
     w.webContents.on("did-stop-loading", () => {
         const url = URL.parse(w.webContents.getURL());

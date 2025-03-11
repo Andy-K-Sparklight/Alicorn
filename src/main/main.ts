@@ -12,7 +12,7 @@ import { mirror } from "@/main/net/mirrors";
 import { registry } from "@/main/registry/registry";
 import { cleaner } from "@/main/sys/cleaner";
 import { getOSName } from "@/main/sys/os";
-import { ALICORN_CANONICAL_UA } from "@/main/sys/ua";
+import { getCanonicalUA } from "@/main/sys/ua";
 import { update } from "@/main/sys/update";
 import { windowControl } from "@/main/sys/window-control";
 import { app, BrowserWindow, Menu, net, protocol, session } from "electron";
@@ -88,7 +88,7 @@ async function main() {
         }
     }
 
-    session.defaultSession.setUserAgent(ALICORN_CANONICAL_UA);
+    session.defaultSession.setUserAgent(getCanonicalUA());
 
     if (!import.meta.env.AL_TEST) {
         await setupMainWindow();

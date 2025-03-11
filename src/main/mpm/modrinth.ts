@@ -1,3 +1,4 @@
+import { conf } from "@/main/conf/conf";
 import type { MpmPackageProvider } from "@/main/mpm/pm";
 import {
     type MpmAddonMeta,
@@ -9,6 +10,7 @@ import {
     MpmPackageSpecifier
 } from "@/main/mpm/spec";
 import { netx } from "@/main/net/netx";
+import { getCanonicalUA } from "@/main/sys/ua";
 import { session } from "electron";
 import lazyValue from "lazy-value";
 import { nanoid } from "nanoid";
@@ -18,8 +20,12 @@ const API_URL = "https://api.modrinth.com/v2";
 
 const getSession = lazyValue(() => {
     const s = session.fromPartition(`temp:${nanoid()}`);
-    // Set this user agent for Modrinth to recognize us
-    s.setUserAgent(`Andy-K-Sparklight/Alicorn/${pkg.version} (skjsjhb@outlook.com)`);
+    if (conf().analytics.hideUA) {
+        s.setUserAgent(getCanonicalUA());
+    } else {
+        // Set this user agent for Modrinth to recognize us
+        s.setUserAgent(`Andy-K-Sparklight/Alicorn/${pkg.version} (skjsjhb@outlook.com)`);
+    }
     return s;
 });
 

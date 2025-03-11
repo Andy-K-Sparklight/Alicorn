@@ -207,7 +207,12 @@ const DEFAULT_CONFIG = {
         /**
          * Allow to send ping messages.
          */
-        ping: true
+        ping: true,
+
+        /**
+         * Whether to hide UA when performing network requests.
+         */
+        hideUA: false
     }
 };
 

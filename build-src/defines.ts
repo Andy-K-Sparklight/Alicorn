@@ -1,3 +1,4 @@
+import UserAgent from "user-agents";
 import { type BuildConfig } from "~/config";
 
 export type OSName = "windows" | "osx" | "linux"
@@ -16,6 +17,8 @@ function genBuildDefines(config: BuildConfig) {
         linux: "linux"
     };
 
+    const fakeUAs = Array(20).fill(0).map(() => new UserAgent().toString());
+
     return {
         AL_DEV: mode === "development",
         AL_TEST: mode === "test",
@@ -24,7 +27,8 @@ function genBuildDefines(config: BuildConfig) {
         AL_ARCH: arch,
         AL_ENABLE_BMCLAPI: enableBMCLAPI,
         AL_DEV_SERVER_PORT: devServerPort,
-        AL_ENABLE_NATIVE_LZMA: enableNativeLZMA
+        AL_ENABLE_NATIVE_LZMA: enableNativeLZMA,
+        AL_FAKE_UAS: fakeUAs
     };
 }
 
