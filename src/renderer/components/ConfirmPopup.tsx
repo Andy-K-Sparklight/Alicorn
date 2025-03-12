@@ -39,7 +39,7 @@ export function ConfirmPopup(
             <div className="flex flex-col gap-1 py-2 px-4 items-center">
                 <div className="text-lg font-bold">{title}</div>
 
-                <div className="text-sm text-foreground-400">{sub}</div>
+                <div className="text-sm text-foreground-400 whitespace-pre-line text-center">{sub}</div>
                 <Button
                     size="sm"
                     color={color}

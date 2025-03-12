@@ -17,6 +17,8 @@ export function AdvancedPanel() {
     const game = useCurrentGameProfile();
     const { id, name, assetsLevel } = game;
 
+    const isImported = game.installProps.type === "imported";
+
     async function handleUnlink() {
         await native.game.remove(id);
         nav("/games");
@@ -76,19 +78,22 @@ export function AdvancedPanel() {
                     </Button>
                 </div>
 
-                <div className="flex items-center">
-                    <div className="grow flex flex-col gap-1">
-                        <div className="font-bold text-lg">{t("recreate.label")}</div>
-                        <div className="text-sm text-foreground-400">{t("recreate.sub")}</div>
-                    </div>
+                {
+                    !isImported &&
+                    <div className="flex items-center">
+                        <div className="grow flex flex-col gap-1">
+                            <div className="font-bold text-lg">{t("recreate.label")}</div>
+                            <div className="text-sm text-foreground-400">{t("recreate.sub")}</div>
+                        </div>
 
-                    <Button
-                        startContent={<PickaxeIcon/>}
-                        onPress={handleRecreate}
-                    >
-                        {t("recreate.btn", { name })}
-                    </Button>
-                </div>
+                        <Button
+                            startContent={<PickaxeIcon/>}
+                            onPress={handleRecreate}
+                        >
+                            {t("recreate.btn", { name })}
+                        </Button>
+                    </div>
+                }
 
                 <div className="mt-6 w-full flex flex-col gap-6 rounded-xl border-2 border-danger border-solid p-4">
                     <Alert classNames={{ title: "font-bold" }} color="danger" title={t("danger-warn")}/>
@@ -113,9 +118,12 @@ export function AdvancedPanel() {
                         </ConfirmPopup>
                     </div>
 
-                    <DialogProvider dialogProps={{ name, id }} component={DestroyCompoundDialog}>
-                        <DestroyEntry/>
-                    </DialogProvider>
+                    {
+                        !isImported &&
+                        <DialogProvider dialogProps={{ name, id }} component={DestroyCompoundDialog}>
+                            <DestroyEntry/>
+                        </DialogProvider>
+                    }
                 </div>
             </div>
         </div>

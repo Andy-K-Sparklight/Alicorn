@@ -35,8 +35,8 @@ export function ProfilePanel() {
         [t("install-status"), t(installed ? "installed" : "not-installed")]
     ];
 
-    return <div className="mx-auto py-8 w-5/6 h-full overflow-y-auto">
-        <div className="flex flex-col gap-12 px-8 py-10 w-full h-full rounded-xl bg-content1">
+    return <div className="mx-auto py-8 w-5/6 h-full">
+        <div className="flex flex-col min-h-0 overflow-y-auto gap-12 px-8 py-10 w-full h-full rounded-xl bg-content1">
             <div className="flex gap-8 justify-center">
                 <GameTypeIcon className="w-16" gameType={type}/>
 

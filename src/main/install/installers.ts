@@ -58,6 +58,11 @@ interface LiteloaderInstallerProps {
     gameVersion: string;
 }
 
+interface ImportedGameInstallerProps {
+    type: "imported";
+    profileId: string;
+}
+
 export type InstallerProps =
     VanillaInstallerProps
     | FabricInstallerProps
@@ -66,7 +71,8 @@ export type InstallerProps =
     | ForgeInstallerProps
     | RiftInstallerProps
     | LiteloaderInstallerProps
-    | OptiFineInstallerProps;
+    | OptiFineInstallerProps
+    | ImportedGameInstallerProps;
 
 export interface DetailedInstallerContext {
     game: GameProfile;
@@ -285,6 +291,12 @@ async function installForge(props: ForgeInstallerProps, context: DetailedInstall
     game.launchHint.profileId = p.id;
 }
 
+async function installImportedGame(props: ImportedGameInstallerProps, context: DetailedInstallerContext) {
+    const { container } = context;
+    const p = await profileLoader.fromContainer(props.profileId, container);
+    await finalizeVanilla(p, context);
+}
+
 const internalInstallers = {
     vanilla: installVanilla,
     fabric: installFabricOrQuilt,
@@ -293,7 +305,8 @@ const internalInstallers = {
     forge: installForge,
     rift: installRift,
     liteloader: installLiteloader,
-    optifine: installOptiFine
+    optifine: installOptiFine,
+    imported: installImportedGame
 } as const;
 
 async function runInstall(gameId: string, control?: ProgressController) {

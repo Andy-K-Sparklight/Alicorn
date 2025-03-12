@@ -29,7 +29,7 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
     const profile = useGameProfile(gameId ?? "");
 
     const [gameName, setGameName] = useState(profile?.name || t("default-name"));
-    const [gameVersion, setGameVersion] = useState<string | undefined>(profile?.installProps.gameVersion);
+    const [gameVersion, setGameVersion] = useState<string | undefined>((profile?.installProps as any)?.gameVersion || "");
     const [containerId, setContainerId] = useState<string | undefined>(profile?.launchHint.containerId);
     const [containerShouldLink, setContainerShouldLink] = useState(true);
     const [shareContainer, setShareContainer] = useState(!!profile?.launchHint.containerId);
@@ -103,6 +103,10 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
     function openYggdrasilForm() {
         setYggdrasilFormOpen(true);
         setYggdrasilFormKey(nanoid());
+    }
+
+    if (profile?.installProps.type === "imported") {
+        return <Alert color="danger" classNames={{ title: "font-bold" }} title={t("no-import")}/>;
     }
 
     return <div className="w-11/12 h-full mx-auto overflow-y-auto overflow-x-hidden">

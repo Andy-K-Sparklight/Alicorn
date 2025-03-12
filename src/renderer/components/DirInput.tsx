@@ -12,7 +12,10 @@ export function DirInput({ value, onChange }: DirInputProps) {
 
     async function runSelect() {
         const d = await native.ext.selectDir();
-        if (d) onChange(d);
+        if (d) {
+            setInternalValue(d);
+            onChange(d);
+        }
     }
 
     return <div className="flex items-center gap-1">

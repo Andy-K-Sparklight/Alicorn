@@ -54,6 +54,11 @@ export interface GameProfile {
     };
 
     /**
+     * Whether the game is locked for compatibility.
+     */
+    locked?: boolean;
+
+    /**
      * Type of the game core.
      */
     type: GameCoreType;

@@ -70,4 +70,6 @@ export type IpcCommands = {
     removeAddons: (gameId: string, specs: string[]) => void;
     getAccountSkin: (accountId: string) => string;
     getAccountSkinAvatar: (accountId: string) => [string, string];
+    scanImportableProfiles: (root: string) => string[];
+    importGame: (name: string, root: string, profileId: string, accountId: string) => void;
 }

@@ -37,5 +37,16 @@ function get(id: string) {
 }
 
 export const games = {
-    add, remove, queryShared, get
+    add, remove, queryShared, get, genId
 };
+
+function genId(): string {
+    let i = 1;
+    while (true) {
+        const st = "#" + i;
+        if (!reg.games.has(st)) {
+            return st;
+        }
+        i++;
+    }
+}

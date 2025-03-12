@@ -10,6 +10,7 @@ import { CreateGameWizardView } from "@pages/create-game-wizard/CreateGameWizard
 import { CreateGameView } from "@pages/create-game/CreateGameView";
 import { GameDetailView } from "@pages/game-detail/GameDetailView";
 import { GamesView } from "@pages/games/GamesView";
+import { ImportGameView } from "@pages/import-game/ImportGameView";
 import { MonitorListView } from "@pages/monitor-list/MonitorListView";
 import { MonitorView } from "@pages/monitor/MonitorView";
 import { SettingsView } from "@pages/settings/SettingsView";
@@ -51,6 +52,7 @@ function MainArea() {
     return <div className="grow min-h-0 w-11/12 mb-8 mt-4 mx-auto relative">
         <AnimatedRoute path="/about" component={AboutView}/>
         <AnimatedRoute path="/settings" component={SettingsView}/>
+        <AnimatedRoute path="/games/import" component={ImportGameView}/>
         <AnimatedRoute path="/games/new-wizard/*?" component={CreateGameWizardView}/>
         <AnimatedRoute path="/games/new/:gameId?" component={CreateGameView}/>
         <AnimatedRoute path="/games" component={GamesView}/>

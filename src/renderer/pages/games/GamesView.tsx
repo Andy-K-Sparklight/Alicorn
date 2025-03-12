@@ -4,7 +4,14 @@ import { useGameList } from "@/renderer/services/games";
 import { useNav } from "@/renderer/util/nav";
 import { Button, Tab, Tabs, Tooltip } from "@heroui/react";
 import { GameCard } from "@pages/games/GameCard";
-import { ArrowDownAZIcon, ArrowUpAZIcon, ClockArrowDownIcon, ClockArrowUpIcon, PlusIcon } from "lucide-react";
+import {
+    ArrowDownAZIcon,
+    ArrowUpAZIcon,
+    ClockArrowDownIcon,
+    ClockArrowUpIcon,
+    GitMergeIcon,
+    PlusIcon
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLocalStorage } from "react-use";
 
@@ -31,7 +38,9 @@ export function GamesView() {
             >
                 {t("new")}
             </Button>
-
+            <Button onPress={() => nav("/games/import")} startContent={<GitMergeIcon/>}>
+                {t("import")}
+            </Button>
             <Button onPress={() => nav("/games/new")} startContent={<PlusIcon/>}>
                 {t("new-advanced")}
             </Button>

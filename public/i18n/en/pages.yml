@@ -128,10 +128,21 @@ create-game-wizard:
     add-yggdrasil: Add Third Party Account
     btn: Next Step
 
+import-game:
+  title: Import Existing Game
+  default-name: Imported Game
+  select-game-dir: Select Game Folder
+  select-game-dir-hint: Game folder is usually named .minecraft and resides in the same folder containing your launcher.
+  select-profile: Select Game Profile
+  no-profile: No available profile. (wrong folder selected?)
+  select-account: Select Account
+  btn: Import
+
 games:
   title: Games
   new: Create
   new-advanced: Directly Create
+  import: Import
   sorting:
     az: A to Z
     za: Z to A
@@ -158,6 +169,15 @@ game-card:
     rift: Rift
 
 game-detail:
+  locked-alert: This game has been locked for compatibility. This does not affect launching.
+  unlock:
+    btn: Unlock
+    popover:
+      title: Unlock Game?
+      sub: |-
+        Keep the game locked to protect your game.
+        It may get corrupted if being unlocked.
+      btn: I know what I'm doing!
   manage:
     profile:
       title: Game Info

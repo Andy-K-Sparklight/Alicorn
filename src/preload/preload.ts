@@ -157,6 +157,22 @@ const native = {
             ipcRenderer.send("destroyGame", id);
         },
 
+
+        /**
+         * Scans the given directory for importable profiles.
+         */
+        scanImportableProfiles(root: string): Promise<string[]> {
+            console.log(root);
+            return ipcRenderer.invoke("scanImportableProfiles", root);
+        },
+
+        /**
+         * Imports the specified game.
+         */
+        importGame(name: string, root: string, profileId: string, accountId: string) {
+            return ipcRenderer.invoke("importGame", name, root, profileId, accountId);
+        },
+
         /**
          * Adds a listener for game changes.
          */

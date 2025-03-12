@@ -10,9 +10,11 @@ import type { InstallerProps } from "@/main/install/installers";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { ipcMain } from "@/main/ipc/typed";
 import { venv } from "@/main/launch/venv";
+import { gameMigrator } from "@/main/migrate/game";
 import { reg } from "@/main/registry/registry";
 import { shell } from "electron";
 import fs from "fs-extra";
+import path from "node:path";
 
 ipcMain.handle("listGames", () => reg.games.getAll());
 ipcMain.handle("removeGame", (_, gameId) => games.remove(gameId));
@@ -104,7 +106,7 @@ ipcMain.handle("addGame", async (_, init) => {
     }
 
     const g: GameProfile = {
-        id: init.id || genGameId(),
+        id: init.id || games.genId(),
         name,
         installed: false,
         installProps,
@@ -146,16 +148,12 @@ ipcMain.on("destroyGame", async (_, id) => {
 
 ipcMain.handle("querySharedGames", async (_, id) => games.queryShared(id));
 
-function genGameId(): string {
-    let i = 1;
-    while (true) {
-        const st = "#" + i;
-        if (!reg.games.has(st)) {
-            return st;
-        }
-        i++;
-    }
-}
+ipcMain.handle("scanImportableProfiles", async (_, fp) => gameMigrator.scanImportableProfiles(fp));
+
+ipcMain.handle("importGame", async (_, name: string, root, profileId, accountId) => {
+    const fp = path.join(root, "versions", profileId, profileId + ".json");
+    await gameMigrator.doImport(name, fp, accountId === "new" ? "" : accountId);
+});
 
 async function genContainerProps(): Promise<ContainerProps> {
     let dirs: string[] = [];
