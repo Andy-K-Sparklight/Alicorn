@@ -83,6 +83,7 @@ exceptions:
 undefined: 未知
 
 account-picker:
+  add-yggdrasil: 登录第三方帐户
   new:
     title: 添加新微软帐户
     sub: 启动游戏时将提示你登录微软帐户。

@@ -2,11 +2,10 @@ import type { InstallerProps } from "@/main/install/installers";
 import { useAccounts } from "@/renderer/services/accounts";
 import { useGameProfile } from "@/renderer/services/games";
 import { useNav } from "@/renderer/util/nav";
-import { AccountPicker } from "@components/AccountPicker";
 import { Alert } from "@components/Alert";
 import type { PropsWithParams } from "@components/AnimatedRoute";
+import { ExtendedAccountPicker } from "@components/ExtendedAccountPicker";
 import { PlayerNameInput } from "@components/PlayerNameInput";
-import { YggdrasilFormDialog } from "@components/YggdrasilFormDialog";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { addToast, Button, Input, Switch } from "@heroui/react";
 import { AssetLevelSelector } from "@pages/create-game/AssetsLevelSelector";
@@ -14,8 +13,6 @@ import { ContainerSelector } from "@pages/create-game/ContainerSelector";
 import { ModLoaderSelector } from "@pages/create-game/ModLoaderSelector";
 import { ModLoaderVersionSelector } from "@pages/create-game/ModLoaderVersionSelector";
 import { VersionSelector } from "@pages/create-game/VersionSelector";
-import { UserPlus2Icon } from "lucide-react";
-import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocalStorage } from "react-use";
@@ -54,9 +51,6 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
     const nav = useNav();
 
     const [availableModLoaders, setAvailableModLoaders] = useState<string[] | null>(null);
-
-    const [yggdrasilFormOpen, setYggdrasilFormOpen] = useState(false);
-    const [yggdrasilFormKey, setYggdrasilFormKey] = useState("");
 
     useEffect(() => {
         if (gameVersion) {
@@ -98,11 +92,6 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
             });
             nav("/games");
         }
-    }
-
-    function openYggdrasilForm() {
-        setYggdrasilFormOpen(true);
-        setYggdrasilFormKey(nanoid());
     }
 
     if (profile?.installProps.type === "imported") {
@@ -190,12 +179,7 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
 
                     {
                         authType === "online" &&
-                        <>
-                            <AccountPicker allowCreation accountId={accountId} onChange={handleAccountChange}/>
-                            <Button startContent={<UserPlus2Icon/>} onPress={openYggdrasilForm}>
-                                {t("add-yggdrasil")}
-                            </Button>
-                        </>
+                        <ExtendedAccountPicker accountId={accountId} onAccountChange={setAccountId}/>
                     }
 
                     {
@@ -235,10 +219,6 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
                 </Button>
             </div>
         </div>
-
-        <YggdrasilFormDialog
-            isOpen={yggdrasilFormOpen} key={yggdrasilFormKey} onClose={() => setYggdrasilFormOpen(false)}
-        />
     </div>;
 }
 

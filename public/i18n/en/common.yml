@@ -83,6 +83,7 @@ exceptions:
 undefined: Unknown
 
 account-picker:
+  add-yggdrasil: Add Third Party Account
   new:
     title: Add New Microsoft Account
     sub: You'll be prompted to log in to your Microsoft account when launching.

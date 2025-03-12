@@ -5,6 +5,7 @@ import type { PropsWithParams } from "@components/AnimatedRoute";
 import { ConfirmPopup } from "@components/ConfirmPopup";
 import { GameTypeIcon } from "@components/GameTypeIcon";
 import { Button, Tab, Tabs } from "@heroui/react";
+import { AccountPanel } from "@pages/game-detail/AccountPanel";
 import { AddonsPanel } from "@pages/game-detail/AddonsPanel";
 import { AdvancedPanel } from "@pages/game-detail/AdvancedPanel";
 import { GameProfileProvider, useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
@@ -84,6 +85,7 @@ function ManagePanel() {
 
     const tabs = {
         profile: <ProfilePanel/>,
+        account: <AccountPanel/>,
         launch: <LaunchPanel/>,
         addons: !isLocked && <AddonsPanel/>,
         "local-addons": !isLocked && <LocalAddonsPanel/>,
