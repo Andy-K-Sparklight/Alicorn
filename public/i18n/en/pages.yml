@@ -45,6 +45,8 @@ create-game:
   create-btn: Create
   toast-created: Game created.
 
+  add-yggdrasil: Add Third Party Account
+
   mod-loader-title: Mod Loader
   mod-loader:
     loading: Querying available mod loaders...

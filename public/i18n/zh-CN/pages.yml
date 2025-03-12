@@ -45,6 +45,8 @@ create-game:
   create-btn: 创建
   toast-created: 已创建游戏。
 
+  add-yggdrasil: 登录第三方帐户
+
   mod-loader-title: 模组系统
   mod-loader:
     loading: 正在检查模组系统兼容性……
