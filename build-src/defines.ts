@@ -8,7 +8,7 @@ function genBuildDefines(config: BuildConfig) {
         enableBMCLAPI,
         enableNativeLZMA,
         devServerPort,
-        variant: { mode, platform, arch }
+        variant: { mode, platform, arch, testLevel }
     } = config;
 
     const osNames: Record<string, OSName> = {
@@ -28,7 +28,8 @@ function genBuildDefines(config: BuildConfig) {
         AL_ENABLE_BMCLAPI: enableBMCLAPI,
         AL_DEV_SERVER_PORT: devServerPort,
         AL_ENABLE_NATIVE_LZMA: enableNativeLZMA,
-        AL_FAKE_UAS: fakeUAs
+        AL_FAKE_UAS: fakeUAs,
+        AL_TEST_LEVEL: testLevel
     };
 }
 

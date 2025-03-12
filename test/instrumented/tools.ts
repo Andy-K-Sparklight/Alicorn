@@ -1,4 +1,5 @@
 import { writeJSON } from "fs-extra";
+import type { TestLevel } from "~/config";
 
 export interface TestSummary {
     allPassed: boolean;
@@ -13,20 +14,26 @@ export interface TestSuiteSummary {
 
 const suites: TestSuiteSummary[] = [];
 
-async function run(name: string, exec: () => void | Promise<void>) {
-    console.log(`Executing test: ${name}`);
-    try {
-        await exec();
-        suites.push({
-            name,
-            passed: true
-        });
-    } catch (e) {
-        suites.push({
-            name,
-            passed: false,
-            message: e?.toString()
-        });
+const testLevels = ["lite", "medium", "full"];
+
+async function run(name: string, exec: () => void | Promise<void>, level: TestLevel = "full") {
+    if (testLevels.indexOf(import.meta.env.AL_TEST_LEVEL) >= testLevels.indexOf(level)) {
+        console.log(`Executing test: ${name}`);
+        try {
+            await exec();
+            suites.push({
+                name,
+                passed: true
+            });
+        } catch (e) {
+            suites.push({
+                name,
+                passed: false,
+                message: e?.toString()
+            });
+        }
+    } else {
+        console.log(`Skipped test: ${name}`);
     }
 }
 

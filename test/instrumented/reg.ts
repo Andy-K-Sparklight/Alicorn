@@ -8,27 +8,25 @@ import { iTest } from "~/test/instrumented/tools";
 /**
  * This test does not run in Bun so it's classified as instrumented tests.
  */
-export async function checkRegistries() {
-    await iTest.run("Registries Save & Load", async () => {
-        const g = {
-            id: "default",
-            name: "fake",
-            launchHint: {
-                containerId: "" // Required when purging
-            }
-        } as GameProfile; // We're not building a full copy here
+await iTest.run("Registries Save & Load", async () => {
+    const g = {
+        id: "default",
+        name: "fake",
+        launchHint: {
+            containerId: "" // Required when purging
+        }
+    } as GameProfile; // We're not building a full copy here
 
-        reg.games.add(g.id, g);
+    reg.games.add(g.id, g);
 
-        assert(reg.games.get("default") === g, "Should save registry content in memory");
+    assert(reg.games.get("default") === g, "Should save registry content in memory");
 
-        await registry.close();
+    await registry.close();
 
-        const m = await fs.readJSON(paths.store.to("registries.json"));
+    const m = await fs.readJSON(paths.store.to("registries.json"));
 
-        const co = m["games"]["default"];
+    const co = m["games"]["default"];
 
-        assert(!!co, "Should save registry content");
-        assert(co.name === "fake", "Should keep object information");
-    });
-}
+    assert(!!co, "Should save registry content");
+    assert(co.name === "fake", "Should keep object information");
+}, "lite");

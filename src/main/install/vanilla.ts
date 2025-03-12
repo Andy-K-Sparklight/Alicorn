@@ -181,8 +181,6 @@ async function installLibraries(
 
     console.debug(`Library artifacts counted: ${tasks.length}`);
 
-    if (import.meta.env.AL_TEST) return; // Skips download
-
     await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "vanilla.download-libs") });
 
     onProgress?.(progress.indefinite("vanilla.unpack-libs"));
@@ -241,8 +239,6 @@ async function installAssets(
             fastLink: shouldLink
         }
     ));
-
-    if (import.meta.env.AL_TEST) return; // Skips download
 
     await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "vanilla.download-assets") });
 

@@ -1,11 +1,14 @@
 import path from "node:path";
 
 export type BuildMode = "development" | "production" | "test"
+export type TestLevel = "lite" | "medium" | "full";
+
 
 export interface BuildVariant {
     mode: BuildMode;
     platform: string;
     arch: string;
+    testLevel: TestLevel;
 }
 
 export function createBuildConfig(variant: BuildVariant) {

@@ -150,8 +150,6 @@ async function installRuntime(component: string, control?: ProgressController): 
         // We're ignoring directories here as they'll be auto-created when downloading
     }
 
-    if (import.meta.env.AL_TEST) return; // Skips download
-
     console.debug("Fetching files...");
     await dlx.getAll(tasks, {
         onProgress: progress.makeNamed(onProgress, "jrt.download"),
