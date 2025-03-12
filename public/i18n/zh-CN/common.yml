@@ -94,6 +94,8 @@ yggdrasil-form:
   password: 密码
   pwd-no-store: Alicorn 不会存储你的密码。
   invalid-url: 需要有效的 URL
+  dnd-hint: |-
+    如果验证服务器提供可拖拽的按钮，请在这里放置它。
   untrusted: |-
     你的密码将不加密地发送给 {{host}} 用于验证。
     你真的 100% 确定它是安全的吗？

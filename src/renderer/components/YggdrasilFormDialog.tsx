@@ -2,7 +2,7 @@ import type { DetailedAccountProps } from "@/main/auth/types";
 import { Alert } from "@heroui/alert";
 import { Button, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
 import { GlobeIcon, KeyRoundIcon, UserIcon } from "lucide-react";
-import { useState } from "react";
+import { type DragEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface YggdrasilFormDialogProps {
@@ -38,6 +38,7 @@ export function YggdrasilFormDialog(
         if (btnConfirmed) {
             setLoginError(false);
             setLoggingIn(true);
+
             try {
                 const a = await native.auth.createYggdrasil(userHost, userEmail, pwd);
                 onClose();
@@ -51,8 +52,25 @@ export function YggdrasilFormDialog(
         }
     }
 
+    function handleDrop(e: DragEvent) {
+        e.preventDefault();
+        const d = e.dataTransfer.getData("text/plain");
+        console.log(d);
+        if (d.startsWith("authlib-injector:yggdrasil-server:")) {
+            const url = decodeURIComponent(d.slice("authlib-injector:yggdrasil-server:".length).trim());
+            if (URL.parse(url) && !host) {
+                setUserHost(url);
+            }
+        }
+    }
+
+    function handleDragOver(e: DragEvent) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "link";
+    }
+
     return <Modal isOpen={isOpen} onClose={onClose} size="2xl">
-        <ModalContent>
+        <ModalContent onDrop={handleDrop} onDragOver={handleDragOver}>
             <ModalHeader>{t("title")}</ModalHeader>
             <ModalBody>
                 <Input
@@ -66,6 +84,14 @@ export function YggdrasilFormDialog(
                     isInvalid={hostInvalid}
                     errorMessage={t("invalid-url")}
                 />
+                {
+                    (!userHost || hostInvalid) &&
+                    <Alert
+                        color="primary"
+                        classNames={{ title: "font-bold" }}
+                        title={t("dnd-hint")}
+                    />
+                }
                 {
                     userHost && !hostInvalid && !trusted &&
                     <Alert

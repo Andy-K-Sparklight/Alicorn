@@ -94,6 +94,8 @@ yggdrasil-form:
   password: Password
   pwd-no-store: Alicorn will not store your password.
   invalid-url: Invalid URL
+  dnd-hint: |-
+    Have a draggable button? Please drop it here.
   untrusted: |-
     Your password will be sent to {{host}} as-is.
     Do you absolutely (100%) trust it?
