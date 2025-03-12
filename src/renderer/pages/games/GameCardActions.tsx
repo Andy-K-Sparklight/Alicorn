@@ -3,9 +3,11 @@ import { useGameProfile } from "@/renderer/services/games";
 import { remoteInstaller } from "@/renderer/services/install";
 import { procService } from "@/renderer/services/proc";
 import { useNav } from "@/renderer/util/nav";
+import { YggdrasilFormDialog } from "@components/YggdrasilFormDialog";
 import { Button, cn } from "@heroui/react";
 import { CirclePlayIcon, DownloadIcon, EllipsisIcon, PinIcon, PinOffIcon, XIcon } from "lucide-react";
-import { useState } from "react";
+import { nanoid } from "nanoid";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type InstallStatus = "installed" | "installing" | "not-installed";
@@ -18,6 +20,12 @@ interface GameActionsProps {
 export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
     const { t } = useTranslation("pages", { keyPrefix: "game-card" });
     const [launching, setLaunching] = useState(false);
+    const [yggdrasilFormOpen, setYggdrasilFormOpen] = useState(false);
+    const [yggdrasilFormKey, setYggdrasilFormKey] = useState("");
+    const [yggdrasilEmail, setYggdrasilEmail] = useState("");
+    const [yggdrasilHost, setYggdrasilHost] = useState("");
+
+    const isRequestingLogin = useRef(false);
     const game = useGameProfile(gameId);
     const nav = useNav();
 
@@ -47,13 +55,25 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
         }));
     }
 
+    function handleAccountRefreshed() {
+        void launch();
+    }
+
     async function launch() {
         try {
             setLaunching(true);
-            await native.auth.forGame(gameId);
+            const res = await native.auth.forGame(gameId);
 
-            const procId = await procService.create(gameId);
-            nav(`/monitor/${procId}`);
+            if (typeof res === "object") {
+                isRequestingLogin.current = true;
+                setYggdrasilFormKey(nanoid());
+                setYggdrasilFormOpen(true);
+                setYggdrasilEmail(res.email);
+                setYggdrasilHost(res.host);
+            } else {
+                const procId = await procService.create(gameId);
+                nav(`/monitor/${procId}`);
+            }
         } finally {
             setLaunching(false);
         }
@@ -102,5 +122,14 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
                 <EllipsisIcon/>
             </Button>
         </div>
+
+        <YggdrasilFormDialog
+            email={yggdrasilEmail}
+            host={yggdrasilHost}
+            key={yggdrasilFormKey}
+            isOpen={yggdrasilFormOpen}
+            onClose={() => setYggdrasilFormOpen(false)}
+            onAccountAdded={handleAccountRefreshed}
+        />
     </div>;
 }

@@ -23,8 +23,7 @@ interface YggdrasilResponse {
 export class YggdrasilAccount implements Account {
     uuid = "";
     host: string;
-
-    #email: string;
+    email: string;
     #playerName = "";
     #accessToken = "";
 
@@ -38,7 +37,7 @@ export class YggdrasilAccount implements Account {
 
     constructor(host: string, email: string) {
         this.host = host;
-        this.#email = email;
+        this.email = email;
     }
 
     async refresh(): Promise<void> {
@@ -51,7 +50,7 @@ export class YggdrasilAccount implements Account {
 
         const res = await this.#apiRequest("/authserver/authenticate",
             {
-                username: this.#email,
+                username: this.email,
                 password: pwd,
                 requestUser: false,
                 agent: {
@@ -141,7 +140,7 @@ export class YggdrasilAccount implements Account {
         return {
             type: "yggdrasil",
             host: this.host,
-            email: this.#email,
+            email: this.email,
             uuid: this.uuid,
             playerName: this.#playerName,
             accessToken: doEncrypt(this.#accessToken)

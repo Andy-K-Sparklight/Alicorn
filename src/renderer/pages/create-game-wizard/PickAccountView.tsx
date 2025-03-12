@@ -1,9 +1,12 @@
+import type { DetailedAccountProps } from "@/main/auth/types";
 import { useNav } from "@/renderer/util/nav";
 import { AccountPicker } from "@components/AccountPicker";
 import { WizardCard } from "@components/WizardCard";
+import { YggdrasilFormDialog } from "@components/YggdrasilFormDialog";
 import { Button } from "@heroui/react";
 import { useCreateGameWizardContext } from "@pages/create-game-wizard/CreateGameWizardView";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, UserPlus2Icon } from "lucide-react";
+import { nanoid } from "nanoid";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -11,7 +14,8 @@ export function PickAccountView() {
     const { t } = useTranslation("pages", { keyPrefix: "create-game-wizard.pick-account" });
     const ctx = useCreateGameWizardContext();
     const nav = useNav();
-
+    const [yggdrasilFormOpen, setYggdrasilFormOpen] = useState(false);
+    const [yggdrasilFormKey, setYggdrasilFormKey] = useState("");
     const [accountId, setAccountId] = useState("new");
 
     function onConfirm() {
@@ -19,6 +23,14 @@ export function PickAccountView() {
         nav("/games/new-wizard/finish");
     }
 
+    function handleAddYggdrasil() {
+        setYggdrasilFormKey(nanoid());
+        setYggdrasilFormOpen(true);
+    }
+
+    function onAccountAdded(a: DetailedAccountProps) {
+        setAccountId(a.uuid);
+    }
 
     return <WizardCard
         title={t("title")}
@@ -30,6 +42,16 @@ export function PickAccountView() {
                 </div>
 
                 <div className="mt-auto">
+                    <Button
+                        fullWidth
+                        startContent={<UserPlus2Icon/>}
+                        onPress={handleAddYggdrasil}
+                    >
+                        {t("add-yggdrasil")}
+                    </Button>
+                </div>
+
+                <div>
                     <Button
                         fullWidth
                         startContent={<CheckIcon/>}
@@ -47,5 +69,12 @@ export function PickAccountView() {
                 <AccountPicker accountId={accountId} onChange={setAccountId} allowCreation/>
             </div>
         </div>
+
+        <YggdrasilFormDialog
+            key={yggdrasilFormKey}
+            isOpen={yggdrasilFormOpen}
+            onClose={() => setYggdrasilFormOpen(false)}
+            onAccountAdded={onAccountAdded}
+        />
     </WizardCard>;
 }

@@ -1,3 +1,4 @@
+import type { GameAuthResult } from "@/main/api/auth";
 import type { CreateGameInit } from "@/main/api/game";
 import type { LaunchGameResult } from "@/main/api/launcher";
 import type { MpmAddonSearchResult } from "@/main/api/mpm";
@@ -54,9 +55,10 @@ export type IpcCommands = {
     removeGame: (gameId: string) => void;
     querySharedGames: (id: string) => string[];
     launch: (id: string) => LaunchGameResult;
-    gameAuth: (gameId: string) => void;
+    gameAuth: (gameId: string, pwd?: string) => GameAuthResult;
     listAccounts: () => DetailedAccountProps[];
-    createVanillaAccount: () => DetailedAccountProps | null;
+    createVanillaAccount: () => DetailedAccountProps;
+    createYggdrasilAccount: (host: string, email: string, pwd: string) => DetailedAccountProps;
     addGame: (game: CreateGameInit) => string;
     updateGame: (game: GameProfile) => void;
     getVersionManifest: () => VersionManifest;

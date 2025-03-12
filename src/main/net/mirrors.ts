@@ -200,7 +200,7 @@ function apply(url: string): string[] {
         return [url];
     }
 
-    const sources = [...getMirrors().map(m => m.apply(url)), url].filter(isTruthy);
+    const sources = [...getMirrors().map(m => m.apply(url)), url].map(u => u?.trim()).filter(isTruthy);
     return [...new Set(sources)];
 }
 

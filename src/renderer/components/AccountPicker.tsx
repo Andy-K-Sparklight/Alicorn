@@ -31,6 +31,7 @@ export function AccountPicker({ accountId, allowCreation, onChange }: AccountSel
         {
             accounts.map(a =>
                 <PickEntry
+                    key={a.uuid}
                     value={a.uuid}
                     title={a.playerName}
                     sub={a.uuid}
@@ -49,7 +50,7 @@ interface PickEntryProps {
 }
 
 function PickEntry({ icon, value, title, sub }: PickEntryProps) {
-    return <CardRadio key={value} value={value}>
+    return <CardRadio value={value}>
         <div className="flex gap-4 items-center">
             <div className="w-12 h-12 shrink-0 p-1">
                 {icon}

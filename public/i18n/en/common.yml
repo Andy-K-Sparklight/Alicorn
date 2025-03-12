@@ -87,6 +87,21 @@ account-picker:
     title: Add New Microsoft Account
     sub: You'll be prompted to log in to your Microsoft account when launching.
 
+yggdrasil-form:
+  title: Third Party Login
+  host: Server
+  username: Username / Email
+  password: Password
+  pwd-no-store: Alicorn will not store your password.
+  invalid-url: Invalid URL
+  untrusted: |-
+    Your password will be sent to {{host}} as-is.
+    Do you absolutely (100%) trust it?
+  failed: Login failed. Please check the server address and your credentials.
+  btn:
+    confirm: Trust {{host}}
+    login: Log in to {{host}}
+
 loader:
   vanilla: None
   fabric: Fabric

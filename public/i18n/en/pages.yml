@@ -120,8 +120,10 @@ create-game-wizard:
       Make sure to choose the account used to purchase.
 
     hint: |-
-      Not listed? Go with "Add New Microsoft Account".
-      You'll be prompted to log in when launching.
+      Using a third-party account?
+      Add it by using the button below.
+
+    add-yggdrasil: Add Third Party Account
     btn: Next Step
 
 games:

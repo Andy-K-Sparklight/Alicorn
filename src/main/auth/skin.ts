@@ -1,5 +1,6 @@
 import type { Account } from "@/main/auth/types";
 import { VanillaAccount } from "@/main/auth/vanilla";
+import { YggdrasilAccount } from "@/main/auth/yggdrasil";
 import { paths } from "@/main/fs/paths";
 import { netx } from "@/main/net/netx";
 import { nativeImage } from "electron";
@@ -17,8 +18,7 @@ interface SkinPayload {
     };
 }
 
-async function getVanillaSkin(uuid: string): Promise<string> {
-    const url = `https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`;
+async function loadSkin(url: string): Promise<string> {
     const res = await netx.getJSON(url) as SkinQueryResponse;
 
     const v = res.properties.find(p => p.name === "textures")?.value;
@@ -27,13 +27,27 @@ async function getVanillaSkin(uuid: string): Promise<string> {
     return payload.textures.SKIN.url;
 }
 
+async function getVanillaSkin(uuid: string): Promise<string> {
+    const url = `https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`;
+    return await loadSkin(url);
+}
+
+async function getYggdrasilSkin(a: YggdrasilAccount): Promise<string> {
+    const url = `${a.host}/sessionserver/session/minecraft/profile/${a.uuid}`;
+    return await loadSkin(url);
+}
+
 
 async function getSkin(a: Account): Promise<string> {
     if (a instanceof VanillaAccount) {
         return getVanillaSkin(a.uuid);
-    } else {
-        return "";
     }
+
+    if (a instanceof YggdrasilAccount) {
+        return getYggdrasilSkin(a);
+    }
+
+    return "";
 }
 
 const skinCache = new Map<string, Buffer>();

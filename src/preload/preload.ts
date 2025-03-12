@@ -1,3 +1,4 @@
+import type { GameAuthResult } from "@/main/api/auth";
 import type { CreateGameInit } from "@/main/api/game";
 import type { LaunchGameResult } from "@/main/api/launcher";
 import type { MpmAddonSearchResult } from "@/main/api/mpm";
@@ -171,8 +172,8 @@ const native = {
         /**
          * Authenticate the account of the specified game.
          */
-        forGame(id: string): Promise<void> {
-            return ipcRenderer.invoke("gameAuth", id);
+        forGame(id: string, pwd?: string): Promise<GameAuthResult> {
+            return ipcRenderer.invoke("gameAuth", id, pwd);
         },
 
         /**
@@ -185,8 +186,15 @@ const native = {
         /**
          * Creates a new vanilla account.
          */
-        createVanilla(): Promise<DetailedAccountProps | null> {
+        createVanilla(): Promise<DetailedAccountProps> {
             return ipcRenderer.invoke("createVanillaAccount");
+        },
+
+        /**
+         * Creates an Yggdrasil account.
+         */
+        createYggdrasil(host: string, email: string, pwd: string): Promise<DetailedAccountProps> {
+            return ipcRenderer.invoke("createYggdrasilAccount", host, email, pwd);
         },
 
         /**
@@ -207,7 +215,7 @@ const native = {
          * Gets notified when accounts have changed.
          */
         onAccountChange(fn: () => void) {
-            internalEvents.off("accountChanged", fn);
+            internalEvents.on("accountChanged", fn);
         }
     },
 

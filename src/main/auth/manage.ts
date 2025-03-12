@@ -31,6 +31,7 @@ function get(accountId: string): Account {
 
 function add(account: Account) {
     reg.accounts.add(account.uuid, account.toProps());
+    accountMap.set(account.uuid, account);
     windowControl.getMainWindow()?.webContents.send("accountChanged");
 }
 
