@@ -31,7 +31,7 @@ const appRoot = path.join(import.meta.dirname, "build", "production");
 for (const platform of platforms) {
     for (const arch of arches) {
         consola.start(`build: ${platform}-${arch}...`);
-        await build({ mode: "production", platform, arch });
+        await build({ mode: "production", platform, arch, testLevel: "lite" });
 
         if (types.includes("app-bundle")) {
             consola.start(`hot-update bundle: ${platform}-${arch}...`);
