@@ -31,7 +31,7 @@ export function AddonMetaDisplay({ gameId, meta }: { gameId: string, meta: MpmAd
 
         <div className="flex flex-col overflow-hidden grow">
             <div className="font-bold text-lg">{title}</div>
-            <div className="text-sm text-foreground-500 break-normal">{description}</div>
+            <div className="text-sm text-foreground-500">{description}</div>
         </div>
 
         <VendorChip vendor={vendor}/>

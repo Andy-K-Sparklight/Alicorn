@@ -26,7 +26,7 @@ export function ImportGameWarningDialog() {
                                 <GitPullRequestClosed size={36}/>
                             </div>
 
-                            <p className="whitespace-pre-line w-full break-normal">
+                            <p className="whitespace-pre-line w-full">
                                 <Trans t={t} i18nKey="sub"/>
                             </p>
                         </div>

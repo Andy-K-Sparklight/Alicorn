@@ -8,10 +8,6 @@ html, body {
     user-select: none;
 }
 
-* {
-    word-break: break-all;
-}
-
 .drag {
     app-region: drag;
 }
