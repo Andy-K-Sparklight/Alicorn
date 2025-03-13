@@ -1,6 +1,6 @@
 import type { VersionEntry } from "@/main/install/vanilla";
 import { useVersionManifest } from "@/renderer/services/sources";
-import { GameTypeIcon } from "@components/GameTypeIcon";
+import { GameTypeIcon } from "@components/display/GameTypeIcon";
 import { Autocomplete, AutocompleteItem, Checkbox, Spinner } from "@heroui/react";
 import { DotIcon } from "lucide-react";
 import React, { useState } from "react";

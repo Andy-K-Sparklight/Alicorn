@@ -1,4 +1,4 @@
-import { Alert } from "@components/Alert";
+import { Alert } from "@components/display/Alert";
 import { Button, cn, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from "@heroui/react";
 import { ArrowRightIcon, CheckIcon, InfoIcon, XIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";

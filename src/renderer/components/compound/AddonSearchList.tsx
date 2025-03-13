@@ -1,6 +1,6 @@
 import type { MpmAddonMeta, MpmAddonType } from "@/main/mpm/spec";
 import { uniqueBy } from "@/main/util/misc";
-import { AddonMetaDisplay } from "@components/AddonMetaDisplay";
+import { AddonMetaDisplay } from "@components/display/AddonMetaDisplay";
 import { Input, Spinner, Tab, Tabs } from "@heroui/react";
 import { BlocksIcon, ImagesIcon, SearchIcon, SunIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";

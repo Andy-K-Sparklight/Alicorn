@@ -1,6 +1,6 @@
 import type { RemoteGameStatus } from "@/renderer/services/proc";
 import { useNav } from "@/renderer/util/nav";
-import { ConfirmPopup } from "@components/ConfirmPopup";
+import { ConfirmPopup } from "@components/modal/ConfirmPopup";
 import { Button } from "@heroui/react";
 import { ArrowLeftIcon, FolderArchiveIcon, FolderIcon, OctagonXIcon, ScrollTextIcon } from "lucide-react";
 import React from "react";

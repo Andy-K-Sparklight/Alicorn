@@ -1,5 +1,5 @@
 import logo from "@assets/logo.png";
-import { Alert } from "@components/Alert";
+import { Alert } from "@components/display/Alert";
 import { Button, ButtonGroup, Card, CardBody, Image } from "@heroui/react";
 import { FileBadgeIcon, FolderGit2 } from "lucide-react";
 import { useTranslation } from "react-i18next";

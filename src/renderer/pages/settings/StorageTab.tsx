@@ -1,5 +1,5 @@
 import { useConfig } from "@/renderer/services/conf";
-import { Alert } from "@components/Alert";
+import { Alert } from "@components/display/Alert";
 import { Divider } from "@heroui/react";
 import { DirEntry } from "@pages/settings/SettingsEntry";
 import { HardDriveIcon } from "lucide-react";

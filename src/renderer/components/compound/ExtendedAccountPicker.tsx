@@ -1,5 +1,5 @@
-import { AccountPicker } from "@components/AccountPicker";
-import { YggdrasilFormDialog } from "@components/YggdrasilFormDialog";
+import { AccountPicker } from "@components/input/AccountPicker";
+import { YggdrasilFormDialog } from "@components/modal/YggdrasilFormDialog";
 import { Button, cn } from "@heroui/react";
 import { UserPlus2Icon } from "lucide-react";
 import { nanoid } from "nanoid";

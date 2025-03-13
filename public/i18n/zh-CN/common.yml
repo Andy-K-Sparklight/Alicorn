@@ -63,7 +63,9 @@ toast:
 exceptions:
   title: 哎呀呀，糟糕！
   btn: 好
-  detail: 详细的错误消息：
+  cause: 因为：
+  detail: 错误跟踪信息：
+  show-source: 查看错误跟踪信息
   types:
     unknown: 出现了一些意料之外的情况。
     cancelled: 已取消操作。

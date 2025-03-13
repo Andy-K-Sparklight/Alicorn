@@ -1,4 +1,4 @@
-import { Alert } from "@components/Alert";
+import { Alert } from "@components/display/Alert";
 import { Tab, Tabs } from "@heroui/react";
 import { DevTab } from "@pages/settings/DevTab";
 import { LaunchTab } from "@pages/settings/LaunchTab";

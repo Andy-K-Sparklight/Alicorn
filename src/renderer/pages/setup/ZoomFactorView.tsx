@@ -1,6 +1,6 @@
 import { useConfig } from "@/renderer/services/conf";
-import { Alert } from "@components/Alert";
-import { GameTypeIcon } from "@components/GameTypeIcon";
+import { Alert } from "@components/display/Alert";
+import { GameTypeIcon } from "@components/display/GameTypeIcon";
 import { Button, ButtonGroup, Card, CardBody, Input, Progress } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";
 import { BanIcon, CheckIcon, ChevronsRight, FlagIcon, MinusIcon, PlusIcon, ZoomInIcon } from "lucide-react";

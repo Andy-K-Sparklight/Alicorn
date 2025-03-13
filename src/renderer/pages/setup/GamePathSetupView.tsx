@@ -1,6 +1,6 @@
 import { useConfig } from "@/renderer/services/conf";
 
-import { DirInput } from "@components/DirInput";
+import { DirInput } from "@components/input/DirInput";
 import { Button } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";
 import { CheckIcon, PackageIcon } from "lucide-react";

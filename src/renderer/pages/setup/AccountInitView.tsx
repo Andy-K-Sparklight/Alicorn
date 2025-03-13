@@ -1,5 +1,5 @@
 import type { DetailedAccountProps } from "@/main/auth/types";
-import { DialogProvider, type PropsWithDialog, useOpenDialog } from "@components/DialogProvider";
+import { DialogProvider, type PropsWithDialog, useOpenDialog } from "@components/modal/DialogProvider";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";

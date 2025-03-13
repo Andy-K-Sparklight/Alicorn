@@ -1,4 +1,4 @@
-import { Alert } from "@components/Alert";
+import { Alert } from "@components/display/Alert";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { Input } from "@heroui/react";
 import React, { useState } from "react";

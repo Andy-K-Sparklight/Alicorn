@@ -1,9 +1,9 @@
 import { alter } from "@/main/util/misc";
 import { remoteInstaller } from "@/renderer/services/install";
 import { useNav } from "@/renderer/util/nav";
-import { Alert } from "@components/Alert";
-import { ConfirmPopup } from "@components/ConfirmPopup";
-import { DialogProvider, type PropsWithDialog, useOpenDialog } from "@components/DialogProvider";
+import { Alert } from "@components/display/Alert";
+import { ConfirmPopup } from "@components/modal/ConfirmPopup";
+import { DialogProvider, type PropsWithDialog, useOpenDialog } from "@components/modal/DialogProvider";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { addToast, Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
 import { useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";

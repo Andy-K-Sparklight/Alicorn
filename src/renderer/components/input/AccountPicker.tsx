@@ -1,6 +1,6 @@
 import { useAccounts } from "@/renderer/services/accounts";
-import { CardRadio } from "@components/CardRadio";
-import { SkinAvatar } from "@components/SkinAvatar";
+import { SkinAvatar } from "@components/display/SkinAvatar";
+import { CardRadio } from "@components/input/CardRadio";
 import { RadioGroup } from "@heroui/radio";
 import { Skeleton } from "@heroui/react";
 import { UserPlus2Icon } from "lucide-react";

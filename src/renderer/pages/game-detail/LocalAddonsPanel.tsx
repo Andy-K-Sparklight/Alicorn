@@ -1,5 +1,5 @@
 import { useMpmManifest } from "@/renderer/services/mpm";
-import { AddonMetaDisplay } from "@components/AddonMetaDisplay";
+import { AddonMetaDisplay } from "@components/display/AddonMetaDisplay";
 import { useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
 import { useTranslation } from "react-i18next";
 import { VList } from "virtua";

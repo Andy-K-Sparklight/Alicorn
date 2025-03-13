@@ -1,5 +1,5 @@
 import type { CreateGameInit } from "@/main/api/game";
-import { AnimatedRoute } from "@components/AnimatedRoute";
+import { AnimatedRoute } from "@components/misc/AnimatedRoute";
 import { FinishView } from "@pages/create-game-wizard/FinishView";
 import { PickAccountView } from "@pages/create-game-wizard/PickAccountView";
 import { PickModLoaderView } from "@pages/create-game-wizard/PickModLoaderView";

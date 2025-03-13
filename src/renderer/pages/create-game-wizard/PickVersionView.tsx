@@ -1,9 +1,9 @@
 import type { VersionEntry } from "@/main/install/vanilla";
 import { useVersionManifest } from "@/renderer/services/sources";
 import { useNav } from "@/renderer/util/nav";
-import { CardRadio } from "@components/CardRadio";
-import { GameTypeIcon } from "@components/GameTypeIcon";
-import { WizardCard } from "@components/WizardCard";
+import { GameTypeIcon } from "@components/display/GameTypeIcon";
+import { WizardCard } from "@components/display/WizardCard";
+import { CardRadio } from "@components/input/CardRadio";
 import { RadioGroup } from "@heroui/radio";
 import { Button, Input, Link, Spinner, Switch } from "@heroui/react";
 import { useCreateGameWizardContext } from "@pages/create-game-wizard/CreateGameWizardView";

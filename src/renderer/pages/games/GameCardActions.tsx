@@ -3,7 +3,7 @@ import { useGameProfile } from "@/renderer/services/games";
 import { remoteInstaller } from "@/renderer/services/install";
 import { procService } from "@/renderer/services/proc";
 import { useNav } from "@/renderer/util/nav";
-import { YggdrasilFormDialog } from "@components/YggdrasilFormDialog";
+import { YggdrasilFormDialog } from "@components/modal/YggdrasilFormDialog";
 import { Button, cn } from "@heroui/react";
 import { CirclePlayIcon, DownloadIcon, EllipsisIcon, PinIcon, PinOffIcon, XIcon } from "lucide-react";
 import { nanoid } from "nanoid";

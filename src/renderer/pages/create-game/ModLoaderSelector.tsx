@@ -1,6 +1,6 @@
 import type { GameCoreType } from "@/main/game/spec";
-import { CardRadio } from "@components/CardRadio";
-import { GameTypeIcon } from "@components/GameTypeIcon";
+import { GameTypeIcon } from "@components/display/GameTypeIcon";
+import { CardRadio } from "@components/input/CardRadio";
 import { RadioGroup } from "@heroui/radio";
 import { Spinner } from "@heroui/react";
 import React, { useEffect } from "react";

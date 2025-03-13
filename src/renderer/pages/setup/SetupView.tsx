@@ -1,5 +1,5 @@
 import { useNav } from "@/renderer/util/nav";
-import { AnimatedRoute } from "@components/AnimatedRoute";
+import { AnimatedRoute } from "@components/misc/AnimatedRoute";
 import { AccountInitView } from "@pages/setup/AccountInitView";
 import { AnalyticsView } from "@pages/setup/AnalyticsView";
 import { FinishView } from "@pages/setup/FinishView";

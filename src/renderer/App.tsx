@@ -1,9 +1,9 @@
 import { useAutoFontClass } from "@/renderer/i18n/i18n";
 import { useAutoTheme } from "@/renderer/theme";
 import { useNav } from "@/renderer/util/nav";
-import { AnimatedRoute } from "@components/AnimatedRoute";
-import { ExceptionDisplay } from "@components/ExceptionDisplay";
-import { Navigator } from "@components/Navigator";
+import { ExceptionDisplay } from "@components/display/ExceptionDisplay";
+import { AnimatedRoute } from "@components/misc/AnimatedRoute";
+import { Navigator } from "@components/misc/Navigator";
 import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
 import { CreateGameWizardView } from "@pages/create-game-wizard/CreateGameWizardView";

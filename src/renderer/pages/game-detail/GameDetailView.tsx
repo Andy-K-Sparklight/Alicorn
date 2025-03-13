@@ -1,9 +1,9 @@
 import { alter } from "@/main/util/misc";
 import { useGameProfile } from "@/renderer/services/games";
-import { Alert } from "@components/Alert";
-import type { PropsWithParams } from "@components/AnimatedRoute";
-import { ConfirmPopup } from "@components/ConfirmPopup";
-import { GameTypeIcon } from "@components/GameTypeIcon";
+import { Alert } from "@components/display/Alert";
+import { GameTypeIcon } from "@components/display/GameTypeIcon";
+import type { PropsWithParams } from "@components/misc/AnimatedRoute";
+import { ConfirmPopup } from "@components/modal/ConfirmPopup";
 import { Button, Tab, Tabs } from "@heroui/react";
 import { AccountPanel } from "@pages/game-detail/AccountPanel";
 import { AddonsPanel } from "@pages/game-detail/AddonsPanel";

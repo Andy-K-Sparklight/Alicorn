@@ -1,6 +1,6 @@
 import { remoteInstaller } from "@/renderer/services/install";
 import { useNav } from "@/renderer/util/nav";
-import { WizardCard } from "@components/WizardCard";
+import { WizardCard } from "@components/display/WizardCard";
 import { Button } from "@heroui/react";
 import { useCreateGameWizardContext } from "@pages/create-game-wizard/CreateGameWizardView";
 import { ArrowRightIcon, CheckIcon, PlayCircleIcon } from "lucide-react";

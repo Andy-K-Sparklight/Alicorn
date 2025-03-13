@@ -1,6 +1,6 @@
 import type { GameProfile } from "@/main/game/spec";
 import { alter } from "@/main/util/misc";
-import { StringArrayInput } from "@components/StringArrayInput";
+import { StringArrayInput } from "@components/input/StringArrayInput";
 import { Input, Switch } from "@heroui/react";
 import { useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
 import React from "react";

@@ -1,7 +1,7 @@
 import type { GameProfile } from "@/main/game/spec";
 import { useInstallProgress } from "@/renderer/services/install";
 
-import { GameTypeIcon } from "@components/GameTypeIcon";
+import { GameTypeIcon } from "@components/display/GameTypeIcon";
 import { Card, CardBody, Chip, cn } from "@heroui/react";
 import { GameCardActions } from "@pages/games/GameCardActions";
 import { DotIcon } from "lucide-react";

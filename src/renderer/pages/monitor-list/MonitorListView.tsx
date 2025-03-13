@@ -1,6 +1,6 @@
 import { procService, type RemoteGameProcess, type RemoteGameStatus, useGameProcList } from "@/renderer/services/proc";
 import { useNav } from "@/renderer/util/nav";
-import { GameTypeIcon } from "@components/GameTypeIcon";
+import { GameTypeIcon } from "@components/display/GameTypeIcon";
 import { Button, Card, CardBody, Chip } from "@heroui/react";
 import { ArrowRightIcon, XIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";

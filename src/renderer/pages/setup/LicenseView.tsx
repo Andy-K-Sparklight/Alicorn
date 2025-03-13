@@ -1,4 +1,4 @@
-import { ConfirmPopup } from "@components/ConfirmPopup";
+import { ConfirmPopup } from "@components/modal/ConfirmPopup";
 import { Button, Card, CardBody } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";
 import { CircleCheckIcon, FileBadgeIcon } from "lucide-react";

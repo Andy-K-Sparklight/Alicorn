@@ -1,8 +1,8 @@
 /**
  * Various entry widgets for manipulating the settings.
  */
-import { DirInput } from "@components/DirInput";
-import { StringArrayInput } from "@components/StringArrayInput";
+import { DirInput } from "@components/input/DirInput";
+import { StringArrayInput } from "@components/input/StringArrayInput";
 import { Button, Input, Select, SelectItem, type SharedSelection, Slider, Switch } from "@heroui/react";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import React from "react";

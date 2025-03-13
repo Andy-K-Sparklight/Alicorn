@@ -9,6 +9,7 @@ export type SerializedException<K extends keyof CatchyExceptionType> = {
     _ALICORN_CHECKED_EXCEPTION: true;
     name: K;
     props: CatchyExceptionType[K];
+    stack?: string;
     cause?: SerializedException<any>;
 }
 
@@ -20,11 +21,23 @@ interface SerializableException<K extends keyof CatchyExceptionType> {
     toString(): string;
 }
 
+function getStack() {
+    const ex = new Error().stack?.split("\n");
+    if (!ex) return "";
+    return ex.slice(3).join("\n"); // Drop caller stack and skip `AbstractException` for a shorter stacktrace
+}
+
 export class AbstractException<K extends keyof CatchyExceptionType> implements SerializableException<K> {
     #except: SerializedException<K>;
 
     constructor(name: K, props: CatchyExceptionType[K], cause?: SerializableException<any>) {
-        this.#except = { _ALICORN_CHECKED_EXCEPTION: true, name, props, cause: cause?.serialize() };
+        this.#except = {
+            _ALICORN_CHECKED_EXCEPTION: true,
+            name,
+            props,
+            cause: cause?.serialize(),
+            stack: getStack()
+        };
     }
 
     serialize(): SerializedException<K> {

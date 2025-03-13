@@ -1,7 +1,7 @@
 import { useNav } from "@/renderer/util/nav";
-import { AccountPicker } from "@components/AccountPicker";
-import { Alert } from "@components/Alert";
-import { DirInput } from "@components/DirInput";
+import { Alert } from "@components/display/Alert";
+import { AccountPicker } from "@components/input/AccountPicker";
+import { DirInput } from "@components/input/DirInput";
 import { Button, Select, SelectItem, type SharedSelection } from "@heroui/react";
 import { ImportGameWarningDialog } from "@pages/import-game/ImportGameWarningDialog";
 import { useState } from "react";

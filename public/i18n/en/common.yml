@@ -63,7 +63,9 @@ toast:
 exceptions:
   title: Oops! That's...
   btn: Close
-  detail: "Error message:"
+  cause: "Cause:"
+  detail: "Tracing:"
+  show-source: "Show Error Trace"
   types:
     unknown: Something unexpected happened.
     cancelled: The operation was cancelled.

@@ -1,7 +1,7 @@
 import type { GameCoreType } from "@/main/game/spec";
 import { alter } from "@/main/util/misc";
-import { Editable } from "@components/Editable";
-import { GameTypeIcon } from "@components/GameTypeIcon";
+import { GameTypeIcon } from "@components/display/GameTypeIcon";
+import { Editable } from "@components/input/Editable";
 import { Button, ButtonGroup } from "@heroui/react";
 import { useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
 import { EditIcon, FolderIcon } from "lucide-react";

@@ -1,5 +1,5 @@
 import { alter } from "@/main/util/misc";
-import { ExtendedAccountPicker } from "@components/ExtendedAccountPicker";
+import { ExtendedAccountPicker } from "@components/compound/ExtendedAccountPicker";
 import { useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
 
 export function AccountPanel() {

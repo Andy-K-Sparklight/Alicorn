@@ -1,5 +1,5 @@
 import { useNav } from "@/renderer/util/nav";
-import { WizardCard } from "@components/WizardCard";
+import { WizardCard } from "@components/display/WizardCard";
 import { Button, Link } from "@heroui/react";
 import { useCreateGameWizardContext } from "@pages/create-game-wizard/CreateGameWizardView";
 import { ModLoaderSelector } from "@pages/create-game/ModLoaderSelector";

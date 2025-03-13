@@ -1,6 +1,6 @@
 import type { GameCoreType } from "@/main/game/spec";
 import type { RemoteGameStatus } from "@/renderer/services/proc";
-import { GameTypeIcon } from "@components/GameTypeIcon";
+import { GameTypeIcon } from "@components/display/GameTypeIcon";
 import { Card, CardBody, cn } from "@heroui/react";
 import React from "react";
 import { useTranslation } from "react-i18next";

@@ -1,4 +1,4 @@
-import type { PropsWithParams } from "@components/AnimatedRoute";
+import type { PropsWithParams } from "@components/misc/AnimatedRoute";
 import { Tab, Tabs } from "@heroui/react";
 import { GameProcessProvider, useCurrentProc } from "@pages/monitor/GameProcessProvider";
 import { LogsDisplay } from "@pages/monitor/LogsDisplay";

@@ -1,8 +1,8 @@
 import type { DetailedAccountProps } from "@/main/auth/types";
 import { useNav } from "@/renderer/util/nav";
-import { AccountPicker } from "@components/AccountPicker";
-import { WizardCard } from "@components/WizardCard";
-import { YggdrasilFormDialog } from "@components/YggdrasilFormDialog";
+import { WizardCard } from "@components/display/WizardCard";
+import { AccountPicker } from "@components/input/AccountPicker";
+import { YggdrasilFormDialog } from "@components/modal/YggdrasilFormDialog";
 import { Button } from "@heroui/react";
 import { useCreateGameWizardContext } from "@pages/create-game-wizard/CreateGameWizardView";
 import { CheckIcon, UserPlus2Icon } from "lucide-react";
