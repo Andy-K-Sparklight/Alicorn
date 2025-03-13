@@ -2,7 +2,6 @@ import { containers } from "@/main/container/manage";
 import { games } from "@/main/game/manage";
 import type { GameCoreType, GameProfile } from "@/main/game/spec";
 import { profileLoader } from "@/main/profile/loader";
-import { reg } from "@/main/registry/registry";
 import { isTruthy } from "@/main/util/misc";
 import fs from "fs-extra";
 import path from "node:path";
@@ -77,11 +76,8 @@ async function doImport(name: string, fp: string, accountId: string): Promise<vo
 
     const containerRoot = path.normalize(path.join(fp, "..", "..", ".."));
 
-    const c = containers.create({
-        id: genContainerId(),
-        root: containerRoot,
-        flags: {}
-    });
+    const c = await containers.genContainerProps("INC");
+    c.root = containerRoot;
 
     const g: GameProfile = {
         id: games.genId(),
@@ -93,7 +89,7 @@ async function doImport(name: string, fp: string, accountId: string): Promise<vo
         },
         launchHint: {
             profileId: path.basename(fp, ".json"),
-            containerId: c.props.id,
+            containerId: c.id,
             pref: {},
             accountId
         },
@@ -111,16 +107,6 @@ async function doImport(name: string, fp: string, accountId: string): Promise<vo
     games.add(g);
 }
 
-function genContainerId(): string {
-    let i = 1;
-    while (true) {
-        const st = "INC-" + i;
-        if (!reg.containers.has(st)) {
-            return st;
-        }
-        i++;
-    }
-}
 
 async function scanImportableProfiles(root: string): Promise<string[]> {
     try {

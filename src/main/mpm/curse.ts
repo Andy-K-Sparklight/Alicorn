@@ -181,6 +181,11 @@ async function search(scope: MpmAddonType, query: string, gameVersion: string, l
     }
 }
 
+async function getFiles(fileIds: number[]): Promise<CurseVersion[]> {
+    const res = await netx.getJSON(`${API_BASE}/mods/files`, { fileIds }) as { data: CurseVersion[] };
+    return res.data;
+}
+
 export class CurseProvider implements MpmPackageProvider {
     vendorName = "curse";
 
@@ -258,4 +263,4 @@ export class CurseProvider implements MpmPackageProvider {
     }
 }
 
-export const curse = { search };
+export const curse = { search, getFiles };

@@ -1,6 +1,8 @@
 import { Container, type ContainerProps } from "@/main/container/spec";
+import { paths } from "@/main/fs/paths";
 import { MavenName } from "@/main/profile/maven-name";
 import { reg } from "@/main/registry/registry";
+import fs from "fs-extra";
 import path from "node:path";
 
 
@@ -115,6 +117,32 @@ class SimpleContainer implements Container {
     }
 }
 
+
+async function genContainerProps(prefix = "MC"): Promise<ContainerProps> {
+    let dirs: string[] = [];
+
+    try {
+        dirs = await fs.readdir(paths.game.to());
+    } catch {}
+
+    let i = 1;
+    let st: string;
+
+    while (true) {
+        st = prefix + "-" + i;
+        if (!reg.containers.has(st) && !dirs.includes(st)) {
+            break;
+        }
+        i++;
+    }
+
+    return {
+        id: st,
+        root: paths.game.to(st),
+        flags: {}
+    };
+}
+
 export const containers = {
-    create, get, add
+    create, get, add, genContainerProps
 };

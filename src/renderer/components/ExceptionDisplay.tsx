@@ -22,7 +22,11 @@ export function ExceptionDisplay() {
         e = restoreError(e);
 
         // For cancellation, we only show a toast
-        if (isKnownException(e) && (e as ExceptionProps<any>).type === "cancelled" || String(e).includes("AbortError")) {
+        if (isKnownException(e) && (
+                (e as ExceptionProps<any>).type === "cancelled" ||
+                String((e as ExceptionProps<any>).detail.error).includes("AbortError")
+            )
+            || String(e).includes("AbortError")) {
             addToast({
                 color: "warning",
                 title: t("types.cancelled")

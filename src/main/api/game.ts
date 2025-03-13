@@ -2,8 +2,6 @@ import { accounts } from "@/main/auth/manage";
 import { TemporalAccount } from "@/main/auth/temp";
 import { containerInspector } from "@/main/container/inspect";
 import { containers } from "@/main/container/manage";
-import type { ContainerProps } from "@/main/container/spec";
-import { paths } from "@/main/fs/paths";
 import { games } from "@/main/game/manage";
 import type { GameCoreType, GameProfile } from "@/main/game/spec";
 import type { InstallerProps } from "@/main/install/installers";
@@ -62,7 +60,7 @@ ipcMain.handle("addGame", async (_, init) => {
     let cid = containerId;
 
     if (!cid) {
-        const props = await genContainerProps();
+        const props = await containers.genContainerProps();
         cid = props.id;
 
         props.flags = {
@@ -154,28 +152,3 @@ ipcMain.handle("importGame", async (_, name: string, root, profileId, accountId)
     const fp = path.join(root, "versions", profileId, profileId + ".json");
     await gameMigrator.doImport(name, fp, accountId === "new" ? "" : accountId);
 });
-
-async function genContainerProps(): Promise<ContainerProps> {
-    let dirs: string[] = [];
-
-    try {
-        dirs = await fs.readdir(paths.game.to());
-    } catch {}
-
-    let i = 1;
-    let st: string;
-
-    while (true) {
-        st = "MC-" + i;
-        if (!reg.containers.has(st) && !dirs.includes(st)) {
-            break;
-        }
-        i++;
-    }
-
-    return {
-        id: st,
-        root: paths.game.to(st),
-        flags: {}
-    };
-}

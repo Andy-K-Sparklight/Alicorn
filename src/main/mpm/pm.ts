@@ -238,7 +238,7 @@ async function doFullResolve(gameId: string, additionalPrompts: string[] = []): 
         manifest.userPrompt,
         {
             gameVersion: game.versions.game,
-            loader: game.installProps.type
+            loader: game.type
         }
     );
 
@@ -260,7 +260,7 @@ async function doAddPackages(gameId: string, specs: string[]): Promise<void> {
     const game = games.get(gameId);
     const ctx = {
         gameVersion: game.versions.game,
-        loader: game.installProps.type
+        loader: game.type
     };
 
     const manifest = await mpmLock.loadManifest(gameId);

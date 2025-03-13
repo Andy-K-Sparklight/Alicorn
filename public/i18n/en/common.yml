@@ -44,6 +44,9 @@ progress:
     resolve: Syncing OptiFine Versions
     download: Retrieving OptiFine Installer
     install: Executing Installer
+  modpack:
+    download-mods: Installing Mods {{current}} / {{total}}
+    unpack-files: Extracting Files {{current}} / {{total}}
 
 input:
   string-array:

@@ -31,7 +31,9 @@ export type ProgressStateName =
     "liteloader.resolve" |
     "optifine.resolve" |
     "optifine.download" |
-    "optifine.install"
+    "optifine.install" |
+    "modpack.download-mods" |
+    "modpack.unpack-files"
 
 /**
  * Interface describing generic progress.

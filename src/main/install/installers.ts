@@ -14,6 +14,7 @@ import { smeltLegacy } from "@/main/install/smelt-legacy";
 import { unfine } from "@/main/install/unfine";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { jrt } from "@/main/jrt/install";
+import { curseModpack } from "@/main/modpack/curse";
 import { profileLoader } from "@/main/profile/loader";
 import type { VersionProfile } from "@/main/profile/version-profile";
 import type { ProgressController } from "@/main/util/progress";
@@ -63,6 +64,13 @@ interface ImportedGameInstallerProps {
     profileId: string;
 }
 
+interface ModpackInstallerProps {
+    type: "modpack";
+    source: string;
+    vendor: string;
+    delegate: InstallerProps;
+}
+
 export type InstallerProps =
     VanillaInstallerProps
     | FabricInstallerProps
@@ -72,7 +80,8 @@ export type InstallerProps =
     | RiftInstallerProps
     | LiteloaderInstallerProps
     | OptiFineInstallerProps
-    | ImportedGameInstallerProps;
+    | ImportedGameInstallerProps
+    | ModpackInstallerProps;
 
 export interface DetailedInstallerContext {
     game: GameProfile;
@@ -297,6 +306,19 @@ async function installImportedGame(props: ImportedGameInstallerProps, context: D
     await finalizeVanilla(p, context);
 }
 
+async function installModpack(props: ModpackInstallerProps, context: DetailedInstallerContext) {
+    const dg = props.delegate;
+    await internalInstallers[dg.type](dg as any, context);
+
+    switch (props.vendor) {
+        case "curse":
+            await curseModpack.finalizeInstall(context.container, props.source, context.control);
+            break;
+        default:
+            throw `Unknown modpack vendor: ${props.vendor}`;
+    }
+}
+
 const internalInstallers = {
     vanilla: installVanilla,
     fabric: installFabricOrQuilt,
@@ -306,7 +328,8 @@ const internalInstallers = {
     rift: installRift,
     liteloader: installLiteloader,
     optifine: installOptiFine,
-    imported: installImportedGame
+    imported: installImportedGame,
+    modpack: installModpack
 } as const;
 
 async function runInstall(gameId: string, control?: ProgressController) {
