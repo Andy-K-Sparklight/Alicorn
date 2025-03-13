@@ -51,7 +51,6 @@ export type IpcCommands = {
     getConfig: () => UserConfig;
     selectDir: () => string;
     listGames: () => GameProfile[];
-    getGameProfile: (id: string) => GameProfile;
     removeGame: (gameId: string) => void;
     querySharedGames: (id: string) => string[];
     launch: (id: string) => LaunchGameResult;

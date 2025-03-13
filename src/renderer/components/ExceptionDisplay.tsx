@@ -1,3 +1,4 @@
+import type { SerializedException } from "@/main/except/exception";
 import type { ExceptionProps, ExceptionType } from "@/main/util/exception";
 import { TipPicker } from "@components/TipPicker";
 import { addToast, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
@@ -61,7 +62,10 @@ export function ExceptionDisplay() {
     let type: keyof ExceptionType;
     let detail: ExceptionType[keyof ExceptionType] & { error?: unknown };
 
-    if (isKnownException(currentException)) {
+    if (isCheckedException(currentException)) {
+        type = currentException.name;
+        detail = currentException.props;
+    } else if (isKnownException(currentException)) {
         const exp = currentException as ExceptionProps<any>;
         type = exp.type;
         detail = exp.detail;
@@ -111,11 +115,17 @@ export function ExceptionDisplay() {
     </Modal>;
 }
 
+function isCheckedException(e: unknown): e is SerializedException<any> {
+    return typeof e === "object" && e !== null && "_ALICORN_CHECKED_EXCEPTION" in e;
+}
+
 function isKnownException(e: unknown): boolean {
     return typeof e === "object" && e !== null && "ALICORN_EXCEPTION" in e;
 }
 
 function restoreError(e: unknown) {
+    if (isCheckedException(e)) return e;
+
     try {
         const se = String(e);
 

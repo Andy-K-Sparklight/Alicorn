@@ -83,6 +83,8 @@ exceptions:
     forge-install-failed: 无法执行 Forge / NeoForged 安装程序包。
     optifine-install-failed: 无法执行 OptiFine 安装程序包。
 
+    no-such-element: 找不到指定的元素：{{id}}
+
 undefined: 未知
 
 account-picker:

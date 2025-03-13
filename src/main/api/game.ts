@@ -6,6 +6,7 @@ import { games } from "@/main/game/manage";
 import type { GameCoreType, GameProfile } from "@/main/game/spec";
 import type { InstallerProps } from "@/main/install/installers";
 import { vanillaInstaller } from "@/main/install/vanilla";
+import { addCheckedHandler } from "@/main/ipc/checked";
 import { ipcMain } from "@/main/ipc/typed";
 import { venv } from "@/main/launch/venv";
 import { gameMigrator } from "@/main/migrate/game";
@@ -16,7 +17,8 @@ import path from "node:path";
 
 ipcMain.handle("listGames", () => reg.games.getAll());
 ipcMain.handle("removeGame", (_, gameId) => games.remove(gameId));
-ipcMain.handle("getGameProfile", (_, id) => games.get(id));
+
+addCheckedHandler("getGameProfile", id => games.get(id));
 
 const allowedContentScopes = new Set(["resourcepacks", ".", "logs/latest.log"]);
 

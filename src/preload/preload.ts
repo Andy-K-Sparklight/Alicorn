@@ -4,9 +4,11 @@ import type { LaunchGameResult } from "@/main/api/launcher";
 import type { MpmAddonSearchResult } from "@/main/api/mpm";
 import type { DetailedAccountProps } from "@/main/auth/types";
 import type { UserConfig } from "@/main/conf/conf";
+import type { SerializedException } from "@/main/except/exception";
 import type { GameProfile } from "@/main/game/spec";
 import type { VersionManifest } from "@/main/install/vanilla";
 import { type IpcCallEvents, type IpcCommands, type IpcMessageEvents, type IpcPushEvents } from "@/main/ipc/channels";
+import type { CheckedIpcCommands } from "@/main/ipc/checked";
 import type { TypedIpcRenderer } from "@/main/ipc/typed";
 import type { MpmAddonType, MpmManifest } from "@/main/mpm/spec";
 import { contextBridge, ipcRenderer as ipcRendererRaw } from "electron";
@@ -133,7 +135,7 @@ const native = {
          * Gets the game profile of the specified ID.
          */
         getProfile(id: string): Promise<GameProfile> {
-            return ipcRenderer.invoke("getGameProfile", id);
+            return checkedInvoke("getGameProfile", id);
         },
 
         /**
@@ -397,3 +399,27 @@ contextBridge.exposeInMainWorld("native", native);
 console.log("Completed native API bindings.");
 
 export type NativeAPI = typeof native;
+
+type Optional<T> = {
+    success: true;
+    value: T;
+} | {
+    success: false;
+    error: string;
+}
+
+async function checkedInvoke<K extends keyof CheckedIpcCommands>(
+    method: K,
+    ...args: Parameters<CheckedIpcCommands[K]>
+): Promise<ReturnType<CheckedIpcCommands[K]>> {
+    const res = await ipcRendererRaw.invoke("checkedInvoke", {
+        method,
+        args
+    }) as Optional<ReturnType<CheckedIpcCommands[K]>>;
+
+    if (res.success) {
+        return res.value;
+    } else {
+        throw JSON.parse(res.error) as SerializedException<any>;
+    }
+}
