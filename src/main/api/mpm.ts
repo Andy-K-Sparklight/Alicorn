@@ -32,12 +32,10 @@ ipcMain.handle("searchAddons", async (_, scope, query, gameId, pg?: AddonSearchP
     const res = await modrinth.search(scope, query, game.versions.game, game.type, pg.offset.modrinth);
     pg.offset.modrinth += res.length;
 
-    if (scope === "mods") {
-        const curseRes = await curse.search(query, game.versions.game, game.type, pg.offset.curse);
-        pg.offset.curse += 50; // Fixed offset as we'll filter out some modpack results
-        res.unshift(...curseRes);
-        sortResults(res, query);
-    }
+    const curseRes = await curse.search(scope, query, game.versions.game, game.type, pg.offset.curse);
+    pg.offset.curse += curseRes.length;
+    res.push(...curseRes);
+    sortResults(res, query);
 
     return {
         contents: res,

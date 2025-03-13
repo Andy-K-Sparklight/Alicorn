@@ -1,14 +1,18 @@
 import { type MpmPackageProvider } from "@/main/mpm/pm";
-import { type MpmAddonMeta, type MpmContext, type MpmPackage, MpmPackageSpecifier } from "@/main/mpm/spec";
+import {
+    type MpmAddonMeta,
+    type MpmAddonType,
+    type MpmContext,
+    type MpmPackage,
+    MpmPackageSpecifier
+} from "@/main/mpm/spec";
 import { netx } from "@/main/net/netx";
 
 const API_BASE = "https://api.curse.tools/v1/cf";
 
 interface CurseProject {
     id: number;
-    links: {
-        websiteUrl: string; // Used to identify and filter out modpacks
-    };
+    classId: number; // 6-mod 6552-shader 4471-modpack 12-resourcepacks
     name: string;
     slug: string;
     authors: { name: string }[];
@@ -60,16 +64,18 @@ function sortVersions(arr: CurseVersion[]) {
     });
 }
 
-async function requestProjectVersions(projId: number, gameVersion: string, loader: string): Promise<CurseVersion[]> {
-    const cl = toCurseLoader(loader);
-
+async function requestProjectVersions(projId: number, gameVersion: string, loader: string | null): Promise<CurseVersion[]> {
     let index = 0;
     const out: CurseVersion[] = [];
 
     while (true) {
-        const res = await netx.getJSON(
-            `${API_BASE}/mods/${projId}/files?gameVersion=${gameVersion}&modLoaderType=${cl}&index=${index}`
-        ) as { data: CurseVersion[] };
+        let url = `${API_BASE}/mods/${projId}/files?gameVersion=${gameVersion}&index=${index}`;
+
+        if (loader) {
+            url += `&modLoaderType=${toCurseLoader(loader)}`;
+        }
+
+        const res = await netx.getJSON(url) as { data: CurseVersion[] };
 
         out.push(...res.data);
         if (res.data.length < 50) break;
@@ -119,27 +125,53 @@ function toMpmAddonMeta(proj: CurseProject): MpmAddonMeta {
         vendor: "curse",
         description: proj.summary,
         icon: proj.logo.thumbnailUrl,
-        type: "mods",
+        type: toMpmType(proj.classId),
         author: proj.authors.map(a => a.name).join(", ")
     };
 }
 
 const projectMetaCache = new Map<number, CurseProject>();
 
-function isModpack(proj: CurseProject) {
-    // A naive way to check for modpacks as the category is not included in the API
-    return proj.links.websiteUrl.includes("modpacks");
+function toCurseClassId(type: MpmAddonType): number {
+    switch (type) {
+        case "mods":
+            return 6;
+        case "modpack":
+            return 4471;
+        case "resourcepacks":
+            return 12;
+        case "shaderpacks":
+            return 6552;
+    }
 }
 
-async function search(query: string, gameVersion: string, loader: string, index = 0): Promise<MpmAddonMeta[]> {
+function toMpmType(classId: number): MpmAddonType {
+    switch (classId) {
+        case 6:
+            return "mods";
+        case 4471:
+            return "modpack";
+        case 12:
+            return "resourcepacks";
+        case 6552:
+            return "shaderpacks";
+    }
+
+    throw `Unrecognized class ID: ${classId}`;
+}
+
+async function search(scope: MpmAddonType, query: string, gameVersion: string, loader: string, index = 0): Promise<MpmAddonMeta[]> {
     const cl = toCurseLoader(loader);
     const q = encodeURIComponent(query);
-    const url = `${API_BASE}/mods/search?gameId=432&searchFilter=${q}&gameVersion=${gameVersion}&modLoaderType=${cl}&index=${index}&sortField=6`;
+    const cz = toCurseClassId(scope);
+    let url = `${API_BASE}/mods/search?gameId=432&searchFilter=${q}&classId=${cz}&gameVersion=${gameVersion}&index=${index}&sortField=6`;
+
+    if (scope === "mods") {
+        url += `&modLoaderType=${cl}`;
+    }
 
     try {
         const rp = await netx.getJSON(url) as { data: CurseProject[] };
-        rp.data = rp.data.filter(p => !isModpack(p));
-
         rp.data.forEach(p => projectMetaCache.set(p.id, p));
         return rp.data.map(toMpmAddonMeta);
     } catch (e) {
@@ -176,7 +208,8 @@ export class CurseProvider implements MpmPackageProvider {
                 if (s.version) {
                     return { spec, versions: [parseInt(s.version, 10)] };
                 } else {
-                    const versions = await requestProjectVersions(parseInt(s.id, 10), ctx.gameVersion, ctx.loader);
+                    const shouldIncludeLoader = s.type === "mods" || s.type === "modpack";
+                    const versions = await requestProjectVersions(parseInt(s.id, 10), ctx.gameVersion, shouldIncludeLoader ? ctx.loader : null);
                     versions.forEach(cacheVersion);
 
                     return { spec, versions: versions.map(v => v.id) };
@@ -199,12 +232,13 @@ export class CurseProvider implements MpmPackageProvider {
 
         function toMpmPackage(v: CurseVersion): MpmPackage {
             const proj = projectMetaCache.get(v.modId)!;
+            const tp = toMpmType(proj.classId);
             return {
                 id: v.modId.toString(),
                 version: v.id.toString(),
                 versionName: v.displayName,
                 vendor: "curse",
-                spec: `curse:mods:${v.modId}:${v.id}`,
+                spec: `curse:${tp}:${v.modId}:${v.id}`,
                 meta: toMpmAddonMeta(proj),
                 files: [{ url: v.downloadUrl, fileName: v.fileName }],
                 dependencies: v.dependencies
@@ -212,7 +246,7 @@ export class CurseProvider implements MpmPackageProvider {
                     .map(d => ({
                         // Curseforge has no version-only dependency
                         type: d.relationType === 3 ? "require" : "conflict",
-                        spec: `curse:mods:${d.modId}:`
+                        spec: `curse:${tp}:${d.modId}:`
                     }))
             };
         }

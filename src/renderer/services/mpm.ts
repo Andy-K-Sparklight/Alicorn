@@ -30,10 +30,6 @@ async function removeAddon(gameId: string, type: MpmAddonType, vendor: string, i
     }
 }
 
-export const remoteMpm = {
-    addAddon,
-    removeAddon
-};
 const selectAddonInstallStatus = createSelector(
     [
         (s: AppState) => s.mpm.installingAddons,
@@ -45,6 +41,7 @@ const selectAddonInstallStatus = createSelector(
     }
 );
 export type AddonInstallStatus = "installed" | "auto-installed" | "installing" | "not-installed";
+
 
 export function useMpmManifest(gameId: string): MpmManifest | null {
     useEffect(() => {
@@ -81,3 +78,8 @@ export function useAddonInstallStatus(gameId: string, id: string, vendor: string
 
     return isInstalling ? "installing" : "not-installed";
 }
+
+export const remoteMpm = {
+    addAddon,
+    removeAddon
+};
