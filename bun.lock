@@ -5,6 +5,7 @@
       "name": "alicorn-launcher",
       "dependencies": {
         "@fontsource-variable/jetbrains-mono": "^5.2.5",
+        "@fontsource-variable/noto-sans": "^5.2.5",
         "@fontsource-variable/noto-sans-sc": "^5.2.5",
         "@fontsource-variable/nunito": "^5.2.5",
         "@heroui/react": "^2.7.5",
@@ -202,6 +203,8 @@
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.25.1", "", { "os": "win32", "cpu": "x64" }, "sha512-Y1EQdcfwMSeQN/ujR5VayLOJ1BHaK+ssyk0AEzPjC+t1lITgsnccPqFjb6V+LsTp/9Iov4ysfjxLaGJ9RPtkVg=="],
 
     "@fontsource-variable/jetbrains-mono": ["@fontsource-variable/jetbrains-mono@5.2.5", "", {}, "sha512-G3sN1xq1moZd0JL+hFaA4MEdsiQS+JXC/z7m+EqA5/Fzn5CQlXGUaaNKFGQdDsFuLTnCfW0KOOSWHjygNfjEPw=="],
+
+    "@fontsource-variable/noto-sans": ["@fontsource-variable/noto-sans@5.2.5", "", {}, "sha512-eH6AxZEtLAq7AaqDK642UnIu/dsfNPkgUdDxX8aGGFOhw4h+J1MpWxk03sehzQvxgXw2lCprmoz0AFfvSpYNYQ=="],
 
     "@fontsource-variable/noto-sans-sc": ["@fontsource-variable/noto-sans-sc@5.2.5", "", {}, "sha512-TRxlLdbTMNq7XbTQN6XYsx8fdlg9MGZE5tVGzqCRi3audF4yugjino1NuwaKd5La+063qTSFXoRJf+sBv1ATXg=="],
 

@@ -136,6 +136,16 @@ import-game:
   select-account: Select Account
   btn: Import
 
+  warning:
+    title: Caution! Read before importing!
+    sub: |-
+      Severe compatibility issues may arise by importing external games.
+      Including but not limited to <strong>crashing, saves corruption and mods failure</strong>.
+      They may not be able to get fully resolved even by switching back.
+
+      <strong>Are you fully aware of the risk?</strong>
+    btn: I know what I'm doing!
+
 games:
   title: Games
   new: Create

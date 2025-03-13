@@ -53,6 +53,7 @@
     },
     "dependencies": {
         "@fontsource-variable/jetbrains-mono": "^5.2.5",
+        "@fontsource-variable/noto-sans": "^5.2.5",
         "@fontsource-variable/noto-sans-sc": "^5.2.5",
         "@fontsource-variable/nunito": "^5.2.5",
         "@heroui/react": "^2.7.5",

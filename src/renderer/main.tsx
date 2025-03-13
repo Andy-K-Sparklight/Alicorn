@@ -12,12 +12,13 @@ import { Provider as ReduxProvider } from "react-redux";
 // Styles and fonts
 import "./global.css";
 import "./fonts.css";
-import "@fontsource-variable/nunito";
+import "@fontsource-variable/noto-sans";
 import "@fontsource-variable/jetbrains-mono";
+import "@fontsource-variable/noto-sans-sc";
 import { Router } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
 import pkg from "~/package.json";
-import "@fontsource-variable/noto-sans-sc";
+
 
 /**
  * Renderer main entry.

@@ -3,6 +3,7 @@ import { AccountPicker } from "@components/AccountPicker";
 import { Alert } from "@components/Alert";
 import { DirInput } from "@components/DirInput";
 import { Button, Select, SelectItem, type SharedSelection } from "@heroui/react";
+import { ImportGameWarningDialog } from "@pages/import-game/ImportGameWarningDialog";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -74,5 +75,7 @@ export function ImportGameView() {
 
             <Button isDisabled={!allowImport} onPress={runImport} color="primary">{t("btn")}</Button>
         </div>
+
+        <ImportGameWarningDialog/>
     </div>;
 }

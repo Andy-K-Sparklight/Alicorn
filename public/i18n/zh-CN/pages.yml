@@ -135,6 +135,16 @@ import-game:
   select-account: 选择帐户
   btn: 导入
 
+  warning:
+    title: 警告！导入前请注意！
+    sub: |-
+      导入任何不是由 Alicorn 创建的游戏，都可能产生无法预知的兼容性问题。
+      包括但不限于<strong>游戏无法启动、存档丢失及损坏、模组不正常加载</strong>等。
+      即使切换回原本的启动器，这些问题也可能无法完全解决。
+
+      <strong>你确实明白这样做的风险吗？</strong>
+    btn: 我知道我在做什么！
+
 games:
   title: 游戏库
   new: 创建新游戏
