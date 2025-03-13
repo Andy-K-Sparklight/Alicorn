@@ -106,7 +106,12 @@ const DEFAULT_CONFIG = {
             /**
              * Mirrors in use.
              */
-            picked: [] as string[]
+            picked: [] as string[],
+
+            /**
+             * The next time to bench mirrors.
+             */
+            nextBenchTime: 0
         },
 
         /**

@@ -205,7 +205,7 @@ function apply(url: string): string[] {
 }
 
 async function bench(): Promise<void> {
-    if (!conf().net.mirror.bench || mirrorList.length < 2) {
+    if (!conf().net.mirror.bench || mirrorList.length < 2 || conf().net.mirror.nextBenchTime > Date.now()) {
         return;
     }
 
@@ -235,6 +235,7 @@ async function bench(): Promise<void> {
     }))).filter(isTruthy);
 
     conf.alter(c => c.net.mirror.picked = enabledMirrors);
+    conf.alter(c => c.net.mirror.nextBenchTime = Date.now() + 86400e3); // Bench at most once a day
 }
 
 async function digUrl(url: string, signal: AbortSignal): Promise<string> {
