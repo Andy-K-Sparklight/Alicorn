@@ -1,6 +1,6 @@
 import { ACCOUNT_REG_TRANS, ACCOUNT_REG_VERSION, type AccountProps } from "@/main/auth/types";
 import { CONTAINER_REG_TRANS, CONTAINER_REG_VERSION, type ContainerProps } from "@/main/container/spec";
-import { AbstractException } from "@/main/except/exception";
+import { NoSuchElementException } from "@/main/except/common";
 import { paths } from "@/main/fs/paths";
 import { GAME_REG_TRANS, GAME_REG_VERSION, type GameProfile } from "@/main/game/spec";
 import { isENOENT } from "@/main/util/fs";
@@ -10,19 +10,6 @@ import fs from "fs-extra";
 let registryContent: Record<string, Record<string, unknown>> & { versions?: Record<string, number> } = {};
 
 export type RegistryTransformer = (src: any) => any;
-
-class NoSuchElementException extends AbstractException<"no-such-element"> {
-    #id: string;
-
-    constructor(id: string) {
-        super("no-such-element", { id });
-        this.#id = id;
-    }
-
-    toString(): string {
-        return `No element in registry: ${this.#id}`;
-    }
-}
 
 /**
  * A registry mapping unique IDs to objects.

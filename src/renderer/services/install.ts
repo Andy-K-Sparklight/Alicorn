@@ -56,6 +56,10 @@ async function install(gameId: string): Promise<void> {
                 finalize();
                 reject(e.data.err);
                 break;
+            case "cancelled":
+                finalize();
+                reject("Cancelled");
+                break;
         }
     };
 

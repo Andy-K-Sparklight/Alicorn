@@ -3,13 +3,13 @@ import { skin } from "@/main/auth/skin";
 import { VanillaAccount, type VanillaAccountProps } from "@/main/auth/vanilla";
 import { YggdrasilAccount, type YggdrasilAccountProps } from "@/main/auth/yggdrasil";
 import { games } from "@/main/game/manage";
-import { ipcMain } from "@/main/ipc/typed";
+import { addCheckedHandler } from "@/main/ipc/checked";
 import { reg } from "@/main/registry/registry";
 import { alter } from "@/main/util/misc";
 
 export type GameAuthResult = true | { host: string, email: string }
 
-ipcMain.handle("gameAuth", async (_, gameId, pwd) => {
+addCheckedHandler("gameAuth", async (gameId, pwd) => {
     const g = games.get(gameId);
 
     const a = g.launchHint.accountId ? accounts.get(g.launchHint.accountId) : new VanillaAccount();
@@ -36,23 +36,23 @@ ipcMain.handle("gameAuth", async (_, gameId, pwd) => {
     return true;
 });
 
-ipcMain.handle("listAccounts", () => reg.accounts.entries().map(([k, v]) => ({ ...v, uuid: k })));
+addCheckedHandler("listAccounts", () => reg.accounts.entries().map(([k, v]) => ({ ...v, uuid: k })));
 
-ipcMain.handle("createVanillaAccount", async () => {
+addCheckedHandler("createVanillaAccount", async () => {
     const a = new VanillaAccount();
     await a.refresh();
     accounts.add(a);
     return a.toProps() as VanillaAccountProps;
 });
 
-ipcMain.handle("createYggdrasilAccount", async (_, host, email, pwd) => {
+addCheckedHandler("createYggdrasilAccount", async (host, email, pwd) => {
     const a = new YggdrasilAccount(host, email);
     await a.login(pwd);
     accounts.add(a);
     return a.toProps() as YggdrasilAccountProps;
 });
 
-ipcMain.handle("getAccountSkin", async (_, accountId) => {
+addCheckedHandler("getAccountSkin", async accountId => {
     try {
         const a = accounts.get(accountId);
         return await skin.getSkin(a);
@@ -63,7 +63,7 @@ ipcMain.handle("getAccountSkin", async (_, accountId) => {
     }
 });
 
-ipcMain.handle("getAccountSkinAvatar", async (_, accountId) => {
+addCheckedHandler("getAccountSkinAvatar", async accountId => {
     try {
         const a = accounts.get(accountId);
         return await skin.getSkinAvatar(a);

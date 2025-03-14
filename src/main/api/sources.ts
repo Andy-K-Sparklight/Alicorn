@@ -1,4 +1,4 @@
 import { vanillaInstaller } from "@/main/install/vanilla";
-import { ipcMain } from "@/main/ipc/typed";
+import { addCheckedHandler } from "@/main/ipc/checked";
 
-ipcMain.handle("getVersionManifest", () => vanillaInstaller.getManifest());
+addCheckedHandler("getVersionManifest", () => vanillaInstaller.getManifest());

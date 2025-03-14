@@ -15,8 +15,8 @@ import { shell } from "electron";
 import fs from "fs-extra";
 import path from "node:path";
 
-ipcMain.handle("listGames", () => reg.games.getAll());
-ipcMain.handle("removeGame", (_, gameId) => games.remove(gameId));
+addCheckedHandler("listGames", () => reg.games.getAll());
+addCheckedHandler("removeGame", gameId => games.remove(gameId));
 
 addCheckedHandler("getGameProfile", id => games.get(id));
 
@@ -52,7 +52,7 @@ export interface CreateGameInit {
     containerShouldLink: boolean; // Only present when creating dedicated container
 }
 
-ipcMain.handle("addGame", async (_, init) => {
+addCheckedHandler("addGame", async init => {
     const { name, gameVersion, containerId, assetsLevel, containerShouldLink, installProps } = init;
 
     const vm = await vanillaInstaller.getManifest();
@@ -130,7 +130,7 @@ ipcMain.handle("addGame", async (_, init) => {
     return g.id;
 });
 
-ipcMain.handle("updateGame", (_, g) => games.add(g));
+addCheckedHandler("updateGame", g => games.add(g));
 
 ipcMain.on("destroyGame", async (_, id) => {
     if (games.queryShared(id).length > 0) return;
@@ -146,11 +146,11 @@ ipcMain.on("destroyGame", async (_, id) => {
     }
 });
 
-ipcMain.handle("querySharedGames", async (_, id) => games.queryShared(id));
+addCheckedHandler("querySharedGames", async id => games.queryShared(id));
 
-ipcMain.handle("scanImportableProfiles", async (_, fp) => gameMigrator.scanImportableProfiles(fp));
+addCheckedHandler("scanImportableProfiles", async fp => gameMigrator.scanImportableProfiles(fp));
 
-ipcMain.handle("importGame", async (_, name: string, root, profileId, accountId) => {
+addCheckedHandler("importGame", async (name: string, root, profileId, accountId) => {
     const fp = path.join(root, "versions", profileId, profileId + ".json");
     await gameMigrator.doImport(name, fp, accountId === "new" ? "" : accountId);
 });

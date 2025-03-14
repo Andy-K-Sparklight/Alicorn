@@ -2,20 +2,22 @@
  * Utilities related to network access.
  */
 import { conf } from "@/main/conf/conf";
+import { AbstractException } from "@/main/except/exception";
+import { NetRequestFailedException } from "@/main/except/net";
 import { mirror } from "@/main/net/mirrors";
-import { exceptions } from "@/main/util/exception";
 import { net, Session } from "electron";
 
 /**
  * Fetches the content of the given URL using any available mirror.
  */
 async function get(url: string, body?: any, session?: Session): Promise<Response> {
-    if (url.length === 0) throw exceptions.create("network", { url: "unknown" });
+    let lastError;
 
     const urls = mirror.apply(url);
     const jsonHeader = body === undefined ? undefined : { "Content-Type": "application/json" };
 
     for (const u of urls) {
+        let code: number | undefined = undefined;
         try {
             const signal = AbortSignal.timeout(conf().net.requestTimeout);
             const r = await (session ?? net).fetch(u, {
@@ -25,13 +27,15 @@ async function get(url: string, body?: any, session?: Session): Promise<Response
                 signal
             });
             if (r.ok) return r;
+            code = r.status;
         } catch (e) {
-            console.error(`Mirror unreachable: ${u}`);
+            console.error(`[NETX] Unable to fetch from: ${u}`);
             console.error(e);
         }
+        lastError = new NetRequestFailedException(u, code);
     }
 
-    throw exceptions.create("network", { url });
+    throw new NetMirrorsAllFailedException(url, lastError);
 }
 
 async function getJSON<T = any>(url: string, body?: any, session?: Session): Promise<T> {
@@ -40,11 +44,25 @@ async function getJSON<T = any>(url: string, body?: any, session?: Session): Pro
     try {
         return await r.json();
     } catch (e) {
-        console.error(`Unable to fetch JSON from: ${r.url}`);
+        console.error(`[NETX] Unable to fetch JSON from: ${r.url}`);
         console.error(e);
     }
 
-    throw exceptions.create("network", { url: r.url });
+    throw new NetMirrorsAllFailedException(url);
+}
+
+
+class NetMirrorsAllFailedException extends AbstractException<"net-mirrors-all-failed"> {
+    #url: string;
+
+    constructor(url: string, cause?: unknown) {
+        super("net-mirrors-all-failed", { url }, cause);
+        this.#url = url;
+    }
+
+    toString(): string {
+        return `All mirrors have failed: ${this.#url}`;
+    }
 }
 
 export const netx = {

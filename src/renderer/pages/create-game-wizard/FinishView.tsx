@@ -23,10 +23,9 @@ export function FinishView() {
             assetsLevel: "full",
             installProps: {
                 type: ctx.value.installProps!.type,
-                profileId: "",
                 gameVersion: ctx.value.gameVersion!,
                 loaderVersion: ""
-            },
+            } as any,
             playerName: "",
             containerShouldLink: true
         });

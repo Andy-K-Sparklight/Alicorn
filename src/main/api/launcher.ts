@@ -1,4 +1,5 @@
 import { games } from "@/main/game/manage";
+import { addCheckedHandler } from "@/main/ipc/checked";
 import { ipcMain } from "@/main/ipc/typed";
 import { bl } from "@/main/launch/bl";
 import type { GameProcessLog } from "@/main/launch/log-parser";
@@ -10,7 +11,7 @@ export interface LaunchGameResult {
     pid: number;
 }
 
-ipcMain.handle("launch", async (_, gameId: string) => {
+addCheckedHandler("launch", async gameId => {
     const launchHint = games.get(gameId).launchHint;
 
     const g = await bl.launch(launchHint);

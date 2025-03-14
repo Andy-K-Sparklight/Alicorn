@@ -2,16 +2,29 @@
  * Utilities for loading profiles.
  */
 import { Container } from "@/main/container/spec";
+import { AbstractException } from "@/main/except/exception";
 import { linkProfile } from "@/main/profile/linker";
 import { VersionProfile } from "@/main/profile/version-profile";
-import { exceptions } from "@/main/util/exception";
 import fs from "fs-extra";
+
+class ProfileLinkFailedException extends AbstractException<"profile-link-failed"> {
+    #id: string;
+
+    constructor(id: string) {
+        super("profile-link-failed", { id });
+        this.#id = id;
+    }
+
+    toString(): string {
+        return `Failed to link profile ${this.#id}`;
+    }
+}
 
 async function fromContainer(id: string, container: Container): Promise<VersionProfile> {
     try {
         return await linkProfile(id, i => fs.readJSON(container.profile(i)));
     } catch (e) {
-        throw exceptions.create("profile-link", { id, error: String(e) });
+        throw new ProfileLinkFailedException(id);
     }
 }
 

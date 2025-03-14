@@ -3,13 +3,13 @@
  */
 import { accounts } from "@/main/auth/manage";
 import { YggdrasilAccount } from "@/main/auth/yggdrasil";
+import { NoSuchElementException } from "@/main/except/common";
 import { jrt } from "@/main/jrt/install";
 import { launchArgs } from "@/main/launch/args";
 import { GameProcess } from "@/main/launch/proc";
 import { LaunchHint, LaunchInit } from "@/main/launch/types";
 import { venv } from "@/main/launch/venv";
 import { profileLoader } from "@/main/profile/loader";
-import { exceptions } from "@/main/util/exception";
 import { net } from "electron";
 import { containers } from "../container/manage";
 
@@ -99,7 +99,7 @@ async function prefetchAuthlibInjectorMeta(url: string): Promise<string> {
 
 function getInstance(gid: string): GameProcess {
     const g = games.get(gid);
-    if (!g) throw exceptions.create("no-entry", { id: gid });
+    if (!g) throw new NoSuchElementException(gid);
     return g;
 }
 

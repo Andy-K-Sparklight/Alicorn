@@ -1,7 +1,8 @@
-import { Account, type AccountProps, AuthCredentials } from "@/main/auth/types";
+import { Account, type AccountProps, AuthCredentials, AuthFailedException } from "@/main/auth/types";
 import { vanillaOAuth } from "@/main/auth/vanilla-oauth";
+import { CancelledException } from "@/main/except/common";
+import { coerceErrorMessage } from "@/main/except/exception";
 import { doDecrypt, doEncrypt } from "@/main/security/encrypt";
-import { exceptions } from "@/main/util/exception";
 import { net } from "electron";
 import { nanoid } from "nanoid";
 
@@ -79,25 +80,29 @@ export class VanillaAccount implements Account {
     }
 
     async #doRefresh() {
-        if (this.#isOAuthTokenExpired()) {
-            console.log("Obtaining new OAuth code.");
-            await this.#getCode();
-        } else {
-            console.log("Reusing existing refresh token.");
+        try {
+            if (this.#isOAuthTokenExpired()) {
+                console.log("Obtaining new OAuth code.");
+                await this.#getCode();
+            } else {
+                console.log("Reusing existing refresh token.");
+            }
+
+            await this.#getOAuthToken(!this.#isOAuthTokenExpired());
+            await this.#getXBLToken();
+            await Promise.all([
+                this.#getXboxId(),
+                (async () => {
+                    await this.#getXSTSToken();
+                    await this.#getAccessToken();
+                    await this.#getUserProfile();
+                })()
+            ]);
+
+            console.log(`Login complete. Welcome back, ${this.#playerName}!`);
+        } catch (e) {
+            throw new AuthFailedException(coerceErrorMessage(e));
         }
-
-        await this.#getOAuthToken(!this.#isOAuthTokenExpired());
-        await this.#getXBLToken();
-        await Promise.all([
-            this.#getXboxId(),
-            (async () => {
-                await this.#getXSTSToken();
-                await this.#getAccessToken();
-                await this.#getUserProfile();
-            })()
-        ]);
-
-        console.log(`Login complete. Welcome back, ${this.#playerName}!`);
     }
 
     toProps(): AccountProps {
@@ -124,7 +129,7 @@ export class VanillaAccount implements Account {
 
     async #getCode(): Promise<void> {
         this.#code = await vanillaOAuth.browserLogin(this.#partId);
-        if (!this.#code) throw exceptions.create("cancelled", {});
+        if (!this.#code) throw new CancelledException();
     }
 
     async #getOAuthToken(refresh: boolean) {
@@ -151,11 +156,11 @@ export class VanillaAccount implements Account {
 
         const dat = await res.json();
 
-        if (dat.error) throw exceptions.create("auth", { error: dat.error });
+        if (dat.error) throw dat.error;
 
         const { access_token: accessToken, refresh_token: refreshToken, expires_in: expiresIn } = dat;
 
-        if (!accessToken) throw exceptions.create("auth", {});
+        if (!accessToken) throw "Missing access token in response";
 
         this.#refreshTokenExpiresAt = Date.now() + (expiresIn - 300) * 1000; // Reserve 5min for the token
         this.#oAuthToken = accessToken;
@@ -183,11 +188,11 @@ export class VanillaAccount implements Account {
 
         const dat = await res.json();
 
-        if (dat.error) throw exceptions.create("auth", { error: dat.error });
+        if (dat.error) throw dat.error;
 
         const { Token: token, DisplayClaims: { xui: [{ uhs }] } } = dat;
 
-        if (!token || !uhs) throw exceptions.create("auth", {});
+        if (!token || !uhs) throw "Missing XBL token in response";
 
         this.#xblToken = token;
         this.#userHash = uhs;
@@ -213,7 +218,7 @@ export class VanillaAccount implements Account {
 
         const dat = await res.json();
 
-        if (dat.error) throw exceptions.create("auth", { error: dat.error });
+        if (dat.error) throw dat.error;
 
         const { DisplayClaims: { xui: [{ xid }] } } = dat;
 
@@ -240,11 +245,11 @@ export class VanillaAccount implements Account {
 
         const dat = await res.json();
 
-        if (dat.error) throw exceptions.create("auth", { error: dat.error });
+        if (dat.error) dat.error;
 
         const { Token: token } = dat;
 
-        if (!token) throw exceptions.create("auth", {});
+        if (!token) throw "Missing XSTS token in response";
 
         this.#xstsToken = token;
     }
@@ -263,7 +268,7 @@ export class VanillaAccount implements Account {
 
         const { access_token: accessToken, expires_in: expiresIn } = await res.json();
 
-        if (!accessToken) throw exceptions.create("auth", {});
+        if (!accessToken) throw "Missing Mojang access token in response";
 
         this.#accessTokenExpiresAt = Date.now() + (expiresIn - 300) * 1000;
         this.#accessToken = accessToken;
@@ -280,7 +285,7 @@ export class VanillaAccount implements Account {
 
         const { id, name } = await res.json();
 
-        if (!id || !name) throw exceptions.create("auth", {});
+        if (!id || !name) throw "Missing username in response";
 
         this.uuid = id;
         this.#playerName = name;

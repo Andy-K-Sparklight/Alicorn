@@ -6,8 +6,8 @@ import { neoforgedInstaller } from "@/main/install/neoforged";
 import { quiltInstaller } from "@/main/install/quilt";
 import { riftInstaller } from "@/main/install/rift";
 import { unfine } from "@/main/install/unfine";
+import { addCheckedHandler } from "@/main/ipc/checked";
 import { ipcMain } from "@/main/ipc/typed";
-import { exceptions } from "@/main/util/exception";
 import type { Progress, ProgressController } from "@/main/util/progress";
 
 export type VanillaInstallEvent =
@@ -21,6 +21,9 @@ export type VanillaInstallEvent =
     {
         type: "progress",
         progress: Progress;
+    } |
+    {
+        type: "cancelled";
     }
 
 const installControllers = new Map<string, AbortController>();
@@ -28,7 +31,7 @@ const installControllers = new Map<string, AbortController>();
 ipcMain.on("cancelInstall", (_, gameId) => {
     const ac = installControllers.get(gameId);
     installControllers.delete(gameId);
-    ac?.abort(exceptions.create("cancelled", {}));
+    ac?.abort();
 });
 
 ipcMain.on("installGame", async (e, gameId) => {
@@ -59,14 +62,18 @@ ipcMain.on("installGame", async (e, gameId) => {
 
         port.close();
     } catch (err) {
-        send({ type: "error", err });
+        if (abortController.signal.aborted) {
+            send({ type: "cancelled" });
+        } else {
+            send({ type: "error", err });
+        }
     } finally {
         port.close();
         installControllers.delete(gameId);
     }
 });
 
-ipcMain.handle("queryAvailableModLoaders", async (_, gameVersion) => {
+addCheckedHandler("queryAvailableModLoaders", async gameVersion => {
     const supported: string[] = [];
 
     const [

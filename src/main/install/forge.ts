@@ -1,8 +1,9 @@
+import { NetRequestFailedException } from "@/main/except/net";
 import { paths } from "@/main/fs/paths";
+import { UnavailableModLoaderException } from "@/main/install/except";
 import { dlx } from "@/main/net/dlx";
 import { mirror } from "@/main/net/mirrors";
 import { netx } from "@/main/net/netx";
-import { exceptions } from "@/main/util/exception";
 import { isTruthy } from "@/main/util/misc";
 import { progress, type ProgressController } from "@/main/util/progress";
 import { XMLParser } from "fast-xml-parser";
@@ -48,7 +49,7 @@ async function syncVersions(): Promise<string[]> {
 
         const res = await netx.get(FORGE_VERSIONS);
 
-        if (!res.ok) throw exceptions.create("network", { url: res.url });
+        if (!res.ok) throw new NetRequestFailedException(FORGE_VERSIONS, res.status);
 
         const xml = await res.text();
         const parser = new XMLParser();
@@ -95,7 +96,7 @@ function genClientUrl(loaderVersion: string): string {
 
 async function pickLoaderVersion(gameVersion: string, control?: ProgressController): Promise<string> {
     const versions = await queryLoaderVersions(gameVersion, control);
-    if (versions.length === 0) throw exceptions.create("forge-no-version", { gameVersion });
+    if (versions.length === 0) throw new UnavailableModLoaderException(gameVersion);
     return versions[0];
 }
 

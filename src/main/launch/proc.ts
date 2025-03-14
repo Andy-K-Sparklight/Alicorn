@@ -1,6 +1,6 @@
 import { conf } from "@/main/conf/conf";
+import { AbstractException, coerceErrorMessage } from "@/main/except/exception";
 import { type GameProcessLog, logParser } from "@/main/launch/log-parser";
-import { exceptions } from "@/main/util/exception";
 import { nanoid } from "nanoid";
 import * as child_process from "node:child_process";
 import EventEmitter from "node:events";
@@ -217,8 +217,21 @@ export class GameProcess {
         try {
             await proc.#readyPromise;
         } catch (e) {
-            throw exceptions.create("launch-spawn", { error: String(e) });
+            throw new LaunchSpawnFailedException(coerceErrorMessage(e));
         }
         return proc;
+    }
+}
+
+class LaunchSpawnFailedException extends AbstractException<"launch-spawn-failed"> {
+    #err: string;
+
+    constructor(err: string) {
+        super("launch-spawn-failed", { err });
+        this.#err = err;
+    }
+
+    toString(): string {
+        return `Failed to spawn game process: ${this.#err}`;
     }
 }

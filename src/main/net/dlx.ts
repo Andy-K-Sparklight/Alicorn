@@ -3,6 +3,7 @@
  */
 import { cache } from "@/main/cache/cache";
 import { conf } from "@/main/conf/conf";
+import { AbstractException } from "@/main/except/exception";
 import { aria2, type Aria2DownloadRequest } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
 import { nextdl, type NextDownloadRequest } from "@/main/net/nextdl";
@@ -25,6 +26,21 @@ export interface DlxDownloadRequest {
      */
     fastLink?: boolean;
     noCache?: true;
+}
+
+export class DownloadException extends AbstractException<"download-failed"> {
+    #url: string;
+    #cause?: unknown;
+
+    constructor(url: string, cause?: unknown) {
+        super("download-failed", { url }, cause);
+        this.#url = url;
+        this.#cause = cause;
+    }
+
+    toString(): string {
+        return `Failed to download ${this.#url}: ${this.#cause}`;
+    }
 }
 
 /**

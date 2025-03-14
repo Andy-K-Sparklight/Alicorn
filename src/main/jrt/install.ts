@@ -1,11 +1,11 @@
 import { lzma } from "@/main/compress/lzma";
 import { conf } from "@/main/conf/conf";
+import { AbstractException } from "@/main/except/exception";
 import { paths } from "@/main/fs/paths";
 import { jrtLinuxArm } from "@/main/jrt/linux-arm";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { netx } from "@/main/net/netx";
 import { getOSName } from "@/main/sys/os";
-import { exceptions } from "@/main/util/exception";
 import { progress, type ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
 import * as child_process from "node:child_process";
@@ -48,6 +48,19 @@ function osPair(): string {
     return "unknown";
 }
 
+export class JrtInstallationFailedException extends AbstractException<"jrt-install-failed"> {
+    #component: string;
+
+    constructor(component: string) {
+        super("jrt-install-failed", { component });
+        this.#component = component;
+    }
+
+    toString(): string {
+        return `Failed to install JRT component: ${this.#component}`;
+    }
+}
+
 async function getProfile(componentName: string): Promise<JavaRuntimeProfile> {
     const d = await netx.getJSON(JRT_MANIFEST);
     const osp = osPair();
@@ -61,7 +74,7 @@ async function getProfile(componentName: string): Promise<JavaRuntimeProfile> {
     }
 
     if (!Array.isArray(availableProfiles) || availableProfiles.length === 0) {
-        throw exceptions.create("jrt-not-available", { component: componentName });
+        throw new JrtInstallationFailedException(componentName);
     }
 
     // Gets the latest release
@@ -109,7 +122,7 @@ async function installRuntime(component: string, control?: ProgressController): 
     const root = getInstallPath(component);
 
     try {
-        await verify(root);
+        await verify(component);
         console.log(`JRT component already installed: ${component}`);
         return;
     } catch {}
@@ -206,7 +219,7 @@ async function installRuntime(component: string, control?: ProgressController): 
 
     control?.onProgress?.(progress.indefinite("jrt.verify"));
 
-    await verify(root);
+    await verify(component);
 
     console.debug(`Runtime installed: ${component}`);
 }
@@ -222,7 +235,8 @@ function getExecPath(): string {
     }
 }
 
-async function verify(root: string): Promise<void> {
+async function verify(component: string): Promise<void> {
+    const root = getInstallPath(component);
     const bin = path.join(root, getExecPath());
 
     const proc = child_process.spawn(bin, ["-version"]);
@@ -230,7 +244,7 @@ async function verify(root: string): Promise<void> {
     const code = await pEvent(proc, "exit", { timeout: 5000 });
 
     if (code !== 0) {
-        throw exceptions.create("jrt-not-verified", { bin });
+        throw new JrtInstallationFailedException(component);
     }
 }
 

@@ -94,7 +94,7 @@ const native = {
         },
 
         queryAvailableModLoaders(gameVersion: string): Promise<string[]> {
-            return ipcRenderer.invoke("queryAvailableModLoaders", gameVersion);
+            return checkedInvoke("queryAvailableModLoaders", gameVersion);
         }
     },
 
@@ -106,7 +106,7 @@ const native = {
          * Get all available game profiles.
          */
         list(): Promise<GameProfile[]> {
-            return ipcRenderer.invoke("listGames");
+            return checkedInvoke("listGames");
         },
 
         /**
@@ -121,14 +121,14 @@ const native = {
          * @param gameId
          */
         remove(gameId: string): Promise<void> {
-            return ipcRenderer.invoke("removeGame", gameId);
+            return checkedInvoke("removeGame", gameId);
         },
 
         /**
          * Adds the specified game to registry.
          */
         add(game: CreateGameInit): Promise<string> {
-            return ipcRenderer.invoke("addGame", game);
+            return checkedInvoke("addGame", game);
         },
 
         /**
@@ -142,14 +142,14 @@ const native = {
          * Checks whether the game profile is being shared with other games.
          */
         queryShared(id: string): Promise<string[]> {
-            return ipcRenderer.invoke("querySharedGames", id);
+            return checkedInvoke("querySharedGames", id);
         },
 
         /**
          * Updates the specified game profile.
          */
         update(g: GameProfile) {
-            return ipcRenderer.invoke("updateGame", g);
+            return checkedInvoke("updateGame", g);
         },
 
         /**
@@ -165,14 +165,14 @@ const native = {
          */
         scanImportableProfiles(root: string): Promise<string[]> {
             console.log(root);
-            return ipcRenderer.invoke("scanImportableProfiles", root);
+            return checkedInvoke("scanImportableProfiles", root);
         },
 
         /**
          * Imports the specified game.
          */
         importGame(name: string, root: string, profileId: string, accountId: string) {
-            return ipcRenderer.invoke("importGame", name, root, profileId, accountId);
+            return checkedInvoke("importGame", name, root, profileId, accountId);
         },
 
         /**
@@ -191,42 +191,42 @@ const native = {
          * Authenticate the account of the specified game.
          */
         forGame(id: string, pwd?: string): Promise<GameAuthResult> {
-            return ipcRenderer.invoke("gameAuth", id, pwd);
+            return checkedInvoke("gameAuth", id, pwd);
         },
 
         /**
          * Gets all accounts stored in the registry.
          */
         getAccounts(): Promise<DetailedAccountProps[]> {
-            return ipcRenderer.invoke("listAccounts");
+            return checkedInvoke("listAccounts");
         },
 
         /**
          * Creates a new vanilla account.
          */
         createVanilla(): Promise<DetailedAccountProps> {
-            return ipcRenderer.invoke("createVanillaAccount");
+            return checkedInvoke("createVanillaAccount");
         },
 
         /**
          * Creates an Yggdrasil account.
          */
         createYggdrasil(host: string, email: string, pwd: string): Promise<DetailedAccountProps> {
-            return ipcRenderer.invoke("createYggdrasilAccount", host, email, pwd);
+            return checkedInvoke("createYggdrasilAccount", host, email, pwd);
         },
 
         /**
          * Queries the skin of the given account.
          */
         getSkin(accountId: string): Promise<string> {
-            return ipcRenderer.invoke("getAccountSkin", accountId);
+            return checkedInvoke("getAccountSkin", accountId);
         },
 
         /**
          * Like `getSkin`, but crops the section corresponding to the avatar for displaying.
          */
         getSkinAvatar(accountId: string): Promise<[string, string]> {
-            return ipcRenderer.invoke("getAccountSkinAvatar", accountId);
+            return checkedInvoke("getAccountSkinAvatar", accountId);
         },
 
         /**
@@ -245,7 +245,7 @@ const native = {
          * Launches the game using the given launch hint.
          */
         launch(gameId: string): Promise<LaunchGameResult> {
-            return ipcRenderer.invoke("launch", gameId);
+            return checkedInvoke("launch", gameId);
         },
 
         /**
@@ -280,7 +280,7 @@ const native = {
          * Retrieves the base game version manifest.
          */
         getVersionManifest(): Promise<VersionManifest> {
-            return ipcRenderer.invoke("getVersionManifest");
+            return checkedInvoke("getVersionManifest");
         }
     },
 
@@ -292,35 +292,35 @@ const native = {
          * Searches for addons.
          */
         searchAddons(scope: MpmAddonType, query: string, gameId: string, pg?: unknown): Promise<MpmAddonSearchResult> {
-            return ipcRenderer.invoke("searchAddons", scope, query, gameId, pg);
+            return checkedInvoke("searchAddons", scope, query, gameId, pg);
         },
 
         /**
          * Updates the addons installed.
          */
         updateAddons(gameId: string): Promise<void> {
-            return ipcRenderer.invoke("updateAddons", gameId);
+            return checkedInvoke("updateAddons", gameId);
         },
 
         /**
          * Adds the specified addons to the game.
          */
         addAddons(gameId: string, specs: string[]): Promise<void> {
-            return ipcRenderer.invoke("addAddons", gameId, specs);
+            return checkedInvoke("addAddons", gameId, specs);
         },
 
         /**
          * Removes the specified addons from the game.
          */
         removeAddons(gameId: string, specs: string[]): Promise<void> {
-            return ipcRenderer.invoke("removeAddons", gameId, specs);
+            return checkedInvoke("removeAddons", gameId, specs);
         },
 
         /**
          * Loads MPM manifest.
          */
         loadManifest(gameId: string): Promise<MpmManifest> {
-            return ipcRenderer.invoke("loadMpmManifest", gameId);
+            return checkedInvoke("loadMpmManifest", gameId);
         },
 
         /**
@@ -336,7 +336,7 @@ const native = {
      */
     conf: {
         get(): Promise<UserConfig> {
-            return ipcRenderer.invoke("getConfig");
+            return checkedInvoke("getConfig");
         },
 
         update(conf: UserConfig): void {
@@ -363,7 +363,7 @@ const native = {
          * Selects a directory.
          */
         selectDir(): Promise<string> {
-            return ipcRenderer.invoke("selectDir");
+            return checkedInvoke("selectDir");
         },
 
         /**
@@ -420,6 +420,6 @@ async function checkedInvoke<K extends keyof CheckedIpcCommands>(
     if (res.success) {
         return res.value;
     } else {
-        throw JSON.parse(res.error) as SerializedException<any>;
+        throw JSON.parse(res.error) as SerializedException;
     }
 }

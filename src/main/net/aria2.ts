@@ -3,12 +3,12 @@
  * details.
  */
 import { conf } from "@/main/conf/conf";
+import { CancelledException } from "@/main/except/common";
 import { paths } from "@/main/fs/paths";
-import type { DlxDownloadRequest } from "@/main/net/dlx";
+import { type DlxDownloadRequest, DownloadException } from "@/main/net/dlx";
 import { WebSocketJsonRpcClient } from "@/main/net/ws-rpc";
 import { getExecutableExt } from "@/main/sys/os";
 import { getCanonicalUA } from "@/main/sys/ua";
-import { exceptions } from "@/main/util/exception";
 import { net } from "electron";
 import Emittery from "emittery";
 import fs from "fs-extra";
@@ -48,10 +48,12 @@ async function resolve(req: Aria2DownloadRequest): Promise<void> {
             console.debug(`Aria2 Got: ${req.origin}`);
             return;
         } catch (e) {
-            lastErr = e;
             console.debug(`Aria2 Try: ${req.origin} (${e})`);
             if (req.signal?.aborted) {
+                lastErr = new CancelledException();
                 break;
+            } else {
+                lastErr = e;
             }
         }
     }
@@ -106,8 +108,7 @@ async function sendRequest(req: Aria2DownloadRequest): Promise<void> {
     try {
         await pEvent(emitter, "finish");
     } catch (e) {
-        // Re-warp the error event
-        throw exceptions.create("download", { url: req.url, error: e });
+        throw new DownloadException(req.url, e);
     }
 }
 

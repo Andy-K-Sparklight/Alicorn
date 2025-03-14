@@ -1,19 +1,31 @@
+import { UnknownException } from "@/main/except/common";
+
 interface CatchyExceptionType {
     unknown: { err: string };
     cancelled: {};
     "no-handler-registered": { method: string };
     "no-such-element": { id: string };
+    "net-request-failed": { url: string, code?: number };
+    "net-mirrors-all-failed": { url: string };
+    "launch-spawn-failed": { err: string };
+    "download-failed": { url: string };
+    "profile-link-failed": { id: string };
+    "auth-failed": { err: string };
+    "unavailable-mod-loader": { version: string };
+    "optifine-install-failed": { code: number };
+    "jrt-install-failed": { component: string };
+    "forge-install-failed": {};
 }
 
-export type SerializedException<K extends keyof CatchyExceptionType> = {
+export type SerializedException<K extends keyof CatchyExceptionType = keyof CatchyExceptionType> = {
     _ALICORN_CHECKED_EXCEPTION: true;
     name: K;
     props: CatchyExceptionType[K];
     stack?: string;
-    cause?: SerializedException<any>;
+    cause?: SerializedException;
 }
 
-interface SerializableException<K extends keyof CatchyExceptionType> {
+interface SerializableException<K extends keyof CatchyExceptionType = keyof CatchyExceptionType> {
     serialize(): SerializedException<K>;
 
     toJSON(): string;
@@ -27,15 +39,16 @@ function getStack() {
     return ex.slice(3).join("\n"); // Drop caller stack and skip `AbstractException` for a shorter stacktrace
 }
 
-export class AbstractException<K extends keyof CatchyExceptionType> implements SerializableException<K> {
+export class AbstractException<K extends keyof CatchyExceptionType = keyof CatchyExceptionType> implements SerializableException<K> {
     #except: SerializedException<K>;
 
-    constructor(name: K, props: CatchyExceptionType[K], cause?: SerializableException<any>) {
+    constructor(name: K, props: CatchyExceptionType[K], cause?: unknown) {
+        const ex = cause === undefined ? undefined : (cause instanceof AbstractException ? cause : new UnknownException(cause));
         this.#except = {
             _ALICORN_CHECKED_EXCEPTION: true,
             name,
             props,
-            cause: cause?.serialize(),
+            cause: ex?.serialize(),
             stack: getStack()
         };
     }
@@ -53,26 +66,12 @@ export class AbstractException<K extends keyof CatchyExceptionType> implements S
     }
 }
 
-export class UnknownException extends AbstractException<"unknown"> {
-    #exs: string;
-
-    constructor(ex: unknown) {
-        const e = String(ex);
-        super("unknown", { err: e });
-        this.#exs = e;
+export function coerceErrorMessage(ex: unknown) {
+    if (typeof ex === "object" && ex !== null) {
+        if ("message" in ex && typeof ex.message === "string") return ex.message;
     }
 
-    toString(): string {
-        return this.#exs;
-    }
-}
+    if (typeof ex === "string") return ex;
 
-export class CancelledException extends AbstractException<"cancelled"> {
-    constructor() {
-        super("cancelled", {});
-    }
-
-    toString(): string {
-        return "Operation cancelled";
-    }
+    return String(ex);
 }

@@ -5,9 +5,8 @@
  * Electron. This is expected to bypass the connection limit in the browser window and maximize the throughput.
  */
 import { conf } from "@/main/conf/conf";
-import type { DlxDownloadRequest } from "@/main/net/dlx";
+import { type DlxDownloadRequest, DownloadException } from "@/main/net/dlx";
 import { hash } from "@/main/security/hash";
-import { exceptions } from "@/main/util/exception";
 import { isTruthy } from "@/main/util/misc";
 import { net } from "electron";
 import Emittery from "emittery";
@@ -69,7 +68,7 @@ async function beginWork(task: NextDownloadTask) {
         if (!url) {
             // Failed
             console.warn(`NextDL Err: ${task.req.origin}`);
-            const ex = exceptions.create("download", { url: task.req.origin });
+            const ex = new DownloadException(task.req.origin);
             void task.emitter.emit("error", ex);
             return;
         }

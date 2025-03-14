@@ -1,6 +1,6 @@
 import type { Container } from "@/main/container/spec";
+import { UnavailableModLoaderException } from "@/main/install/except";
 import { netx } from "@/main/net/netx";
-import { exceptions } from "@/main/util/exception";
 import { progress, type ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
 
@@ -49,7 +49,7 @@ async function retrieveProfile(
             // There are no stable versions, use the first one instead
             sv = versions[0]?.version;
         }
-        if (!sv) throw exceptions.create("fabric-no-version", { gameVersion });
+        if (!sv) throw new UnavailableModLoaderException(gameVersion);
 
         loaderVersion = sv;
     }
@@ -60,7 +60,7 @@ async function retrieveProfile(
     controller?.signal?.throwIfAborted();
 
     const fbp = await netx.getJSON(url);
-    if (!("id" in fbp) || typeof fbp.id !== "string") throw exceptions.create("fabric-no-version", { gameVersion });
+    if (!("id" in fbp) || typeof fbp.id !== "string") throw new UnavailableModLoaderException(gameVersion);
 
     console.debug(`Writing profile with ID: ${fbp.id}`);
     await fs.outputJSON(container.profile(fbp.id), fbp);

@@ -1,5 +1,5 @@
 import { games } from "@/main/game/manage";
-import { ipcMain } from "@/main/ipc/typed";
+import { addCheckedHandler } from "@/main/ipc/checked";
 import { curse } from "@/main/mpm/curse";
 import { mpmLock } from "@/main/mpm/lockfile";
 import { modrinth } from "@/main/mpm/modrinth";
@@ -19,7 +19,7 @@ export interface MpmAddonSearchResult {
     pagination: AddonSearchPagination;
 }
 
-ipcMain.handle("searchAddons", async (_, scope, query, gameId, pg?: AddonSearchPagination) => {
+addCheckedHandler("searchAddons", async (scope, query, gameId, pg?: AddonSearchPagination) => {
     const game = games.get(gameId);
 
     pg = pg || {
@@ -43,19 +43,19 @@ ipcMain.handle("searchAddons", async (_, scope, query, gameId, pg?: AddonSearchP
     };
 });
 
-ipcMain.handle("updateAddons", async (_, gameId) => {
+addCheckedHandler("updateAddons", async gameId => {
     await mpm.fullResolve(gameId);
 });
 
-ipcMain.handle("addAddons", async (_, gameId, specs) => {
+addCheckedHandler("addAddons", async (gameId, specs) => {
     await mpm.addPackages(gameId, specs);
 });
 
-ipcMain.handle("removeAddons", async (_, gameId, specs) => {
+addCheckedHandler("removeAddons", async (gameId, specs) => {
     await mpm.removePackages(gameId, specs);
 });
 
-ipcMain.handle("loadMpmManifest", async (_, gameId) => {
+addCheckedHandler("loadMpmManifest", async (gameId) => {
     return await mpmLock.loadManifest(gameId);
 });
 

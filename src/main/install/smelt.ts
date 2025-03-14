@@ -2,12 +2,12 @@
  * Handles post-install tasks for Forge / NeoForged installers of recent versions (V1).
  */
 import type { Container } from "@/main/container/spec";
+import { AbstractException } from "@/main/except/exception";
 import { paths } from "@/main/fs/paths";
 import { jrt } from "@/main/jrt/install";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { MavenName } from "@/main/profile/maven-name";
 import type { Library, VersionProfile } from "@/main/profile/version-profile";
-import { exceptions } from "@/main/util/exception";
 import { type Progress, progress, type ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
 import { nanoid } from "nanoid";
@@ -348,8 +348,20 @@ async function runPostInstall(
 
         console.debug("Forge installation completed.");
     } catch (e) {
-        console.warn(e);
-        throw exceptions.create("forge-install-failed", { error: e });
+        throw new ForgeInstallFailedException(e);
+    }
+}
+
+export class ForgeInstallFailedException extends AbstractException<"forge-install-failed"> {
+    #cause?: unknown;
+
+    constructor(cause?: unknown) {
+        super("forge-install-failed", {}, cause);
+        this.#cause = cause;
+    }
+
+    toString(): string {
+        return `Failed to install Forge: ${this.#cause}`;
     }
 }
 

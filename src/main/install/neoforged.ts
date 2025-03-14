@@ -1,8 +1,8 @@
 import { paths } from "@/main/fs/paths";
+import { UnavailableModLoaderException } from "@/main/install/except";
 import { dlx } from "@/main/net/dlx";
 import { mirror } from "@/main/net/mirrors";
 import { netx } from "@/main/net/netx";
-import { exceptions } from "@/main/util/exception";
 import { progress, type ProgressController } from "@/main/util/progress";
 
 const NEOFORGED_API = "https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge";
@@ -53,7 +53,7 @@ async function queryLoaderVersions(gameVersion: string, control?: ProgressContro
 
 async function pickLoaderVersion(gameVersion: string, control?: ProgressController): Promise<string> {
     const versions = await queryLoaderVersions(gameVersion, control);
-    if (versions.length === 0) throw exceptions.create("neoforged-no-version", { gameVersion });
+    if (versions.length === 0) throw new UnavailableModLoaderException(gameVersion);
     return versions[versions.length - 1];
 }
 

@@ -1,5 +1,4 @@
 import type { SerializedException } from "@/main/except/exception";
-import type { ExceptionProps, ExceptionType } from "@/main/util/exception";
 import { isTruthy } from "@/main/util/misc";
 import { TipPicker } from "@components/display/TipPicker";
 import { MessageBox } from "@components/modal/MessageBox";
@@ -30,14 +29,8 @@ export function ExceptionDisplay() {
         console.error("Received error event:");
         console.error(e);
 
-        e = restoreError(e);
-
         // For cancellation, we only show a toast
-        if (isKnownException(e) && (
-                (e as ExceptionProps<any>).type === "cancelled" ||
-                String((e as ExceptionProps<any>).detail.error).includes("AbortError")
-            )
-            || String(e).includes("AbortError")) {
+        if (isCancelled(e)) {
             addToast({
                 color: "warning",
                 title: t("types.cancelled")
@@ -74,18 +67,14 @@ export function ExceptionDisplay() {
     let ex: unknown = currentException;
 
     while (ex) {
-        let type: keyof ExceptionType;
-        let detail: ExceptionType[keyof ExceptionType] & { error?: unknown };
+        let type: string;
+        let detail: unknown;
         let stack: string | undefined = undefined;
 
         if (isCheckedException(currentException)) {
             type = currentException.name;
             detail = currentException.props;
             stack = currentException.stack;
-        } else if (isKnownException(currentException)) {
-            const exp = currentException as ExceptionProps<any>;
-            type = exp.type;
-            detail = exp.detail;
         } else {
             type = "unknown";
             detail = { error: currentException };
@@ -169,28 +158,21 @@ function buildErrorMessage(name: string, props: any, stack: string): string {
     return [name, propLines, stack].filter(isTruthy).join("\n") + "\n";
 }
 
-function isCheckedException(e: unknown): e is SerializedException<any> {
+function isCheckedException(e: unknown): e is SerializedException {
     return typeof e === "object" && e !== null && "_ALICORN_CHECKED_EXCEPTION" in e;
 }
 
-function isKnownException(e: unknown): boolean {
-    return typeof e === "object" && e !== null && "ALICORN_EXCEPTION" in e;
-}
-
-function restoreError(e: unknown) {
-    if (isCheckedException(e)) return e;
-
-    try {
-        const se = String(e);
-
-        // Restore the error previously serialized
-        if (se.includes("\x00\x01\x02") && se.includes("ALICORN_EXCEPTION")) {
-            const json = se.split("\x00\x01\x02")[1];
-            return JSON.parse(json);
+function isCancelled(e: unknown): boolean {
+    if (isCheckedException(e)) {
+        return e.name === "cancelled";
+    } else {
+        if (e instanceof DOMException) {
+            return e.name === "AbortError";
+        } else {
+            const se = String(e).toLowerCase();
+            return se.includes("aborterror") || se.includes("cancelled");
         }
-    } catch {}
-
-    return e;
+    }
 }
 
 function shouldSuppressError(e: unknown): boolean {

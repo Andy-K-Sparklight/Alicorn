@@ -67,25 +67,22 @@ exceptions:
   detail: 错误跟踪信息：
   show-source: 查看错误跟踪信息
   types:
-    unknown: 出现了一些意料之外的情况。
+    unknown: |-
+      发生内部错误：
+      {{err}}
     cancelled: 已取消操作。
-    no-entry: 没有名为 {{id}} 的记录。
-    network: 试图访问 {{url}} 时出现错误，状态码为：{{code}}
-    download: 下载文件 {{url}} 时出错。
-    auth: 验证帐户的过程中出现错误。
-    fabric-no-version: 此游戏版本（{{gameVersion}}）不支持 Fabric，或所选 Fabric 版本无效。
-    quilt-no-version: 此游戏版本（{{gameVersion}}）不支持 Quilt，或所选 Quilt 版本无效。
-    neoforged-no-version: 此游戏版本（{{gameVersion}}）不支持 NeoForged，或所选 NeoForged 版本无效。
-    forge-no-version: 此游戏版本（{{gameVersion}}）不支持 Forge，或所选 Forge 版本无效。
-    optifine-no-version: 此游戏版本（{{gameVersion}}）不支持 OptiFine，或所选 OptiFine 版本无效。
-    profile-link: 无法读取核心 {{id}} 的信息。
-    jrt-not-available: 所需的 Java 运行环境 {{component}} 不可用。
-    jrt-not-verified: 无法启动 Java 虚拟机：{{bin}}
-    launch-spawn: 启动游戏进程失败。
-    forge-install-failed: 无法执行 Forge / NeoForged 安装程序包。
-    optifine-install-failed: 无法执行 OptiFine 安装程序包。
-
+    no-handler-registered: 未定义方法：{{method}}
     no-such-element: 找不到指定的元素：{{id}}
+    net-request-failed: 请求失败（状态码：{{code}}）：{{url}}
+    net-mirrors-all-failed: 请求失败（已尝试所有镜像）：{{url}}
+    launch-spawn-failed: 无法创建游戏进程：{{err}}
+    download-failed: 无法下载文件：{{url}}
+    profile-linked-failed: 读取核心档案时出现错误：{{id}}
+    auth-failed: 登录验证失败：{{err}}
+    unavailable-mod-loader: 指定的模组系统不支持游戏版本 {{version}}
+    optifine-install-failed: OptiFine 安装程序异常退出：{{code}}
+    jrt-install-failed: 无法安装 Java 运行环境 {{component}}
+    forge-install-failed: 无法完成 Forge / NeoForged 安装过程。
 
 undefined: 未知
 

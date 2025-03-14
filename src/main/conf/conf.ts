@@ -82,7 +82,7 @@ const DEFAULT_CONFIG = {
         /**
          * Maximum wait time (ms) before aborting a request. 0 or negative value indicates infinite wait time.
          */
-        requestTimeout: 5000,
+        requestTimeout: 10000,
 
         /**
          * Minimum acceptable transfer speed when downloading files.

@@ -67,25 +67,22 @@ exceptions:
   detail: "Tracing:"
   show-source: "Show Error Trace"
   types:
-    unknown: Something unexpected happened.
+    unknown: |-
+      Internal error:
+      {{err}}
     cancelled: The operation was cancelled.
-    no-entry: "Entry not found: {{id}}"
-    network: "Unable to access {{url}}. Status: {{code}}"
-    download: "Failed to download {{url}}"
-    auth: Failed to authenticate the account.
-    fabric-no-version: Fabric does not support {{gameVersion}}, or the its version specified is invalid.
-    quilt-no-version: Quilt does not support {{gameVersion}}, or the its version specified is invalid.
-    neoforged-no-version: NeoForged does not support {{gameVersion}}, or the its version specified is invalid.
-    forge-no-version: Forge does not support {{gameVersion}}, or the its version specified is invalid.
-    optifine-no-version: OptiFine does not support {{gameVersion}}, or the its version specified is invalid.
-    profile-link: "Unable to read game profile: {{id}}"
-    jrt-not-available: "Java runtime unavailable: {{component}}"
-    jrt-not-verified: "Failed to execute Java binary: {{bin}}"
-    launch-spawn: Failed to spawn game process.
-    forge-install-failed: Unable to execute Forge / NeoForged installer.
-    optifine-install-failed: Unable to execute OptiFine installer.
-
-    no-such-element: "No element with such ID: {{id}}"
+    no-handler-registered: No handler registered for {{method}}
+    no-such-element: No element with ID {{id}}
+    net-request-failed: "Request failed ({{code}}): {{url}}"
+    net-mirrors-all-failed: "Request failed (tried all mirrors): {{url}}"
+    launch-spawn-failed: "Could not spawn game process: {{err}}"
+    download-failed: "Could not download: {{url}}"
+    profile-linked-failed: "Unable to read version profile {{id}}"
+    auth-failed: "Failed to login: {{err}}"
+    unavailable-mod-loader: The mod loader specified does not support {{version}}
+    optifine-install-failed: OptiFine installer exited with code {{code}}
+    jrt-install-failed: "Failed to install Java runtime: {{component}}"
+    forge-install-failed: Failed to finalize Forge / NeoForged installation.
 
 undefined: Unknown
 

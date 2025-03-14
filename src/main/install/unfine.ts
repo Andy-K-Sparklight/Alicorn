@@ -1,8 +1,10 @@
 import type { Container } from "@/main/container/spec";
+import { AbstractException } from "@/main/except/exception";
+import { NetRequestFailedException } from "@/main/except/net";
 import { paths } from "@/main/fs/paths";
+import { UnavailableModLoaderException } from "@/main/install/except";
 import { dlx } from "@/main/net/dlx";
 import { netx } from "@/main/net/netx";
-import { exceptions } from "@/main/util/exception";
 import { progress, type ProgressController } from "@/main/util/progress";
 import { session } from "electron";
 import fs from "fs-extra";
@@ -66,7 +68,7 @@ async function crawlVersions(): Promise<OptiFineVersionMeta[]> {
         const v: OptiFineVersionMeta[] = [];
 
         const res = await crawlSession().fetch(VERSIONS_HTML);
-        if (!res.ok) throw exceptions.create("network", { url: VERSIONS_HTML, code: res.status });
+        if (!res.ok) throw new NetRequestFailedException(VERSIONS_HTML, res.status);
 
         const html = await res.text();
 
@@ -107,7 +109,7 @@ async function crawlVersions(): Promise<OptiFineVersionMeta[]> {
 async function getRealUrl(htmlUrl: string): Promise<string> {
     console.debug(`Identifying real URL of: ${htmlUrl}`);
     const res = await crawlSession().fetch(htmlUrl);
-    if (!res.ok) throw exceptions.create("network", { url: htmlUrl, code: res.status });
+    if (!res.ok) throw new NetRequestFailedException(htmlUrl, res.status);
 
     const html = await res.text();
     const doc = nodeHTML(html, {
@@ -118,7 +120,9 @@ async function getRealUrl(htmlUrl: string): Promise<string> {
     });
 
     const pathname = doc.querySelector("div.downloadButton > a")?.attributes?.href;
-    if (!pathname) throw exceptions.create("network", { url: htmlUrl });
+
+    // TODO replace with a more robust exception
+    if (!pathname) throw new NetRequestFailedException(htmlUrl);
 
     const url = `https://optifine.net/${pathname}`;
 
@@ -144,7 +148,7 @@ async function pickVersion(gameVersion: string, version: string): Promise<[OptiF
         const v = versions.find(v => v.stable && v.gameVersion === gameVersion) ??
             versions.find(v => v.gameVersion === gameVersion);
 
-        if (!v) throw exceptions.create("optifine-no-version", { gameVersion });
+        if (!v) throw new UnavailableModLoaderException(gameVersion);
 
         console.debug(`Picked OptiFine version ${v.name}`);
         return [v, genProfileId(v.name)];
@@ -159,7 +163,7 @@ async function pickVersion(gameVersion: string, version: string): Promise<[OptiF
         }
     });
 
-    if (!v) throw exceptions.create("optifine-no-version", { gameVersion });
+    if (!v) throw new UnavailableModLoaderException(gameVersion);
 
     console.debug(`Picked OptiFine version ${v.name}`);
     return [v, genProfileId(v.name)];
@@ -214,8 +218,21 @@ async function runInstaller(jrtExec: string, fp: string, container: Container, c
 
         const code = await pEvent(proc, "exit");
 
-        if (code !== 0) throw exceptions.create("optifine-install-failed", {});
+        if (code !== 0) throw new OptiFineInstallFailedException(code);
     });
+}
+
+class OptiFineInstallFailedException extends AbstractException<"optifine-install-failed"> {
+    #code: number;
+
+    constructor(code: number) {
+        super("optifine-install-failed", { code });
+        this.#code = code;
+    }
+
+    toString(): string {
+        return `OptiFine install failed with exit code ${this.#code}`;
+    }
 }
 
 async function prefetch() {

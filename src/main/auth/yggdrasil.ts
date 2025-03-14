@@ -1,6 +1,6 @@
-import type { Account, AccountProps, AuthCredentials } from "@/main/auth/types";
+import { type Account, type AccountProps, type AuthCredentials, AuthFailedException } from "@/main/auth/types";
+import { coerceErrorMessage } from "@/main/except/exception";
 import { doDecrypt, doEncrypt } from "@/main/security/encrypt";
-import { exceptions } from "@/main/util/exception";
 import { net } from "electron";
 
 export interface YggdrasilAccountProps {
@@ -41,13 +41,25 @@ export class YggdrasilAccount implements Account {
     }
 
     async refresh(): Promise<void> {
-        if (await this.#validate()) return;
-        await this.#refresh();
+        try {
+            if (await this.#validate()) return;
+            await this.#refresh();
+        } catch (e) {
+            throw new AuthFailedException(coerceErrorMessage(e));
+        }
     }
 
     async login(pwd: string) {
         await this.#locateHost();
 
+        try {
+            await this.#doLogin(pwd);
+        } catch (e) {
+            throw new AuthFailedException(coerceErrorMessage(e));
+        }
+    }
+
+    async #doLogin(pwd: string) {
         const res = await this.#apiRequest("/authserver/authenticate",
             {
                 username: this.email,
@@ -60,12 +72,9 @@ export class YggdrasilAccount implements Account {
             }
         );
 
-        if (!res.ok) throw exceptions.create("auth", {});
+        if (!res.ok) throw `Unexpected response status: ${res.status}`;
 
         const rp = await res.json() as YggdrasilResponse;
-
-        // TODO support multiple characters
-        if (!rp.selectedProfile) throw exceptions.create("auth", {});
 
         this.#updateCredentials(rp);
 
@@ -87,14 +96,15 @@ export class YggdrasilAccount implements Account {
             }
         );
 
-        if (!res.ok) throw exceptions.create("auth", {});
+        if (!res.ok) throw `Unexpected response status: ${res.status}`;
 
         const rp = await res.json() as YggdrasilResponse;
         this.#updateCredentials(rp);
     }
 
     #updateCredentials(rp: YggdrasilResponse) {
-        if (!rp.selectedProfile) throw exceptions.create("auth", {});
+        // TODO support multiple characters
+        if (!rp.selectedProfile) throw "No profile selected";
 
         this.#accessToken = rp.accessToken;
         this.uuid = rp.selectedProfile.id;
