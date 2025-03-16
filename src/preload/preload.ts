@@ -11,7 +11,7 @@ import { type IpcCallEvents, type IpcCommands, type IpcMessageEvents, type IpcPu
 import type { CheckedIpcCommands } from "@/main/ipc/checked";
 import type { TypedIpcRenderer } from "@/main/ipc/typed";
 import type { MpmAddonType, MpmManifest } from "@/main/mpm/spec";
-import { contextBridge, ipcRenderer as ipcRendererRaw } from "electron";
+import { contextBridge, type FileFilter, ipcRenderer as ipcRendererRaw, webUtils } from "electron";
 import Emittery from "emittery";
 import { exposePort } from "./message";
 
@@ -285,6 +285,25 @@ const native = {
     },
 
     /**
+     * Modpack operations.
+     */
+    modpack: {
+        /**
+         * Reads the metadata of the specified modpack.
+         */
+        readMeta(fp: string) {
+            return checkedInvoke("readModpack", fp);
+        },
+
+        /**
+         * Deploys the specified modpack.
+         */
+        deploy(fp: string, accountId: string) {
+            return checkedInvoke("deployModpack", fp, accountId);
+        }
+    },
+
+    /**
      * Addon resolving operations.
      */
     mpm: {
@@ -367,10 +386,24 @@ const native = {
         },
 
         /**
+         * Selects a file with optional filters.
+         */
+        selectFile(filters?: FileFilter[]): Promise<string> {
+            return checkedInvoke("selectFile", filters);
+        },
+
+        /**
          * Sends current language value to the main process.
          */
         updateLanguage(lang: string): void {
             ipcRenderer.send("languageChange", lang);
+        },
+
+        /**
+         * Gets the real path of a web file.
+         */
+        getRealFilePath(f: File): string {
+            return webUtils.getPathForFile(f);
         },
 
         /**

@@ -8,7 +8,9 @@ import { UnknownException } from "@/main/except/common";
 import { AbstractException } from "@/main/except/exception";
 import type { GameProfile } from "@/main/game/spec";
 import type { VersionManifest } from "@/main/install/vanilla";
+import type { ModpackMetaSlim } from "@/main/modpack/common";
 import type { MpmAddonType, MpmManifest } from "@/main/mpm/spec";
+import type { FileFilter } from "electron";
 import { ipcMain } from "electron";
 
 const handlers = new Map<string, Function>();
@@ -17,6 +19,7 @@ export interface CheckedIpcCommands {
     getGameProfile: (id: string) => GameProfile;
     getConfig: () => UserConfig;
     selectDir: () => string;
+    selectFile: (filters?: FileFilter[]) => string;
     listGames: () => GameProfile[];
     removeGame: (gameId: string) => void;
     querySharedGames: (id: string) => string[];
@@ -38,6 +41,8 @@ export interface CheckedIpcCommands {
     getAccountSkinAvatar: (accountId: string) => [string, string];
     scanImportableProfiles: (root: string) => string[];
     importGame: (name: string, root: string, profileId: string, accountId: string) => void;
+    readModpack: (fp: string) => ModpackMetaSlim | null;
+    deployModpack: (fp: string, accountId: string) => void;
 }
 
 type OptionalPromise<T> = T | Promise<T>;

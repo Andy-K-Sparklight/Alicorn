@@ -9,6 +9,7 @@ import {
     ArrowUpAZIcon,
     ClockArrowDownIcon,
     ClockArrowUpIcon,
+    FolderSymlinkIcon,
     GitMergeIcon,
     PlusIcon
 } from "lucide-react";
@@ -37,6 +38,9 @@ export function GamesView() {
                 startContent={<PlusIcon/>}
             >
                 {t("new")}
+            </Button>
+            <Button onPress={() => nav("/games/from-modpack")} startContent={<FolderSymlinkIcon/>}>
+                {t("from-modpack")}
             </Button>
             <Button onPress={() => nav("/games/import")} startContent={<GitMergeIcon/>}>
                 {t("import")}

@@ -1,6 +1,6 @@
 import { useConfig } from "@/renderer/services/conf";
 
-import { DirInput } from "@components/input/DirInput";
+import { FileSelectInput } from "@components/input/FileSelectInput";
 import { Button } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";
 import { CheckIcon, PackageIcon } from "lucide-react";
@@ -27,7 +27,7 @@ export function GamePathSetupView() {
         </div>
 
         <div className="w-5/6 mx-auto">
-            <DirInput value={config.paths.game} onChange={v => alterConfig(c => c.paths.game = v)}/>
+            <FileSelectInput value={config.paths.game} onChange={v => alterConfig(c => c.paths.game = v)}/>
         </div>
 
         <Button color="primary" startContent={<CheckIcon/>} onPress={next}>{t("btn")}</Button>

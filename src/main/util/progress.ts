@@ -32,6 +32,7 @@ export type ProgressStateName =
     "optifine.resolve" |
     "optifine.download" |
     "optifine.install" |
+    "modpack.resolve-mods" |
     "modpack.download-mods" |
     "modpack.unpack-files"
 

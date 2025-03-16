@@ -45,6 +45,7 @@ progress:
     download: Retrieving OptiFine Installer
     install: Executing Installer
   modpack:
+    resolve-mods: Resolving Mods
     download-mods: Installing Mods {{current}} / {{total}}
     unpack-files: Extracting Files {{current}} / {{total}}
 

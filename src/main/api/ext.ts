@@ -13,3 +13,12 @@ addCheckedHandler("selectDir", async () => {
 
     return filePaths[0] ?? "";
 });
+
+addCheckedHandler("selectFile", async (filters) => {
+    const { filePaths } = await dialog.showOpenDialog({
+        properties: ["openFile", "dontAddToRecent"],
+        filters
+    });
+
+    return filePaths[0] ?? "";
+});

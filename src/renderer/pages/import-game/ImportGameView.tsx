@@ -1,7 +1,7 @@
 import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/display/Alert";
 import { AccountPicker } from "@components/input/AccountPicker";
-import { DirInput } from "@components/input/DirInput";
+import { FileSelectInput } from "@components/input/FileSelectInput";
 import { Button, Select, SelectItem, type SharedSelection } from "@heroui/react";
 import { ImportGameWarningDialog } from "@pages/import-game/ImportGameWarningDialog";
 import { useState } from "react";
@@ -41,7 +41,7 @@ export function ImportGameView() {
             <div className="flex flex-col gap-4">
                 <h2 className="font-bold text-xl">{t("select-game-dir")}</h2>
                 <Alert title={t("select-game-dir-hint")}/>
-                <DirInput value={gameDir} onChange={handleGameDirChange}/>
+                <FileSelectInput value={gameDir} onChange={handleGameDirChange}/>
             </div>
 
             {

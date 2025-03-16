@@ -164,7 +164,7 @@ function isCheckedException(e: unknown): e is SerializedException {
 
 function isCancelled(e: unknown): boolean {
     if (isCheckedException(e)) {
-        return e.name === "cancelled";
+        return e.name === "cancelled" || (!!e.cause && isCancelled(e.cause));
     } else {
         if (e instanceof DOMException) {
             return e.name === "AbortError";

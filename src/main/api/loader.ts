@@ -8,3 +8,4 @@ import "./sources";
 import "./install";
 import "./i18n";
 import "./mpm";
+import "./modpack";

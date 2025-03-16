@@ -1,7 +1,7 @@
 /**
  * Various entry widgets for manipulating the settings.
  */
-import { DirInput } from "@components/input/DirInput";
+import { FileSelectInput } from "@components/input/FileSelectInput";
 import { StringArrayInput } from "@components/input/StringArrayInput";
 import { Button, Input, Select, SelectItem, type SharedSelection, Slider, Switch } from "@heroui/react";
 import { MinusIcon, PlusIcon } from "lucide-react";
@@ -55,7 +55,7 @@ export function TextEntry({ id, icon, value, onChange }: SettingsEntryProps<stri
 export function DirEntry({ id, icon, value, onChange }: SettingsEntryProps<string>) {
     return <div className="flex flex-col gap-2 w-full">
         <EntryLabel id={id} icon={icon}/>
-        <DirInput value={value} onChange={onChange}/>
+        <FileSelectInput value={value} onChange={onChange}/>
     </div>;
 }
 

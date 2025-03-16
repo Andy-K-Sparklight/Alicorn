@@ -125,6 +125,21 @@ create-game-wizard:
       install: 现在游玩
       create-only: 稍后再安装
 
+create-game-from-modpack:
+  title: 从整合包创建游戏
+  select-file: 选择整合包文件
+  select-account: 选择一个帐户
+  hint: 拖放整合包文件到这里，或者手动选择整合包文件。
+  select-filter: 整合包文件
+  alert: 请绝不要安装不可信来源的整合包 —— 它们可以随意下载任何文件，这非常危险！
+  meta: 整合包 {{name}} {{version}}（游戏版本 {{gameVersion}}），{{author}} 作品
+  no-meta: 无法读取整合包信息，请确保选择正确的整合包文件。
+  install-hint: 在安装前请确保上述信息正确。
+  toast: 已添加 {{name}} {{version}}
+  btn:
+    confirm: 我确实信任 {{author}} 并要安装 {{name}}
+    install: 安装 {{name}}
+
 import-game:
   title: 导入已有游戏
   default-name: 导入的游戏
@@ -149,6 +164,7 @@ games:
   title: 游戏库
   new: 创建新游戏
   new-advanced: 快速创建
+  from-modpack: 从整合包创建
   import: 导入已有游戏
   sorting:
     az: 名称升序

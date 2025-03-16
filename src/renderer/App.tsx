@@ -6,6 +6,7 @@ import { AnimatedRoute } from "@components/misc/AnimatedRoute";
 import { Navigator } from "@components/misc/Navigator";
 import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
+import { CreateGameFromModpackView } from "@pages/create-from-modpack/CreateGameFromModpackView";
 import { CreateGameWizardView } from "@pages/create-game-wizard/CreateGameWizardView";
 import { CreateGameView } from "@pages/create-game/CreateGameView";
 import { GameDetailView } from "@pages/game-detail/GameDetailView";
@@ -55,6 +56,7 @@ function MainArea() {
         <AnimatedRoute path="/games/import" component={ImportGameView}/>
         <AnimatedRoute path="/games/new-wizard/*?" component={CreateGameWizardView}/>
         <AnimatedRoute path="/games/new/:gameId?" component={CreateGameView}/>
+        <AnimatedRoute path="/games/from-modpack" component={CreateGameFromModpackView}/>
         <AnimatedRoute path="/games" component={GamesView}/>
         <AnimatedRoute path="/games/detail/:gameId" component={GameDetailView}/>
         <AnimatedRoute path="/monitor/:procId" component={MonitorView}/>

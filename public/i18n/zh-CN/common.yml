@@ -45,6 +45,7 @@ progress:
     download: 正在下载 OptiFine 安装文件
     install: 正在执行 OptiFine 安装程序包
   modpack:
+    resolve-mods: 正在获取模组信息
     download-mods: 正在下载模组：{{current}} / {{total}}
     unpack-files: 正在提取文件：{{current}} / {{total}}
 

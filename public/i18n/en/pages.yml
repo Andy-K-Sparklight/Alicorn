@@ -126,6 +126,21 @@ create-game-wizard:
     add-yggdrasil: Add Third Party Account
     btn: Next Step
 
+create-game-from-modpack:
+  title: Create Game From Modpack
+  select-file: Select Modpack
+  select-account: Select Account
+  hint: Drag and drop modpack archive here or select one manually.
+  select-filter: Modpack Archive
+  alert: Modpacks can download arbitrary files, which can be danger — IS IT TRUSTED?
+  meta: Found {{name}} {{version}} (Game {{gameVersion}}), by {{author}}
+  no-meta: Unable to parse modpack. Try another file.
+  install-hint: Please check the above information before installing.
+  toast: Added {{name}} {{version}}
+  btn:
+    confirm: Trust {{author}} and Install {{name}}
+    install: Install {{name}}
+
 import-game:
   title: Import Existing Game
   default-name: Imported Game
@@ -150,6 +165,7 @@ games:
   title: Games
   new: Create
   new-advanced: Directly Create
+  from-modpack: From Modpack
   import: Import
   sorting:
     az: A to Z

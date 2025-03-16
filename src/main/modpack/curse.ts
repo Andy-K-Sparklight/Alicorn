@@ -3,6 +3,7 @@ import type { Container } from "@/main/container/spec";
 import { games } from "@/main/game/manage";
 import type { GameCoreType, GameProfile } from "@/main/game/spec";
 import type { InstallerProps } from "@/main/install/installers";
+import type { ModpackMetaSlim } from "@/main/modpack/common";
 import { curse } from "@/main/mpm/curse";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { progress, type ProgressController } from "@/main/util/progress";
@@ -17,6 +18,7 @@ interface CurseModpackManifest {
     };
     manifestVersion: 1;
     name: string;
+    author: string;
     version: string;
     files: CurseModSpec[];
     overrides: string;
@@ -96,7 +98,7 @@ function createDelegateInstallerProps(mf: CurseModpackManifest): InstallerProps 
     }
 }
 
-async function createGame(mf: CurseModpackManifest): Promise<GameProfile> {
+async function createGame(mf: CurseModpackManifest, accountId: string): Promise<GameProfile> {
     const c = await containers.genContainerProps("MP");
     containers.add(c);
     const g: GameProfile = {
@@ -105,7 +107,7 @@ async function createGame(mf: CurseModpackManifest): Promise<GameProfile> {
         assetsLevel: "full",
         installed: false,
         launchHint: {
-            accountId: "",
+            accountId: accountId,
             containerId: c.id,
             pref: {},
             profileId: ""
@@ -130,7 +132,24 @@ async function createGame(mf: CurseModpackManifest): Promise<GameProfile> {
     return g;
 }
 
-async function deploy(fp: string) {
+async function readMetadata(zip: StreamZip.StreamZipAsync): Promise<ModpackMetaSlim> {
+    const dat = await zip.entryData("manifest.json");
+    const mf = await JSON.parse(dat.toString());
+
+    if (mf.manifestVersion !== 1) {
+        throw "Unsupported Curseforge modpack manifest";
+    }
+    const emf = mf as CurseModpackManifest;
+
+    return {
+        name: emf.name,
+        author: emf.author,
+        gameVersion: emf.minecraft.version,
+        version: emf.version
+    };
+}
+
+async function deploy(fp: string, accountId: string) {
     let zip: StreamZip.StreamZipAsync | null = null;
 
     try {
@@ -143,7 +162,7 @@ async function deploy(fp: string) {
             throw "Unsupported Curseforge modpack manifest";
         }
 
-        const game = await createGame(manifest);
+        const game = await createGame(manifest, accountId);
         const cc = containers.get(game.launchHint.containerId);
         const mpPath = path.join(cc.gameDir(), "_modpack.zip");
         await fs.ensureDir(path.dirname(mpPath));
@@ -159,6 +178,7 @@ async function deploy(fp: string) {
 async function finalizeInstall(container: Container, fp: string, control?: ProgressController) {
     const { onProgress, signal } = control ?? {};
 
+    onProgress?.(progress.indefinite("modpack.resolve-mods"));
     console.debug(`Finalizing Curseforge modpack installation from ${fp}`);
     let zip: StreamZip.StreamZipAsync | null = null;
 
@@ -209,4 +229,4 @@ async function finalizeInstall(container: Container, fp: string, control?: Progr
     }
 }
 
-export const curseModpack = { deploy, finalizeInstall };
+export const curseModpack = { deploy, finalizeInstall, readMetadata };
