@@ -1,5 +1,4 @@
 import { type Account, type AccountProps, type AuthCredentials, AuthFailedException } from "@/main/auth/types";
-import { coerceErrorMessage } from "@/main/except/exception";
 import { doDecrypt, doEncrypt } from "@/main/security/encrypt";
 import { net } from "electron";
 
@@ -45,7 +44,7 @@ export class YggdrasilAccount implements Account {
             if (await this.#validate()) return;
             await this.#refresh();
         } catch (e) {
-            throw new AuthFailedException(coerceErrorMessage(e));
+            throw new AuthFailedException(e);
         }
     }
 
@@ -55,7 +54,7 @@ export class YggdrasilAccount implements Account {
         try {
             await this.#doLogin(pwd);
         } catch (e) {
-            throw new AuthFailedException(coerceErrorMessage(e));
+            throw new AuthFailedException(e);
         }
     }
 

@@ -11,8 +11,9 @@ export type GameAuthResult = true | { host: string, email: string }
 
 addCheckedHandler("gameAuth", async (gameId, pwd) => {
     const g = games.get(gameId);
+    const aid = g.launchHint.accountId === "new" ? "" : g.launchHint.accountId;
+    const a = aid ? accounts.get(aid) : new VanillaAccount();
 
-    const a = g.launchHint.accountId ? accounts.get(g.launchHint.accountId) : new VanillaAccount();
     if (a instanceof YggdrasilAccount) {
         if (pwd) {
             await a.login(pwd);
@@ -27,7 +28,7 @@ addCheckedHandler("gameAuth", async (gameId, pwd) => {
         await a.refresh();
     }
 
-    if (!g.launchHint.accountId) {
+    if (!aid) {
         games.add(alter(g, g => g.launchHint.accountId = a.uuid));
     }
 

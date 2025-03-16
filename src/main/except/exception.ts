@@ -10,7 +10,7 @@ interface CatchyExceptionType {
     "launch-spawn-failed": { err: string };
     "download-failed": { url: string };
     "profile-link-failed": { id: string };
-    "auth-failed": { err: string };
+    "auth-failed": {};
     "unavailable-mod-loader": { version: string };
     "optifine-install-failed": { code: number };
     "jrt-install-failed": { component: string };

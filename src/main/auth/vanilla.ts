@@ -1,7 +1,6 @@
 import { Account, type AccountProps, AuthCredentials, AuthFailedException } from "@/main/auth/types";
 import { vanillaOAuth } from "@/main/auth/vanilla-oauth";
 import { CancelledException } from "@/main/except/common";
-import { coerceErrorMessage } from "@/main/except/exception";
 import { doDecrypt, doEncrypt } from "@/main/security/encrypt";
 import { net } from "electron";
 import { nanoid } from "nanoid";
@@ -101,7 +100,7 @@ export class VanillaAccount implements Account {
 
             console.log(`Login complete. Welcome back, ${this.#playerName}!`);
         } catch (e) {
-            throw new AuthFailedException(coerceErrorMessage(e));
+            throw new AuthFailedException(e);
         }
     }
 

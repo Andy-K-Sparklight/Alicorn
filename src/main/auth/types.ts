@@ -35,15 +35,15 @@ export type AccountProps = TemporalAccountProps | VanillaAccountProps | Yggdrasi
 export type DetailedAccountProps = AccountProps & { uuid: string; }
 
 export class AuthFailedException extends AbstractException<"auth-failed"> {
-    #err: string;
+    #cause?: unknown;
 
-    constructor(err: string) {
-        super("auth-failed", { err });
-        this.#err = err;
+    constructor(cause?: unknown) {
+        super("auth-failed", {}, cause);
+        this.#cause = cause;
     }
 
     toString(): string {
-        return `Authentication failed: ${this.#err}`;
+        return `Authentication failed: ${this.#cause}`;
     }
 }
 

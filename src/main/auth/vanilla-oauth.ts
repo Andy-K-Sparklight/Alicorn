@@ -38,9 +38,15 @@ async function browserLogin(part: string): Promise<string> {
 
         if (url && url.hostname === "login.live.com" && url.pathname === "/oauth20_desktop.srf") {
             const rawCode = url.searchParams.get("code");
+            const error = url.searchParams.get("error");
 
             if (rawCode) {
                 code = decodeURIComponent(rawCode);
+                w.close();
+                return;
+            }
+
+            if (error) {
                 w.close();
                 return;
             }
