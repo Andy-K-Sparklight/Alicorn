@@ -100,6 +100,15 @@ async function pickLoaderVersion(gameVersion: string, control?: ProgressControll
     return versions[0];
 }
 
+async function coerceLoaderVersion(loaderVersion: string): Promise<string> {
+    const versions = await syncVersions();
+
+    if (versions.includes(loaderVersion)) return loaderVersion;
+
+    // Allow to omit game version in version specifier
+    return versions.find(v => v.split("-")[1] === loaderVersion) ?? loaderVersion;
+}
+
 async function downloadInstaller(loaderVersion: string, type: "installer" | "universal" | "client", control?: ProgressController): Promise<string> {
     control?.onProgress?.(progress.indefinite("forge.download"));
 
@@ -159,5 +168,6 @@ export const forgeInstaller = {
     pickLoaderVersion,
     getInstallType,
     downloadInstaller,
-    prefetch
+    prefetch,
+    coerceLoaderVersion
 };

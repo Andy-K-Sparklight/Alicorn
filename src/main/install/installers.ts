@@ -217,6 +217,8 @@ async function installForge(props: ForgeInstallerProps, context: DetailedInstall
 
     if (!loaderVersion) {
         loaderVersion = await forgeInstaller.pickLoaderVersion(gameVersion, control);
+    } else {
+        loaderVersion = await forgeInstaller.coerceLoaderVersion(loaderVersion);
     }
 
     const installerType = forgeInstaller.getInstallType(gameVersion);
