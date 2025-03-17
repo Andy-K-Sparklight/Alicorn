@@ -1,3 +1,4 @@
+import { AbstractException } from "@/main/except/exception";
 import { fabricInstaller } from "@/main/install/fabric";
 import { forgeInstaller } from "@/main/install/forge";
 import { installers } from "@/main/install/installers";
@@ -65,7 +66,11 @@ ipcMain.on("installGame", async (e, gameId) => {
         if (abortController.signal.aborted) {
             send({ type: "cancelled" });
         } else {
-            send({ type: "error", err });
+            if (err instanceof AbstractException) {
+                send({ type: "error", err: err.toJSON() });
+            } else {
+                send({ type: "error", err });
+            }
         }
     } finally {
         port.close();
