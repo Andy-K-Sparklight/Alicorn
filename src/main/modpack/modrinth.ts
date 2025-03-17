@@ -161,26 +161,31 @@ async function finalizeInstall(container: Container, fp: string, control?: Progr
         }
 
 
-        const entries = await zip.entries();
-        const ps = Object.values(entries)
-            .filter(ent => ent.name.startsWith("overrides/") && ent.isFile)
-            .map(async ent => {
-                const fp = path.join(container.gameDir(), ent.name.slice("overrides/".length));
-
-                console.debug(`Extracting override file: ${ent.name} -> ${fp}`);
-
-                await fs.ensureDir(path.dirname(fp));
-                await fs.remove(fp);
-                await zip!.extract(ent, fp);
-            });
-
-        const countedPromises = progress.countPromises(ps, progress.makeNamed(onProgress, "modpack.unpack-files"));
-
-        await Promise.all(countedPromises);
+        await applyOverrides(zip, "overrides/", container.gameDir(), control);
+        await applyOverrides(zip, "client-overrides/", container.gameDir(), control);
     } finally {
         zip?.close();
     }
+}
 
+async function applyOverrides(zip: StreamZip.StreamZipAsync, prefix: string, root: string, control?: ProgressController) {
+    const { onProgress } = control ?? {};
+    const entries = await zip.entries();
+    const ps = Object.values(entries)
+        .filter(ent => ent.name.startsWith(prefix) && ent.isFile)
+        .map(async ent => {
+            const fp = path.join(root, ent.name.slice(prefix.length));
+
+            console.debug(`Extracting override file: ${ent.name} -> ${fp}`);
+
+            await fs.ensureDir(path.dirname(fp));
+            await fs.remove(fp);
+            await zip!.extract(ent, fp);
+        });
+
+    const countedPromises = progress.countPromises(ps, progress.makeNamed(onProgress, "modpack.unpack-files"));
+
+    await Promise.all(countedPromises);
 }
 
 export const modrinthModpack = { readMetadata, deploy, finalizeInstall };
