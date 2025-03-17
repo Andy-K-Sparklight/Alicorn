@@ -4,6 +4,7 @@ import { games } from "@/main/game/manage";
 import type { GameCoreType, GameProfile } from "@/main/game/spec";
 import type { InstallerProps } from "@/main/install/installers";
 import type { ModpackMetaSlim } from "@/main/modpack/common";
+import { modpackTools } from "@/main/modpack/tools";
 import { curse } from "@/main/mpm/curse";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { progress, type ProgressController } from "@/main/util/progress";
@@ -189,7 +190,6 @@ async function finalizeInstall(container: Container, fp: string, control?: Progr
         const files: CurseModSpec[] = manifest.files;
         if (Array.isArray(files)) {
             const fileDetails = await curse.getFiles(files.map(f => f.fileID));
-            // TODO limit promise concurrency
             const tsk: DlxDownloadRequest[] = fileDetails.map(f => ({
                 url: f.downloadUrl,
                 path: container.addon("mods", f.fileName), // TODO other addon types
@@ -205,21 +205,7 @@ async function finalizeInstall(container: Container, fp: string, control?: Progr
         const overridesFolder = manifest.overrides;
 
         if (overridesFolder) {
-            const entries = await zip.entries();
-            const ps = Object.values(entries)
-                .filter(ent => ent.name.startsWith(overridesFolder + "/") && ent.isFile)
-                .map(async ent => {
-                    const fp = path.join(container.gameDir(), ent.name.slice(overridesFolder.length + 1));
-
-                    console.debug(`Extracting override file: ${ent.name} -> ${fp}`);
-
-                    await fs.ensureDir(path.dirname(fp));
-                    await fs.remove(fp);
-                    await zip!.extract(ent, fp);
-                });
-
-            const countedPromises = progress.countPromises(ps, progress.makeNamed(onProgress, "modpack.unpack-files"));
-            await Promise.all(countedPromises);
+            await modpackTools.applyOverrides(zip, overridesFolder + "/", container.gameDir(), control);
         }
     } finally {
         zip?.close();

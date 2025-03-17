@@ -8,6 +8,9 @@ import { pEvent } from "p-event";
 import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider as ReduxProvider } from "react-redux";
+import { Router } from "wouter";
+import { useHashLocation } from "wouter/use-hash-location";
+import pkg from "~/package.json";
 
 // Styles and fonts
 import "./global.css";
@@ -15,10 +18,6 @@ import "./fonts.css";
 import "@fontsource-variable/noto-sans";
 import "@fontsource-variable/jetbrains-mono";
 import "@fontsource-variable/noto-sans-sc";
-import { Router } from "wouter";
-import { useHashLocation } from "wouter/use-hash-location";
-import pkg from "~/package.json";
-
 
 /**
  * Renderer main entry.
