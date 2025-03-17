@@ -15,6 +15,7 @@ import { unfine } from "@/main/install/unfine";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { jrt } from "@/main/jrt/install";
 import { curseModpack } from "@/main/modpack/curse";
+import { modrinthModpack } from "@/main/modpack/modrinth";
 import { profileLoader } from "@/main/profile/loader";
 import type { VersionProfile } from "@/main/profile/version-profile";
 import type { ProgressController } from "@/main/util/progress";
@@ -313,6 +314,9 @@ async function installModpack(props: ModpackInstallerProps, context: DetailedIns
     switch (props.vendor) {
         case "curse":
             await curseModpack.finalizeInstall(context.container, props.source, context.control);
+            break;
+        case "modrinth":
+            await modrinthModpack.finalizeInstall(context.container, props.source, context.control);
             break;
         default:
             throw `Unknown modpack vendor: ${props.vendor}`;

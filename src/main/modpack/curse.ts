@@ -219,10 +219,7 @@ async function finalizeInstall(container: Container, fp: string, control?: Progr
                 });
 
             const countedPromises = progress.countPromises(ps, progress.makeNamed(onProgress, "modpack.unpack-files"));
-
-            for (const p of countedPromises) {
-                await p;
-            }
+            await Promise.all(countedPromises);
         }
     } finally {
         zip?.close();
