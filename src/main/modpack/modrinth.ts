@@ -79,6 +79,7 @@ async function createGame(mf: ModrinthManifest, accountId: string): Promise<Game
         versions: {
             game: mf.dependencies.minecraft
         },
+        locked: true,
         type: inferGameType(mf)
     };
 
