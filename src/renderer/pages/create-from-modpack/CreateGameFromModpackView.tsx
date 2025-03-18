@@ -1,6 +1,5 @@
 import type { ModpackMetaSlim } from "@/main/modpack/common";
 import { useNav } from "@/renderer/util/nav";
-import { ExtendedAccountPicker } from "@components/compound/ExtendedAccountPicker";
 import { Alert } from "@components/display/Alert";
 import { FileSelectInput } from "@components/input/FileSelectInput";
 import { addToast, Button } from "@heroui/react";
@@ -15,7 +14,6 @@ export function CreateGameFromModpackView() {
     const [modpackMeta, setModpackMeta] = useState<ModpackMetaSlim | null>(null);
     const [btnConfirmed, setBtnConfirmed] = useState(false);
     const [deploying, setDeploying] = useState(false);
-    const [accountId, setAccountId] = useState("");
     const nav = useNav();
 
     useEffect(() => {
@@ -42,7 +40,7 @@ export function CreateGameFromModpackView() {
             setBtnConfirmed(true);
         } else {
             setDeploying(true);
-            native.modpack.deploy(modpackFile, accountId === "new" ? "" : accountId).then(() => {
+            native.modpack.deploy(modpackFile).then(() => {
                 addToast({
                     color: "success",
                     title: t("toast", { ...modpackMeta })
@@ -52,7 +50,7 @@ export function CreateGameFromModpackView() {
         }
     }
 
-    return <div className="w-full h-full overflow-y-auto">
+    return <div className="w-full h-full overflow-y-auto flex items-center">
         <div
             className="w-5/6 mx-auto flex flex-col my-auto gap-4"
             onDrop={handleDrop}
@@ -60,7 +58,6 @@ export function CreateGameFromModpackView() {
         >
             <h1 className="font-bold text-2xl">{t("title")}</h1>
 
-            <h2 className="font-bold text-xl">{t("select-file")}</h2>
             <p className="text-foreground-400 text-medium">{t("hint")}</p>
 
             <FileSelectInput value={modpackFile} onChange={setModpackFile} selector={selectModpackFile}/>
@@ -86,9 +83,6 @@ export function CreateGameFromModpackView() {
             <div>
                 <Alert color="warning" classNames={{ title: "font-bold" }} title={t("alert")}/>
             </div>
-
-            <h2 className="font-bold text-xl">{t("select-account")}</h2>
-            <ExtendedAccountPicker accountId={accountId} onAccountChange={setAccountId}/>
 
             {
                 modpackMeta &&

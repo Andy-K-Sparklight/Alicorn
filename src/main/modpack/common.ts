@@ -33,7 +33,7 @@ async function loadPackMeta(fp: string): Promise<ModpackMetaSlim | null> {
     return null;
 }
 
-async function deploy(fp: string, accountId: string): Promise<void> {
+async function deploy(fp: string): Promise<void> {
     let zip: StreamZip.StreamZipAsync | null = null;
 
     try {
@@ -42,12 +42,12 @@ async function deploy(fp: string, accountId: string): Promise<void> {
 
         if (entries.includes("manifest.json")) {
             // Curseforge
-            await curseModpack.deploy(fp, accountId);
+            await curseModpack.deploy(fp);
         }
 
         if (entries.includes("modrinth.index.json")) {
             // Modrinth
-            await modrinthModpack.deploy(fp, accountId);
+            await modrinthModpack.deploy(fp);
         }
 
     } finally {

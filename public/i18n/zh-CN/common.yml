@@ -93,6 +93,10 @@ account-picker:
     title: 添加新微软帐户
     sub: 启动游戏时将提示你登录微软帐户。
 
+account-selector-dialog:
+  title: 选择一个帐户
+  btn: 确定
+
 yggdrasil-form:
   title: 登录第三方帐户
   host: 验证服务器

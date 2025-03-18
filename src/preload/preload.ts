@@ -298,8 +298,8 @@ const native = {
         /**
          * Deploys the specified modpack.
          */
-        deploy(fp: string, accountId: string) {
-            return checkedInvoke("deployModpack", fp, accountId);
+        deploy(fp: string) {
+            return checkedInvoke("deployModpack", fp);
         }
     },
 

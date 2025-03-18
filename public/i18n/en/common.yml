@@ -93,6 +93,10 @@ account-picker:
     title: Add New Microsoft Account
     sub: You'll be prompted to log in to your Microsoft account when launching.
 
+account-selector-dialog:
+  title: Select an Account
+  btn: Confirm
+
 yggdrasil-form:
   title: Third Party Login
   host: Server

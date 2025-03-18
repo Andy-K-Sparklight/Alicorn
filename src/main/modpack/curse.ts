@@ -99,7 +99,7 @@ function createDelegateInstallerProps(mf: CurseModpackManifest): InstallerProps 
     }
 }
 
-async function createGame(mf: CurseModpackManifest, accountId: string): Promise<GameProfile> {
+async function createGame(mf: CurseModpackManifest): Promise<GameProfile> {
     const c = await containers.genContainerProps("MP");
     containers.add(c);
     const g: GameProfile = {
@@ -108,7 +108,7 @@ async function createGame(mf: CurseModpackManifest, accountId: string): Promise<
         assetsLevel: "full",
         installed: false,
         launchHint: {
-            accountId: accountId,
+            accountId: "",
             containerId: c.id,
             pref: {},
             profileId: ""
@@ -150,7 +150,7 @@ async function readMetadata(zip: StreamZip.StreamZipAsync): Promise<ModpackMetaS
     };
 }
 
-async function deploy(fp: string, accountId: string) {
+async function deploy(fp: string) {
     let zip: StreamZip.StreamZipAsync | null = null;
 
     try {
@@ -163,7 +163,7 @@ async function deploy(fp: string, accountId: string) {
             throw "Unsupported Curseforge modpack manifest";
         }
 
-        const game = await createGame(manifest, accountId);
+        const game = await createGame(manifest);
         const cc = containers.get(game.launchHint.containerId);
         const mpPath = path.join(cc.gameDir(), "_modpack.zip");
         await fs.ensureDir(path.dirname(mpPath));

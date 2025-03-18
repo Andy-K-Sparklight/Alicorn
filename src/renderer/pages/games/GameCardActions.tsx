@@ -3,6 +3,7 @@ import { useGameProfile } from "@/renderer/services/games";
 import { remoteInstaller } from "@/renderer/services/install";
 import { procService } from "@/renderer/services/proc";
 import { useNav } from "@/renderer/util/nav";
+import { useOpenDialog } from "@components/modal/DialogProvider";
 import { YggdrasilFormDialog } from "@components/modal/YggdrasilFormDialog";
 import { Button, cn } from "@heroui/react";
 import { CirclePlayIcon, DownloadIcon, EllipsisIcon, PinIcon, PinOffIcon, XIcon } from "lucide-react";
@@ -19,14 +20,15 @@ interface GameActionsProps {
 
 export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
     const { t } = useTranslation("pages", { keyPrefix: "game-card" });
+    const game = useGameProfile(gameId);
     const [launching, setLaunching] = useState(false);
     const [yggdrasilFormOpen, setYggdrasilFormOpen] = useState(false);
     const [yggdrasilFormKey, setYggdrasilFormKey] = useState("");
     const [yggdrasilEmail, setYggdrasilEmail] = useState("");
     const [yggdrasilHost, setYggdrasilHost] = useState("");
+    const openAccountSelector = useOpenDialog<string>();
 
     const isRequestingLogin = useRef(false);
-    const game = useGameProfile(gameId);
     const nav = useNav();
 
     if (!game) throw "Game actions cannot be used without corresponding game profile";
@@ -62,6 +64,11 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
     async function launch() {
         try {
             setLaunching(true);
+            if (game && !game?.launchHint.accountId) {
+                const aid = await openAccountSelector();
+                await native.game.update(alter(game, g => g.launchHint.accountId = aid));
+            }
+
             const res = await native.auth.forGame(gameId);
 
             if (typeof res === "object") {

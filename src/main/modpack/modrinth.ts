@@ -55,7 +55,7 @@ function createDelegateInstallerProps(mf: ModrinthManifest): InstallerProps {
     }
 }
 
-async function createGame(mf: ModrinthManifest, accountId: string): Promise<GameProfile> {
+async function createGame(mf: ModrinthManifest): Promise<GameProfile> {
     const c = await containers.genContainerProps("MP");
     const g: GameProfile = {
         id: games.genId(),
@@ -63,7 +63,7 @@ async function createGame(mf: ModrinthManifest, accountId: string): Promise<Game
         assetsLevel: "full",
         installed: false,
         launchHint: {
-            accountId: accountId,
+            accountId: "",
             containerId: c.id,
             pref: {},
             profileId: ""
@@ -107,7 +107,7 @@ async function readMetadata(zip: StreamZip.StreamZipAsync): Promise<ModpackMetaS
     };
 }
 
-async function deploy(fp: string, accountId: string) {
+async function deploy(fp: string) {
     let zip: StreamZip.StreamZipAsync | null = null;
 
     try {
@@ -120,7 +120,7 @@ async function deploy(fp: string, accountId: string) {
             throw "Unsupported Modrinth modpack manifest";
         }
 
-        const game = await createGame(manifest, accountId);
+        const game = await createGame(manifest);
         const cc = containers.get(game.launchHint.containerId);
         const mpPath = path.join(cc.gameDir(), "_modpack.zip");
         await fs.ensureDir(path.dirname(mpPath));

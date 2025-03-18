@@ -42,7 +42,7 @@ export interface CheckedIpcCommands {
     scanImportableProfiles: (root: string) => string[];
     importGame: (name: string, root: string, profileId: string, accountId: string) => void;
     readModpack: (fp: string) => ModpackMetaSlim | null;
-    deployModpack: (fp: string, accountId: string) => void;
+    deployModpack: (fp: string) => void;
 }
 
 type OptionalPromise<T> = T | Promise<T>;

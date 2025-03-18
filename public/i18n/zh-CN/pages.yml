@@ -127,8 +127,6 @@ create-game-wizard:
 
 create-game-from-modpack:
   title: 从整合包创建游戏
-  select-file: 选择整合包文件
-  select-account: 选择一个帐户
   hint: 拖放整合包文件到这里，或者手动选择整合包文件。
   select-filter: 整合包文件
   alert: 请绝不要安装不可信来源的整合包 —— 它们可以随意下载任何文件，这非常危险！
@@ -147,7 +145,6 @@ import-game:
   select-game-dir-hint: 游戏文件夹通常名为 .minecraft，并与启动器位于同一目录。
   select-profile: 选择启动核心
   no-profile: 无可用核心。（可能是选择了错误的文件夹？）
-  select-account: 选择帐户
   btn: 导入
 
   warning:

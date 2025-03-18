@@ -11,6 +11,6 @@ addCheckedHandler("readModpack", async fp => {
     }
 });
 
-addCheckedHandler("deployModpack", async (fp, a) => {
-    await modpacks.deploy(fp, a);
+addCheckedHandler("deployModpack", async fp => {
+    await modpacks.deploy(fp);
 });

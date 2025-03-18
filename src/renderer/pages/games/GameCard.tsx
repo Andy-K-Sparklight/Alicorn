@@ -2,6 +2,8 @@ import type { GameProfile } from "@/main/game/spec";
 import { useInstallProgress } from "@/renderer/services/install";
 
 import { GameTypeIcon } from "@components/display/GameTypeIcon";
+import { AccountSelectorDialog } from "@components/modal/AccountSelectorDialog";
+import { DialogProvider } from "@components/modal/DialogProvider";
 import { Card, CardBody, Chip, cn } from "@heroui/react";
 import { GameCardActions } from "@pages/games/GameCardActions";
 import { DotIcon } from "lucide-react";
@@ -47,10 +49,12 @@ export function GameCard({ game }: GameCardProps) {
                 </div>
 
                 <div className="ml-4">
-                    <GameCardActions
-                        gameId={id}
-                        installStatus={installStatus}
-                    />
+                    <DialogProvider dialogProps={{}} component={AccountSelectorDialog}>
+                        <GameCardActions
+                            gameId={id}
+                            installStatus={installStatus}
+                        />
+                    </DialogProvider>
                 </div>
             </div>
         </CardBody>

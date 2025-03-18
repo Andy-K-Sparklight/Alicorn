@@ -128,8 +128,6 @@ create-game-wizard:
 
 create-game-from-modpack:
   title: Create Game From Modpack
-  select-file: Select Modpack
-  select-account: Select Account
   hint: Drag and drop modpack archive here or select one manually.
   select-filter: Modpack Archive
   alert: Modpacks can download arbitrary files, which can be danger — IS IT TRUSTED?
@@ -148,7 +146,6 @@ import-game:
   select-game-dir-hint: Game folder is usually named .minecraft and resides in the same folder containing your launcher.
   select-profile: Select Game Profile
   no-profile: No available profile. (wrong folder selected?)
-  select-account: Select Account
   btn: Import
 
   warning:
