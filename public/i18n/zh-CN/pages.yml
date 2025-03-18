@@ -23,17 +23,8 @@ create-game:
     label: 重用已有文件
     sub: 重新使用已经安装的文件，减少空间占用。这项技术可能与部分客户端不兼容。
 
-  account-title: 帐户
   default-name: 新游戏
   loading-versions: 正在获取版本列表……
-
-  account:
-    online:
-      label: 在线验证
-      sub: 使用已有帐户，或添加新的微软帐户。
-    manual:
-      label: 手动输入玩家名
-      sub: 如果无法登录，你可以手动提供玩家名。
 
   assets-level:
     full:

@@ -18,7 +18,6 @@ export function FinishView() {
             name: tc("default-name"),
             containerId: undefined,
             accountId: ctx.value.accountId ?? "",
-            authType: ctx.value.authType ?? "online",
             gameVersion: ctx.value.gameVersion!,
             assetsLevel: "full",
             installProps: {
@@ -26,7 +25,6 @@ export function FinishView() {
                 gameVersion: ctx.value.gameVersion!,
                 loaderVersion: ""
             } as any,
-            playerName: "",
             containerShouldLink: true
         });
 

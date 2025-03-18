@@ -19,7 +19,7 @@ export function PickAccountView() {
     const [accountId, setAccountId] = useState("new");
 
     function onConfirm() {
-        ctx.setValue({ ...ctx.value, authType: "online", accountId: accountId === "new" ? "" : accountId });
+        ctx.setValue({ ...ctx.value, accountId });
         nav("/games/new-wizard/finish");
     }
 

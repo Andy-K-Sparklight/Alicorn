@@ -1,10 +1,7 @@
 import type { InstallerProps } from "@/main/install/installers";
-import { useAccounts } from "@/renderer/services/accounts";
 import { useGameProfile } from "@/renderer/services/games";
 import { useNav } from "@/renderer/util/nav";
-import { ExtendedAccountPicker } from "@components/compound/ExtendedAccountPicker";
 import { Alert } from "@components/display/Alert";
-import { PlayerNameInput } from "@components/input/PlayerNameInput";
 import type { PropsWithParams } from "@components/misc/AnimatedRoute";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { addToast, Button, Input, Switch } from "@heroui/react";
@@ -15,14 +12,12 @@ import { ModLoaderVersionSelector } from "@pages/create-game/ModLoaderVersionSel
 import { VersionSelector } from "@pages/create-game/VersionSelector";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocalStorage } from "react-use";
 
 /**
  * Create new game without the help of the wizard.
  */
 export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?: string }>) {
     const { t } = useTranslation("pages", { keyPrefix: "create-game" });
-    const accounts = useAccounts();
     const profile = useGameProfile(gameId ?? "");
 
     const [gameName, setGameName] = useState(profile?.name || t("default-name"));
@@ -30,18 +25,6 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
     const [containerId, setContainerId] = useState<string | undefined>(profile?.launchHint.containerId);
     const [containerShouldLink, setContainerShouldLink] = useState(true);
     const [shareContainer, setShareContainer] = useState(!!profile?.launchHint.containerId);
-
-
-    const [lastSelectedAccountId, setLastSelectedAccountId] = useLocalStorage<string>("create-game.account.last-selected");
-    const initialAccountId =
-        profile?.launchHint.accountId ||
-        accounts.some(a => a.uuid === lastSelectedAccountId) ? lastSelectedAccountId : null;
-
-    const [authType, setAuthType] = useState<"online" | "manual">("online");
-
-    const [accountId, setAccountId] = useState<string | null>(initialAccountId ?? null);
-
-    const [playerName, setPlayerName] = useState<string>("Player");
 
     const [assetsLevel, setAssetsLevel] = useState<"full" | "video-only">(profile?.assetsLevel || "full");
 
@@ -61,16 +44,8 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
         }
     }, [gameVersion]);
 
-    function handleAccountChange(id: string | null) {
-        setAccountId(id);
-        if (id) {
-            setLastSelectedAccountId(id);
-        }
-    }
 
-    const valid = gameVersion &&
-        !(shareContainer && !containerId) &&
-        !(authType === "manual" && !playerName);
+    const valid = gameVersion && !(shareContainer && !containerId);
 
     async function handleCreate() {
         if (valid) {
@@ -78,9 +53,7 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
                 id: gameId,
                 name: gameName,
                 containerId,
-                accountId,
-                authType,
-                playerName,
+                accountId: "",
                 installProps: buildInstallProps(installType, gameVersion, loaderVersion),
                 gameVersion,
                 assetsLevel,
@@ -156,34 +129,6 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
                             <Alert color="warning" classNames={{ title: "font-bold" }} title={t("share-alert")}/>
                             <ContainerSelector containerId={containerId} onChange={setContainerId}/>
                         </>
-                    }
-                </div>
-
-
-                <div className="flex flex-col gap-4">
-                    <div className="font-bold text-xl">{t("account-title")}</div>
-
-                    <RadioGroup
-                        value={authType}
-                        onValueChange={(s) => setAuthType(s as any)}
-                    >
-                        {
-                            ["online", "manual"].map(tp =>
-                                <Radio key={tp} value={tp} description={t(`account.${tp}.sub`)}>
-                                    {t(`account.${tp}.label`)}
-                                </Radio>
-                            )
-                        }
-                    </RadioGroup>
-
-
-                    {
-                        authType === "online" &&
-                        <ExtendedAccountPicker accountId={accountId} onAccountChange={setAccountId}/>
-                    }
-
-                    {
-                        authType === "manual" && <PlayerNameInput onChange={setPlayerName}/>
                     }
                 </div>
 

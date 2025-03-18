@@ -1,5 +1,3 @@
-import { accounts } from "@/main/auth/manage";
-import { TemporalAccount } from "@/main/auth/temp";
 import { containerInspector } from "@/main/container/inspect";
 import { containers } from "@/main/container/manage";
 import { games } from "@/main/game/manage";
@@ -43,9 +41,7 @@ export interface CreateGameInit {
     id?: string;
     name: string;
     gameVersion: string;
-    authType: "online" | "manual";
     installProps: InstallerProps;
-    playerName: string;
     accountId: string | null;
     assetsLevel: "full" | "video-only";
     containerId?: string;
@@ -91,19 +87,7 @@ addCheckedHandler("addGame", async init => {
         type = installProps.type;
     }
 
-    let accountId = "";
-    switch (init.authType) {
-        case "manual": {
-            const a = new TemporalAccount(init.playerName);
-            accounts.add(a);
-            accountId = a.uuid;
-            break;
-        }
-
-        case "online": {
-            accountId = init.accountId ?? "";
-        }
-    }
+    let accountId = init.accountId ?? "";
 
     const g: GameProfile = {
         id: init.id || games.genId(),

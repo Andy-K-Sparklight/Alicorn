@@ -22,17 +22,8 @@ create-game:
     label: Reuse Existing Files
     sub: Reuse existing files to reduce space consumption. This might not be compatible with certain clients.
 
-  account-title: Account
   default-name: New Game
   loading-versions: Retrieving Version Manifest
-
-  account:
-    online:
-      label: Authenticate Online
-      sub: Pick an account or add a new Microsoft account.
-    manual:
-      label: Set Player Name Manually
-      sub: Manually enter player name if online verification has failed.
 
   assets-level:
     full:
