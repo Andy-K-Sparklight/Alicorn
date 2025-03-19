@@ -60,7 +60,7 @@ function findCompatibleAsset(meta: ReleasesMeta): [string, string] | null {
 async function installAsset(url: string, ver: string): Promise<void> {
     console.log("Installing asset from: " + url);
 
-    const res = await netx.get(url);
+    const res = await netx.request(url);
 
     if (!res.ok || !res.body) throw `Unable to fetch asset content: ${res.status}`;
 

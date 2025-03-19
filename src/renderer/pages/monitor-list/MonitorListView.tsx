@@ -26,10 +26,7 @@ const statusColors = {
 function StatusChip({ status }: { status: RemoteGameStatus }) {
     const { t } = useTranslation("pages", { keyPrefix: "monitor.status" });
 
-    return <Chip
-        variant="dot"
-        color={statusColors[status]}
-    >
+    return <Chip variant="dot" color={statusColors[status]}>
         {t(status)}
     </Chip>;
 }
@@ -57,7 +54,6 @@ function MonitorItem({ proc }: { proc: RemoteGameProcess }) {
                     <StatusChip status={status}/>
                 </div>
 
-
                 <div className="ml-4 flex gap-2">
                     <Button isIconOnly color="primary" onPress={revealProc}>
                         <ArrowRightIcon/>
@@ -69,7 +65,6 @@ function MonitorItem({ proc }: { proc: RemoteGameProcess }) {
                             <XIcon/>
                         </Button>
                     }
-
                 </div>
             </div>
         </CardBody>

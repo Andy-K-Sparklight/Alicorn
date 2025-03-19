@@ -1,10 +1,11 @@
+import type { GameAssetsLevel } from "@/main/game/spec";
 import { Radio, RadioGroup } from "@heroui/radio";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
 interface AssetsLevelSelectorProps {
-    assetsLevel: "full" | "video-only";
-    onChange: (v: "full" | "video-only") => void;
+    assetsLevel: GameAssetsLevel;
+    onChange: (v: GameAssetsLevel) => void;
 }
 
 export function AssetLevelSelector({ assetsLevel, onChange }: AssetsLevelSelectorProps) {
@@ -13,7 +14,7 @@ export function AssetLevelSelector({ assetsLevel, onChange }: AssetsLevelSelecto
     return <RadioGroup
         color={assetsLevel === "full" ? "primary" : "warning"}
         value={assetsLevel}
-        onValueChange={v => onChange(v as any)}
+        onValueChange={v => onChange(v as GameAssetsLevel)}
     >
         <Radio value="full" description={t("full.sub")}>
             {t("full.label")}

@@ -19,7 +19,7 @@ interface SkinPayload {
 }
 
 async function loadSkin(url: string): Promise<string> {
-    const res = await netx.getJSON(url) as SkinQueryResponse;
+    const res = await netx.json(url) as SkinQueryResponse;
 
     const v = res.properties.find(p => p.name === "textures")?.value;
     if (!v) return "";
@@ -62,7 +62,7 @@ async function getSkinAvatar(a: Account): Promise<[string, string]> {
         const url = await getSkin(a);
 
         if (url) {
-            const res = await netx.get(url);
+            const res = await netx.request(url);
             dat = Buffer.from(await res.arrayBuffer());
         } else {
             // Loads a fallback image

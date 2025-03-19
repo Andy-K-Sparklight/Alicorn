@@ -62,7 +62,7 @@ export class JrtInstallationFailedException extends AbstractException<"jrt-insta
 }
 
 async function getProfile(componentName: string): Promise<JavaRuntimeProfile> {
-    const d = await netx.getJSON(JRT_MANIFEST);
+    const d = await netx.json(JRT_MANIFEST);
     const osp = osPair();
 
     let availableProfiles = d?.[osp]?.[componentName];
@@ -139,7 +139,7 @@ async function installRuntime(component: string, control?: ProgressController): 
     const profile = await getProfile(component);
     console.debug(`Picked up profile ${profile.manifest.url}`);
 
-    const dat = await netx.getJSON(profile.manifest.url);
+    const dat = await netx.json(profile.manifest.url);
     let files = Object.entries(dat.files)
         .map(([name, file]) => ({ name, ...(file as FileHint) } as NamedFileHint));
 

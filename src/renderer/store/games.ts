@@ -2,16 +2,18 @@ import type { GameProfile } from "@/main/game/spec";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 type GameListSliceState = {
-    games: GameProfile[];
+    games: Record<string, GameProfile>;
 }
 export const gamesSlice = createSlice({
     name: "games",
     initialState: {
-        games: []
+        games: {}
     } as GameListSliceState,
     reducers: {
         replace(state, action: PayloadAction<{ games: GameProfile[] }>) {
-            state.games = action.payload.games;
+            for (const g of action.payload.games) {
+                state.games[g.id] = g;
+            }
         }
     }
 });

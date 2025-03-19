@@ -25,7 +25,7 @@ async function syncVersionFromBMCLAPI(): Promise<string[]> {
 
     let offset = 0;
     while (true) {
-        const results = await netx.getJSON(`https://bmclapi2.bangbang93.com/forge/list/${offset}/500`) as BMCLAPIForgeVersion[];
+        const results = await netx.json(`https://bmclapi2.bangbang93.com/forge/list/${offset}/500`) as BMCLAPIForgeVersion[];
         const rv = results.map(r => [r.mcversion, r.version, r.branch].filter(isTruthy).join("-"));
         vs.push(...rv);
 
@@ -47,7 +47,7 @@ async function syncVersions(): Promise<string[]> {
             }
         }
 
-        const res = await netx.get(FORGE_VERSIONS);
+        const res = await netx.request(FORGE_VERSIONS);
 
         if (!res.ok) throw new NetRequestFailedException(FORGE_VERSIONS, res.status);
 

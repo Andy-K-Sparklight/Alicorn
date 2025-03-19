@@ -8,9 +8,7 @@ import { modpackTools } from "@/main/modpack/tools";
 import { curse } from "@/main/mpm/curse";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { progress, type ProgressController } from "@/main/util/progress";
-import fs from "fs-extra";
 import StreamZip from "node-stream-zip";
-import path from "node:path";
 
 interface CurseModpackManifest {
     minecraft: {
@@ -165,9 +163,7 @@ async function deploy(fp: string) {
 
         const game = await createGame(manifest);
         const cc = containers.get(game.launchHint.containerId);
-        const mpPath = path.join(cc.gameDir(), "_modpack.zip");
-        await fs.ensureDir(path.dirname(mpPath));
-        await fs.copyFile(fp, mpPath);
+        const mpPath = await modpackTools.copyPack(fp, cc);
 
         Object.defineProperty(game.installProps, "source", { value: mpPath });
         games.add(game);

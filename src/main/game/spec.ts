@@ -2,6 +2,8 @@ import type { InstallerProps } from "@/main/install/installers";
 import type { LaunchHint } from "@/main/launch/types";
 import type { RegistryTransformer } from "@/main/registry/registry";
 
+export type GameAssetsLevel = "full" | "video-only";
+
 export interface GameProfile {
     /**
      * Game identifier.
@@ -36,7 +38,7 @@ export interface GameProfile {
     /**
      * Assets level for downloading partial assets.
      */
-    assetsLevel: "full" | "video-only";
+    assetsLevel: GameAssetsLevel;
 
     /**
      * Launch hint object.

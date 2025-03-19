@@ -1,7 +1,7 @@
 import { containerInspector } from "@/main/container/inspect";
 import { containers } from "@/main/container/manage";
 import { games } from "@/main/game/manage";
-import type { GameCoreType, GameProfile } from "@/main/game/spec";
+import type { GameAssetsLevel, GameCoreType, GameProfile } from "@/main/game/spec";
 import type { InstallerProps } from "@/main/install/installers";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { addCheckedHandler } from "@/main/ipc/checked";
@@ -43,7 +43,7 @@ export interface CreateGameInit {
     gameVersion: string;
     installProps: InstallerProps;
     accountId: string | null;
-    assetsLevel: "full" | "video-only";
+    assetsLevel: GameAssetsLevel;
     containerId?: string;
     containerShouldLink: boolean; // Only present when creating dedicated container
 }

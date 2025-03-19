@@ -1,3 +1,4 @@
+import type { Container } from "@/main/container/spec";
 import { progress, type ProgressController } from "@/main/util/progress";
 import fs from "fs-extra";
 import StreamZip from "node-stream-zip";
@@ -25,5 +26,11 @@ async function applyOverrides(zip: StreamZip.StreamZipAsync, prefix: string, roo
     await Promise.all(progress.countPromises(ps, progress.makeNamed(onProgress, "modpack.unpack-files")));
 }
 
+async function copyPack(fp: string, container: Container): Promise<string> {
+    const pt = path.join(container.gameDir(), "_modpack.zip");
+    await fs.ensureDir(path.dirname(pt));
+    await fs.copyFile(fp, pt);
+    return pt;
+}
 
-export const modpackTools = { applyOverrides };
+export const modpackTools = { applyOverrides, copyPack };

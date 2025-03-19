@@ -44,7 +44,7 @@ async function prefetch() {
 
 async function getManifest(): Promise<LiteloaderVersionManifest> {
     if (!versionManifest) {
-        versionManifest = await netx.getJSON(LITELOADER_VERSIONS) as LiteloaderVersionManifest;
+        versionManifest = await netx.json(LITELOADER_VERSIONS) as LiteloaderVersionManifest;
     }
 
     return versionManifest;

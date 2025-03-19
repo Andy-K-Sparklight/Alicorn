@@ -1,3 +1,4 @@
+import type { GameAssetsLevel } from "@/main/game/spec";
 import type { InstallerProps } from "@/main/install/installers";
 import { useGameProfile } from "@/renderer/services/games";
 import { useNav } from "@/renderer/util/nav";
@@ -26,7 +27,7 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
     const [containerShouldLink, setContainerShouldLink] = useState(true);
     const [shareContainer, setShareContainer] = useState(!!profile?.launchHint.containerId);
 
-    const [assetsLevel, setAssetsLevel] = useState<"full" | "video-only">(profile?.assetsLevel || "full");
+    const [assetsLevel, setAssetsLevel] = useState<GameAssetsLevel>(profile?.assetsLevel || "full");
 
     const [installType, setInstallType] = useState<string>(profile?.installProps.type || "vanilla");
     const [loaderVersion, setLoaderVersion] = useState<string>("");

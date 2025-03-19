@@ -45,7 +45,7 @@ interface BMCLAPIOptiFineVersion {
 
 async function syncVersionsFromBMCLAPI(): Promise<OptiFineVersionMeta[]> {
     const url = "https://bmclapi2.bangbang93.com/optifine/versionList";
-    const vs = await netx.getJSON(url) as BMCLAPIOptiFineVersion[];
+    const vs = await netx.json(url) as BMCLAPIOptiFineVersion[];
     return vs.map(v => ({
         gameVersion: v.mcversion,
         htmlUrl: "",

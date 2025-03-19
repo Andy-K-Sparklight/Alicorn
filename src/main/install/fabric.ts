@@ -20,7 +20,7 @@ let availableGameVersions: string[];
 async function getAvailableGameVersions() {
     if (!availableGameVersions) {
         const url = FABRIC_META_API + "/versions/game";
-        const vs = await netx.getJSON(url);
+        const vs = await netx.json(url);
         availableGameVersions = vs.map((v: { version: string }) => v.version);
     }
 
@@ -30,7 +30,7 @@ async function getAvailableGameVersions() {
 async function queryLoaderVersions(gameVersion: string): Promise<FabricLoaderVersion[]> {
     const url = FABRIC_META_API + `/versions/loader/${gameVersion}`;
 
-    const entries = await netx.getJSON(url) as LoaderEntry[];
+    const entries = await netx.json(url) as LoaderEntry[];
     return entries.map(e => e.loader);
 }
 
@@ -59,7 +59,7 @@ async function retrieveProfile(
 
     controller?.signal?.throwIfAborted();
 
-    const fbp = await netx.getJSON(url);
+    const fbp = await netx.json(url);
     if (!("id" in fbp) || typeof fbp.id !== "string") throw new UnavailableModLoaderException(gameVersion);
 
     console.debug(`Writing profile with ID: ${fbp.id}`);

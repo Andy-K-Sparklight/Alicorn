@@ -6,11 +6,7 @@ import fs from "fs-extra";
  */
 async function createContentDir(c: Container, scope: string): Promise<void> {
     const d = c.content(scope);
-    try {
-        const st = await fs.stat(d);
-        if (st.isDirectory()) return;
-        await fs.remove(d);
-    } catch {}
+    if (await fs.pathExists(d)) return;
 
     await fs.ensureDir(d);
 }

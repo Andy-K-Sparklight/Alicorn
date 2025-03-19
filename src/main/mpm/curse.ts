@@ -75,7 +75,7 @@ async function requestProjectVersions(projId: number, gameVersion: string, loade
             url += `&modLoaderType=${toCurseLoader(loader)}`;
         }
 
-        const res = await netx.getJSON(url) as { data: CurseVersion[] };
+        const res = await netx.json(url) as { data: CurseVersion[] };
 
         out.push(...res.data);
         if (res.data.length < 50) break;
@@ -94,11 +94,11 @@ async function requestVersions(versionIds: number[]): Promise<CurseVersion[]> {
         // Use GET version of API as it's usually cached by upstream
         const v = versionIds[0];
         const url = `${API_BASE}/mods/files/${v}`;
-        const rp = await netx.getJSON(url) as { data: CurseVersion };
+        const rp = await netx.json(url) as { data: CurseVersion };
         return [rp.data];
     } else {
         const url = `${API_BASE}/mods/files`;
-        const rp = await netx.getJSON(url, { fileIds: versionIds }) as { data: CurseVersion[] };
+        const rp = await netx.json(url, { fileIds: versionIds }) as { data: CurseVersion[] };
         return rp.data;
     }
 }
@@ -108,11 +108,11 @@ async function requestProjects(projIds: number[]): Promise<CurseProject[]> {
     if (projIds.length === 1) {
         const p = projIds[0];
         const url = `${API_BASE}/mods/${p}`;
-        const rp = await netx.getJSON(url) as { data: CurseProject };
+        const rp = await netx.json(url) as { data: CurseProject };
         return [rp.data];
     } else {
         const url = `${API_BASE}/mods`;
-        const rp = await netx.getJSON(url, { modIds: projIds }) as { data: CurseProject[] };
+        const rp = await netx.json(url, { modIds: projIds }) as { data: CurseProject[] };
         return rp.data;
     }
 }
@@ -171,7 +171,7 @@ async function search(scope: MpmAddonType, query: string, gameVersion: string, l
     }
 
     try {
-        const rp = await netx.getJSON(url) as { data: CurseProject[] };
+        const rp = await netx.json(url) as { data: CurseProject[] };
         rp.data.forEach(p => projectMetaCache.set(p.id, p));
         return rp.data.map(toMpmAddonMeta);
     } catch (e) {
@@ -182,7 +182,7 @@ async function search(scope: MpmAddonType, query: string, gameVersion: string, l
 }
 
 async function getFiles(fileIds: number[]): Promise<CurseVersion[]> {
-    const res = await netx.getJSON(`${API_BASE}/mods/files`, { fileIds }) as { data: CurseVersion[] };
+    const res = await netx.json(`${API_BASE}/mods/files`, { fileIds }) as { data: CurseVersion[] };
     return res.data;
 }
 

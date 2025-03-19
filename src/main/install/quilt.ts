@@ -23,7 +23,7 @@ let availableGameVersions: string[];
 async function getAvailableGameVersions() {
     if (!availableGameVersions) {
         const url = QUILT_META_API + "/versions/game";
-        const vs = await netx.getJSON(url);
+        const vs = await netx.json(url);
         availableGameVersions = vs.map((v: { version: string }) => v.version);
     }
 
@@ -33,7 +33,7 @@ async function getAvailableGameVersions() {
 async function queryLoaderVersions(gameVersion: string): Promise<QuiltLoaderVersion[]> {
     const url = QUILT_META_API + `/versions/loader/${gameVersion}`;
 
-    const entries = await netx.getJSON(url) as LoaderEntry[];
+    const entries = await netx.json(url) as LoaderEntry[];
     return entries.map(e => e.loader);
 }
 
@@ -62,7 +62,7 @@ async function retrieveProfile(
 
     controller?.signal?.throwIfAborted();
 
-    const qtp = await netx.getJSON(url);
+    const qtp = await netx.json(url);
     if (!("id" in qtp) || typeof qtp.id !== "string") throw new UnavailableModLoaderException(gameVersion);
 
     console.debug(`Writing profile with ID: ${qtp.id}`);

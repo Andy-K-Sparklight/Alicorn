@@ -16,7 +16,7 @@ interface BMCLAPINeoForgedFile {
 
 async function syncVersionsFromBMCLAPI() {
     const url = "https://bmclapi2.bangbang93.com/neoforge/meta/api/maven/details/releases/net/neoforged/neoforge";
-    const releases = await netx.getJSON(url) as { files: BMCLAPINeoForgedFile[] };
+    const releases = await netx.json(url) as { files: BMCLAPINeoForgedFile[] };
     return releases.files.filter(r => r.type === "DIRECTORY").map(r => r.name);
 }
 
@@ -30,7 +30,7 @@ async function syncVersions(): Promise<string[]> {
                 console.error(`Unable to sync NeoForged versions from BMCLAPI: ${e}`);
             }
         }
-        versions = (await netx.getJSON(NEOFORGED_API)).versions as string[];
+        versions = (await netx.json(NEOFORGED_API)).versions as string[];
     }
 
     return versions;

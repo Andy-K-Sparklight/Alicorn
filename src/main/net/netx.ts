@@ -10,7 +10,7 @@ import { net, Session } from "electron";
 /**
  * Fetches the content of the given URL using any available mirror.
  */
-async function get(url: string, body?: any, session?: Session): Promise<Response> {
+async function request(url: string, body?: any, session?: Session): Promise<Response> {
     let lastError;
 
     const urls = mirror.apply(url);
@@ -38,8 +38,8 @@ async function get(url: string, body?: any, session?: Session): Promise<Response
     throw new NetMirrorsAllFailedException(url, lastError);
 }
 
-async function getJSON<T = any>(url: string, body?: any, session?: Session): Promise<T> {
-    const r = await get(url, body, session);
+async function json<T = any>(url: string, body?: any, session?: Session): Promise<T> {
+    const r = await request(url, body, session);
 
     try {
         return await r.json();
@@ -66,5 +66,5 @@ class NetMirrorsAllFailedException extends AbstractException<"net-mirrors-all-fa
 }
 
 export const netx = {
-    get, getJSON
+    request, json
 };

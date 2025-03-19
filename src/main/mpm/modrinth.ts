@@ -83,7 +83,7 @@ interface ModrinthFile {
 }
 
 async function apiGet<T = any>(url: string): Promise<T> {
-    return await netx.getJSON(url, undefined, getSession());
+    return await netx.json(url, undefined, getSession());
 }
 
 function makeJSONParam(obj: any): string {

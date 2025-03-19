@@ -117,7 +117,7 @@ async function main() {
 
     console.log("Running optional tasks...");
 
-    const tasks = [
+    await Promise.all([
         venv.recover(),
         cleaner.removeUnusedOAuthPartitions(),
         cleaner.removeTempPath(),
@@ -127,9 +127,7 @@ async function main() {
         neoforgedInstaller.prefetch(),
         liteloaderInstaller.prefetch(),
         unfine.prefetch()
-    ].filter(Boolean);
-
-    await Promise.all(tasks);
+    ]);
 
     // Delay update check after app initialization
     if (conf().app.hotUpdate) {
@@ -165,8 +163,6 @@ async function setupMainWindow() {
         title: "Alicorn Launcher"
     });
 
-    w.webContents.session.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36");
-
     windowControl.setMainWindow(w);
 
     // Open DevTools if applicable
@@ -175,21 +171,10 @@ async function setupMainWindow() {
         w.webContents.openDevTools();
     }
 
-    w.on("resized", () => {
-        conf.alter(c => c.app.window.size = w!.getSize());
-    });
-
-    w.on("moved", () => {
-        conf.alter(c => c.app.window.pos = w!.getPosition());
-    });
-
-    w.on("ready-to-show", () => {
-        w.webContents.setZoomFactor(conf().app.window.zoom / 100);
-    });
-
-    w.webContents.on("devtools-opened", () => {
-        w.webContents.send("devToolsOpened");
-    });
+    w.on("resized", () => conf.alter(c => c.app.window.size = w!.getSize()));
+    w.on("moved", () => conf.alter(c => c.app.window.pos = w!.getPosition()));
+    w.on("ready-to-show", () => w.webContents.setZoomFactor(conf().app.window.zoom / 100));
+    w.webContents.on("devtools-opened", () => w.webContents.send("devToolsOpened"));
 
     w.setMenu(null);
 
@@ -331,11 +316,12 @@ function checkSingleInstance() {
         app.quit();
         return false;
     } else {
-        const reopenWindow = () => {
+        function reopenWindow() {
             const w = windowControl.getMainWindow();
             w?.show();
             w?.restore();
-        };
+        }
+
         app.on("second-instance", reopenWindow);
 
         // macOS open action handler

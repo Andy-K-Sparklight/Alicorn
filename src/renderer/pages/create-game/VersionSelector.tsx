@@ -44,12 +44,6 @@ export function VersionSelector({ version, onChange }: VersionSelectorProps) {
                 listboxProps={{
                     emptyContent: t("version-select-empty")
                 }}
-                scrollShadowProps={{
-                    style: {
-                        // @ts-expect-error Non-standard properties
-                        "--scroll-shadow-size": "0px"
-                    }
-                }}
                 itemHeight={64}
             >
                 {

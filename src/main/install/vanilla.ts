@@ -1,4 +1,5 @@
 import type { Container } from "@/main/container/spec";
+import type { GameAssetsLevel } from "@/main/game/spec";
 import { nativesLint } from "@/main/install/natives-lint";
 import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
 import { netx } from "@/main/net/netx";
@@ -39,7 +40,7 @@ let versionManifest: VersionManifest;
  */
 async function getManifest(): Promise<VersionManifest> {
     if (!versionManifest) {
-        versionManifest = await netx.getJSON(VERSION_MANIFEST) as VersionManifest;
+        versionManifest = await netx.json(VERSION_MANIFEST) as VersionManifest;
     }
 
     return versionManifest;
@@ -201,7 +202,7 @@ const ASSETS_BASE_URL = "https://resources.download.minecraft.net";
 async function installAssets(
     profile: VersionProfile,
     container: Container,
-    level: "full" | "video-only",
+    level: GameAssetsLevel,
     control?: ProgressController
 ): Promise<void> {
     const { signal, onProgress } = control ?? {};
@@ -272,11 +273,7 @@ async function installAssets(
 async function emitOptions(container: Container) {
     const fp = container.options();
 
-    try {
-        await fs.access(fp);
-        return;
-    } catch {
-    }
+    if (await fs.pathExists(fp)) return;
 
     const values = {
         lang: i18nMain.language.replaceAll("-", "_")
@@ -290,11 +287,8 @@ async function emitOptions(container: Container) {
  * Link game assets for legacy versions. Assets are always linked regardless of the `link` flag.
  */
 async function makeAssetLink(src: string, dst: string) {
-    try {
-        // Skip the target file, if it exists (it was previously linked by Alicorn, or managed externally)
-        await fs.access(dst);
-        return;
-    } catch {}
+    // Skip the target file if it exists (it was previously linked by Alicorn, or managed externally)
+    if (await fs.pathExists(dst)) return;
 
     console.debug(`Linking asset ${src} -> ${dst}.`);
 
