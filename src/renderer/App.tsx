@@ -56,7 +56,7 @@ function MainArea() {
         <AnimatedRoute path="/games/import" component={ImportGameView}/>
         <AnimatedRoute path="/games/new-wizard/*?" component={CreateGameWizardView}/>
         <AnimatedRoute path="/games/new/:gameId?" component={CreateGameView}/>
-        <AnimatedRoute path="/games/from-modpack" component={CreateGameFromModpackView}/>
+        <AnimatedRoute path="/games/from-modpack/:path?" component={CreateGameFromModpackView}/>
         <AnimatedRoute path="/games" component={GamesView}/>
         <AnimatedRoute path="/games/detail/:gameId" component={GameDetailView}/>
         <AnimatedRoute path="/monitor/:procId" component={MonitorView}/>

@@ -2,15 +2,16 @@ import type { ModpackMetaSlim } from "@/main/modpack/common";
 import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/display/Alert";
 import { FileSelectInput } from "@components/input/FileSelectInput";
+import type { PropsWithParams } from "@components/misc/AnimatedRoute";
 import { addToast, Button } from "@heroui/react";
 import type { FileFilter } from "electron";
 import { t } from "i18next";
 import { type DragEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-export function CreateGameFromModpackView() {
+export function CreateGameFromModpackView({ params }: PropsWithParams<{ path?: string }>) {
     const { t } = useTranslation("pages", { keyPrefix: "create-game-from-modpack" });
-    const [modpackFile, setModpackFile] = useState("");
+    const [modpackFile, setModpackFile] = useState(params.path || "");
     const [modpackMeta, setModpackMeta] = useState<ModpackMetaSlim | null>(null);
     const [btnConfirmed, setBtnConfirmed] = useState(false);
     const [deploying, setDeploying] = useState(false);
