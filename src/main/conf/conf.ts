@@ -140,6 +140,11 @@ const DEFAULT_CONFIG = {
      */
     runtime: {
         /**
+         * Enable ReadyBoom features.
+         */
+        readyboom: true,
+
+        /**
          * Global additional arguments.
          */
         args: {

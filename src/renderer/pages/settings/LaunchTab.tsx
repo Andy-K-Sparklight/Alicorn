@@ -1,7 +1,7 @@
 import { useConfig } from "@/renderer/services/conf";
 import { Divider } from "@heroui/react";
-import { StringArrayEntry } from "@pages/settings/SettingsEntry";
-import { TerminalIcon } from "lucide-react";
+import { OnOffEntry, StringArrayEntry } from "@pages/settings/SettingsEntry";
+import { GaugeIcon, TerminalIcon } from "lucide-react";
 
 export function LaunchTab() {
     const { config, alterConfig } = useConfig();
@@ -9,6 +9,15 @@ export function LaunchTab() {
     if (!config) return null;
 
     return <>
+        <OnOffEntry
+            icon={GaugeIcon}
+            id="launch.readyboom"
+            value={config.runtime.readyboom}
+            onChange={v => alterConfig(c => c.runtime.readyboom = v)}
+        />
+
+        <Divider/>
+
         <StringArrayEntry
             icon={TerminalIcon}
             id="launch.jvm-args"

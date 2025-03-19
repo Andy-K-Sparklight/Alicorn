@@ -394,6 +394,11 @@ settings:
           要将临时文件存放在哪里？
 
     launch:
+      readyboom:
+        title: ReadyBoom 启动预热技术
+        sub: |-
+          推测并提前准备启动所需资源，以加快启动速度。
+
       jvm-args:
         title: 启动选项 / JVM
         sub: |-

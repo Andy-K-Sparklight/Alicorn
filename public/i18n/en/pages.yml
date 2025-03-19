@@ -281,6 +281,12 @@ game-detail:
 
     launch:
       title: Launch
+      venv:
+        label: Compatibility Mode
+        sub: |-
+          A workaround for legacy Forge versions.
+          This downgrades game performance and has known flaws. Only consider altering when the game fails to launch.
+
       alter-jrt:
         label: Use This JRT for Launching
         sub: Alicorn chooses JRT for the game. Override it by changing this option.
@@ -389,11 +395,11 @@ settings:
           Path to store temp files.
 
     launch:
-      venv:
-        label: Compatibility Mode
+      readyboom:
+        title: "ReadyBoom: Fast Launching"
         sub: |-
-          A workaround for legacy Forge versions.
-          This downgrades game performance and has known flaws. Only consider altering when the game fails to launch.
+          Speeds up launch process by preparing necessary resources for launching.
+
       jvm-args:
         title: Launch Args (JVM)
         sub: |-

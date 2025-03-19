@@ -27,6 +27,7 @@ export class VanillaAccount implements Account {
     #userHash = "";
     #code = "";
     #existingRefreshPromise: Promise<void> | null = null;
+    #existingRefreshIsQuiet = false;
 
     static fromProps(props: VanillaAccountProps): VanillaAccount {
         const a = new VanillaAccount(props.partitionId);
@@ -59,6 +60,14 @@ export class VanillaAccount implements Account {
     }
 
     async refresh(): Promise<void> {
+        return this.#possiblyRefresh(false);
+    }
+
+    async refreshQuietly(): Promise<void> {
+        return this.#possiblyRefresh(true);
+    }
+
+    async #possiblyRefresh(quiet: boolean): Promise<void> {
         if (!this.#isAccessTokenExpired()) {
             console.log(`Account ${this.uuid} is not expired, skipped.`);
             return;
@@ -66,23 +75,36 @@ export class VanillaAccount implements Account {
 
         if (this.#existingRefreshPromise) {
             console.debug("A refresh is already in progress. Linking to it.");
-            await this.#existingRefreshPromise;
+            try {
+                await this.#existingRefreshPromise;
+            } catch (e) {
+                if (this.#existingRefreshIsQuiet && !quiet) {
+                    // Try again without quiet mode
+                    console.debug("Previous quiet refresh failed. Retrying.");
+                    this.#existingRefreshPromise = this.#doRefresh(false);
+                    this.#existingRefreshIsQuiet = false;
+                    await this.#existingRefreshPromise;
+                } else {
+                    throw e;
+                }
+            }
             return;
         }
 
         try {
-            this.#existingRefreshPromise = this.#doRefresh();
+            this.#existingRefreshPromise = this.#doRefresh(quiet);
+            this.#existingRefreshIsQuiet = quiet;
             await this.#existingRefreshPromise;
         } finally {
             this.#existingRefreshPromise = null;
         }
     }
 
-    async #doRefresh() {
+    async #doRefresh(quiet: boolean) {
         try {
             if (this.#isOAuthTokenExpired()) {
                 console.log("Obtaining new OAuth code.");
-                await this.#getCode();
+                await this.#getCode(quiet);
             } else {
                 console.log("Reusing existing refresh token.");
             }
@@ -126,8 +148,8 @@ export class VanillaAccount implements Account {
         return this.#accessTokenExpiresAt <= Date.now();
     }
 
-    async #getCode(): Promise<void> {
-        this.#code = await vanillaOAuth.browserLogin(this.#partId);
+    async #getCode(quiet: boolean): Promise<void> {
+        this.#code = await vanillaOAuth.browserLogin(this.#partId, quiet);
         if (!this.#code) throw new CancelledException();
     }
 

@@ -9,6 +9,7 @@ import { bl } from "@/main/launch/bl";
 import { venv } from "@/main/launch/venv";
 import { aria2 } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
+import { rbAccounts } from "@/main/readyboom/accounts";
 import { registry } from "@/main/registry/registry";
 import { cleaner } from "@/main/sys/cleaner";
 import { getOSName } from "@/main/sys/os";
@@ -126,7 +127,8 @@ async function main() {
         forgeInstaller.prefetch(),
         neoforgedInstaller.prefetch(),
         liteloaderInstaller.prefetch(),
-        unfine.prefetch()
+        unfine.prefetch(),
+        rbAccounts.keepAccountsAlive()
     ]);
 
     // Delay update check after app initialization

@@ -15,7 +15,7 @@ function createOAuthUrl() {
     return u.toString();
 }
 
-async function browserLogin(part: string): Promise<string> {
+async function browserLogin(part: string, quiet = false): Promise<string> {
     const [width, height] = windowControl.optimalSize();
 
     const w = new BrowserWindow({
@@ -53,18 +53,30 @@ async function browserLogin(part: string): Promise<string> {
         }
 
         if (!isShowing) {
-            // Show the window if we cannot extract the code at once
-            console.debug("The initial page does not contain the code, showing for user interactions.");
-            w.show();
-            isShowing = true;
+            if (quiet) {
+                // Not logged in, closing in quiet mode
+                console.debug("The initial page does not contain the code and we are in quiet mode, closing.");
+                w.close();
+                isShowing = true; // Prevent timer from being called
+            } else {
+                // Show the window if we cannot extract the code at once
+                console.debug("The initial page does not contain the code, showing for user interactions.");
+                w.show();
+                isShowing = true;
+            }
         }
     });
 
     setTimeout(() => {
         if (!code && !isShowing) {
-            // Show the window if the web page loads too slow
-            console.debug("Login timed out, showing window.");
-            w.show();
+            if (quiet) {
+                console.debug("Login timed out, closing window.");
+                w.close();
+            } else {
+                // Show the window if the web page loads too slow
+                console.debug("Login timed out, showing window.");
+                w.show();
+            }
         }
     }, 5000);
 
