@@ -1,8 +1,10 @@
 import { conf } from "@/main/conf/conf";
 import { paths } from "@/main/fs/paths";
+import { fabricInstaller } from "@/main/install/fabric";
 import { forgeInstaller } from "@/main/install/forge";
 import { liteloaderInstaller } from "@/main/install/liteloader";
 import { neoforgedInstaller } from "@/main/install/neoforged";
+import { quiltInstaller } from "@/main/install/quilt";
 import { unfine } from "@/main/install/unfine";
 import { vanillaInstaller } from "@/main/install/vanilla";
 import { bl } from "@/main/launch/bl";
@@ -127,6 +129,8 @@ async function main() {
         forgeInstaller.prefetch(),
         neoforgedInstaller.prefetch(),
         liteloaderInstaller.prefetch(),
+        fabricInstaller.prefetch(),
+        quiltInstaller.prefetch(),
         unfine.prefetch(),
         rbAccounts.keepAccountsAlive()
     ]);

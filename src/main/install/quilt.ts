@@ -71,7 +71,15 @@ async function retrieveProfile(
     return qtp.id;
 }
 
+async function prefetch() {
+    try {
+        await getAvailableGameVersions();
+    } catch {
+    }
+}
+
 export const quiltInstaller = {
+    prefetch,
     queryLoaderVersions,
     getAvailableGameVersions,
     retrieveProfile

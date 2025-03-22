@@ -68,7 +68,14 @@ async function retrieveProfile(
     return fbp.id;
 }
 
+async function prefetch() {
+    try {
+        await getAvailableGameVersions();
+    } catch {}
+}
+
 export const fabricInstaller = {
+    prefetch,
     queryLoaderVersions,
     getAvailableGameVersions,
     retrieveProfile
