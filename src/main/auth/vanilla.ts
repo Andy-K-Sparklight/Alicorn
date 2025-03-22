@@ -68,11 +68,6 @@ export class VanillaAccount implements Account {
     }
 
     async #possiblyRefresh(quiet: boolean): Promise<void> {
-        if (!this.#isAccessTokenExpired()) {
-            console.log(`Account ${this.uuid} is not expired, skipped.`);
-            return;
-        }
-
         if (this.#existingRefreshPromise) {
             console.debug("A refresh is already in progress. Linking to it.");
             try {
@@ -101,6 +96,11 @@ export class VanillaAccount implements Account {
     }
 
     async #doRefresh(quiet: boolean) {
+        if (!this.#isAccessTokenExpired()) {
+            console.log(`Account ${this.uuid} is not expired, skipped.`);
+            return;
+        }
+
         try {
             if (this.#isOAuthTokenExpired()) {
                 console.log("Obtaining new OAuth code.");
