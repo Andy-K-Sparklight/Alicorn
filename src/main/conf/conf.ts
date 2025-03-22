@@ -253,11 +253,14 @@ function getConfigPath(): string {
 /**
  * Loads the configuration file.
  */
-async function load(): Promise<void> {
+function load() {
     const pt = getConfigPath();
     console.log(`Loading config from: ${pt}`);
     try {
-        const d = (await fs.readFile(getConfigPath())).toString();
+        // `fs.readFileSync` is way faster than `await fs.readFile` (~300ms vs ~0.2ms, almost 1000x faster)
+        // As configuration files are loaded at startup, it's blocking anyway
+        // Get this faster will allow main window to get created earlier
+        const d = fs.readFileSync(getConfigPath()).toString();
         if (d.trim().length > 0) {
             config = applyPatch(DEFAULT_CONFIG, JSON.parse(d));
             if (import.meta.env.AL_DEV) {

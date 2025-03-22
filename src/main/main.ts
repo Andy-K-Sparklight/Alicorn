@@ -51,7 +51,7 @@ async function main() {
     console.log(`Electron ${electron} / Node.js ${node} / Chrome ${chrome}`);
 
     console.log("Loading config...");
-    await conf.load();
+    conf.load();
 
     console.log("Setting up application...");
     await app.whenReady();
