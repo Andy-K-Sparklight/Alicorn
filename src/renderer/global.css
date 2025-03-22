@@ -46,3 +46,7 @@ svg:focus {
 pre {
     font-family: "Ubuntu Mono", monospace;
 }
+
+a, img, svg {
+    -webkit-user-drag: none;
+}
