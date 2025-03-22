@@ -162,6 +162,7 @@ async function init() {
             "--no-want-digest-header", // Stop serves from blocking us
             `--max-concurrent-downloads=1024`,
             "--min-split-size=5M",
+            "--split=16",
             "--max-connection-per-server=16",
             `--connect-timeout=${Math.round(requestTimeout / 1000)}`,
             "--enable-rpc=true",
