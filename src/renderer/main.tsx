@@ -53,10 +53,7 @@ async function main() {
 }
 
 function render() {
-    const rootEle = document.createElement("div");
-    document.body.appendChild(rootEle);
-    const root = createRoot(rootEle);
-    root.render(
+    createRoot(document.getElementById("app")!).render(
         <StrictMode>
             <Router hook={useHashLocation}>
                 <ThemeSwitchProvider>

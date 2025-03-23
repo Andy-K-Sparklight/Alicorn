@@ -61,7 +61,6 @@ async function main() {
 
     console.log("Initializing modules...");
 
-
     if (import.meta.env.AL_TEST) {
         paths.setup({
             storeRoot: path.resolve("emulated", "store"),
@@ -174,11 +173,11 @@ async function setupMainWindow() {
     // Open DevTools if applicable
     if (hasDevTools) {
         injectDevToolsStyles(w);
-        w.webContents.openDevTools();
     }
 
     w.on("resized", () => conf.alter(c => c.app.window.size = w!.getSize()));
     w.on("moved", () => conf.alter(c => c.app.window.pos = w!.getPosition()));
+    w.on("show", () => w.webContents.openDevTools());
     w.on("ready-to-show", () => w.webContents.setZoomFactor(conf().app.window.zoom / 100));
     w.webContents.on("devtools-opened", () => w.webContents.send("devToolsOpened"));
 
@@ -193,13 +192,15 @@ async function setupMainWindow() {
     console.log("Loading window contents...");
 
     // Load renderer from dev server (dev) or file (prod).
+    let url: string;
     if (import.meta.env.AL_DEV) {
-        const devServerURL = `http://localhost:${import.meta.env.AL_DEV_SERVER_PORT}/`;
-        console.log(`Picked up dev server URL: ${devServerURL}`);
-        await w.loadURL(devServerURL);
+        url = `http://localhost:${import.meta.env.AL_DEV_SERVER_PORT}/`;
+        console.log(`Picked up dev server URL: ${url}`);
     } else {
-        await w.loadURL("app://./index.html");
+        url = "app://./index.html";
     }
+
+    void w.loadURL(url);
 }
 
 function registerAppProtocol() {
