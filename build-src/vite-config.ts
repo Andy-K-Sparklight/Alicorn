@@ -3,6 +3,7 @@ import reactSWC from "@vitejs/plugin-react-swc";
 import path from "node:path";
 import tailwindcss from "tailwindcss";
 import { defineConfig, PluginOption } from "vite";
+import removeConsole from "vite-plugin-remove-console";
 import tsConfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig(({ command }) => {
@@ -42,7 +43,8 @@ export default defineConfig(({ command }) => {
                     }
                 }),
             tsConfigPaths(),
-            i18nHotReload()
+            i18nHotReload(),
+            removeConsole()
         ],
         define: {},
         css: {

@@ -29,6 +29,7 @@ export async function build(variant: BuildVariant) {
     await fs.emptyDir(outputDir);
 
     const defines = {
+        "NODE_ENV": isDev ? "\"development\"" : "\"production\"",
         "__dirname": "import.meta.dirname",
         "__filename": "import.meta.filename",
         ...defs
@@ -42,7 +43,8 @@ export async function build(variant: BuildVariant) {
         external: ["electron", "original-fs"],
         define: defines,
         outdir: outputDir,
-        legalComments: "none"
+        legalComments: "none",
+        drop: isProd ? ["console", "debugger"] : []
     };
 
     const mainBuildOptions: BuildOptions = {
