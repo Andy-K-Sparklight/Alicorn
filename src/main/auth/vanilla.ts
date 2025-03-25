@@ -190,26 +190,15 @@ export class VanillaAccount implements Account {
 
     async #getXBLToken(): Promise<void> {
         console.log("OAuth Token -> XBL");
-        const res = await net.fetch(XBL_API, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json"
+        const dat = await postJSON(XBL_API, {
+            Properties: {
+                AuthMethod: "RPS",
+                SiteName: "user.auth.xboxlive.com",
+                RpsTicket: this.#oAuthToken
             },
-            body: JSON.stringify({
-                Properties: {
-                    AuthMethod: "RPS",
-                    SiteName: "user.auth.xboxlive.com",
-                    RpsTicket: this.#oAuthToken
-                },
-                RelyingParty: "http://auth.xboxlive.com",
-                TokenType: "JWT"
-            })
+            RelyingParty: "http://auth.xboxlive.com",
+            TokenType: "JWT"
         });
-
-        const dat = await res.json();
-
-        if (dat.error) throw dat.error;
 
         const { Token: token, DisplayClaims: { xui: [{ uhs }] } } = dat;
 
@@ -221,25 +210,14 @@ export class VanillaAccount implements Account {
 
     async #getXboxId(): Promise<void> {
         console.log("XBL -> Xbox ID");
-        const res = await net.fetch(XSTS_API, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json"
+        const dat = await postJSON(XSTS_API, {
+            Properties: {
+                SandboxId: "RETAIL",
+                UserTokens: [this.#xblToken]
             },
-            body: JSON.stringify({
-                Properties: {
-                    SandboxId: "RETAIL",
-                    UserTokens: [this.#xblToken]
-                },
-                RelyingParty: "http://xboxlive.com",
-                TokenType: "JWT"
-            })
+            RelyingParty: "http://xboxlive.com",
+            TokenType: "JWT"
         });
-
-        const dat = await res.json();
-
-        if (dat.error) throw dat.error;
 
         const { DisplayClaims: { xui: [{ xid }] } } = dat;
 
@@ -248,25 +226,14 @@ export class VanillaAccount implements Account {
 
     async #getXSTSToken(): Promise<void> {
         console.log("XBL -> XSTS");
-        const res = await net.fetch(XSTS_API, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json"
+        const dat = await postJSON(XSTS_API, {
+            Properties: {
+                SandboxId: "RETAIL",
+                UserTokens: [this.#xblToken]
             },
-            body: JSON.stringify({
-                Properties: {
-                    SandboxId: "RETAIL",
-                    UserTokens: [this.#xblToken]
-                },
-                RelyingParty: "rp://api.minecraftservices.com/",
-                TokenType: "JWT"
-            })
+            RelyingParty: "rp://api.minecraftservices.com/",
+            TokenType: "JWT"
         });
-
-        const dat = await res.json();
-
-        if (dat.error) dat.error;
 
         const { Token: token } = dat;
 
@@ -277,17 +244,11 @@ export class VanillaAccount implements Account {
 
     async #getAccessToken(): Promise<void> {
         console.log("XSTS -> Access Token");
-        const res = await net.fetch(MOJANG_LOGIN_API, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                identityToken: `XBL3.0 x=${this.#userHash};${this.#xstsToken}`
-            })
+        const res = await postJSON(MOJANG_LOGIN_API, {
+            identityToken: `XBL3.0 x=${this.#userHash};${this.#xstsToken}`
         });
 
-        const { access_token: accessToken, expires_in: expiresIn } = await res.json();
+        const { access_token: accessToken, expires_in: expiresIn } = res;
 
         if (!accessToken) throw "Missing Mojang access token in response";
 
@@ -311,6 +272,20 @@ export class VanillaAccount implements Account {
         this.uuid = id;
         this.#playerName = name;
     }
+}
+
+async function postJSON(url: string, data: unknown) {
+    const res = await net.fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+    const d = await res.json();
+    if (d.error) throw d.error;
+    return d;
 }
 
 export interface VanillaAccountProps {
