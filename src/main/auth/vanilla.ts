@@ -35,6 +35,7 @@ export class VanillaAccount implements Account {
         a.#playerName = props.playerName;
         a.#accessToken = props.accessToken;
         a.#refreshToken = props.refreshToken;
+        a.#xboxId = props.xboxId ?? ""; // Historical reason, the key may be missing
 
         if (props.encrypted) {
             a.#accessToken = doDecrypt(a.#accessToken);
@@ -132,6 +133,7 @@ export class VanillaAccount implements Account {
             encrypted: true,
             uuid: this.uuid,
             partitionId: this.#partId,
+            xboxId: this.#xboxId,
             playerName: this.#playerName,
             accessToken: doEncrypt(this.#accessToken),
             refreshToken: doEncrypt(this.#refreshToken),
@@ -292,6 +294,7 @@ export interface VanillaAccountProps {
     type: "vanilla";
     encrypted?: boolean;
     uuid: string;
+    xboxId: string;
     partitionId: string;
     playerName: string;
     accessToken: string;
