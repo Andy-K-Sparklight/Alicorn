@@ -12,7 +12,7 @@ export function filterRules(r: Rule[] | undefined, features: Set<string>): boole
         if (it.os) {
             const { name, version, arch } = it.os;
             if (name) criteria.push(name === getOSName());
-            if (version) criteria.push(new RegExp(version).test(os.version()));
+            if (version) criteria.push(new RegExp(version).test(os.release()));
             if (arch) criteria.push(arch === os.arch());
         }
 
