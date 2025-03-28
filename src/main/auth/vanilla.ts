@@ -56,7 +56,8 @@ export class VanillaAccount implements Account {
             uuid: this.uuid,
             playerName: this.#playerName,
             xboxId: this.#xboxId,
-            accessToken: this.#accessToken
+            accessToken: this.#accessToken,
+            userType: "msa"
         };
     }
 

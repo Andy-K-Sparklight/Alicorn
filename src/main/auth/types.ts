@@ -9,6 +9,7 @@ export interface AuthCredentials {
     uuid: string;
     xboxId: string;
     playerName: string;
+    userType: string;
 }
 
 export interface Account {

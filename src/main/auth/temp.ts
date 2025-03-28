@@ -25,7 +25,8 @@ export class TemporalAccount implements Account {
             playerName: this.#name,
             uuid: this.uuid,
             accessToken: "0",
-            xboxId: "0"
+            xboxId: "0",
+            userType: "mojang"
         };
     }
 

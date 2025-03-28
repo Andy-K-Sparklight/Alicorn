@@ -141,7 +141,8 @@ export class YggdrasilAccount implements Account {
             uuid: this.uuid,
             playerName: this.#playerName,
             accessToken: this.#accessToken,
-            xboxId: "0"
+            xboxId: "0",
+            userType: "mojang"
         };
     }
 
