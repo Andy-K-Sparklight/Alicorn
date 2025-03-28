@@ -63,7 +63,7 @@ function createTemplateValues(init: LaunchInit): Map<string, string> {
     va.set("auth_uuid", credentials.uuid);
     va.set("auth_session", credentials.accessToken);
     va.set("auth_access_token", credentials.accessToken);
-    va.set("user_type", "mojang");
+    va.set("user_type", "msa");
     va.set("clientid", conf().client.id);
     va.set("auth_xuid", credentials.xboxId);
     va.set("user_properties", "[]");
