@@ -5,6 +5,7 @@ import { useNav } from "@/renderer/util/nav";
 import { Button, Tab, Tabs, Tooltip } from "@heroui/react";
 import { GameCard } from "@pages/games/GameCard";
 import {
+    ArrowDown01Icon,
     ArrowDownAZIcon,
     ArrowUpAZIcon,
     ClockArrowDownIcon,
@@ -81,6 +82,8 @@ function toSortedGames(games: GameProfile[], sortMethod: SortMethod): GameProfil
         if (pb) return 1;
 
         switch (sortMethod) {
+            case "id":
+                return parseInt(a.id.slice(1), 10) - parseInt(b.id.slice(1), 10);
             case "az" :
                 return a.name.localeCompare(b.name);
             case "za":
@@ -93,7 +96,7 @@ function toSortedGames(games: GameProfile[], sortMethod: SortMethod): GameProfil
     });
 }
 
-type SortMethod = "az" | "za" | "latest" | "earliest";
+type SortMethod = "id" | "az" | "za" | "latest" | "earliest";
 
 interface SortMethodControlProps {
     sortMethod: SortMethod;
@@ -104,6 +107,7 @@ function SortMethodControl({ sortMethod, onChange }: SortMethodControlProps) {
     const { t } = useTranslation("pages", { keyPrefix: "games.sorting" });
 
     const iconMap = {
+        id: <ArrowDown01Icon/>,
         az: <ArrowUpAZIcon/>,
         za: <ArrowDownAZIcon/>,
         earliest: <ClockArrowUpIcon/>,
@@ -120,7 +124,7 @@ function SortMethodControl({ sortMethod, onChange }: SortMethodControlProps) {
         classNames={{ tab: "px-2" }}
     >
         {
-            (["az", "za", "earliest", "latest"] as const).map(m =>
+            (["id", "az", "za", "earliest", "latest"] as const).map(m =>
                 <Tab
                     key={m}
                     title={

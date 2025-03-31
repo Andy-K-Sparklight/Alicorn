@@ -155,6 +155,7 @@ games:
   from-modpack: 从整合包创建
   import: 导入已有游戏
   sorting:
+    id: 按编号
     az: 名称升序
     za: 名称降序
     earliest: 最早创建

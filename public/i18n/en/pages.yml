@@ -156,6 +156,7 @@ games:
   from-modpack: From Modpack
   import: Import
   sorting:
+    id: By ID
     az: A to Z
     za: Z to A
     earliest: Earliest First
