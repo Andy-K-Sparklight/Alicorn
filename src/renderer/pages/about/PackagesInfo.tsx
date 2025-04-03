@@ -29,8 +29,8 @@ function Packages() {
             {
                 packages.map(([name, version]) => {
                     return <TableRow key={name}>
-                        <TableCell>{name}</TableCell>
-                        <TableCell>{version}</TableCell>
+                        <TableCell><code>{name}</code></TableCell>
+                        <TableCell><code>{version}</code></TableCell>
                     </TableRow>;
                 })
             }
