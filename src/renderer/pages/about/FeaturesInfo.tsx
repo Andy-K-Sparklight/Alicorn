@@ -21,7 +21,7 @@ function RebuildNote() {
     return <div className="w-full">
         <Alert
             title={t("rebuild-note")}
-            classNames={{ title: "font-bold" }}
+
             endContent={
                 <Button startContent={<ArrowRightIcon/>} onPress={() => native.ext.openURL(BUILDING_URL)}>
                     {t("rebuild-how")}

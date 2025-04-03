@@ -96,7 +96,7 @@ export function AdvancedPanel() {
                 }
 
                 <div className="mt-6 w-full flex flex-col gap-6 rounded-xl border-2 border-danger border-solid p-4">
-                    <Alert classNames={{ title: "font-bold" }} color="danger" title={t("danger-warn")}/>
+                    <Alert color="danger" title={t("danger-warn")}/>
 
                     <div className="flex items-center">
                         <div className="grow flex flex-col gap-1">

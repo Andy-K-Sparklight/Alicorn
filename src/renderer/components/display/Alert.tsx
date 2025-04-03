@@ -8,6 +8,7 @@ type AlertProps = Parameters<typeof RawAlert>[0];
  */
 export function Alert(props: AlertProps) {
     const ref = useRef<HTMLDivElement | null>(null);
+    const { classNames, ...rest } = props;
 
     useEffect(() => {
         if (ref.current) {
@@ -15,5 +16,12 @@ export function Alert(props: AlertProps) {
         }
     }, [ref.current]);
 
-    return <RawAlert ref={ref} {...props}/>;
+    return <RawAlert
+        ref={ref}
+        classNames={{
+            title: "font-bold",
+            ...classNames
+        }}
+        {...rest}
+    />;
 }

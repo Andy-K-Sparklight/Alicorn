@@ -15,7 +15,7 @@ export function StorageTab() {
 
     return <>
         <Alert
-            classNames={{ title: "font-bold" }}
+
             color="warning"
             title={t("store-warn")}
         />

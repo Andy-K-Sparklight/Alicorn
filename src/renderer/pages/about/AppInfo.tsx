@@ -47,7 +47,7 @@ function DevNoteCard() {
         <Alert
             color="warning"
             title={t("dev-note")}
-            classNames={{ title: "font-bold" }}
+
         />
     </div>;
 }

@@ -91,7 +91,7 @@ function ExampleContent() {
                 </div>
             </CardBody>
         </Card>
-        <Alert color="primary" classNames={{ title: "font-bold" }} title={t("alert")}/>
+        <Alert color="primary" title={t("alert")}/>
         <Input placeholder={t("input")}/>
 
         <Progress aria-label="Example Progress" isIndeterminate size="sm"/>

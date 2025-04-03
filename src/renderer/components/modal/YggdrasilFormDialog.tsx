@@ -1,5 +1,5 @@
 import type { DetailedAccountProps } from "@/main/auth/types";
-import { Alert } from "@heroui/alert";
+import { Alert } from "@components/display/Alert";
 import { Button, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
 import { GlobeIcon, KeyRoundIcon, UserIcon } from "lucide-react";
 import { type DragEvent, useState } from "react";
@@ -88,7 +88,7 @@ export function YggdrasilFormDialog(
                     (!userHost || hostInvalid) &&
                     <Alert
                         color="primary"
-                        classNames={{ title: "font-bold" }}
+
                         title={t("dnd-hint")}
                     />
                 }
@@ -96,7 +96,7 @@ export function YggdrasilFormDialog(
                     userHost && !hostInvalid && !trusted &&
                     <Alert
                         color="warning"
-                        classNames={{ title: "font-bold" }}
+
                         title={
                             <span className="whitespace-pre-line">
                                 {t("untrusted", { host: userHost })}
@@ -124,7 +124,7 @@ export function YggdrasilFormDialog(
                 />
                 {
                     loginError &&
-                    <Alert color="danger" classNames={{ title: "font-bold" }} title={t("failed")}/>
+                    <Alert color="danger" title={t("failed")}/>
                 }
             </ModalBody>
             <ModalFooter>

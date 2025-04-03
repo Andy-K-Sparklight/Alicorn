@@ -69,7 +69,7 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
     }
 
     if (profile?.installProps.type === "imported") {
-        return <Alert color="danger" classNames={{ title: "font-bold" }} title={t("no-import")}/>;
+        return <Alert color="danger" title={t("no-import")}/>;
     }
 
     return <div className="w-11/12 h-full mx-auto overflow-y-auto overflow-x-hidden">
@@ -127,7 +127,7 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
                     {
                         shareContainer &&
                         <>
-                            <Alert color="warning" classNames={{ title: "font-bold" }} title={t("share-alert")}/>
+                            <Alert color="warning" title={t("share-alert")}/>
                             <ContainerSelector containerId={containerId} onChange={setContainerId}/>
                         </>
                     }

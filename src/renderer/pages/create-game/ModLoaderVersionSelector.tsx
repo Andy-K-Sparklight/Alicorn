@@ -38,7 +38,7 @@ export function ModLoaderVersionSelector({ value, onChange }: ModLoaderVersionSe
         {
             !isAuto &&
             <>
-                <Alert classNames={{ title: "font-bold" }} title={t("alert")} color="warning"/>
+                <Alert title={t("alert")} color="warning"/>
                 <Input value={value} onValueChange={onChange} label={t("label")} placeholder={t("placeholder")}/>
             </>
         }

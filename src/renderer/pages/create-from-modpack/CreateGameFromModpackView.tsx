@@ -82,7 +82,7 @@ export function CreateGameFromModpackView({ params }: PropsWithParams<{ path?: s
             }
 
             <div>
-                <Alert color="warning" classNames={{ title: "font-bold" }} title={t("alert")}/>
+                <Alert color="warning" title={t("alert")}/>
             </div>
 
             {

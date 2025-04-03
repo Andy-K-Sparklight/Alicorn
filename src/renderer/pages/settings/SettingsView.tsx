@@ -108,7 +108,7 @@ function SettingsAlert() {
 
     return <div className="w-full">
         <Alert
-            classNames={{ title: "font-bold" }}
+
             color="warning"
             title={t("hint")}
             onClose={() => setHideAlert(true)}

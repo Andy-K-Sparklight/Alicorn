@@ -15,7 +15,7 @@ export function DevTab() {
 
     return <>
         <Alert
-            classNames={{ title: "font-bold" }}
+
             color="danger"
             title={t("dev-warn")}
         />
