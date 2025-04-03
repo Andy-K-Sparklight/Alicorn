@@ -164,7 +164,6 @@ const native = {
          * Scans the given directory for importable profiles.
          */
         scanImportableProfiles(root: string): Promise<string[]> {
-            console.log(root);
             return checkedInvoke("scanImportableProfiles", root);
         },
 

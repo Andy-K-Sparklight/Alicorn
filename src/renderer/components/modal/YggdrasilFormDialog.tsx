@@ -55,7 +55,6 @@ export function YggdrasilFormDialog(
     function handleDrop(e: DragEvent) {
         e.preventDefault();
         const d = e.dataTransfer.getData("text/plain");
-        console.log(d);
         if (d.startsWith("authlib-injector:yggdrasil-server:")) {
             const url = decodeURIComponent(d.slice("authlib-injector:yggdrasil-server:".length).trim());
             if (URL.parse(url) && !host) {
