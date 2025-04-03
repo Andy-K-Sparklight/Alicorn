@@ -164,10 +164,14 @@ async function search(scope: MpmAddonType, query: string, gameVersion: string, l
     const cl = toCurseLoader(loader);
     const q = encodeURIComponent(query);
     const cz = toCurseClassId(scope);
-    let url = `${API_BASE}/mods/search?gameId=432&searchFilter=${q}&classId=${cz}&gameVersion=${gameVersion}&index=${index}&sortField=6`;
+    let url = `${API_BASE}/mods/search?gameId=432&searchFilter=${q}&classId=${cz}&index=${index}&sortField=6`;
 
     if (scope === "mods") {
         url += `&modLoaderType=${cl}`;
+    }
+
+    if (scope !== "modpack") {
+        url += `&gameVersion=${gameVersion}`;
     }
 
     try {

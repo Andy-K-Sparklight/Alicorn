@@ -104,7 +104,7 @@ async function search(
 ): Promise<MpmAddonMeta[]> {
     const q = encodeURIComponent(query);
     const facets = makeJSONParam([
-        [`versions:${gameVersion}`],
+        scope !== "modpack" && [`versions:${gameVersion}`],
         scope === "mods" && [`categories:${toModrinthLoaderType(loader)}`],
         [`project_type:${toModrinthType(scope)}`]
     ].filter(Boolean));
