@@ -24,7 +24,7 @@ export function GameCard({ game }: GameCardProps) {
     const installStatus = isInstalling ? "installing" : installed ? "installed" : "not-installed";
     const progressText = progress && tc(progress.state, { ...progress.value });
 
-    return <Card shadow="sm" className={cn(pinned && "outline-2 outline-default-500")}>
+    return <Card shadow="sm" className={cn(pinned && "-outline-hidden outline-2 outline-default-500")}>
         <CardBody>
             <div className="flex gap-6 items-center px-3">
                 <GameTypeIcon className="w-12" gameType={type}/>

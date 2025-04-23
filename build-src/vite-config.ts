@@ -1,7 +1,7 @@
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import reactSWC from "@vitejs/plugin-react-swc";
 import path from "node:path";
-import tailwindcss from "tailwindcss";
 import { defineConfig, PluginOption } from "vite";
 import removeConsole from "vite-plugin-remove-console";
 import tsConfigPaths from "vite-tsconfig-paths";
@@ -44,14 +44,10 @@ export default defineConfig(({ command }) => {
                 }),
             tsConfigPaths(),
             i18nHotReload(),
-            removeConsole()
+            removeConsole(),
+            tailwindcss()
         ],
         define: {},
-        css: {
-            postcss: {
-                plugins: [tailwindcss()]
-            }
-        },
         server: {
             warmup: {
                 clientFiles: ["index.html"]
