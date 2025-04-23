@@ -25,7 +25,7 @@ export function Navigator() {
 }
 
 function PageTabs() {
-    const [pathname] = useLocation();
+    const [pathname, nav] = useLocation();
     const procs = useGameProcList();
 
     const hideMonitor = procs.length === 0;
@@ -40,12 +40,13 @@ function PageTabs() {
         color="primary"
         variant="light"
         radius="full"
+        // A temporary workaround since routing seems not working
+        onSelectionChange={(k) => nav("/" + k)}
         selectedKey={activeTab}
     >
         {
             isSetup ?
                 <Tab
-                    href="/setup"
                     key="setup"
                     title={
                         <PageTitle page={{ id: "setup", icon: SparklesIcon }}/>
@@ -58,7 +59,6 @@ function PageTabs() {
                     // Tabs cannot be extracted as separated components or HeroUI will complain
                     // Upstream issue: https://github.com/heroui-inc/heroui/issues/729
                     <Tab
-                        href={"/" + p.id}
                         title={
                             <PageTitle page={p}/>
                         }
