@@ -53,9 +53,6 @@ async function inflate(src: string, dst: string) {
             if (e) {
                 reject(e);
             } else {
-                // False positive type error
-                // It would be valid to write `typeof r === "string" ? Buffer.from(r) : Buffer.from(r)` but that's pointless
-                // @ts-expect-error False positive type error
                 resolve(Buffer.from(r));
             }
         });
