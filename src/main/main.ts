@@ -356,7 +356,7 @@ function getIconPath(): string {
  */
 function launchExtServiceWorker() {
     return Promise.all(
-        session.defaultSession.getAllExtensions().map(async ext => {
+        session.defaultSession.extensions.getAllExtensions().map(async ext => {
             const manifest = ext.manifest;
             if (manifest?.manifest_version === 3 && manifest?.background?.service_worker) {
                 await session.defaultSession.serviceWorkers.startWorkerForScope(ext.url);
