@@ -58,7 +58,7 @@
         "@fontsource-variable/noto-sans": "^5.2.7",
         "@fontsource-variable/noto-sans-sc": "^5.2.5",
         "@fontsource-variable/nunito": "^5.2.5",
-        "@heroui/react": "^2.8.0-beta.6",
+        "@heroui/react": "^2.7.9",
         "@reduxjs/toolkit": "^2.8.2",
         "emittery": "^1.1.0",
         "fast-xml-parser": "^5.2.3",
