@@ -61,6 +61,12 @@ export interface VersionProfile {
 
     mainClass: string;
 
+    /**
+     * Arguments in legacy profiles. This is not used for launching, but can be handy to add
+     * missing arguments like window resolution.
+     */
+    minecraftArguments?: string;
+
     type: string;
 }
 

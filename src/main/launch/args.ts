@@ -97,7 +97,7 @@ function createMemoryArgs(init: LaunchInit): string[] {
 
 function createWindowSizeArgs(init: LaunchInit): string[] {
     // Resolution args has been included in the profile since 1.13
-    if (init.profile.complianceLevel >= 1 || !init.pref.window) return [];
+    if (!init.profile.minecraftArguments || !init.pref.window) return [];
 
     const { width, height } = init.pref.window;
     if (width > 0 && height > 0) {

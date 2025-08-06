@@ -24,16 +24,6 @@ interface VersionProfile {
 let versionManifest: VersionManifest;
 let profiles: VersionProfile[];
 
-async function createComplianceLevelRef() {
-    const out: Record<string, number> = {};
-    for (const { id, complianceLevel } of versionManifest.versions) {
-        out[id] = complianceLevel;
-    }
-
-    const data = { complianceLevels: out };
-    await fs.outputJSON(path.resolve(import.meta.dirname, "../src/refs/compliance-levels.json"), data, { spaces: 4 });
-}
-
 async function createLegacyAssetsRef() {
     const legacyAssets = new Set<string>();
     for (const p of profiles) {
@@ -66,10 +56,6 @@ async function main() {
     console.log("Fetching versions...");
     versionManifest = await fetchJSON("https://piston-meta.mojang.com/mc/game/version_manifest_v2.json") as VersionManifest;
     profiles = await Promise.all(versionManifest.versions.map(v => fetchJSON(v.url))) as VersionProfile[];
-
-
-    console.log("Creating compliance level table...");
-    await createComplianceLevelRef();
 
     console.log("Collecting legacy assets...");
     await createLegacyAssetsRef();
