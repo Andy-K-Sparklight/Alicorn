@@ -1,8 +1,7 @@
 import type { GameCoreType } from "@/main/game/spec";
 import { GameTypeIcon } from "@components/display/GameTypeIcon";
 import { CardRadio } from "@components/input/CardRadio";
-import { RadioGroup } from "@heroui/radio";
-import { Spinner } from "@heroui/react";
+import { RadioGroup, Spinner } from "@heroui/react";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -12,7 +11,11 @@ interface ModLoaderSelectorProps {
     onChange: (v: string) => void;
 }
 
-export function ModLoaderSelector({ availableModLoaders, value, onChange }: ModLoaderSelectorProps) {
+export function ModLoaderSelector({
+                                      availableModLoaders,
+                                      value,
+                                      onChange
+                                  }: ModLoaderSelectorProps) {
     const { t } = useTranslation("pages", { keyPrefix: "create-game.mod-loader" });
 
     const loaders = availableModLoaders ?? [];
@@ -51,7 +54,8 @@ export function ModLoaderSelector({ availableModLoaders, value, onChange }: ModL
 
                                 <div className="flex flex-col gap-1">
                                     <div>{t(`${lv}.label`)}</div>
-                                    <div className="text-sm text-foreground-400"> {t(`${lv}.sub`)}</div>
+                                    <div
+                                        className="text-sm text-foreground-400"> {t(`${lv}.sub`)}</div>
                                 </div>
                             </div>
                         </CardRadio>;

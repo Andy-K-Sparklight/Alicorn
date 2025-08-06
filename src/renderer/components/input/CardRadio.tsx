@@ -1,4 +1,4 @@
-import { Radio } from "@heroui/radio";
+import { Radio } from "@heroui/react";
 
 export function CardRadio(props: Parameters<typeof Radio>[0]) {
     const { classNames, ...rest } = props;

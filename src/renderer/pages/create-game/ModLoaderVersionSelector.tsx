@@ -1,6 +1,5 @@
 import { Alert } from "@components/display/Alert";
-import { Radio, RadioGroup } from "@heroui/radio";
-import { Input } from "@heroui/react";
+import { Input, Radio, RadioGroup } from "@heroui/react";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -20,7 +19,8 @@ export function ModLoaderVersionSelector({ value, onChange }: ModLoaderVersionSe
         setIsAuto(v !== "manual");
     }
 
-    return <div className="p-4 border-solid border-2 border-foreground-400 rounded-xl flex flex-col gap-4">
+    return <div
+        className="p-4 border-solid border-2 border-foreground-400 rounded-xl flex flex-col gap-4">
         <div className="font-bold text-medium">{t("title")}</div>
 
         <RadioGroup
@@ -39,7 +39,8 @@ export function ModLoaderVersionSelector({ value, onChange }: ModLoaderVersionSe
             !isAuto &&
             <>
                 <Alert title={t("alert")} color="warning"/>
-                <Input value={value} onValueChange={onChange} label={t("label")} placeholder={t("placeholder")}/>
+                <Input value={value} onValueChange={onChange} label={t("label")}
+                       placeholder={t("placeholder")}/>
             </>
         }
     </div>;

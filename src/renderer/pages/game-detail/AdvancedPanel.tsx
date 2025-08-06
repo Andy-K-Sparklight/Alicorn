@@ -3,9 +3,23 @@ import { remoteInstaller } from "@/renderer/services/install";
 import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/display/Alert";
 import { ConfirmPopup } from "@components/modal/ConfirmPopup";
-import { DialogProvider, type PropsWithDialog, useOpenDialog } from "@components/modal/DialogProvider";
-import { Radio, RadioGroup } from "@heroui/radio";
-import { addToast, Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+import {
+    DialogProvider,
+    type PropsWithDialog,
+    useOpenDialog
+} from "@components/modal/DialogProvider";
+import {
+    addToast,
+    Button,
+    Input,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    Radio,
+    RadioGroup
+} from "@heroui/react";
 import { useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
 import { CloudDownloadIcon, PickaxeIcon, RefreshCwIcon, TrashIcon, UnlinkIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -50,7 +64,8 @@ export function AdvancedPanel() {
                     <div className="flex items-center">
                         <div className="grow flex flex-col gap-1">
                             <div className="font-bold text-lg">{t("install-full.label")}</div>
-                            <div className="text-sm text-foreground-400">{t("install-full.sub")}</div>
+                            <div
+                                className="text-sm text-foreground-400">{t("install-full.sub")}</div>
                         </div>
 
                         <Button
@@ -95,7 +110,8 @@ export function AdvancedPanel() {
                     </div>
                 }
 
-                <div className="mt-6 w-full flex flex-col gap-6 rounded-xl border-2 border-danger border-solid p-4">
+                <div
+                    className="mt-6 w-full flex flex-col gap-6 rounded-xl border-2 border-danger border-solid p-4">
                     <Alert color="danger" title={t("danger-warn")}/>
 
                     <div className="flex items-center">
@@ -120,7 +136,8 @@ export function AdvancedPanel() {
 
                     {
                         !isImported &&
-                        <DialogProvider dialogProps={{ name, id }} component={DestroyCompoundDialog}>
+                        <DialogProvider dialogProps={{ name, id }}
+                                        component={DestroyCompoundDialog}>
                             <DestroyEntry/>
                         </DialogProvider>
                     }
@@ -172,13 +189,17 @@ function DestroyEntry() {
             </div>
         </div>
 
-        <Button startContent={<TrashIcon/>} color="danger" onPress={handleBtnClick} isDisabled={!canDestroy}>
+        <Button startContent={<TrashIcon/>} color="danger" onPress={handleBtnClick}
+                isDisabled={!canDestroy}>
             {t("destroy.btn", { name })}
         </Button>
     </div>;
 }
 
-function DestroyCompoundDialog({ isOpen, onResult, id, name }: PropsWithDialog<boolean, { id: string, name: string }>) {
+function DestroyCompoundDialog({ isOpen, onResult, id, name }: PropsWithDialog<boolean, {
+    id: string,
+    name: string
+}>) {
     const [stage, setStage] = useState<"confirm" | "challenge">("confirm");
 
     function handleConfirmResult(v: boolean) {
@@ -206,7 +227,10 @@ function DestroyCompoundDialog({ isOpen, onResult, id, name }: PropsWithDialog<b
 }
 
 
-function DestroyConfirmDialog({ isOpen, onResult, id, name }: PropsWithDialog<boolean, { id: string, name: string }>) {
+function DestroyConfirmDialog({ isOpen, onResult, id, name }: PropsWithDialog<boolean, {
+    id: string,
+    name: string
+}>) {
     const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage.advanced.destroy.confirm" });
     const [input, setInput] = useState("");
 
@@ -218,7 +242,8 @@ function DestroyConfirmDialog({ isOpen, onResult, id, name }: PropsWithDialog<bo
                     {t("sub", { name })}
                 </p>
 
-                <Input className="mt-2" description={t("input-hint")} value={input} onValueChange={setInput} size="sm"/>
+                <Input className="mt-2" description={t("input-hint")} value={input}
+                       onValueChange={setInput} size="sm"/>
             </ModalBody>
             <ModalFooter>
                 {
@@ -237,7 +262,9 @@ function DestroyConfirmDialog({ isOpen, onResult, id, name }: PropsWithDialog<bo
     </Modal>;
 }
 
-function DestroyChallengeDialog({ isOpen, onResult, name }: PropsWithDialog<boolean, { name: string }>) {
+function DestroyChallengeDialog({ isOpen, onResult, name }: PropsWithDialog<boolean, {
+    name: string
+}>) {
     const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage.advanced.destroy.challenge" });
     const [selected, setSelected] = useState("");
     const [btnClicked, setBtnClicked] = useState(0);

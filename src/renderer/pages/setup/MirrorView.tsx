@@ -1,6 +1,5 @@
 import { useConfig } from "@/renderer/services/conf";
-import { Radio, RadioGroup } from "@heroui/radio";
-import { Button, Link } from "@heroui/react";
+import { Button, Link, Radio, RadioGroup } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";
 import { ArrowRightIcon, GaugeIcon } from "lucide-react";
 import React, { useEffect } from "react";
@@ -42,7 +41,8 @@ export function MirrorView() {
                     onValueChange={v => alterConfig(c => c.net.mirror.enable = v === "allow")}
                 >
                     <Radio value="allow" description={t("allow.sub")}>{t("allow.label")}</Radio>
-                    <Radio value="disallow" description={t("disallow.sub")}>{t("disallow.label")}</Radio>
+                    <Radio value="disallow"
+                           description={t("disallow.sub")}>{t("disallow.label")}</Radio>
                 </RadioGroup>
             </div>
         </div>
@@ -56,7 +56,8 @@ export function MirrorView() {
         </p>
 
         <div>
-            <Button color="primary" onPress={next} startContent={<ArrowRightIcon/>}>{t("btn")}</Button>
+            <Button color="primary" onPress={next}
+                    startContent={<ArrowRightIcon/>}>{t("btn")}</Button>
         </div>
     </div>;
 }

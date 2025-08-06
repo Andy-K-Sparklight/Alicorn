@@ -1,5 +1,5 @@
 import type { GameAssetsLevel } from "@/main/game/spec";
-import { Radio, RadioGroup } from "@heroui/radio";
+import { Radio, RadioGroup } from "@heroui/react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 

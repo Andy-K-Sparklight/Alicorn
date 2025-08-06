@@ -1,7 +1,20 @@
 import type { DetailedAccountProps } from "@/main/auth/types";
-import { DialogProvider, type PropsWithDialog, useOpenDialog } from "@components/modal/DialogProvider";
-import { Radio, RadioGroup } from "@heroui/radio";
-import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+import {
+    DialogProvider,
+    type PropsWithDialog,
+    useOpenDialog
+} from "@components/modal/DialogProvider";
+import {
+    Button,
+    Link,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    Radio,
+    RadioGroup
+} from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";
 import { ArrowRightIcon, UserRoundPlusIcon, UserSquareIcon } from "lucide-react";
 import React, { useState } from "react";
@@ -75,7 +88,8 @@ function SkipLoginLink({ onConfirm }: { onConfirm: () => void }) {
         }
     }
 
-    return <Link color="primary" className="justify-center" onPress={handlePress}>{t("btn-skip")}</Link>;
+    return <Link color="primary" className="justify-center"
+                 onPress={handlePress}>{t("btn-skip")}</Link>;
 }
 
 function SkipLoginDialog({ isOpen, onResult }: PropsWithDialog<boolean, {}>) {

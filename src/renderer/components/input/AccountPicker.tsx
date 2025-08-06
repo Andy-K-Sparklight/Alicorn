@@ -1,8 +1,7 @@
 import { useAccounts } from "@/renderer/services/accounts";
 import { SkinAvatar } from "@components/display/SkinAvatar";
 import { CardRadio } from "@components/input/CardRadio";
-import { RadioGroup } from "@heroui/radio";
-import { Skeleton } from "@heroui/react";
+import { RadioGroup, Skeleton } from "@heroui/react";
 import { UserPlus2Icon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";

@@ -4,8 +4,7 @@ import { useGameProfile } from "@/renderer/services/games";
 import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/display/Alert";
 import type { PropsWithParams } from "@components/misc/AnimatedRoute";
-import { Radio, RadioGroup } from "@heroui/radio";
-import { addToast, Button, Input, Switch } from "@heroui/react";
+import { addToast, Button, Input, Radio, RadioGroup, Switch } from "@heroui/react";
 import { AssetLevelSelector } from "@pages/create-game/AssetsLevelSelector";
 import { ContainerSelector } from "@pages/create-game/ContainerSelector";
 import { ModLoaderSelector } from "@pages/create-game/ModLoaderSelector";
@@ -119,7 +118,8 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
                         >
                             <div className="flex flex-col">
                                 <div className="text-medium">{t("container-link.label")}</div>
-                                <div className="text-foreground-400 text-sm">{t("container-link.sub")}</div>
+                                <div
+                                    className="text-foreground-400 text-sm">{t("container-link.sub")}</div>
                             </div>
                         </Switch>
                     }
@@ -150,7 +150,8 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
 
                     {
                         (["fabric", "quilt", "neoforged", "forge", "rift", "optifine"].includes(installType)) &&
-                        <ModLoaderVersionSelector value={loaderVersion} onChange={setLoaderVersion}/>
+                        <ModLoaderVersionSelector value={loaderVersion}
+                                                  onChange={setLoaderVersion}/>
                     }
                 </div>
 
