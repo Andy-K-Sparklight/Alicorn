@@ -25,6 +25,10 @@ export function AboutView() {
             </div>
         </div>
         <Pagination
+            classNames={{
+                // A workaround for the incorrectly colored cursor
+                cursor: "opacity-100"
+            }}
             className="mx-auto"
             showControls
             initialPage={1}

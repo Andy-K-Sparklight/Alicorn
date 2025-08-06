@@ -26,7 +26,7 @@ function StatusDisplay({ id, name, profileId, type, status, uptime, pid }: Statu
                 <div className="w-full flex gap-6 justify-center items-center">
                     <GameTypeIcon
                         className={
-                            cn("w-12 outline outline-2 outline-offset-4 rounded-xl", {
+                            cn("w-12 outline-solid outline-2 outline-offset-4 rounded-xl", {
                                 "outline-success": status === "running",
                                 "outline-default": status === "exited",
                                 "outline-danger": status === "crashed"

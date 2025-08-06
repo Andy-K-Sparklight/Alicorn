@@ -137,7 +137,7 @@ export function ExceptionDisplay() {
 
                     <div
                         className={cn(
-                            "mt-2 w-full p-2 rounded-sm outline outline-danger outline-2 outline-offset-4 text-sm",
+                            "mt-2 w-full p-2 rounded-xs outline-solid outline-danger outline-2 outline-offset-4 text-sm",
                             "overflow-auto"
                         )}
                     >

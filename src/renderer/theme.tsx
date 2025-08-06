@@ -1,4 +1,3 @@
-import type { ConfigTheme } from "@heroui/react";
 import React, {
     type Dispatch,
     type PropsWithChildren,
@@ -14,10 +13,6 @@ function getThemes() {
     return ["light", "dark", ...Object.keys(themes)];
 }
 
-function isDark(th: string) {
-    return (themes as Record<string, ConfigTheme>)[th]?.extend === "dark" || th === "dark";
-}
-
 interface ThemeContextContent {
     theme: string;
     setTheme: (theme: string) => void;
@@ -31,13 +26,10 @@ export function useAutoTheme() {
 
     useEffect(() => {
         if (originalTheme.current) {
-            document.documentElement.classList.remove(originalTheme.current, "dark");
+            document.body.classList.remove(originalTheme.current);
         }
 
-        document.documentElement.classList.add(theme);
-        if (isDark(theme)) {
-            document.documentElement.classList.add("dark");
-        }
+        document.body.classList.add(theme);
 
         originalTheme.current = theme;
     }, [theme]);
@@ -59,4 +51,4 @@ export function ThemeSwitchProvider({ children }: PropsWithChildren) {
     </ThemeContext.Provider>;
 }
 
-export const themeManager = { getThemes, isDark };
+export const themeManager = { getThemes };

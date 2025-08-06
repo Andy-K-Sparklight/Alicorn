@@ -71,7 +71,7 @@ function AccountSkinAvatar({ accountId }: { accountId: string }) {
     }, [accountId]);
 
     if (!skinUrls) {
-        return <Skeleton className="w-full h-full rounded-sm"/>;
+        return <Skeleton className="w-full h-full rounded-xs"/>;
     }
 
     return <SkinAvatar avatarSrc={skinUrls}/>;

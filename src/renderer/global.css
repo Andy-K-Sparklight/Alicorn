@@ -1,11 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@plugin "./hero.ts";
+@source "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
+
+/* References to the themes to prevent them from being purged */
+@source inline("sakura-light sakura-dark overworld hoshi twikie amazing-grace advanced");
+
+/* Dark variant needs to be specified for primitives to be colored correctly */
+@custom-variant dark (&:is(.dark *, .sakura-dark *, .overworld *, .hoshi *, .advanced *));
 
 html, body {
     width: 100%;
     height: 100%;
     user-select: none;
+
+    /*
+    A workaround for HeroUI default coloring.
+    The default `color` and `background-color` are defined in the `base` layer, which can't be
+    overridden by theme variables defined in the `utilities` layer.
+    */
+    color: hsl(var(--heroui-foreground));
+    background-color: hsl(var(--heroui-background));
 }
 
 .drag {

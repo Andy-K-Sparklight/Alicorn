@@ -13,7 +13,7 @@ export function SkinAvatar({ avatarSrc, className, ...rest }: SkinAvatarProps) {
 
     return <div
         className={cn(
-            "aspect-square relative overflow-hidden rounded-sm",
+            "aspect-square relative overflow-hidden rounded-xs",
             className
         )}
         {...rest}
