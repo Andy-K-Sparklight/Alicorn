@@ -36,9 +36,9 @@ const contents = {
 
     certificate: {
         "*": {
-            url: "https://curl.se/ca/cacert-2025-05-20.pem",
+            url: "https://curl.se/ca/cacert-2025-09-09.pem",
             target: "ca-cert.pem",
-            sha256: "ab3ee3651977a4178a702b0b828a4ee7b2bbb9127235b0ab740e2e15974bf5db"
+            sha256: "f290e6acaf904a4121424ca3ebdd70652780707e28e8af999221786b86bb1975"
         }
     },
 
