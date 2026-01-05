@@ -48,28 +48,32 @@ function parse(src: string, index: number): GameProcessLog[] {
         return [parseAsRaw(src, index)];
     }
 
-    const dom = parser().parse(compatFragment(src));
-    let events = dom?.["Events"]?.["Event"];
+    try {
+        const dom = parser().parse(compatFragment(src));
+        let events = dom?.["Events"]?.["Event"];
 
-    if (typeof events !== "object") return [];
+        if (typeof events !== "object") return [];
 
-    if (!Array.isArray(events)) {
-        events = [events];
+        if (!Array.isArray(events)) {
+            events = [events];
+        }
+
+        events = events.filter((e: unknown) => typeof e === "object");
+
+        return events.map((e: any) => {
+            return {
+                index: index++,
+                message: e["Message"] ?? "",
+                throwable: e["Throwable"],
+                logger: e["@_logger"] ?? "",
+                time: parseInt(e["@_timestamp"] ?? "0"),
+                level: e["@_level"] ?? "INFO",
+                thread: e["@_thread"] ?? ""
+            } satisfies GameProcessLog;
+        });
+    } catch {
+        return [parseAsRaw(src, index)];
     }
-
-    events = events.filter((e: unknown) => typeof e === "object");
-
-    return events.map((e: any) => {
-        return {
-            index: index++,
-            message: e["Message"] ?? "",
-            throwable: e["Throwable"],
-            logger: e["@_logger"] ?? "",
-            time: parseInt(e["@_timestamp"] ?? "0"),
-            level: e["@_level"] ?? "INFO",
-            thread: e["@_thread"] ?? ""
-        } satisfies GameProcessLog;
-    });
 }
 
 export const logParser = { parse };
