@@ -36,9 +36,9 @@ const contents = {
 
     certificate: {
         "*": {
-            url: "https://curl.se/ca/cacert-2025-09-09.pem",
+            url: "https://curl.se/ca/cacert-2025-12-02.pem",
             target: "ca-cert.pem",
-            sha256: "f290e6acaf904a4121424ca3ebdd70652780707e28e8af999221786b86bb1975"
+            sha256: "f1407d974c5ed87d544bd931a278232e13925177e239fca370619aba63c757b4"
         }
     },
 
@@ -60,9 +60,9 @@ const contents = {
 
     "authlib-injector": {
         "*": {
-            url: "https://github.com/yushijinhun/authlib-injector/releases/download/v1.2.5/authlib-injector-1.2.5.jar",
-            target: "authlib-injector-1.2.5.jar",
-            sha256: "3bc9ebdc583b36abd2a65b626c4b9f35f21177fbf42a851606eaaea3fd42ee0f"
+            url: "https://github.com/yushijinhun/authlib-injector/releases/download/v1.2.7/authlib-injector-1.2.7.jar",
+            target: "authlib-injector-1.2.7.jar",
+            sha256: "eaf14bc5acffc7d885bd5bd5942b99f36d6299302beae356b2fc5807fe42652b"
         }
     }
 } as Record<string, Record<string, VendorFile>>;

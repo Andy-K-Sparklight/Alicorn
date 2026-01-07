@@ -116,7 +116,7 @@ function createAuthlibInjectorArgs(init: LaunchInit): string[] {
     const out: string[] = [];
 
     if (init.authlibInjectorHost) {
-        const libPt = paths.app.to("vendor", "authlib-injector-1.2.5.jar");
+        const libPt = paths.app.to("vendor", "authlib-injector-1.2.7.jar");
         out.push(
             `-javaagent:${libPt}=${init.authlibInjectorHost}`
         );

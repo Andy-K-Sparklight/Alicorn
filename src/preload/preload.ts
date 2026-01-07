@@ -432,7 +432,7 @@ console.log("Completed native API bindings.");
 
 export type NativeAPI = typeof native;
 
-type Optional<T> = {
+type Result<T> = {
     success: true;
     value: T;
 } | {
@@ -447,7 +447,7 @@ async function checkedInvoke<K extends keyof CheckedIpcCommands>(
     const res = await ipcRendererRaw.invoke("checkedInvoke", {
         method,
         args
-    }) as Optional<ReturnType<CheckedIpcCommands[K]>>;
+    }) as Result<ReturnType<CheckedIpcCommands[K]>>;
 
     if (res.success) {
         return res.value;
