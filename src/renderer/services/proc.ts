@@ -151,7 +151,7 @@ export function useGameProcDetail(procId: string): RemoteGameProcess {
     const subscribe = useCallback((cb: () => void) => {
         const ch = `change:${procId}`;
         detailedEmitter.on(ch, cb);
-        return () => restrictedEmitter.off(ch, cb);
+        return () => detailedEmitter.off(ch, cb);
     }, [procId]);
 
     const getSnapshot = useCallback(() => procs.get(procId)!, [procId]);
