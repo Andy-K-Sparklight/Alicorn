@@ -48,7 +48,7 @@ export type GameProcEvent =
     } |
     {
         type: "log";
-        log: GameProcessLog
+        log: GameProcessLog[]
     } |
     {
         type: "memUsageUpdate",

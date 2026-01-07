@@ -112,7 +112,7 @@ async function create(id: string): Promise<string> {
                     clearLogs(buf);
                     break;
                 case "log":
-                    pr.logs.push(e.data.log);
+                    pr.logs.push(...e.data.log);
                     clearLogs(pr.logs);
                     break;
                 case "memUsageUpdate":

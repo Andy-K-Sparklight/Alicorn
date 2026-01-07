@@ -40,7 +40,7 @@ type GameProcessEvents = {
     /**
      * Game log object parsed and received.
      */
-    log: (log: GameProcessLog) => void
+    log: (log: GameProcessLog[]) => void
 
     /**
      * Memory usage value updated.
@@ -123,10 +123,10 @@ export class GameProcess {
                     const logs = logParser.parse(str, logIndex);
                     logIndex += logs.length;
 
+                    this.logs.push(...logs);
+                    this.emitter.emit("log", logs);
                     for (const l of logs) {
-                        this.logs.push(l);
                         void this.#handleLogExtensions(l.message.trim());
-                        this.emitter.emit("log", l);
                     }
 
                     t.push(str);
