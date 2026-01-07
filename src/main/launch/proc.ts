@@ -195,19 +195,22 @@ export class GameProcess {
         if (!this.#proc) return -1;
 
         let cmdLine: string;
-        let factor = 1;
 
         if (os.platform() === "win32") {
-            cmdLine = `wmic process where processid=${this.#proc.pid} get WorkingSetSize`;
+            cmdLine = `powershell -Command "Get-Process -Id ${this.#proc.pid} | Select-Object @{Name='Mem';Expression={$_.WorkingSet64}} | ConvertTo-Json"`;
         } else {
             cmdLine = `ps -o rss= ${this.#proc.pid}`;
-            factor = 1024;
         }
 
         const exec = promisify(child_process.exec);
 
         const { stdout } = await exec(cmdLine);
-        return parseInt(stdout.toString().match(/[1-9][0-9]*/)?.[0] ?? "0", 10) * factor || 0;
+
+        if (os.platform() === "win32") {
+            return Number(JSON.parse(stdout.toString())?.["Mem"]) || 0;
+        } else {
+            return parseInt(stdout.toString().match(/[1-9][0-9]*/)?.[0] ?? "0", 10) * 1024 || 0;
+        }
     }
 
     async #handleLogExtensions(_: string) {}
