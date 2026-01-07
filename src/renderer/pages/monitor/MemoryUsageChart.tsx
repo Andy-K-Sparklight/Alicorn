@@ -1,6 +1,6 @@
 import { useThemeColorValues } from "@pages/monitor/use-color";
 import { useTranslation } from "react-i18next";
-import AutoSizer from "react-virtualized-auto-sizer";
+import { AutoSizer } from "react-virtualized-auto-sizer";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 interface MemoryUsageChartProps {
@@ -23,8 +23,8 @@ export function MemoryUsageChart({ stat }: MemoryUsageChartProps) {
     }));
 
     return <div className="w-full h-full">
-        <AutoSizer>
-            {({ height, width }) =>
+        <AutoSizer renderProp={
+            ({ height, width }) =>
                 <LineChart width={width} height={height} data={data}>
                     <Line
                         isAnimationActive={false}
@@ -38,8 +38,7 @@ export function MemoryUsageChart({ stat }: MemoryUsageChartProps) {
                     <XAxis dataKey="time"/>
                     <YAxis/>
                 </LineChart>
-            }
-        </AutoSizer>
-
+        }
+        />
     </div>;
 }

@@ -47,7 +47,7 @@ export function AddonSearchList({ gameId }: AddonSearchListProps) {
     }
 
     function onScroll() {
-        if (vlistRef.current && results && vlistRef.current.findEndIndex() + 20 > results.length && !fetching) {
+        if (vlistRef.current && results && vlistRef.current.findItemIndex(vlistRef.current.scrollOffset + vlistRef.current.viewportSize) + 20 > results.length && !fetching) {
             void fetchItems(false);
         }
     }

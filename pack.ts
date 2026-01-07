@@ -1,7 +1,7 @@
 /**
  * Packages the application for supported platforms.
  */
-import { type Options, packager } from "@electron/packager";
+import { OfficialPlatform, type Options, packager, SupportedArch } from "@electron/packager";
 import consola from "consola";
 import { createDMG } from "electron-installer-dmg";
 import { MSICreator } from "electron-wix-msi";
@@ -50,8 +50,8 @@ for (const platform of platforms) {
                 appVersion: pkg.version,
                 icon: path.resolve(import.meta.dirname, "resources", "icons", "icon"),
                 dir: appRoot,
-                arch: arch,
-                platform: platform,
+                arch: arch as SupportedArch,
+                platform: platform as OfficialPlatform,
                 out: outRoot,
                 overwrite: true,
                 ignore: [".local", "node.napi.node"]

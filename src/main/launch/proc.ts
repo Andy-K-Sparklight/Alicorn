@@ -8,7 +8,7 @@ import os from "node:os";
 import * as process from "node:process";
 import { Readable } from "node:stream";
 import { promisify } from "node:util";
-import { pEvent } from "p-event";
+import { CancelablePromise, pEvent } from "p-event";
 import type TypedEmitter from "typed-emitter";
 
 type GameProcessEvents = {
@@ -60,10 +60,10 @@ export class GameProcess {
     };
     logs: GameProcessLog[] = [];
 
-    #readyPromise: Promise<void> | null = null;
+    #readyPromise: CancelablePromise<unknown> | null = null;
     #proc: child_process.ChildProcess | null = null;
-    #memMonitTimer: NodeJS.Timer | null = null;
-    #netMonitTimer: NodeJS.Timer | null = null;
+    #memMonitTimer: NodeJS.Timeout | null = null;
+    #netMonitTimer: NodeJS.Timeout | null = null;
 
     constructor(bin: string, args: string[], gameDir: string) {
         const env = { ...process.env };

@@ -216,7 +216,7 @@ async function runInstaller(jrtExec: string, fp: string, container: Container, c
             "moe.skjsjhb.unfine.Reflector"
         ], { stdio: ["ignore", "inherit", "inherit"] });
 
-        const code = await pEvent(proc, "exit");
+        const code = (await pEvent(proc, "exit")) as number;
 
         if (code !== 0) throw new OptiFineInstallFailedException(code);
     });
