@@ -10,7 +10,8 @@ export function LogsDisplay() {
     const { id: procId, logs } = useCurrentProc();
 
     function scrollToBottom() {
-        ref.current?.scrollToIndex(Number.MAX_SAFE_INTEGER, { smooth: true });
+        // The animation affects readability when logs come fast, just disable it
+        ref.current?.scrollToIndex(Number.MAX_SAFE_INTEGER, { smooth: false });
     }
 
     useEffect(() => {
