@@ -28,6 +28,7 @@ import { pathToFileURL } from "node:url";
 import pkg from "~/package.json";
 import { runInstrumentedTest } from "~/test/instrumented/entry";
 import "v8-compile-cache";
+import { skin } from "@/main/auth/skin";
 
 void main();
 
@@ -131,7 +132,8 @@ async function main() {
         fabricInstaller.prefetch(),
         quiltInstaller.prefetch(),
         unfine.prefetch(),
-        rbAccounts.keepAccountsAlive()
+        rbAccounts.keepAccountsAlive(),
+        skin.preloadSkins()
     ]);
 
     // Delay update check after app initialization
