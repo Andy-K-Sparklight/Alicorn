@@ -18,8 +18,9 @@ import { getOSName } from "@/main/sys/os";
 import { getCanonicalUA } from "@/main/sys/ua";
 import { update } from "@/main/sys/update";
 import { windowControl } from "@/main/sys/window-control";
-import { app, BrowserWindow, Menu, net, protocol, session } from "electron";
+// XXX: electron-devtools-installer uses deprecated APIs (session.getAllExtensions, session.loadExtension)
 import { installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } from "electron-devtools-installer";
+import { app, BrowserWindow, Menu, net, protocol, session } from "electron";
 import { randomUUID } from "node:crypto";
 import events from "node:events";
 import os from "node:os";
