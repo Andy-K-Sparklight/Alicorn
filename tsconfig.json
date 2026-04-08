@@ -9,7 +9,6 @@
         "strict": true,
         "moduleResolution": "Bundler",
         "resolveJsonModule": true,
-        "baseUrl": "./",
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,

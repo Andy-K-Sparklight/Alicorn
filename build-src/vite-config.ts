@@ -1,10 +1,9 @@
-import react from "@vitejs/plugin-react";
-import reactSWC from "@vitejs/plugin-react-swc";
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import path from "node:path";
 import { defineConfig, PluginOption } from "vite";
 import removeConsole from "vite-plugin-remove-console";
-import tsConfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
+import babel from "@rolldown/plugin-babel";
 
 export default defineConfig(({ command }) => {
     const isDev = command === "serve";
@@ -17,32 +16,37 @@ export default defineConfig(({ command }) => {
         base: "",
         publicDir: path.resolve(import.meta.dirname, "..", "public"),
         cacheDir: path.resolve(import.meta.dirname, "..", ".vite-cache"),
+        resolve: {
+            tsconfigPaths: true
+        },
         build: {
-            // Output directory will be specified when building
             emptyOutDir: true,
             chunkSizeWarningLimit: 1024,
-            rollupOptions: {
+            rolldownOptions: {
                 output: {
-                    manualChunks: isDev ? undefined : {
-                        heroui: ["@heroui/react"],
-                        theme: ["@heroui/theme"],
-                        lucide: ["lucide-react"]
+                    codeSplitting: {
+                        groups: [
+                            {
+                                test: /node_modules\/@heroui\/react/,
+                                name: "heroui"
+                            },
+                            {
+                                test: /node_modules\/@heroui\/theme/,
+                                name: "theme"
+                            },
+                            {
+                                test: /node_modules\/lucide-react/,
+                                name: "lucide"
+                            }
+                        ]
                     }
                 }
             }
         },
         plugins: [
             isDev ?
-                reactSWC() :
-                // Use React Compiler in production for better performance
-                react({
-                    babel: {
-                        plugins: [
-                            ["babel-plugin-react-compiler", { target: "19" }]
-                        ]
-                    }
-                }),
-            tsConfigPaths(),
+                react() :
+                [react(), babel({ presets: [reactCompilerPreset()] })],
             tailwindcss(),
             i18nHotReload(),
             removeConsole()
@@ -52,9 +56,6 @@ export default defineConfig(({ command }) => {
             warmup: {
                 clientFiles: ["index.html"]
             }
-        },
-        esbuild: {
-            legalComments: "none"
         }
     };
 });
