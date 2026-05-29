@@ -180,8 +180,10 @@ async function setupMainWindow() {
 
     w.on("resized", () => conf.alter(c => c.app.window.size = w!.getSize()));
     w.on("moved", () => conf.alter(c => c.app.window.pos = w!.getPosition()));
-    w.on("show", () => w.webContents.openDevTools());
-    w.on("ready-to-show", () => w.webContents.setZoomFactor(conf().app.window.zoom / 100));
+    w.on("ready-to-show", () => {
+        w.webContents.setZoomFactor(conf().app.window.zoom / 100);
+        w.webContents.openDevTools();
+    });
     w.webContents.on("devtools-opened", () => w.webContents.send("devToolsOpened"));
 
     w.setMenu(null);
