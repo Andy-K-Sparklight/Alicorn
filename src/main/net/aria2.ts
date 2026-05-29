@@ -178,10 +178,14 @@ async function init() {
             `--user-agent=${getCanonicalUA()}`
         ], { stdio: "ignore" });
 
+        console.log(`Invoked aria2c with command: ${aria2cProcess.spawnargs.join(' ')}`);
+
         console.debug("Connecting to aria2 RPC interface...");
 
         // Polls a request to make sure aria2c server is online before opening WS connection
-        await net.fetch(`http://localhost:${aria2cPort}`, { method: "HEAD" });
+        if (!await pollUrl(`http://localhost:${aria2cPort}`)) {
+            throw new Error("Can't connect to aria2 RPC interface");
+        }
 
         const ws = new WebSocket(`ws://localhost:${aria2cPort}/jsonrpc`);
 
@@ -203,6 +207,18 @@ async function init() {
     }
 }
 
+async function pollUrl(url: string, timeout = 3000): Promise<boolean> {
+    const ddl = Date.now() + timeout;
+
+    while (Date.now() < ddl) {
+        try {
+            await net.fetch(url, { cache: "no-cache" });
+            return true;
+        } catch {}
+    }
+
+    return false;
+}
 
 function extractEmitter(gid: string): Emittery | null {
     const em = gidEmitters.get(gid);
