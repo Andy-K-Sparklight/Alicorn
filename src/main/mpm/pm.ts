@@ -176,6 +176,9 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
         }
 
         const pkgs = resolved.get(spec)!;
+
+        solver.require(Logic.atMostOne(...pkgs.map(it => it.spec)));
+
         for (const p of pkgs) {
             if (lastSln.getTrueVars().includes(p.spec)) {
                 break; // Already the latest version
