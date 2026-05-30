@@ -1,5 +1,5 @@
-import fs from "fs-extra";
 import path from "node:path";
+import fs from "fs-extra";
 
 async function fetchJSON(url: string): Promise<unknown> {
     const res = await fetch(url, { cache: "no-cache" });
@@ -8,7 +8,7 @@ async function fetchJSON(url: string): Promise<unknown> {
 }
 
 interface VersionManifest {
-    versions: { id: string; complianceLevel: number, url: string }[];
+    versions: { id: string; complianceLevel: number; url: string }[];
 }
 
 interface VersionProfile {
@@ -33,7 +33,9 @@ async function createLegacyAssetsRef() {
     }
 
     const data = [...legacyAssets.values()];
-    await fs.outputJSON(path.resolve(import.meta.dirname, "../src/refs/legacy-assets.json"), data, { spaces: 4 });
+    await fs.outputJSON(path.resolve(import.meta.dirname, "../src/refs/legacy-assets.json"), data, {
+        spaces: 4,
+    });
 }
 
 async function createJRTVersionRef() {
@@ -49,13 +51,19 @@ async function createJRTVersionRef() {
         arr.push(p.id);
     }
 
-    await fs.outputJSON(path.resolve(import.meta.dirname, "../src/refs/jrt-versions.json"), out, { spaces: 4 });
+    await fs.outputJSON(path.resolve(import.meta.dirname, "../src/refs/jrt-versions.json"), out, {
+        spaces: 4,
+    });
 }
 
 async function main() {
     console.log("Fetching versions...");
-    versionManifest = await fetchJSON("https://piston-meta.mojang.com/mc/game/version_manifest_v2.json") as VersionManifest;
-    profiles = await Promise.all(versionManifest.versions.map(v => fetchJSON(v.url))) as VersionProfile[];
+    versionManifest = (await fetchJSON(
+        "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json",
+    )) as VersionManifest;
+    profiles = (await Promise.all(
+        versionManifest.versions.map(v => fetchJSON(v.url)),
+    )) as VersionProfile[];
 
     console.log("Collecting legacy assets...");
     await createLegacyAssetsRef();

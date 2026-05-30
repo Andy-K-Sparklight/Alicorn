@@ -1,10 +1,11 @@
 /**
  * Path management module.
  */
-import { conf } from "@/main/conf/conf";
-import { app } from "electron";
+
 import os from "node:os";
 import path from "node:path";
+import { app } from "electron";
+import { conf } from "@/main/conf/conf";
 
 interface PathResolver {
     /**
@@ -21,11 +22,11 @@ interface PathResolver {
 function createResolver(rootProvider: string | (() => string)): PathResolver {
     if (typeof rootProvider === "string") {
         return {
-            to: (...rel) => path.normalize(path.resolve(rootProvider, ...rel))
+            to: (...rel) => path.normalize(path.resolve(rootProvider, ...rel)),
         };
     } else {
         return {
-            to: (...rel) => path.normalize(path.resolve(rootProvider(), ...rel))
+            to: (...rel) => path.normalize(path.resolve(rootProvider(), ...rel)),
         };
     }
 }
@@ -36,7 +37,10 @@ function createResolver(rootProvider: string | (() => string)): PathResolver {
 function optimalStoreRoot(): string {
     switch (os.platform()) {
         case "win32":
-            return path.join(process.env["LOCALAPPDATA"] || process.env["APPDATA"] || os.homedir(), "Alicorn");
+            return path.join(
+                process.env.LOCALAPPDATA || process.env.APPDATA || os.homedir(),
+                "Alicorn",
+            );
         case "darwin":
             return path.join(os.homedir(), "Library", "Application Support", "Alicorn");
         default:
@@ -88,17 +92,17 @@ function setup(init?: Partial<PathsInit>): void {
     initPrompt = init ?? null;
 
     if (!conf().paths.store) {
-        conf.alter(c => c.paths.store = optimalStoreRoot());
+        conf.alter(c => (c.paths.store = optimalStoreRoot()));
         console.log(`Store path set to ${conf().paths.store}`);
     }
 
     if (!conf().paths.game) {
-        conf.alter(c => c.paths.game = optimalGameRoot());
+        conf.alter(c => (c.paths.game = optimalGameRoot()));
         console.log(`Game path set to ${conf().paths.game}`);
     }
 
     if (!conf().paths.temp) {
-        conf.alter(c => c.paths.temp = path.resolve(app.getPath("temp"), "Alicorn"));
+        conf.alter(c => (c.paths.temp = path.resolve(app.getPath("temp"), "Alicorn")));
         console.log(`Temp path set to ${conf().paths.temp}`);
     }
 }
@@ -158,5 +162,5 @@ export const paths = {
     /**
      * Stores temp files.
      */
-    temp: createResolver(() => getTempRoot())
+    temp: createResolver(() => getTempRoot()),
 };

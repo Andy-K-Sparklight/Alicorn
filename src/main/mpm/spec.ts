@@ -19,7 +19,7 @@ export class MpmPackageSpecifier {
     constructor(s: string) {
         const [vendor, type, id, version] = s.split(":");
         this.id = id || "";
-        this.type = type as MpmAddonType || "mods";
+        this.type = (type as MpmAddonType) || "mods";
         this.vendor = vendor || "";
         this.version = version || "";
     }

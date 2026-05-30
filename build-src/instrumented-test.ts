@@ -1,15 +1,28 @@
-import consola from "consola";
-import fs from "fs-extra";
 import child_process from "node:child_process";
 import path from "node:path";
+import consola from "consola";
+import fs from "fs-extra";
 import { pEvent } from "p-event";
-import { type TestSummary } from "~/test/instrumented/tools";
+import type { TestSummary } from "~/test/instrumented/tools";
 
 export async function startInstrumentedTest() {
     consola.start("start: instrumented tests");
 
-    const xvfbExec = path.resolve(import.meta.dirname, "..", "node_modules", "xvfb-maybe", "src", "xvfb-maybe.js");
-    const electronExec = path.resolve(import.meta.dirname, "..", "node_modules", "electron", "cli.js");
+    const xvfbExec = path.resolve(
+        import.meta.dirname,
+        "..",
+        "node_modules",
+        "xvfb-maybe",
+        "src",
+        "xvfb-maybe.js",
+    );
+    const electronExec = path.resolve(
+        import.meta.dirname,
+        "..",
+        "node_modules",
+        "electron",
+        "cli.js",
+    );
     const cwd = path.resolve(import.meta.dirname, "..", "build", "test");
     const proc = child_process.fork(xvfbExec, [electronExec, "--trace-warnings", "."], { cwd });
 
@@ -19,7 +32,7 @@ export async function startInstrumentedTest() {
 }
 
 async function printTestSummary(f: string): Promise<void> {
-    const d = await fs.readJSON(f) as TestSummary;
+    const d = (await fs.readJSON(f)) as TestSummary;
 
     for (const s of d.suites) {
         if (s.passed) {

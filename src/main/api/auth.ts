@@ -7,7 +7,7 @@ import { addCheckedHandler } from "@/main/ipc/checked";
 import { reg } from "@/main/registry/registry";
 import { alter } from "@/main/util/misc";
 
-export type GameAuthResult = true | { host: string, email: string }
+export type GameAuthResult = true | { host: string; email: string };
 
 addCheckedHandler("gameAuth", async (gameId, pwd) => {
     const g = games.get(gameId);
@@ -29,7 +29,7 @@ addCheckedHandler("gameAuth", async (gameId, pwd) => {
     }
 
     if (!aid) {
-        games.add(alter(g, g => g.launchHint.accountId = a.uuid));
+        games.add(alter(g, g => (g.launchHint.accountId = a.uuid)));
     }
 
     // Update account
@@ -37,7 +37,9 @@ addCheckedHandler("gameAuth", async (gameId, pwd) => {
     return true;
 });
 
-addCheckedHandler("listAccounts", () => reg.accounts.entries().map(([k, v]) => ({ ...v, uuid: k })));
+addCheckedHandler("listAccounts", () =>
+    reg.accounts.entries().map(([k, v]) => ({ ...v, uuid: k })),
+);
 
 addCheckedHandler("createVanillaAccount", async () => {
     const a = new VanillaAccount();

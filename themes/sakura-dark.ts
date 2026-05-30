@@ -15,7 +15,7 @@ export default {
             "800": "#eae6e8",
             "900": "#fdf4f8",
             foreground: "#fff",
-            DEFAULT: "#573a45"
+            DEFAULT: "#573a45",
         },
         primary: {
             "50": "#492332",
@@ -29,7 +29,7 @@ export default {
             "800": "#fbd5e4",
             "900": "#feeef4",
             foreground: "#fff",
-            DEFAULT: "#f374a5"
+            DEFAULT: "#f374a5",
         },
         secondary: {
             "50": "#1a3f4a",
@@ -43,7 +43,7 @@ export default {
             "800": "#ccf2fc",
             "900": "#eafafe",
             foreground: "#fff",
-            DEFAULT: "#56d3f6"
+            DEFAULT: "#56d3f6",
         },
         success: {
             "50": "#194430",
@@ -57,7 +57,7 @@ export default {
             "800": "#ccf7e3",
             "900": "#eafcf3",
             foreground: "#fff",
-            DEFAULT: "#54e3a1"
+            DEFAULT: "#54e3a1",
         },
         warning: {
             "50": "#4d2d1d",
@@ -71,7 +71,7 @@ export default {
             "800": "#ffe0d0",
             "900": "#fff2eb",
             foreground: "#fff",
-            DEFAULT: "#ff9761"
+            DEFAULT: "#ff9761",
         },
         danger: {
             "50": "#491616",
@@ -85,7 +85,7 @@ export default {
             "800": "#fbc8c8",
             "900": "#fde8e8",
             foreground: "#fff",
-            DEFAULT: "#f24949"
+            DEFAULT: "#f24949",
         },
         background: "#0b0b0b",
         foreground: {
@@ -100,26 +100,26 @@ export default {
             "800": "#fff7f9",
             "900": "#fffcfd",
             foreground: "#fff",
-            DEFAULT: "#ffeaef"
+            DEFAULT: "#ffeaef",
         },
         content1: {
             DEFAULT: "#1f161a",
-            foreground: "#fff"
+            foreground: "#fff",
         },
         content2: {
             DEFAULT: "#291c21",
-            foreground: "#fff"
+            foreground: "#fff",
         },
         content3: {
             DEFAULT: "#39262d",
-            foreground: "#fff"
+            foreground: "#fff",
         },
         content4: {
             DEFAULT: "#483039",
-            foreground: "#fff"
+            foreground: "#fff",
         },
         focus: "#ff86b5",
         overlay: "#ffffff",
-        divider: "#ffffff"
-    }
+        divider: "#ffffff",
+    },
 } satisfies ConfigTheme;

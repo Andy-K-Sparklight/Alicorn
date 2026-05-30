@@ -15,7 +15,7 @@ export default {
             "800": "#c2c2c2",
             "900": "#e6e6e6",
             foreground: "#fff",
-            DEFAULT: "#505050"
+            DEFAULT: "#505050",
         },
         primary: {
             "50": "#42000f",
@@ -29,7 +29,7 @@ export default {
             "800": "#f5b3c1",
             "900": "#fbdfe5",
             foreground: "#fff",
-            DEFAULT: "#dd0031"
+            DEFAULT: "#dd0031",
         },
         secondary: {
             "50": "#0f0f0f",
@@ -43,7 +43,7 @@ export default {
             "800": "#c2c2c2",
             "900": "#e6e6e6",
             foreground: "#fff",
-            DEFAULT: "#333333"
+            DEFAULT: "#333333",
         },
         success: {
             "50": "#193305",
@@ -57,7 +57,7 @@ export default {
             "800": "#cce6b8",
             "900": "#eaf5e1",
             foreground: "#fff",
-            DEFAULT: "#54ab11"
+            DEFAULT: "#54ab11",
         },
         warning: {
             "50": "#4d3d0e",
@@ -71,7 +71,7 @@ export default {
             "800": "#fff0c1",
             "900": "#fff9e5",
             foreground: "#fff",
-            DEFAULT: "#ffcc30"
+            DEFAULT: "#ffcc30",
         },
         danger: {
             "50": "#4a1d02",
@@ -85,26 +85,26 @@ export default {
             "800": "#fccfb5",
             "900": "#feebe0",
             foreground: "#fff",
-            DEFAULT: "#f65f07"
+            DEFAULT: "#f65f07",
         },
         background: "#000000",
         content1: {
             DEFAULT: "#242424",
-            foreground: "#fff"
+            foreground: "#fff",
         },
         content2: {
             DEFAULT: "#353535",
-            foreground: "#fff"
+            foreground: "#fff",
         },
         content3: {
             DEFAULT: "#464646",
-            foreground: "#fff"
+            foreground: "#fff",
         },
         content4: {
             DEFAULT: "#505050",
-            foreground: "#fff"
+            foreground: "#fff",
         },
         focus: "#dd0031",
-        overlay: "#ffffff"
-    }
+        overlay: "#ffffff",
+    },
 } satisfies ConfigTheme;

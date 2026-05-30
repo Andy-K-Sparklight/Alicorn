@@ -4,7 +4,7 @@ import React, {
     type SetStateAction,
     useContext,
     useEffect,
-    useRef
+    useRef,
 } from "react";
 import { useLocalStorage } from "react-use";
 import themes from "~/themes";
@@ -44,11 +44,13 @@ export function useTheme() {
 }
 
 export function ThemeSwitchProvider({ children }: PropsWithChildren) {
-    const [theme, setTheme] = useLocalStorage("theme", "dark") as [string, Dispatch<SetStateAction<string>>, () => void];
+    const [theme, setTheme] = useLocalStorage("theme", "dark") as [
+        string,
+        Dispatch<SetStateAction<string>>,
+        () => void,
+    ];
 
-    return <ThemeContext.Provider value={{ theme, setTheme }}>
-        {children}
-    </ThemeContext.Provider>;
+    return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
 }
 
 export const themeManager = { getThemes };

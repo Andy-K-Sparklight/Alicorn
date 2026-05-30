@@ -1,18 +1,16 @@
+import { addToast } from "@heroui/react";
+import { t } from "i18next";
 import type { VanillaInstallEvent } from "@/main/api/install";
 import type { Progress } from "@/main/util/progress";
 import { retrievePort } from "@/preload/message";
 import { installProgressSlice } from "@/renderer/store/install-progress";
 import { globalStore, useAppSelector } from "@/renderer/store/store";
-import { addToast } from "@heroui/react";
-import { t } from "i18next";
 
 async function install(gameId: string): Promise<void> {
     native.install.installGame(gameId);
     const port = await retrievePort(gameId);
 
-    globalStore.dispatch(
-        installProgressSlice.actions.markInstalling({ gameId })
-    );
+    globalStore.dispatch(installProgressSlice.actions.markInstalling({ gameId }));
 
     const { promise, resolve, reject } = Promise.withResolvers<void>();
 
@@ -24,9 +22,7 @@ async function install(gameId: string): Promise<void> {
         dispatched = true;
         requestIdleCallback(() => {
             if (finished) return;
-            globalStore.dispatch(
-                installProgressSlice.actions.update({ gameId, progress })
-            );
+            globalStore.dispatch(installProgressSlice.actions.update({ gameId, progress }));
             dispatched = false;
         });
     }
@@ -34,9 +30,7 @@ async function install(gameId: string): Promise<void> {
     function finalize() {
         finished = true;
         port.close();
-        globalStore.dispatch(
-            installProgressSlice.actions.reset({ gameId })
-        );
+        globalStore.dispatch(installProgressSlice.actions.reset({ gameId }));
     }
 
     port.onmessage = (e: MessageEvent<VanillaInstallEvent>) => {
@@ -48,7 +42,7 @@ async function install(gameId: string): Promise<void> {
                 finalize();
                 addToast({
                     color: "success",
-                    title: t("toast.game-installed")
+                    title: t("toast.game-installed"),
                 });
                 resolve();
                 break;
@@ -67,7 +61,7 @@ async function install(gameId: string): Promise<void> {
 }
 
 export const remoteInstaller = {
-    install
+    install,
 };
 
 export interface InstallProgressSlim {

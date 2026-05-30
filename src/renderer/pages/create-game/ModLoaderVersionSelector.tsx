@@ -1,6 +1,6 @@
 import { Alert } from "@components/display/Alert";
 import { Input, Radio, RadioGroup } from "@heroui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface ModLoaderVersionSelectorProps {
@@ -19,29 +19,33 @@ export function ModLoaderVersionSelector({ value, onChange }: ModLoaderVersionSe
         setIsAuto(v !== "manual");
     }
 
-    return <div
-        className="p-4 border-solid border-2 border-foreground-400 rounded-xl flex flex-col gap-4">
-        <div className="font-bold text-medium">{t("title")}</div>
+    return (
+        <div className="p-4 border-solid border-2 border-foreground-400 rounded-xl flex flex-col gap-4">
+            <div className="font-bold text-medium">{t("title")}</div>
 
-        <RadioGroup
-            value={isAuto ? "auto" : "manual"}
-            color={isAuto ? "primary" : "warning"}
-            onValueChange={handleSelectionChange}
-        >
-            {
-                ["auto", "manual"].map(lv =>
-                    <Radio key={lv} value={lv}>{t(lv)}</Radio>
-                )
-            }
-        </RadioGroup>
+            <RadioGroup
+                value={isAuto ? "auto" : "manual"}
+                color={isAuto ? "primary" : "warning"}
+                onValueChange={handleSelectionChange}
+            >
+                {["auto", "manual"].map(lv => (
+                    <Radio key={lv} value={lv}>
+                        {t(lv)}
+                    </Radio>
+                ))}
+            </RadioGroup>
 
-        {
-            !isAuto &&
-            <>
-                <Alert title={t("alert")} color="warning"/>
-                <Input value={value} onValueChange={onChange} label={t("label")}
-                       placeholder={t("placeholder")}/>
-            </>
-        }
-    </div>;
+            {!isAuto && (
+                <>
+                    <Alert title={t("alert")} color="warning" />
+                    <Input
+                        value={value}
+                        onValueChange={onChange}
+                        label={t("label")}
+                        placeholder={t("placeholder")}
+                    />
+                </>
+            )}
+        </div>
+    );
 }

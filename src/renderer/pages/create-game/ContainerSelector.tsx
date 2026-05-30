@@ -1,6 +1,6 @@
-import { useGameList } from "@/renderer/services/games";
 import { Select, SelectItem, type SharedSelection } from "@heroui/react";
 import { useTranslation } from "react-i18next";
+import { useGameList } from "@/renderer/services/games";
 
 interface ContainerSelectorProps {
     containerId?: string;
@@ -25,21 +25,21 @@ export function ContainerSelector({ containerId, onChange }: ContainerSelectorPr
         }
     }
 
-    return <Select
-        label={t("container-select-title")}
-        placeholder={t("version-select-placeholder")}
-        selectedKeys={sid ? [sid] : []}
-        onSelectionChange={handleSelectionChange}
-    >
-        {
-            games.map(g =>
+    return (
+        <Select
+            label={t("container-select-title")}
+            placeholder={t("version-select-placeholder")}
+            selectedKeys={sid ? [sid] : []}
+            onSelectionChange={handleSelectionChange}
+        >
+            {games.map(g => (
                 <SelectItem key={g.id} textValue={g.id}>
                     <div className="flex items-center gap-2">
                         {g.name}
                         <span className="text-foreground-400 text-sm">{g.id}</span>
                     </div>
                 </SelectItem>
-            )
-        }
-    </Select>;
+            ))}
+        </Select>
+    );
 }

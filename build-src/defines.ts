@@ -1,23 +1,25 @@
 import UserAgent from "user-agents";
-import { type BuildConfig } from "~/config";
+import type { BuildConfig } from "~/config";
 
-export type OSName = "windows" | "osx" | "linux"
+export type OSName = "windows" | "osx" | "linux";
 
 function genBuildDefines(config: BuildConfig) {
     const {
         enableBMCLAPI,
         enableNativeLZMA,
         devServerPort,
-        variant: { mode, platform, arch, testLevel }
+        variant: { mode, platform, arch, testLevel },
     } = config;
 
     const osNames: Record<string, OSName> = {
         win32: "windows",
         darwin: "osx",
-        linux: "linux"
+        linux: "linux",
     };
 
-    const fakeUAs = Array(20).fill(0).map(() => new UserAgent().toString());
+    const fakeUAs = Array(20)
+        .fill(0)
+        .map(() => new UserAgent().toString());
 
     return {
         AL_DEV: mode === "development",
@@ -29,7 +31,7 @@ function genBuildDefines(config: BuildConfig) {
         AL_DEV_SERVER_PORT: devServerPort,
         AL_ENABLE_NATIVE_LZMA: enableNativeLZMA,
         AL_FAKE_UAS: fakeUAs,
-        AL_TEST_LEVEL: testLevel
+        AL_TEST_LEVEL: testLevel,
     };
 }
 
@@ -37,7 +39,7 @@ function transformBuildDefines(def: BuildDefines): Record<string, string> {
     const o: Record<string, string> = {};
 
     for (const [k, v] of Object.entries(def)) {
-        o["import.meta.env." + k] = JSON.stringify(v);
+        o[`import.meta.env.${k}`] = JSON.stringify(v);
     }
 
     return o;

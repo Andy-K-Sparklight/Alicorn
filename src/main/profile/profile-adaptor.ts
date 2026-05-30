@@ -11,17 +11,17 @@ import { unwrapESM } from "@/main/util/module";
 async function patchJRTVersion(src: Record<string, unknown>) {
     if ("javaVersion" in src) return;
 
-    if ("id" in src && typeof src["id"] === "string") {
+    if ("id" in src && typeof src.id === "string") {
         const jrtVersions = await unwrapESM(import("@/refs/jrt-versions.json"));
         for (const [k, v] of Object.entries(jrtVersions)) {
             if (Array.isArray(v) && v.includes(src.id)) {
-                src["javaVersion"] = { component: k };
+                src.javaVersion = { component: k };
                 return;
             }
         }
     }
 
-    src["javaVersion"] = { component: "jre-legacy" };
+    src.javaVersion = { component: "jre-legacy" };
 }
 
 /**
@@ -29,11 +29,13 @@ async function patchJRTVersion(src: Record<string, unknown>) {
  */
 async function transformLegacy(src: Record<string, unknown>): Promise<void> {
     if ("minecraftArguments" in src) {
-        const gameArgs = (typeof src["minecraftArguments"] === "string" ? src["minecraftArguments"] : "").split(" ");
+        const gameArgs = (
+            typeof src.minecraftArguments === "string" ? src.minecraftArguments : ""
+        ).split(" ");
         const { vmArgs } = await unwrapESM(import("@/refs/default-vm-args.json"));
         src.arguments = {
             game: gameArgs,
-            jvm: vmArgs
+            jvm: vmArgs,
         };
     }
 }
@@ -45,7 +47,7 @@ export async function patchProfile(src: Record<string, unknown>): Promise<void> 
     await patchJRTVersion(src);
     await transformLegacy(src);
 
-    if ("libraries" in src && Array.isArray(src["libraries"])) {
-        await lwjglARMPatch.patchLibraries(src["libraries"]);
+    if ("libraries" in src && Array.isArray(src.libraries)) {
+        await lwjglARMPatch.patchLibraries(src.libraries);
     }
 }

@@ -1,19 +1,20 @@
+import * as child_process from "node:child_process";
+import os from "node:os";
+import path from "node:path";
+import fs from "fs-extra";
+import { pEvent } from "p-event";
 import { lzma } from "@/main/compress/lzma";
 import { conf } from "@/main/conf/conf";
 import { AbstractException } from "@/main/except/exception";
 import { paths } from "@/main/fs/paths";
 import { jrtLinuxArm } from "@/main/jrt/linux-arm";
-import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
+import { type DlxDownloadRequest, dlx } from "@/main/net/dlx";
 import { netx } from "@/main/net/netx";
 import { getOSName } from "@/main/sys/os";
-import { progress, type ProgressController } from "@/main/util/progress";
-import fs from "fs-extra";
-import * as child_process from "node:child_process";
-import os from "node:os";
-import path from "node:path";
-import { pEvent } from "p-event";
+import { type ProgressController, progress } from "@/main/util/progress";
 
-const JRT_MANIFEST = "https://piston-meta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json";
+const JRT_MANIFEST =
+    "https://piston-meta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json";
 
 interface JavaRuntimeProfile {
     manifest: {
@@ -69,7 +70,10 @@ async function getProfile(componentName: string): Promise<JavaRuntimeProfile> {
 
     // Mojang provides ARM64 native builds only for recent versions of JRT
     // For earlier versions the x86 variant can be used. They shall run with Rosetta 2.
-    if (osp === "mac-os-arm64" && (!Array.isArray(availableProfiles) || availableProfiles.length === 0)) {
+    if (
+        osp === "mac-os-arm64" &&
+        (!Array.isArray(availableProfiles) || availableProfiles.length === 0)
+    ) {
         availableProfiles = d?.["mac-os"]?.[componentName];
     }
 
@@ -98,23 +102,23 @@ interface FileDownload {
 }
 
 type FileHint =
-    {
-        type: "directory";
-    } |
-    {
-        downloads: {
-            lzma?: FileDownload;
-            raw: FileDownload;
-        }
-        executable: boolean;
-        type: "file";
-    } |
-    {
-        target: string;
-        type: "link";
-    }
+    | {
+          type: "directory";
+      }
+    | {
+          downloads: {
+              lzma?: FileDownload;
+              raw: FileDownload;
+          };
+          executable: boolean;
+          type: "file";
+      }
+    | {
+          target: string;
+          type: "link";
+      };
 
-type NamedFileHint = FileHint & { name: string; }
+type NamedFileHint = FileHint & { name: string };
 
 async function installRuntime(component: string, control?: ProgressController): Promise<void> {
     const { signal, onProgress } = control ?? {};
@@ -140,8 +144,9 @@ async function installRuntime(component: string, control?: ProgressController): 
     console.debug(`Picked up profile ${profile.manifest.url}`);
 
     const dat = await netx.json(profile.manifest.url);
-    let files = Object.entries(dat.files)
-        .map(([name, file]) => ({ name, ...(file as FileHint) } as NamedFileHint));
+    let files = Object.entries(dat.files).map(
+        ([name, file]) => ({ name, ...(file as FileHint) }) as NamedFileHint,
+    );
 
     signal?.throwIfAborted();
 
@@ -156,7 +161,7 @@ async function installRuntime(component: string, control?: ProgressController): 
         const ext = f.downloads.lzma ? ".lzma" : "";
         const dl: DlxDownloadRequest = {
             path: path.join(root, f.name + ext),
-            ...artifact
+            ...artifact,
         };
         tasks.push(dl);
 
@@ -166,50 +171,55 @@ async function installRuntime(component: string, control?: ProgressController): 
     console.debug("Fetching files...");
     await dlx.getAll(tasks, {
         onProgress: progress.makeNamed(onProgress, "jrt.download"),
-        signal
+        signal,
     });
 
     console.debug("Unpacking files...");
     await lzma.init();
 
-    await Promise.all(progress.countPromises(
-        files.filter(f => f.type === "file" && f.downloads.lzma)
-            .map(async file => {
-                const src = path.join(root, file.name + ".lzma");
-                const dst = path.join(root, file.name);
-                console.debug(`Unpacking: ${src}`);
+    await Promise.all(
+        progress.countPromises(
+            files
+                .filter(f => f.type === "file" && f.downloads.lzma)
+                .map(async file => {
+                    const src = path.join(root, `${file.name}.lzma`);
+                    const dst = path.join(root, file.name);
+                    console.debug(`Unpacking: ${src}`);
 
-                await lzma.inflate(src, dst);
-                await fs.remove(src);
-            }),
-        progress.makeNamed(onProgress, "jrt.unpack")
-    ));
+                    await lzma.inflate(src, dst);
+                    await fs.remove(src);
+                }),
+            progress.makeNamed(onProgress, "jrt.unpack"),
+        ),
+    );
 
     control?.signal?.throwIfAborted();
 
     console.debug("Linking files...");
     // Linking can be done very fast so no progress will be reported
     await Promise.all(
-        files.filter(f => f.type === "link")
+        files
+            .filter(f => f.type === "link")
             .map(async f => {
                 const target = path.join(root, f.target);
                 const base = path.join(root, f.name);
                 console.debug(`Linking: ${target} -> ${base}`);
 
                 await fs.link(base, target);
-            })
+            }),
     );
 
     if (getOSName() !== "windows") {
         console.debug("Making files executable...");
 
         await Promise.all(
-            files.filter(f => f.type === "file" && f.executable)
+            files
+                .filter(f => f.type === "file" && f.executable)
                 .map(async f => {
                     const pt = path.join(root, f.name);
                     console.debug(`Add executable flag: ${pt}`);
                     await fs.chmod(pt, 0o777);
-                })
+                }),
         );
     }
 
@@ -226,7 +236,7 @@ async function installRuntime(component: string, control?: ProgressController): 
 
 function getExecPath(): string {
     switch (getOSName()) {
-        case "windows" :
+        case "windows":
             return "bin/java.exe";
         case "osx":
             return "jre.bundle/Contents/Home/bin/java";

@@ -28,7 +28,10 @@ function isPossiblyXmlLog(src: string): boolean {
 
 function parseAsRaw(src: string, index: number): GameProcessLog {
     const ss = src.toLowerCase();
-    const level = ["fatal", "error", "warn", "info", "debug", "trace"].find(lv => ss.includes(lv))?.toUpperCase() ?? "INFO";
+    const level =
+        ["fatal", "error", "warn", "info", "debug", "trace"]
+            .find(lv => ss.includes(lv))
+            ?.toUpperCase() ?? "INFO";
     return {
         index,
         time: Date.now(),
@@ -36,7 +39,7 @@ function parseAsRaw(src: string, index: number): GameProcessLog {
         level,
         thread: "Unknown",
         message: src.trim(),
-        throwable: undefined
+        throwable: undefined,
     };
 }
 
@@ -50,7 +53,7 @@ function parse(src: string, index: number): GameProcessLog[] {
 
     try {
         const dom = parser().parse(compatFragment(src));
-        let events = dom?.["Events"]?.["Event"];
+        let events = dom?.Events?.Event;
 
         if (typeof events !== "object") return [];
 
@@ -63,12 +66,12 @@ function parse(src: string, index: number): GameProcessLog[] {
         return events.map((e: any) => {
             return {
                 index: index++,
-                message: e["Message"] ?? "",
-                throwable: e["Throwable"],
+                message: e.Message ?? "",
+                throwable: e.Throwable,
                 logger: e["@_logger"] ?? "",
-                time: parseInt(e["@_timestamp"] ?? "0"),
+                time: parseInt(e["@_timestamp"] ?? "0", 10),
                 level: e["@_level"] ?? "INFO",
-                thread: e["@_thread"] ?? ""
+                thread: e["@_thread"] ?? "",
             } satisfies GameProcessLog;
         });
     } catch {

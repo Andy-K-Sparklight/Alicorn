@@ -1,8 +1,8 @@
+import fs from "fs-extra";
 import type { Container } from "@/main/container/spec";
 import { UnavailableModLoaderException } from "@/main/install/except";
 import { netx } from "@/main/net/netx";
-import { progress, type ProgressController } from "@/main/util/progress";
-import fs from "fs-extra";
+import { type ProgressController, progress } from "@/main/util/progress";
 
 const FABRIC_META_API = "https://meta.fabricmc.net/v2";
 
@@ -19,7 +19,7 @@ let availableGameVersions: string[];
 
 async function getAvailableGameVersions() {
     if (!availableGameVersions) {
-        const url = FABRIC_META_API + "/versions/game";
+        const url = `${FABRIC_META_API}/versions/game`;
         const vs = await netx.json(url);
         availableGameVersions = vs.map((v: { version: string }) => v.version);
     }
@@ -28,9 +28,9 @@ async function getAvailableGameVersions() {
 }
 
 async function queryLoaderVersions(gameVersion: string): Promise<FabricLoaderVersion[]> {
-    const url = FABRIC_META_API + `/versions/loader/${gameVersion}`;
+    const url = `${FABRIC_META_API}/versions/loader/${gameVersion}`;
 
-    const entries = await netx.json(url) as LoaderEntry[];
+    const entries = (await netx.json(url)) as LoaderEntry[];
     return entries.map(e => e.loader);
 }
 
@@ -38,7 +38,7 @@ async function retrieveProfile(
     gameVersion: string,
     loaderVersion: string,
     container: Container,
-    controller?: ProgressController
+    controller?: ProgressController,
 ): Promise<string> {
     controller?.onProgress?.(progress.indefinite("fabric.resolve"));
 
@@ -55,12 +55,13 @@ async function retrieveProfile(
     }
 
     console.debug(`Fetching Fabric profile for ${gameVersion} / ${loaderVersion}`);
-    const url = FABRIC_META_API + `/versions/loader/${gameVersion}/${loaderVersion}/profile/json`;
+    const url = `${FABRIC_META_API}/versions/loader/${gameVersion}/${loaderVersion}/profile/json`;
 
     controller?.signal?.throwIfAborted();
 
     const fbp = await netx.json(url);
-    if (!("id" in fbp) || typeof fbp.id !== "string") throw new UnavailableModLoaderException(gameVersion);
+    if (!("id" in fbp) || typeof fbp.id !== "string")
+        throw new UnavailableModLoaderException(gameVersion);
 
     console.debug(`Writing profile with ID: ${fbp.id}`);
     await fs.outputJSON(container.profile(fbp.id), fbp);
@@ -78,5 +79,5 @@ export const fabricInstaller = {
     prefetch,
     queryLoaderVersions,
     getAvailableGameVersions,
-    retrieveProfile
+    retrieveProfile,
 };

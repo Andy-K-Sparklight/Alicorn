@@ -1,7 +1,11 @@
+import os from "node:os";
+import path from "node:path";
+import fs from "fs-extra";
+import pLimit from "p-limit";
 import type { Container } from "@/main/container/spec";
 import type { GameAssetsLevel } from "@/main/game/spec";
 import { nativesLint } from "@/main/install/natives-lint";
-import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
+import { type DlxDownloadRequest, dlx } from "@/main/net/dlx";
 import { netx } from "@/main/net/netx";
 import { profileLoader } from "@/main/profile/loader";
 import { MavenName } from "@/main/profile/maven-name";
@@ -9,11 +13,7 @@ import { nativeLib } from "@/main/profile/native-lib";
 import { filterRules } from "@/main/profile/rules";
 import type { AssetIndex, VersionProfile } from "@/main/profile/version-profile";
 import { i18nMain } from "@/main/util/i18n";
-import { progress, type ProgressController } from "@/main/util/progress";
-import fs from "fs-extra";
-import os from "node:os";
-import path from "node:path";
-import pLimit from "p-limit";
+import { type ProgressController, progress } from "@/main/util/progress";
 
 const VERSION_MANIFEST = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
 
@@ -40,7 +40,7 @@ let versionManifest: VersionManifest;
  */
 async function getManifest(): Promise<VersionManifest> {
     if (!versionManifest) {
-        versionManifest = await netx.json(VERSION_MANIFEST) as VersionManifest;
+        versionManifest = (await netx.json(VERSION_MANIFEST)) as VersionManifest;
     }
 
     return versionManifest;
@@ -60,7 +60,11 @@ async function prefetch(): Promise<void> {
 /**
  * Fetches and loads the version manifest of the specified ID.
  */
-async function installProfile(id: string | "latest-release" | "latest-snapshot", container: Container, control?: ProgressController): Promise<VersionProfile> {
+async function installProfile(
+    id: string | "latest-release" | "latest-snapshot",
+    container: Container,
+    control?: ProgressController,
+): Promise<VersionProfile> {
     control?.onProgress?.(progress.indefinite("vanilla.resolve"));
 
     const mf = await getManifest();
@@ -94,7 +98,7 @@ async function installLibraries(
     profile: VersionProfile,
     container: Container,
     features: Set<string>,
-    control?: ProgressController
+    control?: ProgressController,
 ) {
     const { signal, onProgress } = control ?? {};
     const usableLibraries = profile.libraries.filter(lib => filterRules(lib.rules, features));
@@ -105,18 +109,19 @@ async function installLibraries(
         if (nativeLib.isNative(lib)) {
             const name = nativeLib.getArtifactName(lib);
             const a = nativeLib.getArtifact(lib);
-            if (name && a && a.url) {
+            if (name && a?.url) {
                 const fp = container.nativeLibrary(lib.name, name);
                 tasks.push({
                     ...a,
                     url: a.url, // A workaround for TS type system
                     path: fp,
-                    fastLink: shouldLink
+                    fastLink: shouldLink,
                 });
             }
         }
 
-        if (lib.downloads) { // Make sure that flatten `url` key is only picked up when `downloads` is missing
+        if (lib.downloads) {
+            // Make sure that flatten `url` key is only picked up when `downloads` is missing
             if (lib.downloads.artifact) {
                 const a = lib.downloads.artifact;
                 if (a.url) {
@@ -125,7 +130,7 @@ async function installLibraries(
                         ...a,
                         url: a.url,
                         path: fp,
-                        fastLink: shouldLink
+                        fastLink: shouldLink,
                     });
                 }
             }
@@ -151,7 +156,7 @@ async function installLibraries(
                 path: fp,
                 sha1: lib.sha1 || lib.checksums?.[0] || undefined,
                 size: lib.size,
-                fastLink: shouldLink
+                fastLink: shouldLink,
             });
         }
     }
@@ -166,7 +171,7 @@ async function installLibraries(
     tasks.push({
         ...ca,
         path: clientPath,
-        fastLink: shouldLink
+        fastLink: shouldLink,
     });
 
     // Add logging config
@@ -174,7 +179,7 @@ async function installLibraries(
     if (logging) {
         tasks.push({
             ...logging,
-            path: container.loggingConfig(logging.id)
+            path: container.loggingConfig(logging.id),
         });
     }
 
@@ -182,7 +187,10 @@ async function installLibraries(
 
     console.debug(`Library artifacts counted: ${tasks.length}`);
 
-    await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "vanilla.download-libs") });
+    await dlx.getAll(tasks, {
+        signal,
+        onProgress: progress.makeNamed(onProgress, "vanilla.download-libs"),
+    });
 
     onProgress?.(progress.indefinite("vanilla.unpack-libs"));
 
@@ -203,7 +211,7 @@ async function installAssets(
     profile: VersionProfile,
     container: Container,
     level: GameAssetsLevel,
-    control?: ProgressController
+    control?: ProgressController,
 ): Promise<void> {
     const { signal, onProgress } = control ?? {};
 
@@ -213,13 +221,18 @@ async function installAssets(
 
     const shouldLink = container.props.flags.link;
 
-    await dlx.getAll([{
-        ...profile.assetIndex,
-        path: assetIndexPath,
-        fastLink: shouldLink
-    }], { signal });
+    await dlx.getAll(
+        [
+            {
+                ...profile.assetIndex,
+                path: assetIndexPath,
+                fastLink: shouldLink,
+            },
+        ],
+        { signal },
+    );
 
-    const assetIndex = await fs.readJSON(assetIndexPath) as AssetIndex;
+    const assetIndex = (await fs.readJSON(assetIndexPath)) as AssetIndex;
 
     const objects = Object.entries(assetIndex.objects).filter(([name]) => {
         if (level === "video-only") {
@@ -231,39 +244,42 @@ async function installAssets(
 
     console.debug(`Fetching ${objects.length} assets...`);
 
-    const tasks: DlxDownloadRequest[] = objects.map(([, { hash, size }]) => (
-        {
-            url: `${ASSETS_BASE_URL}/${hash.slice(0, 2)}/${hash}`,
-            path: container.asset(hash),
-            sha1: hash,
-            size,
-            fastLink: shouldLink
-        }
-    ));
+    const tasks: DlxDownloadRequest[] = objects.map(([, { hash, size }]) => ({
+        url: `${ASSETS_BASE_URL}/${hash.slice(0, 2)}/${hash}`,
+        path: container.asset(hash),
+        sha1: hash,
+        size,
+        fastLink: shouldLink,
+    }));
 
-    await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "vanilla.download-assets") });
+    await dlx.getAll(tasks, {
+        signal,
+        onProgress: progress.makeNamed(onProgress, "vanilla.download-assets"),
+    });
 
     if (await profileLoader.isLegacyAssets(profile.assets)) {
         console.debug(`Linking ${objects.length} assets...`);
 
         const limit = pLimit(os.availableParallelism());
 
-        await Promise.all(progress.countPromises(
-            objects.map(([name, { hash }]) =>
-                limit(async () => {
-                    const src = container.asset(hash);
-                    const dst = container.assetLegacy(profile.assetIndex.id, name);
-                    await makeAssetLink(src, dst);
-
-                    if (assetIndex.map_to_resources) {
-                        // Also link to the resources dir
-                        const dst = container.assetMapped(name);
+        await Promise.all(
+            progress.countPromises(
+                objects.map(([name, { hash }]) =>
+                    limit(async () => {
+                        const src = container.asset(hash);
+                        const dst = container.assetLegacy(profile.assetIndex.id, name);
                         await makeAssetLink(src, dst);
-                    }
-                })
+
+                        if (assetIndex.map_to_resources) {
+                            // Also link to the resources dir
+                            const dst = container.assetMapped(name);
+                            await makeAssetLink(src, dst);
+                        }
+                    }),
+                ),
+                progress.makeNamed(onProgress, "vanilla.link-assets"),
             ),
-            progress.makeNamed(onProgress, "vanilla.link-assets")
-        ));
+        );
     }
 }
 
@@ -276,10 +292,12 @@ async function emitOptions(container: Container) {
     if (await fs.pathExists(fp)) return;
 
     const values = {
-        lang: i18nMain.language.replaceAll("-", "_")
+        lang: i18nMain.language.replaceAll("-", "_"),
     };
 
-    const out = Object.entries(values).map(([k, v]) => `${k}:${v}`).join("\n");
+    const out = Object.entries(values)
+        .map(([k, v]) => `${k}:${v}`)
+        .join("\n");
     await fs.outputFile(fp, out);
 }
 
@@ -298,5 +316,10 @@ async function makeAssetLink(src: string, dst: string) {
 }
 
 export const vanillaInstaller = {
-    getManifest, prefetch, installProfile, installLibraries, installAssets, emitOptions
+    getManifest,
+    prefetch,
+    installProfile,
+    installLibraries,
+    installAssets,
+    emitOptions,
 };

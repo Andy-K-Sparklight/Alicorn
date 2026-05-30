@@ -1,5 +1,5 @@
-import consola from "consola";
 import os from "node:os";
+import consola from "consola";
 import { build } from "./build-src/run-build";
 import type { BuildMode, TestLevel } from "./config";
 
@@ -9,7 +9,7 @@ if (!["development", "production", "test"].includes(mode)) {
     process.exit(1);
 }
 
-let testLevel = process.argv[3] || "lite";
+const testLevel = process.argv[3] || "lite";
 
 if (!["lite", "medium", "full"].includes(testLevel)) {
     consola.error(`Unknown test level: ${testLevel}`);
@@ -20,5 +20,5 @@ await build({
     mode: mode as BuildMode,
     platform: os.platform(),
     arch: os.arch(),
-    testLevel: testLevel as TestLevel
+    testLevel: testLevel as TestLevel,
 });

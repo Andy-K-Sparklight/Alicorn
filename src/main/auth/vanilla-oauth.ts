@@ -1,7 +1,7 @@
-import { getCanonicalUA } from "@/main/sys/ua";
-import { windowControl } from "@/main/sys/window-control";
 import { BrowserWindow } from "electron";
 import { pEvent } from "p-event";
+import { getCanonicalUA } from "@/main/sys/ua";
+import { windowControl } from "@/main/sys/window-control";
 
 const OAUTH_URL = createOAuthUrl();
 
@@ -19,12 +19,13 @@ async function browserLogin(part: string, quiet = false): Promise<string> {
     const [width, height] = windowControl.optimalSize();
 
     const w = new BrowserWindow({
-        width, height,
+        width,
+        height,
         frame: false,
         show: false,
         webPreferences: {
-            partition: `persist:${part}`
-        }
+            partition: `persist:${part}`,
+        },
     });
 
     let code = "";
@@ -55,12 +56,16 @@ async function browserLogin(part: string, quiet = false): Promise<string> {
         if (!isShowing) {
             if (quiet) {
                 // Not logged in, closing in quiet mode
-                console.debug("The initial page does not contain the code and we are in quiet mode, closing.");
+                console.debug(
+                    "The initial page does not contain the code and we are in quiet mode, closing.",
+                );
                 w.close();
                 isShowing = true; // Prevent timer from being called
             } else {
                 // Show the window if we cannot extract the code at once
-                console.debug("The initial page does not contain the code, showing for user interactions.");
+                console.debug(
+                    "The initial page does not contain the code, showing for user interactions.",
+                );
                 w.show();
                 isShowing = true;
             }
@@ -87,7 +92,6 @@ async function browserLogin(part: string, quiet = false): Promise<string> {
     return code;
 }
 
-
 export const vanillaOAuth = {
-    browserLogin
+    browserLogin,
 };

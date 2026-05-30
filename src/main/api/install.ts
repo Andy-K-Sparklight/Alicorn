@@ -12,20 +12,20 @@ import { ipcMain } from "@/main/ipc/typed";
 import type { Progress, ProgressController } from "@/main/util/progress";
 
 export type VanillaInstallEvent =
-    {
-        type: "finish"
-    } |
-    {
-        type: "error",
-        err: unknown
-    } |
-    {
-        type: "progress",
-        progress: Progress;
-    } |
-    {
-        type: "cancelled";
-    }
+    | {
+          type: "finish";
+      }
+    | {
+          type: "error";
+          err: unknown;
+      }
+    | {
+          type: "progress";
+          progress: Progress;
+      }
+    | {
+          type: "cancelled";
+      };
 
 const installControllers = new Map<string, AbortController>();
 
@@ -52,7 +52,7 @@ ipcMain.on("installGame", async (e, gameId) => {
 
     const control: ProgressController = {
         signal: abortController.signal,
-        onProgress
+        onProgress,
     };
 
     try {
@@ -88,7 +88,7 @@ addCheckedHandler("queryAvailableModLoaders", async gameVersion => {
         forgeVersions,
         riftAvailable,
         liteloaderVersions,
-        hasOptiFine
+        hasOptiFine,
     ] = await Promise.all([
         fabricInstaller.getAvailableGameVersions(),
         quiltInstaller.getAvailableGameVersions(),
@@ -96,7 +96,7 @@ addCheckedHandler("queryAvailableModLoaders", async gameVersion => {
         forgeInstaller.queryLoaderVersions(gameVersion),
         riftInstaller.isAvailable(gameVersion),
         liteloaderInstaller.getAvailableVersions(),
-        unfine.hasVersion(gameVersion)
+        unfine.hasVersion(gameVersion),
     ]);
 
     if (fabricVersions.includes(gameVersion)) {

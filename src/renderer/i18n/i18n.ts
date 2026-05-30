@@ -1,4 +1,4 @@
-import i18next, { BackendModule } from "i18next";
+import i18next, { type BackendModule } from "i18next";
 import languageDetector from "i18next-browser-languagedetector";
 import { useEffect, useRef } from "react";
 import { initReactI18next, useTranslation } from "react-i18next";
@@ -16,7 +16,7 @@ const i18nLoader: BackendModule = {
     async read(lng, ns) {
         const dat = await (await fetch(`i18n/${lng}/${ns}.yml`)).text();
         return YAML.parse(dat);
-    }
+    },
 };
 
 /**
@@ -33,14 +33,14 @@ async function init(): Promise<void> {
             fallbackLng: "zh-CN",
             debug: import.meta.env.AL_DEV,
             interpolation: {
-                escapeValue: false
+                escapeValue: false,
             },
             react: {
-                useSuspense: false
+                useSuspense: false,
             },
-            missingInterpolationHandler(_, value) {
+            missingInterpolationHandler(_, _value) {
                 return i18next.t("common:undefined");
-            }
+            },
         });
 
     i18next.setDefaultNamespace(namespaces[0]);
@@ -69,9 +69,11 @@ const definedFonts = new Set(["zh-CN", "zh", "en"]);
  * A hook to automatically update font classes when the current locale changes.
  */
 export function useAutoFontClass() {
-    const { i18n: { languages } } = useTranslation();
+    const {
+        i18n: { languages },
+    } = useTranslation();
     const fontClass = useRef("");
-    const newFontClass = "lang-" + (languages?.find(it => definedFonts.has(it)) ?? "");
+    const newFontClass = `lang-${languages?.find(it => definedFonts.has(it)) ?? ""}`;
 
     useEffect(() => {
         if (fontClass.current) {
@@ -88,5 +90,7 @@ function getAvailableLanguages() {
 }
 
 export const i18n = {
-    init, getAvailableLanguages, alterLanguage
+    init,
+    getAvailableLanguages,
+    alterLanguage,
 };

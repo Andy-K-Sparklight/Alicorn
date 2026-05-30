@@ -13,35 +13,16 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "noEmit": true,
-        "types": [
-            "vite/client",
-            "@types/bun"
-        ],
+        "types": ["vite/client", "@types/bun"],
         "paths": {
-            "@/*": [
-                "./src/*"
-            ],
-            "@components/*": [
-                "./src/renderer/components/*"
-            ],
-            "@pages/*": [
-                "./src/renderer/pages/*"
-            ],
-            "@assets/*": [
-                "./assets/*"
-            ],
-            "~/*": [
-                "./*"
-            ]
+            "@/*": ["./src/*"],
+            "@components/*": ["./src/renderer/components/*"],
+            "@pages/*": ["./src/renderer/pages/*"],
+            "@assets/*": ["./assets/*"],
+            "~/*": ["./*"]
         },
         "strictNullChecks": true
     },
-    "include": [
-        "./**/*.ts",
-        "./**/*.tsx"
-    ],
-    "exclude": [
-        "node_modules",
-        "dist"
-    ]
+    "include": ["./**/*.ts", "./**/*.tsx"],
+    "exclude": ["node_modules", "dist"]
 }

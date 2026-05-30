@@ -2,19 +2,19 @@ import { UnknownException } from "@/main/except/common";
 
 interface CatchyExceptionType {
     unknown: { err: string };
-    cancelled: {};
+    cancelled: never;
     "no-handler-registered": { method: string };
     "no-such-element": { id: string };
-    "net-request-failed": { url: string, code?: number };
+    "net-request-failed": { url: string; code?: number };
     "net-mirrors-all-failed": { url: string };
     "launch-spawn-failed": { err: string };
     "download-failed": { url: string };
     "profile-link-failed": { id: string };
-    "auth-failed": {};
+    "auth-failed": never;
     "unavailable-mod-loader": { version: string };
     "optifine-install-failed": { code: number };
     "jrt-install-failed": { component: string };
-    "forge-install-failed": {};
+    "forge-install-failed": never;
 }
 
 export type SerializedException<K extends keyof CatchyExceptionType = keyof CatchyExceptionType> = {
@@ -23,7 +23,7 @@ export type SerializedException<K extends keyof CatchyExceptionType = keyof Catc
     props: CatchyExceptionType[K];
     stack?: string;
     cause?: SerializedException;
-}
+};
 
 interface SerializableException<K extends keyof CatchyExceptionType = keyof CatchyExceptionType> {
     serialize(): SerializedException<K>;
@@ -39,17 +39,24 @@ function getStack() {
     return ex.slice(3).join("\n"); // Drop caller stack and skip `AbstractException` for a shorter stacktrace
 }
 
-export class AbstractException<K extends keyof CatchyExceptionType = keyof CatchyExceptionType> implements SerializableException<K> {
+export class AbstractException<K extends keyof CatchyExceptionType = keyof CatchyExceptionType>
+    implements SerializableException<K>
+{
     #except: SerializedException<K>;
 
     constructor(name: K, props: CatchyExceptionType[K], cause?: unknown) {
-        const ex = cause === undefined ? undefined : (cause instanceof AbstractException ? cause : new UnknownException(cause));
+        const ex =
+            cause === undefined
+                ? undefined
+                : cause instanceof AbstractException
+                  ? cause
+                  : new UnknownException(cause);
         this.#except = {
             _ALICORN_CHECKED_EXCEPTION: true,
             name,
             props,
             cause: ex?.serialize(),
-            stack: getStack()
+            stack: getStack(),
         };
     }
 

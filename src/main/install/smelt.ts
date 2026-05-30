@@ -1,20 +1,21 @@
 /**
  * Handles post-install tasks for Forge / NeoForged installers of recent versions (V1).
  */
+
+import child_process from "node:child_process";
+import path from "node:path";
+import fs from "fs-extra";
+import { nanoid } from "nanoid";
+import StreamZip from "node-stream-zip";
+import { pEvent } from "p-event";
 import type { Container } from "@/main/container/spec";
 import { AbstractException } from "@/main/except/exception";
 import { paths } from "@/main/fs/paths";
 import { jrt } from "@/main/jrt/install";
-import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
+import { type DlxDownloadRequest, dlx } from "@/main/net/dlx";
 import { MavenName } from "@/main/profile/maven-name";
 import type { Library, VersionProfile } from "@/main/profile/version-profile";
-import { type Progress, progress, type ProgressController } from "@/main/util/progress";
-import fs from "fs-extra";
-import { nanoid } from "nanoid";
-import StreamZip from "node-stream-zip";
-import child_process from "node:child_process";
-import path from "node:path";
-import { pEvent } from "p-event";
+import { type Progress, type ProgressController, progress } from "@/main/util/progress";
 
 interface InstallProfile {
     json: string;
@@ -33,7 +34,7 @@ interface Processor {
 
 export interface SmeltInstallInit {
     installProfile: InstallProfile;
-    versionProfile: { id: string, libraries: Library[], _comment_?: string };
+    versionProfile: { id: string; libraries: Library[]; _comment_?: string };
 }
 
 const PROTESTING_FORGE = [
@@ -42,7 +43,7 @@ const PROTESTING_FORGE = [
     "Other developers of Forge have abandoned Lex and started a new project called NeoForged.",
     "Stop Lex from harming our community. Say NO to his donation requests. Say NO to Forge LLC.",
     "Save your money, time and kindness for the one who deserves it.",
-    "Read the full story at https://neoforged.net/news/theproject"
+    "Read the full story at https://neoforged.net/news/theproject",
 ];
 
 /**
@@ -58,19 +59,24 @@ async function readInstallProfile(installer: string): Promise<SmeltInstallInit> 
 
         if (typeof obj === "object" && obj) {
             const ip = obj as InstallProfile;
-            const versionData = await zip.entryData(ip.json.startsWith("/") ? ip.json.slice(1) : ip.json);
+            const versionData = await zip.entryData(
+                ip.json.startsWith("/") ? ip.json.slice(1) : ip.json,
+            );
             const vp = JSON.parse(versionData.toString());
             if (
-                typeof vp === "object" && vp &&
-                "id" in vp && typeof vp.id === "string" &&
-                "libraries" in vp && Array.isArray(vp.libraries)
+                typeof vp === "object" &&
+                vp &&
+                "id" in vp &&
+                typeof vp.id === "string" &&
+                "libraries" in vp &&
+                Array.isArray(vp.libraries)
             ) {
                 if ("_comment_" in vp) {
                     vp._comment_ = PROTESTING_FORGE;
                 }
                 return {
                     installProfile: ip,
-                    versionProfile: vp
+                    versionProfile: vp,
                 };
             }
         }
@@ -94,17 +100,20 @@ function buildTemplateValues(
     init: SmeltInstallInit,
     installer: string,
     installerUnpack: string,
-    container: Container
+    container: Container,
 ): [Map<string, string>, string[]] {
     const m = new Map<string, string>();
     const unpackFiles: string[] = [];
 
     function parseVal(src: string) {
-        if (src.startsWith("[") && src.endsWith("]")) { // [<library name>]
+        if (src.startsWith("[") && src.endsWith("]")) {
+            // [<library name>]
             return container.library(src.slice(1, -1));
-        } else if (src.startsWith("'") && src.endsWith("'")) { // 'escaped value'
+        } else if (src.startsWith("'") && src.endsWith("'")) {
+            // 'escaped value'
             return src.slice(1, -1);
-        } else { // File in the archive
+        } else {
+            // File in the archive
             unpackFiles.push(src);
             return path.join(installerUnpack, src);
         }
@@ -129,7 +138,11 @@ function buildTemplateValues(
 /**
  * Extracts files needed for installation from the installer.
  */
-async function unpackInstaller(installer: string, unpackDir: string, unpackFiles: string[]): Promise<void> {
+async function unpackInstaller(
+    installer: string,
+    unpackDir: string,
+    unpackFiles: string[],
+): Promise<void> {
     let zip: StreamZip.StreamZipAsync | null = null;
     try {
         zip = new StreamZip.async({ file: installer });
@@ -146,7 +159,11 @@ async function unpackInstaller(installer: string, unpackDir: string, unpackFiles
     }
 }
 
-async function downloadMappings(profile: VersionProfile, target: string, control?: ProgressController) {
+async function downloadMappings(
+    profile: VersionProfile,
+    target: string,
+    control?: ProgressController,
+) {
     const cm = profile.downloads.client_mappings;
     if (cm) {
         control?.onProgress?.(progress.indefinite("mappings"));
@@ -159,8 +176,8 @@ async function downloadMappings(profile: VersionProfile, target: string, control
                 url: cm.url,
                 size: cm.size,
                 sha1: cm.sha1,
-                fastLink: false
-            }
+                fastLink: false,
+            },
         ]);
     }
 }
@@ -172,7 +189,7 @@ async function extractLibraries(
     init: SmeltInstallInit,
     installer: string,
     container: Container,
-    control?: ProgressController
+    control?: ProgressController,
 ): Promise<void> {
     const { signal, onProgress } = control ?? {};
 
@@ -209,21 +226,28 @@ async function extractLibraries(
     }
 }
 
-async function downloadLibraries(init: SmeltInstallInit, container: Container, control?: ProgressController) {
+async function downloadLibraries(
+    init: SmeltInstallInit,
+    container: Container,
+    control?: ProgressController,
+) {
     const { signal, onProgress } = control ?? {};
 
     const tasks: DlxDownloadRequest[] = init.installProfile.libraries
         .filter(lib => !!lib.downloads?.artifact?.url)
         .map(lib => ({
-            ...lib.downloads!.artifact!,
+            ...(lib.downloads!.artifact ?? {}),
             url: lib.downloads!.artifact!.url!,
             path: container.library(lib.name),
-            fastLink: !!container.props.flags.link
+            fastLink: !!container.props.flags.link,
         }));
 
     console.debug(`Resolving ${tasks.length} libraries for Forge.`);
 
-    await dlx.getAll(tasks, { signal, onProgress: progress.makeNamed(onProgress, "forge-install.download-libraries") });
+    await dlx.getAll(tasks, {
+        signal,
+        onProgress: progress.makeNamed(onProgress, "forge-install.download-libraries"),
+    });
 }
 
 async function getMainClass(jar: string): Promise<string> {
@@ -233,7 +257,7 @@ async function getMainClass(jar: string): Promise<string> {
         const mf = (await zip.entryData("META-INF/MANIFEST.MF")).toString();
         for (const line of mf.split("\n")) {
             const [k, v] = line.split(": ").map(s => s.trim());
-            if (k === "Main-Class" && !!v) {
+            if (k === "Main-Class" && v) {
                 console.debug(`Main class of ${jar} is ${v}`);
                 return v;
             }
@@ -248,7 +272,13 @@ async function getMainClass(jar: string): Promise<string> {
 /**
  * Executes the processor JARs to finalize the installation.
  */
-async function runProcessor(jrtExec: string, p: Processor, values: Map<string, string>, container: Container, signal?: AbortSignal) {
+async function runProcessor(
+    jrtExec: string,
+    p: Processor,
+    values: Map<string, string>,
+    container: Container,
+    signal?: AbortSignal,
+) {
     // Skip mappings download first
     const taskIndex = p.args.indexOf("--task");
     if (taskIndex >= 0 && p.args[taskIndex + 1] === "DOWNLOAD_MOJMAPS") {
@@ -257,7 +287,10 @@ async function runProcessor(jrtExec: string, p: Processor, values: Map<string, s
 
     if (p.sides && !p.sides.includes("client")) return; // Not needed on client
 
-    const classpath = p.classpath.concat(p.jar).map(n => container.library(n)).join(path.delimiter);
+    const classpath = p.classpath
+        .concat(p.jar)
+        .map(n => container.library(n))
+        .join(path.delimiter);
 
     // The main class must be loaded from the archive in order to run it
     const mainClass = await getMainClass(container.library(p.jar));
@@ -278,12 +311,9 @@ async function runProcessor(jrtExec: string, p: Processor, values: Map<string, s
 
     console.debug(`Executing Forge processor: ${p.jar} ${args.join(",")}`);
 
-    const proc = child_process.spawn(jrtExec, [
-        "-cp",
-        classpath,
-        mainClass,
-        ...args
-    ], { stdio: ["ignore", "inherit", "inherit"] });
+    const proc = child_process.spawn(jrtExec, ["-cp", classpath, mainClass, ...args], {
+        stdio: ["ignore", "inherit", "inherit"],
+    });
 
     signal?.addEventListener("abort", () => proc.kill());
 
@@ -299,7 +329,7 @@ async function runPostInstall(
     installer: string,
     profile: VersionProfile,
     container: Container,
-    control?: ProgressController
+    control?: ProgressController,
 ) {
     const { signal, onProgress } = control ?? {};
 
@@ -311,7 +341,6 @@ async function runPostInstall(
         await unpackInstaller(installer, unpackDir, unpackFiles);
 
         signal?.throwIfAborted();
-
 
         const mojmaps = values.get("MOJMAPS");
         if (mojmaps) {
@@ -330,8 +359,8 @@ async function runPostInstall(
             type: "count",
             value: {
                 current: 0,
-                total: init.installProfile.processors.length
-            }
+                total: init.installProfile.processors.length,
+            },
         };
 
         onProgress?.(prog);
@@ -368,5 +397,5 @@ export class ForgeInstallFailedException extends AbstractException<"forge-instal
 export const smelt = {
     readInstallProfile,
     deployVersionProfile,
-    runPostInstall
+    runPostInstall,
 };

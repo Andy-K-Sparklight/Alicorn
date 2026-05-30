@@ -23,13 +23,13 @@ async function run(name: string, exec: () => void | Promise<void>, level: TestLe
             await exec();
             suites.push({
                 name,
-                passed: true
+                passed: true,
             });
         } catch (e) {
             suites.push({
                 name,
                 passed: false,
-                message: e?.toString()
+                message: e?.toString(),
             });
         }
     } else {
@@ -37,11 +37,10 @@ async function run(name: string, exec: () => void | Promise<void>, level: TestLe
     }
 }
 
-
 async function dumpSummary() {
     await writeJSON("test-summary.json", {
         allPassed: suites.every(s => s.passed),
-        suites
+        suites,
     });
 }
 

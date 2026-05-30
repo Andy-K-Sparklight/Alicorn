@@ -1,15 +1,19 @@
 /**
  * Add the missing ARM64 artifacts for LWJGL 3.3.x on GNU/Linux.
  */
+
+import os from "node:os";
 import { MavenName } from "@/main/profile/maven-name";
 import type { Library, LibraryArtifact } from "@/main/profile/version-profile";
 import { unwrapESM } from "@/main/util/module";
-import os from "node:os";
 
 async function patchLibraries(libraries: unknown[]) {
-    if (os.arch() !== "arm64") return; // Skip patching
+    if (os.arch() !== "arm64" || os.platform() !== "linux") return; // Skip patching
 
-    const lwjglArtifacts = await unwrapESM(import("@/refs/lwjgl-artifacts.json")) as Record<string, LibraryArtifact>;
+    const lwjglArtifacts = (await unwrapESM(import("@/refs/lwjgl-artifacts.json"))) as Record<
+        string,
+        LibraryArtifact
+    >;
     const availableArtifacts = new Set(Object.keys(lwjglArtifacts));
 
     const injectLibs = new Set<string>();
@@ -32,17 +36,17 @@ async function patchLibraries(libraries: unknown[]) {
 
         return {
             downloads: {
-                artifact
+                artifact,
             },
             name: libName,
             rules: [
                 {
                     action: "allow",
                     os: {
-                        name: "linux"
-                    }
-                }
-            ]
+                        name: "linux",
+                    },
+                },
+            ],
         };
     });
 

@@ -3,9 +3,10 @@ import { UnavailableModLoaderException } from "@/main/install/except";
 import { dlx } from "@/main/net/dlx";
 import { mirror } from "@/main/net/mirrors";
 import { netx } from "@/main/net/netx";
-import { progress, type ProgressController } from "@/main/util/progress";
+import { type ProgressController, progress } from "@/main/util/progress";
 
-const NEOFORGED_API = "https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge";
+const NEOFORGED_API =
+    "https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge";
 
 let versions: string[] | null = null;
 
@@ -15,8 +16,9 @@ interface BMCLAPINeoForgedFile {
 }
 
 async function syncVersionsFromBMCLAPI() {
-    const url = "https://bmclapi2.bangbang93.com/neoforge/meta/api/maven/details/releases/net/neoforged/neoforge";
-    const releases = await netx.json(url) as { files: BMCLAPINeoForgedFile[] };
+    const url =
+        "https://bmclapi2.bangbang93.com/neoforge/meta/api/maven/details/releases/net/neoforged/neoforge";
+    const releases = (await netx.json(url)) as { files: BMCLAPINeoForgedFile[] };
     return releases.files.filter(r => r.type === "DIRECTORY").map(r => r.name);
 }
 
@@ -36,7 +38,10 @@ async function syncVersions(): Promise<string[]> {
     return versions;
 }
 
-async function queryLoaderVersions(gameVersion: string, control?: ProgressController): Promise<string[]> {
+async function queryLoaderVersions(
+    gameVersion: string,
+    control?: ProgressController,
+): Promise<string[]> {
     control?.onProgress?.(progress.indefinite("neoforged.resolve"));
 
     const [, minor, patch] = gameVersion.split(".");
@@ -51,7 +56,10 @@ async function queryLoaderVersions(gameVersion: string, control?: ProgressContro
     });
 }
 
-async function pickLoaderVersion(gameVersion: string, control?: ProgressController): Promise<string> {
+async function pickLoaderVersion(
+    gameVersion: string,
+    control?: ProgressController,
+): Promise<string> {
     const versions = await queryLoaderVersions(gameVersion, control);
     if (versions.length === 0) throw new UnavailableModLoaderException(gameVersion);
     return versions[versions.length - 1];
@@ -61,19 +69,25 @@ function genInstallerUrl(loaderVersion: string) {
     return `https://maven.neoforged.net/releases/net/neoforged/neoforge/${loaderVersion}/neoforge-${loaderVersion}-installer.jar`;
 }
 
-async function downloadInstaller(loaderVersion: string, control?: ProgressController): Promise<string> {
+async function downloadInstaller(
+    loaderVersion: string,
+    control?: ProgressController,
+): Promise<string> {
     control?.onProgress?.(progress.indefinite("neoforged.download"));
 
     console.debug(`Fetching NeoForged installer ${loaderVersion}`);
 
     const fp = paths.temp.to(`neoforged-${loaderVersion}.jar`);
-    await dlx.getAll([
-        {
-            url: genInstallerUrl(loaderVersion),
-            path: fp,
-            noCache: true
-        }
-    ], { signal: control?.signal });
+    await dlx.getAll(
+        [
+            {
+                url: genInstallerUrl(loaderVersion),
+                path: fp,
+                noCache: true,
+            },
+        ],
+        { signal: control?.signal },
+    );
 
     return fp;
 }
@@ -88,5 +102,5 @@ export const neoforgedInstaller = {
     queryLoaderVersions,
     pickLoaderVersion,
     downloadInstaller,
-    prefetch
+    prefetch,
 };

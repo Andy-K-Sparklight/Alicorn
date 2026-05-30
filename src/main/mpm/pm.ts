@@ -1,3 +1,5 @@
+import fs from "fs-extra";
+import PQueue from "p-queue";
 import { containers } from "@/main/container/manage";
 import type { Container } from "@/main/container/spec";
 import { games } from "@/main/game/manage";
@@ -5,10 +7,8 @@ import { CurseProvider } from "@/main/mpm/curse";
 import { mpmLock } from "@/main/mpm/lockfile";
 import { ModrinthProvider } from "@/main/mpm/modrinth";
 import { type MpmContext, type MpmPackage, MpmPackageSpecifier } from "@/main/mpm/spec";
-import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
+import { type DlxDownloadRequest, dlx } from "@/main/net/dlx";
 import { uniqueBy } from "@/main/util/misc";
-import fs from "fs-extra";
-import PQueue from "p-queue";
 
 export interface MpmPackageProvider {
     /**
@@ -90,7 +90,10 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
     // Resolve all possible deps
     console.debug("Collecting MPM package details...");
     while (deps.size > 0) {
-        const needResolveDeps = deps.values().filter(s => !resolved.has(s)).toArray();
+        const needResolveDeps = deps
+            .values()
+            .filter(s => !resolved.has(s))
+            .toArray();
         const packages = await resolvePackages(needResolveDeps, ctx);
 
         for (const [i, ps] of packages.entries()) {
@@ -98,7 +101,7 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
         }
 
         const nd = packages
-            .flatMap(ps => ps)
+            .flat()
             .flatMap(p => p.dependencies)
             .filter(d => d.type === "require")
             .map(d => d.spec)
@@ -114,7 +117,7 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
     const { default: Logic } = await import("logic-solver");
     const solver = new Logic.Solver();
 
-    const allPackages = resolved.values().flatMap(pkgs => pkgs).toArray();
+    const allPackages = resolved.values().flat().toArray();
     const allPackagesMap = new Map<string, MpmPackage>();
 
     for (const pkg of allPackages) {
@@ -131,10 +134,7 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
             if (dep.type === "require") {
                 const candidates = resolved.get(dep.spec)!;
                 solver.require(
-                    Logic.implies(
-                        pkg.spec,
-                        Logic.exactlyOne(...candidates.map(p => p.spec))
-                    )
+                    Logic.implies(pkg.spec, Logic.exactlyOne(...candidates.map(p => p.spec))),
                 );
             } else if (dep.type === "conflict") {
                 const sd = new MpmPackageSpecifier(dep.spec);
@@ -167,7 +167,10 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
 
     if (!sln) return null;
 
-    const upgradableSpecs = resolved.keys().filter(s => s.endsWith(":")).toArray(); // Filter out specs with no versions defined
+    const upgradableSpecs = resolved
+        .keys()
+        .filter(s => s.endsWith(":"))
+        .toArray(); // Filter out specs with no versions defined
     let lastSln = sln;
 
     for (const spec of upgradableSpecs) {
@@ -199,30 +202,36 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
     return finalPkgs.map(p => allPackagesMap.get(p)!);
 }
 
-async function flashPackages(original: MpmPackage[], current: MpmPackage[], container: Container): Promise<void> {
+async function flashPackages(
+    original: MpmPackage[],
+    current: MpmPackage[],
+    container: Container,
+): Promise<void> {
     const originalSet = new Set<string>(original.map(p => p.spec));
     const currentSet = new Set<string>(current.map(p => p.spec));
 
     const toRemove = original.filter(p => !currentSet.has(p.spec));
     const toAppend = current.filter(p => !originalSet.has(p.spec));
 
-    console.debug(`Need to remove ${toRemove.length} packages and add ${toAppend.length} packages.`);
+    console.debug(
+        `Need to remove ${toRemove.length} packages and add ${toAppend.length} packages.`,
+    );
 
-    const toRemoveFiles = toRemove.flatMap(p => p.files.map(f => container.addon(p.meta.type, f.fileName)));
+    const toRemoveFiles = toRemove.flatMap(p =>
+        p.files.map(f => container.addon(p.meta.type, f.fileName)),
+    );
 
     // TODO validate before removing & other addon types
     await Promise.all(toRemoveFiles.map(f => fs.remove(f)));
 
     const toAppendFiles: DlxDownloadRequest[] = toAppend.flatMap(p =>
-        p.files.map(
-            f => ({
-                url: f.url,
-                path: container.addon(p.meta.type, f.fileName),
-                size: f.size,
-                sha1: f.sha1,
-                fastLink: container.props.flags.link
-            })
-        )
+        p.files.map(f => ({
+            url: f.url,
+            path: container.addon(p.meta.type, f.fileName),
+            size: f.size,
+            sha1: f.sha1,
+            fastLink: container.props.flags.link,
+        })),
     );
 
     await dlx.getAll(toAppendFiles); // TODO progress and signal
@@ -237,13 +246,10 @@ async function doFullResolve(gameId: string, additionalPrompts: string[] = []): 
 
     console.debug("Resolving packages...");
     const prevPkgs = manifest.resolved.concat();
-    const newPkgs = await resolve(
-        manifest.userPrompt,
-        {
-            gameVersion: game.versions.game,
-            loader: game.type
-        }
-    );
+    const newPkgs = await resolve(manifest.userPrompt, {
+        gameVersion: game.versions.game,
+        loader: game.type,
+    });
 
     if (!newPkgs) {
         throw "The specified mods cannot be satisfied";
@@ -263,7 +269,7 @@ async function doAddPackages(gameId: string, specs: string[]): Promise<void> {
     const game = games.get(gameId);
     const ctx = {
         gameVersion: game.versions.game,
-        loader: game.type
+        loader: game.type,
     };
 
     const manifest = await mpmLock.loadManifest(gameId);
@@ -273,12 +279,12 @@ async function doAddPackages(gameId: string, specs: string[]): Promise<void> {
 
     const pkgs = await resolve(specs, ctx);
 
-    const existingPackagesMap = new Map(manifest.resolved.map(p => [p.vendor + ":" + p.id, p]));
+    const existingPackagesMap = new Map(manifest.resolved.map(p => [`${p.vendor}:${p.id}`, p]));
 
     if (pkgs) {
         // First, for all the new packages, replace each one with installed version (regardless of compatibility)
         for (const [i, p] of pkgs.entries()) {
-            const pu = p.vendor + ":" + p.id;
+            const pu = `${p.vendor}:${p.id}`;
             if (existingPackagesMap.has(pu)) {
                 pkgs[i] = existingPackagesMap.get(pu)!;
             }
@@ -290,7 +296,11 @@ async function doAddPackages(gameId: string, specs: string[]): Promise<void> {
 
         if (allPkgs.every(p => isDependencySatisfied(p, allPkgNames))) {
             console.debug("Incremental resolution successful.");
-            await flashPackages(manifest.resolved, allPkgs, containers.get(game.launchHint.containerId));
+            await flashPackages(
+                manifest.resolved,
+                allPkgs,
+                containers.get(game.launchHint.containerId),
+            );
 
             manifest.userPrompt.push(...specs);
             manifest.resolved = allPkgs;
@@ -378,5 +388,5 @@ async function removePackages(gameId: string, specs: string[]) {
 export const mpm = {
     fullResolve,
     addPackages,
-    removePackages
+    removePackages,
 };

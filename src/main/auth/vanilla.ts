@@ -1,9 +1,14 @@
-import { Account, type AccountProps, AuthCredentials, AuthFailedException } from "@/main/auth/types";
+import { net } from "electron";
+import { nanoid } from "nanoid";
+import {
+    type Account,
+    type AccountProps,
+    type AuthCredentials,
+    AuthFailedException,
+} from "@/main/auth/types";
 import { vanillaOAuth } from "@/main/auth/vanilla-oauth";
 import { CancelledException } from "@/main/except/common";
 import { doDecrypt, doEncrypt } from "@/main/security/encrypt";
-import { net } from "electron";
-import { nanoid } from "nanoid";
 
 const OAUTH_API = "https://login.live.com/oauth20_token.srf";
 const XBL_API = "https://user.auth.xboxlive.com/user/authenticate";
@@ -48,7 +53,7 @@ export class VanillaAccount implements Account {
     }
 
     constructor(partId?: string) {
-        this.#partId = partId || ("ms-auth-" + nanoid()).toLowerCase();
+        this.#partId = partId || `ms-auth-${nanoid()}`.toLowerCase();
     }
 
     credentials(): AuthCredentials {
@@ -57,7 +62,7 @@ export class VanillaAccount implements Account {
             playerName: this.#playerName,
             xboxId: this.#xboxId,
             accessToken: this.#accessToken,
-            userType: "msa"
+            userType: "msa",
         };
     }
 
@@ -119,7 +124,7 @@ export class VanillaAccount implements Account {
                     await this.#getXSTSToken();
                     await this.#getAccessToken();
                     await this.#getUserProfile();
-                })()
+                })(),
             ]);
 
             console.log(`Login complete. Welcome back, ${this.#playerName}!`);
@@ -139,7 +144,7 @@ export class VanillaAccount implements Account {
             accessToken: doEncrypt(this.#accessToken),
             refreshToken: doEncrypt(this.#refreshToken),
             accessTokenExpirationTime: this.#accessTokenExpiresAt,
-            refreshTokenExpirationTime: this.#refreshTokenExpiresAt
+            refreshTokenExpirationTime: this.#refreshTokenExpiresAt,
         };
     }
 
@@ -167,22 +172,26 @@ export class VanillaAccount implements Account {
         const res = await net.fetch(OAUTH_API, {
             method: "POST",
             headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
+                "Content-Type": "application/x-www-form-urlencoded",
             },
             body: new URLSearchParams({
                 client_id: "00000000402b5328",
                 [grantTag]: credit,
                 grant_type: grantType,
                 redirect_uri: "https://login.live.com/oauth20_desktop.srf",
-                scope: "service::user.auth.xboxlive.com::MBI_SSL"
-            })
+                scope: "service::user.auth.xboxlive.com::MBI_SSL",
+            }),
         });
 
         const dat = await res.json();
 
         if (dat.error) throw dat.error;
 
-        const { access_token: accessToken, refresh_token: refreshToken, expires_in: expiresIn } = dat;
+        const {
+            access_token: accessToken,
+            refresh_token: refreshToken,
+            expires_in: expiresIn,
+        } = dat;
 
         if (!accessToken) throw "Missing access token in response";
 
@@ -197,13 +206,18 @@ export class VanillaAccount implements Account {
             Properties: {
                 AuthMethod: "RPS",
                 SiteName: "user.auth.xboxlive.com",
-                RpsTicket: this.#oAuthToken
+                RpsTicket: this.#oAuthToken,
             },
             RelyingParty: "http://auth.xboxlive.com",
-            TokenType: "JWT"
+            TokenType: "JWT",
         });
 
-        const { Token: token, DisplayClaims: { xui: [{ uhs }] } } = dat;
+        const {
+            Token: token,
+            DisplayClaims: {
+                xui: [{ uhs }],
+            },
+        } = dat;
 
         if (!token || !uhs) throw "Missing XBL token in response";
 
@@ -216,13 +230,17 @@ export class VanillaAccount implements Account {
         const dat = await postJSON(XSTS_API, {
             Properties: {
                 SandboxId: "RETAIL",
-                UserTokens: [this.#xblToken]
+                UserTokens: [this.#xblToken],
             },
             RelyingParty: "http://xboxlive.com",
-            TokenType: "JWT"
+            TokenType: "JWT",
         });
 
-        const { DisplayClaims: { xui: [{ xid }] } } = dat;
+        const {
+            DisplayClaims: {
+                xui: [{ xid }],
+            },
+        } = dat;
 
         this.#xboxId = xid ?? ""; // Xbox ID is not enforced
     }
@@ -232,10 +250,10 @@ export class VanillaAccount implements Account {
         const dat = await postJSON(XSTS_API, {
             Properties: {
                 SandboxId: "RETAIL",
-                UserTokens: [this.#xblToken]
+                UserTokens: [this.#xblToken],
             },
             RelyingParty: "rp://api.minecraftservices.com/",
-            TokenType: "JWT"
+            TokenType: "JWT",
         });
 
         const { Token: token } = dat;
@@ -248,7 +266,7 @@ export class VanillaAccount implements Account {
     async #getAccessToken(): Promise<void> {
         console.log("XSTS -> Access Token");
         const res = await postJSON(MOJANG_LOGIN_API, {
-            identityToken: `XBL3.0 x=${this.#userHash};${this.#xstsToken}`
+            identityToken: `XBL3.0 x=${this.#userHash};${this.#xstsToken}`,
         });
 
         const { access_token: accessToken, expires_in: expiresIn } = res;
@@ -259,13 +277,12 @@ export class VanillaAccount implements Account {
         this.#accessToken = accessToken;
     }
 
-
     async #getUserProfile(): Promise<void> {
         console.log("Access Token -> Profile");
         const res = await net.fetch(MOJANG_PROFILE_API, {
             headers: {
-                Authorization: `Bearer ${this.#accessToken}`
-            }
+                Authorization: `Bearer ${this.#accessToken}`,
+            },
         });
 
         const { id, name } = await res.json();
@@ -282,9 +299,9 @@ async function postJSON(url: string, data: unknown) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            Accept: "application/json"
+            Accept: "application/json",
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
     });
     const d = await res.json();
     if (d.error) throw d.error;

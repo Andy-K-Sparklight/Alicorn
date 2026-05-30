@@ -1,26 +1,26 @@
-import { conf } from "@/main/conf/conf";
-import { AbstractException, coerceErrorMessage } from "@/main/except/exception";
-import { type GameProcessLog, logParser } from "@/main/launch/log-parser";
-import { nanoid } from "nanoid";
 import * as child_process from "node:child_process";
 import EventEmitter from "node:events";
 import os from "node:os";
 import * as process from "node:process";
-import { Readable } from "node:stream";
+import type { Readable } from "node:stream";
 import { promisify } from "node:util";
-import { CancelablePromise, pEvent } from "p-event";
+import { nanoid } from "nanoid";
+import { type CancelablePromise, pEvent } from "p-event";
 import type TypedEmitter from "typed-emitter";
+import { conf } from "@/main/conf/conf";
+import { AbstractException, coerceErrorMessage } from "@/main/except/exception";
+import { type GameProcessLog, logParser } from "@/main/launch/log-parser";
 
 type GameProcessEvents = {
     /**
      * Exits normally.
      */
-    exit: () => void
+    exit: () => void;
 
     /**
      * Exits abnormally.
      */
-    crash: () => void
+    crash: () => void;
 
     /**
      * Exits regardless of status.
@@ -30,25 +30,25 @@ type GameProcessEvents = {
     /**
      * Standard output message received.
      */
-    stdout: (s: string) => void
+    stdout: (s: string) => void;
 
     /**
      * Standard error message received.
      */
-    stderr: (s: string) => void
+    stderr: (s: string) => void;
 
     /**
      * Game log object parsed and received.
      */
-    log: (log: GameProcessLog[]) => void
+    log: (log: GameProcessLog[]) => void;
 
     /**
      * Memory usage value updated.
      */
     memUsageUpdate: (bytes: number) => void;
-}
+};
 
-type GameProcessStatus = "created" | "running" | "exited" | "crashed"
+type GameProcessStatus = "created" | "running" | "exited" | "crashed";
 
 export class GameProcess {
     id = nanoid();
@@ -56,7 +56,7 @@ export class GameProcess {
     status: GameProcessStatus = "created";
     outputs = {
         stdout: [] as string[],
-        stderr: [] as string[]
+        stderr: [] as string[],
     };
     logs: GameProcessLog[] = [];
 
@@ -74,7 +74,7 @@ export class GameProcess {
             cwd: gameDir,
             detached: true,
             env,
-            stdio: ["ignore", "overlapped", "overlapped"]
+            stdio: ["ignore", "overlapped", "overlapped"],
         });
 
         this.#proc = proc;
@@ -85,13 +85,17 @@ export class GameProcess {
             this.status = "running";
         });
 
-        proc.on("error", (e) => {
-            console.error(`Error occurred in game instance ${this.id} (PID ${this.#proc?.pid ?? "UNKNOWN"})`);
+        proc.on("error", e => {
+            console.error(
+                `Error occurred in game instance ${this.id} (PID ${this.#proc?.pid ?? "UNKNOWN"})`,
+            );
             console.error(e);
         });
 
-        proc.once("exit", (code) => {
-            console.log(`Game process ${this.id} (PID ${proc.pid ?? "UNKNOWN"}) exited with code ${code}.`);
+        proc.once("exit", code => {
+            console.log(
+                `Game process ${this.id} (PID ${proc.pid ?? "UNKNOWN"}) exited with code ${code}.`,
+            );
             if (code === 0) {
                 this.status = "exited";
                 this.emitter.emit("exit");
@@ -146,8 +150,7 @@ export class GameProcess {
             try {
                 const m = await this.getMemoryUsage();
                 this.emitter.emit("memUsageUpdate", m);
-            } catch {
-            }
+            } catch {}
         }, 1000);
     }
 
@@ -207,7 +210,7 @@ export class GameProcess {
         const { stdout } = await exec(cmdLine);
 
         if (os.platform() === "win32") {
-            return Number(JSON.parse(stdout.toString())?.["Mem"]) || 0;
+            return Number(JSON.parse(stdout.toString())?.Mem) || 0;
         } else {
             return parseInt(stdout.toString().match(/[1-9][0-9]*/)?.[0] ?? "0", 10) * 1024 || 0;
         }

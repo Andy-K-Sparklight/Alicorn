@@ -1,4 +1,3 @@
-import type { CreateGameInit } from "@/main/api/game";
 import { AnimatedRoute } from "@components/misc/AnimatedRoute";
 import { FinishView } from "@pages/create-game-wizard/FinishView";
 import { PickAccountView } from "@pages/create-game-wizard/PickAccountView";
@@ -6,6 +5,7 @@ import { PickModLoaderView } from "@pages/create-game-wizard/PickModLoaderView";
 import { PickVersionView } from "@pages/create-game-wizard/PickVersionView";
 import React, { useState } from "react";
 import { Redirect } from "wouter";
+import type { CreateGameInit } from "@/main/api/game";
 
 interface CreateGameWizardContextContent {
     value: Partial<CreateGameInit>;
@@ -16,17 +16,19 @@ const CreateGameWizardContext = React.createContext<CreateGameWizardContextConte
 
 export function CreateGameWizardView() {
     const [value, setValue] = useState<Partial<CreateGameInit>>({});
-    return <CreateGameWizardContext.Provider value={{ value, setValue }}>
-        <AnimatedRoute path="/games/new-wizard/pick-version" component={PickVersionView}/>
-        <AnimatedRoute path="/games/new-wizard/pick-mod-loader" component={PickModLoaderView}/>
-        <AnimatedRoute path="/games/new-wizard/pick-account" component={PickAccountView}/>
-        <AnimatedRoute path="/games/new-wizard/finish" component={FinishView}/>
-        <AnimatedRoute path="/games/new-wizard" component={DefaultPageRedirect}/>
-    </CreateGameWizardContext.Provider>;
+    return (
+        <CreateGameWizardContext.Provider value={{ value, setValue }}>
+            <AnimatedRoute path="/games/new-wizard/pick-version" component={PickVersionView} />
+            <AnimatedRoute path="/games/new-wizard/pick-mod-loader" component={PickModLoaderView} />
+            <AnimatedRoute path="/games/new-wizard/pick-account" component={PickAccountView} />
+            <AnimatedRoute path="/games/new-wizard/finish" component={FinishView} />
+            <AnimatedRoute path="/games/new-wizard" component={DefaultPageRedirect} />
+        </CreateGameWizardContext.Provider>
+    );
 }
 
 function DefaultPageRedirect() {
-    return <Redirect to="/games/new-wizard/pick-version"/>;
+    return <Redirect to="/games/new-wizard/pick-version" />;
 }
 
 export function useCreateGameWizardContext() {

@@ -1,5 +1,5 @@
-import fs from "fs-extra";
 import path from "node:path";
+import fs from "fs-extra";
 
 export async function linkAll(src: string, dst: string): Promise<void> {
     const st = await fs.stat(src);

@@ -1,11 +1,12 @@
 // Runs the development build and starts frontend hot-reloading server
+
+import * as child_process from "node:child_process";
+import path from "node:path";
+import * as util from "node:util";
 import { TsconfigPathsPlugin } from "@esbuild-plugins/tsconfig-paths";
 import consola from "consola";
 import esbuild, { type BuildOptions } from "esbuild";
 import fs from "fs-extra";
-import * as child_process from "node:child_process";
-import path from "node:path";
-import * as util from "node:util";
 import { pEvent } from "p-event";
 import * as vite from "vite";
 import { processResources } from "~/build-src/resources";
@@ -29,10 +30,10 @@ export async function build(variant: BuildVariant) {
     await fs.emptyDir(outputDir);
 
     const defines = {
-        "NODE_ENV": isDev ? "\"development\"" : "\"production\"",
-        "__dirname": "import.meta.dirname",
-        "__filename": "import.meta.filename",
-        ...defs
+        NODE_ENV: isDev ? '"development"' : '"production"',
+        __dirname: "import.meta.dirname",
+        __filename: "import.meta.filename",
+        ...defs,
     };
 
     const sharedOptions: BuildOptions = {
@@ -44,36 +45,32 @@ export async function build(variant: BuildVariant) {
         define: defines,
         outdir: outputDir,
         legalComments: "none",
-        drop: isProd ? ["console", "debugger"] : []
+        drop: isProd ? ["console", "debugger"] : [],
     };
 
     const mainBuildOptions: BuildOptions = {
         entryPoints: {
             main: "src/main/main.ts",
             "hash-worker": "src/main/security/hash-worker.ts",
-            boot: "src/main/sys/boot.ts"
+            boot: "src/main/sys/boot.ts",
         },
-        plugins: [
-            TsconfigPathsPlugin({ tsconfig: "./tsconfig.json" })
-        ],
+        plugins: [TsconfigPathsPlugin({ tsconfig: "./tsconfig.json" })],
         chunkNames: "[hash]",
         splitting: true,
         format: "esm",
         banner: {
             // A patch to make require available
-            js: "import { createRequire } from \"node:module\";\nglobal.require = createRequire(import.meta.url);\n"
+            js: 'import { createRequire } from "node:module";\nglobal.require = createRequire(import.meta.url);\n',
         },
-        ...sharedOptions
+        ...sharedOptions,
     };
 
     const preloadBuildOptions: BuildOptions = {
         entryPoints: {
-            preload: "src/preload/preload.ts"
+            preload: "src/preload/preload.ts",
         },
-        plugins: [
-            TsconfigPathsPlugin({ tsconfig: "./tsconfig.json" })
-        ],
-        ...sharedOptions
+        plugins: [TsconfigPathsPlugin({ tsconfig: "./tsconfig.json" })],
+        ...sharedOptions,
     };
 
     await processResources(cfg);
@@ -91,7 +88,7 @@ export async function build(variant: BuildVariant) {
         const server = await vite.createServer({
             configFile: viteConfigFile,
             server: { port: cfg.devServerPort, strictPort: true },
-            define: defines
+            define: defines,
         });
 
         await server.listen();
@@ -102,8 +99,8 @@ export async function build(variant: BuildVariant) {
             configFile: viteConfigFile,
             define: defines,
             build: {
-                outDir: path.join(outputDir, "renderer")
-            }
+                outDir: path.join(outputDir, "renderer"),
+            },
         });
     }
 
@@ -116,7 +113,13 @@ export async function build(variant: BuildVariant) {
 
 async function runElectronDev(appDir: string) {
     consola.start("start: electron app");
-    const electronExec = path.resolve(import.meta.dirname, "..", "node_modules", "electron", "cli.js");
+    const electronExec = path.resolve(
+        import.meta.dirname,
+        "..",
+        "node_modules",
+        "electron",
+        "cli.js",
+    );
     const proc = child_process.fork(electronExec, ["--trace-warnings", "."], { cwd: appDir });
 
     // Forward Ctrl-C to the app

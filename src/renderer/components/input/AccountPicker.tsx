@@ -1,10 +1,11 @@
-import { useAccounts } from "@/renderer/services/accounts";
 import { SkinAvatar } from "@components/display/SkinAvatar";
 import { CardRadio } from "@components/input/CardRadio";
 import { RadioGroup, Skeleton } from "@heroui/react";
 import { UserPlus2Icon } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccounts } from "@/renderer/services/accounts";
 
 interface AccountSelectorProps {
     accountId: string | null;
@@ -16,29 +17,28 @@ export function AccountPicker({ accountId, allowCreation, onChange }: AccountSel
     const { t } = useTranslation("common", { keyPrefix: "account-picker" });
     const accounts = useAccounts();
 
-    return <RadioGroup value={accountId} onValueChange={onChange}>
-        {
-            allowCreation &&
-            <PickEntry
-                value="new"
-                title={t("new.title")}
-                sub={t("new.sub")}
-                icon={<UserPlus2Icon className="w-full h-full"/>}
-            />
-        }
+    return (
+        <RadioGroup value={accountId} onValueChange={onChange}>
+            {allowCreation && (
+                <PickEntry
+                    value="new"
+                    title={t("new.title")}
+                    sub={t("new.sub")}
+                    icon={<UserPlus2Icon className="w-full h-full" />}
+                />
+            )}
 
-        {
-            accounts.map(a =>
+            {accounts.map(a => (
                 <PickEntry
                     key={a.uuid}
                     value={a.uuid}
                     title={a.playerName}
                     sub={a.uuid}
-                    icon={<AccountSkinAvatar accountId={a.uuid}/>}
+                    icon={<AccountSkinAvatar accountId={a.uuid} />}
                 />
-            )
-        }
-    </RadioGroup>;
+            ))}
+        </RadioGroup>
+    );
 }
 
 interface PickEntryProps {
@@ -49,18 +49,18 @@ interface PickEntryProps {
 }
 
 function PickEntry({ icon, value, title, sub }: PickEntryProps) {
-    return <CardRadio value={value}>
-        <div className="flex gap-4 items-center">
-            <div className="w-12 h-12 shrink-0 p-1">
-                {icon}
-            </div>
+    return (
+        <CardRadio value={value}>
+            <div className="flex gap-4 items-center">
+                <div className="w-12 h-12 shrink-0 p-1">{icon}</div>
 
-            <div className="flex flex-col gap-1">
-                <div>{title}</div>
-                <div className="text-sm text-foreground-400">{sub}</div>
+                <div className="flex flex-col gap-1">
+                    <div>{title}</div>
+                    <div className="text-sm text-foreground-400">{sub}</div>
+                </div>
             </div>
-        </div>
-    </CardRadio>;
+        </CardRadio>
+    );
 }
 
 function AccountSkinAvatar({ accountId }: { accountId: string }) {
@@ -71,8 +71,8 @@ function AccountSkinAvatar({ accountId }: { accountId: string }) {
     }, [accountId]);
 
     if (!skinUrls) {
-        return <Skeleton className="w-full h-full rounded-xs"/>;
+        return <Skeleton className="w-full h-full rounded-xs" />;
     }
 
-    return <SkinAvatar avatarSrc={skinUrls}/>;
+    return <SkinAvatar avatarSrc={skinUrls} />;
 }

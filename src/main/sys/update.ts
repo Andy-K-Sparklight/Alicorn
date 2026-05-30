@@ -1,19 +1,23 @@
-import { netx } from "@/main/net/netx";
-import { windowControl } from "@/main/sys/window-control";
+import os from "node:os";
+import path from "node:path";
+import { Stream } from "node:stream";
 import { app, net } from "electron";
 import fs from "fs-extra";
 import { nanoid } from "nanoid";
 import StreamZip from "node-stream-zip";
-import os from "node:os";
-import path from "node:path";
-import { Stream } from "node:stream";
 import * as semver from "semver";
+import { netx } from "@/main/net/netx";
+import { windowControl } from "@/main/sys/window-control";
 import pkg from "~/package.json";
 
 function getVariableAppDir() {
     switch (os.platform()) {
         case "win32":
-            return path.join(process.env["LOCALAPPDATA"] || process.env["APPDATA"] || os.homedir(), "Alicorn", "app");
+            return path.join(
+                process.env.LOCALAPPDATA || process.env.APPDATA || os.homedir(),
+                "Alicorn",
+                "app",
+            );
         case "darwin":
             return path.join(os.homedir(), "Library", "Application Support", "Alicorn", "app");
         default:
@@ -31,8 +35,8 @@ const RELEASES_URL = "https://jsr.io/@skjsjhb/alicorn-launcher/meta.json";
 async function queryReleases(): Promise<ReleasesMeta> {
     const res = await net.fetch(RELEASES_URL, {
         headers: {
-            "Accept": "application/json"
-        }
+            Accept: "application/json",
+        },
     });
 
     if (!res.ok) throw `Unable to query releases: ${res.status}`;
@@ -48,7 +52,7 @@ function findCompatibleAsset(meta: ReleasesMeta): [string, string] | null {
     for (const v of versions) {
         const cv = semver.clean(v, { loose: true });
 
-        if (cv && semver.satisfies(cv, "^" + pkg.version) && semver.gt(cv, pkg.version)) {
+        if (cv && semver.satisfies(cv, `^${pkg.version}`) && semver.gt(cv, pkg.version)) {
             const url = `https://github.com/Andy-K-Sparklight/Alicorn/releases/download/v${v}/${appBundleName}`;
             return [url, cv];
         }
@@ -58,7 +62,7 @@ function findCompatibleAsset(meta: ReleasesMeta): [string, string] | null {
 }
 
 async function installAsset(url: string, ver: string): Promise<void> {
-    console.log("Installing asset from: " + url);
+    console.log(`Installing asset from: ${url}`);
 
     const res = await netx.request(url);
 

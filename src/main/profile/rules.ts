@@ -1,6 +1,6 @@
+import os from "node:os";
 import type { Rule } from "@/main/profile/version-profile";
 import { getOSName } from "@/main/sys/os";
-import os from "node:os";
 
 /**
  * Filter the rules based on OS information and given feature set.

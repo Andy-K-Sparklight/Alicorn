@@ -4,16 +4,17 @@
  * Comparing to the wrapped downloader, the next downloader runs on the main process and utilizes the net module from
  * Electron. This is expected to bypass the connection limit in the browser window and maximize the throughput.
  */
+
+import path from "node:path";
+import { Stream } from "node:stream";
+import { net } from "electron";
+import Emittery from "emittery";
+import fs from "fs-extra";
+import { pEvent } from "p-event";
 import { conf } from "@/main/conf/conf";
 import { type DlxDownloadRequest, DownloadException } from "@/main/net/dlx";
 import { hash } from "@/main/security/hash";
 import { isTruthy } from "@/main/util/misc";
-import { net } from "electron";
-import Emittery from "emittery";
-import fs from "fs-extra";
-import path from "node:path";
-import { Stream } from "node:stream";
-import { pEvent } from "p-event";
 
 /**
  * A network-level download request for fetching the given resources and save them to the given path.
@@ -111,8 +112,9 @@ async function resolveOnce(task: NextDownloadTask): Promise<NextRequestStatus> {
 
     if (res === "success") {
         if (task.req.validate && task.req.sha1) {
-
-            return await hash.checkFile(task.req.path, "sha1", task.req.sha1) ? "success" : "retry";
+            return (await hash.checkFile(task.req.path, "sha1", task.req.sha1))
+                ? "success"
+                : "retry";
         } else {
             return "success";
         }
@@ -130,12 +132,12 @@ function createTask(req: NextDownloadRequest): NextDownloadTask {
     return {
         req: {
             ...req,
-            path: path.resolve(req.path)
+            path: path.resolve(req.path),
         },
         activeURL: req.urls[0],
         signal: req.signal,
         emitter: new Emittery(),
-        tries: 0
+        tries: 0,
     };
 }
 
@@ -151,16 +153,19 @@ async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
 
     let res: Response | null = null;
 
-    const timer = requestTimeout > 0 && setTimeout(() => {
-        if (!res) { // Avoid aborting the request when it has fulfilled
-            ac.abort("Request timed out");
-        }
-    }, requestTimeout);
+    const timer =
+        requestTimeout > 0 &&
+        setTimeout(() => {
+            if (!res) {
+                // Avoid aborting the request when it has fulfilled
+                ac.abort("Request timed out");
+            }
+        }, requestTimeout);
 
     try {
         res = await net.fetch(task.activeURL, {
             credentials: "omit",
-            signal
+            signal,
         });
 
         if (timer) {
@@ -180,10 +185,11 @@ async function retrieve(task: NextDownloadTask): Promise<NextRequestStatus> {
         return "retry";
     }
 
-
     try {
         await fs.ensureFile(task.req.path);
-        const writeStream = Stream.Writable.toWeb(fs.createWriteStream(task.req.path)) as WritableStream<Uint8Array>;
+        const writeStream = Stream.Writable.toWeb(
+            fs.createWriteStream(task.req.path),
+        ) as WritableStream<Uint8Array>;
         const guard = createGuard(minSpeed);
         const streamSignal = AbortSignal.any([task.signal, guard.signal].filter(isTruthy));
         await res.body.pipeThrough(guard.stream).pipeTo(writeStream, { signal: streamSignal });
@@ -232,13 +238,13 @@ function createGuard(minSpeed: number): Guard {
         transform(chunk, controller) {
             bytesSinceLastUpdate += chunk.byteLength;
             controller.enqueue(chunk);
-        }
+        },
     });
 
     return {
         signal: ac.signal,
         stream: st,
-        clear: () => clearInterval(timer)
+        clear: () => clearInterval(timer),
     };
 }
 

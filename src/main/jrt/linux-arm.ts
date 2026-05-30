@@ -1,18 +1,22 @@
 /**
  * Add the missing JRT on ARM64 GNU/Linux.
  */
+
+import path from "node:path";
+import { pipeline } from "node:stream/promises";
+import * as zlib from "node:zlib";
+import fs from "fs-extra";
+import tar from "tar-fs";
 import { paths } from "@/main/fs/paths";
-import { jrt, JrtInstallationFailedException } from "@/main/jrt/install";
+import { JrtInstallationFailedException, jrt } from "@/main/jrt/install";
 import { dlx } from "@/main/net/dlx";
 import { unwrapESM } from "@/main/util/module";
-import fs from "fs-extra";
-import path from "node:path";
-import * as zlib from "node:zlib";
-import { pipeline } from "stream/promises";
-import tar from "tar-fs";
 
 async function installComponent(component: string) {
-    const urls = await unwrapESM(import("@/refs/jrt-linux-arm.json")) as unknown as Record<string, string>;
+    const urls = (await unwrapESM(import("@/refs/jrt-linux-arm.json"))) as unknown as Record<
+        string,
+        string
+    >;
 
     const root = jrt.getInstallPath(component);
 
@@ -41,10 +45,9 @@ async function installComponent(component: string) {
         {
             url: u,
             path: tarFile,
-            fastLink: false
-        }
+            fastLink: false,
+        },
     ]);
-
 
     console.log(`Unpacking ${tarFile}`);
     await fs.ensureDir(root);

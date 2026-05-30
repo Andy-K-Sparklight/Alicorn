@@ -1,9 +1,9 @@
-import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import path from "node:path";
-import { defineConfig, PluginOption } from "vite";
-import removeConsole from "vite-plugin-remove-console";
-import tailwindcss from "@tailwindcss/vite";
 import babel from "@rolldown/plugin-babel";
+import tailwindcss from "@tailwindcss/vite";
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import { defineConfig, type PluginOption } from "vite";
+import removeConsole from "vite-plugin-remove-console";
 
 export default defineConfig(({ command }) => {
     const isDev = command === "serve";
@@ -17,7 +17,7 @@ export default defineConfig(({ command }) => {
         publicDir: path.resolve(import.meta.dirname, "..", "public"),
         cacheDir: path.resolve(import.meta.dirname, "..", ".vite-cache"),
         resolve: {
-            tsconfigPaths: true
+            tsconfigPaths: true,
         },
         build: {
             emptyOutDir: true,
@@ -28,35 +28,33 @@ export default defineConfig(({ command }) => {
                         groups: [
                             {
                                 test: /node_modules\/@heroui\/react/,
-                                name: "heroui"
+                                name: "heroui",
                             },
                             {
                                 test: /node_modules\/@heroui\/theme/,
-                                name: "theme"
+                                name: "theme",
                             },
                             {
                                 test: /node_modules\/lucide-react/,
-                                name: "lucide"
-                            }
-                        ]
-                    }
-                }
-            }
+                                name: "lucide",
+                            },
+                        ],
+                    },
+                },
+            },
         },
         plugins: [
-            isDev ?
-                react() :
-                [react(), babel({ presets: [reactCompilerPreset()] })],
+            isDev ? react() : [react(), babel({ presets: [reactCompilerPreset()] })],
             tailwindcss(),
             i18nHotReload(),
-            removeConsole()
+            removeConsole(),
         ],
         define: {},
         server: {
             warmup: {
-                clientFiles: ["index.html"]
-            }
-        }
+                clientFiles: ["index.html"],
+            },
+        },
     };
 });
 
@@ -67,9 +65,9 @@ function i18nHotReload(): PluginOption {
             if (file.includes("i18n") && file.endsWith(".yml")) {
                 server.ws.send({
                     type: "custom",
-                    event: "locales-update"
+                    event: "locales-update",
                 });
             }
-        }
+        },
     };
 }

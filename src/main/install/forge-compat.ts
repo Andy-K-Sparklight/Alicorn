@@ -1,13 +1,13 @@
+import path from "node:path";
+import fs from "fs-extra";
+import { nanoid } from "nanoid";
+import StreamZip from "node-stream-zip";
 import type { Container } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import { dlx } from "@/main/net/dlx";
 import type { Library } from "@/main/profile/version-profile";
 import { unwrapESM } from "@/main/util/module";
 import type { ProgressController } from "@/main/util/progress";
-import fs from "fs-extra";
-import { nanoid } from "nanoid";
-import StreamZip from "node-stream-zip";
-import path from "node:path";
 
 async function loadCompat() {
     return await unwrapESM(import("@/refs/legacy-forge-compat.json"));
@@ -18,7 +18,7 @@ async function shouldUseVenv(v: string): Promise<boolean> {
 }
 
 async function getModLoaderUrl(v: string): Promise<string> {
-    return (await loadCompat() as any)["mod-loader"][v] ?? "";
+    return ((await loadCompat()) as any)["mod-loader"][v] ?? "";
 }
 
 async function downloadModLoader(url: string, control?: ProgressController): Promise<string> {
@@ -29,7 +29,7 @@ async function downloadModLoader(url: string, control?: ProgressController): Pro
 }
 
 async function getModLoaderDamtLibrary(): Promise<Library> {
-    return (await loadCompat())["damt"];
+    return (await loadCompat()).damt;
 }
 
 async function getModLoaderDamtArg(): Promise<string> {
@@ -40,7 +40,7 @@ async function patchProfile(container: Container, id: string) {
     console.debug(`Patching ${id} with DAMT...`);
     const prof = await fs.readJSON(container.profile(id));
     prof.libraries.push(await getModLoaderDamtLibrary());
-    prof.minecraftArguments += (" " + await getModLoaderDamtArg());
+    prof.minecraftArguments += ` ${await getModLoaderDamtArg()}`;
     await fs.writeJSON(container.profile(id), prof);
 }
 
@@ -76,5 +76,5 @@ export const forgeCompat = {
     downloadModLoader,
     patchProfile,
     shouldStripSignature,
-    stripSignature
+    stripSignature,
 };

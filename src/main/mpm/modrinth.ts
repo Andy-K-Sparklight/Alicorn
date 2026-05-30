@@ -1,3 +1,6 @@
+import { session } from "electron";
+import lazyValue from "lazy-value";
+import { nanoid } from "nanoid";
 import { conf } from "@/main/conf/conf";
 import type { MpmPackageProvider } from "@/main/mpm/pm";
 import {
@@ -7,13 +10,10 @@ import {
     type MpmFile,
     type MpmPackage,
     type MpmPackageDependency,
-    MpmPackageSpecifier
+    MpmPackageSpecifier,
 } from "@/main/mpm/spec";
 import { netx } from "@/main/net/netx";
 import { getCanonicalUA } from "@/main/sys/ua";
-import { session } from "electron";
-import lazyValue from "lazy-value";
-import { nanoid } from "nanoid";
 import pkg from "~/package.json";
 
 const API_URL = "https://api.modrinth.com/v2";
@@ -100,18 +100,20 @@ async function search(
     query: string,
     gameVersion: string,
     loader: string,
-    offset = 0
+    offset = 0,
 ): Promise<MpmAddonMeta[]> {
     const q = encodeURIComponent(query);
-    const facets = makeJSONParam([
-        scope !== "modpack" && [`versions:${gameVersion}`],
-        scope === "mods" && [`categories:${toModrinthLoaderType(loader)}`],
-        [`project_type:${toModrinthType(scope)}`]
-    ].filter(Boolean));
+    const facets = makeJSONParam(
+        [
+            scope !== "modpack" && [`versions:${gameVersion}`],
+            scope === "mods" && [`categories:${toModrinthLoaderType(loader)}`],
+            [`project_type:${toModrinthType(scope)}`],
+        ].filter(Boolean),
+    );
 
     try {
         const res = await apiGet<{ hits?: ModrinthProjectSlim[] }>(
-            `${API_URL}/search?query=${q}&facets=${facets}&limit=50&offset=${offset}`
+            `${API_URL}/search?query=${q}&facets=${facets}&limit=50&offset=${offset}`,
         );
 
         res.hits?.forEach(p => projectMetaCache.set(p.project_id, p));
@@ -136,7 +138,6 @@ async function requestVersions(versionIds: string[]): Promise<ModrinthVersion[]>
     return apiGet<ModrinthVersion[]>(`${API_URL}/versions?ids=${vs}`);
 }
 
-
 function sortVersions(arr: ModrinthVersion[]) {
     arr.sort((a, b) => {
         const d1 = new Date(a.date_published);
@@ -145,7 +146,11 @@ function sortVersions(arr: ModrinthVersion[]) {
     });
 }
 
-async function requestProjectVersions(projId: string, gameVersion: string, loader: string | null): Promise<ModrinthVersion[]> {
+async function requestProjectVersions(
+    projId: string,
+    gameVersion: string,
+    loader: string | null,
+): Promise<ModrinthVersion[]> {
     const loadersParam = loader && makeJSONParam([loader]);
     const gameVersionsParam = makeJSONParam([gameVersion]);
 
@@ -164,7 +169,7 @@ function toMpmFile(f: ModrinthFile): MpmFile {
         url: f.url,
         fileName: f.filename,
         size: f.size,
-        sha1: f.hashes.sha1
+        sha1: f.hashes.sha1,
     };
 }
 
@@ -202,7 +207,7 @@ function toMpmAddonMeta(proj: ModrinthProject | ModrinthProjectSlim): MpmAddonMe
         author: proj.author,
         description: proj.description,
         icon: proj.icon_url ?? "",
-        type: toMpmType(proj.project_type)
+        type: toMpmType(proj.project_type),
     };
 }
 
@@ -228,43 +233,57 @@ export class ModrinthProvider implements MpmPackageProvider {
 
         // Enumerate possible versions
         const possibleVersions: {
-            spec: string,
-            versions: string[]
-        }[] = await Promise.all(specs.map(async spec => {
-            const s = new MpmPackageSpecifier(spec);
-            if (s.version) {
-                return { spec, versions: [s.version] };
-            } else {
-                const shouldIncludeLoader = s.type === "mods" || s.type === "modpack";
-                const versions = await requestProjectVersions(
-                    s.id,
-                    ctx.gameVersion,
-                    shouldIncludeLoader ? toModrinthLoaderType(ctx.loader) : null
-                );
-                versions.forEach(cacheVersion);
+            spec: string;
+            versions: string[];
+        }[] = await Promise.all(
+            specs.map(async spec => {
+                const s = new MpmPackageSpecifier(spec);
+                if (s.version) {
+                    return { spec, versions: [s.version] };
+                } else {
+                    const shouldIncludeLoader = s.type === "mods" || s.type === "modpack";
+                    const versions = await requestProjectVersions(
+                        s.id,
+                        ctx.gameVersion,
+                        shouldIncludeLoader ? toModrinthLoaderType(ctx.loader) : null,
+                    );
+                    versions.forEach(cacheVersion);
 
-                return { spec, versions: versions.map(v => v.id) };
-            }
-        }));
+                    return { spec, versions: versions.map(v => v.id) };
+                }
+            }),
+        );
 
         // Process unresolved versions
-        const missingVersions = possibleVersions.flatMap(v => v.versions).filter(vi => !cachedVersions.has(vi));
+        const missingVersions = possibleVersions
+            .flatMap(v => v.versions)
+            .filter(vi => !cachedVersions.has(vi));
 
         (await requestVersions(missingVersions)).forEach(cacheVersion);
 
         // Collect dependencies
-        const allDeps = cachedVersions.values().flatMap(v => v.dependencies).filter(d => d.dependency_type === "required");
-        const versionOnlyDeps = allDeps.filter(d => d.version_id && !d.project_id)
+        const allDeps = cachedVersions
+            .values()
+            .flatMap(v => v.dependencies)
+            .filter(d => d.dependency_type === "required");
+        const versionOnlyDeps = allDeps
+            .filter(d => d.version_id && !d.project_id)
             .map(d => d.version_id!)
             .filter(v => !cachedVersions.has(v));
-
 
         (await requestVersions([...versionOnlyDeps])).forEach(cacheVersion);
 
         // Collect projects
-        const allProjects = await requestProjects(Array.from(new Set(
-            cachedVersions.values().map(v => v.project_id).filter(p => !projectMetaCache.has(p))
-        )));
+        const allProjects = await requestProjects(
+            Array.from(
+                new Set(
+                    cachedVersions
+                        .values()
+                        .map(v => v.project_id)
+                        .filter(p => !projectMetaCache.has(p)),
+                ),
+            ),
+        );
 
         for (const proj of allProjects) {
             projectMetaCache.set(proj.id, proj);
@@ -281,26 +300,31 @@ export class ModrinthProvider implements MpmPackageProvider {
                 files: version.files.map(toMpmFile),
                 dependencies: version.dependencies
                     .filter(d => d.project_id || d.version_id)
-                    .filter(d => d.dependency_type === "required" || d.dependency_type === "incompatible")
+                    .filter(
+                        d =>
+                            d.dependency_type === "required" ||
+                            d.dependency_type === "incompatible",
+                    )
                     .map(d => {
-                        const projId = d.project_id || getCachedVersion(d.version_id!)?.project_id || "";
+                        const projId =
+                            d.project_id || getCachedVersion(d.version_id!)?.project_id || "";
                         const versionId = d.version_id || ""; // Arbitrary version
                         const proj = projectMetaCache.get(projId);
                         const type = proj ? toMpmType(proj.project_type) : "mods";
 
-
                         return {
                             type: d.dependency_type === "required" ? "require" : "conflict",
-                            spec: `modrinth:${type}:${projId}:${versionId}`
+                            spec: `modrinth:${type}:${projId}:${versionId}`,
                         } satisfies MpmPackageDependency;
                     }),
-                meta: toMpmAddonMeta(projectMetaCache.get(version.project_id)!)
+                meta: toMpmAddonMeta(projectMetaCache.get(version.project_id)!),
             };
         }
 
-        return possibleVersions.map(({ versions }) => versions
-            .map(v => getCachedVersion(v)) // All versions have been resolved above
-            .map(toMpmPackage)
+        return possibleVersions.map(({ versions }) =>
+            versions
+                .map(v => getCachedVersion(v)) // All versions have been resolved above
+                .map(toMpmPackage),
         );
     }
 }

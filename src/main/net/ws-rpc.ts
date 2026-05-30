@@ -15,12 +15,12 @@ export class WebSocketJsonRpcClient {
     constructor(ws: WebSocket) {
         this.#ws = ws;
 
-        this.#ws.addEventListener("error", (e) => {
+        this.#ws.addEventListener("error", e => {
             console.error(`Error in WebSocket JSON-RPC client`);
             console.error(e);
         });
 
-        this.#ws.onmessage = (e) => {
+        this.#ws.onmessage = e => {
             const d = JSON.parse(e.data.toString());
 
             if (d.id) {
@@ -33,7 +33,10 @@ export class WebSocketJsonRpcClient {
                 cb(d.error, d.result);
             } else {
                 // Dispatches event
-                const { method, params: [event] } = d;
+                const {
+                    method,
+                    params: [event],
+                } = d;
                 void this.#emitter.emit(method, event);
             }
         };
@@ -52,7 +55,9 @@ export class WebSocketJsonRpcClient {
 
         const body = JSON.stringify({
             jsonrpc: "2.0",
-            id, method, params
+            id,
+            method,
+            params,
         });
 
         this.#ws.send(body);

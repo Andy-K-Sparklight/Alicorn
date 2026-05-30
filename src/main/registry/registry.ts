@@ -1,13 +1,19 @@
+import deepFreeze from "deep-freeze-es6";
+import fs from "fs-extra";
 import { ACCOUNT_REG_TRANS, ACCOUNT_REG_VERSION, type AccountProps } from "@/main/auth/types";
-import { CONTAINER_REG_TRANS, CONTAINER_REG_VERSION, type ContainerProps } from "@/main/container/spec";
+import {
+    CONTAINER_REG_TRANS,
+    CONTAINER_REG_VERSION,
+    type ContainerProps,
+} from "@/main/container/spec";
 import { NoSuchElementException } from "@/main/except/common";
 import { paths } from "@/main/fs/paths";
 import { GAME_REG_TRANS, GAME_REG_VERSION, type GameProfile } from "@/main/game/spec";
 import { isENOENT } from "@/main/util/fs";
-import deepFreeze from "deep-freeze-es6";
-import fs from "fs-extra";
 
-let registryContent: Record<string, Record<string, unknown>> & { versions?: Record<string, number> } = {};
+let registryContent: Record<string, Record<string, unknown>> & {
+    versions?: Record<string, number>;
+} = {};
 
 export type RegistryTransformer = (src: any) => any;
 
@@ -82,8 +88,8 @@ export class NamedRegistry<T> {
         return Object.keys(registryContent[this.#name] ?? {});
     }
 
-    entries(): [string, T] [] {
-        return Object.entries(registryContent[this.#name] ?? {}) as [string, T] [];
+    entries(): [string, T][] {
+        return Object.entries(registryContent[this.#name] ?? {}) as [string, T][];
     }
 
     getAll(): T[] {
@@ -162,11 +168,16 @@ function purgeRegistries() {
 }
 
 export const registry = {
-    init, close
+    init,
+    close,
 };
 
 export const reg = {
     accounts: new NamedRegistry<AccountProps>("accounts", ACCOUNT_REG_VERSION, ACCOUNT_REG_TRANS),
-    containers: new NamedRegistry<ContainerProps>("containers", CONTAINER_REG_VERSION, CONTAINER_REG_TRANS),
-    games: new NamedRegistry<GameProfile>("games", GAME_REG_VERSION, GAME_REG_TRANS)
+    containers: new NamedRegistry<ContainerProps>(
+        "containers",
+        CONTAINER_REG_VERSION,
+        CONTAINER_REG_TRANS,
+    ),
+    games: new NamedRegistry<GameProfile>("games", GAME_REG_VERSION, GAME_REG_TRANS),
 };

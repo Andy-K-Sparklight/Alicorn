@@ -1,10 +1,10 @@
+import os from "node:os";
+import path from "node:path";
+import deepFreeze from "deep-freeze-es6";
+import fs from "fs-extra";
 import { windowControl } from "@/main/sys/window-control";
 import { isENOENT } from "@/main/util/fs";
 import { alter as alt } from "@/main/util/misc";
-import deepFreeze from "deep-freeze-es6";
-import fs from "fs-extra";
-import os from "node:os";
-import path from "node:path";
 
 /**
  * The config (v2) module which has enhanced type support.
@@ -22,7 +22,7 @@ const DEFAULT_CONFIG = {
         /**
          * Display window frame.
          */
-        showFrame: false
+        showFrame: false,
     },
 
     /**
@@ -32,7 +32,7 @@ const DEFAULT_CONFIG = {
         /**
          * Customizable username.
          */
-        username: os.userInfo().username
+        username: os.userInfo().username,
     },
 
     /**
@@ -52,7 +52,7 @@ const DEFAULT_CONFIG = {
         /**
          * Path to store temp files.
          */
-        temp: ""
+        temp: "",
     },
 
     /**
@@ -111,7 +111,7 @@ const DEFAULT_CONFIG = {
             /**
              * The next time to bench mirrors.
              */
-            nextBenchTime: 0
+            nextBenchTime: 0,
         },
 
         /**
@@ -121,8 +121,8 @@ const DEFAULT_CONFIG = {
             /**
              * Whether to allow NFAT to record files and reuse them when necessary.
              */
-            enable: true
-        }
+            enable: true,
+        },
     },
 
     /**
@@ -132,7 +132,7 @@ const DEFAULT_CONFIG = {
         /**
          * The ID to identify the client.
          */
-        id: ""
+        id: "",
     },
 
     /**
@@ -149,13 +149,13 @@ const DEFAULT_CONFIG = {
          */
         args: {
             vm: [] as string[],
-            game: [] as string[]
+            game: [] as string[],
         },
 
         /**
          * The maximum lines of logs to be kept in buffer for scrolling back.
          */
-        logsLimit: 10000
+        logsLimit: 10000,
     },
 
     /**
@@ -167,7 +167,7 @@ const DEFAULT_CONFIG = {
          *
          * This drastically improves the installation of the runtime and should not be disabled in common scenarios.
          */
-        filterDocs: true
+        filterDocs: true,
     },
 
     /**
@@ -191,13 +191,13 @@ const DEFAULT_CONFIG = {
             /**
              * Zoom factor.
              */
-            zoom: 100.0
+            zoom: 100.0,
         },
 
         /**
          * Enable hot update.
          */
-        hotUpdate: true
+        hotUpdate: true,
     },
 
     /**
@@ -222,8 +222,8 @@ const DEFAULT_CONFIG = {
         /**
          * Whether to hide UA when performing network requests.
          */
-        hideUA: false
-    }
+        hideUA: false,
+    },
 };
 
 /**
@@ -238,7 +238,10 @@ function getConfigPath(): string {
     let root: string;
     switch (os.platform()) {
         case "win32":
-            root = path.join(process.env["LOCALAPPDATA"] || process.env["APPDATA"] || os.homedir(), "Alicorn");
+            root = path.join(
+                process.env.LOCALAPPDATA || process.env.APPDATA || os.homedir(),
+                "Alicorn",
+            );
             break;
         case "darwin":
             root = path.join(os.homedir(), "Library", "Application Support", "Alicorn");
@@ -290,8 +293,15 @@ async function store(): Promise<void> {
     }
 }
 
-type ConfigSection = string | number | boolean | string[] | number[] | boolean[] | ConfigSectionObject;
-type ConfigSectionObject = { [key: string]: ConfigSection; }
+type ConfigSection =
+    | string
+    | number
+    | boolean
+    | string[]
+    | number[]
+    | boolean[]
+    | ConfigSectionObject;
+type ConfigSectionObject = { [key: string]: ConfigSection };
 
 /**
  * Applies the patch object on the base object if type matches.
@@ -334,7 +344,7 @@ function applyPatch<T extends ConfigSection>(origin: T, user: T): T {
  * Compares the given objects and gets an object with unchanged keys removed.
  */
 function createPatch(origin: ConfigSection, user: ConfigSection): ConfigSection | null {
-    let out: ConfigSection = {};
+    const out: ConfigSection = {};
     if (typeof origin !== "object") {
         if (typeof user !== typeof origin) return null;
         return user === origin ? null : user;
@@ -344,7 +354,7 @@ function createPatch(origin: ConfigSection, user: ConfigSection): ConfigSection 
 
     if (Array.isArray(origin)) {
         if (!Array.isArray(user)) return null;
-        if (origin.length === user.length && origin.every((v, i) => user[i] == v)) {
+        if (origin.length === user.length && origin.every((v, i) => user[i] === v)) {
             return null;
         }
         return user;
@@ -363,7 +373,9 @@ function createPatch(origin: ConfigSection, user: ConfigSection): ConfigSection 
     return null;
 }
 
-let config: UserConfig = import.meta.env.AL_DEV ? deepFreeze(structuredClone(DEFAULT_CONFIG)) : structuredClone(DEFAULT_CONFIG);
+let config: UserConfig = import.meta.env.AL_DEV
+    ? deepFreeze(structuredClone(DEFAULT_CONFIG))
+    : structuredClone(DEFAULT_CONFIG);
 
 function update(c: UserConfig) {
     config = c;

@@ -2,6 +2,15 @@
  * Driver for aria2 downloader. aria2 delegates heavy I/O tasks to separated processes and handles all necessary
  * details.
  */
+
+import child_process from "node:child_process";
+import crypto from "node:crypto";
+import path from "node:path";
+import { net } from "electron";
+import Emittery from "emittery";
+import fs from "fs-extra";
+import getPort from "get-port";
+import { pEvent } from "p-event";
 import { conf } from "@/main/conf/conf";
 import { CancelledException } from "@/main/except/common";
 import { paths } from "@/main/fs/paths";
@@ -9,14 +18,6 @@ import { type DlxDownloadRequest, DownloadException } from "@/main/net/dlx";
 import { WebSocketJsonRpcClient } from "@/main/net/ws-rpc";
 import { getExecutableExt } from "@/main/sys/os";
 import { getCanonicalUA } from "@/main/sys/ua";
-import { net } from "electron";
-import Emittery from "emittery";
-import fs from "fs-extra";
-import getPort from "get-port";
-import child_process from "node:child_process";
-import crypto from "node:crypto";
-import path from "node:path";
-import { pEvent } from "p-event";
 
 let aria2cProcess: child_process.ChildProcess | null = null;
 let aria2cToken: string | null = null;
@@ -69,7 +70,7 @@ async function sendRequest(req: Aria2DownloadRequest): Promise<void> {
     const dir = path.dirname(req.path);
     const file = path.basename(req.path);
 
-    const checksum = (conf().net.validate && req.sha1) ? { checksum: `sha-1=${req.sha1}` } : {};
+    const checksum = conf().net.validate && req.sha1 ? { checksum: `sha-1=${req.sha1}` } : {};
 
     const getGid = aria2cRpcClient?.request("aria2.addUri", [
         `token:${aria2cToken}`,
@@ -77,18 +78,22 @@ async function sendRequest(req: Aria2DownloadRequest): Promise<void> {
         {
             dir,
             out: file, // Filename,
-            ...checksum
-        }
+            ...checksum,
+        },
     ]) as Promise<string>;
 
     let gid: string;
 
     if (req.signal) {
-        req.signal.addEventListener("abort", () => {
-            if (gid) {
-                remove(gid);
-            }
-        }, { once: true });
+        req.signal.addEventListener(
+            "abort",
+            () => {
+                if (gid) {
+                    remove(gid);
+                }
+            },
+            { once: true },
+        );
     }
 
     gid = await getGid;
@@ -112,12 +117,11 @@ async function sendRequest(req: Aria2DownloadRequest): Promise<void> {
     }
 }
 
-
 /**
  * Resolves aria2c executable and check its availability.
  */
 async function checkPath(): Promise<string> {
-    const execName = "aria2c" + getExecutableExt();
+    const execName = `aria2c${getExecutableExt()}`;
     let exec = execName;
 
     try {
@@ -157,33 +161,37 @@ async function init() {
 
         const cert = paths.app.to("vendor", "ca-cert.pem");
 
-        aria2cProcess = child_process.spawn(pt, [
-            `--quiet=true`, // If not added, the download will stop once the log reaches the limit
-            "--no-want-digest-header", // Stop serves from blocking us
-            `--max-concurrent-downloads=1024`,
-            "--min-split-size=5M",
-            "--split=16",
-            "--max-connection-per-server=16",
-            `--connect-timeout=${Math.round(requestTimeout / 1000)}`,
-            "--enable-rpc=true",
-            "--check-integrity=true",
-            `--lowest-speed-limit=${conf().net.minSpeed}`,
-            "--allow-overwrite=true",
-            "--auto-file-renaming=false",
-            "--optimize-concurrent-downloads=true",
-            `--rpc-listen-port=${aria2cPort}`,
-            "--rpc-max-request-size=32M",
-            `--rpc-secret=${aria2cToken}`,
-            `--ca-certificate=${cert}`,
-            `--user-agent=${getCanonicalUA()}`
-        ], { stdio: "ignore" });
+        aria2cProcess = child_process.spawn(
+            pt,
+            [
+                `--quiet=true`, // If not added, the download will stop once the log reaches the limit
+                "--no-want-digest-header", // Stop serves from blocking us
+                `--max-concurrent-downloads=1024`,
+                "--min-split-size=5M",
+                "--split=16",
+                "--max-connection-per-server=16",
+                `--connect-timeout=${Math.round(requestTimeout / 1000)}`,
+                "--enable-rpc=true",
+                "--check-integrity=true",
+                `--lowest-speed-limit=${conf().net.minSpeed}`,
+                "--allow-overwrite=true",
+                "--auto-file-renaming=false",
+                "--optimize-concurrent-downloads=true",
+                `--rpc-listen-port=${aria2cPort}`,
+                "--rpc-max-request-size=32M",
+                `--rpc-secret=${aria2cToken}`,
+                `--ca-certificate=${cert}`,
+                `--user-agent=${getCanonicalUA()}`,
+            ],
+            { stdio: "ignore" },
+        );
 
-        console.log(`Invoked aria2c with command: ${aria2cProcess.spawnargs.join(' ')}`);
+        console.log(`Invoked aria2c with command: ${aria2cProcess.spawnargs.join(" ")}`);
 
         console.debug("Connecting to aria2 RPC interface...");
 
         // Polls a request to make sure aria2c server is online before opening WS connection
-        if (!await pollUrl(`http://localhost:${aria2cPort}`)) {
+        if (!(await pollUrl(`http://localhost:${aria2cPort}`))) {
             throw new Error("Can't connect to aria2 RPC interface");
         }
 
@@ -192,7 +200,9 @@ async function init() {
         aria2cRpcClient = new WebSocketJsonRpcClient(ws);
         await aria2cRpcClient.wait();
 
-        const { version } = await aria2cRpcClient.request("aria2.getVersion", ["token:" + aria2cToken]);
+        const { version } = await aria2cRpcClient.request("aria2.getVersion", [
+            `token:${aria2cToken}`,
+        ]);
 
         console.log(`Connected to aria2c version ${version}`);
 
@@ -238,12 +248,12 @@ function notifyComplete(gid: string) {
 
 async function notifyError(gid: string) {
     const em = extractEmitter(gid);
-    if (!em) return;
+    if (!em || !aria2cRpcClient) return;
 
-    const { errorCode, errorMessage } = await aria2cRpcClient?.request("aria2.tellStatus", [
-        "token:" + aria2cToken,
+    const { errorCode, errorMessage } = await aria2cRpcClient.request("aria2.tellStatus", [
+        `token:${aria2cToken}`,
         gid,
-        ["errorCode", "errorMessage"]
+        ["errorCode", "errorMessage"],
     ]);
 
     console.error(`Task ${gid} failed: ${errorCode} (${errorMessage || "?"})`);
@@ -268,10 +278,7 @@ function available() {
 async function remove(gid: string) {
     try {
         notifyCancel(gid);
-        await aria2cRpcClient?.request("aria2.remove", [
-            "token:" + aria2cToken,
-            gid
-        ]);
+        await aria2cRpcClient?.request("aria2.remove", [`token:${aria2cToken}`, gid]);
     } catch {}
 }
 
@@ -280,5 +287,5 @@ export const aria2 = {
     init,
     resolve,
     shutdown,
-    remove
+    remove,
 };

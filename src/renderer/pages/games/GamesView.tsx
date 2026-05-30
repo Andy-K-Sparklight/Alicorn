@@ -1,7 +1,3 @@
-import type { GameProfile } from "@/main/game/spec";
-
-import { useGameList } from "@/renderer/services/games";
-import { useNav } from "@/renderer/util/nav";
 import { Button, Tab, Tabs, Tooltip } from "@heroui/react";
 import { GameCard } from "@pages/games/GameCard";
 import {
@@ -12,10 +8,13 @@ import {
     ClockArrowUpIcon,
     FolderSymlinkIcon,
     GitMergeIcon,
-    PlusIcon
+    PlusIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLocalStorage } from "react-use";
+import type { GameProfile } from "@/main/game/spec";
+import { useGameList } from "@/renderer/services/games";
+import { useNav } from "@/renderer/util/nav";
 
 /**
  * The index page of game launching, listing user-defined games for playing.
@@ -29,44 +28,48 @@ export function GamesView() {
 
     const sortedGames = toSortedGames(games, sortMethod!);
 
-    return <div className="flex flex-col w-full h-full px-5">
-        <div className="flex gap-2 px-3">
-            {/* The px-3 above is necessary to align the button with the cards. */}
-            <Button
-                onPress={() => nav("/games/new-wizard")}
-                className="grow"
-                color="primary"
-                startContent={<PlusIcon/>}
-            >
-                {t("new")}
-            </Button>
-            <Button onPress={() => nav("/games/from-modpack")} startContent={<FolderSymlinkIcon/>}>
-                {t("from-modpack")}
-            </Button>
-            <Button onPress={() => nav("/games/import")} startContent={<GitMergeIcon/>}>
-                {t("import")}
-            </Button>
-            <Button onPress={() => nav("/games/new")} startContent={<PlusIcon/>}>
-                {t("new-advanced")}
-            </Button>
+    return (
+        <div className="flex flex-col w-full h-full px-5">
+            <div className="flex gap-2 px-3">
+                {/* The px-3 above is necessary to align the button with the cards. */}
+                <Button
+                    onPress={() => nav("/games/new-wizard")}
+                    className="grow"
+                    color="primary"
+                    startContent={<PlusIcon />}
+                >
+                    {t("new")}
+                </Button>
+                <Button
+                    onPress={() => nav("/games/from-modpack")}
+                    startContent={<FolderSymlinkIcon />}
+                >
+                    {t("from-modpack")}
+                </Button>
+                <Button onPress={() => nav("/games/import")} startContent={<GitMergeIcon />}>
+                    {t("import")}
+                </Button>
+                <Button onPress={() => nav("/games/new")} startContent={<PlusIcon />}>
+                    {t("new-advanced")}
+                </Button>
 
-            <SortMethodControl sortMethod={sortMethod!} onChange={setSortMethod}/>
-        </div>
+                <SortMethodControl sortMethod={sortMethod!} onChange={setSortMethod} />
+            </div>
 
-        {
-            games.length > 0 ?
+            {games.length > 0 ? (
                 <div className="mt-4 w-full h-full overflow-y-auto px-3">
                     {/* The px-3 and py-3 are necessary to reserve space for the card shadow. */}
                     <div className="flex flex-col gap-3 w-full py-3">
-                        {
-                            sortedGames.map(g => <GameCard key={g.id} game={g}/>)
-                        }
+                        {sortedGames.map(g => (
+                            <GameCard key={g.id} game={g} />
+                        ))}
                     </div>
                 </div>
-                :
-                <EmptyHint/>
-        }
-    </div>;
+            ) : (
+                <EmptyHint />
+            )}
+        </div>
+    );
 }
 
 function toSortedGames(games: GameProfile[], sortMethod: SortMethod): GameProfile[] {
@@ -84,7 +87,7 @@ function toSortedGames(games: GameProfile[], sortMethod: SortMethod): GameProfil
         switch (sortMethod) {
             case "id":
                 return parseInt(a.id.slice(1), 10) - parseInt(b.id.slice(1), 10);
-            case "az" :
+            case "az":
                 return a.name.localeCompare(b.name);
             case "za":
                 return -a.name.localeCompare(b.name);
@@ -107,24 +110,24 @@ function SortMethodControl({ sortMethod, onChange }: SortMethodControlProps) {
     const { t } = useTranslation("pages", { keyPrefix: "games.sorting" });
 
     const iconMap = {
-        id: <ArrowDown01Icon/>,
-        az: <ArrowUpAZIcon/>,
-        za: <ArrowDownAZIcon/>,
-        earliest: <ClockArrowUpIcon/>,
-        latest: <ClockArrowDownIcon/>
+        id: <ArrowDown01Icon />,
+        az: <ArrowUpAZIcon />,
+        za: <ArrowDownAZIcon />,
+        earliest: <ClockArrowUpIcon />,
+        latest: <ClockArrowDownIcon />,
     };
 
     function handleSelectionChange(k: string | number) {
         onChange(k.toString() as SortMethod);
     }
 
-    return <Tabs
-        selectedKey={sortMethod}
-        onSelectionChange={handleSelectionChange}
-        classNames={{ tab: "px-2" }}
-    >
-        {
-            (["id", "az", "za", "earliest", "latest"] as const).map(m =>
+    return (
+        <Tabs
+            selectedKey={sortMethod}
+            onSelectionChange={handleSelectionChange}
+            classNames={{ tab: "px-2" }}
+        >
+            {(["id", "az", "za", "earliest", "latest"] as const).map(m => (
                 <Tab
                     key={m}
                     title={
@@ -133,17 +136,19 @@ function SortMethodControl({ sortMethod, onChange }: SortMethodControlProps) {
                         </Tooltip>
                     }
                 />
-            )
-        }
-    </Tabs>;
+            ))}
+        </Tabs>
+    );
 }
 
 function EmptyHint() {
     const { t } = useTranslation("pages", { keyPrefix: "games.empty-hint" });
-    return <div className="w-full h-full flex justify-center items-center gap-6">
-        <div className="text-foreground-400 text-center">
-            <div className="text-xl font-bold">{t("title")}</div>
-            <div className="text-medium">{t("sub")}</div>
+    return (
+        <div className="w-full h-full flex justify-center items-center gap-6">
+            <div className="text-foreground-400 text-center">
+                <div className="text-xl font-bold">{t("title")}</div>
+                <div className="text-medium">{t("sub")}</div>
+            </div>
         </div>
-    </div>;
+    );
 }

@@ -1,3 +1,5 @@
+import path from "node:path";
+import StreamZip from "node-stream-zip";
 import { containers } from "@/main/container/manage";
 import type { Container } from "@/main/container/spec";
 import { games } from "@/main/game/manage";
@@ -5,10 +7,8 @@ import type { GameCoreType, GameProfile } from "@/main/game/spec";
 import type { InstallerProps } from "@/main/install/installers";
 import type { ModpackMetaSlim } from "@/main/modpack/common";
 import { modpackTools } from "@/main/modpack/tools";
-import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
-import { progress, type ProgressController } from "@/main/util/progress";
-import StreamZip from "node-stream-zip";
-import path from "node:path";
+import { type DlxDownloadRequest, dlx } from "@/main/net/dlx";
+import { type ProgressController, progress } from "@/main/util/progress";
 
 interface ModrinthManifest {
     name: string;
@@ -20,7 +20,7 @@ interface ModrinthManifest {
 
 interface ModrinthFile {
     path: string;
-    hashes: { sha1: string; };
+    hashes: { sha1: string };
     env: { client?: "required" | string };
     downloads: string[];
     fileSize: number;
@@ -43,13 +43,13 @@ function createDelegateInstallerProps(mf: ModrinthManifest): InstallerProps {
     if (tp.startsWith("vanilla")) {
         return {
             type: "vanilla",
-            gameVersion: mf.dependencies.minecraft
+            gameVersion: mf.dependencies.minecraft,
         };
     } else {
         return {
             type: tp as any,
             gameVersion: mf.dependencies.minecraft,
-            loaderVersion: mf.dependencies[tp]
+            loaderVersion: mf.dependencies[tp],
         };
     }
 }
@@ -65,21 +65,21 @@ async function createGame(mf: ModrinthManifest): Promise<GameProfile> {
             accountId: "",
             containerId: c.id,
             pref: {},
-            profileId: ""
+            profileId: "",
         },
         installProps: {
             type: "modpack",
             vendor: "modrinth",
             source: "", // Need to be assigned later
-            delegate: createDelegateInstallerProps(mf)
+            delegate: createDelegateInstallerProps(mf),
         },
         time: Date.now(),
         user: {},
         versions: {
-            game: mf.dependencies.minecraft
+            game: mf.dependencies.minecraft,
         },
         locked: true,
-        type: inferGameType(mf)
+        type: inferGameType(mf),
     };
 
     containers.add(c);
@@ -102,7 +102,7 @@ async function readMetadata(zip: StreamZip.StreamZipAsync): Promise<ModpackMetaS
         name: emf.name,
         author: "Modrinth",
         gameVersion: emf.dependencies.minecraft,
-        version: emf.versionId
+        version: emf.versionId,
     };
 }
 
@@ -139,7 +139,9 @@ async function finalizeInstall(container: Container, fp: string, control?: Progr
 
     try {
         zip = new StreamZip.async({ file: fp });
-        const manifest = JSON.parse((await zip.entryData("modrinth.index.json")).toString()) as ModrinthManifest;
+        const manifest = JSON.parse(
+            (await zip.entryData("modrinth.index.json")).toString(),
+        ) as ModrinthManifest;
 
         const files = manifest.files;
         if (Array.isArray(files)) {
@@ -150,12 +152,12 @@ async function finalizeInstall(container: Container, fp: string, control?: Progr
                     path: path.join(container.gameDir(), f.path),
                     sha1: f.hashes.sha1,
                     size: f.fileSize,
-                    fastLink: container.props.flags.link
+                    fastLink: container.props.flags.link,
                 }));
 
             await dlx.getAll(tsk, {
                 signal,
-                onProgress: progress.makeNamed(onProgress, "modpack.download-mods")
+                onProgress: progress.makeNamed(onProgress, "modpack.download-mods"),
             });
         }
 
@@ -165,6 +167,5 @@ async function finalizeInstall(container: Container, fp: string, control?: Progr
         zip?.close();
     }
 }
-
 
 export const modrinthModpack = { readMetadata, deploy, finalizeInstall };

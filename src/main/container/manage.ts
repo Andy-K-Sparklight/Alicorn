@@ -1,10 +1,9 @@
-import { Container, type ContainerProps } from "@/main/container/spec";
+import path from "node:path";
+import fs from "fs-extra";
+import type { Container, ContainerProps } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import { MavenName } from "@/main/profile/maven-name";
 import { reg } from "@/main/registry/registry";
-import fs from "fs-extra";
-import path from "node:path";
-
 
 function get(id: string): Container {
     return create(structuredClone(reg.containers.get(id)));
@@ -21,7 +20,6 @@ function add(c: Container | ContainerProps) {
         reg.containers.add(c.id, c);
     }
 }
-
 
 class SimpleContainer implements Container {
     props;
@@ -117,7 +115,6 @@ class SimpleContainer implements Container {
     }
 }
 
-
 async function genContainerProps(prefix = "MC"): Promise<ContainerProps> {
     let dirs: string[] = [];
 
@@ -129,7 +126,7 @@ async function genContainerProps(prefix = "MC"): Promise<ContainerProps> {
     let st: string;
 
     while (true) {
-        st = prefix + "-" + i;
+        st = `${prefix}-${i}`;
         if (!reg.containers.has(st) && !dirs.includes(st)) {
             break;
         }
@@ -139,10 +136,13 @@ async function genContainerProps(prefix = "MC"): Promise<ContainerProps> {
     return {
         id: st,
         root: paths.game.to(st),
-        flags: {}
+        flags: {},
     };
 }
 
 export const containers = {
-    create, get, add, genContainerProps
+    create,
+    get,
+    add,
+    genContainerProps,
 };

@@ -3,9 +3,17 @@
  */
 import { FileSelectInput } from "@components/input/FileSelectInput";
 import { StringArrayInput } from "@components/input/StringArrayInput";
-import { Button, Input, Select, SelectItem, type SharedSelection, Slider, Switch } from "@heroui/react";
+import {
+    Button,
+    Input,
+    Select,
+    SelectItem,
+    type SharedSelection,
+    Slider,
+    Switch,
+} from "@heroui/react";
 import { MinusIcon, PlusIcon } from "lucide-react";
-import React from "react";
+import type React from "react";
 import { useTranslation } from "react-i18next";
 
 interface SettingsEntryProps<T> {
@@ -22,13 +30,15 @@ function useEntriesTrans() {
     return useTranslation("pages", { keyPrefix: "settings.entries" });
 }
 
-function Title({ id, icon: Icon }: { id: string, icon?: React.ComponentType }) {
+function Title({ id, icon: Icon }: { id: string; icon?: React.ComponentType }) {
     const { t } = useEntriesTrans();
 
-    return <div className="flex gap-2 items-center">
-        {Icon && <Icon/>}
-        <div className="text-lg font-bold">{t(`${id}.title`)}</div>
-    </div>;
+    return (
+        <div className="flex gap-2 items-center">
+            {Icon && <Icon />}
+            <div className="text-lg font-bold">{t(`${id}.title`)}</div>
+        </div>
+    );
 }
 
 function Subtitle({ id }: { id: string }) {
@@ -38,25 +48,30 @@ function Subtitle({ id }: { id: string }) {
 }
 
 function EntryLabel({ id, icon }: { id: string; icon?: React.ComponentType }) {
-    return <div className="flex flex-col gap-2">
-
-        <Title id={id} icon={icon}/>
-        <Subtitle id={id}/>
-    </div>;
+    return (
+        <div className="flex flex-col gap-2">
+            <Title id={id} icon={icon} />
+            <Subtitle id={id} />
+        </div>
+    );
 }
 
 export function TextEntry({ id, icon, value, onChange }: SettingsEntryProps<string>) {
-    return <div className="flex flex-col gap-2 w-full">
-        <EntryLabel id={id} icon={icon}/>
-        <Input fullWidth defaultValue={value} onBlur={e => onChange(e.target.value)}/>
-    </div>;
+    return (
+        <div className="flex flex-col gap-2 w-full">
+            <EntryLabel id={id} icon={icon} />
+            <Input fullWidth defaultValue={value} onBlur={e => onChange(e.target.value)} />
+        </div>
+    );
 }
 
 export function DirEntry({ id, icon, value, onChange }: SettingsEntryProps<string>) {
-    return <div className="flex flex-col gap-2 w-full">
-        <EntryLabel id={id} icon={icon}/>
-        <FileSelectInput value={value} onChange={onChange}/>
-    </div>;
+    return (
+        <div className="flex flex-col gap-2 w-full">
+            <EntryLabel id={id} icon={icon} />
+            <FileSelectInput value={value} onChange={onChange} />
+        </div>
+    );
 }
 
 interface ActionEntryProps {
@@ -68,12 +83,14 @@ interface ActionEntryProps {
 export function ActionEntry({ id, icon, onClick }: ActionEntryProps) {
     const { t } = useEntriesTrans();
 
-    return <div className="flex flex-col gap-2 w-full">
-        <EntryLabel id={id} icon={icon}/>
-        <div>
-            <Button onPress={() => onClick()}>{t(`${id}.action`)}</Button>
+    return (
+        <div className="flex flex-col gap-2 w-full">
+            <EntryLabel id={id} icon={icon} />
+            <div>
+                <Button onPress={() => onClick()}>{t(`${id}.action`)}</Button>
+            </div>
         </div>
-    </div>;
+    );
 }
 
 type NumberTuningEntryProps = SettingsEntryProps<number> & {
@@ -81,9 +98,18 @@ type NumberTuningEntryProps = SettingsEntryProps<number> & {
     min: number;
     step?: number;
     toLabel?: (v: number) => string;
-}
+};
 
-export function NumberTuningEntry({ id, icon, value, onChange, max, min, step, toLabel }: NumberTuningEntryProps) {
+export function NumberTuningEntry({
+    id,
+    icon,
+    value,
+    onChange,
+    max,
+    min,
+    step,
+    toLabel,
+}: NumberTuningEntryProps) {
     function handleAdd() {
         const nv = value + (step ?? 1);
         if (nv <= max) {
@@ -98,69 +124,85 @@ export function NumberTuningEntry({ id, icon, value, onChange, max, min, step, t
         }
     }
 
-    return <div className="flex flex-col gap-2 w-full">
-        <EntryLabel id={id} icon={icon}/>
+    return (
+        <div className="flex flex-col gap-2 w-full">
+            <EntryLabel id={id} icon={icon} />
 
-        <div className="flex gap-4 items-center">
-            <Button isIconOnly size="sm" onPress={handleSubtract}>
-                <MinusIcon/>
-            </Button>
-            {toLabel ? toLabel(value) : value}
-            <Button isIconOnly size="sm" onPress={handleAdd}>
-                <PlusIcon/>
-            </Button>
+            <div className="flex gap-4 items-center">
+                <Button isIconOnly size="sm" onPress={handleSubtract}>
+                    <MinusIcon />
+                </Button>
+                {toLabel ? toLabel(value) : value}
+                <Button isIconOnly size="sm" onPress={handleAdd}>
+                    <PlusIcon />
+                </Button>
+            </div>
         </div>
-    </div>;
+    );
 }
 
 type NumberSliderEntryProps = SettingsEntryProps<number> & {
     max: number;
     min: number;
     step?: number;
-}
+};
 
-export function NumberSliderEntry({ id, icon, value, onChange, max, min, step }: NumberSliderEntryProps) {
-    return <div className="flex flex-col gap-4 w-full">
-        <EntryLabel id={id} icon={icon}/>
-        <Slider
-            step={step ?? 1}
-            maxValue={max}
-            minValue={min}
-            value={value}
-            hideThumb
-            showTooltip
-            aria-label="Number Slider"
-            tooltipProps={{ size: "lg", radius: "full" }}
-            classNames={{
-                startContent: "text-nowrap",
-                endContent: "text-nowrap"
-            }}
-            startContent={min}
-            endContent={max}
-            onChange={(v) => onChange(Array.isArray(v) ? v[0] : v)}
-        />
-    </div>;
+export function NumberSliderEntry({
+    id,
+    icon,
+    value,
+    onChange,
+    max,
+    min,
+    step,
+}: NumberSliderEntryProps) {
+    return (
+        <div className="flex flex-col gap-4 w-full">
+            <EntryLabel id={id} icon={icon} />
+            <Slider
+                step={step ?? 1}
+                maxValue={max}
+                minValue={min}
+                value={value}
+                hideThumb
+                showTooltip
+                aria-label="Number Slider"
+                tooltipProps={{ size: "lg", radius: "full" }}
+                classNames={{
+                    startContent: "text-nowrap",
+                    endContent: "text-nowrap",
+                }}
+                startContent={min}
+                endContent={max}
+                onChange={v => onChange(Array.isArray(v) ? v[0] : v)}
+            />
+        </div>
+    );
 }
 
 export function StringArrayEntry({ id, icon, value, onChange }: SettingsEntryProps<string[]>) {
-    return <div className="flex flex-col gap-2 w-full">
-        <EntryLabel id={id} icon={icon}/>
-        <StringArrayInput value={value} onChange={onChange}/>
-    </div>;
+    return (
+        <div className="flex flex-col gap-2 w-full">
+            <EntryLabel id={id} icon={icon} />
+            <StringArrayInput value={value} onChange={onChange} />
+        </div>
+    );
 }
 
 export function OnOffEntry({ id, icon, value, onChange }: SettingsEntryProps<boolean>) {
-    return <div className="flex flex-col gap-2 w-full">
-        <Title id={id} icon={icon}/>
+    return (
+        <div className="flex flex-col gap-2 w-full">
+            <Title id={id} icon={icon} />
 
-        <div className="flex gap-2 items-center">
-            <Switch size="sm" isSelected={value} onValueChange={onChange}/>
-            <Subtitle id={id}/>
+            <div className="flex gap-2 items-center">
+                <Switch size="sm" isSelected={value} onValueChange={onChange} />
+                <Subtitle id={id} />
+            </div>
         </div>
-    </div>;
+    );
 }
 
-type SelectEntryProps<T> = SettingsEntryProps<T> & { items: T[] }
+type SelectEntryProps<T> = SettingsEntryProps<T> & { items: T[] };
 
 export function SelectEntry({ id, icon, value, onChange, items }: SelectEntryProps<string>) {
     const { t } = useEntriesTrans();
@@ -171,13 +213,20 @@ export function SelectEntry({ id, icon, value, onChange, items }: SelectEntryPro
         }
     }
 
-    return <div className="flex flex-col gap-2 w-full">
-        <EntryLabel id={id} icon={icon}/>
+    return (
+        <div className="flex flex-col gap-2 w-full">
+            <EntryLabel id={id} icon={icon} />
 
-        <Select aria-label="Selection" fullWidth selectedKeys={[value]} onSelectionChange={handleSelectionChange}>
-            {
-                items.map(item => <SelectItem key={item}>{t(`${id}.items.${item}`)}</SelectItem>)
-            }
-        </Select>
-    </div>;
+            <Select
+                aria-label="Selection"
+                fullWidth
+                selectedKeys={[value]}
+                onSelectionChange={handleSelectionChange}
+            >
+                {items.map(item => (
+                    <SelectItem key={item}>{t(`${id}.items.${item}`)}</SelectItem>
+                ))}
+            </Select>
+        </div>
+    );
 }

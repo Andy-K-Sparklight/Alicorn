@@ -1,11 +1,10 @@
-import { remoteInstaller } from "@/renderer/services/install";
-import { useNav } from "@/renderer/util/nav";
 import { WizardCard } from "@components/display/WizardCard";
 import { Button } from "@heroui/react";
 import { useCreateGameWizardContext } from "@pages/create-game-wizard/CreateGameWizardView";
 import { ArrowRightIcon, CheckIcon, PlayCircleIcon } from "lucide-react";
-import React from "react";
 import { useTranslation } from "react-i18next";
+import { remoteInstaller } from "@/renderer/services/install";
+import { useNav } from "@/renderer/util/nav";
 
 export function FinishView() {
     const { t } = useTranslation("pages", { keyPrefix: "create-game-wizard.finish" });
@@ -21,11 +20,11 @@ export function FinishView() {
             gameVersion: ctx.value.gameVersion!,
             assetsLevel: "full",
             installProps: {
-                type: ctx.value.installProps!.type,
+                type: ctx.value.installProps?.type,
                 gameVersion: ctx.value.gameVersion!,
-                loaderVersion: ""
+                loaderVersion: "",
             } as any,
-            containerShouldLink: true
+            containerShouldLink: true,
         });
 
         if (install) {
@@ -35,35 +34,37 @@ export function FinishView() {
         nav("/games");
     }
 
-    return <WizardCard
-        title={t("title")}
-        sub={t("sub")}
-        content={
-            <div className="flex flex-col h-full gap-4">
-                <div className="mt-auto flex flex-col gap-2">
-                    <Button
-                        fullWidth
-                        startContent={<PlayCircleIcon/>}
-                        color="primary"
-                        onPress={() => finalize(true)}
-                    >
-                        {t("btn.install")}
-                    </Button>
+    return (
+        <WizardCard
+            title={t("title")}
+            sub={t("sub")}
+            content={
+                <div className="flex flex-col h-full gap-4">
+                    <div className="mt-auto flex flex-col gap-2">
+                        <Button
+                            fullWidth
+                            startContent={<PlayCircleIcon />}
+                            color="primary"
+                            onPress={() => finalize(true)}
+                        >
+                            {t("btn.install")}
+                        </Button>
 
-                    <Button
-                        fullWidth
-                        startContent={<ArrowRightIcon/>}
-                        onPress={() => finalize(false)}
-                    >
-                        {t("btn.create-only")}
-                    </Button>
+                        <Button
+                            fullWidth
+                            startContent={<ArrowRightIcon />}
+                            onPress={() => finalize(false)}
+                        >
+                            {t("btn.create-only")}
+                        </Button>
+                    </div>
                 </div>
+            }
+        >
+            <div className="w-full h-full flex flex-col gap-6 items-center justify-center">
+                <CheckIcon size={96} />
+                {tc("default-name")} / {ctx.value.gameVersion}
             </div>
-        }
-    >
-        <div className="w-full h-full flex flex-col gap-6 items-center justify-center">
-            <CheckIcon size={96}/>
-            {tc("default-name")} / {ctx.value.gameVersion}
-        </div>
-    </WizardCard>;
+        </WizardCard>
+    );
 }

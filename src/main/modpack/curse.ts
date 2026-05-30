@@ -1,3 +1,4 @@
+import StreamZip from "node-stream-zip";
 import { containers } from "@/main/container/manage";
 import type { Container } from "@/main/container/spec";
 import { games } from "@/main/game/manage";
@@ -6,14 +7,13 @@ import type { InstallerProps } from "@/main/install/installers";
 import type { ModpackMetaSlim } from "@/main/modpack/common";
 import { modpackTools } from "@/main/modpack/tools";
 import { curse } from "@/main/mpm/curse";
-import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
-import { progress, type ProgressController } from "@/main/util/progress";
-import StreamZip from "node-stream-zip";
+import { type DlxDownloadRequest, dlx } from "@/main/net/dlx";
+import { type ProgressController, progress } from "@/main/util/progress";
 
 interface CurseModpackManifest {
     minecraft: {
         version: string;
-        modLoaders: CurseModLoaderSpec[]
+        modLoaders: CurseModLoaderSpec[];
     };
     manifestVersion: 1;
     name: string;
@@ -67,23 +67,26 @@ function createDelegateInstallerProps(mf: CurseModpackManifest): InstallerProps 
             case "fabric":
                 return {
                     type: "fabric",
-                    gameVersion, loaderVersion: ver
+                    gameVersion,
+                    loaderVersion: ver,
                 };
             case "neoforge":
             case "neoforged":
                 return {
                     type: "neoforged",
-                    gameVersion, loaderVersion: ver
+                    gameVersion,
+                    loaderVersion: ver,
                 };
             case "quilt":
                 return {
                     type: "quilt",
-                    gameVersion, loaderVersion: ver
+                    gameVersion,
+                    loaderVersion: ver,
                 };
             case "liteloader":
                 return {
                     type: "liteloader",
-                    gameVersion
+                    gameVersion,
                 };
             default:
                 throw `Unsupported mod loader: ${tp}`;
@@ -92,7 +95,7 @@ function createDelegateInstallerProps(mf: CurseModpackManifest): InstallerProps 
         // Install vanilla
         return {
             type: "vanilla",
-            gameVersion
+            gameVersion,
         };
     }
 }
@@ -109,21 +112,21 @@ async function createGame(mf: CurseModpackManifest): Promise<GameProfile> {
             accountId: "",
             containerId: c.id,
             pref: {},
-            profileId: ""
+            profileId: "",
         },
         installProps: {
             type: "modpack",
             vendor: "curse",
             source: "", // Need to be assigned later
-            delegate: createDelegateInstallerProps(mf)
+            delegate: createDelegateInstallerProps(mf),
         },
         time: Date.now(),
         versions: {
-            game: mf.minecraft.version
+            game: mf.minecraft.version,
         },
         locked: true,
         user: {},
-        type: inferGameType(mf)
+        type: inferGameType(mf),
     };
     games.add(g);
     console.debug(`Generated game name: ${g.name}`);
@@ -144,7 +147,7 @@ async function readMetadata(zip: StreamZip.StreamZipAsync): Promise<ModpackMetaS
         name: emf.name,
         author: emf.author,
         gameVersion: emf.minecraft.version,
-        version: emf.version
+        version: emf.version,
     };
 }
 
@@ -189,19 +192,24 @@ async function finalizeInstall(container: Container, fp: string, control?: Progr
             const tsk: DlxDownloadRequest[] = fileDetails.map(f => ({
                 url: f.downloadUrl,
                 path: container.addon("mods", f.fileName), // TODO other addon types
-                fastLink: container.props.flags.link
+                fastLink: container.props.flags.link,
             }));
 
             await dlx.getAll(tsk, {
                 signal,
-                onProgress: progress.makeNamed(onProgress, "modpack.download-mods")
+                onProgress: progress.makeNamed(onProgress, "modpack.download-mods"),
             });
         }
 
         const overridesFolder = manifest.overrides;
 
         if (overridesFolder) {
-            await modpackTools.applyOverrides(zip, overridesFolder + "/", container.gameDir(), control);
+            await modpackTools.applyOverrides(
+                zip,
+                `${overridesFolder}/`,
+                container.gameDir(),
+                control,
+            );
         }
     } finally {
         zip?.close();

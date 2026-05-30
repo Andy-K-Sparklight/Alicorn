@@ -1,6 +1,6 @@
-import { AuthCredentials } from "@/main/auth/types";
-import { Container } from "@/main/container/spec";
-import { VersionProfile } from "@/main/profile/version-profile";
+import type { AuthCredentials } from "@/main/auth/types";
+import type { Container } from "@/main/container/spec";
+import type { VersionProfile } from "@/main/profile/version-profile";
 
 /**
  * Launch hints are the next generation way of managing the launch process.

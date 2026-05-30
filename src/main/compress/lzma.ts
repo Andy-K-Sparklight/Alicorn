@@ -1,15 +1,14 @@
-import { paths } from "@/main/fs/paths";
-import { unwrapESM } from "@/main/util/module";
+import path from "node:path";
+import { pipeline } from "node:stream/promises";
 import fs from "fs-extra";
 import type lzmaJS from "lzma";
 import type lzmaNative from "lzma-native";
-import path from "node:path";
-import { pipeline } from "stream/promises";
+import { paths } from "@/main/fs/paths";
+import { unwrapESM } from "@/main/util/module";
 import pkg from "~/package.json";
 
 let lzmaNativeMod: typeof lzmaNative;
 let lzmaJSMod: typeof lzmaJS;
-
 
 async function init() {
     if (lzmaNativeMod || lzmaJSMod) return; // Already loaded
@@ -18,7 +17,7 @@ async function init() {
         // lzma-native uses node-gyp to resolve the prebuilt native modules
         // The path is not recognized nor bundled by ESBuild
         // By assigning to the magic variable we can override the resolution base directory
-        const canonicalName = pkg.name.toUpperCase().replaceAll("-", "_") + "_PREBUILD";
+        const canonicalName = `${pkg.name.toUpperCase().replaceAll("-", "_")}_PREBUILD`;
         const ap = process.env[canonicalName];
         process.env[canonicalName] = paths.app.to("natives/lzma-native");
         lzmaNativeMod = (await unwrapESM(import("lzma-native"))).default;
@@ -29,7 +28,6 @@ async function init() {
         lzmaJSMod = m.default.LZMA_WORKER as typeof lzmaJS;
     }
 }
-
 
 /**
  * Inflate a file known to be of LZMA format.

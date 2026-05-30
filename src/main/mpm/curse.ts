@@ -1,10 +1,10 @@
-import { type MpmPackageProvider } from "@/main/mpm/pm";
+import type { MpmPackageProvider } from "@/main/mpm/pm";
 import {
     type MpmAddonMeta,
     type MpmAddonType,
     type MpmContext,
     type MpmPackage,
-    MpmPackageSpecifier
+    MpmPackageSpecifier,
 } from "@/main/mpm/spec";
 import { netx } from "@/main/net/netx";
 
@@ -19,7 +19,7 @@ interface CurseProject {
     summary: string;
     logo: {
         thumbnailUrl: string;
-        url: string
+        url: string;
     };
 }
 
@@ -64,7 +64,11 @@ function sortVersions(arr: CurseVersion[]) {
     });
 }
 
-async function requestProjectVersions(projId: number, gameVersion: string, loader: string | null): Promise<CurseVersion[]> {
+async function requestProjectVersions(
+    projId: number,
+    gameVersion: string,
+    loader: string | null,
+): Promise<CurseVersion[]> {
     let index = 0;
     const out: CurseVersion[] = [];
 
@@ -75,7 +79,7 @@ async function requestProjectVersions(projId: number, gameVersion: string, loade
             url += `&modLoaderType=${toCurseLoader(loader)}`;
         }
 
-        const res = await netx.json(url) as { data: CurseVersion[] };
+        const res = (await netx.json(url)) as { data: CurseVersion[] };
 
         out.push(...res.data);
         if (res.data.length < 50) break;
@@ -94,11 +98,11 @@ async function requestVersions(versionIds: number[]): Promise<CurseVersion[]> {
         // Use GET version of API as it's usually cached by upstream
         const v = versionIds[0];
         const url = `${API_BASE}/mods/files/${v}`;
-        const rp = await netx.json(url) as { data: CurseVersion };
+        const rp = (await netx.json(url)) as { data: CurseVersion };
         return [rp.data];
     } else {
         const url = `${API_BASE}/mods/files`;
-        const rp = await netx.json(url, { fileIds: versionIds }) as { data: CurseVersion[] };
+        const rp = (await netx.json(url, { fileIds: versionIds })) as { data: CurseVersion[] };
         return rp.data;
     }
 }
@@ -108,15 +112,14 @@ async function requestProjects(projIds: number[]): Promise<CurseProject[]> {
     if (projIds.length === 1) {
         const p = projIds[0];
         const url = `${API_BASE}/mods/${p}`;
-        const rp = await netx.json(url) as { data: CurseProject };
+        const rp = (await netx.json(url)) as { data: CurseProject };
         return [rp.data];
     } else {
         const url = `${API_BASE}/mods`;
-        const rp = await netx.json(url, { modIds: projIds }) as { data: CurseProject[] };
+        const rp = (await netx.json(url, { modIds: projIds })) as { data: CurseProject[] };
         return rp.data;
     }
 }
-
 
 function toMpmAddonMeta(proj: CurseProject): MpmAddonMeta {
     return {
@@ -126,7 +129,7 @@ function toMpmAddonMeta(proj: CurseProject): MpmAddonMeta {
         description: proj.summary,
         icon: proj.logo.thumbnailUrl,
         type: toMpmType(proj.classId),
-        author: proj.authors.map(a => a.name).join(", ")
+        author: proj.authors.map(a => a.name).join(", "),
     };
 }
 
@@ -160,7 +163,13 @@ function toMpmType(classId: number): MpmAddonType {
     throw `Unrecognized class ID: ${classId}`;
 }
 
-async function search(scope: MpmAddonType, query: string, gameVersion: string, loader: string, index = 0): Promise<MpmAddonMeta[]> {
+async function search(
+    scope: MpmAddonType,
+    query: string,
+    gameVersion: string,
+    loader: string,
+    index = 0,
+): Promise<MpmAddonMeta[]> {
     const cl = toCurseLoader(loader);
     const q = encodeURIComponent(query);
     const cz = toCurseClassId(scope);
@@ -175,7 +184,7 @@ async function search(scope: MpmAddonType, query: string, gameVersion: string, l
     }
 
     try {
-        const rp = await netx.json(url) as { data: CurseProject[] };
+        const rp = (await netx.json(url)) as { data: CurseProject[] };
         rp.data.forEach(p => projectMetaCache.set(p.id, p));
         return rp.data.map(toMpmAddonMeta);
     } catch (e) {
@@ -186,7 +195,9 @@ async function search(scope: MpmAddonType, query: string, gameVersion: string, l
 }
 
 async function getFiles(fileIds: number[]): Promise<CurseVersion[]> {
-    const res = await netx.json(`${API_BASE}/mods/files`, { fileIds }) as { data: CurseVersion[] };
+    const res = (await netx.json(`${API_BASE}/mods/files`, { fileIds })) as {
+        data: CurseVersion[];
+    };
     return res.data;
 }
 
@@ -209,8 +220,8 @@ export class CurseProvider implements MpmPackageProvider {
         }
 
         const possibleVersions: {
-            spec: string,
-            versions: number[]
+            spec: string;
+            versions: number[];
         }[] = await Promise.all(
             specs.map(async spec => {
                 const s = new MpmPackageSpecifier(spec);
@@ -218,22 +229,35 @@ export class CurseProvider implements MpmPackageProvider {
                     return { spec, versions: [parseInt(s.version, 10)] };
                 } else {
                     const shouldIncludeLoader = s.type === "mods" || s.type === "modpack";
-                    const versions = await requestProjectVersions(parseInt(s.id, 10), ctx.gameVersion, shouldIncludeLoader ? ctx.loader : null);
+                    const versions = await requestProjectVersions(
+                        parseInt(s.id, 10),
+                        ctx.gameVersion,
+                        shouldIncludeLoader ? ctx.loader : null,
+                    );
                     versions.forEach(cacheVersion);
 
                     return { spec, versions: versions.map(v => v.id) };
                 }
-            })
+            }),
         );
 
-        const missingVersions = possibleVersions.flatMap(v => v.versions).filter(vi => !cachedVersions.has(vi));
+        const missingVersions = possibleVersions
+            .flatMap(v => v.versions)
+            .filter(vi => !cachedVersions.has(vi));
 
         (await requestVersions(missingVersions)).forEach(cacheVersion);
 
         // Collect projects
-        const allProjects = await requestProjects(Array.from(new Set(
-            cachedVersions.values().map(v => v.modId).filter(p => !projectMetaCache.has(p))
-        )));
+        const allProjects = await requestProjects(
+            Array.from(
+                new Set(
+                    cachedVersions
+                        .values()
+                        .map(v => v.modId)
+                        .filter(p => !projectMetaCache.has(p)),
+                ),
+            ),
+        );
 
         for (const proj of allProjects) {
             projectMetaCache.set(proj.id, proj);
@@ -255,14 +279,15 @@ export class CurseProvider implements MpmPackageProvider {
                     .map(d => ({
                         // Curseforge has no version-only dependency
                         type: d.relationType === 3 ? "require" : "conflict",
-                        spec: `curse:${tp}:${d.modId}:`
-                    }))
+                        spec: `curse:${tp}:${d.modId}:`,
+                    })),
             };
         }
 
-        return possibleVersions.map(({ versions }) => versions
-            .map(v => getCachedVersion(v)) // All versions have been resolved above
-            .map(toMpmPackage)
+        return possibleVersions.map(({ versions }) =>
+            versions
+                .map(v => getCachedVersion(v)) // All versions have been resolved above
+                .map(toMpmPackage),
         );
     }
 }

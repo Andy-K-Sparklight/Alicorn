@@ -1,10 +1,9 @@
-import { type MpmAddonType, type MpmManifest, MpmPackageSpecifier } from "@/main/mpm/spec";
-import { useGameProfile } from "@/renderer/services/games";
-
-import { mpmSlice } from "@/renderer/store/mpm";
-import { type AppState, globalStore, useAppSelector } from "@/renderer/store/store";
 import { createSelector } from "@reduxjs/toolkit";
 import { useEffect } from "react";
+import { type MpmAddonType, type MpmManifest, MpmPackageSpecifier } from "@/main/mpm/spec";
+import { useGameProfile } from "@/renderer/services/games";
+import { mpmSlice } from "@/renderer/store/mpm";
+import { type AppState, globalStore, useAppSelector } from "@/renderer/store/store";
 
 native.mpm.onManifestChange((gameId, manifest) => {
     globalStore.dispatch(mpmSlice.actions.replaceManifest({ gameId, manifest }));
@@ -34,14 +33,13 @@ const selectAddonInstallStatus = createSelector(
     [
         (s: AppState) => s.mpm.installingAddons,
         (_, gameId: string, __: string) => gameId,
-        (_, __: string, id: string) => id
+        (_, __: string, id: string) => id,
     ],
     (installingMods, gameId, id) => {
         return installingMods.some(m => m.gameId === gameId && m.id === id);
-    }
+    },
 );
 export type AddonInstallStatus = "installed" | "auto-installed" | "installing" | "not-installed";
-
 
 export function useMpmManifest(gameId: string): MpmManifest | null {
     useEffect(() => {
@@ -50,13 +48,16 @@ export function useMpmManifest(gameId: string): MpmManifest | null {
         native.mpm.loadManifest(gameId).then(mf => {
             globalStore.dispatch(mpmSlice.actions.replaceManifest({ gameId, manifest: mf }));
         });
-
     }, [gameId]);
 
     return useAppSelector(s => s.mpm.manifests[gameId]) ?? null;
 }
 
-export function useAddonInstallStatus(gameId: string, id: string, vendor: string): AddonInstallStatus {
+export function useAddonInstallStatus(
+    gameId: string,
+    id: string,
+    vendor: string,
+): AddonInstallStatus {
     const game = useGameProfile(gameId);
 
     const isInstalling = useAppSelector(s => selectAddonInstallStatus(s, gameId, id));
@@ -67,10 +68,12 @@ export function useAddonInstallStatus(gameId: string, id: string, vendor: string
 
     if (!manifest) return "not-installed";
 
-    if (manifest.userPrompt.some(spec => {
-        const ss = new MpmPackageSpecifier(spec);
-        return ss.vendor === vendor && ss.id === id;
-    })) {
+    if (
+        manifest.userPrompt.some(spec => {
+            const ss = new MpmPackageSpecifier(spec);
+            return ss.vendor === vendor && ss.id === id;
+        })
+    ) {
         return "installed";
     }
 
@@ -81,5 +84,5 @@ export function useAddonInstallStatus(gameId: string, id: string, vendor: string
 
 export const remoteMpm = {
     addAddon,
-    removeAddon
+    removeAddon,
 };

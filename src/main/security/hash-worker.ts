@@ -6,7 +6,7 @@ import workerPool from "workerpool";
 async function hash(path: string, algorithm: string): Promise<string> {
     const hash = createHash(algorithm);
     const rs = fs.createReadStream(path);
-    rs.on("data", (chunk) => hash.update(chunk));
+    rs.on("data", chunk => hash.update(chunk));
 
     await pEvent(rs, "end");
     return hash.digest("hex").toLowerCase();

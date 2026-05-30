@@ -9,37 +9,37 @@ export function LicenseView() {
     const { t } = useTranslation("setup", { keyPrefix: "license" });
     const next = useSetupNextPage();
 
-    return <div className="flex flex-col w-5/6 h-full mx-auto items-center justify-center gap-4">
-        <div className="w-full h-full flex flex-col items-center gap-4">
-            <div>
-                <FileBadgeIcon size={64}/>
-            </div>
+    return (
+        <div className="flex flex-col w-5/6 h-full mx-auto items-center justify-center gap-4">
+            <div className="w-full h-full flex flex-col items-center gap-4">
+                <div>
+                    <FileBadgeIcon size={64} />
+                </div>
 
-            <h1 className="font-bold text-2xl text-center">{t("title")}</h1>
-            <p className="text-foreground-400 whitespace-pre-line text-center">
-                {t("sub")}
-            </p>
+                <h1 className="font-bold text-2xl text-center">{t("title")}</h1>
+                <p className="text-foreground-400 whitespace-pre-line text-center">{t("sub")}</p>
 
-            <Card>
-                <CardBody>
-                    <pre className="px-4">
-                        {license}
-                    </pre>
-                </CardBody>
-            </Card>
+                <Card>
+                    <CardBody>
+                        <pre className="px-4">{license}</pre>
+                    </CardBody>
+                </Card>
 
-            <div className="flex flex-col gap-2 items-center">
-                <div className="text-sm text-foreground-400">{t("btn-hint")}</div>
-                <ConfirmPopup
-                    title={t("confirm.title")}
-                    sub={t("confirm.sub")}
-                    btnText={t("confirm.btn")}
-                    color="primary"
-                    onConfirm={next}
-                >
-                    <Button color="primary" startContent={<CircleCheckIcon/>}>{t("btn")}</Button>
-                </ConfirmPopup>
+                <div className="flex flex-col gap-2 items-center">
+                    <div className="text-sm text-foreground-400">{t("btn-hint")}</div>
+                    <ConfirmPopup
+                        title={t("confirm.title")}
+                        sub={t("confirm.sub")}
+                        btnText={t("confirm.btn")}
+                        color="primary"
+                        onConfirm={next}
+                    >
+                        <Button color="primary" startContent={<CircleCheckIcon />}>
+                            {t("btn")}
+                        </Button>
+                    </ConfirmPopup>
+                </div>
             </div>
         </div>
-    </div>;
+    );
 }

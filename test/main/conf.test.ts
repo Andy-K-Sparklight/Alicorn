@@ -1,7 +1,7 @@
-import { conf } from "@/main/conf/conf";
 import { expect, test } from "bun:test";
-import fs from "fs-extra";
 import path from "node:path";
+import fs from "fs-extra";
+import { conf } from "@/main/conf/conf";
 
 const cfgPath = path.resolve("emulated", "config.v2.json");
 process.env.ALICORN_CONFIG_PATH = cfgPath;
@@ -11,13 +11,13 @@ test("Config Read & Write", async () => {
     await conf.load();
     expect(conf().dev.devTools, "Should use default config when missing").toBeFalse();
 
-    conf.alter(c => c.dev.devTools = true);
+    conf.alter(c => (c.dev.devTools = true));
     await conf.store();
     await conf.load();
     expect(conf().dev.devTools, "Should keep changes between saves & loads").toBeTrue();
 
     // Check array values
-    conf.alter(c => c.runtime.args.vm = ["arg1"]);
+    conf.alter(c => (c.runtime.args.vm = ["arg1"]));
     await conf.store();
     await conf.load();
     expect(conf().runtime.args.vm.length, "Should save array values").toEqual(1);

@@ -1,8 +1,6 @@
 {
     "defaultVersion": "1.0.4-87",
-    "versions": [
-        "1.13"
-    ],
+    "versions": ["1.13"],
     "libs": [
         {
             "name": "org.dimdev:mixin:0.7.11-SNAPSHOT",

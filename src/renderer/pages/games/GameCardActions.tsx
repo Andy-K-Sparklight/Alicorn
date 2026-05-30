@@ -1,15 +1,22 @@
+import { useOpenDialog } from "@components/modal/DialogProvider";
+import { YggdrasilFormDialog } from "@components/modal/YggdrasilFormDialog";
+import { Button, cn } from "@heroui/react";
+import {
+    CirclePlayIcon,
+    DownloadIcon,
+    EllipsisIcon,
+    PinIcon,
+    PinOffIcon,
+    XIcon,
+} from "lucide-react";
+import { nanoid } from "nanoid";
+import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { alter } from "@/main/util/misc";
 import { useGameProfile } from "@/renderer/services/games";
 import { remoteInstaller } from "@/renderer/services/install";
 import { procService } from "@/renderer/services/proc";
 import { useNav } from "@/renderer/util/nav";
-import { useOpenDialog } from "@components/modal/DialogProvider";
-import { YggdrasilFormDialog } from "@components/modal/YggdrasilFormDialog";
-import { Button, cn } from "@heroui/react";
-import { CirclePlayIcon, DownloadIcon, EllipsisIcon, PinIcon, PinOffIcon, XIcon } from "lucide-react";
-import { nanoid } from "nanoid";
-import { useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
 
 type InstallStatus = "installed" | "installing" | "not-installed";
 
@@ -48,13 +55,15 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
     }
 
     function togglePin() {
-        void native.game.update(alter(game!, g => {
-            if (g.user.pinTime && g.user.pinTime > 0) {
-                g.user.pinTime = undefined;
-            } else {
-                g.user.pinTime = Date.now();
-            }
-        }));
+        void native.game.update(
+            alter(game!, g => {
+                if (g.user.pinTime && g.user.pinTime > 0) {
+                    g.user.pinTime = undefined;
+                } else {
+                    g.user.pinTime = Date.now();
+                }
+            }),
+        );
     }
 
     function handleAccountRefreshed() {
@@ -66,7 +75,7 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
             setLaunching(true);
             if (game && !game?.launchHint.accountId) {
                 const aid = await openAccountSelector();
-                await native.game.update(alter(game, g => g.launchHint.accountId = aid));
+                await native.game.update(alter(game, g => (g.launchHint.accountId = aid)));
             }
 
             const res = await native.auth.forGame(gameId);
@@ -86,57 +95,47 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
         }
     }
 
-    return <div className="flex gap-2">
-        {
-            installStatus === "installed" ?
+    return (
+        <div className="flex gap-2">
+            {installStatus === "installed" ? (
                 <Button
-                    startContent={!launching && <CirclePlayIcon/>}
+                    startContent={!launching && <CirclePlayIcon />}
                     isLoading={launching}
                     color="primary"
                     onPress={launch}
                 >
                     {t("launch")}
                 </Button>
-                :
-                installStatus === "installing" ?
-                    <Button
-                        isIconOnly
-                        color="danger"
-                        onPress={handleCancel}
-                    >
-                        <XIcon/>
-                    </Button>
-                    :
-                    <Button
-                        color="secondary"
-                        onPress={handleInstall}
-                        startContent={<DownloadIcon/>}
-                    >
-                        {t("download")}
-                    </Button>
-        }
+            ) : installStatus === "installing" ? (
+                <Button isIconOnly color="danger" onPress={handleCancel}>
+                    <XIcon />
+                </Button>
+            ) : (
+                <Button color="secondary" onPress={handleInstall} startContent={<DownloadIcon />}>
+                    {t("download")}
+                </Button>
+            )}
 
-        <div className="flex gap-1">
-            <Button variant="light" isIconOnly onPress={togglePin}>
-            <span className={cn("duration-200", !pinned && "rotate-45")}>
-                 {
-                     pinned ? <PinOffIcon/> : <PinIcon/>
-                 }
-            </span>
-            </Button>
+            <div className="flex gap-1">
+                <Button variant="light" isIconOnly onPress={togglePin}>
+                    <span className={cn("duration-200", !pinned && "rotate-45")}>
+                        {pinned ? <PinOffIcon /> : <PinIcon />}
+                    </span>
+                </Button>
 
-            <Button variant="light" isIconOnly onPress={handleShowDetails}>
-                <EllipsisIcon/>
-            </Button>
+                <Button variant="light" isIconOnly onPress={handleShowDetails}>
+                    <EllipsisIcon />
+                </Button>
+            </div>
+
+            <YggdrasilFormDialog
+                email={yggdrasilEmail}
+                host={yggdrasilHost}
+                key={yggdrasilFormKey}
+                isOpen={yggdrasilFormOpen}
+                onClose={() => setYggdrasilFormOpen(false)}
+                onAccountAdded={handleAccountRefreshed}
+            />
         </div>
-
-        <YggdrasilFormDialog
-            email={yggdrasilEmail}
-            host={yggdrasilHost}
-            key={yggdrasilFormKey}
-            isOpen={yggdrasilFormOpen}
-            onClose={() => setYggdrasilFormOpen(false)}
-            onAccountAdded={handleAccountRefreshed}
-        />
-    </div>;
+    );
 }

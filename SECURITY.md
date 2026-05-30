@@ -4,7 +4,8 @@
 
 Alicorn provides no security updates for versions except the latest stable release.
 
-As Alicorn is backward-compatible at the same major version, users at the latest major version should update to receive security updates.
+As Alicorn is backward-compatible at the same major version, users at the latest major version
+should update to receive security updates.
 
 Users running previous major versions should consider upgrading to the latest version.
 

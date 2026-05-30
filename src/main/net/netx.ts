@@ -1,30 +1,31 @@
 /**
  * Utilities related to network access.
  */
+
+import { net, type Session } from "electron";
 import { conf } from "@/main/conf/conf";
 import { AbstractException } from "@/main/except/exception";
 import { NetRequestFailedException } from "@/main/except/net";
 import { mirror } from "@/main/net/mirrors";
-import { net, Session } from "electron";
 
 /**
  * Fetches the content of the given URL using any available mirror.
  */
 async function request(url: string, body?: any, session?: Session): Promise<Response> {
-    let lastError;
+    let lastError: any = null;
 
     const urls = mirror.apply(url);
     const jsonHeader = body === undefined ? undefined : { "Content-Type": "application/json" };
 
     for (const u of urls) {
-        let code: number | undefined = undefined;
+        let code: number | undefined;
         try {
             const signal = AbortSignal.timeout(conf().net.requestTimeout);
             const r = await (session ?? net).fetch(u, {
                 headers: { ...jsonHeader },
                 method: body === undefined ? "GET" : "POST",
                 body: body === undefined ? undefined : JSON.stringify(body),
-                signal
+                signal,
             });
             if (r.ok) return r;
             code = r.status;
@@ -51,7 +52,6 @@ async function json<T = any>(url: string, body?: any, session?: Session): Promis
     throw new NetMirrorsAllFailedException(url);
 }
 
-
 class NetMirrorsAllFailedException extends AbstractException<"net-mirrors-all-failed"> {
     #url: string;
 
@@ -66,5 +66,6 @@ class NetMirrorsAllFailedException extends AbstractException<"net-mirrors-all-fa
 }
 
 export const netx = {
-    request, json
+    request,
+    json,
 };

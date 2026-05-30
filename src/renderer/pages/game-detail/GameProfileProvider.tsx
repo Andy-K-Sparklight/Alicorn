@@ -1,12 +1,10 @@
-import type { GameProfile } from "@/main/game/spec";
 import React, { type PropsWithChildren, useContext } from "react";
+import type { GameProfile } from "@/main/game/spec";
 
 const GameProfileContext = React.createContext<GameProfile | null>(null);
 
 export function GameProfileProvider({ children, game }: PropsWithChildren<{ game: GameProfile }>) {
-    return <GameProfileContext.Provider value={game}>
-        {children}
-    </GameProfileContext.Provider>;
+    return <GameProfileContext.Provider value={game}>{children}</GameProfileContext.Provider>;
 }
 
 export function useCurrentGameProfile(): GameProfile {

@@ -2,8 +2,8 @@ import type { ConfigTheme } from "@heroui/react";
 
 export default {
     extend: "light",
-    "colors": {
-        "default": {
+    colors: {
+        default: {
             "50": "#f8f0f4",
             "100": "#eedae4",
             "200": "#e4c4d5",
@@ -14,10 +14,10 @@ export default {
             "700": "#81556c",
             "800": "#5f3e4f",
             "900": "#3c2732",
-            "foreground": "#230c55",
-            "DEFAULT": "#c783a6"
+            foreground: "#230c55",
+            DEFAULT: "#c783a6",
         },
-        "primary": {
+        primary: {
             "50": "#ebe4f1",
             "100": "#cebdde",
             "200": "#b297cb",
@@ -28,10 +28,10 @@ export default {
             "700": "#3c175e",
             "800": "#2c1145",
             "900": "#1c0b2c",
-            "foreground": "#fff",
-            "DEFAULT": "#5d2391"
+            foreground: "#fff",
+            DEFAULT: "#5d2391",
         },
-        "secondary": {
+        secondary: {
             "50": "#fbe5ef",
             "100": "#f5c1d9",
             "200": "#f09dc2",
@@ -42,11 +42,11 @@ export default {
             "700": "#911f53",
             "800": "#6a173c",
             "900": "#430e26",
-            "foreground": "#000",
-            "DEFAULT": "#df307f"
+            foreground: "#000",
+            DEFAULT: "#df307f",
         },
-        "background": "#ffe0f0",
-        "foreground": {
+        background: "#ffe0f0",
+        foreground: {
             "50": "#e8e2ed",
             "100": "#c8b9d5",
             "200": "#a891bc",
@@ -57,27 +57,27 @@ export default {
             "700": "#2e0f4a",
             "800": "#220b36",
             "900": "#150722",
-            "foreground": "#fff",
-            "DEFAULT": "#471772"
+            foreground: "#fff",
+            DEFAULT: "#471772",
         },
-        "content1": {
-            "DEFAULT": "#e2c3d3",
-            "foreground": "#000"
+        content1: {
+            DEFAULT: "#e2c3d3",
+            foreground: "#000",
         },
-        "content2": {
-            "DEFAULT": "#ceb1c1",
-            "foreground": "#000"
+        content2: {
+            DEFAULT: "#ceb1c1",
+            foreground: "#000",
         },
-        "content3": {
-            "DEFAULT": "#b091a2",
-            "foreground": "#000"
+        content3: {
+            DEFAULT: "#b091a2",
+            foreground: "#000",
         },
-        "content4": {
-            "DEFAULT": "#977c8a",
-            "foreground": "#000"
+        content4: {
+            DEFAULT: "#977c8a",
+            foreground: "#000",
         },
-        "focus": "#5d2391",
-        "overlay": "#000000",
-        "divider": "#111111"
-    }
+        focus: "#5d2391",
+        overlay: "#000000",
+        divider: "#111111",
+    },
 } satisfies ConfigTheme;

@@ -18,7 +18,7 @@ export type IpcCallEvents = {
     revealGameContent: (id: string, scope: string) => void;
     languageChange: (lang: string) => void;
     cancelInstall: (id: string) => void;
-}
+};
 
 /**
  * Events sent from renderer to main with message port forwarding.
@@ -26,7 +26,7 @@ export type IpcCallEvents = {
 export type IpcMessageEvents = {
     installGame: (gameId: string) => void;
     subscribeGameEvents: (gid: string) => void;
-}
+};
 
 /**
  * Events sent from main to renderer.
@@ -38,6 +38,6 @@ export type IpcPushEvents = {
     appUpgraded: (version: string) => void;
     devToolsOpened: () => void;
     mpmManifestChanged: (id: string, mf: MpmManifest) => void;
-}
+};
 
-export type IpcCommands = {}
+export type IpcCommands = { [k: keyof any]: never };

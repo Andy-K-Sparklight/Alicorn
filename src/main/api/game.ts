@@ -1,3 +1,6 @@
+import path from "node:path";
+import { shell } from "electron";
+import fs from "fs-extra";
 import { containerInspector } from "@/main/container/inspect";
 import { containers } from "@/main/container/manage";
 import { games } from "@/main/game/manage";
@@ -9,9 +12,6 @@ import { ipcMain } from "@/main/ipc/typed";
 import { venv } from "@/main/launch/venv";
 import { gameMigrator } from "@/main/migrate/game";
 import { reg } from "@/main/registry/registry";
-import { shell } from "electron";
-import fs from "fs-extra";
-import path from "node:path";
 
 addCheckedHandler("listGames", () => reg.games.getAll());
 addCheckedHandler("removeGame", gameId => games.remove(gameId));
@@ -62,18 +62,21 @@ addCheckedHandler("addGame", async init => {
         cid = props.id;
 
         props.flags = {
-            link: containerShouldLink
+            link: containerShouldLink,
         };
 
         containers.add(props);
     }
 
-    let type: GameCoreType = ({
-        "release": "vanilla-release",
-        "snapshot": "vanilla-snapshot",
-        "old_alpha": "vanilla-old-alpha",
-        "old_beta": "vanilla-old-beta"
-    } as const)[p.type] ?? "unknown";
+    let type: GameCoreType =
+        (
+            {
+                release: "vanilla-release",
+                snapshot: "vanilla-snapshot",
+                old_alpha: "vanilla-old-alpha",
+                old_beta: "vanilla-old-beta",
+            } as const
+        )[p.type] ?? "unknown";
 
     if (
         installProps.type === "fabric" ||
@@ -87,7 +90,7 @@ addCheckedHandler("addGame", async init => {
         type = installProps.type;
     }
 
-    let accountId = init.accountId ?? "";
+    const accountId = init.accountId ?? "";
 
     const g: GameProfile = {
         id: init.id || games.genId(),
@@ -98,15 +101,15 @@ addCheckedHandler("addGame", async init => {
             accountId,
             containerId: cid,
             profileId: "", // Will be re-assigned after installation
-            pref: {} // TODO allow user to choose pref
+            pref: {}, // TODO allow user to choose pref
         },
         assetsLevel,
         time: Date.now(),
         versions: {
-            game: p.id
+            game: p.id,
         },
         user: {},
-        type
+        type,
     };
 
     games.add(g);
@@ -135,6 +138,6 @@ addCheckedHandler("querySharedGames", async id => games.queryShared(id));
 addCheckedHandler("scanImportableProfiles", async fp => gameMigrator.scanImportableProfiles(fp));
 
 addCheckedHandler("importGame", async (name: string, root, profileId, accountId) => {
-    const fp = path.join(root, "versions", profileId, profileId + ".json");
+    const fp = path.join(root, "versions", profileId, `${profileId}.json`);
     await gameMigrator.doImport(name, fp, accountId === "new" ? "" : accountId);
 });

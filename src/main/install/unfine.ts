@@ -1,3 +1,11 @@
+import child_process from "node:child_process";
+import path from "node:path";
+import { session } from "electron";
+import fs from "fs-extra";
+import lazyValue from "lazy-value";
+import { nanoid } from "nanoid";
+import nodeHTML from "node-html-parser";
+import { pEvent } from "p-event";
 import type { Container } from "@/main/container/spec";
 import { AbstractException } from "@/main/except/exception";
 import { NetRequestFailedException } from "@/main/except/net";
@@ -5,15 +13,7 @@ import { paths } from "@/main/fs/paths";
 import { UnavailableModLoaderException } from "@/main/install/except";
 import { dlx } from "@/main/net/dlx";
 import { netx } from "@/main/net/netx";
-import { progress, type ProgressController } from "@/main/util/progress";
-import { session } from "electron";
-import fs from "fs-extra";
-import lazyValue from "lazy-value";
-import { nanoid } from "nanoid";
-import nodeHTML from "node-html-parser";
-import child_process from "node:child_process";
-import path from "node:path";
-import { pEvent } from "p-event";
+import { type ProgressController, progress } from "@/main/util/progress";
 
 const VERSIONS_HTML = "https://optifine.net/downloads";
 
@@ -28,7 +28,8 @@ export interface OptiFineVersionMeta {
 
 let versions: OptiFineVersionMeta[] | null = null;
 
-const FAKE_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36";
+const FAKE_USER_AGENT =
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36";
 
 const crawlSession = lazyValue(() => {
     const s = session.fromPartition(`temp:${nanoid()}`);
@@ -45,14 +46,14 @@ interface BMCLAPIOptiFineVersion {
 
 async function syncVersionsFromBMCLAPI(): Promise<OptiFineVersionMeta[]> {
     const url = "https://bmclapi2.bangbang93.com/optifine/versionList";
-    const vs = await netx.json(url) as BMCLAPIOptiFineVersion[];
+    const vs = (await netx.json(url)) as BMCLAPIOptiFineVersion[];
     return vs.map(v => ({
         gameVersion: v.mcversion,
         htmlUrl: "",
         url: `https://bmclapi2.bangbang93.com/maven/com/optifine/1.21.4/${v.filename}`,
         name: v.filename.replaceAll("preview_", "").replaceAll(".jar", ""),
-        edition: v.type + "_" + v.patch,
-        stable: v.filename.includes("preview")
+        edition: `${v.type}_${v.patch}`,
+        stable: v.filename.includes("preview"),
     }));
 }
 
@@ -75,8 +76,8 @@ async function crawlVersions(): Promise<OptiFineVersionMeta[]> {
         const doc = nodeHTML(html, {
             blockTextElements: {
                 style: false,
-                script: false
-            }
+                script: false,
+            },
         });
 
         const entries = doc.querySelectorAll("tr.downloadLine");
@@ -115,8 +116,8 @@ async function getRealUrl(htmlUrl: string): Promise<string> {
     const doc = nodeHTML(html, {
         blockTextElements: {
             style: false,
-            script: false
-        }
+            script: false,
+        },
     });
 
     const pathname = doc.querySelector("div.downloadButton > a")?.attributes?.href;
@@ -141,11 +142,15 @@ async function hasVersion(gameVersion: string): Promise<boolean> {
     return versions.some(v => v.gameVersion === gameVersion);
 }
 
-async function pickVersion(gameVersion: string, version: string): Promise<[OptiFineVersionMeta, string]> {
+async function pickVersion(
+    gameVersion: string,
+    version: string,
+): Promise<[OptiFineVersionMeta, string]> {
     const versions = await crawlVersions();
 
     if (!version) {
-        const v = versions.find(v => v.stable && v.gameVersion === gameVersion) ??
+        const v =
+            versions.find(v => v.stable && v.gameVersion === gameVersion) ??
             versions.find(v => v.gameVersion === gameVersion);
 
         if (!v) throw new UnavailableModLoaderException(gameVersion);
@@ -161,6 +166,8 @@ async function pickVersion(gameVersion: string, version: string): Promise<[OptiF
             const name = vs.name.replaceAll("_", "");
             if (name.includes(uv)) return true;
         }
+
+        return false;
     });
 
     if (!v) throw new UnavailableModLoaderException(gameVersion);
@@ -169,10 +176,13 @@ async function pickVersion(gameVersion: string, version: string): Promise<[OptiF
     return [v, genProfileId(v.name)];
 }
 
-async function downloadInstaller(meta: OptiFineVersionMeta, control?: ProgressController): Promise<string> {
+async function downloadInstaller(
+    meta: OptiFineVersionMeta,
+    control?: ProgressController,
+): Promise<string> {
     control?.onProgress?.(progress.indefinite("optifine.download"));
 
-    const url = meta.url || await getRealUrl(meta.htmlUrl);
+    const url = meta.url || (await getRealUrl(meta.htmlUrl));
     console.debug(`Fetching OptiFine installer from: ${url}`);
 
     const fp = paths.temp.to(`optifine-installer-${nanoid()}.jar`);
@@ -181,9 +191,12 @@ async function downloadInstaller(meta: OptiFineVersionMeta, control?: ProgressCo
     return fp;
 }
 
-async function withFakeLauncherProfiles(container: Container, exec: () => Promise<void>): Promise<void> {
+async function withFakeLauncherProfiles(
+    container: Container,
+    exec: () => Promise<void>,
+): Promise<void> {
     const lp = container.launcherProfiles();
-    const lpBak = lp + ".bak";
+    const lpBak = `${lp}.bak`;
 
     try {
         await fs.move(lp, lpBak);
@@ -201,7 +214,12 @@ async function withFakeLauncherProfiles(container: Container, exec: () => Promis
     }
 }
 
-async function runInstaller(jrtExec: string, fp: string, container: Container, control?: ProgressController): Promise<void> {
+async function runInstaller(
+    jrtExec: string,
+    fp: string,
+    container: Container,
+    control?: ProgressController,
+): Promise<void> {
     control?.onProgress?.(progress.indefinite("optifine.install"));
 
     const unfineJar = paths.app.to("vendor", "unfine-1.0.jar");
@@ -209,12 +227,16 @@ async function runInstaller(jrtExec: string, fp: string, container: Container, c
     await withFakeLauncherProfiles(container, async () => {
         console.debug(`Executing OptiFine installer at ${fp}`);
 
-        const proc = child_process.spawn(jrtExec, [
-            `-Dunfine.root=${container.props.root}`,
-            "-cp",
-            [fp, unfineJar].join(path.delimiter),
-            "moe.skjsjhb.unfine.Reflector"
-        ], { stdio: ["ignore", "inherit", "inherit"] });
+        const proc = child_process.spawn(
+            jrtExec,
+            [
+                `-Dunfine.root=${container.props.root}`,
+                "-cp",
+                [fp, unfineJar].join(path.delimiter),
+                "moe.skjsjhb.unfine.Reflector",
+            ],
+            { stdio: ["ignore", "inherit", "inherit"] },
+        );
 
         const code = (await pEvent(proc, "exit")) as number;
 

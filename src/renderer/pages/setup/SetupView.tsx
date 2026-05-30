@@ -1,4 +1,3 @@
-import { useNav } from "@/renderer/util/nav";
 import { AnimatedRoute } from "@components/misc/AnimatedRoute";
 import { AccountInitView } from "@pages/setup/AccountInitView";
 import { AnalyticsView } from "@pages/setup/AnalyticsView";
@@ -11,6 +10,7 @@ import { WelcomeView } from "@pages/setup/WelcomeView";
 import { ZoomFactorView } from "@pages/setup/ZoomFactorView";
 import React, { useContext, useState } from "react";
 import { Redirect } from "wouter";
+import { useNav } from "@/renderer/util/nav";
 
 interface PagesContextContent {
     currentPage: number;
@@ -29,7 +29,7 @@ const setupPages = [
     ["game-path", GamePathSetupView],
     ["account-init", AccountInitView],
     ["analytics", AnalyticsView],
-    ["finish", FinishView]
+    ["finish", FinishView],
 ] as [string, React.ComponentType<any>][];
 
 export function SetupView() {
@@ -37,17 +37,17 @@ export function SetupView() {
 
     const pages = setupPages.map(p => p[0]);
 
-    return <div className="p-8 w-full h-full">
-        <PagesContext.Provider value={{ pages, currentPage, setCurrentPage }}>
-            {
-                setupPages.map(([name, comp]) =>
-                    <AnimatedRoute key={name} path={`/setup/${name}`} component={comp}/>
-                )
-            }
+    return (
+        <div className="p-8 w-full h-full">
+            <PagesContext.Provider value={{ pages, currentPage, setCurrentPage }}>
+                {setupPages.map(([name, comp]) => (
+                    <AnimatedRoute key={name} path={`/setup/${name}`} component={comp} />
+                ))}
 
-            <AnimatedRoute path="/setup" component={DefaultPageRedirect}/>
-        </PagesContext.Provider>
-    </div>;
+                <AnimatedRoute path="/setup" component={DefaultPageRedirect} />
+            </PagesContext.Provider>
+        </div>
+    );
 }
 
 export function useSetupNextPage() {
@@ -64,5 +64,5 @@ export function useSetupNextPage() {
 }
 
 function DefaultPageRedirect() {
-    return <Redirect to="/setup/lang"/>;
+    return <Redirect to="/setup/lang" />;
 }

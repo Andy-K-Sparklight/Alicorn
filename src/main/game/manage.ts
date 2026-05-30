@@ -27,7 +27,8 @@ function queryShared(id: string): string[] {
 
     if (!g) return [];
 
-    return reg.games.getAll()
+    return reg.games
+        .getAll()
         .filter(gp => gp.id !== g.id && gp.launchHint.containerId === g.launchHint.containerId)
         .map(gp => gp.id);
 }
@@ -37,13 +38,17 @@ function get(id: string) {
 }
 
 export const games = {
-    add, remove, queryShared, get, genId
+    add,
+    remove,
+    queryShared,
+    get,
+    genId,
 };
 
 function genId(): string {
     let i = 1;
     while (true) {
-        const st = "#" + i;
+        const st = `#${i}`;
         if (!reg.games.has(st)) {
             return st;
         }

@@ -363,9 +363,7 @@
                 }
             },
             "extract": {
-                "exclude": [
-                    "META-INF/"
-                ]
+                "exclude": ["META-INF/"]
             },
             "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.1",
             "natives": {
@@ -398,9 +396,7 @@
                 }
             },
             "extract": {
-                "exclude": [
-                    "META-INF/"
-                ]
+                "exclude": ["META-INF/"]
             },
             "name": "net.java.jinput:jinput-platform:2.0.5",
             "natives": {
@@ -444,9 +440,7 @@
                 }
             },
             "extract": {
-                "exclude": [
-                    "META-INF/"
-                ]
+                "exclude": ["META-INF/"]
             },
             "name": "tv.twitch:twitch-platform:5.16",
             "natives": {
@@ -484,9 +478,7 @@
                 }
             },
             "extract": {
-                "exclude": [
-                    "META-INF/"
-                ]
+                "exclude": ["META-INF/"]
             },
             "name": "tv.twitch:twitch-external-platform:4.5",
             "natives": {

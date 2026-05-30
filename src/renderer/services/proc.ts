@@ -2,14 +2,14 @@
  * Syncs events from main process and maintain renderer-side game instances.
  */
 
+import Emittery from "emittery";
+import { useCallback, useSyncExternalStore } from "react";
+import throttle from "throttleit";
 import type { GameProcEvent } from "@/main/api/launcher";
 import type { GameProfile } from "@/main/game/spec";
 import type { GameProcessLog } from "@/main/launch/log-parser";
 import { alter } from "@/main/util/misc";
 import { retrievePort } from "@/preload/message";
-import Emittery from "emittery";
-import { useCallback, useSyncExternalStore } from "react";
-import throttle from "throttleit";
 
 /**
  * Contains a slice of game information at the renderer side.
@@ -70,10 +70,10 @@ async function create(id: string): Promise<string> {
         startTime: Date.now(), // Time measurement is done at the front end
         outputs: {
             stdout: [],
-            stderr: []
+            stderr: [],
         },
 
-        logs: []
+        logs: [],
     };
 
     console.log("Establishing event stream...");
@@ -105,12 +105,13 @@ async function create(id: string): Promise<string> {
                     restrictedEmitter.emit("change");
                     break;
                 case "stdout":
-                case "stderr":
+                case "stderr": {
                     const s = e.data.data;
                     const buf = pr.outputs[e.data.type]; // The channels and the buffers share the same names
                     buf.push(s);
                     clearLogs(buf);
                     break;
+                }
                 case "log":
                     pr.logs.push(...e.data.log);
                     clearLogs(pr.logs);
@@ -148,11 +149,14 @@ function remove(id: string) {
  * This can introduce much performance overhead and should be taken into account when using.
  */
 export function useGameProcDetail(procId: string): RemoteGameProcess {
-    const subscribe = useCallback((cb: () => void) => {
-        const ch = `change:${procId}`;
-        detailedEmitter.on(ch, cb);
-        return () => detailedEmitter.off(ch, cb);
-    }, [procId]);
+    const subscribe = useCallback(
+        (cb: () => void) => {
+            const ch = `change:${procId}`;
+            detailedEmitter.on(ch, cb);
+            return () => detailedEmitter.off(ch, cb);
+        },
+        [procId],
+    );
 
     const getSnapshot = useCallback(() => procs.get(procId)!, [procId]);
 
@@ -177,5 +181,6 @@ export function useGameProcList(): RemoteGameProcess[] {
 }
 
 export const procService = {
-    create, remove
+    create,
+    remove,
 };

@@ -1,17 +1,19 @@
+import path from "node:path";
+import fs from "fs-extra";
 import { containers } from "@/main/container/manage";
 import { games } from "@/main/game/manage";
 import type { GameCoreType, GameProfile } from "@/main/game/spec";
 import { profileLoader } from "@/main/profile/loader";
 import { isTruthy } from "@/main/util/misc";
-import fs from "fs-extra";
-import path from "node:path";
 
 /**
  * Infers the type of the profile without linking it.
  */
 function detectProfileType(p: any): GameCoreType {
     if ("libraries" in p && Array.isArray(p.libraries)) {
-        const effectiveLibs = p.libraries.filter((lib: any) => "name" in lib && typeof lib.name === "string");
+        const effectiveLibs = p.libraries.filter(
+            (lib: any) => "name" in lib && typeof lib.name === "string",
+        );
 
         for (const lib of effectiveLibs) {
             if (lib.name.includes("neoforge")) return "neoforged";
@@ -58,7 +60,7 @@ async function detectGameVersion(fp: string): Promise<string> {
         const c = containers.create({
             id: "importer",
             root,
-            flags: {}
+            flags: {},
         });
 
         const ep = await profileLoader.fromContainer(fp, c);
@@ -85,28 +87,27 @@ async function doImport(name: string, fp: string, accountId: string): Promise<vo
         assetsLevel: "full",
         name,
         versions: {
-            game: ver
+            game: ver,
         },
         launchHint: {
             profileId: path.basename(fp, ".json"),
             containerId: c.id,
             pref: {},
-            accountId
+            accountId,
         },
         installProps: {
             type: "imported",
-            profileId: String(p.id)
+            profileId: String(p.id),
         },
         installed: false,
         locked: true,
         time: Date.now(),
-        user: {}
+        user: {},
     };
 
     containers.add(c);
     games.add(g);
 }
-
 
 async function scanImportableProfiles(root: string): Promise<string[]> {
     try {
@@ -119,7 +120,7 @@ async function scanImportableProfiles(root: string): Promise<string[]> {
                     return v;
                 }
                 return null;
-            })
+            }),
         );
 
         return effectiveVersions.filter(isTruthy);

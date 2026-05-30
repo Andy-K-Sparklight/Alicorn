@@ -26,7 +26,10 @@ export class MavenName {
      */
     toPath(): string {
         const groupPath = this.group.replaceAll(".", "/");
-        const jarName = [this.artifact, this.version, this.classifier].filter(isTruthy).join("-") + "." + this.ext;
+        const jarName =
+            [this.artifact, this.version, this.classifier].filter(isTruthy).join("-") +
+            "." +
+            this.ext;
 
         return [groupPath, this.artifact, this.version, jarName].join("/");
     }

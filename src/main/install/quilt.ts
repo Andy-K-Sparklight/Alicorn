@@ -1,8 +1,8 @@
+import fs from "fs-extra";
 import type { Container } from "@/main/container/spec";
 import { UnavailableModLoaderException } from "@/main/install/except";
 import { netx } from "@/main/net/netx";
-import { progress, type ProgressController } from "@/main/util/progress";
-import fs from "fs-extra";
+import { type ProgressController, progress } from "@/main/util/progress";
 
 // Quilt installer works quite similar to Fabric
 // We're copy-pasting these code in case Quilt make incompatible changes in the future
@@ -22,7 +22,7 @@ let availableGameVersions: string[];
 
 async function getAvailableGameVersions() {
     if (!availableGameVersions) {
-        const url = QUILT_META_API + "/versions/game";
+        const url = `${QUILT_META_API}/versions/game`;
         const vs = await netx.json(url);
         availableGameVersions = vs.map((v: { version: string }) => v.version);
     }
@@ -31,9 +31,9 @@ async function getAvailableGameVersions() {
 }
 
 async function queryLoaderVersions(gameVersion: string): Promise<QuiltLoaderVersion[]> {
-    const url = QUILT_META_API + `/versions/loader/${gameVersion}`;
+    const url = `${QUILT_META_API}/versions/loader/${gameVersion}`;
 
-    const entries = await netx.json(url) as LoaderEntry[];
+    const entries = (await netx.json(url)) as LoaderEntry[];
     return entries.map(e => e.loader);
 }
 
@@ -41,7 +41,7 @@ async function retrieveProfile(
     gameVersion: string,
     loaderVersion: string,
     container: Container,
-    controller?: ProgressController
+    controller?: ProgressController,
 ): Promise<string> {
     controller?.onProgress?.(progress.indefinite("quilt.resolve"));
 
@@ -58,12 +58,13 @@ async function retrieveProfile(
     }
 
     console.debug(`Fetching Quilt profile for ${gameVersion} / ${loaderVersion}`);
-    const url = QUILT_META_API + `/versions/loader/${gameVersion}/${loaderVersion}/profile/json`;
+    const url = `${QUILT_META_API}/versions/loader/${gameVersion}/${loaderVersion}/profile/json`;
 
     controller?.signal?.throwIfAborted();
 
     const qtp = await netx.json(url);
-    if (!("id" in qtp) || typeof qtp.id !== "string") throw new UnavailableModLoaderException(gameVersion);
+    if (!("id" in qtp) || typeof qtp.id !== "string")
+        throw new UnavailableModLoaderException(gameVersion);
 
     console.debug(`Writing profile with ID: ${qtp.id}`);
     await fs.outputJSON(container.profile(qtp.id), qtp);
@@ -74,13 +75,12 @@ async function retrieveProfile(
 async function prefetch() {
     try {
         await getAvailableGameVersions();
-    } catch {
-    }
+    } catch {}
 }
 
 export const quiltInstaller = {
     prefetch,
     queryLoaderVersions,
     getAvailableGameVersions,
-    retrieveProfile
+    retrieveProfile,
 };

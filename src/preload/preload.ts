@@ -1,3 +1,5 @@
+import { contextBridge, type FileFilter, ipcRenderer as ipcRendererRaw, webUtils } from "electron";
+import Emittery from "emittery";
 import type { GameAuthResult } from "@/main/api/auth";
 import type { CreateGameInit } from "@/main/api/game";
 import type { LaunchGameResult } from "@/main/api/launcher";
@@ -7,17 +9,25 @@ import type { UserConfig } from "@/main/conf/conf";
 import type { SerializedException } from "@/main/except/exception";
 import type { GameProfile } from "@/main/game/spec";
 import type { VersionManifest } from "@/main/install/vanilla";
-import { type IpcCallEvents, type IpcCommands, type IpcMessageEvents, type IpcPushEvents } from "@/main/ipc/channels";
+import type {
+    IpcCallEvents,
+    IpcCommands,
+    IpcMessageEvents,
+    IpcPushEvents,
+} from "@/main/ipc/channels";
 import type { CheckedIpcCommands } from "@/main/ipc/checked";
 import type { TypedIpcRenderer } from "@/main/ipc/typed";
 import type { MpmAddonType, MpmManifest } from "@/main/mpm/spec";
-import { contextBridge, type FileFilter, ipcRenderer as ipcRendererRaw, webUtils } from "electron";
-import Emittery from "emittery";
 import { exposePort } from "./message";
 
 console.log("Enabling preload script.");
 
-const ipcRenderer = ipcRendererRaw as TypedIpcRenderer<IpcCallEvents, IpcPushEvents, IpcMessageEvents, IpcCommands>;
+const ipcRenderer = ipcRendererRaw as TypedIpcRenderer<
+    IpcCallEvents,
+    IpcPushEvents,
+    IpcMessageEvents,
+    IpcCommands
+>;
 const internalEvents = new Emittery();
 
 const native = {
@@ -30,7 +40,7 @@ const native = {
          */
         onUpgraded(handler: (version: string) => void) {
             ipcRenderer.on("appUpgraded", (_, v) => handler(v));
-        }
+        },
     },
 
     /**
@@ -70,7 +80,7 @@ const native = {
          */
         setZoom(v: number): void {
             ipcRenderer.send("setZoom", v);
-        }
+        },
     },
 
     /**
@@ -95,7 +105,7 @@ const native = {
 
         queryAvailableModLoaders(gameVersion: string): Promise<string[]> {
             return checkedInvoke("queryAvailableModLoaders", gameVersion);
-        }
+        },
     },
 
     /**
@@ -159,7 +169,6 @@ const native = {
             ipcRenderer.send("destroyGame", id);
         },
 
-
         /**
          * Scans the given directory for importable profiles.
          */
@@ -179,7 +188,7 @@ const native = {
          */
         onChange(fn: () => void) {
             internalEvents.on("gameChanged", fn);
-        }
+        },
     },
 
     /**
@@ -233,7 +242,7 @@ const native = {
          */
         onAccountChange(fn: () => void) {
             internalEvents.on("accountChanged", fn);
-        }
+        },
     },
 
     /**
@@ -268,7 +277,7 @@ const native = {
          */
         remove(procId: string): void {
             ipcRenderer.send("removeGame", procId);
-        }
+        },
     },
 
     /**
@@ -280,7 +289,7 @@ const native = {
          */
         getVersionManifest(): Promise<VersionManifest> {
             return checkedInvoke("getVersionManifest");
-        }
+        },
     },
 
     /**
@@ -299,7 +308,7 @@ const native = {
          */
         deploy(fp: string) {
             return checkedInvoke("deployModpack", fp);
-        }
+        },
     },
 
     /**
@@ -309,7 +318,12 @@ const native = {
         /**
          * Searches for addons.
          */
-        searchAddons(scope: MpmAddonType, query: string, gameId: string, pg?: unknown): Promise<MpmAddonSearchResult> {
+        searchAddons(
+            scope: MpmAddonType,
+            query: string,
+            gameId: string,
+            pg?: unknown,
+        ): Promise<MpmAddonSearchResult> {
             return checkedInvoke("searchAddons", scope, query, gameId, pg);
         },
 
@@ -346,7 +360,7 @@ const native = {
          */
         onManifestChange(fn: (gameId: string, manifest: MpmManifest) => void) {
             internalEvents.on("mpmManifestChanged", ({ id, mf }) => fn(id, mf));
-        }
+        },
     },
 
     /**
@@ -363,7 +377,7 @@ const native = {
 
         onChange(cb: (c: UserConfig) => void): void {
             internalEvents.on("configChanged", args => cb(args[0]));
-        }
+        },
     },
 
     /**
@@ -410,8 +424,8 @@ const native = {
          */
         onDevToolsOpened(handler: () => void) {
             internalEvents.on("devToolsOpened", handler);
-        }
-    }
+        },
+    },
 };
 
 // Unwraps IPC events as internal events
@@ -425,29 +439,30 @@ ipcRenderer.on("mpmManifestChanged", (_, id, mf) => {
     void internalEvents.emit("mpmManifestChanged", { id, mf });
 });
 
-
 contextBridge.exposeInMainWorld("native", native);
 
 console.log("Completed native API bindings.");
 
 export type NativeAPI = typeof native;
 
-type Result<T> = {
-    success: true;
-    value: T;
-} | {
-    success: false;
-    error: string;
-}
+type Result<T> =
+    | {
+          success: true;
+          value: T;
+      }
+    | {
+          success: false;
+          error: string;
+      };
 
 async function checkedInvoke<K extends keyof CheckedIpcCommands>(
     method: K,
     ...args: Parameters<CheckedIpcCommands[K]>
 ): Promise<ReturnType<CheckedIpcCommands[K]>> {
-    const res = await ipcRendererRaw.invoke("checkedInvoke", {
+    const res = (await ipcRendererRaw.invoke("checkedInvoke", {
         method,
-        args
-    }) as Result<ReturnType<CheckedIpcCommands[K]>>;
+        args,
+    })) as Result<ReturnType<CheckedIpcCommands[K]>>;
 
     if (res.success) {
         return res.value;

@@ -1,5 +1,5 @@
-import type { Container } from "@/main/container/spec";
 import fs from "fs-extra";
+import type { Container } from "@/main/container/spec";
 
 /**
  * Creates game content directory of the given scope.
@@ -11,7 +11,6 @@ async function createContentDir(c: Container, scope: string): Promise<void> {
     await fs.ensureDir(d);
 }
 
-
 export const containerInspector = {
-    createContentDir
+    createContentDir,
 };

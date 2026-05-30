@@ -11,7 +11,7 @@ export async function runInstrumentedTest() {
         import("./install"),
         import("./jrt"),
         import("./net"),
-        import("./reg")
+        import("./reg"),
     ]);
 
     await iTest.dumpSummary();

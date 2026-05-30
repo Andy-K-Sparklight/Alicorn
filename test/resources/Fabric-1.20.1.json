@@ -7,9 +7,7 @@
     "mainClass": "net.fabricmc.loader.impl.launch.knot.KnotClient",
     "arguments": {
         "game": [],
-        "jvm": [
-            "-DFabricMcEmu= net.minecraft.client.main.Main "
-        ]
+        "jvm": ["-DFabricMcEmu= net.minecraft.client.main.Main "]
     },
     "libraries": [
         {

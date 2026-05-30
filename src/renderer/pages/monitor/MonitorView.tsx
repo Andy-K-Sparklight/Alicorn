@@ -6,65 +6,74 @@ import { MonitorActionsMemo } from "@pages/monitor/MonitorActions";
 import { PerformanceDisplay } from "@pages/monitor/PerformanceDisplay";
 import { StatusDisplayMemo } from "@pages/monitor/StatusDisplay";
 import { CpuIcon, FileClockIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export function MonitorView({ params: { procId } }: PropsWithParams<{ procId: string }>) {
-    return <Monitor procId={procId} key={procId}/>;
+    return <Monitor procId={procId} key={procId} />;
 }
 
 function Monitor({ procId }: { procId: string }) {
-    return <GameProcessProvider procId={procId}>
-        <div className="w-full h-full flex gap-4 mx-auto">
-            <div className="basis-1/4">
-                <ControlPanel/>
+    return (
+        <GameProcessProvider procId={procId}>
+            <div className="w-full h-full flex gap-4 mx-auto">
+                <div className="basis-1/4">
+                    <ControlPanel />
+                </div>
+                <div className="grow flex flex-col">
+                    <ContentArea />
+                </div>
             </div>
-            <div className="grow flex flex-col">
-                <ContentArea/>
-            </div>
-        </div>
-    </GameProcessProvider>;
+        </GameProcessProvider>
+    );
 }
 
 function ContentArea() {
     const { t } = useTranslation("pages", { keyPrefix: "monitor" });
 
-    return <Tabs radius="full">
-        <Tab
-            className="h-full"
-            key="logs"
-            title={
-                <div className="flex gap-1 items-center">
-                    <FileClockIcon/>
-                    {t("log-view")}
-                </div>
-            }
-        >
-            <LogsDisplay/>
-        </Tab>
-        <Tab
-            className="h-full"
-            key="stats"
-            title={
-                <div className="flex gap-1 items-center">
-                    <CpuIcon/>
-                    {t("perf-view")}
-                </div>
-            }
-        >
-            <PerformanceDisplay/>
-        </Tab>
-    </Tabs>;
+    return (
+        <Tabs radius="full">
+            <Tab
+                className="h-full"
+                key="logs"
+                title={
+                    <div className="flex gap-1 items-center">
+                        <FileClockIcon />
+                        {t("log-view")}
+                    </div>
+                }
+            >
+                <LogsDisplay />
+            </Tab>
+            <Tab
+                className="h-full"
+                key="stats"
+                title={
+                    <div className="flex gap-1 items-center">
+                        <CpuIcon />
+                        {t("perf-view")}
+                    </div>
+                }
+            >
+                <PerformanceDisplay />
+            </Tab>
+        </Tabs>
+    );
 }
 
 function ControlPanel() {
     const proc = useCurrentProc();
     const {
-        profile: { id, name, type, launchHint: { profileId } },
+        profile: {
+            id,
+            name,
+            type,
+            launchHint: { profileId },
+        },
         status,
         startTime,
         pid,
-        exitTime
+        exitTime,
     } = proc;
     const [time, setTime] = useState(Date.now());
 
@@ -73,18 +82,20 @@ function ControlPanel() {
         return () => window.clearInterval(t);
     }, []);
 
-    return <div className="w-full h-full flex flex-col gap-4">
-        <div className="grow">
-            <StatusDisplayMemo
-                id={id}
-                name={name}
-                profileId={profileId}
-                type={type}
-                status={status}
-                uptime={(exitTime ?? time) - startTime}
-                pid={pid}
-            />
+    return (
+        <div className="w-full h-full flex flex-col gap-4">
+            <div className="grow">
+                <StatusDisplayMemo
+                    id={id}
+                    name={name}
+                    profileId={profileId}
+                    type={type}
+                    status={status}
+                    uptime={(exitTime ?? time) - startTime}
+                    pid={pid}
+                />
+            </div>
+            <MonitorActionsMemo procId={proc.id} gameId={id} status={status} />
         </div>
-        <MonitorActionsMemo procId={proc.id} gameId={id} status={status}/>
-    </div>;
+    );
 }

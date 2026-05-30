@@ -1,3 +1,15 @@
+import { randomUUID } from "node:crypto";
+import events from "node:events";
+import os from "node:os";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+import { app, BrowserWindow, Menu, net, protocol, session } from "electron";
+// XXX: electron-devtools-installer uses deprecated APIs (session.getAllExtensions, session.loadExtension)
+import {
+    installExtension,
+    REACT_DEVELOPER_TOOLS,
+    REDUX_DEVTOOLS,
+} from "electron-devtools-installer";
 import { conf } from "@/main/conf/conf";
 import { paths } from "@/main/fs/paths";
 import { fabricInstaller } from "@/main/install/fabric";
@@ -18,14 +30,6 @@ import { getOSName } from "@/main/sys/os";
 import { getCanonicalUA } from "@/main/sys/ua";
 import { update } from "@/main/sys/update";
 import { windowControl } from "@/main/sys/window-control";
-// XXX: electron-devtools-installer uses deprecated APIs (session.getAllExtensions, session.loadExtension)
-import { installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } from "electron-devtools-installer";
-import { app, BrowserWindow, Menu, net, protocol, session } from "electron";
-import { randomUUID } from "node:crypto";
-import events from "node:events";
-import os from "node:os";
-import path from "node:path";
-import { pathToFileURL } from "node:url";
 import pkg from "~/package.json";
 import { runInstrumentedTest } from "~/test/instrumented/entry";
 import "v8-compile-cache";
@@ -66,7 +70,7 @@ async function main() {
     if (import.meta.env.AL_TEST) {
         paths.setup({
             storeRoot: path.resolve("emulated", "store"),
-            gameRoot: path.resolve("emulated", "store", "game")
+            gameRoot: path.resolve("emulated", "store", "game"),
         });
     } else {
         paths.setup();
@@ -108,7 +112,7 @@ async function main() {
 
     // Generate a random client ID if it's not configured
     if (!conf().client.id) {
-        conf.alter(c => c.client.id = randomUUID().replaceAll("-", ""));
+        conf.alter(c => (c.client.id = randomUUID().replaceAll("-", "")));
     }
 
     const deltaTime = Math.round(performance.now() - beginTime) / 1000;
@@ -134,7 +138,7 @@ async function main() {
         quiltInstaller.prefetch(),
         unfine.prefetch(),
         rbAccounts.keepAccountsAlive(),
-        skin.preloadSkins()
+        skin.preloadSkins(),
     ]);
 
     // Delay update check after app initialization
@@ -149,7 +153,10 @@ async function setupMainWindow() {
     console.log("Creating window...");
     const hasDevTools = import.meta.env.AL_DEV || conf().dev.devTools;
 
-    const { size: [width, height], pos: [px, py] } = conf().app.window;
+    const {
+        size: [width, height],
+        pos: [px, py],
+    } = conf().app.window;
 
     const [defWidth, defHeight] = windowControl.optimalSize();
     const hasFrame = conf().dev.showFrame;
@@ -161,14 +168,14 @@ async function setupMainWindow() {
             spellcheck: false,
             defaultEncoding: "UTF-8",
             preload: paths.app.to("preload.js"),
-            devTools: hasDevTools
+            devTools: hasDevTools,
         },
-        x: isNaN(px) ? undefined : Math.floor(px),
-        y: isNaN(py) ? undefined : Math.floor(py),
+        x: Number.isNaN(px) ? undefined : Math.floor(px),
+        y: Number.isNaN(py) ? undefined : Math.floor(py),
         frame: hasFrame,
         show: false,
         icon: getIconPath(),
-        title: "Alicorn Launcher"
+        title: "Alicorn Launcher",
     });
 
     windowControl.setMainWindow(w);
@@ -178,8 +185,8 @@ async function setupMainWindow() {
         injectDevToolsStyles(w);
     }
 
-    w.on("resized", () => conf.alter(c => c.app.window.size = w!.getSize()));
-    w.on("moved", () => conf.alter(c => c.app.window.pos = w!.getPosition()));
+    w.on("resized", () => conf.alter(c => (c.app.window.size = w?.getSize())));
+    w.on("moved", () => conf.alter(c => (c.app.window.pos = w?.getPosition())));
     w.on("ready-to-show", () => {
         w.webContents.setZoomFactor(conf().app.window.zoom / 100);
         w.webContents.openDevTools();
@@ -217,34 +224,38 @@ function registerAppProtocol() {
                 secure: true,
                 supportFetchAPI: true,
                 stream: true,
-                codeCache: true
-            }
-        }
+                codeCache: true,
+            },
+        },
     ]);
 }
 
 function addAppProtocolHandler() {
-    protocol.handle("app", (req) => {
+    protocol.handle("app", req => {
         const { host, pathname } = new URL(req.url);
         if (host === ".") {
             // Resolve inside the app bundle
             const target = paths.app.to("renderer", pathname.slice(1));
             const root = paths.app.to("renderer");
             const relativePath = path.relative(root, target);
-            const safe = relativePath && !relativePath.startsWith("..") && !path.isAbsolute(relativePath);
+            const safe =
+                relativePath && !relativePath.startsWith("..") && !path.isAbsolute(relativePath);
             if (safe) {
                 return net.fetch(pathToFileURL(target).toString());
             } else {
-                return new Response(`The specified path ${target} is not included in the app bundle.`, {
-                    status: 404,
-                    headers: { "Content-Type": "text/plain" }
-                });
+                return new Response(
+                    `The specified path ${target} is not included in the app bundle.`,
+                    {
+                        status: 404,
+                        headers: { "Content-Type": "text/plain" },
+                    },
+                );
             }
         }
 
         return new Response(`Unable to process request URL: ${req.url}`, {
             status: 404,
-            headers: { "Content-Type": "text/plain" }
+            headers: { "Content-Type": "text/plain" },
         });
     });
 }
@@ -292,10 +303,13 @@ async function saveContents() {
 let autoSaveInterval: NodeJS.Timer;
 
 function setAutoSave() {
-    autoSaveInterval = setInterval(() => {
-        console.log("Auto saving in progress.");
-        void saveContents();
-    }, 5 * 60 * 1000);
+    autoSaveInterval = setInterval(
+        () => {
+            console.log("Auto saving in progress.");
+            void saveContents();
+        },
+        5 * 60 * 1000,
+    );
 }
 
 /**
@@ -366,6 +380,6 @@ function launchExtServiceWorker() {
             if (manifest?.manifest_version === 3 && manifest?.background?.service_worker) {
                 await session.defaultSession.serviceWorkers.startWorkerForScope(ext.url);
             }
-        })
+        }),
     );
 }

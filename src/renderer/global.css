@@ -9,7 +9,8 @@
 /* Dark variant needs to be specified for primitives to be colored correctly */
 @custom-variant dark (&:is(.dark *, .sakura-dark *, .overworld *, .hoshi *, .advanced *));
 
-html, body {
+html,
+body {
     width: 100%;
     height: 100%;
     user-select: none;
@@ -62,6 +63,8 @@ pre {
     font-family: "Ubuntu Mono", monospace;
 }
 
-a, img, svg {
+a,
+img,
+svg {
     -webkit-user-drag: none;
 }

@@ -1,3 +1,4 @@
+import fs from "fs-extra";
 import { containers } from "@/main/container/manage";
 import type { Container } from "@/main/container/spec";
 import { games } from "@/main/game/manage";
@@ -9,7 +10,7 @@ import { liteloaderInstaller } from "@/main/install/liteloader";
 import { neoforgedInstaller } from "@/main/install/neoforged";
 import { quiltInstaller } from "@/main/install/quilt";
 import { riftInstaller } from "@/main/install/rift";
-import { smelt, type SmeltInstallInit } from "@/main/install/smelt";
+import { type SmeltInstallInit, smelt } from "@/main/install/smelt";
 import { smeltLegacy } from "@/main/install/smelt-legacy";
 import { unfine } from "@/main/install/unfine";
 import { vanillaInstaller } from "@/main/install/vanilla";
@@ -19,7 +20,6 @@ import { modrinthModpack } from "@/main/modpack/modrinth";
 import { profileLoader } from "@/main/profile/loader";
 import type { VersionProfile } from "@/main/profile/version-profile";
 import type { ProgressController } from "@/main/util/progress";
-import fs from "fs-extra";
 
 interface VanillaInstallerProps {
     type: "vanilla";
@@ -73,7 +73,7 @@ interface ModpackInstallerProps {
 }
 
 export type InstallerProps =
-    VanillaInstallerProps
+    | VanillaInstallerProps
     | FabricInstallerProps
     | QuiltInstallerProps
     | NeoForgedInstallerProps
@@ -111,7 +111,10 @@ async function installVanilla(props: VanillaInstallerProps, context: DetailedIns
     await finalizeVanilla(p, context);
 }
 
-async function installFabricOrQuilt(props: FabricInstallerProps | QuiltInstallerProps, context: DetailedInstallerContext) {
+async function installFabricOrQuilt(
+    props: FabricInstallerProps | QuiltInstallerProps,
+    context: DetailedInstallerContext,
+) {
     const { container, control } = context;
     const { gameVersion, loaderVersion } = props;
 
@@ -124,7 +127,10 @@ async function installFabricOrQuilt(props: FabricInstallerProps | QuiltInstaller
     await finalizeVanilla(p, context);
 }
 
-async function installLiteloader(props: LiteloaderInstallerProps, context: DetailedInstallerContext) {
+async function installLiteloader(
+    props: LiteloaderInstallerProps,
+    context: DetailedInstallerContext,
+) {
     const { container, control } = context;
     const { gameVersion } = props;
 
@@ -151,7 +157,12 @@ async function installOptiFine(props: OptiFineInstallerProps, context: DetailedI
 
     const [versionMeta, oid] = await unfine.pickVersion(gameVersion, loaderVersion);
     const installer = await unfine.downloadInstaller(versionMeta, control);
-    await unfine.runInstaller(jrt.executable(vp.javaVersion.component), installer, container, control);
+    await unfine.runInstaller(
+        jrt.executable(vp.javaVersion.component),
+        installer,
+        container,
+        control,
+    );
 
     const p = await profileLoader.fromContainer(oid, container);
 
@@ -222,15 +233,20 @@ async function installForge(props: ForgeInstallerProps, context: DetailedInstall
     }
 
     const installerType = forgeInstaller.getInstallType(gameVersion);
-    const forgeInstallerPath = await forgeInstaller.downloadInstaller(loaderVersion, installerType, control);
+    const forgeInstallerPath = await forgeInstaller.downloadInstaller(
+        loaderVersion,
+        installerType,
+        control,
+    );
 
     const modLoaderUrl = await forgeCompat.getModLoaderUrl(gameVersion);
-    const forgeModLoaderPath = modLoaderUrl && await forgeCompat.downloadModLoader(modLoaderUrl);
+    const forgeModLoaderPath = modLoaderUrl && (await forgeCompat.downloadModLoader(modLoaderUrl));
 
     let universalJarPath: string | null = null;
 
     if (installerType === "installer") {
-        const [legacyProfileId, internalJarPath] = await smeltLegacy.dumpContent(forgeInstallerPath, container) ?? [];
+        const [legacyProfileId, internalJarPath] =
+            (await smeltLegacy.dumpContent(forgeInstallerPath, container)) ?? [];
         universalJarPath = internalJarPath ?? null;
 
         if (legacyProfileId) {
@@ -253,7 +269,6 @@ async function installForge(props: ForgeInstallerProps, context: DetailedInstall
         } else {
             p = vanillaProfile;
         }
-
     }
 
     await jrt.installRuntime(p.javaVersion.component, control);
@@ -264,7 +279,7 @@ async function installForge(props: ForgeInstallerProps, context: DetailedInstall
             jrt.executable(p.javaVersion.component),
             universalJarPath,
             gameVersion,
-            container
+            container,
         );
     }
 
@@ -273,7 +288,7 @@ async function installForge(props: ForgeInstallerProps, context: DetailedInstall
             jrt.executable(p.javaVersion.component),
             forgeInstallerPath,
             gameVersion,
-            container
+            container,
         );
     }
 
@@ -303,7 +318,10 @@ async function installForge(props: ForgeInstallerProps, context: DetailedInstall
     game.launchHint.profileId = p.id;
 }
 
-async function installImportedGame(props: ImportedGameInstallerProps, context: DetailedInstallerContext) {
+async function installImportedGame(
+    props: ImportedGameInstallerProps,
+    context: DetailedInstallerContext,
+) {
     const { container } = context;
     const p = await profileLoader.fromContainer(props.profileId, container);
     await finalizeVanilla(p, context);
@@ -335,7 +353,7 @@ const internalInstallers = {
     liteloader: installLiteloader,
     optifine: installOptiFine,
     imported: installImportedGame,
-    modpack: installModpack
+    modpack: installModpack,
 } as const;
 
 async function runInstall(gameId: string, control?: ProgressController) {

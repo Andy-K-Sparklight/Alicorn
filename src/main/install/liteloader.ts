@@ -1,8 +1,8 @@
+import fs from "fs-extra";
 import type { Container } from "@/main/container/spec";
 import { netx } from "@/main/net/netx";
 import { MavenName } from "@/main/profile/maven-name";
-import { progress, type ProgressController } from "@/main/util/progress";
-import fs from "fs-extra";
+import { type ProgressController, progress } from "@/main/util/progress";
 
 const LITELOADER_VERSIONS = "https://dl.liteloader.com/versions/versions.json";
 const BASE_NAME = "com.mumfrey:liteloader";
@@ -15,7 +15,6 @@ interface LiteloaderMeta {
     version: string;
     timestamp: string;
 }
-
 
 interface VersionGroup {
     snapshots?: {
@@ -44,37 +43,41 @@ async function prefetch() {
 
 async function getManifest(): Promise<LiteloaderVersionManifest> {
     if (!versionManifest) {
-        versionManifest = await netx.json(LITELOADER_VERSIONS) as LiteloaderVersionManifest;
+        versionManifest = (await netx.json(LITELOADER_VERSIONS)) as LiteloaderVersionManifest;
     }
 
     return versionManifest;
 }
-
 
 async function getAvailableVersions(): Promise<string[]> {
     const manifest = await getManifest();
     return Object.keys(manifest.versions);
 }
 
-async function fetchProfile(gameVersion: string, container: Container, control?: ProgressController): Promise<string> {
+async function fetchProfile(
+    gameVersion: string,
+    container: Container,
+    control?: ProgressController,
+): Promise<string> {
     control?.onProgress?.(progress.indefinite("liteloader.resolve"));
 
     const versionGroup = (await getManifest()).versions[gameVersion];
-    const metaGroup = versionGroup.artefacts?.["com.mumfrey:liteloader"] ??
+    const metaGroup =
+        versionGroup.artefacts?.["com.mumfrey:liteloader"] ??
         versionGroup.snapshots?.["com.mumfrey:liteloader"];
 
     const existingArgs = (await fs.readJSON(container.profile(gameVersion))).minecraftArguments;
 
     const meta = metaGroup && (metaGroup.latest ?? Object.values(metaGroup)[0]);
 
-    if (!meta) throw "No liteloader version found for " + gameVersion;
+    if (!meta) throw `No liteloader version found for ${gameVersion}`;
 
     console.debug(`Using Liteloader version ${meta.version}`);
 
     const p = genProfile(meta, gameVersion, existingArgs);
     const fp = container.profile(p.id);
 
-    console.debug("Writing profile with ID: " + p.id);
+    console.debug(`Writing profile with ID: ${p.id}`);
 
     await fs.outputJSON(fp, p, { spaces: 2 });
 
@@ -88,7 +91,7 @@ function genProfile(meta: LiteloaderMeta, gameVersion: string, args: string): { 
     out.releaseTime = new Date(parseInt(meta.timestamp, 10)).toISOString();
     out.time = new Date().toISOString();
     out.type = "release";
-    out.minecraftArguments = args + " --tweakClass " + meta.tweakClass;
+    out.minecraftArguments = `${args} --tweakClass ${meta.tweakClass}`;
     out.libraries = meta.libraries.concat();
 
     if (Array.isArray(out.libraries)) {
@@ -96,8 +99,8 @@ function genProfile(meta: LiteloaderMeta, gameVersion: string, args: string): { 
 
         // Liteloader basic jar
         out.libraries.unshift({
-            name: BASE_NAME + ":" + meta.version,
-            url: "https://dl.liteloader.com/versions/"
+            name: `${BASE_NAME}:${meta.version}`,
+            url: "https://dl.liteloader.com/versions/",
         });
     }
 
@@ -107,10 +110,10 @@ function genProfile(meta: LiteloaderMeta, gameVersion: string, args: string): { 
     return out;
 }
 
-function filterLibraries(libs: { name: string, url?: string }[]) {
+function filterLibraries(libs: { name: string; url?: string }[]) {
     for (const lib of libs) {
         const mn = new MavenName(lib.name);
-        const base = mn.group + ":" + mn.artifact;
+        const base = `${mn.group}:${mn.artifact}`;
         if (base === "net.minecraft:launchwrapper") {
             lib.url = "https://libraries.minecraft.net/";
         } else {

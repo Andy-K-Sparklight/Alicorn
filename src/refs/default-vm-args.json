@@ -9,9 +9,7 @@
                     }
                 }
             ],
-            "value": [
-                "-XstartOnFirstThread"
-            ]
+            "value": ["-XstartOnFirstThread"]
         },
         {
             "rules": [

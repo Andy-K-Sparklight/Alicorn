@@ -1,6 +1,6 @@
+import StreamZip from "node-stream-zip";
 import { curseModpack } from "@/main/modpack/curse";
 import { modrinthModpack } from "@/main/modpack/modrinth";
-import StreamZip from "node-stream-zip";
 
 export interface ModpackMetaSlim {
     name: string;
@@ -25,7 +25,6 @@ async function loadPackMeta(fp: string): Promise<ModpackMetaSlim | null> {
             // Modrinth
             return await modrinthModpack.readMetadata(zip);
         }
-
     } finally {
         zip?.close();
     }
@@ -49,7 +48,6 @@ async function deploy(fp: string): Promise<void> {
             // Modrinth
             await modrinthModpack.deploy(fp);
         }
-
     } finally {
         zip?.close();
     }

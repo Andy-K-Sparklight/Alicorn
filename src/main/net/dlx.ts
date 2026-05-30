@@ -1,19 +1,20 @@
 /**
  * A wrapper around NextDL providing mirror chaining and progress tracking.
  */
+
+import os from "node:os";
+import path from "node:path";
+import fs from "fs-extra";
+import pLimit from "p-limit";
 import { cache } from "@/main/cache/cache";
 import { conf } from "@/main/conf/conf";
 import { AbstractException } from "@/main/except/exception";
-import { aria2, type Aria2DownloadRequest } from "@/main/net/aria2";
+import { type Aria2DownloadRequest, aria2 } from "@/main/net/aria2";
 import { mirror } from "@/main/net/mirrors";
-import { nextdl, type NextDownloadRequest } from "@/main/net/nextdl";
+import { type NextDownloadRequest, nextdl } from "@/main/net/nextdl";
 import { hash } from "@/main/security/hash";
 import { isTruthy } from "@/main/util/misc";
-import { progress, type ProgressController } from "@/main/util/progress";
-import fs from "fs-extra";
-import os from "node:os";
-import path from "node:path";
-import pLimit from "p-limit";
+import { type ProgressController, progress } from "@/main/util/progress";
 
 export interface DlxDownloadRequest {
     url: string;
@@ -76,7 +77,7 @@ async function getAll(req: DlxDownloadRequest[], control?: ProgressController): 
             ...r,
             urls: mirror.apply(r.url),
             origin: r.url,
-            signal: mixedSignal
+            signal: mixedSignal,
         }));
 
         promises = aria2Tasks.map(t => aria2.resolve(t));
@@ -86,17 +87,19 @@ async function getAll(req: DlxDownloadRequest[], control?: ProgressController): 
             urls: mirror.apply(r.url),
             origin: r.url,
             signal: mixedSignal,
-            validate: conf().net.validate
+            validate: conf().net.validate,
         }));
 
         promises = nextTasks.map(t => nextdl.get(t));
     }
 
     try {
-        await Promise.all(progress.countPromises(
-            promises,
-            progress.makeNamed(control?.onProgress, "generic.download")
-        ));
+        await Promise.all(
+            progress.countPromises(
+                promises,
+                progress.makeNamed(control?.onProgress, "generic.download"),
+            ),
+        );
     } catch (e) {
         console.debug("Cancelling other tasks in the same group due to previous error.");
         console.error(e);

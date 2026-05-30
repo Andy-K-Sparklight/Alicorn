@@ -1,10 +1,10 @@
+import type EventEmitter from "node:events";
+import type { MessagePortMain } from "electron";
 import { games } from "@/main/game/manage";
 import { addCheckedHandler } from "@/main/ipc/checked";
 import { ipcMain } from "@/main/ipc/typed";
 import { bl } from "@/main/launch/bl";
 import type { GameProcessLog } from "@/main/launch/log-parser";
-import { MessagePortMain } from "electron";
-import type EventEmitter from "node:events";
 
 export interface LaunchGameResult {
     id: string;
@@ -18,7 +18,7 @@ addCheckedHandler("launch", async gameId => {
 
     return {
         id: g.id,
-        pid: g.pid()
+        pid: g.pid(),
     };
 });
 
@@ -39,21 +39,21 @@ ipcMain.on("removeGame", (_, procId: string) => {
 });
 
 export type GameProcEvent =
-    {
-        type: "end" | "crash" | "exit";
-    } |
-    {
-        type: "stdout" | "stderr";
-        data: string;
-    } |
-    {
-        type: "log";
-        log: GameProcessLog[]
-    } |
-    {
-        type: "memUsageUpdate",
-        mem: number
-    }
+    | {
+          type: "end" | "crash" | "exit";
+      }
+    | {
+          type: "stdout" | "stderr";
+          data: string;
+      }
+    | {
+          type: "log";
+          log: GameProcessLog[];
+      }
+    | {
+          type: "memUsageUpdate";
+          mem: number;
+      };
 
 function forwardGameEvents(src: EventEmitter, dst: MessagePortMain) {
     function send(data: GameProcEvent) {

@@ -33,11 +33,13 @@ Please embed them if there are any.
 **Please tell us about your system.**
 
 - OS: <!-- Please also include distribution name for GNU/Linux systems. -->
-- Possible Conflicting Software: <!-- Other launchers, Java installations, antivirus software, etc. -->
+- Possible Conflicting
+  Software: <!-- Other launchers, Java installations, antivirus software, etc. -->
 
 **Please read the following checklist before submitting.**
 
 - [ ] I've included necessary information in above content.
-- [ ] I'm not including any personal information. / I'm aware of the possible consequences of leaking them.
+- [ ] I'm not including any personal information. / I'm aware of the possible consequences of
+  leaking them.
 - [ ] I'm using the latest version of Alicorn.
 - [ ] This is not a feature request.

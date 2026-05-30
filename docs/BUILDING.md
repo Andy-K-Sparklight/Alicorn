@@ -12,7 +12,8 @@ Alicorn can be built for **preview** on any platform it runs on.
 For **packaging**, however, there are limitations:
 
 - ARM64 platforms other than macOS cannot be used for packaging.
-- Platform-specific installers (`.msi` on Windows, `.dmg` on macOS, etc.) require the corresponding OS.
+- Platform-specific installers (`.msi` on Windows, `.dmg` on macOS, etc.) require the corresponding
+  OS.
 
 The following tools are required:
 
@@ -70,8 +71,10 @@ bun dev
 ```
 
 > [!NOTE]
-> There is a [known issue](https://github.com/electron/electron/issues/42510) related to sandboxing on Ubuntu 24.x (and
-> likely later versions) that makes Alicorn fail to launch. Use the command below as a workaround while waiting for a
+> There is a [known issue](https://github.com/electron/electron/issues/42510) related to sandboxing
+> on Ubuntu 24.x (and
+> likely later versions) that makes Alicorn fail to launch. Use the command below as a workaround
+> while waiting for a
 > fix:
 >
 > ```shell
@@ -80,7 +83,8 @@ bun dev
 
 ## Create Packaged Binaries
 
-This is a bit tricky as Bun skips "untrusted" post-install scripts, which are needed for modules like
+This is a bit tricky as Bun skips "untrusted" post-install scripts, which are needed for modules
+like
 `electron-installer-dmg`. Hence, it's required to reinstall the modules using `npm` before building:
 
 ```shell

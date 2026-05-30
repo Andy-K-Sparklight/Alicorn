@@ -18,8 +18,8 @@ export interface VersionProfile {
     version: string;
 
     arguments: {
-        game: Argument[],
-        jvm: Argument[]
+        game: Argument[];
+        jvm: Argument[];
     };
 
     assetIndex: AssetIndexArtifact;
@@ -33,14 +33,14 @@ export interface VersionProfile {
         /**
          * Defines the client download source.
          */
-        client: DownloadsArtifact,
+        client: DownloadsArtifact;
 
         /**
          * Defines mappings used by the client.
          *
          * This key is missing in some early versions.
          */
-        client_mappings?: DownloadsArtifact
+        client_mappings?: DownloadsArtifact;
     };
 
     /**
@@ -56,7 +56,7 @@ export interface VersionProfile {
         client: {
             argument: string;
             file: LoggingArtifact;
-        }
+        };
     };
 
     mainClass: string;
@@ -82,19 +82,19 @@ export interface ConditionalArgument {
  * Defines a rule entry to describe certain criterion.
  */
 export interface Rule {
-    action: "allow" | "disallow",
-    features?: Record<string, boolean>,
+    action: "allow" | "disallow";
+    features?: Record<string, boolean>;
     os?: {
-        name?: OSName,
-        version?: string,
-        arch?: string
-    }
+        name?: OSName;
+        version?: string;
+        arch?: string;
+    };
 }
 
 /**
  * Defines a generic argument in the profile.
  */
-export type Argument = string | ConditionalArgument
+export type Argument = string | ConditionalArgument;
 
 export interface AssetIndexArtifact {
     id: string;
@@ -158,6 +158,6 @@ export interface LoggingArtifact {
 }
 
 export interface AssetIndex {
-    map_to_resources?: boolean,
-    objects: Record<string, { hash: string, size: number }>;
+    map_to_resources?: boolean;
+    objects: Record<string, { hash: string; size: number }>;
 }

@@ -1,9 +1,9 @@
-import { useNav } from "@/renderer/util/nav";
 import { MessageBox } from "@components/modal/MessageBox";
 import { Button } from "@heroui/react";
 import { GitPullRequestClosed } from "lucide-react";
 import { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
+import { useNav } from "@/renderer/util/nav";
 
 export function ImportGameWarningDialog() {
     const { t } = useTranslation("pages", { keyPrefix: "import-game.warning" });
@@ -15,20 +15,22 @@ export function ImportGameWarningDialog() {
         nav("/games");
     }
 
-    return <MessageBox
-        title={t("title")}
-        icon={<GitPullRequestClosed size={36}/>}
-        color="danger"
-        isOpen={isOpen}
-        onClose={onUserClose}
-        footer={
-            <Button fullWidth color="danger" onPress={() => setOpen(false)}>
-                {t("btn")}
-            </Button>
-        }
-    >
-        <p className="whitespace-pre-line w-full">
-            <Trans t={t} i18nKey="sub"/>
-        </p>
-    </MessageBox>;
+    return (
+        <MessageBox
+            title={t("title")}
+            icon={<GitPullRequestClosed size={36} />}
+            color="danger"
+            isOpen={isOpen}
+            onClose={onUserClose}
+            footer={
+                <Button fullWidth color="danger" onPress={() => setOpen(false)}>
+                    {t("btn")}
+                </Button>
+            }
+        >
+            <p className="whitespace-pre-line w-full">
+                <Trans t={t} i18nKey="sub" />
+            </p>
+        </MessageBox>
+    );
 }

@@ -1,3 +1,4 @@
+import { distance } from "fastest-levenshtein";
 import { games } from "@/main/game/manage";
 import { addCheckedHandler } from "@/main/ipc/checked";
 import { curse } from "@/main/mpm/curse";
@@ -5,7 +6,6 @@ import { mpmLock } from "@/main/mpm/lockfile";
 import { modrinth } from "@/main/mpm/modrinth";
 import { mpm } from "@/main/mpm/pm";
 import type { MpmAddonMeta } from "@/main/mpm/spec";
-import { distance } from "fastest-levenshtein";
 
 interface AddonSearchPagination {
     offset: {
@@ -25,21 +25,33 @@ addCheckedHandler("searchAddons", async (scope, query, gameId, pg?: AddonSearchP
     pg = pg || {
         offset: {
             modrinth: 0,
-            curse: 0
-        }
+            curse: 0,
+        },
     };
 
-    const res = await modrinth.search(scope, query, game.versions.game, game.type, pg.offset.modrinth);
+    const res = await modrinth.search(
+        scope,
+        query,
+        game.versions.game,
+        game.type,
+        pg.offset.modrinth,
+    );
     pg.offset.modrinth += res.length;
 
-    const curseRes = await curse.search(scope, query, game.versions.game, game.type, pg.offset.curse);
+    const curseRes = await curse.search(
+        scope,
+        query,
+        game.versions.game,
+        game.type,
+        pg.offset.curse,
+    );
     pg.offset.curse += curseRes.length;
     res.push(...curseRes);
     sortResults(res, query);
 
     return {
         contents: res,
-        pagination: pg
+        pagination: pg,
     };
 });
 
@@ -55,7 +67,7 @@ addCheckedHandler("removeAddons", async (gameId, specs) => {
     await mpm.removePackages(gameId, specs);
 });
 
-addCheckedHandler("loadMpmManifest", async (gameId) => {
+addCheckedHandler("loadMpmManifest", async gameId => {
     return await mpmLock.loadManifest(gameId);
 });
 
@@ -75,8 +87,12 @@ function sortResults(obj: MpmAddonMeta[], query: string) {
     }
 
     obj.sort((a, b) => {
-        const al = getOrCompute(a.title.toLowerCase(), s => distance(s.toLowerCase(), query.toLowerCase()));
-        const bl = getOrCompute(b.title.toLowerCase(), s => distance(s.toLowerCase(), query.toLowerCase()));
+        const al = getOrCompute(a.title.toLowerCase(), s =>
+            distance(s.toLowerCase(), query.toLowerCase()),
+        );
+        const bl = getOrCompute(b.title.toLowerCase(), s =>
+            distance(s.toLowerCase(), query.toLowerCase()),
+        );
 
         if (al === bl) {
             // Prioritize Modrinth

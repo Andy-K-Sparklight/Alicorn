@@ -1,11 +1,11 @@
-import { paths } from "@/main/fs/paths";
 import lazyValue from "lazy-value";
 import workerPool from "workerpool";
+import { paths } from "@/main/fs/paths";
 
-let pool = lazyValue(() => workerPool.pool(paths.app.to("hash-worker.js")));
+const pool = lazyValue(() => workerPool.pool(paths.app.to("hash-worker.js")));
 
 async function checkFile(pt: string, algorithm: string, expectHash: string): Promise<boolean> {
-    return await forFile(pt, algorithm) === expectHash.trim().toLowerCase();
+    return (await forFile(pt, algorithm)) === expectHash.trim().toLowerCase();
 }
 
 async function forFile(pt: string, algorithm: string): Promise<string> {
@@ -16,5 +16,6 @@ async function forFile(pt: string, algorithm: string): Promise<string> {
 }
 
 export const hash = {
-    forFile, checkFile
+    forFile,
+    checkFile,
 };

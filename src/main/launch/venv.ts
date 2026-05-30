@@ -1,15 +1,14 @@
+import path from "node:path";
+import fs from "fs-extra";
 import { containers } from "@/main/container/manage";
 import type { Container } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import { reg } from "@/main/registry/registry";
 import { getOSName } from "@/main/sys/os";
-import fs from "fs-extra";
-import path from "node:path";
-
 
 async function hasContent(fp: string): Promise<boolean> {
     try {
-        return await fs.pathExists(fp) && (await fs.readdir(fp)).length > 0;
+        return (await fs.pathExists(fp)) && (await fs.readdir(fp)).length > 0;
     } catch {
         return false;
     }
@@ -22,7 +21,7 @@ async function mount(c: Container) {
     console.log(`Mounting virtual container ${c.props.id}`);
     const vp = getVenvPath(c.props.id);
 
-    if (!await hasContent(vp) && await hasContent(c.props.root)) {
+    if (!(await hasContent(vp)) && (await hasContent(c.props.root))) {
         try {
             await fs.remove(vp);
             await fs.ensureDir(path.dirname(vp));
@@ -43,7 +42,7 @@ async function unmount(c: Container) {
     console.log(`Unmounting virtual container ${c.props.id}`);
     const rp = containers.get(c.props.id).props.root;
 
-    if (!await hasContent(rp) && await hasContent(c.props.root)) {
+    if (!(await hasContent(rp)) && (await hasContent(c.props.root))) {
         try {
             await fs.remove(rp);
             await fs.ensureDir(path.dirname(rp));
@@ -88,20 +87,22 @@ async function recover(): Promise<void> {
     try {
         const dirs = await fs.readdir(paths.game.to(".venv"));
 
-        await Promise.allSettled(dirs.map(async d => {
-            if (reg.containers.has(d)) {
-                const vc = containers.get(d);
-                vc.props.root = getVenvPath(d);
+        await Promise.allSettled(
+            dirs.map(async d => {
+                if (reg.containers.has(d)) {
+                    const vc = containers.get(d);
+                    vc.props.root = getVenvPath(d);
 
-                try {
-                    console.debug(`Recovering VENV for ${d}`);
-                    await unmount(vc);
-                } catch (e) {
-                    console.log(`Failed to unmount VENV ${d} (Maybe it's still in use?)`);
-                    console.log(e);
+                    try {
+                        console.debug(`Recovering VENV for ${d}`);
+                        await unmount(vc);
+                    } catch (e) {
+                        console.log(`Failed to unmount VENV ${d} (Maybe it's still in use?)`);
+                        console.log(e);
+                    }
                 }
-            }
-        }));
+            }),
+        );
     } catch {}
 }
 

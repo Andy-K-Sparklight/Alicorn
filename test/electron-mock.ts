@@ -21,11 +21,11 @@ mock.module("electron", () => {
                     case "temp":
                         return path.resolve("emulated", "temp");
                 }
-            }
+            },
         },
         screen: {},
         ipcMain: {},
         net: { fetch },
-        BrowserWindow
+        BrowserWindow,
     };
 });

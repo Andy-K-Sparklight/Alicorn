@@ -1,16 +1,17 @@
 /**
  * The bootloader system.
  */
+
+import { net } from "electron";
 import { accounts } from "@/main/auth/manage";
 import { YggdrasilAccount } from "@/main/auth/yggdrasil";
 import { NoSuchElementException } from "@/main/except/common";
 import { jrt } from "@/main/jrt/install";
 import { launchArgs } from "@/main/launch/args";
 import { GameProcess } from "@/main/launch/proc";
-import { LaunchHint, LaunchInit } from "@/main/launch/types";
+import type { LaunchHint, LaunchInit } from "@/main/launch/types";
 import { venv } from "@/main/launch/venv";
 import { profileLoader } from "@/main/profile/loader";
-import { net } from "electron";
 import { containers } from "../container/manage";
 
 const games = new Map<string, GameProcess>();
@@ -21,7 +22,7 @@ const games = new Map<string, GameProcess>();
 async function prepare(hint: LaunchHint): Promise<LaunchInit> {
     const container = containers.get(hint.containerId);
 
-    let originalRoot = container.props.root;
+    const originalRoot = container.props.root;
 
     // In case this container has already been mounted when launching
     if (hint.venv) {
@@ -30,10 +31,14 @@ async function prepare(hint: LaunchHint): Promise<LaunchInit> {
 
     const profile = await profileLoader.fromContainer(hint.profileId, container);
     const account = accounts.get(hint.accountId);
-    const assetsShouldMap = await profileLoader.assetIndexShouldMap(profile.assetIndex.id, container);
+    const assetsShouldMap = await profileLoader.assetIndexShouldMap(
+        profile.assetIndex.id,
+        container,
+    );
 
     const authlibInjectorHost = account instanceof YggdrasilAccount ? account.host : undefined;
-    const authlibInjectorPrefetch = authlibInjectorHost && await prefetchAuthlibInjectorMeta(authlibInjectorHost);
+    const authlibInjectorPrefetch =
+        authlibInjectorHost && (await prefetchAuthlibInjectorMeta(authlibInjectorHost));
 
     const enabledFeatures = new Set<string>();
     // Add custom resolution flag if applicable
@@ -42,7 +47,8 @@ async function prepare(hint: LaunchHint): Promise<LaunchInit> {
         enabledFeatures.add("has_custom_resolution");
     }
 
-    const jrtExec = hint.pref.alterJRTExec || jrt.executable(profile.javaVersion?.component || "jre-legacy");
+    const jrtExec =
+        hint.pref.alterJRTExec || jrt.executable(profile.javaVersion?.component || "jre-legacy");
 
     container.props.root = originalRoot;
 
@@ -57,7 +63,7 @@ async function prepare(hint: LaunchHint): Promise<LaunchInit> {
         extraVMArgs: [],
         extraClasspath: [],
         authlibInjectorHost,
-        authlibInjectorPrefetch
+        authlibInjectorPrefetch,
     };
 }
 

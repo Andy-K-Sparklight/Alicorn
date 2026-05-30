@@ -1,8 +1,7 @@
 import path from "node:path";
 
-export type BuildMode = "development" | "production" | "test"
+export type BuildMode = "development" | "production" | "test";
 export type TestLevel = "lite" | "medium" | "full";
-
 
 export interface BuildVariant {
     mode: BuildMode;
@@ -32,7 +31,7 @@ export function createBuildConfig(variant: BuildVariant) {
         enableNativeLZMA: !(platform === "win32" && arch === "arm64"),
 
         // Port to be used when hosting HMR content for renderer.
-        devServerPort: 9000
+        devServerPort: 9000,
     };
 }
 

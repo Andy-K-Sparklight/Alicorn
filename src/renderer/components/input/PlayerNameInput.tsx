@@ -29,12 +29,14 @@ export function PlayerNameInput({ onChange }: PlayerNameInputProps) {
         }
     }
 
-    return <Input
-        errorMessage={t("hint")}
-        placeholder="Player"
-        isInvalid={!isValid && internalValue.length > 0} // Do not let the box become red by default
-        value={internalValue}
-        onValueChange={handleValueChange}
-        label={t("label")}
-    />;
+    return (
+        <Input
+            errorMessage={t("hint")}
+            placeholder="Player"
+            isInvalid={!isValid && internalValue.length > 0} // Do not let the box become red by default
+            value={internalValue}
+            onValueChange={handleValueChange}
+            label={t("label")}
+        />
+    );
 }

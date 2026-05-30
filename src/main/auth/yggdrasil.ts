@@ -1,6 +1,11 @@
-import { type Account, type AccountProps, type AuthCredentials, AuthFailedException } from "@/main/auth/types";
-import { doDecrypt, doEncrypt } from "@/main/security/encrypt";
 import { net } from "electron";
+import {
+    type Account,
+    type AccountProps,
+    type AuthCredentials,
+    AuthFailedException,
+} from "@/main/auth/types";
+import { doDecrypt, doEncrypt } from "@/main/security/encrypt";
 
 export interface YggdrasilAccountProps {
     type: "yggdrasil";
@@ -59,21 +64,19 @@ export class YggdrasilAccount implements Account {
     }
 
     async #doLogin(pwd: string) {
-        const res = await this.#apiRequest("/authserver/authenticate",
-            {
-                username: this.email,
-                password: pwd,
-                requestUser: false,
-                agent: {
-                    name: "Minecraft",
-                    version: 1
-                }
-            }
-        );
+        const res = await this.#apiRequest("/authserver/authenticate", {
+            username: this.email,
+            password: pwd,
+            requestUser: false,
+            agent: {
+                name: "Minecraft",
+                version: 1,
+            },
+        });
 
         if (!res.ok) throw `Unexpected response status: ${res.status}`;
 
-        const rp = await res.json() as YggdrasilResponse;
+        const rp = (await res.json()) as YggdrasilResponse;
 
         this.#updateCredentials(rp);
 
@@ -89,15 +92,13 @@ export class YggdrasilAccount implements Account {
     }
 
     async #refresh() {
-        const res = await this.#apiRequest("/authserver/refresh",
-            {
-                accessToken: this.#accessToken
-            }
-        );
+        const res = await this.#apiRequest("/authserver/refresh", {
+            accessToken: this.#accessToken,
+        });
 
         if (!res.ok) throw `Unexpected response status: ${res.status}`;
 
-        const rp = await res.json() as YggdrasilResponse;
+        const rp = (await res.json()) as YggdrasilResponse;
         this.#updateCredentials(rp);
     }
 
@@ -113,11 +114,9 @@ export class YggdrasilAccount implements Account {
     async #validate(): Promise<boolean> {
         if (!this.#accessToken) return false;
         try {
-            const res = await this.#apiRequest("/authserver/validate",
-                {
-                    accessToken: this.#accessToken
-                }
-            );
+            const res = await this.#apiRequest("/authserver/validate", {
+                accessToken: this.#accessToken,
+            });
 
             return res.status === 204;
         } catch {
@@ -130,9 +129,9 @@ export class YggdrasilAccount implements Account {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json"
+                Accept: "application/json",
             },
-            body: JSON.stringify(body)
+            body: JSON.stringify(body),
         });
     }
 
@@ -142,7 +141,7 @@ export class YggdrasilAccount implements Account {
             playerName: this.#playerName,
             accessToken: this.#accessToken,
             xboxId: "0",
-            userType: "mojang"
+            userType: "mojang",
         };
     }
 
@@ -153,14 +152,14 @@ export class YggdrasilAccount implements Account {
             email: this.email,
             uuid: this.uuid,
             playerName: this.#playerName,
-            accessToken: doEncrypt(this.#accessToken)
+            accessToken: doEncrypt(this.#accessToken),
         };
     }
 }
 
 async function processALI(url: string): Promise<string> {
     if (!url.includes("://")) {
-        url = "https://" + url;
+        url = `https://${url}`;
     }
 
     // A HEAD request should satisfy the headers, yet it's not enforced in the documentation

@@ -7,7 +7,12 @@ interface EditableProps {
     inputProps?: Parameters<typeof Input>[0];
 }
 
-export function Editable({ value, onValueChange, children, inputProps }: PropsWithChildren<EditableProps>) {
+export function Editable({
+    value,
+    onValueChange,
+    children,
+    inputProps,
+}: PropsWithChildren<EditableProps>) {
     const [editing, setEditing] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -15,7 +20,7 @@ export function Editable({ value, onValueChange, children, inputProps }: PropsWi
         if (editing) {
             inputRef?.current?.focus();
         }
-    }, [inputRef, editing]);
+    }, [editing]);
 
     function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
         onValueChange(e.target.value);
@@ -26,12 +31,14 @@ export function Editable({ value, onValueChange, children, inputProps }: PropsWi
         return <span onClick={() => setEditing(true)}>{children}</span>;
     }
 
-    return <Input
-        ref={inputRef}
-        autoFocus
-        variant="bordered"
-        defaultValue={value}
-        onBlur={handleBlur}
-        {...inputProps}
-    />;
+    return (
+        <Input
+            ref={inputRef}
+            autoFocus
+            variant="bordered"
+            defaultValue={value}
+            onBlur={handleBlur}
+            {...inputProps}
+        />
+    );
 }

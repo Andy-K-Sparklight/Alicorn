@@ -33,7 +33,7 @@ export interface Account {
 
 export type AccountProps = TemporalAccountProps | VanillaAccountProps | YggdrasilAccountProps;
 
-export type DetailedAccountProps = AccountProps & { uuid: string; }
+export type DetailedAccountProps = AccountProps & { uuid: string };
 
 export class AuthFailedException extends AbstractException<"auth-failed"> {
     #cause?: unknown;

@@ -18,7 +18,7 @@ export async function retrievePort(nonce: string): Promise<MessagePort> {
         rejectionEvents: [],
         filter(e: MessageEvent<WindowMessageContent>) {
             return e.data.channel === `port:${nonce}`;
-        }
+        },
     });
 
     return pe.ports[0];

@@ -14,14 +14,16 @@ export function Alert(props: AlertProps) {
         if (ref.current) {
             ref.current.removeAttribute("title");
         }
-    }, [ref.current]);
+    }, []);
 
-    return <RawAlert
-        ref={ref}
-        classNames={{
-            title: "font-bold",
-            ...classNames
-        }}
-        {...rest}
-    />;
+    return (
+        <RawAlert
+            ref={ref}
+            classNames={{
+                title: "font-bold",
+                ...classNames,
+            }}
+            {...rest}
+        />
+    );
 }

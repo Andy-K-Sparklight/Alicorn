@@ -6,35 +6,35 @@
  * Possible types of progress listed.
  */
 export type ProgressStateName =
-    "generic.download" |
-    "generic.count" |
-    "jrt.download" |
-    "jrt.unpack" |
-    "jrt.verify" |
-    "vanilla.resolve" |
-    "vanilla.download-libs" |
-    "vanilla.unpack-libs" |
-    "vanilla.download-asset-index" |
-    "vanilla.download-assets" |
-    "vanilla.link-assets" |
-    "fabric.resolve" |
-    "quilt.resolve" |
-    "mappings" |
-    "neoforged.resolve" |
-    "neoforged.download" |
-    "forge.resolve" |
-    "forge.download" |
-    "forge-install.extract-libraries" |
-    "forge-install.download-libraries" |
-    "forge-install.processors" |
-    "rift.download" |
-    "liteloader.resolve" |
-    "optifine.resolve" |
-    "optifine.download" |
-    "optifine.install" |
-    "modpack.resolve-mods" |
-    "modpack.download-mods" |
-    "modpack.unpack-files"
+    | "generic.download"
+    | "generic.count"
+    | "jrt.download"
+    | "jrt.unpack"
+    | "jrt.verify"
+    | "vanilla.resolve"
+    | "vanilla.download-libs"
+    | "vanilla.unpack-libs"
+    | "vanilla.download-asset-index"
+    | "vanilla.download-assets"
+    | "vanilla.link-assets"
+    | "fabric.resolve"
+    | "quilt.resolve"
+    | "mappings"
+    | "neoforged.resolve"
+    | "neoforged.download"
+    | "forge.resolve"
+    | "forge.download"
+    | "forge-install.extract-libraries"
+    | "forge-install.download-libraries"
+    | "forge-install.processors"
+    | "rift.download"
+    | "liteloader.resolve"
+    | "optifine.resolve"
+    | "optifine.download"
+    | "optifine.install"
+    | "modpack.resolve-mods"
+    | "modpack.download-mods"
+    | "modpack.unpack-files";
 
 /**
  * Interface describing generic progress.
@@ -64,7 +64,10 @@ export interface ProgressController {
 /**
  * Creates a new handler that forwards underlying progress events to the given parent, with state set to the new name.
  */
-function makeNamed(src: ProgressHandler | undefined, state: ProgressStateName): ProgressHandler | undefined {
+function makeNamed(
+    src: ProgressHandler | undefined,
+    state: ProgressStateName,
+): ProgressHandler | undefined {
     if (src) {
         return (p: Progress) => {
             src({ ...p, state });
@@ -81,14 +84,16 @@ function countPromises<T>(p: Promise<T>[], onProgress?: ProgressHandler): Promis
         type: "count",
         value: {
             current: 0,
-            total: p.length
-        }
+            total: p.length,
+        },
     };
-    return p.map(pr => pr.then((r) => {
-        po.value.current++;
-        onProgress(po);
-        return r;
-    }));
+    return p.map(pr =>
+        pr.then(r => {
+            po.value.current++;
+            onProgress(po);
+            return r;
+        }),
+    );
 }
 
 function indefinite(state: ProgressStateName): Progress {
@@ -97,13 +102,13 @@ function indefinite(state: ProgressStateName): Progress {
         type: "indefinite",
         value: {
             current: 0,
-            total: 0
-        }
+            total: 0,
+        },
     };
 }
 
 export const progress = {
     countPromises,
     makeNamed,
-    indefinite
+    indefinite,
 };

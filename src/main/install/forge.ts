@@ -1,3 +1,4 @@
+import { XMLParser } from "fast-xml-parser";
 import { NetRequestFailedException } from "@/main/except/net";
 import { paths } from "@/main/fs/paths";
 import { UnavailableModLoaderException } from "@/main/install/except";
@@ -5,10 +6,10 @@ import { dlx } from "@/main/net/dlx";
 import { mirror } from "@/main/net/mirrors";
 import { netx } from "@/main/net/netx";
 import { isTruthy } from "@/main/util/misc";
-import { progress, type ProgressController } from "@/main/util/progress";
-import { XMLParser } from "fast-xml-parser";
+import { type ProgressController, progress } from "@/main/util/progress";
 
-const FORGE_VERSIONS = "https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml";
+const FORGE_VERSIONS =
+    "https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml";
 
 let versions: string[] | null = null;
 
@@ -25,7 +26,9 @@ async function syncVersionFromBMCLAPI(): Promise<string[]> {
 
     let offset = 0;
     while (true) {
-        const results = await netx.json(`https://bmclapi2.bangbang93.com/forge/list/${offset}/500`) as BMCLAPIForgeVersion[];
+        const results = (await netx.json(
+            `https://bmclapi2.bangbang93.com/forge/list/${offset}/500`,
+        )) as BMCLAPIForgeVersion[];
         const rv = results.map(r => [r.mcversion, r.version, r.branch].filter(isTruthy).join("-"));
         vs.push(...rv);
 
@@ -66,7 +69,10 @@ async function syncVersions(): Promise<string[]> {
     return versions;
 }
 
-async function queryLoaderVersions(gameVersion: string, control?: ProgressController): Promise<string[]> {
+async function queryLoaderVersions(
+    gameVersion: string,
+    control?: ProgressController,
+): Promise<string[]> {
     control?.onProgress?.(progress.indefinite("forge.download"));
 
     // This is the only except in versioning
@@ -94,7 +100,10 @@ function genClientUrl(loaderVersion: string): string {
     return `https://maven.minecraftforge.net/net/minecraftforge/forge/${loaderVersion}/forge-${loaderVersion}-client.zip`;
 }
 
-async function pickLoaderVersion(gameVersion: string, control?: ProgressController): Promise<string> {
+async function pickLoaderVersion(
+    gameVersion: string,
+    control?: ProgressController,
+): Promise<string> {
     const versions = await queryLoaderVersions(gameVersion, control);
     if (versions.length === 0) throw new UnavailableModLoaderException(gameVersion);
     return versions[0];
@@ -109,7 +118,11 @@ async function coerceLoaderVersion(loaderVersion: string): Promise<string> {
     return versions.find(v => v.split("-")[1] === loaderVersion) ?? loaderVersion;
 }
 
-async function downloadInstaller(loaderVersion: string, type: "installer" | "universal" | "client", control?: ProgressController): Promise<string> {
+async function downloadInstaller(
+    loaderVersion: string,
+    type: "installer" | "universal" | "client",
+    control?: ProgressController,
+): Promise<string> {
     control?.onProgress?.(progress.indefinite("forge.download"));
 
     console.debug(`Fetching Forge installer ${loaderVersion}`);
@@ -128,17 +141,19 @@ async function downloadInstaller(loaderVersion: string, type: "installer" | "uni
     }
 
     const fp = paths.temp.to(`forge-${loaderVersion}.jar`);
-    await dlx.getAll([
-        {
-            url,
-            path: fp,
-            noCache: true
-        }
-    ], { signal: control?.signal });
+    await dlx.getAll(
+        [
+            {
+                url,
+                path: fp,
+                noCache: true,
+            },
+        ],
+        { signal: control?.signal },
+    );
 
     return fp;
 }
-
 
 function getInstallType(gameVersion: string): "installer" | "universal" | "client" {
     const [major, minor, patch] = gameVersion.split(".");
@@ -146,7 +161,8 @@ function getInstallType(gameVersion: string): "installer" | "universal" | "clien
 
     const mv = parseInt(minor, 10);
 
-    if (mv >= 3 && mv < 5 || mv === 5 && patch !== "2") { // 1.3.x, 1.4.x, 1.5.x excluding 1.5.2
+    if ((mv >= 3 && mv < 5) || (mv === 5 && patch !== "2")) {
+        // 1.3.x, 1.4.x, 1.5.x excluding 1.5.2
         return "universal";
     }
 
@@ -169,5 +185,5 @@ export const forgeInstaller = {
     getInstallType,
     downloadInstaller,
     prefetch,
-    coerceLoaderVersion
+    coerceLoaderVersion,
 };

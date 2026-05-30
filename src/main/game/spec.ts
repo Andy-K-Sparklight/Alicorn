@@ -67,32 +67,32 @@ export interface GameProfile {
 }
 
 export type GameCoreType =
-    "vanilla-snapshot" |
-    "vanilla-release" |
-    "vanilla-old-alpha" |
-    "vanilla-old-beta" |
-    "forge" |
-    "fabric" |
-    "quilt" |
-    "neoforged" |
-    "rift" |
-    "liteloader" |
-    "optifine" |
-    "unknown"
+    | "vanilla-snapshot"
+    | "vanilla-release"
+    | "vanilla-old-alpha"
+    | "vanilla-old-beta"
+    | "forge"
+    | "fabric"
+    | "quilt"
+    | "neoforged"
+    | "rift"
+    | "liteloader"
+    | "optifine"
+    | "unknown";
 
 export const GAME_REG_VERSION = 3;
 export const GAME_REG_TRANS: RegistryTransformer[] = [
     // v1: patch the `installerProps` key
-    (s) => {
+    s => {
         s.installProps = {
-            type: "vanilla"
+            type: "vanilla",
         };
 
         return s;
     },
 
     // v2: copy `profileId` to `installProps`
-    (s) => {
+    s => {
         if (!s.installProps.gameVersion) {
             s.installProps.gameVersion = s.launchHint.profileId;
         }
@@ -101,11 +101,11 @@ export const GAME_REG_TRANS: RegistryTransformer[] = [
     },
 
     // v3: append `user` key
-    (s) => {
+    s => {
         if (!s.user) {
             s.user = {};
         }
 
         return s;
-    }
+    },
 ];

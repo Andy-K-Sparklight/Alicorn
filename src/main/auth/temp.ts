@@ -1,5 +1,5 @@
-import { Account, type AccountProps, AuthCredentials } from "@/main/auth/types";
 import crypto from "node:crypto";
+import type { Account, AccountProps, AuthCredentials } from "@/main/auth/types";
 
 /**
  * Provided to the user as an alternative authenticate method when failed to log-in.
@@ -26,7 +26,7 @@ export class TemporalAccount implements Account {
             uuid: this.uuid,
             accessToken: "0",
             xboxId: "0",
-            userType: "mojang"
+            userType: "mojang",
         };
     }
 
@@ -35,7 +35,7 @@ export class TemporalAccount implements Account {
     toProps(): AccountProps {
         return {
             type: "local",
-            playerName: this.#name
+            playerName: this.#name,
         };
     }
 }

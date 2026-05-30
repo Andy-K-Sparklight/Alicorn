@@ -23,10 +23,17 @@ export function FileSelectInput({ value, onChange, selector }: FileSelectInputPr
         }
     }
 
-    return <div className="flex items-center gap-1">
-        <Input fullWidth value={internalValue} onValueChange={setInternalValue} onBlur={() => onChange(internalValue)}/>
-        <Button isIconOnly onPress={runSelect}>
-            <EllipsisIcon/>
-        </Button>
-    </div>;
+    return (
+        <div className="flex items-center gap-1">
+            <Input
+                fullWidth
+                value={internalValue}
+                onValueChange={setInternalValue}
+                onBlur={() => onChange(internalValue)}
+            />
+            <Button isIconOnly onPress={runSelect}>
+                <EllipsisIcon />
+            </Button>
+        </div>
+    );
 }

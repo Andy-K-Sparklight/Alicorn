@@ -1,10 +1,11 @@
 /**
  * Module to handle containers capable for linking files.
  */
+
+import path from "node:path";
+import fs from "fs-extra";
 import { paths } from "@/main/fs/paths";
 import { hash } from "@/main/security/hash";
-import fs from "fs-extra";
-import path from "node:path";
 
 function getCachePath(sha1: string) {
     return paths.game.to(".store", sha1.slice(0, 2), sha1);
@@ -15,7 +16,7 @@ function getCachePath(sha1: string) {
  */
 async function checkFile(sha1: string): Promise<boolean> {
     const fp = getCachePath(sha1);
-    const sp = fp + ".sig";
+    const sp = `${fp}.sig`;
 
     try {
         const st = await fs.stat(fp);
@@ -41,7 +42,7 @@ async function checkFile(sha1: string): Promise<boolean> {
         }
 
         if (shouldVerify) {
-            if (!await hash.checkFile(fp, "sha1", sha1)) {
+            if (!(await hash.checkFile(fp, "sha1", sha1))) {
                 // File invalid, remove it
                 console.warn(`Possibly corrupted store file: ${fp}`);
                 await fs.remove(fp);
@@ -62,7 +63,7 @@ async function checkFile(sha1: string): Promise<boolean> {
 async function signFile(sha1: string) {
     try {
         const fp = getCachePath(sha1);
-        const sp = fp + ".sig";
+        const sp = `${fp}.sig`;
         const stat = await fs.stat(fp);
         await fs.writeFile(sp, stat.mtimeMs.toString());
         console.debug(`Cache mtime signature updated: ${fp}`);
@@ -101,7 +102,7 @@ async function enroll(fp: string, sha1?: string) {
  * Tries to find existing object and copy it to the target.
  */
 async function deploy(target: string, sha1: string, link: boolean): Promise<boolean> {
-    if (!await checkFile(sha1)) return false; // Object corrupted
+    if (!(await checkFile(sha1))) return false; // Object corrupted
 
     try {
         await fs.ensureDir(path.dirname(target));
@@ -142,8 +143,7 @@ async function link(fp: string, sha1?: string) {
                 console.debug(`File compacted: ${ep} -> ${fp}`);
                 return;
             }
-        } catch {
-        }
+        } catch {}
 
         await fs.remove(ep); // Delete corrupted cache, if any
         await fs.ensureDir(path.dirname(ep));

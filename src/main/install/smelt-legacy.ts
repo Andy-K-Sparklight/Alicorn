@@ -1,17 +1,20 @@
-import type { Container } from "@/main/container/spec";
-import { paths } from "@/main/fs/paths";
-import { dlx, type DlxDownloadRequest } from "@/main/net/dlx";
-import type { Library } from "@/main/profile/version-profile";
-import { unwrapESM } from "@/main/util/module";
-import { progress, type ProgressController } from "@/main/util/progress";
+import child_process from "node:child_process";
+import path from "node:path";
 import fs from "fs-extra";
 import { nanoid } from "nanoid";
 import StreamZip from "node-stream-zip";
-import child_process from "node:child_process";
-import path from "node:path";
 import { pEvent } from "p-event";
+import type { Container } from "@/main/container/spec";
+import { paths } from "@/main/fs/paths";
+import { type DlxDownloadRequest, dlx } from "@/main/net/dlx";
+import type { Library } from "@/main/profile/version-profile";
+import { unwrapESM } from "@/main/util/module";
+import { type ProgressController, progress } from "@/main/util/progress";
 
-async function dumpContent(installer: string, container: Container): Promise<[string, string] | null> {
+async function dumpContent(
+    installer: string,
+    container: Container,
+): Promise<[string, string] | null> {
     let zip: StreamZip.StreamZipAsync | null = null;
 
     try {
@@ -36,7 +39,9 @@ async function dumpContent(installer: string, container: Container): Promise<[st
             }
 
             console.debug(`Writing profile to ${ip.versionInfo.id}`);
-            await fs.outputJSON(container.profile(ip.versionInfo.id), ip.versionInfo, { spaces: 2 });
+            await fs.outputJSON(container.profile(ip.versionInfo.id), ip.versionInfo, {
+                spaces: 2,
+            });
 
             return [ip.versionInfo.id, fp];
         }
@@ -58,16 +63,17 @@ function filterLibraries(libs: Library[], libName: string) {
     }
 }
 
-async function findLibraries(jrtExec: string, jarPath: string, gameVersion: string): Promise<string[]> {
-    const proc = child_process.spawn(
-        jrtExec,
-        [
-            `-Dffind.mcv=${gameVersion}`,
-            "-cp",
-            [paths.app.to("vendor", "ffind-1.2.jar"), jarPath].join(path.delimiter),
-            "moe.skjsjhb.ffind.Main"
-        ]
-    );
+async function findLibraries(
+    jrtExec: string,
+    jarPath: string,
+    gameVersion: string,
+): Promise<string[]> {
+    const proc = child_process.spawn(jrtExec, [
+        `-Dffind.mcv=${gameVersion}`,
+        "-cp",
+        [paths.app.to("vendor", "ffind-1.2.jar"), jarPath].join(path.delimiter),
+        "moe.skjsjhb.ffind.Main",
+    ]);
 
     let output = "";
 
@@ -77,14 +83,20 @@ async function findLibraries(jrtExec: string, jarPath: string, gameVersion: stri
 
     await pEvent(proc, "exit");
 
-    const libs = output.split("\n").map(it => it.trim()).filter(it => it.endsWith(".jar") || it.endsWith(".zip"));
+    const libs = output
+        .split("\n")
+        .map(it => it.trim())
+        .filter(it => it.endsWith(".jar") || it.endsWith(".zip"));
     console.debug(`Detected libraries of ${jarPath}: ${libs}`);
 
     return libs;
 }
 
 async function mapLibraries(libs: string[]): Promise<[string, string][]> {
-    const libMap = await unwrapESM(import("@/refs/legacy-forge-libs.json")) as unknown as Record<string, string>;
+    const libMap = (await unwrapESM(import("@/refs/legacy-forge-libs.json"))) as unknown as Record<
+        string,
+        string
+    >;
     const out: [string, string][] = [];
 
     for (const lib of libs) {
@@ -99,18 +111,24 @@ async function mapLibraries(libs: string[]): Promise<[string, string][]> {
     return out;
 }
 
-async function patchLegacyLibraries(jrtExec: string, jarPath: string, gameVersion: string, container: Container, control?: ProgressController): Promise<void> {
+async function patchLegacyLibraries(
+    jrtExec: string,
+    jarPath: string,
+    gameVersion: string,
+    container: Container,
+    control?: ProgressController,
+): Promise<void> {
     const rawLibs = await findLibraries(jrtExec, jarPath, gameVersion);
     const libs = await mapLibraries(rawLibs);
 
     const tasks: DlxDownloadRequest[] = libs.map(([url, lib]) => ({
         url,
-        path: path.join(container.gameDir(), "lib", lib)
+        path: path.join(container.gameDir(), "lib", lib),
     }));
 
     await dlx.getAll(tasks, {
         signal: control?.signal,
-        onProgress: progress.makeNamed(control?.onProgress, "forge-install.download-libraries")
+        onProgress: progress.makeNamed(control?.onProgress, "forge-install.download-libraries"),
     });
 }
 

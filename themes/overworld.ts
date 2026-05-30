@@ -15,7 +15,7 @@ export default {
             "800": "#c5dabe",
             "900": "#e7f0e4",
             foreground: "#fff",
-            DEFAULT: "#3c8527"
+            DEFAULT: "#3c8527",
         },
         secondary: {
             "50": "#2b1d0c",
@@ -29,16 +29,16 @@ export default {
             "800": "#eaceaa",
             "900": "#f2e0c9",
             foreground: "#fff",
-            DEFAULT: "#d3974c"
+            DEFAULT: "#d3974c",
         },
-        focus: "#3c8527"
+        focus: "#3c8527",
     },
 
     layout: {
         radius: {
             small: "0px",
             medium: "0px",
-            large: "0px"
-        }
-    }
+            large: "0px",
+        },
+    },
 } satisfies ConfigTheme;

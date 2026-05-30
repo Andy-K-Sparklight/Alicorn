@@ -1,6 +1,6 @@
+import { mergician } from "mergician";
 import { patchProfile } from "@/main/profile/profile-adaptor";
 import type { VersionProfile } from "@/main/profile/version-profile";
-import { mergician } from "mergician";
 
 /**
  * Links the given profiles.
@@ -10,8 +10,11 @@ import { mergician } from "mergician";
  * @param id The ID of the profile to be linked.
  * @param provider A function which this method calls to retrieve extra profiles for linking.
  */
-export async function linkProfile(id: string, provider: (id: string) => unknown | Promise<unknown>): Promise<VersionProfile> {
-    let circular = new Set();
+export async function linkProfile(
+    id: string,
+    provider: (id: string) => unknown | Promise<unknown>,
+): Promise<VersionProfile> {
+    const circular = new Set();
     let obj = { inheritsFrom: id, version: id };
 
     while (obj.inheritsFrom) {
@@ -21,14 +24,19 @@ export async function linkProfile(id: string, provider: (id: string) => unknown 
 
         const s = await provider(nextID);
 
-        if (typeof s === "object" && s !== null && "inheritsFrom" in s && typeof s.inheritsFrom === "string") {
+        if (
+            typeof s === "object" &&
+            s !== null &&
+            "inheritsFrom" in s &&
+            typeof s.inheritsFrom === "string"
+        ) {
             obj.inheritsFrom = s.inheritsFrom; // Pass the inheritance relationship on
         } else {
             obj.inheritsFrom = ""; // Terminates the inheritance
         }
 
         obj = mergician({
-            prependArrays: true
+            prependArrays: true,
         })(s, obj);
 
         obj.version = nextID;
@@ -48,7 +56,7 @@ export async function linkProfile(id: string, provider: (id: string) => unknown 
 }
 
 function combineLibraries(libs: unknown[]): unknown[] {
-    const out: { name: string } [] = [];
+    const out: { name: string }[] = [];
 
     outer: for (const lib of libs.toReversed()) {
         if (typeof lib === "object" && lib && "name" in lib && typeof lib.name === "string") {

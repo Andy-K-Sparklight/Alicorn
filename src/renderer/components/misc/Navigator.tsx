@@ -1,27 +1,28 @@
-import { useGameProcList } from "@/renderer/services/proc";
 import { Button, Tab, Tabs } from "@heroui/react";
 import { type PageInfo, pages } from "@pages/pages";
 import { MinusIcon, SparklesIcon, XIcon } from "lucide-react";
-import React from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "wouter";
+import { useGameProcList } from "@/renderer/services/proc";
 
 /**
  * Application navigator on the top.
  */
 export function Navigator() {
-    return <div className="flex gap-2 justify-center items-center py-4">
-        <div className="drag w-11/12 h-full flex items-center justify-between bg-default-100 rounded-full py-1 px-1">
-            <div className="no-drag">
-                <PageTabs/>
-            </div>
+    return (
+        <div className="flex gap-2 justify-center items-center py-4">
+            <div className="drag w-11/12 h-full flex items-center justify-between bg-default-100 rounded-full py-1 px-1">
+                <div className="no-drag">
+                    <PageTabs />
+                </div>
 
-            <div className="flex items-center gap-1 no-drag">
-                <MinimizeButton/>
-                <CloseButton/>
+                <div className="flex items-center gap-1 no-drag">
+                    <MinimizeButton />
+                    <CloseButton />
+                </div>
             </div>
         </div>
-    </div>;
+    );
 }
 
 function PageTabs() {
@@ -34,73 +35,72 @@ function PageTabs() {
 
     const isSetup = pathname.startsWith("/setup");
 
-    const activeTab = isSetup ? "setup" : pages.find(p => pathname.startsWith("/" + p.id))?.id ?? pages[0].id;
+    const activeTab = isSetup
+        ? "setup"
+        : (pages.find(p => pathname.startsWith(`/${p.id}`))?.id ?? pages[0].id);
 
-    return <Tabs
-        color="primary"
-        variant="light"
-        radius="full"
-        // A temporary workaround since routing seems not working
-        onSelectionChange={(k) => nav("/" + k)}
-        selectedKey={activeTab}
-    >
-        {
-            isSetup ?
+    return (
+        <Tabs
+            color="primary"
+            variant="light"
+            radius="full"
+            // A temporary workaround since routing seems not working
+            onSelectionChange={k => nav(`/${k}`)}
+            selectedKey={activeTab}
+        >
+            {isSetup ? (
                 <Tab
                     key="setup"
-                    title={
-                        <PageTitle page={{ id: "setup", icon: SparklesIcon }}/>
-                    }
-                >
-
-                </Tab>
-                :
-                activePages.map(p =>
+                    title={<PageTitle page={{ id: "setup", icon: SparklesIcon }} />}
+                ></Tab>
+            ) : (
+                activePages.map(p => (
                     // Tabs cannot be extracted as separated components or HeroUI will complain
                     // Upstream issue: https://github.com/heroui-inc/heroui/issues/729
-                    <Tab
-                        title={
-                            <PageTitle page={p}/>
-                        }
-                        key={p.id}
-                    />
-                )
-        }
-    </Tabs>;
+                    <Tab title={<PageTitle page={p} />} key={p.id} />
+                ))
+            )}
+        </Tabs>
+    );
 }
 
 function PageTitle({ page }: { page: PageInfo }) {
     const { t } = useTranslation("pages");
     const { id, icon: Icon } = page;
 
-    return <div className="flex items-center gap-2">
-        <Icon/>
-        {t(id + ".title")}
-    </div>;
+    return (
+        <div className="flex items-center gap-2">
+            <Icon />
+            {t(`${id}.title`)}
+        </div>
+    );
 }
-
 
 /**
  * The close button. Shows on the right corner when the cursor is moved near it, otherwise hidden for a cleaner LAF.
  */
 function CloseButton() {
-    return <Button
-        onPress={() => native.bwctl.close()}
-        className="rounded-full bg-transparent text-foreground hover:bg-danger"
-        color="danger"
-        isIconOnly
-        variant="solid"
-    >
-        <XIcon/>
-    </Button>;
+    return (
+        <Button
+            onPress={() => native.bwctl.close()}
+            className="rounded-full bg-transparent text-foreground hover:bg-danger"
+            color="danger"
+            isIconOnly
+            variant="solid"
+        >
+            <XIcon />
+        </Button>
+    );
 }
 
 function MinimizeButton() {
-    return <Button
-        onPress={() => native.bwctl.minimize()}
-        className="rounded-full bg-transparent text-foreground hover:bg-default"
-        isIconOnly
-    >
-        <MinusIcon/>
-    </Button>;
+    return (
+        <Button
+            onPress={() => native.bwctl.minimize()}
+            className="rounded-full bg-transparent text-foreground hover:bg-default"
+            isIconOnly
+        >
+            <MinusIcon />
+        </Button>
+    );
 }

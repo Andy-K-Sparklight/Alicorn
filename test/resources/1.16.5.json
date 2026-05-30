@@ -39,12 +39,7 @@
                         }
                     }
                 ],
-                "value": [
-                    "--width",
-                    "${resolution_width}",
-                    "--height",
-                    "${resolution_height}"
-                ]
+                "value": ["--width", "${resolution_width}", "--height", "${resolution_height}"]
             }
         ],
         "jvm": [
@@ -57,9 +52,7 @@
                         }
                     }
                 ],
-                "value": [
-                    "-XstartOnFirstThread"
-                ]
+                "value": ["-XstartOnFirstThread"]
             },
             {
                 "rules": [
@@ -82,10 +75,7 @@
                         }
                     }
                 ],
-                "value": [
-                    "-Dos.name=Windows 10",
-                    "-Dos.version=10.0"
-                ]
+                "value": ["-Dos.name=Windows 10", "-Dos.version=10.0"]
             },
             {
                 "rules": [
@@ -1229,9 +1219,7 @@
                 }
             },
             "extract": {
-                "exclude": [
-                    "META-INF/"
-                ]
+                "exclude": ["META-INF/"]
             },
             "name": "com.mojang:text2speech:1.11.3",
             "natives": {
@@ -1257,9 +1245,7 @@
                 }
             },
             "extract": {
-                "exclude": [
-                    "META-INF/"
-                ]
+                "exclude": ["META-INF/"]
             },
             "name": "ca.weblite:java-objc-bridge:1.0.0",
             "natives": {

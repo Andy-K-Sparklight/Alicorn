@@ -5,25 +5,25 @@
  * 2. If the bundle could not be found, boots using built-in app resources.
  * 3. If a bundle is found, loads main module from it.
  */
-import { update } from "@/main/sys/update";
-import fs from "fs-extra";
+
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import fs from "fs-extra";
 import * as semver from "semver";
+import { update } from "@/main/sys/update";
 import pkg from "~/package.json";
-
 
 async function findModulePath(): Promise<string | null> {
     const d = update.getVariableAppDir();
     const files = await fs.readdir(d);
 
     for (const v of files) {
-        if (semver.satisfies(v, "^" + pkg.version) && semver.gt(v, pkg.version)) {
+        if (semver.satisfies(v, `^${pkg.version}`) && semver.gt(v, pkg.version)) {
             try {
                 const lock = await fs.readFile(path.join(d, v, "install.lock"));
 
                 if (lock.toString() === "OK") {
-                    console.debug("Found compatible module: " + v);
+                    console.debug(`Found compatible module: ${v}`);
                     return path.join(d, v);
                 }
             } catch {}
@@ -40,7 +40,7 @@ async function boot() {
         try {
             const mp = await findModulePath();
             if (mp) {
-                console.debug("Booting from " + mp);
+                console.debug(`Booting from ${mp}`);
                 await import(pathToFileURL(path.join(mp, "main.js")).toString());
                 return;
             }

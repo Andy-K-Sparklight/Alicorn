@@ -1,5 +1,5 @@
 import { BoxIcon, CogIcon, InfoIcon, SquareActivityIcon } from "lucide-react";
-import React from "react";
+import type React from "react";
 
 /**
  * Describes a page in the app.
@@ -19,18 +19,18 @@ export interface PageInfo {
 export const pages: PageInfo[] = [
     {
         id: "games",
-        icon: BoxIcon
+        icon: BoxIcon,
     },
     {
         id: "monitor",
-        icon: SquareActivityIcon
+        icon: SquareActivityIcon,
     },
     {
         id: "settings",
-        icon: CogIcon
+        icon: CogIcon,
     },
     {
         id: "about",
-        icon: InfoIcon
-    }
+        icon: InfoIcon,
+    },
 ];

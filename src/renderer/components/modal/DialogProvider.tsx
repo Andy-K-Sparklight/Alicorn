@@ -17,7 +17,9 @@ interface DialogProviderContextContent<T> {
     openDialog: () => Promise<T>;
 }
 
-const DialogProviderContext = React.createContext<DialogProviderContextContent<unknown> | null>(null);
+const DialogProviderContext = React.createContext<DialogProviderContextContent<unknown> | null>(
+    null,
+);
 
 export function DialogProvider<T, P>(props: PropsWithChildren<DialogProviderProps<T, P>>) {
     const [mount, setMount] = useState(false);
@@ -57,13 +59,19 @@ export function DialogProvider<T, P>(props: PropsWithChildren<DialogProviderProp
 
     const DialogComponent = props.component;
 
-    return <DialogProviderContext.Provider value={contextValue}>
-        {props.children}
-        {
-            mount && <DialogComponent {...props.dialogProps} key={key} isOpen={open} onResult={handleResult}/>
-        }
-
-    </DialogProviderContext.Provider>;
+    return (
+        <DialogProviderContext.Provider value={contextValue}>
+            {props.children}
+            {mount && (
+                <DialogComponent
+                    {...props.dialogProps}
+                    key={key}
+                    isOpen={open}
+                    onResult={handleResult}
+                />
+            )}
+        </DialogProviderContext.Provider>
+    );
 }
 
 export function useOpenDialog<T>(): () => Promise<T> {

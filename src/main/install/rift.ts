@@ -1,18 +1,21 @@
+import path from "node:path";
+import fs from "fs-extra";
+import StreamZip from "node-stream-zip";
 import type { Container } from "@/main/container/spec";
 import { paths } from "@/main/fs/paths";
 import { dlx } from "@/main/net/dlx";
 import { MavenName } from "@/main/profile/maven-name";
 import { unwrapESM } from "@/main/util/module";
-import { progress, type ProgressController } from "@/main/util/progress";
-import fs from "fs-extra";
-import StreamZip from "node-stream-zip";
-import path from "node:path";
+import { type ProgressController, progress } from "@/main/util/progress";
 
 async function loadCompat() {
     return await unwrapESM(import("@/refs/rift-compat.json"));
 }
 
-async function downloadInstaller(loaderVersion: string, control?: ProgressController): Promise<string> {
+async function downloadInstaller(
+    loaderVersion: string,
+    control?: ProgressController,
+): Promise<string> {
     control?.onProgress?.(progress.indefinite("rift.download"));
 
     if (!loaderVersion) {
@@ -41,7 +44,12 @@ async function deployContents(fp: string, container: Container): Promise<string>
 
             // Copy the installer as a library
             for (const lib of p.libraries) {
-                if (typeof lib === "object" && lib && "name" in lib && typeof lib.name === "string") {
+                if (
+                    typeof lib === "object" &&
+                    lib &&
+                    "name" in lib &&
+                    typeof lib.name === "string"
+                ) {
                     const m = new MavenName(lib.name);
                     if (m.group === "org.dimdev" && m.artifact.toLowerCase() === "rift") {
                         const target = container.library(lib.name);

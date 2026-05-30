@@ -13,9 +13,9 @@ import twikie from "./themes/twikie";
 export default {
     "sakura-light": sakuraLight,
     "sakura-dark": sakuraDark,
-    "overworld": overworld,
-    "hoshi": hoshi,
-    "twikie": twikie,
+    overworld: overworld,
+    hoshi: hoshi,
+    twikie: twikie,
     "amazing-grace": amazingGrace,
-    "advanced": advanced
+    advanced: advanced,
 } satisfies ConfigThemes;

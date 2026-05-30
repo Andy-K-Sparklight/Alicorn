@@ -1,27 +1,27 @@
+import { nativeImage } from "electron";
+import fs from "fs-extra";
+import { accounts } from "@/main/auth/manage";
 import type { Account } from "@/main/auth/types";
 import { VanillaAccount } from "@/main/auth/vanilla";
 import { YggdrasilAccount } from "@/main/auth/yggdrasil";
 import { paths } from "@/main/fs/paths";
 import { netx } from "@/main/net/netx";
-import { nativeImage } from "electron";
-import fs from "fs-extra";
 import { reg } from "@/main/registry/registry";
-import { accounts } from "@/main/auth/manage";
 
 interface SkinQueryResponse {
-    properties: { name: string, value: string }[];
+    properties: { name: string; value: string }[];
 }
 
 interface SkinPayload {
     textures: {
         SKIN: {
             url: string;
-        }
+        };
     };
 }
 
 async function loadSkin(url: string): Promise<string> {
-    const res = await netx.json(url) as SkinQueryResponse;
+    const res = (await netx.json(url)) as SkinQueryResponse;
 
     const v = res.properties.find(p => p.name === "textures")?.value;
     if (!v) return "";
@@ -38,7 +38,6 @@ async function getYggdrasilSkin(a: YggdrasilAccount): Promise<string> {
     const url = `${a.host}/sessionserver/session/minecraft/profile/${a.uuid}`;
     return await loadSkin(url);
 }
-
 
 async function getSkin(a: Account): Promise<string> {
     if (a instanceof VanillaAccount) {
@@ -78,7 +77,7 @@ async function purgeSkin(a: Account) {
  * Fetches the skin and crops the head and helm textures. Returns an array of data URLs.
  */
 async function getSkinAvatar(a: Account): Promise<[string, string]> {
-    let dat = skinCache.get(a.uuid);
+    const dat = skinCache.get(a.uuid);
 
     if (dat) {
         return dat;
@@ -89,10 +88,12 @@ async function getSkinAvatar(a: Account): Promise<[string, string]> {
 }
 
 async function preloadSkins() {
-    await Promise.allSettled(reg.accounts.entries().map(async (a) => {
-        const ac = accounts.get(a[0]);
-        await purgeSkin(ac);
-    }));
+    await Promise.allSettled(
+        reg.accounts.entries().map(async a => {
+            const ac = accounts.get(a[0]);
+            await purgeSkin(ac);
+        }),
+    );
 }
 
 export const skin = { getSkin, getSkinAvatar, preloadSkins };

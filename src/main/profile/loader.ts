@@ -1,11 +1,12 @@
 /**
  * Utilities for loading profiles.
  */
-import { Container } from "@/main/container/spec";
+
+import fs from "fs-extra";
+import type { Container } from "@/main/container/spec";
 import { AbstractException } from "@/main/except/exception";
 import { linkProfile } from "@/main/profile/linker";
-import { VersionProfile } from "@/main/profile/version-profile";
-import fs from "fs-extra";
+import type { VersionProfile } from "@/main/profile/version-profile";
 
 class ProfileLinkFailedException extends AbstractException<"profile-link-failed"> {
     #id: string;
@@ -23,15 +24,14 @@ class ProfileLinkFailedException extends AbstractException<"profile-link-failed"
 async function fromContainer(id: string, container: Container): Promise<VersionProfile> {
     try {
         return await linkProfile(id, i => fs.readJSON(container.profile(i)));
-    } catch (e) {
+    } catch (_e) {
         throw new ProfileLinkFailedException(id);
     }
 }
 
-
 async function assetIndexShouldMap(assetIndexId: string, container: Container): Promise<boolean> {
     const a = await fs.readJSON(container.assetIndex(assetIndexId));
-    return "map_to_resources" in a && !!a["map_to_resources"];
+    return "map_to_resources" in a && !!a.map_to_resources;
 }
 
 async function isLegacyAssets(assetIndexId: string): Promise<boolean> {
@@ -41,7 +41,8 @@ async function isLegacyAssets(assetIndexId: string): Promise<boolean> {
     return legacyAssets.includes(assetIndexId);
 }
 
-
 export const profileLoader = {
-    fromContainer, assetIndexShouldMap, isLegacyAssets
+    fromContainer,
+    assetIndexShouldMap,
+    isLegacyAssets,
 };

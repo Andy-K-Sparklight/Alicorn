@@ -1,3 +1,5 @@
+import type { FileFilter } from "electron";
+import { ipcMain } from "electron";
 import type { GameAuthResult } from "@/main/api/auth";
 import type { CreateGameInit } from "@/main/api/game";
 import type { LaunchGameResult } from "@/main/api/launcher";
@@ -10,9 +12,8 @@ import type { GameProfile } from "@/main/game/spec";
 import type { VersionManifest } from "@/main/install/vanilla";
 import type { ModpackMetaSlim } from "@/main/modpack/common";
 import type { MpmAddonType, MpmManifest } from "@/main/mpm/spec";
-import type { FileFilter } from "electron";
-import { ipcMain } from "electron";
 
+// biome-ignore lint/complexity/noBannedTypes: Function type can't be declared as it uses generics.
 const handlers = new Map<string, Function>();
 
 export interface CheckedIpcCommands {
@@ -33,7 +34,12 @@ export interface CheckedIpcCommands {
     getVersionManifest: () => VersionManifest;
     queryAvailableModLoaders: (gameVersion: string) => string[];
     loadMpmManifest: (gameId: string) => MpmManifest;
-    searchAddons: (scope: MpmAddonType, query: string, gameId: string, pagination: any) => MpmAddonSearchResult;
+    searchAddons: (
+        scope: MpmAddonType,
+        query: string,
+        gameId: string,
+        pagination: any,
+    ) => MpmAddonSearchResult;
     updateAddons: (gameId: string) => void;
     addAddons: (gameId: string, specs: string[]) => void;
     removeAddons: (gameId: string, specs: string[]) => void;
@@ -70,7 +76,7 @@ ipcMain.handle("checkedInvoke", async (_, payload: InvocationPayload<any>) => {
     if (!handler) {
         return {
             success: false,
-            error: new NoHandlerRegisteredException(payload.method).toJSON()
+            error: new NoHandlerRegisteredException(payload.method).toJSON(),
         };
     }
 
@@ -78,7 +84,7 @@ ipcMain.handle("checkedInvoke", async (_, payload: InvocationPayload<any>) => {
         const v = await handler(...payload.args);
         return {
             success: true,
-            value: v
+            value: v,
         };
     } catch (e) {
         console.error(`Error occurred in handler ${payload.method}:`);
@@ -90,14 +96,16 @@ ipcMain.handle("checkedInvoke", async (_, payload: InvocationPayload<any>) => {
 
         return {
             success: false,
-            error: (e as AbstractException).toJSON()
+            error: (e as AbstractException).toJSON(),
         };
     }
 });
 
 export function addCheckedHandler<K extends keyof CheckedIpcCommands>(
     method: K,
-    handler: (...args: Parameters<CheckedIpcCommands[K]>) => OptionalPromise<ReturnType<CheckedIpcCommands[K]>>
+    handler: (
+        ...args: Parameters<CheckedIpcCommands[K]>
+    ) => OptionalPromise<ReturnType<CheckedIpcCommands[K]>>,
 ) {
     handlers.set(method, handler);
 }

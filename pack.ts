@@ -1,14 +1,20 @@
 /**
  * Packages the application for supported platforms.
  */
-import { OfficialPlatform, type Options, packager, SupportedArch } from "@electron/packager";
+
+import os from "node:os";
+import path from "node:path";
+import * as process from "node:process";
+import {
+    type OfficialPlatform,
+    type Options,
+    packager,
+    type SupportedArch,
+} from "@electron/packager";
 import consola from "consola";
 import { createDMG } from "electron-installer-dmg";
 import { MSICreator } from "electron-wix-msi";
 import fs from "fs-extra";
-import os from "node:os";
-import path from "node:path";
-import * as process from "node:process";
 import { tar, zip } from "zip-a-folder";
 import { build } from "~/build-src/run-build";
 import pkg from "~/package.json";
@@ -54,15 +60,15 @@ for (const platform of platforms) {
                 platform: platform as OfficialPlatform,
                 out: outRoot,
                 overwrite: true,
-                ignore: [".local", "node.napi.node"]
+                ignore: [".local", "node.napi.node"],
             } satisfies Options;
 
             const [outPath] = await packager(opts);
 
             if (platform === "win32") {
                 consola.start(`Creating zip archive from ${outPath}`);
-                await zip(outPath, outPath + ".zip");
-                consola.success(`Archive written to ${outPath + ".zip"}`);
+                await zip(outPath, `${outPath}.zip`);
+                consola.success(`Archive written to ${`${outPath}.zip`}`);
 
                 if (os.platform() === "win32") {
                     await buildWindowsInstaller(outPath, arch);
@@ -81,7 +87,7 @@ for (const platform of platforms) {
 
             if (platform === "linux") {
                 consola.start(`Creating tar.gz package from ${outPath}`);
-                await tar(outPath, outPath + ".tar.gz");
+                await tar(outPath, `${outPath}.tar.gz`);
             }
         }
     }
@@ -106,13 +112,13 @@ async function buildWindowsInstaller(outPath: string, arch: string) {
         arch: arch,
         features: {
             autoLaunch: false,
-            autoUpdate: false
+            autoUpdate: false,
         },
         ui: {
-            chooseDirectory: true
+            chooseDirectory: true,
         },
         icon: path.resolve(import.meta.dirname, "resources/icons/icon.ico"),
-        outputDirectory: root
+        outputDirectory: root,
     });
     await msiCreator.create();
     await msiCreator.compile();
@@ -130,8 +136,8 @@ async function buildDMG(outPath: string) {
     await createDMG({
         appPath: path.join(outPath, "Alicorn Launcher.app"),
         name: "Alicorn Launcher",
-        out: outPath + ".dmg"
+        out: `${outPath}.dmg`,
     });
 
-    consola.success(`DMG image written to ${outPath + ".dmg"}`);
+    consola.success(`DMG image written to ${`${outPath}.dmg`}`);
 }

@@ -1,12 +1,9 @@
-import { alter } from "@/main/util/misc";
-import { remoteInstaller } from "@/renderer/services/install";
-import { useNav } from "@/renderer/util/nav";
 import { Alert } from "@components/display/Alert";
 import { ConfirmPopup } from "@components/modal/ConfirmPopup";
 import {
     DialogProvider,
     type PropsWithDialog,
-    useOpenDialog
+    useOpenDialog,
 } from "@components/modal/DialogProvider";
 import {
     addToast,
@@ -18,12 +15,15 @@ import {
     ModalFooter,
     ModalHeader,
     Radio,
-    RadioGroup
+    RadioGroup,
 } from "@heroui/react";
 import { useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
 import { CloudDownloadIcon, PickaxeIcon, RefreshCwIcon, TrashIcon, UnlinkIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { alter } from "@/main/util/misc";
+import { remoteInstaller } from "@/renderer/services/install";
+import { useNav } from "@/renderer/util/nav";
 
 export function AdvancedPanel() {
     const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage.advanced" });
@@ -51,100 +51,96 @@ export function AdvancedPanel() {
         nav("/games");
 
         (async () => {
-            await native.game.update(alter(game, g => g.assetsLevel = "full"));
+            await native.game.update(alter(game, g => (g.assetsLevel = "full")));
             await remoteInstaller.install(id);
         })();
     }
 
-    return <div className="w-full h-full overflow-y-auto">
-        <div className="px-4 py-2">
-            <div className="flex flex-col gap-6">
-                {
-                    assetsLevel !== "full" &&
-                    <div className="flex items-center">
-                        <div className="grow flex flex-col gap-1">
-                            <div className="font-bold text-lg">{t("install-full.label")}</div>
-                            <div
-                                className="text-sm text-foreground-400">{t("install-full.sub")}</div>
-                        </div>
+    return (
+        <div className="w-full h-full overflow-y-auto">
+            <div className="px-4 py-2">
+                <div className="flex flex-col gap-6">
+                    {assetsLevel !== "full" && (
+                        <div className="flex items-center">
+                            <div className="grow flex flex-col gap-1">
+                                <div className="font-bold text-lg">{t("install-full.label")}</div>
+                                <div className="text-sm text-foreground-400">
+                                    {t("install-full.sub")}
+                                </div>
+                            </div>
 
-                        <Button
-                            startContent={<CloudDownloadIcon/>}
-                            onPress={handleInstallFull}
-                            color="primary"
-                        >
-                            {t("install-full.btn")}
-                        </Button>
-                    </div>
-                }
-
-
-                <div className="flex items-center">
-                    <div className="grow flex flex-col gap-1">
-                        <div className="font-bold text-lg">{t("reinstall.label")}</div>
-                        <div className="text-sm text-foreground-400">{t("reinstall.sub")}</div>
-                    </div>
-
-                    <Button
-                        startContent={<RefreshCwIcon/>}
-                        onPress={handleReinstall}
-                    >
-                        {t("reinstall.btn", { name })}
-                    </Button>
-                </div>
-
-                {
-                    !isImported &&
-                    <div className="flex items-center">
-                        <div className="grow flex flex-col gap-1">
-                            <div className="font-bold text-lg">{t("recreate.label")}</div>
-                            <div className="text-sm text-foreground-400">{t("recreate.sub")}</div>
-                        </div>
-
-                        <Button
-                            startContent={<PickaxeIcon/>}
-                            onPress={handleRecreate}
-                        >
-                            {t("recreate.btn", { name })}
-                        </Button>
-                    </div>
-                }
-
-                <div
-                    className="mt-6 w-full flex flex-col gap-6 rounded-xl border-2 border-danger border-solid p-4">
-                    <Alert color="danger" title={t("danger-warn")}/>
-
-                    <div className="flex items-center">
-                        <div className="grow flex flex-col gap-1">
-                            <div className="font-bold text-lg">{t("unlink.label")}</div>
-                            <div className="text-sm text-foreground-400">{t("unlink.sub")}</div>
-                        </div>
-
-                        <ConfirmPopup
-                            placement="right"
-                            title={t("unlink.confirm.title")}
-                            sub={t("unlink.confirm.sub")}
-                            btnText={t("unlink.confirm.btn")}
-                            onConfirm={handleUnlink}
-                            color="danger"
-                        >
-                            <Button startContent={<UnlinkIcon/>} color="danger">
-                                {t("unlink.btn", { name })}
+                            <Button
+                                startContent={<CloudDownloadIcon />}
+                                onPress={handleInstallFull}
+                                color="primary"
+                            >
+                                {t("install-full.btn")}
                             </Button>
-                        </ConfirmPopup>
+                        </div>
+                    )}
+
+                    <div className="flex items-center">
+                        <div className="grow flex flex-col gap-1">
+                            <div className="font-bold text-lg">{t("reinstall.label")}</div>
+                            <div className="text-sm text-foreground-400">{t("reinstall.sub")}</div>
+                        </div>
+
+                        <Button startContent={<RefreshCwIcon />} onPress={handleReinstall}>
+                            {t("reinstall.btn", { name })}
+                        </Button>
                     </div>
 
-                    {
-                        !isImported &&
-                        <DialogProvider dialogProps={{ name, id }}
-                                        component={DestroyCompoundDialog}>
-                            <DestroyEntry/>
-                        </DialogProvider>
-                    }
+                    {!isImported && (
+                        <div className="flex items-center">
+                            <div className="grow flex flex-col gap-1">
+                                <div className="font-bold text-lg">{t("recreate.label")}</div>
+                                <div className="text-sm text-foreground-400">
+                                    {t("recreate.sub")}
+                                </div>
+                            </div>
+
+                            <Button startContent={<PickaxeIcon />} onPress={handleRecreate}>
+                                {t("recreate.btn", { name })}
+                            </Button>
+                        </div>
+                    )}
+
+                    <div className="mt-6 w-full flex flex-col gap-6 rounded-xl border-2 border-danger border-solid p-4">
+                        <Alert color="danger" title={t("danger-warn")} />
+
+                        <div className="flex items-center">
+                            <div className="grow flex flex-col gap-1">
+                                <div className="font-bold text-lg">{t("unlink.label")}</div>
+                                <div className="text-sm text-foreground-400">{t("unlink.sub")}</div>
+                            </div>
+
+                            <ConfirmPopup
+                                placement="right"
+                                title={t("unlink.confirm.title")}
+                                sub={t("unlink.confirm.sub")}
+                                btnText={t("unlink.confirm.btn")}
+                                onConfirm={handleUnlink}
+                                color="danger"
+                            >
+                                <Button startContent={<UnlinkIcon />} color="danger">
+                                    {t("unlink.btn", { name })}
+                                </Button>
+                            </ConfirmPopup>
+                        </div>
+
+                        {!isImported && (
+                            <DialogProvider
+                                dialogProps={{ name, id }}
+                                component={DestroyCompoundDialog}
+                            >
+                                <DestroyEntry />
+                            </DialogProvider>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>;
+    );
 }
 
 function DestroyEntry() {
@@ -170,36 +166,47 @@ function DestroyEntry() {
             native.game.destroy(id);
             addToast({
                 color: "success",
-                title: tc("toast.game-destroyed", { name })
+                title: tc("toast.game-destroyed", { name }),
             });
             nav("/games");
         }
     }
 
-    return <div className="flex items-center">
-
-        <div className="grow flex flex-col gap-1">
-            <div className="font-bold text-lg">{t("destroy.label")}</div>
-            <div className="text-sm text-foreground-400 whitespace-pre-line">
-                {
-                    canDestroy ?
-                        t("destroy.sub") :
-                        t("destroy.sub-disabled", { sharedGames: sharedGames.join(" ") })
-                }
+    return (
+        <div className="flex items-center">
+            <div className="grow flex flex-col gap-1">
+                <div className="font-bold text-lg">{t("destroy.label")}</div>
+                <div className="text-sm text-foreground-400 whitespace-pre-line">
+                    {canDestroy
+                        ? t("destroy.sub")
+                        : t("destroy.sub-disabled", { sharedGames: sharedGames.join(" ") })}
+                </div>
             </div>
-        </div>
 
-        <Button startContent={<TrashIcon/>} color="danger" onPress={handleBtnClick}
-                isDisabled={!canDestroy}>
-            {t("destroy.btn", { name })}
-        </Button>
-    </div>;
+            <Button
+                startContent={<TrashIcon />}
+                color="danger"
+                onPress={handleBtnClick}
+                isDisabled={!canDestroy}
+            >
+                {t("destroy.btn", { name })}
+            </Button>
+        </div>
+    );
 }
 
-function DestroyCompoundDialog({ isOpen, onResult, id, name }: PropsWithDialog<boolean, {
-    id: string,
-    name: string
-}>) {
+function DestroyCompoundDialog({
+    isOpen,
+    onResult,
+    id,
+    name,
+}: PropsWithDialog<
+    boolean,
+    {
+        id: string;
+        name: string;
+    }
+>) {
     const [stage, setStage] = useState<"confirm" | "challenge">("confirm");
 
     function handleConfirmResult(v: boolean) {
@@ -210,62 +217,86 @@ function DestroyCompoundDialog({ isOpen, onResult, id, name }: PropsWithDialog<b
         }
     }
 
-    return <>
-        <DestroyConfirmDialog
-            isOpen={isOpen && stage === "confirm"}
-            onResult={handleConfirmResult}
-            id={id}
-            name={name}
-        />
+    return (
+        <>
+            <DestroyConfirmDialog
+                isOpen={isOpen && stage === "confirm"}
+                onResult={handleConfirmResult}
+                id={id}
+                name={name}
+            />
 
-        <DestroyChallengeDialog
-            isOpen={isOpen && stage === "challenge"}
-            onResult={onResult}
-            name={name}
-        />
-    </>;
+            <DestroyChallengeDialog
+                isOpen={isOpen && stage === "challenge"}
+                onResult={onResult}
+                name={name}
+            />
+        </>
+    );
 }
 
-
-function DestroyConfirmDialog({ isOpen, onResult, id, name }: PropsWithDialog<boolean, {
-    id: string,
-    name: string
-}>) {
-    const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage.advanced.destroy.confirm" });
+function DestroyConfirmDialog({
+    isOpen,
+    onResult,
+    id,
+    name,
+}: PropsWithDialog<
+    boolean,
+    {
+        id: string;
+        name: string;
+    }
+>) {
+    const { t } = useTranslation("pages", {
+        keyPrefix: "game-detail.manage.advanced.destroy.confirm",
+    });
     const [input, setInput] = useState("");
 
-    return <Modal isOpen={isOpen} onClose={() => onResult(false)} size="2xl">
-        <ModalContent>
-            <ModalHeader>{t("title")}</ModalHeader>
-            <ModalBody>
-                <p className="whitespace-pre-line">
-                    {t("sub", { name })}
-                </p>
+    return (
+        <Modal isOpen={isOpen} onClose={() => onResult(false)} size="2xl">
+            <ModalContent>
+                <ModalHeader>{t("title")}</ModalHeader>
+                <ModalBody>
+                    <p className="whitespace-pre-line">{t("sub", { name })}</p>
 
-                <Input className="mt-2" description={t("input-hint")} value={input}
-                       onValueChange={setInput} size="sm"/>
-            </ModalBody>
-            <ModalFooter>
-                {
-
-                    <Button
-                        fullWidth
-                        color="danger"
-                        isDisabled={input !== id}
-                        onPress={() => onResult(true)}
-                    >
-                        {t("btn", { name })}
-                    </Button>
-                }
-            </ModalFooter>
-        </ModalContent>
-    </Modal>;
+                    <Input
+                        className="mt-2"
+                        description={t("input-hint")}
+                        value={input}
+                        onValueChange={setInput}
+                        size="sm"
+                    />
+                </ModalBody>
+                <ModalFooter>
+                    {
+                        <Button
+                            fullWidth
+                            color="danger"
+                            isDisabled={input !== id}
+                            onPress={() => onResult(true)}
+                        >
+                            {t("btn", { name })}
+                        </Button>
+                    }
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+    );
 }
 
-function DestroyChallengeDialog({ isOpen, onResult, name }: PropsWithDialog<boolean, {
-    name: string
-}>) {
-    const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage.advanced.destroy.challenge" });
+function DestroyChallengeDialog({
+    isOpen,
+    onResult,
+    name,
+}: PropsWithDialog<
+    boolean,
+    {
+        name: string;
+    }
+>) {
+    const { t } = useTranslation("pages", {
+        keyPrefix: "game-detail.manage.advanced.destroy.challenge",
+    });
     const [selected, setSelected] = useState("");
     const [btnClicked, setBtnClicked] = useState(0);
 
@@ -284,13 +315,17 @@ function DestroyChallengeDialog({ isOpen, onResult, name }: PropsWithDialog<bool
         }
     }
 
-    return <Modal isOpen={isOpen} onClose={() => onResult(false)} size="2xl">
-        <ModalContent>
-            <ModalHeader className="flex flex-col gap-1">{t("title", { name })}</ModalHeader>
-            <ModalBody>
-                <RadioGroup color="danger" value={selected} onValueChange={handleSelectionChange}>
-                    {
-                        ["wrong-1", "wrong-2", "wrong-3", "correct"].map(sel =>
+    return (
+        <Modal isOpen={isOpen} onClose={() => onResult(false)} size="2xl">
+            <ModalContent>
+                <ModalHeader className="flex flex-col gap-1">{t("title", { name })}</ModalHeader>
+                <ModalBody>
+                    <RadioGroup
+                        color="danger"
+                        value={selected}
+                        onValueChange={handleSelectionChange}
+                    >
+                        {["wrong-1", "wrong-2", "wrong-3", "correct"].map(sel => (
                             <Radio
                                 description={selected === sel && t(`${sel}.sub`)}
                                 key={sel}
@@ -298,22 +333,17 @@ function DestroyChallengeDialog({ isOpen, onResult, name }: PropsWithDialog<bool
                             >
                                 {t(`${sel}.label`)}
                             </Radio>
-                        )
-                    }
-                </RadioGroup>
-            </ModalBody>
-            <ModalFooter>
-                {
-                    selected === "correct" &&
-                    <Button
-                        fullWidth
-                        color="danger"
-                        onPress={handleConfirm}
-                    >
-                        {t(`btn.${btnClicked}`, { name })}
-                    </Button>
-                }
-            </ModalFooter>
-        </ModalContent>
-    </Modal>;
+                        ))}
+                    </RadioGroup>
+                </ModalBody>
+                <ModalFooter>
+                    {selected === "correct" && (
+                        <Button fullWidth color="danger" onPress={handleConfirm}>
+                            {t(`btn.${btnClicked}`, { name })}
+                        </Button>
+                    )}
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+    );
 }

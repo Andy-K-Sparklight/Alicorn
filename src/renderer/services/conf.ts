@@ -7,9 +7,7 @@ native.conf.onChange(handleChange);
 native.conf.get().then(handleChange);
 
 function handleChange(c: UserConfig) {
-    globalStore.dispatch(
-        confSlice.actions.replace({ config: c })
-    );
+    globalStore.dispatch(confSlice.actions.replace({ config: c }));
 }
 
 export function useConfig() {

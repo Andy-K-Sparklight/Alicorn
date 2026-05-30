@@ -36,5 +36,6 @@ function add(account: Account) {
 }
 
 export const accounts = {
-    get, add
+    get,
+    add,
 };
