@@ -11,9 +11,7 @@ export const gamesSlice = createSlice({
     } as GameListSliceState,
     reducers: {
         replace(state, action: PayloadAction<{ games: GameProfile[] }>) {
-            for (const g of action.payload.games) {
-                state.games[g.id] = g;
-            }
+            state.games = Object.fromEntries(action.payload.games.map(it => [it.id, it]));
         },
     },
 });
