@@ -1,13 +1,14 @@
 import { Alert } from "@components/display/Alert";
 import {
     Button,
-    Divider,
-    Input,
+    cn,
+    Description,
+    FieldError,
+    InputGroup,
+    Label,
     Modal,
-    ModalBody,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
+    Separator,
+    TextField,
 } from "@heroui/react";
 import { GlobeIcon, KeyRoundIcon, UserIcon } from "lucide-react";
 import { type DragEvent, useState } from "react";
@@ -84,64 +85,103 @@ export function YggdrasilFormDialog({
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size="2xl">
-            <ModalContent onDrop={handleDrop} onDragOver={handleDragOver}>
-                <ModalHeader>{t("title")}</ModalHeader>
-                <ModalBody>
-                    <Input
-                        startContent={<GlobeIcon />}
-                        label={t("host")}
-                        value={userHost}
-                        isDisabled={!!host}
-                        onValueChange={handleHostChange}
-                        labelPlacement="outside"
-                        type="url"
-                        isInvalid={hostInvalid}
-                        errorMessage={t("invalid-url")}
-                    />
-                    {(!userHost || hostInvalid) && <Alert color="primary" title={t("dnd-hint")} />}
-                    {userHost && !hostInvalid && !trusted && (
-                        <Alert
-                            color="warning"
-                            title={
-                                <span className="whitespace-pre-line">
-                                    {t("untrusted", { host: userHost })}
-                                </span>
-                            }
-                        />
-                    )}
-                    <Divider />
-                    <Input
-                        isDisabled={!!email}
-                        startContent={<UserIcon />}
-                        value={userEmail}
-                        onValueChange={setUserEmail}
-                        label={t("username")}
-                        labelPlacement="outside"
-                    />
-                    <Input
-                        startContent={<KeyRoundIcon />}
-                        value={pwd}
-                        onValueChange={setPwd}
-                        label={t("password")}
-                        type="password"
-                        description={t("pwd-no-store")}
-                        labelPlacement="outside"
-                    />
-                    {loginError && <Alert color="danger" title={t("failed")} />}
-                </ModalBody>
-                <ModalFooter>
-                    {canSubmit && (
-                        <Button
-                            isLoading={loggingIn}
-                            color={btnConfirmed ? "primary" : "warning"}
-                            onPress={handleButtonPress}
-                        >
-                            {t(btnConfirmed ? "btn.login" : "btn.confirm", { host: userHost })}
-                        </Button>
-                    )}
-                </ModalFooter>
-            </ModalContent>
+        <Modal>
+            <Modal.Backdrop isOpen={isOpen} onOpenChange={open => !open && onClose()}>
+                <Modal.Container size="lg">
+                    <Modal.Dialog>
+                        <div onDrop={handleDrop} onDragOver={handleDragOver} className="contents">
+                            <Modal.CloseTrigger />
+                            <Modal.Header>
+                                <Modal.Heading>{t("title")}</Modal.Heading>
+                            </Modal.Header>
+                            <Modal.Body className="flex flex-col gap-4">
+                                <TextField
+                                    variant="secondary"
+                                    type="url"
+                                    isDisabled={!!host}
+                                    isInvalid={hostInvalid}
+                                >
+                                    <Label>{t("host")}</Label>
+                                    <InputGroup>
+                                        <InputGroup.Prefix>
+                                            <GlobeIcon />
+                                        </InputGroup.Prefix>
+                                        <InputGroup.Input
+                                            value={userHost}
+                                            onChange={e => handleHostChange(e.target.value)}
+                                        />
+                                    </InputGroup>
+                                    <FieldError>{t("invalid-url")}</FieldError>
+                                </TextField>
+
+                                {(!userHost || hostInvalid) && (
+                                    <Alert
+                                        className="bg-default-soft"
+                                        status="accent"
+                                        title={t("dnd-hint")}
+                                    />
+                                )}
+
+                                {userHost && !hostInvalid && !trusted && (
+                                    <Alert
+                                        className="bg-default-soft"
+                                        status="warning"
+                                        title={
+                                            <span className="whitespace-pre-line">
+                                                {t("untrusted", { host: userHost })}
+                                            </span>
+                                        }
+                                    />
+                                )}
+
+                                <Separator />
+
+                                <TextField variant="secondary" isDisabled={!!email}>
+                                    <Label>{t("username")}</Label>
+                                    <InputGroup>
+                                        <InputGroup.Prefix>
+                                            <UserIcon />
+                                        </InputGroup.Prefix>
+                                        <InputGroup.Input
+                                            value={userEmail}
+                                            onChange={e => setUserEmail(e.target.value)}
+                                        />
+                                    </InputGroup>
+                                </TextField>
+
+                                <TextField variant="secondary" type="password">
+                                    <Label>{t("password")}</Label>
+                                    <InputGroup>
+                                        <InputGroup.Prefix>
+                                            <KeyRoundIcon />
+                                        </InputGroup.Prefix>
+                                        <InputGroup.Input
+                                            value={pwd}
+                                            onChange={e => setPwd(e.target.value)}
+                                        />
+                                    </InputGroup>
+                                    <Description>{t("pwd-no-store")}</Description>
+                                </TextField>
+                                {loginError && <Alert status="danger" title={t("failed")} />}
+                            </Modal.Body>
+                            <Modal.Footer>
+                                {canSubmit && (
+                                    <Button
+                                        isPending={loggingIn}
+                                        className={cn(!btnConfirmed && "text-warning")}
+                                        variant={btnConfirmed ? "primary" : "secondary"}
+                                        onPress={handleButtonPress}
+                                    >
+                                        {t(btnConfirmed ? "btn.login" : "btn.confirm", {
+                                            host: userHost,
+                                        })}
+                                    </Button>
+                                )}
+                            </Modal.Footer>
+                        </div>
+                    </Modal.Dialog>
+                </Modal.Container>
+            </Modal.Backdrop>
         </Modal>
     );
 }

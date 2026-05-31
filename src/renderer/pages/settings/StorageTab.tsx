@@ -1,5 +1,5 @@
 import { Alert } from "@components/display/Alert";
-import { Divider } from "@heroui/react";
+import { Separator } from "@heroui/react";
 import { DirEntry } from "@pages/settings/SettingsEntry";
 import { HardDriveIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,7 @@ export function StorageTab() {
 
     return (
         <>
-            <Alert color="warning" title={t("store-warn")} />
+            <Alert status="danger" title={t("store-warn")} />
 
             <DirEntry
                 icon={HardDriveIcon}
@@ -23,7 +23,7 @@ export function StorageTab() {
                 onChange={v => alterConfig(c => (c.paths.store = v))}
             />
 
-            <Divider />
+            <Separator />
 
             <DirEntry
                 icon={HardDriveIcon}
@@ -32,7 +32,7 @@ export function StorageTab() {
                 onChange={v => alterConfig(c => (c.paths.game = v))}
             />
 
-            <Divider />
+            <Separator />
 
             <DirEntry
                 icon={HardDriveIcon}

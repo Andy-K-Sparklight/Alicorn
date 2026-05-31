@@ -26,10 +26,10 @@ export function useAutoTheme() {
 
     useEffect(() => {
         if (originalTheme.current) {
-            document.body.classList.remove(originalTheme.current);
+            document.documentElement.classList.remove(originalTheme.current);
         }
 
-        document.body.classList.add(theme);
+        document.documentElement.classList.add(theme);
 
         originalTheme.current = theme;
     }, [theme]);

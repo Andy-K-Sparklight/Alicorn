@@ -38,27 +38,18 @@ export function PickAccountView() {
             sub={t("sub")}
             content={
                 <div className="flex flex-col gap-2 h-full">
-                    <div className="text-sm text-foreground-500 whitespace-pre-line">
-                        {t("hint")}
-                    </div>
+                    <div className="text-sm text-muted whitespace-pre-line">{t("hint")}</div>
 
                     <div className="mt-auto">
-                        <Button
-                            fullWidth
-                            startContent={<UserPlus2Icon />}
-                            onPress={handleAddYggdrasil}
-                        >
+                        <Button fullWidth variant="tertiary" onPress={handleAddYggdrasil}>
+                            <UserPlus2Icon />
                             {t("add-yggdrasil")}
                         </Button>
                     </div>
 
                     <div>
-                        <Button
-                            fullWidth
-                            startContent={<CheckIcon />}
-                            onPress={onConfirm}
-                            color="primary"
-                        >
+                        <Button fullWidth onPress={onConfirm}>
+                            <CheckIcon />
                             {t("btn")}
                         </Button>
                     </div>

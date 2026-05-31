@@ -1,5 +1,3 @@
-import type { ConfigTheme } from "@heroui/react";
-
 const color = {
     "50": "#ffffff",
     "100": "#ffffff",
@@ -48,4 +46,4 @@ export default {
             large: "12px",
         },
     },
-} satisfies ConfigTheme;
+};

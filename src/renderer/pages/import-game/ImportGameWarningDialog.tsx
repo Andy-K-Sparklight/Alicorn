@@ -23,7 +23,7 @@ export function ImportGameWarningDialog() {
             isOpen={isOpen}
             onClose={onUserClose}
             footer={
-                <Button fullWidth color="danger" onPress={() => setOpen(false)}>
+                <Button fullWidth variant="danger" onPress={() => setOpen(false)}>
                     {t("btn")}
                 </Button>
             }

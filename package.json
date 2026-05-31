@@ -3,8 +3,8 @@
     "name": "alicorn-launcher",
     "description": "That launcher of the block game, once with the magic of friendship.",
     "author": "skjsjhb",
-    "codename": "Blue Horizon",
-    "version": "3.0.4",
+    "codename": "Contrail",
+    "version": "3.1.0",
     "type": "module",
     "scripts": {
         "dev": "bun build.ts",
@@ -14,7 +14,8 @@
         "clean": "bun exec \"rm -rf build dist\"",
         "dist": "tsx pack.ts",
         "dist-bundles": "cross-env ALICORN_PACK_TYPES=app-bundle tsx pack.ts",
-        "type-check": "tsc --noEmit"
+        "type-check": "tsc --noEmit",
+        "check": "biome check"
     },
     "devDependencies": {
         "@biomejs/biome": "2.4.16",
@@ -39,7 +40,6 @@
         "deep-freeze-es6": "^5.0.0",
         "electron-installer-dmg": "^5.0.1",
         "electron-wix-msi": "^5.1.3",
-        "esbuild": "^0.28.0",
         "jsr": "^0.14.3",
         "tailwindcss": "^4.3.0",
         "tsx": "^4.22.3",
@@ -52,11 +52,12 @@
         "xvfb-maybe": "^0.2.1"
     },
     "dependencies": {
-        "@fontsource-variable/jetbrains-mono": "^5.2.8",
         "@fontsource-variable/noto-sans": "^5.2.10",
         "@fontsource-variable/noto-sans-sc": "^5.2.10",
         "@fontsource-variable/nunito": "^5.2.7",
-        "@heroui/react": "^2.8.10",
+        "@fontsource/maple-mono": "^5.2.6",
+        "@heroui/react": "^3.1.0",
+        "@heroui/styles": "^3.1.0",
         "@reduxjs/toolkit": "^2.12.0",
         "electron": "^42.3.0",
         "electron-devtools-installer": "^4.0.0",
@@ -72,8 +73,8 @@
         "lazy-value": "^3.0.0",
         "logic-solver": "^2.0.1",
         "lucide-react": "^1.17.0",
-        "lzma": "^2.3.2",
         "lzma-native": "^8.0.6",
+        "lzma-wasm": "^1.0.7",
         "mergician": "^2.0.2",
         "nanoid": "^5.1.11",
         "node-html-parser": "^7.1.0",
@@ -102,7 +103,6 @@
         "@heroui/shared-utils",
         "@tailwindcss/oxide",
         "electron",
-        "esbuild",
         "lzma-native"
     ]
 }

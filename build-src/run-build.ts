@@ -3,9 +3,7 @@
 import * as child_process from "node:child_process";
 import path from "node:path";
 import * as util from "node:util";
-import { TsconfigPathsPlugin } from "@esbuild-plugins/tsconfig-paths";
 import consola from "consola";
-import esbuild, { type BuildOptions } from "esbuild";
 import fs from "fs-extra";
 import { pEvent } from "p-event";
 import * as vite from "vite";
@@ -36,50 +34,42 @@ export async function build(variant: BuildVariant) {
         ...defs,
     };
 
-    const sharedOptions: BuildOptions = {
+    const sharedConfig: any = {
         sourcemap: isDev && "linked",
-        bundle: true,
         minify: !isDev,
-        platform: "node",
         external: ["electron", "original-fs"],
         define: defines,
+        naming: "[name].[ext]",
         outdir: outputDir,
-        legalComments: "none",
         drop: isProd ? ["console", "debugger"] : [],
+        target: "node",
     };
 
-    const mainBuildOptions: BuildOptions = {
-        entryPoints: {
-            main: "src/main/main.ts",
-            "hash-worker": "src/main/security/hash-worker.ts",
-            boot: "src/main/sys/boot.ts",
-        },
-        plugins: [TsconfigPathsPlugin({ tsconfig: "./tsconfig.json" })],
-        chunkNames: "[hash]",
+    const mainBuildConfig: Bun.BuildConfig = {
+        entrypoints: [
+            "src/main/main.ts",
+            "src/main/security/hash-worker.ts",
+            "src/main/workers/lzma.ts",
+            "src/main/sys/boot.ts",
+        ],
         splitting: true,
         format: "esm",
-        banner: {
-            // A patch to make require available
-            js: 'import { createRequire } from "node:module";\nglobal.require = createRequire(import.meta.url);\n',
-        },
-        ...sharedOptions,
+        ...sharedConfig,
     };
 
-    const preloadBuildOptions: BuildOptions = {
-        entryPoints: {
-            preload: "src/preload/preload.ts",
-        },
-        plugins: [TsconfigPathsPlugin({ tsconfig: "./tsconfig.json" })],
-        ...sharedOptions,
+    const preloadBuildConfig: Bun.BuildConfig = {
+        entrypoints: ["src/preload/preload.ts"],
+        format: "cjs",
+        ...sharedConfig,
     };
 
     await processResources(cfg);
 
     consola.start("build: main");
-    await esbuild.build(mainBuildOptions);
+    await Bun.build(mainBuildConfig);
 
     consola.start("build: preload");
-    await esbuild.build(preloadBuildOptions);
+    await Bun.build(preloadBuildConfig);
 
     const viteConfigFile = path.resolve(import.meta.dirname, "vite-config.ts");
 

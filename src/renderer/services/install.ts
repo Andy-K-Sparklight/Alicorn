@@ -1,4 +1,4 @@
-import { addToast } from "@heroui/react";
+import { toast } from "@heroui/react";
 import { t } from "i18next";
 import type { VanillaInstallEvent } from "@/main/api/install";
 import type { Progress } from "@/main/util/progress";
@@ -20,11 +20,14 @@ async function install(gameId: string): Promise<void> {
     function throttledDispatchUpdate(progress: Progress) {
         if (dispatched) return;
         dispatched = true;
-        requestIdleCallback(() => {
-            if (finished) return;
-            globalStore.dispatch(installProgressSlice.actions.update({ gameId, progress }));
-            dispatched = false;
-        });
+        requestIdleCallback(
+            () => {
+                if (finished) return;
+                globalStore.dispatch(installProgressSlice.actions.update({ gameId, progress }));
+                dispatched = false;
+            },
+            { timeout: 200 },
+        );
     }
 
     function finalize() {
@@ -40,10 +43,7 @@ async function install(gameId: string): Promise<void> {
                 break;
             case "finish":
                 finalize();
-                addToast({
-                    color: "success",
-                    title: t("toast.game-installed"),
-                });
+                toast.success(t("toast.game-installed"));
                 resolve();
                 break;
             case "error":

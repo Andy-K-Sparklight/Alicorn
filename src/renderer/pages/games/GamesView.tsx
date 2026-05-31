@@ -1,4 +1,4 @@
-import { Button, Tab, Tabs, Tooltip } from "@heroui/react";
+import { Button, ButtonGroup, Tooltip } from "@heroui/react";
 import { GameCard } from "@pages/games/GameCard";
 import {
     ArrowDown01Icon,
@@ -32,24 +32,20 @@ export function GamesView() {
         <div className="flex flex-col w-full h-full px-5">
             <div className="flex gap-2 px-3">
                 {/* The px-3 above is necessary to align the button with the cards. */}
-                <Button
-                    onPress={() => nav("/games/new-wizard")}
-                    className="grow"
-                    color="primary"
-                    startContent={<PlusIcon />}
-                >
+                <Button onPress={() => nav("/games/new-wizard")} className="grow" variant="primary">
+                    <PlusIcon />
                     {t("new")}
                 </Button>
-                <Button
-                    onPress={() => nav("/games/from-modpack")}
-                    startContent={<FolderSymlinkIcon />}
-                >
+                <Button variant="tertiary" onPress={() => nav("/games/from-modpack")}>
+                    <FolderSymlinkIcon />
                     {t("from-modpack")}
                 </Button>
-                <Button onPress={() => nav("/games/import")} startContent={<GitMergeIcon />}>
+                <Button variant="tertiary" onPress={() => nav("/games/import")}>
+                    <GitMergeIcon />
                     {t("import")}
                 </Button>
-                <Button onPress={() => nav("/games/new")} startContent={<PlusIcon />}>
+                <Button variant="tertiary" onPress={() => nav("/games/new")}>
+                    <PlusIcon />
                     {t("new-advanced")}
                 </Button>
 
@@ -117,27 +113,21 @@ function SortMethodControl({ sortMethod, onChange }: SortMethodControlProps) {
         latest: <ClockArrowDownIcon />,
     };
 
-    function handleSelectionChange(k: string | number) {
-        onChange(k.toString() as SortMethod);
-    }
-
     return (
-        <Tabs
-            selectedKey={sortMethod}
-            onSelectionChange={handleSelectionChange}
-            classNames={{ tab: "px-2" }}
-        >
-            {(["id", "az", "za", "earliest", "latest"] as const).map(m => (
-                <Tab
-                    key={m}
-                    title={
-                        <Tooltip content={t(m)} color="foreground">
-                            {iconMap[m]}
-                        </Tooltip>
-                    }
-                />
+        <ButtonGroup>
+            {(["id", "az", "za", "earliest", "latest"] as const).map((m, i) => (
+                <Tooltip delay={0} key={m}>
+                    <Button
+                        isIconOnly
+                        variant={sortMethod === m ? "secondary" : "tertiary"}
+                        onPress={() => onChange(m)}
+                    >
+                        {iconMap[m]}
+                    </Button>
+                    <Tooltip.Content>{t(m)}</Tooltip.Content>
+                </Tooltip>
             ))}
-        </Tabs>
+        </ButtonGroup>
     );
 }
 
@@ -145,9 +135,9 @@ function EmptyHint() {
     const { t } = useTranslation("pages", { keyPrefix: "games.empty-hint" });
     return (
         <div className="w-full h-full flex justify-center items-center gap-6">
-            <div className="text-foreground-400 text-center">
+            <div className="text-muted text-center">
                 <div className="text-xl font-bold">{t("title")}</div>
-                <div className="text-medium">{t("sub")}</div>
+                <div className="text-base">{t("sub")}</div>
             </div>
         </div>
     );

@@ -1,6 +1,6 @@
 import { Alert } from "@components/display/Alert";
 import { GameTypeIcon } from "@components/display/GameTypeIcon";
-import { Button, ButtonGroup, Card, CardBody, Input, Progress } from "@heroui/react";
+import { Button, ButtonGroup, Card, Input, ProgressBar } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";
 import {
     BanIcon,
@@ -27,18 +27,12 @@ export function ZoomFactorView() {
                     </div>
 
                     <h1 className="font-bold text-2xl text-center">{t("title")}</h1>
-                    <p className="text-foreground-400 whitespace-pre-line text-center">
-                        {t("sub")}
-                    </p>
+                    <p className="text-muted whitespace-pre-line text-center">{t("sub")}</p>
 
                     <ZoomTuner />
 
-                    <Button
-                        color="primary"
-                        className="mt-4"
-                        startContent={<CheckIcon />}
-                        onPress={next}
-                    >
+                    <Button variant="primary" className="mt-4" onPress={next}>
+                        <CheckIcon />
                         {t("btn")}
                     </Button>
                 </div>
@@ -88,28 +82,41 @@ function ExampleContent() {
         <div className="border-foreground-400 border-solid border-2 rounded-xl shrink-0 basis-1/2 flex flex-col gap-4 p-8">
             <div className="font-bold text-2xl">{t("title")}</div>
             <div className="font-bold text-xl">{t("text-1")}</div>
-            <div className="text-medium">{t("text-2")}</div>
+            <div className="text-base">{t("text-2")}</div>
             <Card>
-                <CardBody>
+                <Card.Content>
                     <div className="flex items-center gap-4">
                         <GameTypeIcon className="w-16" gameType="fabric" />
 
                         <div className="flex flex-col">
-                            <div className="text-medium font-bold">{t("fabric.title")}</div>
-                            <div className="text-sm text-foreground-400">{t("fabric.sub")}</div>
+                            <div className="text-base font-bold">{t("fabric.title")}</div>
+                            <div className="text-sm text-muted">{t("fabric.sub")}</div>
                         </div>
                     </div>
-                </CardBody>
+                </Card.Content>
             </Card>
-            <Alert color="primary" title={t("alert")} />
+            <Alert status="accent" title={t("alert")} />
             <Input placeholder={t("input")} />
 
-            <Progress aria-label="Example Progress" isIndeterminate size="sm" />
+            <ProgressBar isIndeterminate>
+                <ProgressBar.Track>
+                    <ProgressBar.Fill />
+                </ProgressBar.Track>
+            </ProgressBar>
 
             <ButtonGroup fullWidth>
-                <Button startContent={<FlagIcon />}>{t("btn-1")}</Button>
-                <Button startContent={<ChevronsRight />}>{t("btn-2")}</Button>
-                <Button startContent={<BanIcon />}>{t("btn-3")}</Button>
+                <Button>
+                    <FlagIcon />
+                    {t("btn-1")}
+                </Button>
+                <Button>
+                    <ChevronsRight />
+                    {t("btn-2")}
+                </Button>
+                <Button>
+                    <BanIcon />
+                    {t("btn-3")}
+                </Button>
             </ButtonGroup>
         </div>
     );

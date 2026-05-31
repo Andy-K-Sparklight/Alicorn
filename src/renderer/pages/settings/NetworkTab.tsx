@@ -1,4 +1,4 @@
-import { Divider } from "@heroui/react";
+import { Separator } from "@heroui/react";
 import { NumberSliderEntry, OnOffEntry } from "@pages/settings/SettingsEntry";
 import { ArrowLeftRightIcon, DatabaseBackupIcon, FileDiffIcon, ZapIcon } from "lucide-react";
 import { useConfig } from "@/renderer/services/conf";
@@ -20,7 +20,7 @@ export function NetworkTab() {
                 onChange={v => alterConfig(c => (c.net.validate = v))}
             />
 
-            <Divider />
+            <Separator />
 
             <OnOffEntry
                 icon={ZapIcon}
@@ -29,7 +29,7 @@ export function NetworkTab() {
                 onChange={v => alterConfig(c => (c.net.allowAria2 = v))}
             />
 
-            <Divider />
+            <Separator />
 
             <NumberSliderEntry
                 icon={ArrowLeftRightIcon}
@@ -40,7 +40,7 @@ export function NetworkTab() {
                 onChange={v => alterConfig(c => (c.net.concurrency = v))}
             />
 
-            <Divider />
+            <Separator />
 
             <OnOffEntry
                 icon={DatabaseBackupIcon}

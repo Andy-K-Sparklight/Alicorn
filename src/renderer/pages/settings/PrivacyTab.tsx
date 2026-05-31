@@ -1,4 +1,4 @@
-import { Divider } from "@heroui/react";
+import { Separator } from "@heroui/react";
 import { OnOffEntry } from "@pages/settings/SettingsEntry";
 import { FileClockIcon, FileHeartIcon, FileLock2Icon, FileX2Icon } from "lucide-react";
 import { useConfig } from "@/renderer/services/conf";
@@ -17,7 +17,7 @@ export function PrivacyTab() {
                 onChange={v => alterConfig(c => (c.analytics.crashReports = v))}
             />
 
-            <Divider />
+            <Separator />
 
             <OnOffEntry
                 icon={FileClockIcon}
@@ -26,7 +26,7 @@ export function PrivacyTab() {
                 onChange={v => alterConfig(c => (c.analytics.performanceReports = v))}
             />
 
-            <Divider />
+            <Separator />
 
             <OnOffEntry
                 icon={FileHeartIcon}
@@ -35,7 +35,7 @@ export function PrivacyTab() {
                 onChange={v => alterConfig(c => (c.analytics.ping = v))}
             />
 
-            <Divider />
+            <Separator />
 
             <OnOffEntry
                 icon={FileLock2Icon}

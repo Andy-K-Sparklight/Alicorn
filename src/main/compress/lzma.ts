@@ -1,32 +1,37 @@
 import path from "node:path";
 import { pipeline } from "node:stream/promises";
 import fs from "fs-extra";
-import type lzmaJS from "lzma";
 import type lzmaNative from "lzma-native";
+import workerPool from "workerpool";
 import { paths } from "@/main/fs/paths";
 import { unwrapESM } from "@/main/util/module";
 import pkg from "~/package.json";
 
 let lzmaNativeMod: typeof lzmaNative;
-let lzmaJSMod: typeof lzmaJS;
+let lzmaWasmMod: workerPool.Pool;
 
 async function init() {
-    if (lzmaNativeMod || lzmaJSMod) return; // Already loaded
+    if (lzmaNativeMod || lzmaWasmMod) return; // Already loaded
 
     if (import.meta.env.AL_ENABLE_NATIVE_LZMA) {
-        // lzma-native uses node-gyp to resolve the prebuilt native modules
-        // The path is not recognized nor bundled by ESBuild
-        // By assigning to the magic variable we can override the resolution base directory
-        const canonicalName = `${pkg.name.toUpperCase().replaceAll("-", "_")}_PREBUILD`;
-        const ap = process.env[canonicalName];
-        process.env[canonicalName] = paths.app.to("natives/lzma-native");
-        lzmaNativeMod = (await unwrapESM(import("lzma-native"))).default;
-        process.env[canonicalName] = ap;
-    } else {
-        // @ts-expect-error A workaround for using modules not exported
-        const m = await unwrapESM(import("lzma/src/lzma_worker-min.js"));
-        lzmaJSMod = m.default.LZMA_WORKER as typeof lzmaJS;
+        try {
+            // lzma-native uses node-gyp to resolve the prebuilt native modules
+            // The path is not recognized nor bundled by ESBuild
+            // By assigning to the magic variable we can override the resolution base directory
+            const canonicalName = `${pkg.name.toUpperCase().replaceAll("-", "_")}_PREBUILD`;
+            const ap = process.env[canonicalName];
+            process.env[canonicalName] = paths.app.to("natives/lzma-native");
+            lzmaNativeMod = (await unwrapESM(import("lzma-native"))).default;
+            process.env[canonicalName] = ap;
+            return;
+        } catch (ex) {
+            console.log("Failed to load native LZMA module: " + ex);
+            console.log("Falling back to the WASM version.");
+        }
     }
+
+    console.log("Loading LZMA WASM module.");
+    lzmaWasmMod = workerPool.pool(paths.app.to("lzma.js"));
 }
 
 /**
@@ -35,7 +40,7 @@ async function init() {
 async function inflate(src: string, dst: string) {
     await fs.ensureDir(path.dirname(dst));
 
-    if (import.meta.env.AL_ENABLE_NATIVE_LZMA) {
+    if (import.meta.env.AL_ENABLE_NATIVE_LZMA && lzmaNativeMod) {
         // Native impl
         const rs = fs.createReadStream(src);
         const ts = lzmaNativeMod.createDecompressor();
@@ -43,19 +48,10 @@ async function inflate(src: string, dst: string) {
 
         await pipeline(rs, ts, ws);
     } else {
-        // JS impl
+        // WASM impl
         const dat = await fs.readFile(src);
-        const { promise, resolve, reject } = Promise.withResolvers<Buffer>();
-
-        lzmaJSMod.decompress(dat, (r, e) => {
-            if (e) {
-                reject(e);
-            } else {
-                resolve(Buffer.from(r));
-            }
-        });
-
-        await fs.writeFile(dst, await promise);
+        const out = await lzmaWasmMod.exec("decompress", [dat]);
+        await fs.writeFile(dst, out);
     }
 }
 

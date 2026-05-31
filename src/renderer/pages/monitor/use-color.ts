@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { hslToHex } from "@/renderer/util/misc";
 
 /**
  * Gets computed color values for HeroUI theme tokens.
@@ -13,9 +12,9 @@ export function useThemeColorValues(): { primary: string; background: string } {
     useEffect(() => {
         const style = getComputedStyle(document.documentElement);
 
-        setPrimary(hslToHex(style.getPropertyValue("--heroui-primary")));
+        setPrimary(style.getPropertyValue("--accent"));
 
-        setBackground(hslToHex(style.getPropertyValue("--heroui-foreground-400")));
+        setBackground(style.getPropertyValue("--muted"));
     }, []);
 
     return { primary, background };

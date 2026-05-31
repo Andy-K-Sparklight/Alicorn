@@ -98,32 +98,29 @@ export function GameCardActions({ installStatus, gameId }: GameActionsProps) {
     return (
         <div className="flex gap-2">
             {installStatus === "installed" ? (
-                <Button
-                    startContent={!launching && <CirclePlayIcon />}
-                    isLoading={launching}
-                    color="primary"
-                    onPress={launch}
-                >
+                <Button isPending={launching} variant="primary" onPress={launch}>
+                    {!launching && <CirclePlayIcon />}
                     {t("launch")}
                 </Button>
             ) : installStatus === "installing" ? (
-                <Button isIconOnly color="danger" onPress={handleCancel}>
+                <Button isIconOnly variant="danger" onPress={handleCancel}>
                     <XIcon />
                 </Button>
             ) : (
-                <Button color="secondary" onPress={handleInstall} startContent={<DownloadIcon />}>
+                <Button variant="secondary" onPress={handleInstall}>
+                    <DownloadIcon />
                     {t("download")}
                 </Button>
             )}
 
             <div className="flex gap-1">
-                <Button variant="light" isIconOnly onPress={togglePin}>
+                <Button variant="tertiary" isIconOnly onPress={togglePin}>
                     <span className={cn("duration-200", !pinned && "rotate-45")}>
                         {pinned ? <PinOffIcon /> : <PinIcon />}
                     </span>
                 </Button>
 
-                <Button variant="light" isIconOnly onPress={handleShowDetails}>
+                <Button variant="tertiary" isIconOnly onPress={handleShowDetails}>
                     <EllipsisIcon />
                 </Button>
             </div>

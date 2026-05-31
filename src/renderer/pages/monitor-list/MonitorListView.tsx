@@ -1,5 +1,5 @@
 import { GameTypeIcon } from "@components/display/GameTypeIcon";
-import { Button, Card, CardBody, Chip } from "@heroui/react";
+import { Button, Card, Chip } from "@heroui/react";
 import { ArrowRightIcon, XIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
@@ -34,7 +34,8 @@ function StatusChip({ status }: { status: RemoteGameStatus }) {
     const { t } = useTranslation("pages", { keyPrefix: "monitor.status" });
 
     return (
-        <Chip variant="dot" color={statusColors[status]}>
+        <Chip variant="soft" color={statusColors[status]}>
+            <span className="size-1.5 rounded-full bg-current" />
             {t(status)}
         </Chip>
     );
@@ -58,7 +59,7 @@ function MonitorItem({ proc }: { proc: RemoteGameProcess }) {
 
     return (
         <Card>
-            <CardBody>
+            <Card.Content>
                 <div className="flex gap-4 items-center h-16 px-3">
                     <GameTypeIcon className="h-full" gameType={type} />
 
@@ -69,18 +70,18 @@ function MonitorItem({ proc }: { proc: RemoteGameProcess }) {
                     </div>
 
                     <div className="ml-4 flex gap-2">
-                        <Button isIconOnly color="primary" onPress={revealProc}>
+                        <Button isIconOnly variant="primary" onPress={revealProc}>
                             <ArrowRightIcon />
                         </Button>
 
                         {status !== "running" && (
-                            <Button isIconOnly variant="light" onPress={removeProc}>
+                            <Button isIconOnly variant="tertiary" onPress={removeProc}>
                                 <XIcon />
                             </Button>
                         )}
                     </div>
                 </div>
-            </CardBody>
+            </Card.Content>
         </Card>
     );
 }

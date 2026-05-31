@@ -3,17 +3,7 @@ import {
     type PropsWithDialog,
     useOpenDialog,
 } from "@components/modal/DialogProvider";
-import {
-    Button,
-    Link,
-    Modal,
-    ModalBody,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    Radio,
-    RadioGroup,
-} from "@heroui/react";
+import { Button, Description, Label, Link, Modal, Radio, RadioGroup } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";
 import { ArrowRightIcon, UserRoundPlusIcon, UserSquareIcon } from "lucide-react";
 import { useState } from "react";
@@ -47,7 +37,7 @@ export function AccountInitView() {
                     </div>
 
                     <h1 className="font-bold text-3xl text-center">{t("title")}</h1>
-                    <p className="text-foreground-400 whitespace-pre-line text-center">
+                    <p className="text-muted whitespace-pre-line text-center">
                         {loggedIn
                             ? t("sub-ok", {
                                   playerName: accountProps?.playerName,
@@ -58,13 +48,11 @@ export function AccountInitView() {
                 </div>
 
                 <Button
-                    isLoading={loginActive}
-                    color="primary"
-                    startContent={
-                        !loginActive && (loggedIn ? <ArrowRightIcon /> : <UserRoundPlusIcon />)
-                    }
+                    isPending={loginActive}
+                    variant="primary"
                     onPress={loggedIn ? next : handleAuth}
                 >
+                    {!loginActive && (loggedIn ? <ArrowRightIcon /> : <UserRoundPlusIcon />)}
                     {t(loggedIn ? "btn-next" : "btn-login")}
                 </Button>
 
@@ -73,7 +61,7 @@ export function AccountInitView() {
                 </DialogProvider>
             </div>
 
-            <div className="text-sm text-foreground-400 mt-auto">{t("warranty")}</div>
+            <div className="text-sm text-muted mt-auto">{t("warranty")}</div>
         </div>
     );
 }
@@ -89,13 +77,13 @@ function SkipLoginLink({ onConfirm }: { onConfirm: () => void }) {
     }
 
     return (
-        <Link color="primary" className="justify-center" onPress={handlePress}>
+        <Link className="justify-center text-accent" onPress={handlePress}>
             {t("btn-skip")}
         </Link>
     );
 }
 
-function SkipLoginDialog({ isOpen, onResult }: PropsWithDialog<boolean, {}>) {
+function SkipLoginDialog({ isOpen, onResult }: PropsWithDialog<boolean, object>) {
     const { t } = useTranslation("setup", { keyPrefix: "account-init.skip-confirm" });
     const [selected, setSelected] = useState("");
 
@@ -110,30 +98,41 @@ function SkipLoginDialog({ isOpen, onResult }: PropsWithDialog<boolean, {}>) {
     const allowSkip = selected === "offline";
 
     return (
-        <Modal isOpen={isOpen} onClose={() => onResult(false)} size="xl">
-            <ModalContent>
-                <ModalHeader className="flex flex-col gap-1">{t("title")}</ModalHeader>
-                <ModalBody>
-                    <RadioGroup value={selected} onValueChange={handleSelectionChange}>
-                        {["alt-account", "no-account", "offline"].map(sel => (
-                            <Radio
-                                description={selected === sel && t(`${sel}.sub`)}
-                                key={sel}
-                                value={sel}
-                            >
-                                {t(`${sel}.label`)}
-                            </Radio>
-                        ))}
-                    </RadioGroup>
-                </ModalBody>
-                <ModalFooter>
-                    {allowSkip && (
-                        <Button fullWidth color="primary" onPress={handleConfirm}>
-                            {t("btn")}
-                        </Button>
-                    )}
-                </ModalFooter>
-            </ModalContent>
+        <Modal>
+            <Modal.Backdrop isOpen={isOpen} onOpenChange={open => !open && onResult(false)}>
+                <Modal.Container size="lg">
+                    <Modal.Dialog>
+                        <Modal.CloseTrigger />
+                        <Modal.Header>
+                            <Modal.Heading>{t("title")}</Modal.Heading>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <RadioGroup value={selected} onChange={handleSelectionChange}>
+                                {["alt-account", "no-account", "offline"].map(sel => (
+                                    <Radio key={sel} value={sel}>
+                                        <Radio.Control>
+                                            <Radio.Indicator />
+                                        </Radio.Control>
+                                        <Radio.Content>
+                                            <Label>{t(`${sel}.label`)}</Label>
+                                            {selected === sel && (
+                                                <Description>{t(`${sel}.sub`)}</Description>
+                                            )}
+                                        </Radio.Content>
+                                    </Radio>
+                                ))}
+                            </RadioGroup>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            {allowSkip && (
+                                <Button fullWidth variant="primary" onPress={handleConfirm}>
+                                    {t("btn")}
+                                </Button>
+                            )}
+                        </Modal.Footer>
+                    </Modal.Dialog>
+                </Modal.Container>
+            </Modal.Backdrop>
         </Modal>
     );
 }

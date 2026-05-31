@@ -1,6 +1,6 @@
 import { TipPicker } from "@components/display/TipPicker";
 import { MessageBox } from "@components/modal/MessageBox";
-import { addToast, Button, cn } from "@heroui/react";
+import { Button, cn, toast } from "@heroui/react";
 import { OctagonXIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -32,10 +32,7 @@ export function ExceptionDisplay() {
 
             // For cancellation, we only show a toast
             if (isCancelled(e)) {
-                addToast({
-                    color: "warning",
-                    title: t("types.cancelled"),
-                });
+                toast.warning(t("types.cancelled"));
                 return;
             }
 
@@ -105,10 +102,10 @@ export function ExceptionDisplay() {
             color="danger"
             footer={
                 <div className="flex flex-col w-full gap-2">
-                    <p className="text-sm text-foreground-400 italic ml-auto">
+                    <p className="text-sm text-muted italic ml-auto">
                         <TipPicker tipKey="error" />
                     </p>
-                    <Button fullWidth color="primary" onPress={() => setOpen(false)}>
+                    <Button fullWidth variant="primary" onPress={() => setOpen(false)}>
                         {t("btn")}
                     </Button>
                     {!showSource && (
@@ -123,7 +120,7 @@ export function ExceptionDisplay() {
                 {causeChain.map((ex, i) => (
                     <p className="whitespace-pre-line text-wrap break-all" key={i}>
                         {i !== 0 && (
-                            <span className="text-sm text-foreground-400">
+                            <span className="text-sm text-muted">
                                 {t("cause")} <br />
                             </span>
                         )}
@@ -133,7 +130,7 @@ export function ExceptionDisplay() {
 
                 {showSource && (
                     <>
-                        <div className="text-sm mt-2 text-foreground-400">{t("detail")}</div>
+                        <div className="text-sm mt-2 text-muted">{t("detail")}</div>
 
                         <div
                             className={cn(

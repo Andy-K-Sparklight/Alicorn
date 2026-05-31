@@ -31,7 +31,7 @@ export function StringArrayInput({ value, onChange }: StringArrayInputProps) {
             {value.map((s, i) => (
                 <div key={i} className="mt-2 flex items-center gap-2">
                     <div className="cursor-pointer" onClick={() => removeItem(i)}>
-                        <XIcon className="text-foreground-400" />
+                        <XIcon className="text-muted" />
                     </div>
 
                     <div className="text-sm">{s}</div>
@@ -39,13 +39,18 @@ export function StringArrayInput({ value, onChange }: StringArrayInputProps) {
             ))}
 
             <div className="flex items-center gap-1 mt-2">
-                <Input fullWidth value={str} onValueChange={setStr} onBlur={addItem} />
+                <Input
+                    fullWidth
+                    value={str}
+                    onChange={e => setStr(e.target.value)}
+                    onBlur={addItem}
+                />
                 <Button isIconOnly onPress={addItem}>
                     <PlusIcon />
                 </Button>
             </div>
 
-            {str && <div className="text-sm text-secondary">{t("blur-to-add")}</div>}
+            {str && <div className="text-sm text-accent">{t("blur-to-add")}</div>}
         </div>
     );
 }

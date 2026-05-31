@@ -28,7 +28,8 @@ export function ExtendedAccountPicker({
     return (
         <div className={cn("flex flex-col gap-4", className)}>
             <AccountPicker allowCreation accountId={accountId} onChange={onAccountChange} />
-            <Button startContent={<UserPlus2Icon />} onPress={openForm}>
+            <Button onPress={openForm} variant="tertiary" fullWidth>
+                <UserPlus2Icon />
                 {t("add-yggdrasil")}
             </Button>
             <YggdrasilFormDialog

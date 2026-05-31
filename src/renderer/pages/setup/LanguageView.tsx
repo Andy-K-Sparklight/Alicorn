@@ -1,5 +1,5 @@
 import logo from "@assets/logo.png";
-import { Button, Divider } from "@heroui/react";
+import { Button, Separator } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";
 import { useTranslation } from "react-i18next";
 import { i18n } from "@/renderer/i18n/i18n";
@@ -20,12 +20,16 @@ export function LanguageView() {
                 <div className="font-bold text-5xl">Alicorn</div>
             </div>
 
-            <Divider className="w-2/3 mx-auto" />
-
             <div className="w-2/3 mx-auto flex flex-col justify-center gap-4">
                 {i18n.getAvailableLanguages().map(lang => (
-                    <Button key={lang} variant="light" size="lg" onPress={() => setLang(lang)}>
-                        <span className="font-bold text-xl">{t(lang)}</span>
+                    <Button
+                        key={lang}
+                        variant="tertiary"
+                        fullWidth
+                        size="lg"
+                        onPress={() => setLang(lang)}
+                    >
+                        {t(lang)}
                     </Button>
                 ))}
             </div>

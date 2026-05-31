@@ -19,7 +19,7 @@ export function GamePathSetupView() {
                     <PackageIcon size={64} />
                 </div>
                 <h1 className="font-bold text-2xl text-center">{t("title")}</h1>
-                <p className="text-foreground-400 whitespace-pre-line text-center">{t("sub")}</p>
+                <p className="text-muted whitespace-pre-line text-center">{t("sub")}</p>
             </div>
 
             <div className="w-5/6 mx-auto">
@@ -29,7 +29,8 @@ export function GamePathSetupView() {
                 />
             </div>
 
-            <Button color="primary" startContent={<CheckIcon />} onPress={next}>
+            <Button variant="primary" onPress={next}>
+                <CheckIcon />
                 {t("btn")}
             </Button>
         </div>

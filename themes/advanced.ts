@@ -1,5 +1,3 @@
-import type { ConfigTheme } from "@heroui/react";
-
 export default {
     extend: "dark",
     colors: {
@@ -107,4 +105,4 @@ export default {
         focus: "#dd0031",
         overlay: "#ffffff",
     },
-} satisfies ConfigTheme;
+};

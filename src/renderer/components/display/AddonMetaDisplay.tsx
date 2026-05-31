@@ -1,4 +1,4 @@
-import { Button, Chip, cn, Image, Tooltip } from "@heroui/react";
+import { Button, Chip, cn, Tooltip } from "@heroui/react";
 import { CheckIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { MpmAddonMeta } from "@/main/mpm/spec";
@@ -25,32 +25,37 @@ export function AddonMetaDisplay({ gameId, meta }: { gameId: string; meta: MpmAd
     const isInstalled = installStatus === "installed";
 
     return (
-        <div className="px-4 py-2 rounded-xl bg-content1 w-full flex items-center gap-4 mt-2">
-            <div className="h-12 aspect-square m-1 rounded-lg overflow-hidden bg-content2 shrink-0">
-                <Image src={effectiveIcon} alt={title} />
+        <div className="px-4 py-2 rounded-xl bg-surface w-full flex items-center gap-4 mt-2">
+            <div className="h-12 aspect-square m-1 rounded-lg overflow-hidden bg-surface-secondary shrink-0">
+                <img className="size-full object-cover" src={effectiveIcon} alt={title} />
             </div>
 
             <div className="flex flex-col overflow-hidden grow">
                 <div className="font-bold text-lg">{title}</div>
-                <div className="text-sm text-foreground-500">{description}</div>
+                <div className="text-sm text-muted">{description}</div>
             </div>
 
             <VendorChip vendor={vendor} />
 
             <div className="shrink-0">
                 {installStatus === "auto-installed" ? (
-                    <Tooltip color="foreground" content={t("auto-install-tip")}>
-                        <div>
-                            <Button isDisabled isIconOnly>
-                                <CheckIcon />
-                            </Button>
-                        </div>
+                    <Tooltip delay={0}>
+                        <Tooltip.Trigger>
+                            <div>
+                                <Button isDisabled isIconOnly variant="tertiary">
+                                    <CheckIcon />
+                                </Button>
+                            </div>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content>
+                            <div>{t("auto-install-tip")}</div>
+                        </Tooltip.Content>
                     </Tooltip>
                 ) : (
                     <Button
-                        isLoading={installStatus === "installing"}
+                        isPending={installStatus === "installing"}
                         isIconOnly
-                        color={isInstalled ? "danger" : "primary"}
+                        variant={isInstalled ? "danger" : "primary"}
                         onPress={isInstalled ? runRemove : runInstall}
                     >
                         {isInstalled ? <TrashIcon /> : <PlusIcon />}

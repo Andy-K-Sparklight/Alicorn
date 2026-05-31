@@ -1,6 +1,6 @@
 import { Alert } from "@components/display/Alert";
 import { FileSelectInput } from "@components/input/FileSelectInput";
-import { Button, Select, SelectItem, type SharedSelection } from "@heroui/react";
+import { Button, ListBox, Select } from "@heroui/react";
 import { ImportGameWarningDialog } from "@pages/import-game/ImportGameWarningDialog";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,12 +16,6 @@ export function ImportGameView() {
     function handleGameDirChange(fp: string) {
         setGameDir(fp);
         native.game.scanImportableProfiles(fp).then(setProfiles);
-    }
-
-    function handleSelectionChange(k: SharedSelection) {
-        if (k instanceof Set && k.size > 0) {
-            setSelectedProfile([...k][0].toString());
-        }
     }
 
     async function runImport() {
@@ -47,23 +41,33 @@ export function ImportGameView() {
                     <div className="flex flex-col gap-4">
                         <h2 className="font-bold text-xl">{t("select-profile")}</h2>
                         {gameDir && profiles.length === 0 && (
-                            <Alert title={t("no-profile")} color="danger" />
+                            <Alert title={t("no-profile")} status="danger" />
                         )}
                         {profiles.length > 0 && (
                             <Select
-                                selectedKeys={selectedProfile ? [selectedProfile] : []}
-                                aria-label="Select Profile"
-                                onSelectionChange={handleSelectionChange}
+                                value={selectedProfile || null}
+                                onChange={profile => setSelectedProfile(String(profile ?? ""))}
                             >
-                                {profiles.map(p => (
-                                    <SelectItem key={p}>{p}</SelectItem>
-                                ))}
+                                <Select.Trigger>
+                                    <Select.Value />
+                                    <Select.Indicator />
+                                </Select.Trigger>
+                                <Select.Popover>
+                                    <ListBox>
+                                        {profiles.map(p => (
+                                            <ListBox.Item key={p} id={p} textValue={p}>
+                                                {p}
+                                                <ListBox.ItemIndicator />
+                                            </ListBox.Item>
+                                        ))}
+                                    </ListBox>
+                                </Select.Popover>
                             </Select>
                         )}
                     </div>
                 )}
 
-                <Button isDisabled={!allowImport} onPress={runImport} color="primary">
+                <Button isDisabled={!allowImport} onPress={runImport} variant="primary">
                     {t("btn")}
                 </Button>
             </div>

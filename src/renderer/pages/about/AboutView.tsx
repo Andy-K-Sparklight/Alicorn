@@ -1,4 +1,4 @@
-import { Pagination } from "@heroui/react";
+import { cn, Pagination } from "@heroui/react";
 import { AppInfo } from "@pages/about/AppInfo";
 import { FeaturesInfo } from "@pages/about/FeaturesInfo";
 import { PackagesInfo } from "@pages/about/PackagesInfo";
@@ -21,18 +21,37 @@ export function AboutView() {
                     <Page />
                 </div>
             </div>
-            <Pagination
-                classNames={{
-                    // A workaround for the incorrectly colored cursor
-                    cursor: "opacity-100",
-                }}
-                className="mx-auto"
-                showControls
-                initialPage={1}
-                total={pages.length}
-                page={page}
-                onChange={setPage}
-            />
+            <Pagination>
+                <Pagination.Content className="mx-auto mt-4">
+                    <Pagination.Item>
+                        <Pagination.Previous
+                            isDisabled={page === 1}
+                            onPress={() => setPage(p => Math.max(1, p - 1))}
+                        >
+                            <Pagination.PreviousIcon />
+                        </Pagination.Previous>
+                    </Pagination.Item>
+                    {pages.map((_, i) => (
+                        <Pagination.Item key={i}>
+                            <Pagination.Link
+                                className={cn(page === i + 1 && "bg-accent")}
+                                isActive={page === i + 1}
+                                onPress={() => setPage(i + 1)}
+                            >
+                                {i + 1}
+                            </Pagination.Link>
+                        </Pagination.Item>
+                    ))}
+                    <Pagination.Item>
+                        <Pagination.Next
+                            isDisabled={page === pages.length}
+                            onPress={() => setPage(p => Math.min(pages.length, p + 1))}
+                        >
+                            <Pagination.NextIcon />
+                        </Pagination.Next>
+                    </Pagination.Item>
+                </Pagination.Content>
+            </Pagination>
         </div>
     );
 }

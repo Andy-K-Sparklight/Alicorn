@@ -20,7 +20,7 @@ export function WelcomeView() {
                         alt="Legacy Logo"
                         src={logoLegacy}
                     />
-                    <div className="text-foreground-400">
+                    <div className="text-muted">
                         <ChevronsRight size={36} />
                     </div>
                     <img className="w-full h-full object-contain" alt="Logo" src={logo} />
@@ -28,9 +28,7 @@ export function WelcomeView() {
 
                 <div className="flex flex-col gap-8 items-center grow">
                     <h1 className="font-bold text-3xl">{t("title")}</h1>
-                    <p className="text-foreground-400 whitespace-pre-line text-center">
-                        {t("sub")}
-                    </p>
+                    <p className="text-muted whitespace-pre-line text-center">{t("sub")}</p>
                 </div>
             </div>
 

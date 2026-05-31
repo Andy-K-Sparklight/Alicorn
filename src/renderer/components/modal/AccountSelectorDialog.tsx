@@ -1,6 +1,6 @@
 import { ExtendedAccountPicker } from "@components/compound/ExtendedAccountPicker";
 import type { PropsWithDialog } from "@components/modal/DialogProvider";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+import { Button, Modal } from "@heroui/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -9,24 +9,27 @@ export function AccountSelectorDialog(props: PropsWithDialog<string, object>) {
     const { onResult, isOpen } = props;
     const [accountId, setAccountId] = useState("new");
     return (
-        <Modal
-            size="2xl"
-            isOpen={isOpen}
-            hideCloseButton
-            isDismissable={false}
-            isKeyboardDismissDisabled
-        >
-            <ModalContent>
-                <ModalHeader>{t("title")}</ModalHeader>
-                <ModalBody>
-                    <ExtendedAccountPicker accountId={accountId} onAccountChange={setAccountId} />
-                </ModalBody>
-                <ModalFooter>
-                    <Button fullWidth color="primary" onPress={() => onResult(accountId)}>
-                        {t("btn")}
-                    </Button>
-                </ModalFooter>
-            </ModalContent>
+        <Modal>
+            <Modal.Backdrop isOpen={isOpen} isDismissable={false} isKeyboardDismissDisabled>
+                <Modal.Container size="lg">
+                    <Modal.Dialog>
+                        <Modal.Header>
+                            <Modal.Heading>{t("title")}</Modal.Heading>
+                        </Modal.Header>
+                        <Modal.Body className="text-foreground">
+                            <ExtendedAccountPicker
+                                accountId={accountId}
+                                onAccountChange={setAccountId}
+                            />
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button fullWidth variant="primary" onPress={() => onResult(accountId)}>
+                                {t("btn")}
+                            </Button>
+                        </Modal.Footer>
+                    </Modal.Dialog>
+                </Modal.Container>
+            </Modal.Backdrop>
         </Modal>
     );
 }

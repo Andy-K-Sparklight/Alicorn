@@ -49,7 +49,7 @@ export function GameTypeIcon({
         <div className={cn("aspect-square flex", className)} {...rest}>
             <div
                 className={cn(
-                    "w-full aspect-square rounded-xl bg-content2 p-[15%]",
+                    "w-full aspect-square rounded-xl bg-surface-secondary p-[15%]",
                     wrapperClassName,
                 )}
             >

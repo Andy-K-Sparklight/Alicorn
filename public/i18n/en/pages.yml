@@ -463,10 +463,12 @@ about:
     features-info: Enabled Features
   name: Alicorn Launcher
   version: Version {{version}}
-  dev-note: This is a development build. Use production build for improved performance and security.
+  dev-note:
+    title: Development Build
+    body: Performance may downgrade. Not developing? Use production build instead.
   copyright: |-
     Copyright (C) 2021-2022 Andy K Rarity Sparklight ("ThatRarityEG")
-    Copyright (C) 2024-2025 Ted Gao ("skjsjhb")
+    Copyright (C) 2024-2026 Ted Gao ("skjsjhb")
 
     Alicorn Launcher is released under GNU Generic Public License (version 3 or later).
     Developed in the hope that it will be useful, but WITHOUT ANY WARRANTY.
@@ -477,6 +479,7 @@ about:
     license: License
 
   packages:
+    credit: Many thanks to maintainers of all packages used by Alicorn.
     name: Package Name
     ver: Version
 

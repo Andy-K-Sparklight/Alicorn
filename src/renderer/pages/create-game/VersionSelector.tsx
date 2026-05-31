@@ -1,5 +1,5 @@
 import { GameTypeIcon } from "@components/display/GameTypeIcon";
-import { Autocomplete, AutocompleteItem, Checkbox, Spinner } from "@heroui/react";
+import { Checkbox, ComboBox, Input, Label, ListBox, Spinner } from "@heroui/react";
 import { DotIcon } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -36,28 +36,37 @@ export function VersionSelector({ version, onChange }: VersionSelectorProps) {
     return (
         <div className="items-center flex gap-4">
             <div className="grow">
-                <Autocomplete
-                    isVirtualized
-                    aria-label="Select Version"
-                    selectedKey={version || null}
-                    placeholder={t("version-select-placeholder")}
-                    onSelectionChange={handleSelectionChange}
-                    listboxProps={{
-                        emptyContent: t("version-select-empty"),
-                    }}
-                    itemHeight={64}
-                >
-                    {versions.map(v => (
-                        <AutocompleteItem key={v.id} textValue={v.id}>
-                            <VersionContent version={v} />
-                        </AutocompleteItem>
-                    ))}
-                </Autocomplete>
+                <ComboBox selectedKey={version || null} onSelectionChange={handleSelectionChange}>
+                    <Label className="sr-only">Select Version</Label>
+                    <ComboBox.InputGroup>
+                        <Input placeholder={t("version-select-placeholder")} />
+                        <ComboBox.Trigger />
+                    </ComboBox.InputGroup>
+                    <ComboBox.Popover>
+                        <ListBox renderEmptyState={() => t("version-select-empty")}>
+                            {versions.map(v => (
+                                <ListBox.Item key={v.id} id={v.id} textValue={v.id}>
+                                    <VersionContent version={v} />
+                                    <ListBox.ItemIndicator />
+                                </ListBox.Item>
+                            ))}
+                        </ListBox>
+                    </ComboBox.Popover>
+                </ComboBox>
             </div>
 
             <div>
-                <Checkbox checked={showSnapshots} onValueChange={setShowSnapshots}>
-                    {t("include-snapshots")}
+                <Checkbox
+                    id="include-snapshots"
+                    isSelected={showSnapshots}
+                    onChange={setShowSnapshots}
+                >
+                    <Checkbox.Control>
+                        <Checkbox.Indicator />
+                    </Checkbox.Control>
+                    <Checkbox.Content>
+                        <Label htmlFor="include-snapshots">{t("include-snapshots")}</Label>
+                    </Checkbox.Content>
                 </Checkbox>
             </div>
         </div>
@@ -81,7 +90,7 @@ function VersionContent({ version: { id, type, sha1, releaseTime } }: { version:
 
             <div className="flex flex-col">
                 <div className="font-bold text-lg">{id}</div>
-                <div className="flex items-center text-foreground-400 text-sm">
+                <div className="flex items-center text-muted text-sm">
                     {sha1}
                     <DotIcon />
                     {new Date(releaseTime).toLocaleString()}
@@ -96,8 +105,8 @@ function VersionLoading() {
 
     return (
         <div className="flex gap-4 justify-center items-center">
-            <Spinner size="sm" variant="wave" />
-            <span className="text-foreground-400">{t("loading-versions")}</span>
+            <Spinner size="sm" />
+            <span className="text-muted">{t("loading-versions")}</span>
         </div>
     );
 }

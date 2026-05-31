@@ -1,17 +1,23 @@
-import { Radio } from "@heroui/react";
+import { cn, Radio } from "@heroui/react";
+import type { ComponentProps, ReactNode } from "react";
 
-export function CardRadio(props: Parameters<typeof Radio>[0]) {
-    const { classNames, ...rest } = props;
+type CardRadioProps = Omit<ComponentProps<typeof Radio>, "children"> & {
+    children?: ReactNode;
+};
 
+export function CardRadio({ className, children, ...rest }: CardRadioProps) {
     return (
         <Radio
-            classNames={{
-                base: `bg-content1 m-0 rounded-xl p-3 flex-row-reverse duration-100 max-w-full border-transparent
-            data-[selected=true]:border-primary border-2`,
-                labelWrapper: "mr-auto",
-                ...classNames,
-            }}
+            className={cn(
+                "m-0 max-w-full flex-row-reverse rounded-xl border-2 border-transparent bg-surface p-3 duration-100 data-[selected=true]:border-accent",
+                className,
+            )}
             {...rest}
-        />
+        >
+            <Radio.Control>
+                <Radio.Indicator />
+            </Radio.Control>
+            <Radio.Content className="mr-auto">{children}</Radio.Content>
+        </Radio>
     );
 }

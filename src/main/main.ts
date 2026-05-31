@@ -3,8 +3,7 @@ import events from "node:events";
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { app, BrowserWindow, Menu, net, protocol, session } from "electron";
-// XXX: electron-devtools-installer uses deprecated APIs (session.getAllExtensions, session.loadExtension)
+import { app, BrowserWindow, net, protocol, session } from "electron";
 import {
     installExtension,
     REACT_DEVELOPER_TOOLS,
@@ -42,7 +41,6 @@ void main();
  */
 async function main() {
     const beginTime = performance.now();
-    Menu.setApplicationMenu(null);
 
     process.noAsar = true;
     events.defaultMaxListeners = 8192;
@@ -89,7 +87,6 @@ async function main() {
 
             await installExtension(REACT_DEVELOPER_TOOLS);
             await installExtension(REDUX_DEVTOOLS);
-            await launchExtServiceWorker();
         } catch (e) {
             console.error("Could not install React DevTools");
             console.error(e);
@@ -367,19 +364,4 @@ function getIconPath(): string {
         rel = "icon.ico";
     }
     return paths.app.to("icons", rel);
-}
-
-/**
- * A workaround to load React DevTools.
- * https://github.com/electron/electron/issues/41613
- */
-function launchExtServiceWorker() {
-    return Promise.all(
-        session.defaultSession.extensions.getAllExtensions().map(async ext => {
-            const manifest = ext.manifest;
-            if (manifest?.manifest_version === 3 && manifest?.background?.service_worker) {
-                await session.defaultSession.serviceWorkers.startWorkerForScope(ext.url);
-            }
-        }),
-    );
 }

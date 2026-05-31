@@ -3,7 +3,7 @@ import { reg } from "@/main/registry/registry";
 import { windowControl } from "@/main/sys/window-control";
 
 function emitChange() {
-    windowControl.getMainWindow()?.webContents.send("gameChanged");
+    windowControl.getMainWindow()!.webContents.send("gameChanged");
 }
 
 /**

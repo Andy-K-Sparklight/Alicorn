@@ -51,7 +51,7 @@ for (const platform of platforms) {
                 name: "Alicorn Launcher",
                 executableName: "Alicorn",
                 appBundleId: "moe.skjsjhb.alicorn",
-                appCopyright: `Copyright (C) 2021-2022 Andy K Rarity Sparklight ("ThatRarityEG") / Copyright (C) 2024-2025 Ted Gao ("skjsjhb")`,
+                appCopyright: `Copyright (C) 2021-2022 Andy K Rarity Sparklight ("ThatRarityEG") / Copyright (C) 2024-2026 Ted Gao ("skjsjhb")`,
                 appCategoryType: "public.app-category.utilities",
                 appVersion: pkg.version,
                 icon: path.resolve(import.meta.dirname, "resources", "icons", "icon"),

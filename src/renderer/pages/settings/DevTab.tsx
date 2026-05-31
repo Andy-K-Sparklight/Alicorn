@@ -1,5 +1,5 @@
 import { Alert } from "@components/display/Alert";
-import { Divider } from "@heroui/react";
+import { Separator } from "@heroui/react";
 import { OnOffEntry } from "@pages/settings/SettingsEntry";
 import { AppWindowIcon, SearchCodeIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,7 @@ export function DevTab() {
 
     return (
         <>
-            <Alert color="danger" title={t("dev-warn")} />
+            <Alert status="danger" title={t("dev-warn")} />
 
             <OnOffEntry
                 icon={SearchCodeIcon}
@@ -23,7 +23,7 @@ export function DevTab() {
                 onChange={v => alterConfig(c => (c.dev.devTools = v))}
             />
 
-            <Divider />
+            <Separator />
 
             <OnOffEntry
                 icon={AppWindowIcon}

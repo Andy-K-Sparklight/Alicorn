@@ -32,22 +32,20 @@ function MonitorActions({ procId, gameId, status }: MonitorActionsProps) {
 
     return (
         <div className="flex flex-col gap-4">
-            <Button startContent={<ArrowLeftIcon />} onPress={() => nav("/monitor")}>
+            <Button fullWidth onPress={() => nav("/monitor")}>
+                <ArrowLeftIcon />
                 {t("back-to-list")}
             </Button>
-            <Button
-                startContent={<ScrollTextIcon />}
-                onPress={() => native.game.reveal(gameId, "logs/latest.log")}
-            >
+            <Button fullWidth onPress={() => native.game.reveal(gameId, "logs/latest.log")}>
+                <ScrollTextIcon />
                 {t("reveal-logs")}
             </Button>
-            <Button startContent={<FolderIcon />} onPress={() => native.game.reveal(gameId, ".")}>
+            <Button fullWidth onPress={() => native.game.reveal(gameId, ".")}>
+                <FolderIcon />
                 {t("reveal-root")}
             </Button>
-            <Button
-                startContent={<FolderArchiveIcon />}
-                onPress={() => native.game.reveal(gameId, "resourcepacks")}
-            >
+            <Button fullWidth onPress={() => native.game.reveal(gameId, "resourcepacks")}>
+                <FolderArchiveIcon />
                 {t("reveal-rsp")}
             </Button>
             <ConfirmPopup
@@ -58,7 +56,8 @@ function MonitorActions({ procId, gameId, status }: MonitorActionsProps) {
                 onConfirm={handleStopAction}
                 color="danger"
             >
-                <Button isDisabled={stopDisabled} color="danger" startContent={<OctagonXIcon />}>
+                <Button fullWidth isDisabled={stopDisabled} variant="danger">
+                    <OctagonXIcon />
                     {t("stop")}
                 </Button>
             </ConfirmPopup>

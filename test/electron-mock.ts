@@ -1,6 +1,7 @@
 import { mock } from "bun:test";
 import path from "node:path";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: Test compatibility.
 class BrowserWindow {
     static getAllWindows() {
         return [];

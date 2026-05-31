@@ -5,7 +5,7 @@ export function AddonsPanel() {
     const game = useCurrentGameProfile();
 
     return (
-        <div className="h-full px-4">
+        <div className="h-full">
             <AddonSearchList gameId={game.id} />
         </div>
     );

@@ -31,8 +31,8 @@ export default defineConfig(({ command }) => {
                                 name: "heroui",
                             },
                             {
-                                test: /node_modules\/@heroui\/theme/,
-                                name: "theme",
+                                test: /node_modules\/@heroui\/styles/,
+                                name: "heroui-styles",
                             },
                             {
                                 test: /node_modules\/lucide-react/,

@@ -20,15 +20,11 @@ export function FinishView() {
                 </div>
 
                 <h1 className="font-bold text-3xl text-center">{t("title")}</h1>
-                <p className="text-foreground-400 whitespace-pre-line text-center">{t("sub")}</p>
+                <p className="text-muted whitespace-pre-line text-center">{t("sub")}</p>
             </div>
 
-            <Button
-                color="primary"
-                variant="shadow"
-                startContent={<ArrowRightIcon />}
-                onPress={finishSetup}
-            >
+            <Button variant="primary" className="shadow-md" onPress={finishSetup}>
+                <ArrowRightIcon />
                 {t("btn")}
             </Button>
         </div>

@@ -1,4 +1,4 @@
-import { addToast } from "@heroui/react";
+import { toast } from "@heroui/react";
 import { t } from "i18next";
 import { pEvent } from "p-event";
 import { StrictMode } from "react";
@@ -15,9 +15,9 @@ import pkg from "~/package.json";
 // Styles and fonts
 import "./global.css";
 import "./fonts.css";
-import "@fontsource-variable/noto-sans";
-import "@fontsource-variable/jetbrains-mono";
-import "@fontsource-variable/noto-sans-sc";
+import "@fontsource/maple-mono/index.css";
+import "@fontsource-variable/noto-sans-sc/index.css";
+import "@fontsource-variable/noto-sans/index.css";
 
 /**
  * Renderer main entry.
@@ -43,12 +43,7 @@ async function main() {
 
     native.ext.onDevToolsOpened(printDevToolsWarn);
 
-    native.app.onUpgraded(version =>
-        addToast({
-            color: "success",
-            title: t("toast.app-upgraded", { version }),
-        }),
-    );
+    native.app.onUpgraded(version => toast.success(t("toast.app-upgraded", { version })));
 }
 
 function render() {

@@ -1,7 +1,6 @@
 // This file is included by Tailwind CSS which does not support TS paths
 // Must use relative path
 
-import type { ConfigThemes } from "@heroui/react";
 import advanced from "./themes/advanced";
 import amazingGrace from "./themes/amazing-grace";
 import hoshi from "./themes/hoshi";
@@ -18,4 +17,4 @@ export default {
     twikie: twikie,
     "amazing-grace": amazingGrace,
     advanced: advanced,
-} satisfies ConfigThemes;
+};

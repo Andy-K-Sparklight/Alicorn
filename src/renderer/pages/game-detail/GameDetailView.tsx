@@ -2,7 +2,7 @@ import { Alert } from "@components/display/Alert";
 import { GameTypeIcon } from "@components/display/GameTypeIcon";
 import type { PropsWithParams } from "@components/misc/AnimatedRoute";
 import { ConfirmPopup } from "@components/modal/ConfirmPopup";
-import { Button, Tab, Tabs } from "@heroui/react";
+import { Button, Tabs } from "@heroui/react";
 import { AccountPanel } from "@pages/game-detail/AccountPanel";
 import { AddonsPanel } from "@pages/game-detail/AddonsPanel";
 import { AdvancedPanel } from "@pages/game-detail/AdvancedPanel";
@@ -44,7 +44,7 @@ function CompactHeader() {
 
             <div className="font-bold text-xl">{name}</div>
 
-            <div className="text-foreground-400">{id}</div>
+            <div className="text-muted">{id}</div>
         </div>
     );
 }
@@ -62,7 +62,7 @@ function LockedAlert() {
     return (
         <div className="w-2/3 mx-auto">
             <Alert
-                color="warning"
+                status="warning"
                 title={t("locked-alert")}
                 className="px-4 py-2"
                 endContent={
@@ -74,7 +74,7 @@ function LockedAlert() {
                         color="warning"
                         placement="bottom"
                     >
-                        <Button color="warning">{t("unlock.btn")}</Button>
+                        <Button variant="secondary">{t("unlock.btn")}</Button>
                     </ConfirmPopup>
                 }
             />
@@ -99,13 +99,25 @@ function ManagePanel() {
 
     return (
         <div className="w-5/6 mx-auto h-full">
-            <Tabs classNames={{ tabWrapper: "h-full" }} className="px-4" color="primary" fullWidth>
+            <Tabs className="px-4 h-full">
+                <Tabs.ListContainer>
+                    <Tabs.List>
+                        {Object.entries(tabs)
+                            .filter(([, ele]) => !!ele)
+                            .map(([id]) => (
+                                <Tabs.Tab id={id} key={id}>
+                                    {t(`${id}.title`)}
+                                    <Tabs.Indicator />
+                                </Tabs.Tab>
+                            ))}
+                    </Tabs.List>
+                </Tabs.ListContainer>
                 {Object.entries(tabs)
                     .filter(([, ele]) => !!ele)
                     .map(([id, ele]) => (
-                        <Tab key={id} title={t(`${id}.title`)} className="h-full">
+                        <Tabs.Panel id={id} key={id} className="h-full">
                             {ele}
-                        </Tab>
+                        </Tabs.Panel>
                     ))}
             </Tabs>
         </div>

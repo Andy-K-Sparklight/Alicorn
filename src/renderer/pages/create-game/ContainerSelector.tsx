@@ -1,4 +1,4 @@
-import { Select, SelectItem, type SharedSelection } from "@heroui/react";
+import { Label, ListBox, Select } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 import { useGameList } from "@/renderer/services/games";
 
@@ -14,32 +14,38 @@ export function ContainerSelector({ containerId, onChange }: ContainerSelectorPr
 
     const sid = games.find(g => g.launchHint.containerId === containerId)?.id;
 
-    function handleSelectionChange(s: SharedSelection) {
-        if (s instanceof Set) {
-            const gid = [...s][0];
-            if (!gid) {
-                onChange(undefined);
-            } else {
-                onChange(games.find(g => g.id === gid)?.launchHint.containerId);
-            }
+    function handleSelectionChange(gid: unknown) {
+        if (!gid) {
+            onChange(undefined);
+        } else {
+            onChange(games.find(g => g.id === gid)?.launchHint.containerId);
         }
     }
 
     return (
         <Select
-            label={t("container-select-title")}
             placeholder={t("version-select-placeholder")}
-            selectedKeys={sid ? [sid] : []}
-            onSelectionChange={handleSelectionChange}
+            value={sid ?? null}
+            onChange={handleSelectionChange}
         >
-            {games.map(g => (
-                <SelectItem key={g.id} textValue={g.id}>
-                    <div className="flex items-center gap-2">
-                        {g.name}
-                        <span className="text-foreground-400 text-sm">{g.id}</span>
-                    </div>
-                </SelectItem>
-            ))}
+            <Label>{t("container-select-title")}</Label>
+            <Select.Trigger>
+                <Select.Value />
+                <Select.Indicator />
+            </Select.Trigger>
+            <Select.Popover>
+                <ListBox>
+                    {games.map(g => (
+                        <ListBox.Item key={g.id} id={g.id} textValue={g.id}>
+                            <div className="flex items-center gap-2">
+                                {g.name}
+                                <span className="text-muted text-sm">{g.id}</span>
+                            </div>
+                            <ListBox.ItemIndicator />
+                        </ListBox.Item>
+                    ))}
+                </ListBox>
+            </Select.Popover>
         </Select>
     );
 }

@@ -35,7 +35,7 @@ export function Editable({
         <Input
             ref={inputRef}
             autoFocus
-            variant="bordered"
+            variant="secondary"
             defaultValue={value}
             onBlur={handleBlur}
             {...inputProps}

@@ -18,7 +18,7 @@ export function AccountPicker({ accountId, allowCreation, onChange }: AccountSel
     const accounts = useAccounts();
 
     return (
-        <RadioGroup value={accountId} onValueChange={onChange}>
+        <RadioGroup className="gap-2" value={accountId} onChange={onChange}>
             {allowCreation && (
                 <PickEntry
                     value="new"
@@ -56,7 +56,7 @@ function PickEntry({ icon, value, title, sub }: PickEntryProps) {
 
                 <div className="flex flex-col gap-1">
                     <div>{title}</div>
-                    <div className="text-sm text-foreground-400">{sub}</div>
+                    <div className="text-sm text-muted">{sub}</div>
                 </div>
             </div>
         </CardRadio>
