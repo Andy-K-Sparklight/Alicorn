@@ -50,7 +50,7 @@ async function syncVersionsFromBMCLAPI(): Promise<OptiFineVersionMeta[]> {
     return vs.map(v => ({
         gameVersion: v.mcversion,
         htmlUrl: "",
-        url: `https://bmclapi2.bangbang93.com/maven/com/optifine/1.21.4/${v.filename}`,
+        url: `https://bmclapi2.bangbang93.com/maven/com/optifine/${v.mcversion}/${v.filename}`,
         name: v.filename.replaceAll("preview_", "").replaceAll(".jar", ""),
         edition: `${v.type}_${v.patch}`,
         stable: v.filename.includes("preview"),
@@ -89,12 +89,14 @@ async function crawlVersions(): Promise<OptiFineVersionMeta[]> {
 
             const rawName = URL.parse(htmlUrl)?.searchParams.get("f");
 
-            const name = rawName?.replaceAll("preview_", "").replaceAll(".jar", "");
-            const stable = !rawName?.includes("preview");
+            if (!rawName) continue;
 
             // This seems naive, yet official installer does the same :)
-            const gameVersion = name?.split("_")[1];
-            const edition = name?.split("_").slice(2).join("_");
+            const [_brand, gameVersion, ...rest] = rawName.split("_");
+
+            const name = rawName.replaceAll("preview_", "").replaceAll(".jar", "");
+            const stable = !rawName.includes("preview");
+            const edition = rest.join("_");
 
             if (!gameVersion || !name || !edition) continue;
 
