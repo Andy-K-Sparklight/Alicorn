@@ -218,7 +218,7 @@ async function installRuntime(component: string, control?: ProgressController): 
                 .map(async f => {
                     const pt = path.join(root, f.name);
                     console.debug(`Add executable flag: ${pt}`);
-                    await fs.chmod(pt, 0o777);
+                    await fs.chmod(pt, 0o755);
                 }),
         );
     }
