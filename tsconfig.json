@@ -13,7 +13,7 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "noEmit": true,
-        "types": ["vite/client", "@types/bun"],
+        "types": ["vite/client"],
         "paths": {
             "@/*": ["./src/*"],
             "@components/*": ["./src/renderer/components/*"],

@@ -55,6 +55,9 @@ async function main() {
     console.log(`Electron ${electron} / Node.js ${node} / Chrome ${chrome}`);
 
     console.log("Loading config...");
+    conf.emitter.on("change", c =>
+        windowControl.getMainWindow()?.webContents.send("configChanged", c),
+    );
     conf.load();
 
     console.log("Setting up application...");

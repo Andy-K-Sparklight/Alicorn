@@ -1,8 +1,9 @@
+import EventEmitter from "node:events";
 import os from "node:os";
 import path from "node:path";
 import deepFreeze from "deep-freeze-es6";
 import fs from "fs-extra";
-import { windowControl } from "@/main/sys/window-control";
+import type TypedEmitter from "typed-emitter";
 import { isENOENT } from "@/main/util/fs";
 import { alter as alt } from "@/main/util/misc";
 
@@ -377,9 +378,11 @@ let config: UserConfig = import.meta.env.AL_DEV
     ? deepFreeze(structuredClone(DEFAULT_CONFIG))
     : structuredClone(DEFAULT_CONFIG);
 
+const emitter = new EventEmitter() as TypedEmitter<{ change: (c: UserConfig) => unknown }>;
+
 function update(c: UserConfig) {
     config = c;
-    windowControl.getMainWindow()?.webContents.send("configChanged", c);
+    emitter.emit("change", config);
 }
 
 function alter(fn: (c: UserConfig) => void) {
@@ -391,6 +394,6 @@ function alter(fn: (c: UserConfig) => void) {
  *
  * A direct call to the constant gets the active configuration object.
  */
-export const conf = Object.assign(() => config, { load, store, update, alter });
+export const conf = Object.assign(() => config, { load, store, update, alter, emitter });
 
 export type UserConfig = typeof DEFAULT_CONFIG;

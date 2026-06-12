@@ -6,7 +6,7 @@ import { reg, registry } from "@/main/registry/registry";
 import { iTest } from "~/test/instrumented/tools";
 
 /**
- * This test does not run in Bun so it's classified as instrumented tests.
+ * This test does not run in Node so it's classified as instrumented tests.
  */
 await iTest.run(
     "Registries Save & Load",

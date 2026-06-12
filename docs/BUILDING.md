@@ -17,18 +17,21 @@ For **packaging**, however, there are limitations:
 
 The following tools are required:
 
-- Bun (v1.2.2 or later)
+> [!NOTE]
+>
+> Starting from Contrail (4.x) we now use Node.js and NPM as the toolchain.
 
-  We use Bun to run our build tools for performance reasons.
-  The Bun version for building will not affect the Node.js version bundled with Electron.
+- Node.js ([version](/.node-version))
+
+  We don't have clear compatibility table with Node.js versions as the production code runs on
+  Electron. The workspace and actions are configured to use the version specified in
+  `.node-version`, so tools like `fnm` will just work.
 
 - Git, when fetching the code via cloning.
 
   It's not recommended to download the code tarball as you'll have to pull the latest code manually.
 
 - Wine, when packaging on non-Windows platforms.
-
-- Node.js (v23 or later), when packaging. (**NOT** needed for previewing)
 
 - WiX Toolset v3, when packaging for Windows. (The version matters!)
 
@@ -45,7 +48,7 @@ Flag `--filter=tree:0` reduces the amount of files to receive, yet preserves the
 Install dependencies:
 
 ```shell
-bun install
+npm ci
 ```
 
 > [!TIP]
@@ -60,14 +63,14 @@ bun install
 Preview for production:
 
 ```shell
-bun prod
-bun start
+npm run prod
+npm run start
 ```
 
 Preview for development (with live reload):
 
 ```shell
-bun dev
+npm run dev
 ```
 
 > [!NOTE]
@@ -83,9 +86,7 @@ bun dev
 
 ## Create Packaged Binaries
 
-This is a bit tricky as Bun skips "untrusted" post-install scripts, which are needed for modules
-like
-`electron-installer-dmg`. Hence, it's required to reinstall the modules using `npm` before building:
+To produce packaged apps:
 
 ```shell
 npm install

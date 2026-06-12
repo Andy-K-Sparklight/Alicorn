@@ -1,5 +1,6 @@
-import { expect, test } from "bun:test";
+import assert from "node:assert/strict";
 import path from "node:path";
+import { test } from "node:test";
 import { paths } from "@/main/fs/paths";
 
 test("Path Resolution", () => {
@@ -7,7 +8,9 @@ test("Path Resolution", () => {
         storeRoot: path.resolve("emulated", "store"),
     });
 
-    expect(paths.store.to("foo.so"), "Should resolve file path correctly").toEqual(
+    assert.equal(
+        paths.store.to("foo.so"),
         path.normalize(path.resolve("emulated", "store", "foo.so")),
+        "Should resolve file path correctly",
     );
 });
