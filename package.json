@@ -89,7 +89,7 @@
         "react-dom": "^19.2.6",
         "react-i18next": "^17.0.8",
         "react-redux": "^9.3.0",
-        "react-use": "^17.6.0",
+        "react-use": "^17.6.1",
         "react-virtualized-auto-sizer": "^2.0.3",
         "recharts": "^3.8.1",
         "semver": "^7.8.1",
