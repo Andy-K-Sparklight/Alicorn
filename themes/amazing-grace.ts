@@ -1,5 +1,3 @@
-import type { ConfigTheme } from "@heroui/react";
-
 export default {
     extend: "light",
     colors: {
@@ -80,4 +78,4 @@ export default {
         overlay: "#000000",
         divider: "#111111",
     },
-} satisfies ConfigTheme;
+};

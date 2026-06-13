@@ -1,9 +1,9 @@
 import { GameTypeIcon } from "@components/display/GameTypeIcon";
 import { WizardCard } from "@components/display/WizardCard";
 import { CardRadio } from "@components/input/CardRadio";
-import { Button, Input, Link, RadioGroup, Spinner, Switch } from "@heroui/react";
+import { Button, Input, Label, Link, RadioGroup, Spinner, Switch } from "@heroui/react";
 import { useCreateGameWizardContext } from "@pages/create-game-wizard/CreateGameWizardView";
-import { CheckIcon, SearchIcon } from "lucide-react";
+import { CheckIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import throttle from "throttleit";
@@ -47,8 +47,13 @@ export function PickVersionView() {
     }
 
     const snapshotSwitch = (
-        <Switch isSelected={includeSnapshot} onValueChange={setIncludeSnapshot}>
-            {t("include-snapshot")}
+        <Switch isSelected={includeSnapshot} onChange={setIncludeSnapshot}>
+            <Switch.Control>
+                <Switch.Thumb />
+            </Switch.Control>
+            <Switch.Content>
+                <Label>{t("include-snapshot")}</Label>
+            </Switch.Content>
         </Switch>
     );
 
@@ -59,7 +64,7 @@ export function PickVersionView() {
             content={
                 <div className="flex flex-col h-full gap-4">
                     {snapshotSwitch}
-                    <div className="text-sm text-foreground-500">
+                    <div className="text-sm text-muted">
                         <Trans
                             t={t}
                             i18nKey="hint"
@@ -71,11 +76,11 @@ export function PickVersionView() {
                     <div className="mt-auto">
                         <Button
                             fullWidth
-                            startContent={<CheckIcon />}
-                            color="primary"
+                            variant="primary"
                             isDisabled={!version}
                             onPress={confirmSelect}
                         >
+                            <CheckIcon />
                             {t("btn")}
                         </Button>
                     </div>
@@ -85,13 +90,12 @@ export function PickVersionView() {
             <div className="w-full h-full overflow-y-scroll">
                 {versions ? (
                     <div className="w-full h-full flex flex-col gap-4">
-                        <Input onValueChange={onSearch} startContent={<SearchIcon />} />
-                        <RadioGroup
-                            value={version}
-                            onValueChange={setVersion}
-                            className="h-full"
-                            classNames={{ wrapper: "h-full" }}
-                        >
+                        <Input
+                            variant="secondary"
+                            className="m-2"
+                            onChange={e => onSearch(e.target.value)}
+                        />
+                        <RadioGroup value={version} onChange={setVersion} className="h-full">
                             <VList ref={vlistRef} className="h-full pr-2">
                                 {versions.map(v => (
                                     <CardRadio value={v.id} key={v.id} className="w-full">
@@ -103,7 +107,7 @@ export function PickVersionView() {
                     </div>
                 ) : (
                     <div className="flex w-full h-full items-center justify-center">
-                        <Spinner variant="wave" />
+                        <Spinner />
                     </div>
                 )}
             </div>
@@ -111,7 +115,7 @@ export function PickVersionView() {
     );
 }
 
-function VersionContent({ version: { id, type, sha1, releaseTime } }: { version: VersionEntry }) {
+function VersionContent({ version: { id, type, releaseTime } }: { version: VersionEntry }) {
     const gameType =
         (
             {
@@ -128,7 +132,7 @@ function VersionContent({ version: { id, type, sha1, releaseTime } }: { version:
 
             <div className="flex flex-col">
                 <div className="font-bold text-lg">{id}</div>
-                <div className="flex items-center text-foreground-400 text-sm">
+                <div className="flex items-center text-muted text-sm">
                     {new Date(releaseTime).toLocaleString()}
                 </div>
             </div>

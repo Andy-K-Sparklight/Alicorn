@@ -1,7 +1,7 @@
 import { Alert } from "@components/display/Alert";
 import { FileSelectInput } from "@components/input/FileSelectInput";
 import type { PropsWithParams } from "@components/misc/AnimatedRoute";
-import { addToast, Button } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
 import type { FileFilter } from "electron";
 import { t } from "i18next";
 import { type DragEvent, useEffect, useState } from "react";
@@ -44,10 +44,7 @@ export function CreateGameFromModpackView({ params }: PropsWithParams<{ path?: s
             native.modpack
                 .deploy(modpackFile)
                 .then(() => {
-                    addToast({
-                        color: "success",
-                        title: t("toast", { ...modpackMeta }),
-                    });
+                    toast.success(t("toast", { ...modpackMeta }));
                     nav("/games");
                 })
                 .finally(() => setDeploying(false));
@@ -63,7 +60,7 @@ export function CreateGameFromModpackView({ params }: PropsWithParams<{ path?: s
             >
                 <h1 className="font-bold text-2xl">{t("title")}</h1>
 
-                <p className="text-foreground-400 text-medium">{t("hint")}</p>
+                <p className="text-muted text-base">{t("hint")}</p>
 
                 <FileSelectInput
                     value={modpackFile}
@@ -75,7 +72,7 @@ export function CreateGameFromModpackView({ params }: PropsWithParams<{ path?: s
                     <>
                         <p className="text-success font-bold">{t("meta", { ...modpackMeta })}</p>
 
-                        <p className="text-foreground-400 text-sm">{t("install-hint")}</p>
+                        <p className="text-muted text-sm">{t("install-hint")}</p>
                     </>
                 )}
 
@@ -84,15 +81,15 @@ export function CreateGameFromModpackView({ params }: PropsWithParams<{ path?: s
                 )}
 
                 <div>
-                    <Alert color="warning" title={t("alert")} />
+                    <Alert status="warning" title={t("alert")} />
                 </div>
 
                 {modpackMeta && (
                     <div>
                         <Button
-                            isLoading={deploying}
+                            isPending={deploying}
                             fullWidth
-                            color={btnConfirmed ? "primary" : "warning"}
+                            variant={btnConfirmed ? "primary" : "secondary"}
                             onPress={handleBtnClick}
                         >
                             {t(btnConfirmed ? "btn.install" : "btn.confirm", { ...modpackMeta })}

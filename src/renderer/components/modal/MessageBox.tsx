@@ -1,4 +1,4 @@
-import { cn, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+import { cn, Modal } from "@heroui/react";
 import type React from "react";
 import type { PropsWithChildren } from "react";
 
@@ -8,7 +8,6 @@ interface MessageBoxProps extends PropsWithChildren {
     color: "success" | "info" | "warning" | "danger";
     footer?: React.ReactNode;
     isOpen?: boolean;
-    defaultOpen?: boolean;
     onClose?: () => void;
 }
 
@@ -19,41 +18,48 @@ export function MessageBox({
     footer,
     children,
     isOpen,
-    defaultOpen,
     onClose,
 }: MessageBoxProps) {
     const colors = {
-        success: "text-success-500 bg-success-100",
-        info: "text-primary-500 bg-primary-100",
-        warning: "text-warning-500 bg-warning-100",
-        danger: "text-danger-500 bg-danger-100",
+        success: "text-success bg-success-soft",
+        info: "text-accent bg-accent-soft",
+        warning: "text-warning bg-warning-soft",
+        danger: "text-danger bg-danger-soft",
     } as const;
 
-    return (
-        <Modal
-            isOpen={isOpen}
-            className="max-w-[80%] w-auto min-w-[40%]"
-            onClose={onClose}
-            defaultOpen={defaultOpen}
-        >
-            <ModalContent>
-                <ModalHeader>{title}</ModalHeader>
-                <ModalBody>
-                    <div className="w-full flex items-center gap-8 px-4">
-                        <div
-                            className={cn(
-                                "flex p-4 items-center rounded-full shrink-0",
-                                colors[color],
-                            )}
-                        >
-                            {icon}
-                        </div>
+    function handleOpenChange(open: boolean) {
+        if (!open) {
+            onClose?.();
+        }
+    }
 
-                        <div className="h-full grow min-w-0">{children}</div>
-                    </div>
-                </ModalBody>
-                <ModalFooter>{footer}</ModalFooter>
-            </ModalContent>
+    return (
+        <Modal>
+            <Modal.Backdrop isOpen={isOpen} onOpenChange={handleOpenChange}>
+                <Modal.Container className="max-w-[80%] w-auto min-w-[40%]">
+                    <Modal.Dialog>
+                        <Modal.CloseTrigger />
+                        <Modal.Header>
+                            <Modal.Heading>{title}</Modal.Heading>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="w-full flex items-center gap-8 px-4">
+                                <div
+                                    className={cn(
+                                        "flex p-4 items-center rounded-full shrink-0",
+                                        colors[color],
+                                    )}
+                                >
+                                    {icon}
+                                </div>
+
+                                <div className="h-full grow min-w-0">{children}</div>
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>{footer}</Modal.Footer>
+                    </Modal.Dialog>
+                </Modal.Container>
+            </Modal.Backdrop>
         </Modal>
     );
 }

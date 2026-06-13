@@ -5,18 +5,7 @@ import {
     type PropsWithDialog,
     useOpenDialog,
 } from "@components/modal/DialogProvider";
-import {
-    addToast,
-    Button,
-    Input,
-    Modal,
-    ModalBody,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    Radio,
-    RadioGroup,
-} from "@heroui/react";
+import { Button, Description, Input, Label, Modal, Radio, RadioGroup, toast } from "@heroui/react";
 import { useCurrentGameProfile } from "@pages/game-detail/GameProfileProvider";
 import { CloudDownloadIcon, PickaxeIcon, RefreshCwIcon, TrashIcon, UnlinkIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -64,16 +53,11 @@ export function AdvancedPanel() {
                         <div className="flex items-center">
                             <div className="grow flex flex-col gap-1">
                                 <div className="font-bold text-lg">{t("install-full.label")}</div>
-                                <div className="text-sm text-foreground-400">
-                                    {t("install-full.sub")}
-                                </div>
+                                <div className="text-sm text-muted">{t("install-full.sub")}</div>
                             </div>
 
-                            <Button
-                                startContent={<CloudDownloadIcon />}
-                                onPress={handleInstallFull}
-                                color="primary"
-                            >
+                            <Button onPress={handleInstallFull} variant="primary">
+                                <CloudDownloadIcon />
                                 {t("install-full.btn")}
                             </Button>
                         </div>
@@ -82,10 +66,11 @@ export function AdvancedPanel() {
                     <div className="flex items-center">
                         <div className="grow flex flex-col gap-1">
                             <div className="font-bold text-lg">{t("reinstall.label")}</div>
-                            <div className="text-sm text-foreground-400">{t("reinstall.sub")}</div>
+                            <div className="text-sm text-muted">{t("reinstall.sub")}</div>
                         </div>
 
-                        <Button startContent={<RefreshCwIcon />} onPress={handleReinstall}>
+                        <Button onPress={handleReinstall}>
+                            <RefreshCwIcon />
                             {t("reinstall.btn", { name })}
                         </Button>
                     </div>
@@ -94,24 +79,23 @@ export function AdvancedPanel() {
                         <div className="flex items-center">
                             <div className="grow flex flex-col gap-1">
                                 <div className="font-bold text-lg">{t("recreate.label")}</div>
-                                <div className="text-sm text-foreground-400">
-                                    {t("recreate.sub")}
-                                </div>
+                                <div className="text-sm text-muted">{t("recreate.sub")}</div>
                             </div>
 
-                            <Button startContent={<PickaxeIcon />} onPress={handleRecreate}>
+                            <Button onPress={handleRecreate}>
+                                <PickaxeIcon />
                                 {t("recreate.btn", { name })}
                             </Button>
                         </div>
                     )}
 
                     <div className="mt-6 w-full flex flex-col gap-6 rounded-xl border-2 border-danger border-solid p-4">
-                        <Alert color="danger" title={t("danger-warn")} />
+                        <Alert status="danger" title={t("danger-warn")} />
 
                         <div className="flex items-center">
                             <div className="grow flex flex-col gap-1">
                                 <div className="font-bold text-lg">{t("unlink.label")}</div>
-                                <div className="text-sm text-foreground-400">{t("unlink.sub")}</div>
+                                <div className="text-sm text-muted">{t("unlink.sub")}</div>
                             </div>
 
                             <ConfirmPopup
@@ -122,7 +106,8 @@ export function AdvancedPanel() {
                                 onConfirm={handleUnlink}
                                 color="danger"
                             >
-                                <Button startContent={<UnlinkIcon />} color="danger">
+                                <Button variant="danger">
+                                    <UnlinkIcon />
                                     {t("unlink.btn", { name })}
                                 </Button>
                             </ConfirmPopup>
@@ -164,10 +149,7 @@ function DestroyEntry() {
         const res = await openDialog();
         if (res) {
             native.game.destroy(id);
-            addToast({
-                color: "success",
-                title: tc("toast.game-destroyed", { name }),
-            });
+            toast.success(tc("toast.game-destroyed", { name }));
             nav("/games");
         }
     }
@@ -176,19 +158,15 @@ function DestroyEntry() {
         <div className="flex items-center">
             <div className="grow flex flex-col gap-1">
                 <div className="font-bold text-lg">{t("destroy.label")}</div>
-                <div className="text-sm text-foreground-400 whitespace-pre-line">
+                <div className="text-sm text-muted whitespace-pre-line">
                     {canDestroy
                         ? t("destroy.sub")
                         : t("destroy.sub-disabled", { sharedGames: sharedGames.join(" ") })}
                 </div>
             </div>
 
-            <Button
-                startContent={<TrashIcon />}
-                color="danger"
-                onPress={handleBtnClick}
-                isDisabled={!canDestroy}
-            >
+            <Button variant="danger" onPress={handleBtnClick} isDisabled={!canDestroy}>
+                <TrashIcon />
                 {t("destroy.btn", { name })}
             </Button>
         </div>
@@ -253,33 +231,39 @@ function DestroyConfirmDialog({
     const [input, setInput] = useState("");
 
     return (
-        <Modal isOpen={isOpen} onClose={() => onResult(false)} size="2xl">
-            <ModalContent>
-                <ModalHeader>{t("title")}</ModalHeader>
-                <ModalBody>
-                    <p className="whitespace-pre-line">{t("sub", { name })}</p>
+        <Modal>
+            <Modal.Backdrop isOpen={isOpen} onOpenChange={open => !open && onResult(false)}>
+                <Modal.Container size="lg">
+                    <Modal.Dialog>
+                        <Modal.CloseTrigger />
+                        <Modal.Header>
+                            <Modal.Heading>{t("title")}</Modal.Heading>
+                        </Modal.Header>
+                        <Modal.Body className="flex flex-col gap-2">
+                            <p className="whitespace-pre-line">{t("sub", { name })}</p>
 
-                    <Input
-                        className="mt-2"
-                        description={t("input-hint")}
-                        value={input}
-                        onValueChange={setInput}
-                        size="sm"
-                    />
-                </ModalBody>
-                <ModalFooter>
-                    {
-                        <Button
-                            fullWidth
-                            color="danger"
-                            isDisabled={input !== id}
-                            onPress={() => onResult(true)}
-                        >
-                            {t("btn", { name })}
-                        </Button>
-                    }
-                </ModalFooter>
-            </ModalContent>
+                            <Input
+                                variant="secondary"
+                                className="mt-2 text-sm"
+                                value={input}
+                                onChange={e => setInput(e.target.value)}
+                            />
+
+                            <Description>{t("input-hint")}</Description>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button
+                                fullWidth
+                                variant="danger"
+                                isDisabled={input !== id}
+                                onPress={() => onResult(true)}
+                            >
+                                {t("btn", { name })}
+                            </Button>
+                        </Modal.Footer>
+                    </Modal.Dialog>
+                </Modal.Container>
+            </Modal.Backdrop>
         </Modal>
     );
 }
@@ -316,34 +300,45 @@ function DestroyChallengeDialog({
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={() => onResult(false)} size="2xl">
-            <ModalContent>
-                <ModalHeader className="flex flex-col gap-1">{t("title", { name })}</ModalHeader>
-                <ModalBody>
-                    <RadioGroup
-                        color="danger"
-                        value={selected}
-                        onValueChange={handleSelectionChange}
-                    >
-                        {["wrong-1", "wrong-2", "wrong-3", "correct"].map(sel => (
-                            <Radio
-                                description={selected === sel && t(`${sel}.sub`)}
-                                key={sel}
-                                value={sel}
+        <Modal>
+            <Modal.Backdrop isOpen={isOpen} onOpenChange={open => !open && onResult(false)}>
+                <Modal.Container size="lg">
+                    <Modal.Dialog>
+                        <Modal.CloseTrigger />
+                        <Modal.Header>
+                            <Modal.Heading>{t("title", { name })}</Modal.Heading>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <RadioGroup
+                                variant="secondary"
+                                value={selected}
+                                onChange={handleSelectionChange}
                             >
-                                {t(`${sel}.label`)}
-                            </Radio>
-                        ))}
-                    </RadioGroup>
-                </ModalBody>
-                <ModalFooter>
-                    {selected === "correct" && (
-                        <Button fullWidth color="danger" onPress={handleConfirm}>
-                            {t(`btn.${btnClicked}`, { name })}
-                        </Button>
-                    )}
-                </ModalFooter>
-            </ModalContent>
+                                {["wrong-1", "wrong-2", "wrong-3", "correct"].map(sel => (
+                                    <Radio key={sel} value={sel}>
+                                        <Radio.Control>
+                                            <Radio.Indicator />
+                                        </Radio.Control>
+                                        <Radio.Content>
+                                            <Label>{t(`${sel}.label`)}</Label>
+                                            {selected === sel && (
+                                                <Description>{t(`${sel}.sub`)}</Description>
+                                            )}
+                                        </Radio.Content>
+                                    </Radio>
+                                ))}
+                            </RadioGroup>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            {selected === "correct" && (
+                                <Button fullWidth variant="danger" onPress={handleConfirm}>
+                                    {t(`btn.${btnClicked}`, { name })}
+                                </Button>
+                            )}
+                        </Modal.Footer>
+                    </Modal.Dialog>
+                </Modal.Container>
+            </Modal.Backdrop>
         </Modal>
     );
 }

@@ -41,20 +41,13 @@ export function FinishView() {
             content={
                 <div className="flex flex-col h-full gap-4">
                     <div className="mt-auto flex flex-col gap-2">
-                        <Button
-                            fullWidth
-                            startContent={<PlayCircleIcon />}
-                            color="primary"
-                            onPress={() => finalize(true)}
-                        >
+                        <Button fullWidth variant="primary" onPress={() => finalize(true)}>
+                            <PlayCircleIcon />
                             {t("btn.install")}
                         </Button>
 
-                        <Button
-                            fullWidth
-                            startContent={<ArrowRightIcon />}
-                            onPress={() => finalize(false)}
-                        >
+                        <Button fullWidth onPress={() => finalize(false)}>
+                            <ArrowRightIcon />
                             {t("btn.create-only")}
                         </Button>
                     </div>

@@ -1,7 +1,7 @@
 import { AddonMetaDisplay } from "@components/display/AddonMetaDisplay";
-import { Input, Spinner, Tab, Tabs } from "@heroui/react";
+import { InputGroup, Spinner, Tabs } from "@heroui/react";
 import { BlocksIcon, ImagesIcon, SearchIcon, SunIcon } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSessionStorage } from "react-use";
 import { VList, type VListHandle } from "virtua";
@@ -27,42 +27,10 @@ export function AddonSearchList({ gameId }: AddonSearchListProps) {
     const query = useRef("");
     const scope = useRef<MpmAddonType>("mods");
 
-    const fetchItems = useCallback(
-        async (fresh: boolean) => {
-            setFetching(true);
-            transactionId.current++;
-            const id = transactionId.current;
-
-            const res = await native.mpm.searchAddons(
-                scope.current,
-                query.current,
-                gameId,
-                fresh ? null : paginationRef.current,
-            );
-
-            paginationRef.current = res.pagination;
-
-            if (id === transactionId.current) {
-                setResults(
-                    fresh ? res.contents : uniqueBy(results?.concat(res.contents) ?? [], r => r.id),
-                );
-                setFetching(false);
-            }
-        },
-        [gameId, results, setResults],
-    );
-
-    const initiateFreshQuery = useCallback(() => {
-        if (searchDelayTimer.current !== null) {
-            window.clearTimeout(searchDelayTimer.current);
-        }
-
-        searchDelayTimer.current = window.setTimeout(() => fetchItems(true), 500);
-    }, [fetchItems]);
-
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Expected side effect to run once.
     useEffect(() => {
         initiateFreshQuery();
-    }, [initiateFreshQuery]);
+    }, []);
 
     function handleQueryChange(q: string) {
         query.current = q;
@@ -72,6 +40,14 @@ export function AddonSearchList({ gameId }: AddonSearchListProps) {
     function handleScopeChange(s: string | number) {
         scope.current = s as MpmAddonType;
         initiateFreshQuery();
+    }
+
+    function initiateFreshQuery() {
+        if (searchDelayTimer.current !== null) {
+            window.clearTimeout(searchDelayTimer.current);
+        }
+
+        searchDelayTimer.current = window.setTimeout(() => fetchItems(true), 500);
     }
 
     function onScroll() {
@@ -89,6 +65,26 @@ export function AddonSearchList({ gameId }: AddonSearchListProps) {
         }
     }
 
+    async function fetchItems(fresh: boolean) {
+        setFetching(true);
+        transactionId.current++;
+        const id = transactionId.current;
+
+        const res = await native.mpm.searchAddons(
+            scope.current,
+            query.current,
+            gameId,
+            fresh ? null : paginationRef.current,
+        );
+
+        paginationRef.current = res.pagination;
+
+        if (id === transactionId.current) {
+            setResults(fresh ? res.contents : uniqueBy(results!.concat(res.contents), r => r.id));
+            setFetching(false);
+        }
+    }
+
     const tabTitles = [
         { name: "mods", icon: <BlocksIcon /> },
         { name: "resourcepacks", icon: <ImagesIcon /> },
@@ -97,30 +93,38 @@ export function AddonSearchList({ gameId }: AddonSearchListProps) {
 
     return (
         <div className="flex flex-col h-full gap-2">
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2">
                 <Tabs onSelectionChange={handleScopeChange}>
-                    {tabTitles.map(({ name, icon }) => (
-                        <Tab
-                            key={name}
-                            title={
-                                <div className="flex items-center gap-2">
-                                    {icon}
-                                    {t(`type.${name}`)}
-                                </div>
-                            }
-                        />
-                    ))}
+                    <Tabs.ListContainer>
+                        <Tabs.List>
+                            {tabTitles.map(({ name, icon }) => (
+                                <Tabs.Tab id={name} key={name}>
+                                    <div className="flex items-center gap-2">
+                                        {icon}
+                                        <span className="break-keep"> {t(`type.${name}`)}</span>
+                                    </div>
+                                    <Tabs.Indicator />
+                                </Tabs.Tab>
+                            ))}
+                        </Tabs.List>
+                    </Tabs.ListContainer>
                 </Tabs>
 
-                <Input
-                    startContent={<SearchIcon />}
-                    endContent={fetching && <Spinner color="current" size="sm" />}
-                    onValueChange={handleQueryChange}
-                />
+                <InputGroup fullWidth>
+                    <InputGroup.Prefix>
+                        <SearchIcon />
+                    </InputGroup.Prefix>
+                    <InputGroup.Input onChange={e => handleQueryChange(e.target.value)} />
+                    {fetching && (
+                        <InputGroup.Suffix>
+                            <Spinner color="current" size="sm" />
+                        </InputGroup.Suffix>
+                    )}
+                </InputGroup>
             </div>
 
             {!fetching && results && results.length === 0 ? (
-                <div className="grow w-full flex items-center justify-center font-bold text-foreground-400 text-lg">
+                <div className="grow w-full flex items-center justify-center font-bold text-muted text-lg">
                     {t("no-result")}
                 </div>
             ) : (

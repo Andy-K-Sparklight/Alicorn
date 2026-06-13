@@ -1,5 +1,5 @@
 import type { PropsWithParams } from "@components/misc/AnimatedRoute";
-import { Tab, Tabs } from "@heroui/react";
+import { Tabs } from "@heroui/react";
 import { GameProcessProvider, useCurrentProc } from "@pages/monitor/GameProcessProvider";
 import { LogsDisplay } from "@pages/monitor/LogsDisplay";
 import { MonitorActionsMemo } from "@pages/monitor/MonitorActions";
@@ -32,31 +32,27 @@ function ContentArea() {
     const { t } = useTranslation("pages", { keyPrefix: "monitor" });
 
     return (
-        <Tabs radius="full">
-            <Tab
-                className="h-full"
-                key="logs"
-                title={
-                    <div className="flex gap-1 items-center">
+        <Tabs className="h-full">
+            <Tabs.ListContainer>
+                <Tabs.List>
+                    <Tabs.Tab id="logs">
                         <FileClockIcon />
                         {t("log-view")}
-                    </div>
-                }
-            >
-                <LogsDisplay />
-            </Tab>
-            <Tab
-                className="h-full"
-                key="stats"
-                title={
-                    <div className="flex gap-1 items-center">
+                        <Tabs.Indicator />
+                    </Tabs.Tab>
+                    <Tabs.Tab id="stats">
                         <CpuIcon />
                         {t("perf-view")}
-                    </div>
-                }
-            >
+                        <Tabs.Indicator />
+                    </Tabs.Tab>
+                </Tabs.List>
+            </Tabs.ListContainer>
+            <Tabs.Panel id="logs" className="h-full">
+                <LogsDisplay />
+            </Tabs.Panel>
+            <Tabs.Panel id="stats" className="h-full">
                 <PerformanceDisplay />
-            </Tab>
+            </Tabs.Panel>
         </Tabs>
     );
 }

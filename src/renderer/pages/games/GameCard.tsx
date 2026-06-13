@@ -1,7 +1,7 @@
 import { GameTypeIcon } from "@components/display/GameTypeIcon";
 import { AccountSelectorDialog } from "@components/modal/AccountSelectorDialog";
 import { DialogProvider } from "@components/modal/DialogProvider";
-import { Card, CardBody, Chip, cn } from "@heroui/react";
+import { Card, Chip, cn } from "@heroui/react";
 import { GameCardActions } from "@pages/games/GameCardActions";
 import { DotIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -30,14 +30,14 @@ export function GameCard({ game }: GameCardProps) {
     const progressText = progress && tc(progress.state, { ...progress.value });
 
     return (
-        <Card shadow="sm" className={cn(pinned && "outline-2 outline-default-500")}>
-            <CardBody>
+        <Card className={cn("shadow-sm", pinned && "outline-2 outline-default-500")}>
+            <Card.Content>
                 <div className="flex gap-6 items-center px-3">
                     <GameTypeIcon className="w-12" gameType={type} />
 
                     <div className="flex flex-col">
                         <div className="font-bold text-lg">{name}</div>
-                        <div className="flex items-center text-foreground-400">
+                        <div className="flex items-center text-muted">
                             {id}
                             {progressText && (
                                 <>
@@ -49,12 +49,10 @@ export function GameCard({ game }: GameCardProps) {
                     </div>
 
                     <div className="ml-auto flex gap-2 items-center">
-                        <Chip color="primary" variant="flat">
+                        <Chip color="accent" variant="primary">
                             {gameVersion}
                         </Chip>
-                        <Chip color="default" variant="flat">
-                            {t(`type.${type}`)}
-                        </Chip>
+                        <Chip>{t(`type.${type}`)}</Chip>
                     </div>
 
                     <div className="ml-4">
@@ -63,7 +61,7 @@ export function GameCard({ game }: GameCardProps) {
                         </DialogProvider>
                     </div>
                 </div>
-            </CardBody>
+            </Card.Content>
         </Card>
     );
 }

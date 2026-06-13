@@ -462,10 +462,12 @@ about:
     features-info: 功能开关
   name: Alicorn 启动器
   version: 版本 {{version}}
-  dev-note: 此 Alicorn 是开发版本。要获得最佳性能和质量，请改用产品版本。
+  dev-note:
+    title: 此 Alicorn 是开发版本
+    body: 启动器可能运行较慢。不是在开发吗？请改用生产版本。
   copyright: |-
     Copyright (C) 2021-2022 Andy K Rarity Sparklight ("ThatRarityEG")
-    Copyright (C) 2024-2025 Ted Gao ("skjsjhb")
+    Copyright (C) 2024-2026 Ted Gao ("skjsjhb")
 
     Alicorn 启动器是按 GNU 公共通用许可证（第三版或后继版本）发行的自由软件。
     此软件的开发是基于其将对社区有用的愿景而进行的，但不提供任何担保。
@@ -476,6 +478,7 @@ about:
     license: 查看许可证
 
   packages:
+    credit: Alicorn 向所有软件包的维护者致以诚挚谢意。
     name: 包名称
     ver: 版本号
 

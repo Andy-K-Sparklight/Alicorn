@@ -17,7 +17,7 @@ export function PerformanceDisplay() {
         <div className="w-full h-full flex flex-col gap-4 p-4">
             <div className="grow flex flex-col gap-4">
                 <div className="text-xl font-bold">{t("memory.title")}</div>
-                <div className="text-foreground-400 text-sm">
+                <div className="text-muted text-sm">
                     {t("memory.sub")}
                     <Link onPress={handleExplainMemory} className="text-sm">
                         {t("memory.sub-link")}

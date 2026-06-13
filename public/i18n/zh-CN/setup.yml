@@ -1,6 +1,6 @@
 lang:
-  en: Click Me to Start
-  zh-CN: 点按此按钮以继续
+  en: Continue Using English
+  zh-CN: 以简体中文继续
 
 welcome:
   title: 这次会有所不同。
@@ -39,13 +39,9 @@ license:
   title: 了解我们的许可证
   sub: |-
     Alicorn 是以《GNU 通用公共许可证》（第三版或更新版本）发行的自由软件。
-    若要使用 Alicorn，必须接受此许可证。
-  btn-hint: 点按此按钮，即代表你接受上述许可证的内容。
-  btn: 我接受此许可证
-  confirm:
-    title: 接受许可证？
-    sub: 我理解并接受许可证中的条款与条件。
-    btn: 是的，我接受此许可证
+    以下是该许可证的全文，建议你仔细阅读，它规定了修改和再发行的条款。
+  btn-hint: 即使不接受许可证，你也可以使用 Alicorn。
+  btn: 继续
 
 mirror:
   title: 获取游戏，快人一步

@@ -30,10 +30,10 @@ export function ModLoaderSelector({
 
     return (
         <>
-            <RadioGroup value={value} onValueChange={onChange}>
+            <RadioGroup className="gap-2 pr-2" value={value} onChange={onChange}>
                 {!availableModLoaders && (
                     <div className="w-full flex justify-center items-center gap-6 my-2">
-                        <Spinner variant="wave" />
+                        <Spinner />
                         {t("loading")}
                     </div>
                 )}
@@ -61,10 +61,7 @@ export function ModLoaderSelector({
 
                                 <div className="flex flex-col gap-1">
                                     <div>{t(`${lv}.label`)}</div>
-                                    <div className="text-sm text-foreground-400">
-                                        {" "}
-                                        {t(`${lv}.sub`)}
-                                    </div>
+                                    <div className="text-sm text-muted"> {t(`${lv}.sub`)}</div>
                                 </div>
                             </div>
                         </CardRadio>
@@ -72,7 +69,7 @@ export function ModLoaderSelector({
                 })}
             </RadioGroup>
 
-            <div className="text-sm text-foreground-400">{t("missing")}</div>
+            <div className="text-sm text-muted">{t("missing")}</div>
         </>
     );
 }

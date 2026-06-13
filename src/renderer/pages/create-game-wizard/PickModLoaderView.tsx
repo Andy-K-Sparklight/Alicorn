@@ -49,7 +49,7 @@ export function PickModLoaderView() {
             sub={t("sub")}
             content={
                 <div className="flex flex-col gap-2 h-full">
-                    <div className="text-sm text-foreground-500">
+                    <div className="text-sm text-muted">
                         <Trans
                             t={t}
                             i18nKey="hint"
@@ -60,12 +60,8 @@ export function PickModLoaderView() {
                     </div>
 
                     <div className="mt-auto">
-                        <Button
-                            fullWidth
-                            startContent={<CheckIcon />}
-                            onPress={onConfirm}
-                            color="primary"
-                        >
+                        <Button fullWidth variant="primary" onPress={onConfirm}>
+                            <CheckIcon />
                             {t("btn")}
                         </Button>
                     </div>

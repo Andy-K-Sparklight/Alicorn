@@ -1,15 +1,5 @@
 import { Alert } from "@components/display/Alert";
-import {
-    Button,
-    cn,
-    Table,
-    TableBody,
-    TableCell,
-    TableColumn,
-    TableHeader,
-    TableRow,
-    Tooltip,
-} from "@heroui/react";
+import { Button, cn, Table, Tooltip } from "@heroui/react";
 import { ArrowRightIcon, CheckIcon, InfoIcon, XIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -36,9 +26,11 @@ function RebuildNote() {
                 title={t("rebuild-note")}
                 endContent={
                     <Button
-                        startContent={<ArrowRightIcon />}
+                        variant="tertiary"
+                        size="sm"
                         onPress={() => native.ext.openURL(BUILDING_URL)}
                     >
+                        <ArrowRightIcon />
                         {t("rebuild-how")}
                     </Button>
                 }
@@ -54,23 +46,27 @@ const FEATURES = {
 
 function FeaturesTable() {
     return (
-        <Table hideHeader aria-label="Features" classNames={{ td: "text-medium" }}>
-            <TableHeader>
-                <TableColumn>Name</TableColumn>
-                <TableColumn>Availability</TableColumn>
-            </TableHeader>
-            <TableBody>
-                {Object.entries(FEATURES).map(([name, available]) => (
-                    <TableRow key={name}>
-                        <TableCell>
-                            <PackageName name={name} />
-                        </TableCell>
-                        <TableCell>
-                            <Availability available={available} />
-                        </TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
+        <Table variant="secondary">
+            <Table.Content>
+                <Table.Header className="sr-only">
+                    <Table.Column id="name" isRowHeader>
+                        Name
+                    </Table.Column>
+                    <Table.Column id="availability">Availability</Table.Column>
+                </Table.Header>
+                <Table.Body>
+                    {Object.entries(FEATURES).map(([name, available]) => (
+                        <Table.Row key={name} id={name}>
+                            <Table.Cell className="text-base">
+                                <PackageName name={name} />
+                            </Table.Cell>
+                            <Table.Cell className="text-base">
+                                <Availability available={available} />
+                            </Table.Cell>
+                        </Table.Row>
+                    ))}
+                </Table.Body>
+            </Table.Content>
         </Table>
     );
 }
@@ -81,12 +77,13 @@ function PackageName({ name }: { name: string }) {
     return (
         <div className="flex items-center gap-2">
             {t(`${name}.name`)}
-            <Tooltip
-                placement="right"
-                color="foreground"
-                content={<div className="whitespace-pre-line">{t(`${name}.tip`)}</div>}
-            >
-                <InfoIcon className="text-foreground-400" />
+            <Tooltip delay={0}>
+                <Tooltip.Trigger>
+                    <InfoIcon className="text-muted" />
+                </Tooltip.Trigger>
+                <Tooltip.Content placement="right">
+                    <div className="whitespace-pre-line">{t(`${name}.tip`)}</div>
+                </Tooltip.Content>
             </Tooltip>
         </div>
     );

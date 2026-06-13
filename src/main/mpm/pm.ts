@@ -117,7 +117,7 @@ async function resolve(specs: string[], ctx: MpmContext): Promise<MpmPackage[] |
     const { default: Logic } = await import("logic-solver");
     const solver = new Logic.Solver();
 
-    const allPackages = resolved.values().flat().toArray();
+    const allPackages = Array.from(resolved.values()).flat();
     const allPackagesMap = new Map<string, MpmPackage>();
 
     for (const pkg of allPackages) {

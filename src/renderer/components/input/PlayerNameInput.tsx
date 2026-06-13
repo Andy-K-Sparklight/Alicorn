@@ -1,4 +1,4 @@
-import { Input } from "@heroui/react";
+import { FieldError, Input, Label, TextField } from "@heroui/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -30,13 +30,14 @@ export function PlayerNameInput({ onChange }: PlayerNameInputProps) {
     }
 
     return (
-        <Input
-            errorMessage={t("hint")}
-            placeholder="Player"
-            isInvalid={!isValid && internalValue.length > 0} // Do not let the box become red by default
-            value={internalValue}
-            onValueChange={handleValueChange}
-            label={t("label")}
-        />
+        <TextField isInvalid={!isValid && internalValue.length > 0}>
+            <Label>{t("label")}</Label>
+            <Input
+                placeholder="Player"
+                value={internalValue}
+                onChange={e => handleValueChange(e.target.value)}
+            />
+            <FieldError>{t("hint")}</FieldError>
+        </TextField>
     );
 }

@@ -1,5 +1,3 @@
-import type { ConfigTheme } from "@heroui/react";
-
 export default {
     extend: "dark",
     colors: {
@@ -41,4 +39,4 @@ export default {
             large: "0px",
         },
     },
-} satisfies ConfigTheme;
+};

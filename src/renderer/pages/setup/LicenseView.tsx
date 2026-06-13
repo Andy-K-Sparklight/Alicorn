@@ -1,7 +1,6 @@
-import { ConfirmPopup } from "@components/modal/ConfirmPopup";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Button, Card } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";
-import { CircleCheckIcon, FileBadgeIcon } from "lucide-react";
+import { ArrowRightIcon, FileBadgeIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import license from "~/LICENSE?raw";
 
@@ -17,27 +16,21 @@ export function LicenseView() {
                 </div>
 
                 <h1 className="font-bold text-2xl text-center">{t("title")}</h1>
-                <p className="text-foreground-400 whitespace-pre-line text-center">{t("sub")}</p>
+                <p className="text-muted whitespace-pre-line text-center">{t("sub")}</p>
 
-                <Card>
-                    <CardBody>
+                <Card className="min-h-0 overflow-y-auto">
+                    <Card.Content>
                         <pre className="px-4">{license}</pre>
-                    </CardBody>
+                    </Card.Content>
                 </Card>
 
-                <div className="flex flex-col gap-2 items-center">
-                    <div className="text-sm text-foreground-400">{t("btn-hint")}</div>
-                    <ConfirmPopup
-                        title={t("confirm.title")}
-                        sub={t("confirm.sub")}
-                        btnText={t("confirm.btn")}
-                        color="primary"
-                        onConfirm={next}
-                    >
-                        <Button color="primary" startContent={<CircleCheckIcon />}>
-                            {t("btn")}
-                        </Button>
-                    </ConfirmPopup>
+                <div className="flex flex-col gap-4 items-center">
+                    <div className="text-sm text-muted">{t("btn-hint")}</div>
+
+                    <Button variant="primary" onPress={next}>
+                        {t("btn")}
+                        <ArrowRightIcon />
+                    </Button>
                 </div>
             </div>
         </div>

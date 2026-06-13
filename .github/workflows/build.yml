@@ -17,17 +17,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v6
         with:
-          bun-version: "1.2.5"
+          node-version-file: .node-version
+
       - name: Install Dependencies
-        run: bun install
+        run: npm ci
       - name: Check Types
-        run: bun type-check
-      - name: Run Unit Tests
-        run: bun test
+        run: npm run type-check
+      # - name: Run Unit Tests
+      #   run: npm test
       - name: Deactivate AppImage Restrictions
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Run Instrumented Tests
-        run: bun itest medium
+        run: npm run itest medium

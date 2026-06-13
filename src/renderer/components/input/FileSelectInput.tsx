@@ -28,10 +28,10 @@ export function FileSelectInput({ value, onChange, selector }: FileSelectInputPr
             <Input
                 fullWidth
                 value={internalValue}
-                onValueChange={setInternalValue}
+                onChange={e => setInternalValue(e.target.value)}
                 onBlur={() => onChange(internalValue)}
             />
-            <Button isIconOnly onPress={runSelect}>
+            <Button className="shrink-0" isIconOnly onPress={runSelect}>
                 <EllipsisIcon />
             </Button>
         </div>

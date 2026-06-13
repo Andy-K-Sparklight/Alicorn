@@ -1,4 +1,4 @@
-import { Divider } from "@heroui/react";
+import { Separator } from "@heroui/react";
 import { OnOffEntry, StringArrayEntry } from "@pages/settings/SettingsEntry";
 import { GaugeIcon, TerminalIcon } from "lucide-react";
 import { useConfig } from "@/renderer/services/conf";
@@ -17,7 +17,7 @@ export function LaunchTab() {
                 onChange={v => alterConfig(c => (c.runtime.readyboom = v))}
             />
 
-            <Divider />
+            <Separator />
 
             <StringArrayEntry
                 icon={TerminalIcon}
@@ -26,7 +26,7 @@ export function LaunchTab() {
                 onChange={v => alterConfig(c => (c.runtime.args.vm = v))}
             />
 
-            <Divider />
+            <Separator />
 
             <StringArrayEntry
                 icon={TerminalIcon}

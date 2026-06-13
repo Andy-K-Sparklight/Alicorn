@@ -43,7 +43,7 @@ export function ProfilePanel() {
 
     return (
         <div className="mx-auto py-8 w-5/6 h-full">
-            <div className="flex flex-col min-h-0 overflow-y-auto gap-12 px-8 py-10 w-full h-full rounded-xl bg-content1">
+            <div className="flex flex-col min-h-0 overflow-y-auto gap-12 px-8 py-10 w-full h-full rounded-xl bg-surface">
                 <div className="flex gap-8 justify-center">
                     <GameTypeIcon className="w-16" gameType={type} />
 
@@ -51,17 +51,17 @@ export function ProfilePanel() {
                         <Editable
                             value={name}
                             onValueChange={handleNameChange}
-                            inputProps={{ classNames: { input: "text-xl" } }}
+                            inputProps={{ className: "text-xl" }}
                         >
                             <div className="flex gap-2 items-center font-bold text-2xl">
                                 {name}
-                                <span className="text-foreground-400 cursor-pointer">
+                                <span className="text-muted cursor-pointer">
                                     <EditIcon />
                                 </span>
                             </div>
                         </Editable>
 
-                        <code className="text-foreground-500">
+                        <code className="text-muted">
                             {containerId} / {profileId}
                         </code>
                     </div>
@@ -72,13 +72,14 @@ export function ProfilePanel() {
                         {properties.map((p, i) => (
                             <div key={i} className="flex items-center">
                                 <div className="font-bold">{p[0]}</div>
-                                <div className="ml-auto text-foreground-500">{p[1]}</div>
+                                <div className="ml-auto text-muted">{p[1]}</div>
                             </div>
                         ))}
                     </div>
                     <div className="flex justify-center">
                         <ButtonGroup>
-                            <Button onPress={handleReveal} startContent={<FolderIcon />}>
+                            <Button onPress={handleReveal}>
+                                <FolderIcon />
                                 {t("reveal")}
                             </Button>
                         </ButtonGroup>

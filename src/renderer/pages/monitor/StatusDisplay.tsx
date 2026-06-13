@@ -1,5 +1,5 @@
 import { GameTypeIcon } from "@components/display/GameTypeIcon";
-import { Card, CardBody, cn } from "@heroui/react";
+import { Card, cn } from "@heroui/react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import type { GameCoreType } from "@/main/game/spec";
@@ -22,7 +22,7 @@ function StatusDisplay({ id, name, profileId, type, status, uptime, pid }: Statu
 
     return (
         <Card className="h-full">
-            <CardBody>
+            <Card.Content>
                 <div className="flex flex-col h-full px-6 items-center justify-evenly">
                     <div className="w-full flex gap-6 justify-center items-center">
                         <GameTypeIcon
@@ -39,7 +39,7 @@ function StatusDisplay({ id, name, profileId, type, status, uptime, pid }: Statu
 
                         <div className="flex flex-col gap-1">
                             <div className="font-bold text-lg">{name}</div>
-                            <div className="text-foreground-400">{id}</div>
+                            <div className="text-muted">{id}</div>
                         </div>
                     </div>
 
@@ -50,7 +50,7 @@ function StatusDisplay({ id, name, profileId, type, status, uptime, pid }: Statu
                         <DataSlot label={t("label.profile")} value={profileId} />
                     </div>
                 </div>
-            </CardBody>
+            </Card.Content>
         </Card>
     );
 }
@@ -58,7 +58,7 @@ function StatusDisplay({ id, name, profileId, type, status, uptime, pid }: Statu
 function DataSlot({ label, value }: { label: string; value: string }) {
     return (
         <div className="flex text-sm flex-wrap gap-1">
-            <div className="text-foreground-400">{label}</div>
+            <div className="text-muted">{label}</div>
             <div className="ml-auto">{value}</div>
         </div>
     );

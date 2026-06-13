@@ -127,7 +127,7 @@ async function checkPath(): Promise<string> {
     try {
         const bundled = paths.app.to("vendor", execName);
         await fs.access(bundled);
-        await fs.chmod(bundled, 0o777);
+        await fs.chmod(bundled, 0o755);
         exec = bundled;
     } catch {}
 

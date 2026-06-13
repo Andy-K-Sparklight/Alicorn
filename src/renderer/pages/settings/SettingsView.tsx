@@ -1,5 +1,5 @@
 import { Alert } from "@components/display/Alert";
-import { Tab, Tabs } from "@heroui/react";
+import { Tabs } from "@heroui/react";
 import { DevTab } from "@pages/settings/DevTab";
 import { LaunchTab } from "@pages/settings/LaunchTab";
 import { NetworkTab } from "@pages/settings/NetworkTab";
@@ -71,31 +71,33 @@ function SettingsContent() {
 
     return (
         <Tabs
-            isVertical
             selectedKey={tab}
             onSelectionChange={s => setTab(s.toString())}
-            classNames={{ tabWrapper: "h-full" }}
+            orientation="vertical"
+            className="h-full"
         >
-            {settingsTabs.map(({ id, icon: Icon, content: Content }) => {
-                return (
-                    <Tab
-                        key={id}
-                        className="w-full"
-                        title={
-                            <div className="flex gap-2 items-center">
+            <Tabs.ListContainer>
+                <Tabs.List>
+                    {settingsTabs.map(({ id, icon: Icon }) => (
+                        <Tabs.Tab id={id} key={id}>
+                            <span className="flex items-center gap-2">
                                 <Icon />
-                                {t(`tabs.${id}`)}
-                            </div>
-                        }
-                    >
-                        <div className="w-full h-full overflow-y-auto">
-                            <div className="flex flex-col gap-6 w-full px-4 py-2">
-                                <Content />
-                            </div>
+                                <span className="break-keep">{t(`tabs.${id}`)}</span>
+                            </span>
+                            <Tabs.Indicator />
+                        </Tabs.Tab>
+                    ))}
+                </Tabs.List>
+            </Tabs.ListContainer>
+            {settingsTabs.map(({ id, content: Content }) => (
+                <Tabs.Panel id={id} key={id} className="h-full w-full">
+                    <div className="w-full h-full overflow-y-auto">
+                        <div className="flex flex-col gap-6 w-full px-4 py-2">
+                            <Content />
                         </div>
-                    </Tab>
-                );
-            })}
+                    </div>
+                </Tabs.Panel>
+            ))}
         </Tabs>
     );
 }
@@ -113,7 +115,7 @@ function SettingsAlert() {
     return (
         <div className="w-full">
             <Alert
-                color="warning"
+                status="warning"
                 title={t("hint")}
                 onClose={() => setHideAlert(true)}
                 isClosable

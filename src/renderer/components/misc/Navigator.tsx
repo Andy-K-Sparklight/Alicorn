@@ -1,9 +1,8 @@
-import { Button, Tab, Tabs } from "@heroui/react";
+import { Button, Tabs } from "@heroui/react";
 import { type PageInfo, pages } from "@pages/pages";
 import { MinusIcon, SparklesIcon, XIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "wouter";
-import { useGameProcList } from "@/renderer/services/proc";
 
 /**
  * Application navigator on the top.
@@ -11,10 +10,8 @@ import { useGameProcList } from "@/renderer/services/proc";
 export function Navigator() {
     return (
         <div className="flex gap-2 justify-center items-center py-4">
-            <div className="drag w-11/12 h-full flex items-center justify-between bg-default-100 rounded-full py-1 px-1">
-                <div className="no-drag">
-                    <PageTabs />
-                </div>
+            <div className="drag w-11/12 h-full flex items-center justify-between bg-default rounded-full py-1 px-1">
+                <PageTabs />
 
                 <div className="flex items-center gap-1 no-drag">
                     <MinimizeButton />
@@ -27,11 +24,6 @@ export function Navigator() {
 
 function PageTabs() {
     const [pathname, nav] = useLocation();
-    const procs = useGameProcList();
-
-    const hideMonitor = procs.length === 0;
-
-    const activePages = pages.filter(p => !(p.id === "monitor" && hideMonitor));
 
     const isSetup = pathname.startsWith("/setup");
 
@@ -41,25 +33,33 @@ function PageTabs() {
 
     return (
         <Tabs
-            color="primary"
-            variant="light"
-            radius="full"
-            // A temporary workaround since routing seems not working
-            onSelectionChange={k => nav(`/${k}`)}
+            className="no-drag"
+            onSelectionChange={k => !isSetup && nav(`/${k}`)}
             selectedKey={activeTab}
         >
-            {isSetup ? (
-                <Tab
-                    key="setup"
-                    title={<PageTitle page={{ id: "setup", icon: SparklesIcon }} />}
-                ></Tab>
-            ) : (
-                activePages.map(p => (
-                    // Tabs cannot be extracted as separated components or HeroUI will complain
-                    // Upstream issue: https://github.com/heroui-inc/heroui/issues/729
-                    <Tab title={<PageTitle page={p} />} key={p.id} />
-                ))
-            )}
+            <Tabs.ListContainer>
+                {isSetup ? (
+                    // Tabs will have incorrect indicator when the title is altered
+                    // This div forces a structural change and re-render.
+                    <div>
+                        <Tabs.List>
+                            <Tabs.Tab id="setup">
+                                <PageTitle page={{ id: "setup", icon: SparklesIcon }} />
+                                <Tabs.Indicator className="bg-accent" />
+                            </Tabs.Tab>
+                        </Tabs.List>
+                    </div>
+                ) : (
+                    <Tabs.List>
+                        {pages.map(p => (
+                            <Tabs.Tab id={p.id} key={p.id}>
+                                <PageTitle page={p} />
+                                <Tabs.Indicator className="bg-accent" />
+                            </Tabs.Tab>
+                        ))}
+                    </Tabs.List>
+                )}
+            </Tabs.ListContainer>
         </Tabs>
     );
 }
@@ -69,9 +69,9 @@ function PageTitle({ page }: { page: PageInfo }) {
     const { id, icon: Icon } = page;
 
     return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 py-1">
             <Icon />
-            {t(`${id}.title`)}
+            <span className="break-keep">{t(`${id}.title`)}</span>
         </div>
     );
 }
@@ -84,9 +84,8 @@ function CloseButton() {
         <Button
             onPress={() => native.bwctl.close()}
             className="rounded-full bg-transparent text-foreground hover:bg-danger"
-            color="danger"
             isIconOnly
-            variant="solid"
+            variant="danger"
         >
             <XIcon />
         </Button>
@@ -97,7 +96,7 @@ function MinimizeButton() {
     return (
         <Button
             onPress={() => native.bwctl.minimize()}
-            className="rounded-full bg-transparent text-foreground hover:bg-default"
+            className="rounded-full bg-transparent text-foreground hover:bg-default-hover"
             isIconOnly
         >
             <MinusIcon />

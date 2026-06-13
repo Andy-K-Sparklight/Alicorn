@@ -23,7 +23,7 @@ export function LaunchPanel() {
                     <div className="flex flex-col gap-2">
                         <div className="grow flex flex-col gap-1">
                             <div className="font-bold text-lg">{t("alter-jrt.label")}</div>
-                            <div className="text-sm text-foreground-400">{t("alter-jrt.sub")}</div>
+                            <div className="text-sm text-muted">{t("alter-jrt.sub")}</div>
                         </div>
 
                         <Input
@@ -39,7 +39,7 @@ export function LaunchPanel() {
                     <div className="flex flex-col gap-2">
                         <div className="grow flex flex-col gap-1">
                             <div className="font-bold text-lg">{t("vm-args.label")}</div>
-                            <div className="text-sm text-foreground-400">{t("vm-args.sub")}</div>
+                            <div className="text-sm text-muted">{t("vm-args.sub")}</div>
                         </div>
 
                         <StringArrayInput
@@ -56,7 +56,7 @@ export function LaunchPanel() {
                     <div className="flex flex-col gap-2">
                         <div className="grow flex flex-col gap-1">
                             <div className="font-bold text-lg">{t("game-args.label")}</div>
-                            <div className="text-sm text-foreground-400">{t("game-args.sub")}</div>
+                            <div className="text-sm text-muted">{t("game-args.sub")}</div>
                         </div>
 
                         <StringArrayInput
@@ -78,11 +78,15 @@ export function LaunchPanel() {
                                 <Switch
                                     size="sm"
                                     isSelected={game.launchHint.venv}
-                                    onValueChange={makeGameReducer<boolean>(
+                                    onChange={makeGameReducer<boolean>(
                                         (g, b) => (g.launchHint.venv = b),
                                     )}
-                                />
-                                <div className="text-sm text-foreground-400 whitespace-pre-line">
+                                >
+                                    <Switch.Control>
+                                        <Switch.Thumb />
+                                    </Switch.Control>
+                                </Switch>
+                                <div className="text-sm text-muted whitespace-pre-line">
                                     {t("venv.sub")}
                                 </div>
                             </div>

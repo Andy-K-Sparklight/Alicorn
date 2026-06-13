@@ -1,4 +1,4 @@
-import { Divider } from "@heroui/react";
+import { Separator } from "@heroui/react";
 import {
     ActionEntry,
     NumberTuningEntry,
@@ -47,7 +47,7 @@ export function PreferencesTab() {
                 onChange={v => alterConfig(c => (c.pref.username = v))}
             />
 
-            <Divider />
+            <Separator />
 
             <SelectEntry
                 icon={PaletteIcon}
@@ -57,7 +57,7 @@ export function PreferencesTab() {
                 items={themeManager.getThemes()}
             />
 
-            <Divider />
+            <Separator />
 
             <NumberTuningEntry
                 icon={ZoomInIcon}
@@ -73,7 +73,7 @@ export function PreferencesTab() {
                 }}
             />
 
-            <Divider />
+            <Separator />
 
             <SelectEntry
                 icon={LanguagesIcon}
@@ -83,7 +83,7 @@ export function PreferencesTab() {
                 items={i18n.getAvailableLanguages()}
             />
 
-            <Divider />
+            <Separator />
 
             <OnOffEntry
                 icon={HardDriveUploadIcon}
@@ -92,7 +92,7 @@ export function PreferencesTab() {
                 onChange={v => alterConfig(c => (c.app.hotUpdate = v))}
             />
 
-            <Divider />
+            <Separator />
 
             <ActionEntry id="pref.rerun-setup" icon={UserCogIcon} onClick={rerunSetup} />
         </>

@@ -1,7 +1,7 @@
 import { ExceptionDisplay } from "@components/display/ExceptionDisplay";
 import { AnimatedRoute } from "@components/misc/AnimatedRoute";
 import { Navigator } from "@components/misc/Navigator";
-import { HeroUIProvider, ToastProvider } from "@heroui/react";
+import { Toast } from "@heroui/react";
 import { AboutView } from "@pages/about/AboutView";
 import { CreateGameFromModpackView } from "@pages/create-from-modpack/CreateGameFromModpackView";
 import { CreateGameView } from "@pages/create-game/CreateGameView";
@@ -17,32 +17,25 @@ import { useLocalStorage } from "react-use";
 import { Redirect } from "wouter";
 import { useAutoFontClass } from "@/renderer/i18n/i18n";
 import { useAutoTheme } from "@/renderer/theme";
-import { useNav } from "@/renderer/util/nav";
 import pkg from "~/package.json";
 
 /**
  * App entry.
  */
 export function App() {
-    const nav = useNav();
-
     useAutoTheme();
     useAutoFontClass();
 
-    // Spinner styles need to be set manually for each one until the following issue gets solved
-    // https://github.com/heroui-inc/heroui/issues/4906
     return (
-        <HeroUIProvider navigate={nav}>
-            <main className="fixed inset-0 text-foreground bg-background">
-                <div className="flex flex-col w-full h-full">
-                    <Navigator />
-                    <MainArea />
-                </div>
-                <VersionOverlay />
-                <ExceptionDisplay />
-                <ToastProvider placement="bottom-left" toastOffset={4} />
-            </main>
-        </HeroUIProvider>
+        <main className="fixed inset-0 text-foreground bg-background">
+            <div className="flex flex-col w-full h-full">
+                <Navigator />
+                <MainArea />
+            </div>
+            <VersionOverlay />
+            <ExceptionDisplay />
+            <Toast.Provider placement="bottom start" />
+        </main>
     );
 }
 
@@ -85,7 +78,7 @@ function VersionOverlay() {
     const { version, codename } = pkg;
 
     return (
-        <div className="fixed right-2 bottom-2 text-sm text-foreground-400">
+        <div className="fixed right-2 bottom-2 text-sm text-muted">
             Alicorn Launcher "{codename}" {version}
         </div>
     );

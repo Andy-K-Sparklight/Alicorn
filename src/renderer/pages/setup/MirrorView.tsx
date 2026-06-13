@@ -1,4 +1,4 @@
-import { Button, Link, Radio, RadioGroup } from "@heroui/react";
+import { Button, Description, Label, Link, Radio, RadioGroup } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";
 import { ArrowRightIcon, GaugeIcon } from "lucide-react";
 import { useEffect } from "react";
@@ -31,27 +31,37 @@ export function MirrorView() {
                     </div>
 
                     <h1 className="font-bold text-2xl text-center">{t("title")}</h1>
-                    <p className="text-foreground-400 whitespace-pre-line text-center">
-                        {t("sub")}
-                    </p>
+                    <p className="text-muted whitespace-pre-line text-center">{t("sub")}</p>
                 </div>
 
                 <div className="flex flex-col justify-center gap-4">
                     <RadioGroup
                         value={config.net.mirror.enable ? "allow" : "disallow"}
-                        onValueChange={v => alterConfig(c => (c.net.mirror.enable = v === "allow"))}
+                        onChange={v => alterConfig(c => (c.net.mirror.enable = v === "allow"))}
                     >
-                        <Radio value="allow" description={t("allow.sub")}>
-                            {t("allow.label")}
+                        <Radio value="allow">
+                            <Radio.Control>
+                                <Radio.Indicator />
+                            </Radio.Control>
+                            <Radio.Content>
+                                <Label>{t("allow.label")}</Label>
+                                <Description>{t("allow.sub")}</Description>
+                            </Radio.Content>
                         </Radio>
-                        <Radio value="disallow" description={t("disallow.sub")}>
-                            {t("disallow.label")}
+                        <Radio value="disallow">
+                            <Radio.Control>
+                                <Radio.Indicator />
+                            </Radio.Control>
+                            <Radio.Content>
+                                <Label>{t("disallow.label")}</Label>
+                                <Description>{t("disallow.sub")}</Description>
+                            </Radio.Content>
                         </Radio>
                     </RadioGroup>
                 </div>
             </div>
 
-            <p className="text-foreground-400 text-sm whitespace-pre-line text-center">
+            <p className="text-muted text-sm whitespace-pre-line text-center">
                 <Trans
                     t={t}
                     i18nKey="footer"
@@ -60,7 +70,8 @@ export function MirrorView() {
             </p>
 
             <div>
-                <Button color="primary" onPress={next} startContent={<ArrowRightIcon />}>
+                <Button variant="primary" onPress={next}>
+                    <ArrowRightIcon />
                     {t("btn")}
                 </Button>
             </div>

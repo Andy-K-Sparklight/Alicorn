@@ -1,6 +1,5 @@
 import logo from "@assets/logo.png";
-import { Alert } from "@components/display/Alert";
-import { Button, ButtonGroup, Card, CardBody, Image } from "@heroui/react";
+import { Alert, Button, ButtonGroup, Card } from "@heroui/react";
 import { FileBadgeIcon, FolderGit2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import pkg from "~/package.json";
@@ -24,17 +23,15 @@ function VersionCard() {
 
     return (
         <Card className="w-full">
-            <CardBody>
+            <Card.Content>
                 <div className="flex items-center gap-4 h-12">
-                    <Image removeWrapper className="h-full" alt="Alicorn Logo" src={logo} />
+                    <img className="h-full" alt="Alicorn Logo" src={logo} />
                     <div className="flex flex-col grow">
-                        <p className="text-xl font-bold">{t("name")}</p>
-                        <p className="text-medium text-foreground-400">
-                            {t("version", { version })}
-                        </p>
+                        <p className="text-lg font-bold">{t("name")}</p>
+                        <p className="text-sm text-muted">{t("version", { version })}</p>
                     </div>
                 </div>
-            </CardBody>
+            </Card.Content>
         </Card>
     );
 }
@@ -43,9 +40,13 @@ function DevNoteCard() {
     const { t } = useTranslation("pages", { keyPrefix: "about" });
 
     return (
-        <div className="w-full">
-            <Alert color="warning" title={t("dev-note")} />
-        </div>
+        <Alert status="warning">
+            <Alert.Indicator />
+            <Alert.Content>
+                <Alert.Title>{t("dev-note.title")}</Alert.Title>
+                <Alert.Description>{t("dev-note.body")}</Alert.Description>
+            </Alert.Content>
+        </Alert>
     );
 }
 
@@ -54,9 +55,9 @@ function CopyrightCard() {
 
     return (
         <Card className="w-full">
-            <CardBody>
-                <div className="whitespace-pre-line px-2">{t("copyright")}</div>
-            </CardBody>
+            <Card.Content>
+                <div className="whitespace-pre-line px-2 text-muted text-sm">{t("copyright")}</div>
+            </Card.Content>
         </Card>
     );
 }
@@ -69,13 +70,13 @@ function AppLinks() {
 
     return (
         <ButtonGroup>
-            <Button onPress={() => native.ext.openURL(SRC_URL)} startContent={<FolderGit2 />}>
+            <Button onPress={() => native.ext.openURL(SRC_URL)}>
+                <FolderGit2 />
                 {t("source")}
             </Button>
-            <Button
-                onPress={() => native.ext.openURL(LICENSE_URL)}
-                startContent={<FileBadgeIcon />}
-            >
+            <Button onPress={() => native.ext.openURL(LICENSE_URL)}>
+                <ButtonGroup.Separator />
+                <FileBadgeIcon />
                 {t("license")}
             </Button>
         </ButtonGroup>

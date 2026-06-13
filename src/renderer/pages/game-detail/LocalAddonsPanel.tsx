@@ -14,7 +14,7 @@ export function LocalAddonsPanel() {
     return (
         <div className="flex flex-col h-full gap-2 px-4">
             {manifest.resolved.length === 0 ? (
-                <div className="grow flex items-center justify-center font-bold text-foreground-400 text-lg">
+                <div className="grow flex items-center justify-center font-bold text-muted text-lg">
                     {t("empty")}
                 </div>
             ) : (

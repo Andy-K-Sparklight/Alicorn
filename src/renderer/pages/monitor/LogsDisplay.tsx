@@ -64,12 +64,12 @@ function LogLine({ log }: { log: GameProcessLog }) {
     return (
         <div className="flex flex-col text-sm pb-1">
             <div className="flex gap-3">
-                <pre className="text-foreground-400">{new Date(time).toLocaleTimeString()}</pre>
+                <pre className="text-muted">{new Date(time).toLocaleTimeString()}</pre>
                 <div
                     className={cn("break-all whitespace-pre-line", {
                         "font-bold text-danger": level === "FATAL" || level === "ERROR",
                         "font-bold text-warning": level === "WARN",
-                        "text-foreground-400": level === "DEBUG",
+                        "text-muted": level === "DEBUG",
                     })}
                 >
                     <pre className="whitespace-pre-wrap">

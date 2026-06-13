@@ -1,6 +1,6 @@
 import { Alert } from "@components/display/Alert";
 import type { PropsWithParams } from "@components/misc/AnimatedRoute";
-import { addToast, Button, Input, Radio, RadioGroup, Switch } from "@heroui/react";
+import { Button, Description, Input, Label, Radio, RadioGroup, Switch, toast } from "@heroui/react";
 import { AssetLevelSelector } from "@pages/create-game/AssetsLevelSelector";
 import { ContainerSelector } from "@pages/create-game/ContainerSelector";
 import { ModLoaderSelector } from "@pages/create-game/ModLoaderSelector";
@@ -62,16 +62,13 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
                 assetsLevel,
                 containerShouldLink,
             });
-            addToast({
-                color: "success",
-                title: t("toast-created"),
-            });
+            toast.success(t("toast-created"));
             nav("/games");
         }
     }
 
     if (profile?.installProps.type === "imported") {
-        return <Alert color="danger" title={t("no-import")} />;
+        return <Alert status="danger" title={t("no-import")} />;
     }
 
     return (
@@ -81,11 +78,7 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
                 <div className="w-full grow flex flex-col gap-6 mt-4">
                     <div className="flex flex-col gap-4">
                         <div className="font-bold text-xl">{t("name-input-title")}</div>
-                        <Input
-                            aria-label="Game Name"
-                            value={gameName}
-                            onValueChange={setGameName}
-                        />
+                        <Input value={gameName} onChange={e => setGameName(e.target.value)} />
                     </div>
 
                     <div className="flex flex-col gap-4">
@@ -98,16 +91,20 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
 
                         <RadioGroup
                             value={shareContainer ? "share" : "new"}
-                            onValueChange={v => setShareContainer(v === "share")}
+                            onChange={v => setShareContainer(v === "share")}
                         >
                             {["new", "share"].map(lv => (
                                 <div key={lv} className="flex flex-col gap-2">
-                                    <Radio
-                                        value={lv}
-                                        color={lv === "share" ? "warning" : "primary"}
-                                        description={t(`storage-policy.${lv}.sub`)}
-                                    >
-                                        {t(`storage-policy.${lv}.label`)}
+                                    <Radio value={lv}>
+                                        <Radio.Control>
+                                            <Radio.Indicator />
+                                        </Radio.Control>
+                                        <Radio.Content>
+                                            <Label>{t(`storage-policy.${lv}.label`)}</Label>
+                                            <Description>
+                                                {t(`storage-policy.${lv}.sub`)}
+                                            </Description>
+                                        </Radio.Content>
                                     </Radio>
                                 </div>
                             ))}
@@ -117,21 +114,24 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
                             <Switch
                                 size="sm"
                                 isSelected={containerShouldLink}
-                                onValueChange={setContainerShouldLink}
+                                onChange={setContainerShouldLink}
                                 isDisabled={shareContainer}
                             >
-                                <div className="flex flex-col">
-                                    <div className="text-medium">{t("container-link.label")}</div>
-                                    <div className="text-foreground-400 text-sm">
+                                <Switch.Control>
+                                    <Switch.Thumb />
+                                </Switch.Control>
+                                <Switch.Content className="flex flex-col">
+                                    <Label className="text-base">{t("container-link.label")}</Label>
+                                    <Description className="text-sm">
                                         {t("container-link.sub")}
-                                    </div>
-                                </div>
+                                    </Description>
+                                </Switch.Content>
                             </Switch>
                         )}
 
                         {shareContainer && (
                             <>
-                                <Alert color="warning" title={t("share-alert")} />
+                                <Alert status="warning" title={t("share-alert")} />
                                 <ContainerSelector
                                     containerId={containerId}
                                     onChange={setContainerId}
@@ -167,7 +167,7 @@ export function CreateGameView({ params: { gameId } }: PropsWithParams<{ gameId?
 
                     <Button
                         fullWidth
-                        color="primary"
+                        variant="primary"
                         size="lg"
                         isDisabled={!valid}
                         onPress={handleCreate}

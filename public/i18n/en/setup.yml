@@ -1,6 +1,6 @@
 lang:
-  en: Click Me to Start
-  zh-CN: 点按此按钮以继续
+  en: Continue Using English
+  zh-CN: 以简体中文继续
 
 welcome:
   title: Another place. Another way.
@@ -40,14 +40,10 @@ license:
   title: About the License
   sub: |-
     Alicorn is released under the GNU General Public License (version 3.0 or later).
-    Accept the license to start using Alicorn.
+    The following license text includes terms and conditions for redistributions.
 
-  btn-hint: By clicking the button below you accept the terms and conditions declared in the license.
-  btn: Accept License
-  confirm:
-    title: Accept the license？
-    sub: I understand and accept the terms and conditions.
-    btn: Yes, I accept the license
+  btn-hint: Alicorn is always open for anyone to use regardless of whether they accept the license.
+  btn: Continue
 
 mirror:
   title: Get the Game Faster

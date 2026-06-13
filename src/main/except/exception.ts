@@ -1,8 +1,10 @@
 import { UnknownException } from "@/main/except/common";
 
+type EmptyExceptionProps = Record<string, never>;
+
 interface CatchyExceptionType {
     unknown: { err: string };
-    cancelled: never;
+    cancelled: EmptyExceptionProps;
     "no-handler-registered": { method: string };
     "no-such-element": { id: string };
     "net-request-failed": { url: string; code?: number };
@@ -10,11 +12,11 @@ interface CatchyExceptionType {
     "launch-spawn-failed": { err: string };
     "download-failed": { url: string };
     "profile-link-failed": { id: string };
-    "auth-failed": never;
+    "auth-failed": EmptyExceptionProps;
     "unavailable-mod-loader": { version: string };
     "optifine-install-failed": { code: number };
     "jrt-install-failed": { component: string };
-    "forge-install-failed": never;
+    "forge-install-failed": EmptyExceptionProps;
 }
 
 export type SerializedException<K extends keyof CatchyExceptionType = keyof CatchyExceptionType> = {

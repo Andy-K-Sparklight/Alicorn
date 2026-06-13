@@ -3,15 +3,7 @@
  */
 import { FileSelectInput } from "@components/input/FileSelectInput";
 import { StringArrayInput } from "@components/input/StringArrayInput";
-import {
-    Button,
-    Input,
-    Select,
-    SelectItem,
-    type SharedSelection,
-    Slider,
-    Switch,
-} from "@heroui/react";
+import { Button, Input, ListBox, Select, Slider, Switch } from "@heroui/react";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import type React from "react";
 import { useTranslation } from "react-i18next";
@@ -44,7 +36,7 @@ function Title({ id, icon: Icon }: { id: string; icon?: React.ComponentType }) {
 function Subtitle({ id }: { id: string }) {
     const { t } = useEntriesTrans();
 
-    return <div className="text-sm text-foreground-400 whitespace-pre-line">{t(`${id}.sub`)}</div>;
+    return <div className="text-sm text-muted whitespace-pre-line">{t(`${id}.sub`)}</div>;
 }
 
 function EntryLabel({ id, icon }: { id: string; icon?: React.ComponentType }) {
@@ -164,18 +156,16 @@ export function NumberSliderEntry({
                 maxValue={max}
                 minValue={min}
                 value={value}
-                hideThumb
-                showTooltip
-                aria-label="Number Slider"
-                tooltipProps={{ size: "lg", radius: "full" }}
-                classNames={{
-                    startContent: "text-nowrap",
-                    endContent: "text-nowrap",
-                }}
-                startContent={min}
-                endContent={max}
                 onChange={v => onChange(Array.isArray(v) ? v[0] : v)}
-            />
+            >
+                <div className="flex gap-4 items-center">
+                    <Slider.Track>
+                        <Slider.Fill />
+                        <Slider.Thumb />
+                    </Slider.Track>
+                    <Slider.Output />
+                </div>
+            </Slider>
         </div>
     );
 }
@@ -195,7 +185,11 @@ export function OnOffEntry({ id, icon, value, onChange }: SettingsEntryProps<boo
             <Title id={id} icon={icon} />
 
             <div className="flex gap-2 items-center">
-                <Switch size="sm" isSelected={value} onValueChange={onChange} />
+                <Switch size="sm" isSelected={value} onChange={onChange}>
+                    <Switch.Control>
+                        <Switch.Thumb />
+                    </Switch.Control>
+                </Switch>
                 <Subtitle id={id} />
             </div>
         </div>
@@ -207,25 +201,25 @@ type SelectEntryProps<T> = SettingsEntryProps<T> & { items: T[] };
 export function SelectEntry({ id, icon, value, onChange, items }: SelectEntryProps<string>) {
     const { t } = useEntriesTrans();
 
-    function handleSelectionChange(s: SharedSelection) {
-        if (s instanceof Set && s.size > 0) {
-            onChange([...s][0].toString());
-        }
-    }
-
     return (
         <div className="flex flex-col gap-2 w-full">
             <EntryLabel id={id} icon={icon} />
 
-            <Select
-                aria-label="Selection"
-                fullWidth
-                selectedKeys={[value]}
-                onSelectionChange={handleSelectionChange}
-            >
-                {items.map(item => (
-                    <SelectItem key={item}>{t(`${id}.items.${item}`)}</SelectItem>
-                ))}
+            <Select value={value} onChange={item => onChange(String(item))}>
+                <Select.Trigger>
+                    <Select.Value />
+                    <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                    <ListBox>
+                        {items.map(item => (
+                            <ListBox.Item key={item} id={item} textValue={t(`${id}.items.${item}`)}>
+                                {t(`${id}.items.${item}`)}
+                                <ListBox.ItemIndicator />
+                            </ListBox.Item>
+                        ))}
+                    </ListBox>
+                </Select.Popover>
             </Select>
         </div>
     );
