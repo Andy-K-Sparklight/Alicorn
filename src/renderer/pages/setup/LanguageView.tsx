@@ -1,5 +1,5 @@
 import logo from "@assets/logo.png";
-import { Button, Separator } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { useSetupNextPage } from "@pages/setup/SetupView";
 import { useTranslation } from "react-i18next";
 import { i18n } from "@/renderer/i18n/i18n";
