@@ -300,7 +300,7 @@ async function saveContents() {
     await currentSaving;
 }
 
-let autoSaveInterval: NodeJS.Timer;
+let autoSaveInterval: NodeJS.Timeout;
 
 function setAutoSave() {
     autoSaveInterval = setInterval(
