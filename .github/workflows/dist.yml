@@ -102,7 +102,7 @@ jobs:
           # upload-artifact accepts a directory; a release asset has to be a file,
           # and both arches would otherwise upload the same inner filename.
           for arch in x64 arm64; do
-            src=$(find "./dist/Alicorn Launcher-darwin-$arch.dmg" -maxdepth 1 -name '*.dmg' | head -1)
+            src=$(find "./dist/Alicorn Launcher-darwin-$arch.dmg" -type f -maxdepth 1 -name '*.dmg' | head -1)
             cp "$src" "./dist/Alicorn-Launcher-darwin-$arch.dmg"
           done
           gh release upload "${{ github.event.release.tag_name }}" \
