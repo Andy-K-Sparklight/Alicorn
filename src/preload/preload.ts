@@ -28,7 +28,13 @@ const ipcRenderer = ipcRendererRaw as TypedIpcRenderer<
     IpcMessageEvents,
     IpcCommands
 >;
-const internalEvents = new Emittery();
+const internalEvents = new Emittery<{
+    gameChanged: unknown[];
+    accountChanged: unknown[];
+    configChanged: [UserConfig];
+    devToolsOpened: unknown[];
+    mpmManifestChanged: { id: string; mf: MpmManifest };
+}>();
 
 const native = {
     /**
@@ -359,7 +365,7 @@ const native = {
          * Gets notified when MPM manifest changes.
          */
         onManifestChange(fn: (gameId: string, manifest: MpmManifest) => void) {
-            internalEvents.on("mpmManifestChanged", ({ id, mf }) => fn(id, mf));
+            internalEvents.on("mpmManifestChanged", ({ data: { id, mf } }) => fn(id, mf));
         },
     },
 
@@ -376,7 +382,7 @@ const native = {
         },
 
         onChange(cb: (c: UserConfig) => void): void {
-            internalEvents.on("configChanged", args => cb(args[0]));
+            internalEvents.on("configChanged", ({ data: args }) => cb(args[0]));
         },
     },
 

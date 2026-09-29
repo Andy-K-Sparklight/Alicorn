@@ -488,11 +488,6 @@ about:
     bmclapi:
       name: BMCLAPI 镜像加速
       tip: 在可用时使用 BMCLAPI 加速下载。
-    lzma-native:
-      name: LZMA 原生库
-      tip: |-
-        使用原生的 LZMA 库改进 LZMA 解包的效率。
-        性能很好，但并非所有平台都支持。
     enabled: 已启用
     disabled: 未启用
 

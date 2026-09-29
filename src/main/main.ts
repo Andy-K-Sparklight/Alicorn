@@ -33,6 +33,7 @@ import pkg from "~/package.json";
 import { runInstrumentedTest } from "~/test/instrumented/entry";
 import "v8-compile-cache";
 import { skin } from "@/main/auth/skin";
+import { loadNativeModule } from "@/main/native-loader";
 
 void main();
 
@@ -60,8 +61,12 @@ async function main() {
     );
     conf.load();
 
+    // DO NOT await anything before this line, or those sync calls may actually run after app ready
+    // event, bad-bad-not-good.
     console.log("Setting up application...");
     await app.whenReady();
+
+    await loadNativeModule();
 
     // Create an empty handler to prevent auto-closing when all windows are closed
     app.on("window-all-closed", () => {});

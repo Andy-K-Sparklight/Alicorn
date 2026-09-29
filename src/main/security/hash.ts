@@ -1,15 +1,11 @@
-import lazyValue from "lazy-value";
-import workerPool from "workerpool";
-import { paths } from "@/main/fs/paths";
-
-const pool = lazyValue(() => workerPool.pool(paths.app.to("hash-worker.js")));
+import { getNative } from "@/main/native-loader";
 
 async function checkFile(pt: string, algorithm: string, expectHash: string): Promise<boolean> {
     return (await forFile(pt, algorithm)) === expectHash.trim().toLowerCase();
 }
 
 async function forFile(pt: string, algorithm: string): Promise<string> {
-    const h = await pool().exec("hash", [pt, algorithm]);
+    const h = (await getNative().hashFile(pt, algorithm)) as string;
 
     if (!h) throw `Failed to hash file: ${pt}`;
     return h;

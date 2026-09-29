@@ -100,7 +100,7 @@ The development of Alicorn is based on the following vision:
 Systems:
 
 - Microsoft Windows 10 / 11
-- Apple macOS (Big Sur or later)
+- Apple macOS (Ventura 13 or later)
 - GNU/Linux
   - There are no detailed compatibility metrics, but recent releases should work.
 

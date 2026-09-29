@@ -1,4 +1,6 @@
+import crypto from "node:crypto";
 import path from "node:path";
+import consola from "consola";
 import fs from "fs-extra";
 
 export async function linkAll(src: string, dst: string): Promise<void> {
@@ -15,5 +17,33 @@ export async function linkAll(src: string, dst: string): Promise<void> {
         for (const f of files) {
             await linkAll(path.join(src, f), path.join(dst, f));
         }
+    }
+}
+
+/**
+ * Calculates the checksum of `fp`.
+ */
+export function checksumOf(fp: string, alg: string): Promise<string> {
+    const { promise, resolve, reject } = Promise.withResolvers<string>();
+    const hash = crypto.createHash(alg);
+    const stream = fs.createReadStream(fp);
+
+    stream.on("data", data => hash.update(data));
+    stream.on("end", () => resolve(hash.digest("hex").toLowerCase()));
+    stream.on("error", err => reject(err));
+
+    return promise;
+}
+
+/**
+ * Invokes an async function, swallow and log any errors, and return the result.
+ * Upon failure, `null` is returned.
+ */
+export async function logOnFail<T>(foo: () => Promise<T>): Promise<T | null> {
+    try {
+        return await foo();
+    } catch (e) {
+        consola.error("Error: " + e);
+        return null;
     }
 }

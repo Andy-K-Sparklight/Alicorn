@@ -41,7 +41,6 @@ function RebuildNote() {
 
 const FEATURES = {
     bmclapi: import.meta.env.AL_ENABLE_BMCLAPI,
-    "lzma-native": import.meta.env.AL_ENABLE_NATIVE_LZMA,
 };
 
 function FeaturesTable() {

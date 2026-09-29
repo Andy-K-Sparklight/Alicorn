@@ -15,6 +15,7 @@ import { conf } from "@/main/conf/conf";
 import { CancelledException } from "@/main/except/common";
 import { paths } from "@/main/fs/paths";
 import { type DlxDownloadRequest, DownloadException } from "@/main/net/dlx";
+import { waitForDownload } from "@/main/net/download-events";
 import { WebSocketJsonRpcClient } from "@/main/net/ws-rpc";
 import { getExecutableExt } from "@/main/sys/os";
 import { getCanonicalUA } from "@/main/sys/ua";
@@ -31,7 +32,9 @@ export interface Aria2DownloadRequest extends DlxDownloadRequest {
     signal?: AbortSignal;
 }
 
-const gidEmitters = new Map<string, Emittery>();
+type DownloadEvents = { finish: undefined; error: string };
+
+const gidEmitters = new Map<string, Emittery<DownloadEvents>>();
 
 /**
  * Preflights and resolves the given request.
@@ -107,11 +110,11 @@ async function sendRequest(req: Aria2DownloadRequest): Promise<void> {
         throw "Unable to commit task (empty GID received)";
     }
 
-    const emitter = new Emittery();
+    const emitter = new Emittery<DownloadEvents>();
     gidEmitters.set(gid, emitter);
 
     try {
-        await pEvent(emitter, "finish");
+        await waitForDownload(emitter);
     } catch (e) {
         throw new DownloadException(req.url, e);
     }
@@ -230,7 +233,7 @@ async function pollUrl(url: string, timeout = 3000): Promise<boolean> {
     return false;
 }
 
-function extractEmitter(gid: string): Emittery | null {
+function extractEmitter(gid: string): Emittery<DownloadEvents> | null {
     const em = gidEmitters.get(gid);
     if (!em) return null;
     gidEmitters.delete(gid);

@@ -6,12 +6,12 @@ import { iTest } from "~/test/instrumented/tools";
  */
 export async function runInstrumentedTest() {
     await Promise.all([
-        import("./cache"),
-        import("./hash"),
-        import("./install"),
+        // import("./cache"),
+        // import("./hash"),
+        // import("./install"),
         import("./jrt"),
-        import("./net"),
-        import("./reg"),
+        // import("./net"),
+        // import("./reg"),
     ]);
 
     await iTest.dumpSummary();

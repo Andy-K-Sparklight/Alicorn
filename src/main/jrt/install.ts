@@ -175,8 +175,8 @@ async function installRuntime(component: string, control?: ProgressController): 
     });
 
     console.debug("Unpacking files...");
-    await lzma.init();
 
+    const lzmaPool = lzma.createPool();
     await Promise.all(
         progress.countPromises(
             files
@@ -186,7 +186,7 @@ async function installRuntime(component: string, control?: ProgressController): 
                     const dst = path.join(root, file.name);
                     console.debug(`Unpacking: ${src}`);
 
-                    await lzma.inflate(src, dst);
+                    await lzmaPool.inflate(src, dst);
                     await fs.remove(src);
                 }),
             progress.makeNamed(onProgress, "jrt.unpack"),

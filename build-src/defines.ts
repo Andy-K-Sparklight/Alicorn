@@ -6,7 +6,6 @@ export type OSName = "windows" | "osx" | "linux";
 function genBuildDefines(config: BuildConfig) {
     const {
         enableBMCLAPI,
-        enableNativeLZMA,
         devServerPort,
         variant: { mode, platform, arch, testLevel },
     } = config;
@@ -29,7 +28,6 @@ function genBuildDefines(config: BuildConfig) {
         AL_ARCH: arch,
         AL_ENABLE_BMCLAPI: enableBMCLAPI,
         AL_DEV_SERVER_PORT: devServerPort,
-        AL_ENABLE_NATIVE_LZMA: enableNativeLZMA,
         AL_FAKE_UAS: fakeUAs,
         AL_TEST_LEVEL: testLevel,
     };

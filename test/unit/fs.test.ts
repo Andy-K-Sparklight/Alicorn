@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import path from "node:path";
 import { test } from "node:test";
-import { paths } from "@/main/fs/paths";
+import { mockElectron } from "~/test/electron-mock";
 
-test("Path Resolution", () => {
+test("Path Resolution", async t => {
+    mockElectron(t);
+    const { paths } = await import("@/main/fs/paths");
     paths.setup({
         storeRoot: path.resolve("emulated", "store"),
     });

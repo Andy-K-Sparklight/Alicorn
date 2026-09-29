@@ -45,10 +45,10 @@ const procs = new Map<string, RemoteGameProcess>();
 let procsArray: RemoteGameProcess[] = [];
 
 // Emits "change" event on changing of any component
-const detailedEmitter = new Emittery();
+const detailedEmitter = new Emittery<Record<string, undefined>>();
 
 // Emits "change" event only when game statuses change
-const restrictedEmitter = new Emittery();
+const restrictedEmitter = new Emittery<{ change: undefined }>();
 
 // Sync the immutable processes array when the map changes
 restrictedEmitter.on("change", () => {

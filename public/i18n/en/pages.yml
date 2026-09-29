@@ -489,11 +489,6 @@ about:
     bmclapi:
       name: BMCLAPI
       tip: Add BMCLAPI as alternative mirror.
-    lzma-native:
-      name: Native LZMA Library
-      tip: |-
-        Improve LZMA inflation speed using native library.
-        Fast, yet not widely supported.
     enabled: Available
     disabled: Not Available
 
