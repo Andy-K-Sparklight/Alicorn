@@ -1,7 +1,6 @@
-import crypto from "node:crypto";
 import { app } from "electron";
-import fs from "fs-extra";
 import { paths } from "@/main/fs/paths";
+import { hash } from "@/main/security/hash";
 import type * as NativeMod from "~/build/types/alicorn-r";
 
 type AlicornNative = typeof NativeMod;
@@ -13,7 +12,6 @@ export async function loadNativeModule() {
 
     console.log("Loading library: " + lib);
 
-    // Don't use security/hash, which itself requires native!
     await verifyHash(lib, "sha256", process.env.ALICORN_NATIVE_SHA256);
 
     // @ts-expect-error Using globally defined polyfill
@@ -21,15 +19,7 @@ export async function loadNativeModule() {
 }
 
 async function verifyHash(fp: string, alg: string, h: string) {
-    const { promise, resolve, reject } = Promise.withResolvers<string>();
-    const hash = crypto.createHash(alg);
-    const stream = fs.createReadStream(fp);
-
-    stream.on("data", data => hash.update(data));
-    stream.on("end", () => resolve(hash.digest("hex").toLowerCase()));
-    stream.on("error", err => reject(err));
-
-    const data = await promise;
+    const data = await hash.forFile(fp, alg);
 
     if (data !== h) {
         console.error(`Native library hash mismatch (expected ${h} but found ${data})`);
