@@ -10,9 +10,9 @@ import { Stream } from "node:stream";
 import { net } from "electron";
 import Emittery from "emittery";
 import fs from "fs-extra";
-import { pEvent } from "p-event";
 import { conf } from "@/main/conf/conf";
 import { type DlxDownloadRequest, DownloadException } from "@/main/net/dlx";
+import { waitForDownload } from "@/main/net/download-events";
 import { hash } from "@/main/security/hash";
 import { isTruthy } from "@/main/util/misc";
 
@@ -29,7 +29,7 @@ export interface NextDownloadRequest extends DlxDownloadRequest {
 export interface NextDownloadTask {
     req: NextDownloadRequest;
     signal?: AbortSignal;
-    emitter: Emittery;
+    emitter: Emittery<{ finish: undefined; error: DownloadException }>;
 
     // The current active URL
     activeURL: string;
@@ -49,7 +49,7 @@ async function get(req: NextDownloadRequest): Promise<void> {
     pendingTasks.push(task);
     pollTasks();
 
-    await pEvent(task.emitter, "finish");
+    await waitForDownload(task.emitter);
 }
 
 function pollTasks() {

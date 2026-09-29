@@ -11,7 +11,7 @@ export interface BuildVariant {
 }
 
 export function createBuildConfig(variant: BuildVariant) {
-    const { platform, arch, mode } = variant;
+    const { mode } = variant;
 
     return {
         // Build variant object.
@@ -23,12 +23,6 @@ export function createBuildConfig(variant: BuildVariant) {
         // BMCLAPI provides mirrors to speed up resources delivering in some regions.
         // Make sure that the users read <https://bmclapi2.bangbang93.com>.
         enableBMCLAPI: true,
-
-        // Decompression of LZMA is handled by lzma-native by default, yet not available on all platforms.
-        // Disabling this option enforces Alicorn to fall back to a pure JavaScript implementation.
-        // JavaScript version can be slower and does not support streaming.
-        // This option is (by default) disabled for win32-arm64 and enabled for other platforms.
-        enableNativeLZMA: !(platform === "win32" && arch === "arm64"),
 
         // Port to be used when hosting HMR content for renderer.
         devServerPort: 9000,

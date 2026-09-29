@@ -31,6 +31,8 @@ The following tools are required:
 
   It's not recommended to download the code tarball as you'll have to pull the latest code manually.
 
+- Rust and Cargo, for the native bindings and their TypeScript declarations.
+
 - Wine, when packaging on non-Windows platforms.
 
 - WiX Toolset v3, when packaging for Windows. (The version matters!)
@@ -50,6 +52,17 @@ Install dependencies:
 ```shell
 npm ci
 ```
+
+Installation generates the native TypeScript declarations in `build/types/`. To regenerate
+them after changing the Rust API or running `npm run clean`, run:
+
+```shell
+npm run gen-native-types
+```
+
+This runs `cargo check` and napi-rs declaration generation, skipping native addon code generation
+and linking. TypeScript resolves these declarations through the project's root alias. Normal
+application builds also refresh them.
 
 > [!TIP]
 > Alicorn has a set of customizable build options which toggles or adjusts certain features.

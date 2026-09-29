@@ -3,7 +3,6 @@ import path from "node:path";
 import { test } from "node:test";
 
 import fs from "fs-extra";
-import { conf } from "@/main/conf/conf";
 import { mockElectron } from "~/test/electron-mock";
 
 const cfgPath = path.resolve("emulated", "config.v2.json");
@@ -11,6 +10,7 @@ process.env.ALICORN_CONFIG_PATH = cfgPath;
 
 test("Config Read & Write", async t => {
     mockElectron(t);
+    const { conf } = await import("@/main/conf/conf");
 
     await fs.remove(cfgPath);
     conf.load();

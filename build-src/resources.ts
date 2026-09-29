@@ -14,21 +14,6 @@ export async function processResources(cfg: BuildConfig): Promise<void> {
 
     consola.start("res: processing vendored files");
     await vendor.prepareAssets(cfg, path.join(outputDir, "vendor"));
-
-    consola.start("res: linking native addons");
-    const platform = `${cfg.variant.platform}-${cfg.variant.arch}`;
-
-    if (cfg.enableNativeLZMA) {
-        try {
-            await linkAll(
-                `node_modules/lzma-native/prebuilds/${platform}`,
-                path.join(outputDir, `natives/lzma-native/prebuilds/${platform}`),
-            );
-        } catch (e) {
-            consola.error("Unable to link lzma-native prebuilt binaries. (Is it supported?)");
-            throw e;
-        }
-    }
 }
 
 async function emitPackageJson(outDir: string) {

@@ -159,10 +159,8 @@ async function updateJar(fp: string, ...sources: string[]) {
 
     const { zip } = await import("zip-a-folder");
 
-    // ModLoader requires that the client jar is compressed using DEFLATE
-    // We're passing level 1 to minimum the compression time
-    // This is not documented in zip-a-folder while it works
-    await zip(workDir, fp, { compression: 1 as any });
+    // ModLoader requires DEFLATE; level 1 keeps rebuilding the client jar fast.
+    await zip(workDir, fp, { zlib: { level: 1 } });
     await fs.remove(workDir);
 }
 

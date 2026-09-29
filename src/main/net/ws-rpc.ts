@@ -47,7 +47,7 @@ export class WebSocketJsonRpcClient {
     }
 
     on(channel: string, cb: (res: any) => void) {
-        this.#emitter.on(channel, cb);
+        this.#emitter.on(channel, ({ data }) => cb(data));
     }
 
     async request(method: string, params: unknown[] = []): Promise<any> {
