@@ -86,7 +86,6 @@ napi-derive = "3.6"
 lzma-rust2 = "0.21.0"
 thiserror = "2.0"
 rayon = "1.12"
-sha1 = "0.11.0"
 tempfile = "3.27"
 delegate = "0.13.5"
 
