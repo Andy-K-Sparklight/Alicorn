@@ -44,6 +44,7 @@ manual_instant_elapsed = "warn"
 manual_is_variant_and = "warn"
 manual_let_else = "warn"
 mismatching_type_param_order = "warn"
+missing_const_for_fn = "warn"
 mod_module_files = "warn"
 needless_collect = "warn"
 needless_continue = "warn"
@@ -80,17 +81,32 @@ used_underscore_items = "warn"
 useless_let_if_seq = "warn"
 wildcard_dependencies = "warn"
 
+[features]
+prefer-rust-impl = []
+
 [dependencies]
-napi = { version = "3.13", features = ["napi9"] }
+napi = { version = "3.13", features = ["napi10"] }
 napi-derive = "3.6"
 lzma-rust2 = "0.21.0"
 thiserror = "2.0"
 rayon = "1.12"
 tempfile = "3.27"
 delegate = "0.13.5"
+static-dispatch = "0.3.0"
+faster-hex = "1.0.0"
+digest = "0.11.3"
+sha1 = "0.11.0"
+sha2 = "0.11.0"
+
+[target.'cfg(target_vendor = "apple")'.dependencies]
+common-crypto = "0.3.0"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows = { version = "0.62.2", default-features = false, features = ["Win32_Security_Cryptography"] }
 
 [build-dependencies]
 napi-build = "2.5"
+cfg_aliases = "0.2.2"
 
 [profile.release]
 lto = true
