@@ -1,5 +1,4 @@
-//! Native file operations for Alicorn.
+mod bindings; // N-API has its own entrypoint
 
-mod bindings;
-
-pub mod util;
+pub(crate) mod kit;
+pub(crate) mod util;
