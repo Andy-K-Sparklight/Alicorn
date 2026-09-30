@@ -6,6 +6,4 @@ fn main() {
         use_cng: { all(target_os = "windows", not(feature = "prefer-rust-impl")) },
         use_rust_crypto: { not(any(use_common_crypto, use_cng)) },
     }
-
-    napi_build::setup();
 }

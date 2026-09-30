@@ -14,7 +14,7 @@ export async function generateNativeTypes() {
     await fs.emptyDir(typeDefDir);
 
     consola.start("Considering types in Rust...");
-    const proc = spawn("cargo", ["check", "--lib"], {
+    const proc = spawn("cargo", ["check", "--package", "alicorn-napi", "--lib"], {
         cwd: root,
         stdio: "inherit",
         env: { ...process.env, NAPI_TYPE_DEF_TMP_FOLDER: typeDefDir },

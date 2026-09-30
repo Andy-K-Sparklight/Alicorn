@@ -1,0 +1,23 @@
+[package]
+name = "alicorn-napi"
+authors = ["skjsjhb"]
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[lints]
+workspace = true
+
+[features]
+prefer-rust-impl = ["alicorn_r/prefer-rust-impl"]
+
+[dependencies]
+alicorn_r = { path = "../.." }
+napi = { version = "3.13", features = ["napi10"] }
+napi-derive = "3.6"
+rayon = "1.12"
+
+[build-dependencies]
+napi-build = "2.5"
