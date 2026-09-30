@@ -3,6 +3,17 @@
 version = 4
 
 [[package]]
+name = "alicorn-napi"
+version = "0.1.0"
+dependencies = [
+ "alicorn_r",
+ "napi",
+ "napi-build",
+ "napi-derive",
+ "rayon",
+]
+
+[[package]]
 name = "alicorn_r"
 version = "0.1.0"
 dependencies = [
@@ -12,10 +23,6 @@ dependencies = [
  "digest",
  "faster-hex",
  "lzma-rust2",
- "napi",
- "napi-build",
- "napi-derive",
- "rayon",
  "sha1",
  "sha2",
  "static-dispatch",

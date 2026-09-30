@@ -4,10 +4,15 @@ authors = ["skjsjhb"]
 version = "0.1.0"
 edition = "2024"
 
-[lib]
-crate-type = ["cdylib"]
+[workspace]
+members = ["crates/alicorn-napi"]
+default-members = ["."]
+resolver = "3"
 
-[lints.clippy]
+[lints]
+workspace = true
+
+[workspace.lints.clippy]
 allow_attributes_without_reason = "warn"
 arithmetic_side_effects = "warn"
 as_pointer_underscore = "warn"
@@ -85,11 +90,8 @@ wildcard_dependencies = "warn"
 prefer-rust-impl = []
 
 [dependencies]
-napi = { version = "3.13", features = ["napi10"] }
-napi-derive = "3.6"
 lzma-rust2 = "0.21.0"
 thiserror = "2.0"
-rayon = "1.12"
 tempfile = "3.27"
 delegate = "0.13.5"
 static-dispatch = "0.3.0"
@@ -105,7 +107,6 @@ common-crypto = "0.3.0"
 windows = { version = "0.62.2", default-features = false, features = ["Win32_Security_Cryptography"] }
 
 [build-dependencies]
-napi-build = "2.5"
 cfg_aliases = "0.2.2"
 
 [profile.release]

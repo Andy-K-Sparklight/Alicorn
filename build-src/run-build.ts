@@ -35,6 +35,7 @@ export async function build(variant: BuildVariant) {
     consola.start("build: natives");
 
     const nativeBuild = await new NapiCli().build({
+        package: "alicorn-napi",
         platform: true,
         target: asNativeTarget(cfg.variant.platform, cfg.variant.arch),
         outputDir: path.join(outputDir, "r"),
