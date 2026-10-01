@@ -1,0 +1,198 @@
+diff --git a/crates/vizia_core/src/views/textbox.rs b/crates/vizia_core/src/views/textbox.rs
+index 3463c242f837a2fe9205c53cce15ea4bce449723..e20b0da183d32ff5a5e58b7196ad9d815f331006 100644
+--- a/crates/vizia_core/src/views/textbox.rs
++++ b/crates/vizia_core/src/views/textbox.rs
+@@ -1,3 +1,4 @@
++use core::ops::Range;
+ use std::cell::RefCell;
+ use std::rc::Rc;
+ 
+@@ -91,6 +92,137 @@ enum TextboxKind {
+     MultiLineWrapped,
+ }
+ 
++/// Returns a UTF-16 paragraph range and whether its trailing edge anchors the caret.
++///
++/// `active` is a UTF-8 byte offset; offsets within a grapheme use its leading edge,
++/// and offsets beyond the text use its end. Empty text and a final hard break use
++/// the zero-width space appended by the paragraph builder.
++fn caret_range(text: &str, active: usize) -> (Range<usize>, bool) {
++    let mut previous = 0..0;
++    for (byte, grapheme) in text.grapheme_indices(true) {
++        let range = previous.end..previous.end + grapheme.encode_utf16().count();
++        if active < byte + grapheme.len() {
++            return (range, false);
++        }
++        previous = range;
++    }
++    if text.is_empty() || text.ends_with(['\n', '\r']) {
++        (previous.end..previous.end + 1, false)
++    } else {
++        (previous, true)
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    use crate::events::EventManager;
++    use skia_safe::FontMgr;
++    use skia_safe::textlayout::{FontCollection, ParagraphBuilder, ParagraphStyle, TextStyle};
++
++    /// Caret anchors use UTF-16 ranges for graphemes and the final layout sentinel.
++    #[test]
++    fn caret_range_unicode() {
++        for (text, active, expected) in [
++            ("", 0, (0..1, false)),
++            ("a", 1, (0..1, true)),
++            ("a\n", 2, (2..3, false)),
++            ("\n\n", 2, (2..3, false)),
++            ("a\r\n", 3, (3..4, false)),
++            ("😀e\u{301}\n", 8, (5..6, false)),
++            ("😀e\u{301}", 4, (2..4, false)),
++            ("😀e\u{301}", 7, (2..4, true)),
++            ("😀e\u{301}", 1, (0..2, false)),
++            ("😀e\u{301}", 6, (2..4, false)),
++            ("", 10, (0..1, false)),
++        ] {
++            assert_eq!(caret_range(text, active), expected, "Caret range should match");
++        }
++    }
++
++    /// Skia places the end caret on the final empty line, including wrapped Unicode text.
++    #[test]
++    fn caret_geometry_final_line() {
++        let mut fonts = FontCollection::new();
++        fonts.set_default_font_manager(FontMgr::default(), None);
++        for text in ["", "\n", "hello\n", "hello\n\n", "hello\r\n", "😀e\u{301}中文\n"] {
++            for width in [30.0, 400.0] {
++                let mut style = ParagraphStyle::new();
++                style.set_text_style(TextStyle::new().set_font_size(16.0));
++                let mut builder = ParagraphBuilder::new(&style, fonts.clone());
++                builder.add_text(text).add_text("\u{200B}");
++                let mut paragraph = builder.build();
++                paragraph.layout(width);
++                let (range, trailing) = caret_range(text, text.len());
++                let rects = paragraph.get_rects_for_range(
++                    range,
++                    RectHeightStyle::Tight,
++                    RectWidthStyle::Tight,
++                );
++                let rect = &rects.first().expect("Final line should have a caret anchor").rect;
++                let lines = paragraph.get_line_metrics();
++                let line = lines.last().expect("Paragraph should contain a line");
++                assert!(!trailing, "Final empty line should use the leading edge");
++                assert!(
++                    rect.top <= line.baseline as f32 && rect.bottom >= line.baseline as f32,
++                    "Caret should span the final line baseline for {text:?}"
++                );
++                assert!(rect.height() > 0.0, "Caret should have visible height");
++            }
++        }
++    }
++
++    /// Both Enter keys insert one newline in editable multiline textboxes and preserve read-only text.
++    #[test]
++    fn textbox_enter_multiline() {
++        for code in [Code::Enter, Code::NumpadEnter] {
++            for read_only in [false, true] {
++                let mut cx = Context::default();
++                cx.windows.insert(Entity::root(), crate::context::WindowState::default());
++                let value = Signal::new(String::new());
++                let entity = Textbox::new_multiline(&mut cx, value, true)
++                    .read_only(read_only)
++                    .on_edit(move |_, text| value.set(text))
++                    .entity();
++                let mut events = EventManager::new();
++                cx.emit_custom(Event::new(TextEvent::StartEdit).target(entity));
++                events.flush_events(&mut cx, |_| {});
++                cx.emit_custom(Event::new(WindowEvent::KeyDown(code, None)).target(entity));
++                events.flush_events(&mut cx, |_| {});
++                assert_eq!(
++                    value.get(),
++                    if read_only { "" } else { "\n" },
++                    "Enter should respect multiline read-only state"
++                );
++            }
++        }
++    }
++
++    /// Both Enter keys submit a single-line textbox without inserting a newline.
++    #[test]
++    fn textbox_enter_singleline() {
++        for code in [Code::Enter, Code::NumpadEnter] {
++            let mut cx = Context::default();
++            cx.windows.insert(Entity::root(), crate::context::WindowState::default());
++            let value = Signal::new(String::from("hello"));
++            let submitted = Signal::new(None);
++            let entity = Textbox::new(&mut cx, value)
++                .on_submit(move |_, text, enter| submitted.set(Some((text, enter))))
++                .entity();
++            let mut events = EventManager::new();
++            cx.emit_custom(Event::new(TextEvent::StartEdit).target(entity));
++            events.flush_events(&mut cx, |_| {});
++            cx.emit_custom(Event::new(WindowEvent::KeyDown(code, None)).target(entity));
++            events.flush_events(&mut cx, |_| {});
++            assert_eq!(
++                submitted.get(),
++                Some((String::from("hello"), true)),
++                "Enter should submit the unchanged value"
++            );
++        }
++    }
++}
++
+ impl<R, T> Textbox<R, T>
+ where
+     R: Res<T> + 'static,
+@@ -98,6 +230,8 @@ where
+ {
+     /// Creates a new single-line textbox.
+     ///
++    /// Enter and numpad Enter submit the current value.
++    ///
+     /// # Example
+     /// ```rust
+     /// # use vizia_core::prelude::*;
+@@ -124,6 +258,8 @@ where
+ 
+     /// Creates a new multi-line textbox.
+     ///
++    /// Enter and numpad Enter insert a newline unless the textbox is read-only.
++    ///
+     /// The `wrap` parameter determines whether text which is too long for the textbox
+     /// should soft-wrap onto multiple lines. If false, then only hard-wraps from line breaks
+     /// will cause the text to span multiple lines.
+@@ -687,21 +823,10 @@ where
+             if let Some(text) = cx.style.text.get(cx.current) {
+                 let bounds = cx.bounds();
+ 
+-                let current = text.current_grapheme_offset(self.selection.active);
+-
+-                let grapheme_count = text.graphemes(true).count();
+-                let (range_start, range_end, use_trailing_edge) = if current < grapheme_count {
+-                    (current, current + 1, false)
+-                } else if current > 0 {
+-                    // At end-of-text, use the previous grapheme box and place the caret on its trailing edge.
+-                    (current - 1, current, true)
+-                } else {
+-                    // Empty text or no valid grapheme box to anchor the caret.
+-                    return;
+-                };
++                let (range, use_trailing_edge) = caret_range(text, self.selection.active);
+ 
+                 let rects = paragraph.get_rects_for_range(
+-                    range_start..range_end,
++                    range,
+                     RectHeightStyle::Tight,
+                     RectWidthStyle::Tight,
+                 );
+@@ -1161,7 +1286,7 @@ where
+             }
+ 
+             WindowEvent::KeyDown(code, _) => match code {
+-                Code::Enter => {
++                Code::Enter | Code::NumpadEnter => {
+                     if matches!(self.kind, TextboxKind::SingleLine) {
+                         cx.emit(TextEvent::Submit(true));
+                     } else if !cx.is_read_only() {

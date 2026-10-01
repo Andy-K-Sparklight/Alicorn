@@ -4,6 +4,11 @@ authors = ["skjsjhb"]
 version = "0.1.0"
 edition = "2024"
 
+[[bin]]
+name = "alicorn"
+path = "src/main.rs"
+required-features = ["ui"]
+
 [workspace]
 members = ["crates/alicorn-napi"]
 default-members = ["."]
@@ -88,6 +93,7 @@ wildcard_dependencies = "warn"
 
 [features]
 prefer-rust-impl = []
+ui = ["dep:vizia"]
 
 [dependencies]
 lzma-rust2 = "0.21.0"
@@ -99,6 +105,12 @@ faster-hex = "1.0.0"
 digest = "0.11.3"
 sha1 = "0.11.0"
 sha2 = "0.11.0"
+
+[dependencies.vizia]
+version = "0.4.0"
+default-features = false
+features = ["winit", "clipboard", "x11", "wayland", "accesskit"]
+optional = true
 
 [target.'cfg(target_vendor = "apple")'.dependencies]
 common-crypto = "0.3.0"
