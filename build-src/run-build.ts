@@ -1,6 +1,7 @@
 // Runs the development build and starts frontend hot-reloading server
 
 import * as child_process from "node:child_process";
+import { createRequire } from "node:module";
 import path from "node:path";
 import * as util from "node:util";
 import { NapiCli } from "@napi-rs/cli";
@@ -14,6 +15,7 @@ import { checksumOf } from "~/build-src/util.ts";
 import { type BuildVariant, createBuildConfig } from "~/config";
 import { createBuildDefines } from "./defines";
 import { startInstrumentedTest } from "./instrumented-test";
+import { layout } from "./layout.ts";
 
 export async function build(variant: BuildVariant) {
     const cfg = createBuildConfig(variant);
@@ -40,7 +42,7 @@ export async function build(variant: BuildVariant) {
         target: asNativeTarget(cfg.variant.platform, cfg.variant.arch),
         outputDir: path.join(outputDir, "r"),
         release: isProd,
-        cwd: path.resolve(import.meta.dirname, ".."),
+        cwd: layout.root,
         verbose: true,
     });
 
@@ -62,7 +64,8 @@ export async function build(variant: BuildVariant) {
     };
 
     const sharedOptions: BuildOptions = {
-        tsconfig: "./tsconfig.json",
+        absWorkingDir: layout.root,
+        tsconfig: path.join(layout.root, "tsconfig.json"),
         sourcemap: isDev && "linked",
         bundle: true,
         minify: !isDev,
@@ -104,9 +107,8 @@ export async function build(variant: BuildVariant) {
     consola.start("build: preload");
     await esbuild.build(preloadBuildOptions);
 
-    const viteConfigFile = path.resolve(import.meta.dirname, "vite-config.ts");
-
     consola.start("build: renderer");
+    const viteConfigFile = path.join(import.meta.dirname, "vite-config.ts");
     if (isDev) {
         const server = await vite.createServer({
             configFile: viteConfigFile,
@@ -128,7 +130,7 @@ export async function build(variant: BuildVariant) {
     }
 
     if (cfg.variant.mode === "test") {
-        await startInstrumentedTest();
+        await startInstrumentedTest(outputDir);
     }
 
     consola.success("done.");
@@ -164,13 +166,7 @@ function asNativeTarget(platform: string, arch: string): string {
 
 async function runElectronDev(appDir: string) {
     consola.start("start: electron app");
-    const electronExec = path.resolve(
-        import.meta.dirname,
-        "..",
-        "node_modules",
-        "electron",
-        "cli.js",
-    );
+    const electronExec = createRequire(import.meta.url).resolve("electron/cli.js");
     const proc = child_process.fork(electronExec, ["--trace-warnings", "."], { cwd: appDir });
 
     // Forward Ctrl-C to the app

@@ -16,7 +16,9 @@ import { createDMG } from "electron-installer-dmg";
 import { MSICreator } from "electron-wix-msi";
 import fs from "fs-extra";
 import { tar, zip } from "zip-a-folder";
+import { layout } from "~/build-src/layout.ts";
 import { build } from "~/build-src/run-build";
+import { createBuildConfig } from "~/config";
 import pkg from "~/package.json";
 
 const platformSpec = process.env.ALICORN_PACK_PLATFORMS || "win32,darwin,linux";
@@ -29,15 +31,15 @@ const types = ["app-bundle", "pkg"].filter(t => typesSpec.includes(t));
 
 consola.info(`Start cross-packaging for ${platforms.join(",")} x ${arches.join(",")}`);
 
-const outRoot = path.resolve(import.meta.dirname, "dist");
+const outRoot = layout.dist;
 await fs.emptyDir(outRoot);
-
-const appRoot = path.join(import.meta.dirname, "build", "production");
 
 for (const platform of platforms) {
     for (const arch of arches) {
         consola.start(`build: ${platform}-${arch}...`);
-        await build({ mode: "production", platform, arch, testLevel: "lite" });
+        const cfg = createBuildConfig({ mode: "production", platform, arch, testLevel: "lite" });
+        const appRoot = cfg.outputDir;
+        await build(cfg.variant);
 
         if (types.includes("app-bundle")) {
             consola.start(`hot-update bundle: ${platform}-${arch}...`);
@@ -54,7 +56,7 @@ for (const platform of platforms) {
                 appCopyright: `Copyright (C) 2021-2022 Andy K Rarity Sparklight ("ThatRarityEG") / Copyright (C) 2024-2026 Ted Gao ("skjsjhb")`,
                 appCategoryType: "public.app-category.utilities",
                 appVersion: pkg.version,
-                icon: path.resolve(import.meta.dirname, "resources", "icons", "icon"),
+                icon: path.join(layout.resources, "icons/icon"),
                 dir: appRoot,
                 arch: arch as SupportedArch,
                 platform: platform as OfficialPlatform,
@@ -117,7 +119,7 @@ async function buildWindowsInstaller(outPath: string, arch: string) {
         ui: {
             chooseDirectory: true,
         },
-        icon: path.resolve(import.meta.dirname, "resources/icons/icon.ico"),
+        icon: path.join(layout.resources, "icons/icon.ico"),
         outputDirectory: root,
     });
     await msiCreator.create();

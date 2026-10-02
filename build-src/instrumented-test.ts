@@ -1,33 +1,23 @@
 import child_process from "node:child_process";
+import { createRequire } from "node:module";
 import path from "node:path";
 import consola from "consola";
 import fs from "fs-extra";
 import { pEvent } from "p-event";
 import type { TestSummary } from "~/test/instrumented/tools";
 
-export async function startInstrumentedTest() {
+export async function startInstrumentedTest(appDir: string) {
     consola.start("start: instrumented tests");
 
-    const xvfbExec = path.resolve(
-        import.meta.dirname,
-        "..",
-        "node_modules",
-        "xvfb-maybe",
-        "src",
-        "xvfb-maybe.js",
-    );
-    const electronExec = path.resolve(
-        import.meta.dirname,
-        "..",
-        "node_modules",
-        "electron",
-        "cli.js",
-    );
-    const cwd = path.resolve(import.meta.dirname, "..", "build", "test");
-    const proc = child_process.fork(xvfbExec, [electronExec, "--trace-warnings", "."], { cwd });
+    const require = createRequire(import.meta.url);
+    const xvfbExec = require.resolve("xvfb-maybe/src/xvfb-maybe.js");
+    const electronExec = require.resolve("electron/cli.js");
+    const proc = child_process.fork(xvfbExec, [electronExec, "--trace-warnings", "."], {
+        cwd: appDir,
+    });
 
     await pEvent(proc, "exit");
-    const f = path.join(cwd, "test-summary.json");
+    const f = path.join(appDir, "test-summary.json");
     await printTestSummary(f);
 }
 

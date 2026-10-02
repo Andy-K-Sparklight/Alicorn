@@ -4,14 +4,12 @@ import { execa } from "execa";
 import fs from "fs-extra";
 import { layout } from "~/build-src/layout.ts";
 
-const output = path.join(layout.root, "patches/vizia");
-
 /**
  * Collects the changes in Vizia sources as patches, placing them under `patches/vizia` with
  * pathname as the prefix.
  */
 async function capture() {
-    const source = await fs.readJson(path.join(layout.root, "patches/vizia-source.json"));
+    const source = await fs.readJson(layout.viziaSourceInfo);
     const ex = execa({
         cwd: layout.viziaSource,
         stdin: "ignore",
@@ -37,11 +35,11 @@ async function capture() {
         patches.push({ file, diff });
     }
 
-    await fs.emptyDir(output);
+    await fs.emptyDir(layout.viziaPatches);
     for (const { file, diff } of patches) {
-        await fs.outputFile(path.join(output, `${file}.patch`), diff);
+        await fs.outputFile(path.join(layout.viziaPatches, `${file}.patch`), diff);
     }
-    consola.success(`Saved ${patches.length} Vizia patches to ${output}`);
+    consola.success(`Saved ${patches.length} Vizia patches to ${layout.viziaPatches}`);
 }
 
 try {

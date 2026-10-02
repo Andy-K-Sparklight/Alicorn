@@ -6,6 +6,7 @@ import fs from "fs-extra";
 import { pEvent } from "p-event";
 import { isTruthy } from "@/main/util/misc";
 import type { BuildConfig } from "~/config";
+import { layout } from "./layout.ts";
 
 interface VendorFile {
     url: string;
@@ -67,9 +68,6 @@ const contents = {
     },
 } as Record<string, Record<string, VendorFile>>;
 
-const vendorCacheDir = path.join(import.meta.dirname, "..", "vendor", "cache");
-const vendorActiveDir = path.join(import.meta.dirname, "..", "vendor", "active");
-
 function createFileList(cfg: BuildConfig): VendorFile[] {
     const {
         variant: { platform, arch },
@@ -116,19 +114,20 @@ async function getFile(url: string, target: string, sha256: string) {
 async function prepareAssets(cfg: BuildConfig, outDir: string): Promise<void> {
     const files = createFileList(cfg);
     const platformPair = `${cfg.variant.platform}-${cfg.variant.arch}`;
-    const root = path.join(vendorCacheDir, platformPair);
-    await fs.emptyDir(vendorActiveDir);
+    const root = path.join(layout.vendor, "cache", platformPair);
+    const activeDir = path.join(layout.vendor, "active");
+    await fs.emptyDir(activeDir);
     await Promise.all(
         files.map(async f => {
             const dlPath = path.join(root, f.target);
-            const outPath = path.join(vendorActiveDir, f.target);
+            const outPath = path.join(activeDir, f.target);
             await getFile(f.url, dlPath, f.sha256);
             await fs.ensureDir(path.dirname(outPath));
             await fs.link(dlPath, outPath);
         }),
     );
 
-    await fs.copy(vendorActiveDir, outDir);
+    await fs.copy(activeDir, outDir);
 }
 
 async function checkSha256(fp: string, hash: string): Promise<boolean> {
