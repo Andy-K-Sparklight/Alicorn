@@ -1,4 +1,5 @@
 import path from "node:path";
+import { layout } from "./build-src/layout.ts";
 
 export type BuildMode = "development" | "production" | "test";
 export type TestLevel = "lite" | "medium" | "full";
@@ -10,6 +11,9 @@ export interface BuildVariant {
     testLevel: TestLevel;
 }
 
+/**
+ * Returns build settings with output under `layout.build` for the variant's mode.
+ */
 export function createBuildConfig(variant: BuildVariant) {
     const { mode } = variant;
 
@@ -18,7 +22,7 @@ export function createBuildConfig(variant: BuildVariant) {
         variant,
 
         // Output directory
-        outputDir: path.resolve(import.meta.dirname, "build", mode),
+        outputDir: path.join(layout.build, mode),
 
         // BMCLAPI provides mirrors to speed up resources delivering in some regions.
         // Make sure that the users read <https://bmclapi2.bangbang93.com>.

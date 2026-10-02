@@ -1,5 +1,6 @@
 import path from "node:path";
 import fs from "fs-extra";
+import { layout } from "./layout.ts";
 
 async function fetchJSON(url: string): Promise<unknown> {
     const res = await fetch(url, { cache: "no-cache" });
@@ -33,7 +34,7 @@ async function createLegacyAssetsRef() {
     }
 
     const data = [...legacyAssets.values()];
-    await fs.outputJSON(path.resolve(import.meta.dirname, "../src/refs/legacy-assets.json"), data, {
+    await fs.outputJSON(path.join(layout.root, "src/refs/legacy-assets.json"), data, {
         spaces: 4,
     });
 }
@@ -51,7 +52,7 @@ async function createJRTVersionRef() {
         arr.push(p.id);
     }
 
-    await fs.outputJSON(path.resolve(import.meta.dirname, "../src/refs/jrt-versions.json"), out, {
+    await fs.outputJSON(path.join(layout.root, "src/refs/jrt-versions.json"), out, {
         spaces: 4,
     });
 }

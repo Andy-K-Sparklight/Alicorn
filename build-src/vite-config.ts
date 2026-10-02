@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { defineConfig, type PluginOption } from "vite";
 import removeConsole from "vite-plugin-remove-console";
+import { layout } from "./layout.ts";
 
 export default defineConfig(({ command }) => {
     const isDev = command === "serve";
@@ -11,11 +12,11 @@ export default defineConfig(({ command }) => {
     process.env.NODE_ENV = isDev ? "development" : "production";
 
     return {
-        root: path.resolve(import.meta.dirname, "..", "src", "renderer"),
+        root: path.join(layout.root, "src/renderer"),
         appType: "mpa",
         base: "",
-        publicDir: path.resolve(import.meta.dirname, "..", "public"),
-        cacheDir: path.resolve(import.meta.dirname, "..", ".vite-cache"),
+        publicDir: path.join(layout.root, "public"),
+        cacheDir: path.join(layout.root, ".vite-cache"),
         resolve: {
             tsconfigPaths: true,
         },

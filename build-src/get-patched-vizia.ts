@@ -12,12 +12,10 @@ import { logOnFail } from "~/build-src/util.ts";
  * Any local changes within the source directory will be lost (including untracked items).
  */
 async function prepare() {
-    const source = await fs.readJson(path.join(layout.root, "patches/vizia-source.json"));
-    const patches = (
-        await Array.fromAsync(glob("**/*.patch", { cwd: path.join(layout.root, "patches/vizia") }))
-    )
+    const source = await fs.readJson(layout.viziaSourceInfo);
+    const patches = (await Array.fromAsync(glob("**/*.patch", { cwd: layout.viziaPatches })))
         .sort()
-        .map(name => path.join(layout.root, "patches/vizia", name));
+        .map(name => path.join(layout.viziaPatches, name));
     for (const patch of patches) await fs.access(patch);
 
     await fs.ensureDir(layout.vendor);
