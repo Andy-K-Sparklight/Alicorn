@@ -142,7 +142,7 @@ function asNativeTarget(platform: string, arch: string): string {
 
     switch (platform) {
         case "win32":
-            nativePlatform = "-pc-windows-gnullvm";
+            nativePlatform = "-pc-windows-msvc"; // -gnullvm links MinGW library which fails on regular Electron
             break;
         case "darwin":
             nativePlatform = "-apple-darwin";

@@ -3,6 +3,10 @@ channel = "nightly-2026-07-29"
 profile = "minimal"
 components = ["clippy", "rust-src", "rustfmt"]
 targets = [
+    # MSVC targets are needed for .node to work with regular Electron.
+    # They can be removed once we no longer use Node.js.
+    "x86_64-pc-windows-msvc",
+    "aarch64-pc-windows-msvc",
     "x86_64-pc-windows-gnullvm",
     "aarch64-pc-windows-gnullvm",
     "x86_64-apple-darwin",
