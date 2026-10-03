@@ -7,7 +7,6 @@ edition = "2024"
 [[bin]]
 name = "alicorn"
 path = "src/main.rs"
-required-features = ["ui"]
 
 [workspace]
 members = ["crates/alicorn-napi"]
@@ -93,7 +92,6 @@ wildcard_dependencies = "warn"
 
 [features]
 prefer-rust-impl = []
-ui = ["dep:vizia"]
 
 [dependencies]
 lzma-rust2 = "0.21.0"
@@ -105,12 +103,10 @@ faster-hex = "1.0.0"
 digest = "0.11.3"
 sha1 = "0.11.0"
 sha2 = "0.11.0"
-
-[dependencies.vizia]
-version = "0.4.0"
-default-features = false
-features = ["winit", "clipboard", "x11", "wayland", "accesskit"]
-optional = true
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_with = "3.24"
+vizia = "0.4.0"
 
 [target.'cfg(target_vendor = "apple")'.dependencies]
 common-crypto = "0.3.0"
@@ -122,5 +118,7 @@ windows = { version = "0.62.2", default-features = false, features = ["Win32_Sec
 cfg_aliases = "0.2.2"
 
 [profile.release]
-lto = true
+codegen-units = 1
+opt-level = "s"
+lto = "fat"
 strip = "symbols"

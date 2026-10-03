@@ -1,4 +1,4 @@
-//! Integrity kit for content verification.
+//! The Integrity Kit. Serves mainly content verification interfaces.
 
 use std::str::FromStr;
 
