@@ -1,7 +1,6 @@
 import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..");
-const patches = path.join(root, "patches");
 const vendor = path.join(root, "vendor");
 
 /**
@@ -13,7 +12,4 @@ export const layout = {
     dist: path.join(root, "dist"),
     resources: path.join(root, "resources"),
     vendor,
-    viziaSource: path.join(vendor, "vizia"),
-    viziaPatches: path.join(patches, "vizia"),
-    viziaSourceInfo: path.join(patches, "vizia-source.json"),
 };
