@@ -2,6 +2,7 @@
 #![cfg(use_cng)]
 
 use windows::Win32::Security::Cryptography::BCRYPT_HASH_HANDLE;
+use windows::Win32::Security::Cryptography::BCRYPT_MD5_ALG_HANDLE;
 use windows::Win32::Security::Cryptography::BCRYPT_SHA1_ALG_HANDLE;
 use windows::Win32::Security::Cryptography::BCRYPT_SHA256_ALG_HANDLE;
 use windows::Win32::Security::Cryptography::BCRYPT_SHA512_ALG_HANDLE;
@@ -69,6 +70,10 @@ macro_rules! impl_hash_unchecked {
                 }
             }
 
+            fn digest_with<R>(self, consume: impl FnOnce(&mut [u8]) -> R) -> R {
+                consume(&mut self.finish())
+            }
+
             fn digest_compare_hex(self, hex: &str) -> bool {
                 crate::util::repr::compare_bin_hex(&self.finish(), hex)
             }
@@ -81,6 +86,7 @@ macro_rules! impl_hash_unchecked {
 }
 
 // SAFETY: All algorithms match their length.
+impl_hash_unchecked!(Md5, BCRYPT_MD5_ALG_HANDLE, 16);
 impl_hash_unchecked!(Sha1, BCRYPT_SHA1_ALG_HANDLE, 20);
 impl_hash_unchecked!(Sha256, BCRYPT_SHA256_ALG_HANDLE, 32);
 impl_hash_unchecked!(Sha512, BCRYPT_SHA512_ALG_HANDLE, 64);
@@ -88,6 +94,7 @@ impl_hash_unchecked!(Sha512, BCRYPT_SHA512_ALG_HANDLE, 64);
 /// A CNG hasher selected by algorithm.
 #[static_dispatch::setup]
 pub enum AnyWindowsHasher {
+    Md5(Md5),
     Sha1(Sha1),
     Sha256(Sha256),
     Sha512(Sha512),
@@ -98,6 +105,7 @@ impl AnyWindowsHasher {
     /// fails.
     pub fn of(algo: HashAlgo) -> Self {
         match algo {
+            HashAlgo::Md5 => Self::Md5(Md5::new()),
             HashAlgo::Sha1 => Self::Sha1(Sha1::new()),
             HashAlgo::Sha256 => Self::Sha256(Sha256::new()),
             HashAlgo::Sha512 => Self::Sha512(Sha512::new()),

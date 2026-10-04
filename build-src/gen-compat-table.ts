@@ -1,5 +1,6 @@
 import path from "node:path";
 import fs from "fs-extra";
+import { createJRTVersionTable } from "./jrt-version-table.ts";
 import { layout } from "./layout.ts";
 
 async function fetchJSON(url: string): Promise<unknown> {
@@ -40,17 +41,7 @@ async function createLegacyAssetsRef() {
 }
 
 async function createJRTVersionRef() {
-    const out: Record<string, string[]> = {}; // Maps the component to profile ID for compact storage
-    for (const p of profiles) {
-        const c = p.javaVersion?.component || "jre-legacy";
-        let arr = out[c];
-        if (!arr) {
-            arr = [];
-            out[c] = arr;
-        }
-
-        arr.push(p.id);
-    }
+    const out = createJRTVersionTable(profiles);
 
     await fs.outputJSON(path.join(layout.root, "src/refs/jrt-versions.json"), out, {
         spaces: 4,

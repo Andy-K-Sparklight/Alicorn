@@ -3,7 +3,7 @@
 use std::fs::File;
 use std::path::Path;
 
-use crate::util::fs::DraftFile;
+use crate::kit::storage::fs::DraftFile;
 
 /// Inflates the file content at `src`, places a new file containing the
 /// decompressed content at `dst`, and returns that file.

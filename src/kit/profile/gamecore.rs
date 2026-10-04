@@ -78,14 +78,14 @@ pub struct StructuredLaunchArgs {
 }
 
 /// A launch argument.
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 #[serde(untagged)]
 pub enum LaunchArg {
     Literal(String),
     Gated(GatedArg),
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct GatedArg {
     pub value: ArgValue,
     pub rules: Option<Vec<Rule>>,
@@ -98,7 +98,7 @@ impl<'a> Deserialize<'a> for LaunchArg {
 }
 
 /// One or multiple arguments.
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 #[serde(untagged)]
 pub enum ArgValue {
     Single(String),
@@ -113,7 +113,7 @@ impl<'de> Deserialize<'de> for ArgValue {
 
 /// Rule for conditionally-enabled items.
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct Rule {
     pub action: RuleAct,
     pub features: Option<HashMap<String, bool>>,
@@ -121,16 +121,24 @@ pub struct Rule {
 }
 
 /// Rule action.
-#[derive(Serialize, Deserialize)]
+#[derive(Copy, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum RuleAct {
     Allow,
     Disallow,
 }
 
+impl RuleAct {
+    pub fn into_bool(self) -> bool { self == RuleAct::Allow }
+}
+
+impl From<RuleAct> for bool {
+    fn from(value: RuleAct) -> Self { value.into_bool() }
+}
+
 /// A rule item that checks certain properties of the OS.
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct OsRule {
     pub name: Option<OsName>,
     pub version: Option<String>,

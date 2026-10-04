@@ -53,7 +53,7 @@ impl LzmaInflatePoolHandle {
         let dst = PathBuf::from(dst);
 
         self.pool.spawn(move || {
-            let result = alicorn_r::util::archive::lzma::inflate(&src, &dst)
+            let result = alicorn_r::kit::storage::archive::lzma::inflate(&src, &dst)
                 .map(|_| ())
                 .map_err(Into::into);
 

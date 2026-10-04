@@ -1,0 +1,9 @@
+[embed]
+default_vm_args = { path = "src/refs/default-vm-args.json", type = "data" }
+jrt_linux_arm = { path = "src/refs/jrt-linux-arm.json", type = "data" }
+jrt_versions = { path = "src/refs/jrt-versions.json", type = "data" }
+legacy_assets = { path = "src/refs/legacy-assets.json", type = "data" }
+legacy_forge_compat = { path = "src/refs/legacy-forge-compat.json", type = "data" }
+legacy_forge_libs = { path = "src/refs/legacy-forge-libs.json", type = "data" }
+lwjgl_artifacts = { path = "src/refs/lwjgl-artifacts.json", type = "data" }
+rift_compat = { path = "src/refs/rift-compat.json", type = "data" }

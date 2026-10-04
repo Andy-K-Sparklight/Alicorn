@@ -1,4 +1,7 @@
 //! Stateless building blocks of higher-level functionalities.
 
-pub mod integrity;
-pub mod model;
+pub mod auth;
+pub mod container;
+pub mod launch;
+pub mod profile;
+pub mod storage;

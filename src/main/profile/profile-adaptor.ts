@@ -12,12 +12,11 @@ async function patchJRTVersion(src: Record<string, unknown>) {
     if ("javaVersion" in src) return;
 
     if ("id" in src && typeof src.id === "string") {
-        const jrtVersions = await unwrapESM(import("@/refs/jrt-versions.json"));
-        for (const [k, v] of Object.entries(jrtVersions)) {
-            if (Array.isArray(v) && v.includes(src.id)) {
-                src.javaVersion = { component: k };
-                return;
-            }
+        const { versions, runtimes } = await unwrapESM(import("@/refs/jrt-versions.json"));
+        if (Object.hasOwn(versions, src.id)) {
+            const index = (versions as Record<string, number>)[src.id];
+            src.javaVersion = { component: runtimes[index] };
+            return;
         }
     }
 
@@ -42,6 +41,7 @@ async function transformLegacy(src: Record<string, unknown>): Promise<void> {
 
 /**
  * Patches the given profile in-place.
+ * Preserves explicit `javaVersion` values, inferring missing values by ID with a `jre-legacy` fallback.
  */
 export async function patchProfile(src: Record<string, unknown>): Promise<void> {
     await patchJRTVersion(src);
