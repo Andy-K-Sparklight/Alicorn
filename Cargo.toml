@@ -10,6 +10,8 @@ path = "src/main.rs"
 
 [workspace]
 members = ["crates/alicorn-napi", "crates/alicorn-build"]
+# Don't make block consider itself being in a workspace
+exclude = ["patches/block"]
 default-members = ["."]
 resolver = "3"
 
@@ -130,6 +132,9 @@ alicorn-build = { path = "crates/alicorn-build" }
 cfg_aliases = "0.2.2"
 pkg-config = "0.3.33"
 toml = "1.1"
+
+[patch.crates-io]
+block = { path = "patches/block" } # Fix a soundness issue
 
 [profile.release]
 codegen-units = 1

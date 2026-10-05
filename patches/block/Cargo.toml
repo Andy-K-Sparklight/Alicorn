@@ -1,0 +1,28 @@
+[package]
+name = "block"
+version = "0.1.6"
+authors = ["Steven Sheldon"]
+edition = "2015"
+
+description = "Rust interface for Apple's C language extension of blocks."
+keywords = ["blocks", "osx", "ios", "objective-c"]
+readme = "README.md"
+repository = "http://github.com/SSheldon/rust-block"
+documentation = "http://ssheldon.github.io/rust-objc/block/"
+license = "MIT"
+
+exclude = [
+  ".gitignore",
+  ".travis.yml",
+  "travis_install.sh",
+  "travis_test.sh",
+  "tests-ios/**",
+]
+
+[dev-dependencies.objc_test_utils]
+version = "0.0"
+path = "test_utils"
+
+[package.metadata.alicorn]
+upstream-revision = "47178790cfc9d4a8b092051d8b413b78bd31254a"
+patch = "Use an inhabited opaque Class and addr_of! for _NSConcreteStackBlock; make the C ABI explicit."
