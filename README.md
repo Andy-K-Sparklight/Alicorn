@@ -4,12 +4,22 @@
 
 A faithful launcher for the block game, trying to regain the magic of friendship.
 
-![Alicorn Badge](https://img.shields.io/badge/Alicorn-3.x-df307f)
+![Alicorn Badge](https://img.shields.io/badge/Alicorn-4.x-df307f)
 ![Node.js CI](https://github.com/Andy-K-Sparklight/Alicorn/actions/workflows/build.yml/badge.svg)
 ![CodeQL](https://github.com/Andy-K-Sparklight/Alicorn/actions/workflows/codeql.yml/badge.svg)
 ![Creation Date](https://img.shields.io/github/created-at/Andy-K-Sparklight/Alicorn?label=since)
 ![License Badge](https://img.shields.io/github/license/Andy-K-Sparklight/Alicorn)
 ![Repo Size](https://img.shields.io/github/repo-size/Andy-K-Sparklight/Alicorn)
+
+> [!WARNING]
+> *Contrail* is currently incomplete.
+>
+> We're actively developing towards it. However, before this alert is removed, content written below
+may not be fully represented in the application.
+>
+> Want to get things landed faster? Get involved by
+opening [issues](https://github.com/Andy-K-Sparklight/Alicorn/issues/new) or
+[pull requests](https://github.com/Andy-K-Sparklight/Alicorn/compare)!
 
 ## About Contrail
 
