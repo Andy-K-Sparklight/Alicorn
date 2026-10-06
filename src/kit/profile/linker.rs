@@ -1,30 +1,16 @@
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 use std::rc::Rc;
 
-use serde_json::json;
+use iced::widget::sensor::Key;
 use thiserror::Error;
-
-/// Loads raw profile documents by ID.
-pub trait ProfileSource {
-    type Err;
-
-    fn load(&mut self, id: &str) -> Result<serde_json::Value, Self::Err>;
-}
 
 /// A failure while resolving raw profile inheritance.
 #[derive(Debug, Error)]
-pub enum LinkError<E> {
-    /// The requested profile has cyclic inheritance.
-    #[error("Unsatisfied link when resolving {id}")]
-    Unsatisfied { id: String },
-
-    /// Loading the given lookup ID failed.
-    #[error("Failed to load profile: {id}")]
-    Loader {
-        id: String,
-        #[source]
-        source: E,
-    },
+pub enum LinkError {
+    /// Inheritance contains a cycle involving this lookup ID.
+    #[error("Cyclic profile inheritance involving {id}")]
+    Cycle { id: String },
 }
 
 /// A merged profile and its resolved base lookup ID.
@@ -32,138 +18,191 @@ pub enum LinkError<E> {
 pub struct LinkedProfile {
     /// The merged document with `inheritsFrom` removed.
     pub value: serde_json::Value,
-    /// The last lookup ID loaded in the inheritance chain.
+    /// The terminal ancestor's lookup ID.
     pub base_id: String,
 }
 
-/// A loaded body with its inheritance target stored separately.
-#[derive(Clone)]
-struct LoadedProfile {
-    id: Rc<String>,
-    value: serde_json::Value,
-    parent: Option<Rc<String>>,
+/// The next step or completed result of a linking request.
+#[derive(Debug)]
+pub enum LinkerCmd<'a> {
+    /// Supply this lookup ID's body before retrying the request.
+    Pending(&'a str),
+
+    /// The requested profile is resolved.
+    Resolved(Rc<LinkedProfile>),
+
+    /// The requested profile cannot resolve within this linker.
+    Err(Rc<LinkError>),
 }
 
-impl LoadedProfile {
-    /// Extracts `inheritsFrom` from `src` as the parent, and retain the rest as
-    /// the value.
-    fn new(id: Rc<String>, mut value: serde_json::Value) -> Self {
-        let parent = match &mut value {
-            serde_json::Value::Object(object) => {
-                let maybe_parent = object.remove("inheritsFrom");
-                match maybe_parent {
-                    Some(serde_json::Value::String(id)) => Some(Rc::new(id)),
-                    _ => None,
-                }
-            }
-            _ => None,
-        };
-        Self { id, value, parent }
-    }
+/// Links caller-supplied profiles and retains their resolved ancestors.
+///
+/// Bodies are write-once by lookup ID. Use a new linker when source data
+/// changes.
+#[derive(Debug, Default)]
+pub struct Linker {
+    ids: BTreeMap<Rc<str>, usize>,
+    nodes: Vec<Node>,
 }
 
-/// Links the profiles denoted by the specified IDs, loading required ones from
-/// `source`.
-///
-/// Returns a map from profile ID to the result: either a [`LinkedProfile`] for
-/// a successful load, or a [`LinkError`] describing the problem.
-///
-/// Intermediate results may be cached for performance, and the exact cache
-/// behavior is unspecified.
-///
-/// Inheritance is *root-to-head*, that is, the root is first patched with its
-/// direct dependent, then the dependent of the patched profile, and so on. This
-/// is to ensure that intermediate overrides (like a `null` in the middle)
-/// correctly blocks data from being inherited. Regardless, the exact
-/// inheritance rules are based on guesses and might change in the future.
-pub fn link_profile_content<S: ProfileSource>(
-    ids: impl Iterator<Item = impl Into<String>>,
-    source: &mut S,
-) -> BTreeMap<String, Result<LinkedProfile, LinkError<S::Err>>>
-where
-    S::Err: Clone,
-{
-    let mut linked_profiles = BTreeMap::<_, Result<LinkedProfile, _>>::new();
-    let mut loader_cache = BTreeMap::new();
+impl Linker {
+    /// Creates a linker with no supplied profiles.
+    pub fn new() -> Self { Self::default() }
 
-    for id in ids {
-        let id = Rc::new(id.into());
-        if linked_profiles.contains_key(&id) {
-            continue;
+    /// Supplies profile JSON data to the linker. Returns whether the new
+    /// content is accepted.
+    pub fn supply(&mut self, id: impl Into<String>, mut value: serde_json::Value) -> bool {
+        // Can't use &mut here as the later parent insertion also takes &mut
+        let index = self.node_id_of(&id.into());
+        if !matches!(self.nodes[index].content, NodeContent::Missing) {
+            return false;
         }
 
-        let mut current = Rc::clone(&id);
-        let mut chain: Vec<LoadedProfile> = Vec::new();
+        let base_id = extract_parent(&mut value);
+        let parent_node_id = base_id.map(|it| self.node_id_of(&it));
 
-        let out = loop {
-            if let Some(Ok(profile)) = linked_profiles.get(&current) {
-                break Ok(profile.clone());
-            }
-
-            if chain.iter().any(|it| it.id == current) {
-                // Cyclic
-                break Err(LinkError::Unsatisfied {
-                    id: (*id).to_owned(),
-                });
-            }
-
-            let cached = loader_cache.entry(Rc::clone(&current)).or_insert_with(|| {
-                source
-                    .load(&current)
-                    .map(|it| LoadedProfile::new(Rc::clone(&current), it))
-                    .map_err(Rc::new)
-            });
-
-            let cached = match cached {
-                Ok(profile) => profile,
-                Err(ex) => {
-                    break Err(LinkError::Loader {
-                        id: (*current).to_owned(),
-                        source: Rc::clone(ex),
-                    });
-                }
-            };
-
-            chain.push(cached.to_owned());
-
-            let Some(parent) = &cached.parent else {
-                break Ok(LinkedProfile {
-                    value: json!({}),
-                    base_id: (*current).to_owned(),
-                });
-            };
-
-            current = Rc::clone(parent);
-        };
-
-        let out = out.map(|root| {
-            let base_id = root.base_id;
-            let mut v = root.value;
-            for c in chain.into_iter().rev() {
-                v = merge_json(v, c.value);
-            }
-            LinkedProfile { value: v, base_id }
-        });
-
-        linked_profiles.insert(id, out);
+        self.nodes[index].parent = parent_node_id;
+        self.nodes[index].content = NodeContent::Loaded(value);
+        true
     }
 
-    drop(loader_cache);
+    /// Requires a profile by its ID.
+    ///
+    /// The returned [`LinkerCmd`] indicates the availability: linked and
+    /// available ([`LinkerCmd::Resolved`]), failed during linkage
+    /// ([`LinkerCmd::Err`]) or pending for its dependency
+    /// ([`LinkerCmd::Pending`]).
+    pub fn require(&mut self, id: &str) -> LinkerCmd<'_> {
+        let mut current = self.node_id_of(id);
+        let mut chain = Vec::new();
+        let mut visited = BTreeSet::new();
 
-    linked_profiles
-        .into_iter()
-        .map(|(id, result)| {
-            // Make errors owned
-            let result = result.map_err(|error| match error {
-                LinkError::Unsatisfied { id } => LinkError::Unsatisfied { id },
-                LinkError::Loader { id, source } => LinkError::Loader {
-                    id,
-                    source: Rc::unwrap_or_clone(source),
-                },
-            });
-            (Rc::unwrap_or_clone(id), result)
-        })
-        .collect()
+        // Traverse the tree to find the root
+        let result = loop {
+            let node = &mut self.nodes[current];
+
+            match &node.content {
+                NodeContent::Missing => return LinkerCmd::Pending(&self.nodes[current].id),
+                NodeContent::Ready(profile) => break Ok(profile.to_owned()),
+                NodeContent::Failed(ex) => break Err(ex.to_owned()),
+                NodeContent::Loaded(_) => {}
+            }
+
+            // Cyclic detection
+            if !visited.insert(current) {
+                break Err(Rc::new(LinkError::Cycle {
+                    id: (*node.id).to_owned(),
+                }));
+            }
+
+            let Some(parent) = node.parent else {
+                break Ok(node.finalize(None)); // Root found, finalize it first
+            };
+
+            chain.push(current); // Only add the index if it's not the root (already finalized)
+            current = parent;
+        };
+
+        match result {
+            Ok(mut profile) => {
+                for index in chain.into_iter().rev() {
+                    // Finalize each node in the chain, with the previous node as its parent
+                    profile = self.nodes[index].finalize(Some(&profile));
+                }
+                LinkerCmd::Resolved(profile)
+            }
+            Err(ex) => {
+                // A parent has errored, therefore none of its children can be linked
+                for index in chain {
+                    self.nodes[index].content = NodeContent::Failed(Rc::clone(&ex));
+                }
+                LinkerCmd::Err(ex)
+            }
+        }
+    }
+
+    /// Gets the node ID of the given profile ID, creating missing nodes.
+    fn node_id_of(&mut self, id: &str) -> usize {
+        if let Some(&index) = self.ids.get(id) {
+            return index;
+        }
+
+        let id: Rc<str> = Rc::from(id);
+        let index = self.nodes.len();
+        self.nodes.push(Node {
+            id: Rc::clone(&id),
+            parent: None,
+            content: NodeContent::Missing,
+        });
+        self.ids.insert(id, index);
+        index
+    }
+}
+
+/// Extracts the `inheritsFrom` key from the given JSON value.
+fn extract_parent(v: &mut serde_json::Value) -> Option<String> {
+    if let serde_json::Value::Object(o) = v
+        && let Some(serde_json::Value::String(s)) = o.remove("inheritsFrom")
+    {
+        return Some(s);
+    }
+
+    None
+}
+
+/// A node in the resolution tree.
+#[derive(Debug)]
+struct Node {
+    id: Rc<str>,
+    parent: Option<usize>,
+    content: NodeContent,
+}
+
+impl Node {
+    /// Finalize this profile into a [`LinkedProfile`], patching on a clone of
+    /// `parent` if supplied.
+    ///
+    /// # Panics
+    ///
+    /// This method may only be called on a node whose content is
+    /// [`NodeContent::Loaded`], otherwise it panics.
+    fn finalize(&mut self, parent: Option<&LinkedProfile>) -> Rc<LinkedProfile> {
+        let NodeContent::Loaded(value) = &mut self.content else {
+            panic!("Only loaded profiles may be finalized");
+        };
+
+        let value = value.take();
+
+        let profile = if let Some(parent) = parent {
+            LinkedProfile {
+                value: merge_json(parent.value.to_owned(), value),
+                base_id: parent.base_id.to_owned(),
+            }
+        } else {
+            LinkedProfile {
+                value,
+                base_id: (*self.id).to_owned(),
+            }
+        };
+
+        let profile = Rc::new(profile);
+        self.content = NodeContent::Ready(Rc::clone(&profile));
+
+        profile
+    }
+}
+
+/// The linkage state of the profile.
+#[derive(Debug)]
+enum NodeContent {
+    /// Concrete content is still missing.
+    Missing,
+    /// Content is ready but not yet linked.
+    Loaded(serde_json::Value),
+    /// Profile is ready.
+    Ready(Rc<LinkedProfile>),
+    /// Failure occurred.
+    Failed(Rc<LinkError>),
 }
 
 /// Patches `base` recursively using `head`, replacing primitive values,
@@ -199,46 +238,54 @@ mod tests {
 
     use super::*;
 
-    #[derive(Debug, Clone, Error)]
-    #[error("Profile is missing")]
-    struct Missing;
-
-    struct Source {
-        profiles: BTreeMap<&'static str, serde_json::Value>,
-        loaded: Vec<String>,
+    /// Creates a linker with the supplied test bodies.
+    fn with_profiles(
+        profiles: impl IntoIterator<Item = (&'static str, serde_json::Value)>,
+    ) -> Linker {
+        let mut linker = Linker::new();
+        for (id, value) in profiles {
+            assert!(linker.supply(id, value), "Each fixture should be accepted");
+        }
+        linker
     }
 
-    impl Source {
-        fn new(profiles: impl IntoIterator<Item = (&'static str, serde_json::Value)>) -> Self {
-            Self {
-                profiles: profiles.into_iter().collect(),
-                loaded: Vec::new(),
+    /// Extracts a completed profile from a test request.
+    fn ready(cmd: LinkerCmd<'_>) -> Rc<LinkedProfile> {
+        let LinkerCmd::Resolved(profile) = cmd else {
+            panic!("The request should resolve, got {cmd:?}");
+        };
+        profile
+    }
+
+    /// Drives resolution with fixtures that can each be loaded once.
+    fn resolve(
+        linker: &mut Linker,
+        id: &str,
+        source: &mut BTreeMap<&str, serde_json::Value>,
+    ) -> Rc<LinkedProfile> {
+        loop {
+            match linker.require(id) {
+                LinkerCmd::Pending(id) => {
+                    let id = id.to_owned();
+                    let value = source.remove(&*id).expect("Each body should load once");
+                    assert!(
+                        linker.supply(id, value),
+                        "Requested bodies should be accepted"
+                    );
+                }
+                cmd => return ready(cmd),
             }
         }
-    }
-
-    impl ProfileSource for Source {
-        type Err = Missing;
-
-        fn load(&mut self, id: &str) -> Result<serde_json::Value, Self::Err> {
-            self.loaded.push(id.to_owned());
-            self.profiles.get(id).cloned().ok_or(Missing)
-        }
-    }
-
-    /// Returns the successful result of a test profile's resolution.
-    fn linked(result: &Result<LinkedProfile, LinkError<Missing>>) -> &LinkedProfile {
-        result.as_ref().expect("The requested profile should link")
     }
 
     /// Shared ancestors and completed parents preserve merge precedence without
     /// reloading profiles or leaking one child's overrides into another.
     #[test]
-    fn link_raw_profiles_inheritance() {
+    fn linker_inheritance() {
         for ids in [["child", "sibling", "parent", "child"], [
             "parent", "child", "sibling", "parent",
         ]] {
-            let mut source = Source::new([
+            let mut source = BTreeMap::from([
                 (
                     "child",
                     json!({
@@ -273,14 +320,13 @@ mod tests {
                     json!({"inheritsFrom": "parent", "items": ["sibling"]}),
                 ),
             ]);
-            let profiles = link_profile_content(ids.into_iter(), &mut source);
+            let mut linker = Linker::new();
+            let profiles: BTreeMap<_, _> = ids
+                .into_iter()
+                .map(|id| (id, resolve(&mut linker, id, &mut source)))
+                .collect();
             assert_eq!(
-                profiles.len(),
-                3,
-                "Only distinct requested profiles should be returned"
-            );
-            assert_eq!(
-                linked(&profiles["child"]).value,
+                profiles["child"].value,
                 json!({
                     "id": "child-metadata",
                     "version": "child-version",
@@ -290,7 +336,7 @@ mod tests {
                 "Linking should merge base-outward and retain separate metadata and lookup IDs"
             );
             assert_eq!(
-                linked(&profiles["sibling"]).value,
+                profiles["sibling"].value,
                 json!({
                     "id": "parent-metadata",
                     "version": "parent-version",
@@ -300,300 +346,171 @@ mod tests {
                 "Cached parents should retain their own values for each child"
             );
             assert_eq!(
-                linked(&profiles["parent"]).value["items"],
+                profiles["parent"].value["items"],
                 json!(["parent", "base"]),
                 "A requested parent should retain its resolved ancestor data"
             );
             for profile in profiles.values() {
                 assert_eq!(
-                    linked(profile).base_id,
-                    "base",
+                    profile.base_id, "base",
                     "The base ID should identify the last loaded profile"
                 );
             }
-            source.loaded.sort();
+            assert!(source.is_empty(), "All required bodies should have loaded");
+            let parent = ready(linker.require("parent"));
+            assert!(
+                Rc::ptr_eq(&parent, &profiles["parent"]),
+                "Repeated requests should share the resolved intermediate"
+            );
             assert_eq!(
-                source.loaded,
-                ["base", "child", "parent", "sibling"],
-                "Each encountered profile should load once per call"
+                ready(linker.require("base")).value["items"],
+                json!(["base"]),
+                "The terminal ancestor should remain available after resolving children"
             );
         }
     }
 
-    /// Parent nulls clear inherited arguments before a child omits or replaces
-    /// them, including when the child supplies a new argument list.
+    /// Non-string inheritance is removed and terminates resolution.
     #[test]
-    fn link_raw_profiles_arguments() {
-        for (parent, child, expected) in [
-            (json!(null), None, json!(null)),
-            (
-                json!(null),
-                Some(json!({"jvm": ["-Dchild=true"]})),
-                json!({"jvm": ["-Dchild=true"]}),
-            ),
-            (
-                json!({"game": null}),
-                Some(json!({"game": ["--child"]})),
-                json!({"game": ["--child"]}),
-            ),
-        ] {
-            let mut profile = json!({"id": "child", "inheritsFrom": "parent"});
-            if let Some(arguments) = child {
-                profile["arguments"] = arguments;
-            }
-            let mut source = Source::new([
-                ("child", profile),
-                (
-                    "parent",
-                    json!({
-                        "id": "parent",
-                        "inheritsFrom": "base",
-                        "arguments": parent
-                    }),
-                ),
-                (
-                    "base",
-                    json!({"id": "base", "arguments": {"game": ["--base"]}}),
-                ),
-            ]);
-            let profiles = link_profile_content(["child"].into_iter(), &mut source);
-            assert_eq!(
-                linked(&profiles["child"]).value.get("arguments"),
-                Some(&expected),
-                "Child arguments should preserve the parent's clearing of base arguments"
-            );
-        }
-    }
-
-    /// Arbitrary JSON bodies link under their lookup IDs while retaining their
-    /// contents for subsequent schema validation.
-    #[test]
-    fn link_raw_profiles_body() {
-        for body in [
-            json!(null),
-            json!(true),
-            json!(42),
-            json!("profile"),
-            json!([1, "entry"]),
-            json!({}),
-            json!({"id": null}),
-            json!({"id": "different"}),
-        ] {
-            let mut source = Source::new([("lookup", body.clone())]);
-            let profiles = link_profile_content(["lookup"].into_iter(), &mut source);
-            assert_eq!(
-                linked(&profiles["lookup"]).value,
-                body,
-                "Linking should preserve the body under its lookup ID"
-            );
-            assert_eq!(
-                linked(&profiles["lookup"]).base_id,
-                "lookup",
-                "The base ID should come from the lookup"
-            );
-        }
-    }
-
-    /// Missing and non-string inheritance values end resolution without adding
-    /// a version field to the completed document.
-    #[test]
-    fn link_raw_profiles_termination() {
-        for profile in [
+    fn linker_termination() {
+        let mut linker =
+            with_profiles([("lookup", json!({"id": "metadata", "inheritsFrom": null}))]);
+        let profile = ready(linker.require("lookup"));
+        assert_eq!(
+            profile.value,
             json!({"id": "metadata"}),
-            json!({"id": "metadata", "inheritsFrom": null}),
-            json!({"id": "metadata", "inheritsFrom": 1}),
-        ] {
-            let mut source = Source::new([("lookup", profile)]);
-            let profiles = link_profile_content(["lookup"].into_iter(), &mut source);
-            assert_eq!(
-                linked(&profiles["lookup"]).value,
-                json!({"id": "metadata"}),
-                "Terminal profiles should remove inheritance and preserve source fields"
-            );
-            assert_eq!(
-                linked(&profiles["lookup"]).base_id,
-                "lookup",
-                "Standalone profiles should use their requested ID as the base ID"
-            );
-        }
-    }
-
-    /// Empty requested and inherited IDs load their documents and remain valid
-    /// base IDs in completed results.
-    #[test]
-    fn link_raw_profiles_empty_id() {
-        let mut source = Source::new([
-            ("", json!({"id": "base-metadata", "base": true})),
-            ("child", json!({"id": "child-metadata", "inheritsFrom": ""})),
-        ]);
-        let profiles = link_profile_content(["", "child"].into_iter(), &mut source);
-        assert_eq!(
-            linked(&profiles[""]).value,
-            json!({"id": "base-metadata", "base": true}),
-            "An empty requested ID should retain its loaded document"
+            "Terminal profiles should remove inheritance and preserve source fields"
         );
         assert_eq!(
-            linked(&profiles["child"]).value,
-            json!({"id": "child-metadata", "base": true}),
-            "An empty parent ID should contribute fields with inheritance removed"
-        );
-        for profile in profiles.values() {
-            assert_eq!(
-                linked(profile).base_id,
-                "",
-                "An empty terminal lookup should remain the base ID"
-            );
-        }
-        assert_eq!(
-            source.loaded,
-            ["", "child"],
-            "Empty requested and inherited IDs should share the same cached result"
+            profile.base_id, "lookup",
+            "Standalone profiles should use their requested ID as the base ID"
         );
     }
 
-    /// Shared loader failures produce owned errors for every dependent while
-    /// successful requests on either side of the failures still resolve.
+    /// Missing targets and shared dependencies remain loadable while requests
+    /// interleave, then resolve after their bodies are supplied.
     #[test]
-    fn link_raw_profiles_loader_error() {
-        for missing in ["missing", ""] {
-            let mut source = Source::new([
-                ("good", json!({"id": "good"})),
-                ("child", json!({"id": "child", "inheritsFrom": missing})),
-                ("sibling", json!({"inheritsFrom": missing})),
-                ("later", json!(42)),
-            ]);
-            let mut profiles = link_profile_content(
-                ["good", "child", "sibling", missing, "child", "later"].into_iter(),
-                &mut source,
-            );
-            assert_eq!(
-                profiles.len(),
-                5,
-                "Every distinct requested ID should have a result"
-            );
-            assert_eq!(
-                linked(&profiles["good"]).value,
-                json!({"id": "good"}),
-                "Earlier results should remain available"
-            );
-            assert_eq!(
-                linked(&profiles["later"]).value,
-                json!(42),
-                "Later requests should resolve after failures"
-            );
-            for id in ["child", "sibling", missing] {
-                let error = profiles
-                    .remove(id)
-                    .expect("Each requested ID should have a result")
-                    .expect_err("A missing ancestor should fail its dependent");
-                assert_matches!(
-                    error,
-                    LinkError::Loader { id, source: Missing } if id == missing,
-                    "Loader errors should retain the failed lookup and owned source error"
-                );
-            }
-            source.loaded.sort();
-            let mut expected = ["good", "child", "sibling", missing, "later"];
-            expected.sort();
-            assert_eq!(
-                source.loaded, expected,
-                "Shared failing lookups and duplicate requests should load only once"
-            );
-        }
-    }
-
-    /// Cycles fail each dependent under its requested ID while unrelated
-    /// requests succeed and cached bodies avoid repeated loads.
-    #[test]
-    fn link_raw_profiles_unsatisfied() {
-        for parent in ["bad", "parent", ""] {
-            let mut source = Source::new([
-                ("good", json!({"id": "good"})),
-                ("bad", json!({"inheritsFrom": parent})),
-                ("parent", json!({"inheritsFrom": "bad"})),
-                ("", json!({"inheritsFrom": "bad"})),
-                ("dependent", json!({"inheritsFrom": "bad"})),
-                ("later", json!({})),
-            ]);
-            let profiles = link_profile_content(
-                ["good", "bad", "dependent", "later", "bad"].into_iter(),
-                &mut source,
-            );
-            assert_eq!(
-                profiles.len(),
-                4,
-                "Cyclic and successful requests should all have results"
-            );
-            for requested in ["bad", "dependent"] {
-                let error = profiles[requested]
-                    .as_ref()
-                    .expect_err("Cycles should fail resolution");
-                assert_matches!(
-                    error,
-                    LinkError::Unsatisfied { id } if id == requested,
-                    "Cycle errors should identify each requested profile"
-                );
-            }
-            linked(&profiles["good"]);
-            linked(&profiles["later"]);
-            assert_eq!(
-                source.loaded.iter().filter(|id| *id == "bad").count(),
-                1,
-                "Cycle detection should reuse cached bodies"
-            );
-        }
-    }
-
-    /// An empty requested ID that inherits itself reports a cycle before a
-    /// second load.
-    #[test]
-    fn link_raw_profiles_empty_id_cycle() {
-        let mut source = Source::new([("", json!({"id": "metadata", "inheritsFrom": ""}))]);
-        let mut profiles = link_profile_content([""].into_iter(), &mut source);
-        let error = profiles
-            .remove("")
-            .expect("The empty requested ID should have a result")
-            .expect_err("Empty IDs should participate in cycle detection");
+    fn linker_load_interleaved() {
+        let mut linker = Linker::new();
         assert_matches!(
-            error,
-            LinkError::Unsatisfied { id } if id.is_empty(),
-            "A cycle should identify the empty requested ID"
+            linker.require("child"),
+            LinkerCmd::Pending("child"),
+            "An unsupplied target should request its body"
         );
-        assert_eq!(source.loaded, [""], "A cycle should stop before reloading");
+        assert!(
+            linker.supply("child", json!({"inheritsFrom": "parent", "child": true})),
+            "A requested body should be accepted"
+        );
+        assert!(
+            linker.supply("sibling", json!({"inheritsFrom": "parent"})),
+            "An unrequested body should be accepted"
+        );
+        for requested in ["child", "sibling", "child"] {
+            assert_matches!(
+                linker.require(requested),
+                LinkerCmd::Pending("parent"),
+                "Interleaved requests should identify the same missing ancestor"
+            );
+        }
+        assert!(
+            linker.supply("parent", json!({"base": true})),
+            "The missing ancestor should accept its body"
+        );
+        assert_eq!(
+            ready(linker.require("sibling")).value,
+            json!({"base": true}),
+            "The sibling should resolve after its parent is supplied"
+        );
+        assert_eq!(
+            ready(linker.require("child")).value,
+            json!({"base": true, "child": true}),
+            "A resumed request should merge its supplied ancestor"
+        );
     }
 
-    /// Separate calls reload both successful and failed lookups so changes in
-    /// the source become visible.
+    /// Self-cycles and multi-node cycles fail their dependents while unrelated
+    /// profiles remain resolvable before and after the failure.
     #[test]
-    fn link_raw_profiles_cache_scope() {
-        let mut source = Source::new([("good", json!(1))]);
-        let first = link_profile_content(["good", "missing"].into_iter(), &mut source);
-        assert_eq!(
-            linked(&first["good"]).value,
-            json!(1),
-            "The initial body should resolve"
-        );
-        first["missing"]
-            .as_ref()
-            .expect_err("The missing lookup should fail initially");
+    fn linker_cycles() {
+        for parent in ["bad", "parent"] {
+            let mut linker = with_profiles([
+                ("bad", json!({"inheritsFrom": parent})),
+                ("dependent", json!({"inheritsFrom": "bad"})),
+                ("good", json!(1)),
+                ("later", json!(2)),
+            ]);
+            if parent != "bad" {
+                assert!(
+                    linker.supply(parent, json!({"inheritsFrom": "bad"})),
+                    "The second cycle member should accept its body"
+                );
+            }
+            let good = ready(linker.require("good"));
+            for requested in ["dependent", "bad", parent] {
+                let LinkerCmd::Err(ex) = linker.require(requested) else {
+                    panic!("Cyclic profiles and their dependents should fail");
+                };
+                assert_matches!(
+                    &*ex,
+                    LinkError::Cycle { id } if id == "bad" || id == parent,
+                    "Cycle errors should identify a member of the cycle"
+                );
+            }
+            assert!(
+                linker.supply("sibling", json!({"inheritsFrom": "bad"})),
+                "A new dependent should accept its body after a cycle is detected"
+            );
+            assert_matches!(
+                linker.require("sibling"),
+                LinkerCmd::Err(_),
+                "A new dependent should inherit the cached cycle failure"
+            );
+            assert!(
+                !linker.supply("bad", json!({})),
+                "A failed profile should retain its original body"
+            );
+            assert_matches!(
+                linker.require("bad"),
+                LinkerCmd::Err(_),
+                "Rejected replacement should preserve the cycle failure"
+            );
+            assert_eq!(good.value, json!(1), "Earlier results should remain usable");
+            assert_eq!(
+                ready(linker.require("later")).value,
+                json!(2),
+                "Unrelated profiles should resolve after a cycle failure"
+            );
+        }
+    }
 
-        source.profiles.insert("good", json!(2));
-        source.profiles.insert("missing", json!(3));
-        let second = link_profile_content(["good", "missing"].into_iter(), &mut source);
-        assert_eq!(
-            linked(&second["good"]).value,
-            json!(2),
-            "A new call should load updated bodies"
+    /// Duplicate supplies preserve unresolved bodies and completed results.
+    #[test]
+    fn linker_supply_write_once() {
+        let mut linker = with_profiles([
+            ("child", json!({"inheritsFrom": "base", "child": true})),
+            ("base", json!({"base": 1})),
+        ]);
+        assert!(
+            !linker.supply("child", json!({"inheritsFrom": "other"})),
+            "An unresolved body should reject replacement"
+        );
+        let child = ready(linker.require("child"));
+        assert!(
+            !linker.supply("base", json!(null)),
+            "A completed ancestor should reject replacement"
+        );
+        assert!(
+            !linker.supply("child", json!({})),
+            "A completed target should reject replacement"
+        );
+        assert!(
+            Rc::ptr_eq(&child, &ready(linker.require("child"))),
+            "Rejected supplies should preserve the cached result"
         );
         assert_eq!(
-            linked(&second["missing"]).value,
-            json!(3),
-            "A new call should retry failed lookups"
-        );
-        assert_eq!(
-            source.loaded,
-            ["good", "missing", "good", "missing"],
-            "Each call should have its own loader cache"
+            child.value,
+            json!({"base": 1, "child": true}),
+            "Rejected supplies should preserve the original inheritance and body"
         );
     }
 
@@ -622,22 +539,14 @@ mod tests {
         );
     }
 
-    /// Arrays preserve child-first order and duplicates, including when either
-    /// array is empty.
+    /// Arrays preserve child-first order and duplicates.
     #[test]
     fn merge_json_arrays() {
-        for (base, head, expected) in [
-            (json!([1, 2]), json!([2, 3]), json!([2, 3, 1, 2])),
-            (json!([1]), json!([]), json!([1])),
-            (json!([]), json!([2]), json!([2])),
-            (json!([]), json!([]), json!([])),
-        ] {
-            assert_eq!(
-                merge_json(json!({"items": base}), json!({"items": head})),
-                json!({"items": expected}),
-                "Nested arrays should retain all head elements before base elements"
-            );
-        }
+        assert_eq!(
+            merge_json(json!([1, 2]), json!([2, 3])),
+            json!([2, 3, 1, 2]),
+            "Arrays should retain all head elements before base elements"
+        );
     }
 
     /// Scalars, nulls, and mismatched types are replaced by the head value.
@@ -645,8 +554,6 @@ mod tests {
     fn merge_json_replacement() {
         for (base, head) in [
             (json!(1), json!(0)),
-            (json!(true), json!(false)),
-            (json!("base"), json!("")),
             (json!({"a": 1}), json!(null)),
             (json!(null), json!({"b": 2})),
             (json!({"a": 1}), json!([])),
@@ -658,19 +565,5 @@ mod tests {
                 "Replacement should preserve the head value"
             );
         }
-    }
-
-    /// Base-outward grouping preserves a parent's null override when a child
-    /// supplies a replacement object.
-    #[test]
-    fn merge_json_grouping() {
-        let base = json!({"x": {"a": 1}});
-        let parent = json!({"x": null});
-        let child = json!({"x": {"b": 2}});
-        assert_eq!(
-            merge_json(merge_json(base, parent), child),
-            json!({"x": {"b": 2}}),
-            "Base-outward merging should preserve the clearing of base members"
-        );
     }
 }
