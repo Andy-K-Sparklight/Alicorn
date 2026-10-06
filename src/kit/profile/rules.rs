@@ -5,8 +5,8 @@ use std::collections::HashSet;
 use regex_lite::Regex;
 
 use super::env::OsName;
-use super::gamecore::Rule;
-use super::gamecore::RuleAct;
+use super::version::Rule;
+use super::version::RuleAct;
 
 /// Environment used to match profile rules.
 ///

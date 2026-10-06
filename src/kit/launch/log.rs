@@ -1,6 +1,5 @@
 use std::cmp::min;
 
-use iced::widget::sensor::Key;
 use serde::Deserialize;
 
 /// A game log entry.

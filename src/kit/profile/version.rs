@@ -17,7 +17,7 @@ use super::env::OsName;
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct GameCoreInfo {
+pub struct VersionProfile {
     pub id: String,
     #[serde(flatten)]
     pub launch_args: LaunchArgs,
@@ -499,7 +499,7 @@ mod tests {
                 "mainClass": "Main",
                 "type": "release"
             });
-            let profile: GameCoreInfo = from_value(input.clone())?;
+            let profile: VersionProfile = from_value(input.clone())?;
             assert_eq!(
                 profile.compliance_level, 0,
                 "Absent compliance level should default to zero"

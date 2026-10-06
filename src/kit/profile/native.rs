@@ -3,8 +3,8 @@
 use std::borrow::Cow;
 
 use super::env::OsName;
-use super::gamecore::Library;
-use super::gamecore::LibraryArt;
+use super::version::Library;
+use super::version::LibraryArt;
 
 /// Platform bitwidth that's used to interpret classifiers.
 #[derive(Copy, Clone)]
