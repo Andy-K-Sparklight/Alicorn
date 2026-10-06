@@ -59,6 +59,17 @@ pub struct VersionProfile {
     /// Release type.
     #[serde(rename = "type")]
     pub the_type: String,
+
+    /// The root profile ID in the inheritance chain.
+    ///
+    /// Conventionally this should be the game version that Mojang supplies.
+    /// However, do note that version profiles can describe arbitrary runnable
+    /// Java programs, thus the exact semantics may change.
+    ///
+    /// This value won't be set during deserialization, it must be assigned
+    /// manually.
+    #[serde(skip)]
+    pub vanilla_version: String,
 }
 
 /// Launch arguments.

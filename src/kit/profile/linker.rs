@@ -2,8 +2,10 @@ use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 use std::rc::Rc;
 
-use iced::widget::sensor::Key;
 use thiserror::Error;
+
+use crate::kit::profile::version::VersionProfile;
+use crate::util::scoped::TheScoped;
 
 /// A failure while resolving raw profile inheritance.
 #[derive(Debug, Error)]
@@ -20,6 +22,16 @@ pub struct LinkedProfile {
     pub value: serde_json::Value,
     /// The terminal ancestor's lookup ID.
     pub base_id: String,
+}
+
+/// Deserializes into [`VersionProfile`] and assign the vanilla version.
+impl TryFrom<LinkedProfile> for VersionProfile {
+    type Error = serde_json::Error;
+    fn try_from(value: LinkedProfile) -> Result<Self, Self::Error> {
+        serde_json::from_value::<Self>(value.value)?
+            .apply(|it| it.vanilla_version = value.base_id)
+            .then(Ok)
+    }
 }
 
 /// The next step or completed result of a linking request.
@@ -368,6 +380,49 @@ mod tests {
                 "The terminal ancestor should remain available after resolving children"
             );
         }
+    }
+
+    /// Converting a valid profile with an ID-only patch assigns the base ID as
+    /// its vanilla version while retaining the patched ID.
+    #[test]
+    fn linked_profile_conversion_vanilla_version() {
+        let mut linker = with_profiles([
+            (
+                "base",
+                json!({
+                    "id": "base",
+                    "minecraftArguments": "",
+                    "assetIndex": {
+                        "id": "base",
+                        "totalSize": 0,
+                        "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+                        "size": 0,
+                        "url": "https://example.com/assets.json"
+                    },
+                    "assets": "base",
+                    "downloads": {
+                        "client": {
+                            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+                            "size": 0,
+                            "url": "https://example.com/client.jar"
+                        }
+                    },
+                    "libraries": [],
+                    "mainClass": "net.minecraft.client.main.Main",
+                    "type": "release"
+                }),
+            ),
+            ("patched", json!({"id": "patched", "inheritsFrom": "base"})),
+        ]);
+        let linked_profile = ready(linker.require("patched"));
+        let profile = VersionProfile::try_from((*linked_profile).clone())
+            .expect("A linked valid profile should convert to VersionProfile");
+
+        assert_eq!(profile.id, "patched", "The patched ID should be retained");
+        assert_eq!(
+            profile.vanilla_version, "base",
+            "The vanilla version should be assigned from the base ID"
+        );
     }
 
     /// Non-string inheritance is removed and terminates resolution.
