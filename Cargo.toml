@@ -145,6 +145,9 @@ strip = "symbols"
 [profile.dev.package."*"]
 opt-level = 2
 
+[profile.test.package."*"]
+opt-level = 0 # Makes CI faster
+
 [profile.release.package]
 iced_wgpu = { opt-level = 3 }
 wgpu = { opt-level = 3 }
