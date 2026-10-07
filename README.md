@@ -5,7 +5,7 @@
 A faithful launcher for the block game, trying to regain the magic of friendship.
 
 ![Alicorn Badge](https://img.shields.io/badge/Alicorn-4.x-df307f)
-![Node.js CI](https://github.com/Andy-K-Sparklight/Alicorn/actions/workflows/build.yml/badge.svg)
+![Node.js CI](https://github.com/Andy-K-Sparklight/Alicorn/actions/workflows/rust.yml/badge.svg)
 ![CodeQL](https://github.com/Andy-K-Sparklight/Alicorn/actions/workflows/codeql.yml/badge.svg)
 ![Creation Date](https://img.shields.io/github/created-at/Andy-K-Sparklight/Alicorn?label=since)
 ![License Badge](https://img.shields.io/github/license/Andy-K-Sparklight/Alicorn)
