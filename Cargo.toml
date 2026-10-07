@@ -113,7 +113,7 @@ url = "2.5"
 urlencoding = "2.1"
 sanitise-file-name = "1.0"
 md-5 = "0.11.0"
-quick-xml = { version = "0.41.0", features = ["serialize"] }
+quick-xml = { version = "0.42.0", features = ["serialize"] }
 typed-path = "0.12.3"
 iced = { version = "0.14.0", default-features = false, features = ["x11", "wayland", "thread-pool", "wgpu"] }
 

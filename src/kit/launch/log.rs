@@ -158,7 +158,8 @@ mod tests {
         );
     }
 
-    /// Unprefixed events and alternate namespaces match the same local names.
+    /// Unprefixed events and alternate or rebound namespaces match the same
+    /// local names.
     #[test]
     fn log_record_parse_xml_local_names() {
         for input in [
@@ -166,6 +167,9 @@ mod tests {
             "<Event xmlns=\"urn:test\"><Message>hello</Message></Event>",
             "<other:Event \
              xmlns:other=\"urn:test\"><other:Message>hello</other:Message></other:Event>",
+            "<Event><other:Message xmlns:other=\"urn:test\">hello</other:Message></Event>",
+            "<other:Event xmlns:other=\"urn:outer\"><other:Message \
+             xmlns:other=\"urn:inner\">hello</other:Message></other:Event>",
         ] {
             let records = LogRecord::parse(input, 0, 42);
             assert_eq!(records.len(), 1, "Each event should produce one record");
@@ -176,8 +180,8 @@ mod tests {
         }
     }
 
-    /// Raw text and incomplete or mismatched XML preserve the input using
-    /// fallback metadata.
+    /// Raw text, malformed XML, and mixed-content messages preserve the input
+    /// using fallback metadata.
     #[test]
     fn log_record_parse_raw_fallback() {
         for input in [
@@ -187,6 +191,7 @@ mod tests {
             "<log4j:Event><log4j:Message>error</log4j:Event>",
             "<log4j:Event/><log4j:Event><log4j:Message>broken",
             "<log4j:Event><log4j:Message>&custom;</log4j:Message></log4j:Event>",
+            "<Event><Message>before<Detail/>after</Message></Event>",
         ] {
             let records = LogRecord::parse(input, 7, 42);
             assert_eq!(records.len(), 1, "Raw input should produce one record");
