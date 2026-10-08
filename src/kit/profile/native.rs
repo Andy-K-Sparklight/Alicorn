@@ -1,10 +1,12 @@
 //! Native library classifiers and artifacts.
 
 use std::borrow::Cow;
+use std::rc::Rc;
 
 use super::env::OsName;
 use super::version::Library;
 use super::version::LibraryArt;
+use crate::util::ts::interpret_ts;
 
 /// Platform bitwidth that's used to interpret classifiers.
 #[derive(Copy, Clone)]
@@ -31,20 +33,7 @@ impl OsBits {
 /// accepts interpolation strings. Currently only `${arch}` is observed, which
 /// is set to 32 or 64 according to system bits version.
 pub fn interpret_classifier<'a>(name: impl Into<Cow<'a, str>>, bits: OsBits) -> Cow<'a, str> {
-    const ARCH_MATCHER: &str = "${arch}";
-
-    let mut name = name.into();
-
-    #[expect(
-        clippy::arithmetic_side_effects,
-        reason = "String size cannot practically overflow"
-    )]
-    while let Some(pos) = name.find(ARCH_MATCHER) {
-        name.to_mut()
-            .replace_range(pos..pos + ARCH_MATCHER.len(), bits.as_value());
-    }
-
-    name
+    interpret_ts(name, |key| (key == "arch").then_some(bits.as_value()))
 }
 
 impl Library {

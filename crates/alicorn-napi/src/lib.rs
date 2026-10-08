@@ -1,3 +1,4 @@
-//! JavaScript bindings for asynchronous native file operations.
+//! JavaScript bindings for native utilities.
 
 mod lzma;
+mod ts;

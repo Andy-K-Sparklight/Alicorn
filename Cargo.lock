@@ -72,6 +72,7 @@ dependencies = [
  "iced",
  "lzma-rust2",
  "md-5",
+ "memchr",
  "pkg-config",
  "quick-xml 0.42.0",
  "regex-lite",

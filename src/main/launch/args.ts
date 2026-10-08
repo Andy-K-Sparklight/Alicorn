@@ -7,6 +7,7 @@ import { pathToFileURL } from "node:url";
 import { conf } from "@/main/conf/conf";
 import { paths } from "@/main/fs/paths";
 import type { LaunchInit } from "@/main/launch/types";
+import { getNative } from "@/main/native-loader";
 import { MavenName } from "@/main/profile/maven-name";
 import { filterRules } from "@/main/profile/rules";
 import type { Library } from "@/main/profile/version-profile";
@@ -127,7 +128,7 @@ function createAuthlibInjectorArgs(init: LaunchInit): string[] {
 }
 
 function createArguments(init: LaunchInit): string[] {
-    const va = createTemplateValues(init);
+    const va = Object.fromEntries(createTemplateValues(init));
 
     const [gameArgs, vmArgs] = [init.profile.arguments.game, init.profile.arguments.jvm].map(al =>
         al
@@ -169,13 +170,7 @@ function createArguments(init: LaunchInit): string[] {
         init.altMainClass || init.profile.mainClass,
         ...gameArgs,
         ...extraGameArgs,
-    ].map(a => {
-        let r = a;
-        for (const [k, v] of va) {
-            r = r.replaceAll(`\${${k}}`, v);
-        }
-        return r;
-    });
+    ].map(a => getNative().interpretTs(a, va));
 }
 
 export const launchArgs = {
