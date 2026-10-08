@@ -283,7 +283,7 @@ function injectDevToolsStyles(w: BrowserWindow) {
         `;
         w.webContents.devToolsWebContents?.executeJavaScript(`
             const s = document.createElement('style');
-            s.innerHTML = '${css.replaceAll("\n", " ").replaceAll("'", "\\'")}';
+            s.innerHTML = ${JSON.stringify(css)};
             document.body.append(s);
             document.querySelectorAll('.platform-windows').forEach(e => e.classList.remove('platform-windows'));
         `);

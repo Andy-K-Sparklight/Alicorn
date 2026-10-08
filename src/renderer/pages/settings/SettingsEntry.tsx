@@ -85,12 +85,12 @@ export function ActionEntry({ id, icon, onClick }: ActionEntryProps) {
     );
 }
 
-type NumberTuningEntryProps = SettingsEntryProps<number> & {
+interface NumberTuningEntryProps extends SettingsEntryProps<number> {
     max: number;
     min: number;
     step?: number;
     toLabel?: (v: number) => string;
-};
+}
 
 export function NumberTuningEntry({
     id,
@@ -133,11 +133,11 @@ export function NumberTuningEntry({
     );
 }
 
-type NumberSliderEntryProps = SettingsEntryProps<number> & {
+interface NumberSliderEntryProps extends SettingsEntryProps<number> {
     max: number;
     min: number;
     step?: number;
-};
+}
 
 export function NumberSliderEntry({
     id,
@@ -196,7 +196,9 @@ export function OnOffEntry({ id, icon, value, onChange }: SettingsEntryProps<boo
     );
 }
 
-type SelectEntryProps<T> = SettingsEntryProps<T> & { items: T[] };
+interface SelectEntryProps<T> extends SettingsEntryProps<T> {
+    items: T[];
+}
 
 export function SelectEntry({ id, icon, value, onChange, items }: SelectEntryProps<string>) {
     const { t } = useEntriesTrans();

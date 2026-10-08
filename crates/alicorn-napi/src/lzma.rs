@@ -24,7 +24,7 @@ impl LzmaInflatePoolHandle {
         let pool = rayon::ThreadPoolBuilder::new()
             .num_threads(threads)
             .build()
-            .map_err(|error| napi::Error::from_reason(error.to_string()))?;
+            .map_err(|ex| napi::Error::from_reason(ex.to_string()))?;
 
         Ok(Self { pool })
     }

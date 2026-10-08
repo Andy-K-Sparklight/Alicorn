@@ -1,10 +1,9 @@
 //! Maven library coordinates.
 
+use core::fmt::Display;
+use core::fmt::Formatter;
+use core::fmt::Write;
 use std::borrow::Cow;
-use std::fmt::Debug;
-use std::fmt::Display;
-use std::fmt::Formatter;
-use std::fmt::Write;
 
 use thiserror::Error;
 
@@ -12,6 +11,7 @@ use crate::util::scoped::TheScoped;
 use crate::write_strs;
 
 /// A parsed maven name view of the library name.
+#[derive(Debug, Eq, PartialEq)]
 pub struct MavenName<'a> {
     pub group: &'a str,
     pub artifact: &'a str,
@@ -27,12 +27,8 @@ pub struct MavenNameError {
     pub name: String,
 }
 
-impl Debug for MavenName<'_> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result { Display::fmt(self, f) }
-}
-
 impl Display for MavenName<'_> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
         write_strs!(f; self.group, ":", self.artifact, ":", self.version)?;
         if let Some(c) = self.classifier {
             write_strs!(f; ":", c)?;

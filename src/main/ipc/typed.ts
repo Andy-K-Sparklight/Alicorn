@@ -9,30 +9,32 @@ import {
 import type { IpcCallEvents, IpcCommands, IpcMessageEvents } from "@/main/ipc/channels";
 
 type OptionalPromise<T> = T | Promise<T>;
-type InputMap = {
+interface InputMap {
     [key: string]: (...args: any) => any;
-};
+}
 
-export interface TypedIpcMain<IpcEvents extends InputMap, IpcCommands extends InputMap>
-    extends IpcMain {
-    on<K extends keyof IpcEvents>(
+export interface TypedIpcMain<
+    IpcEvents extends Record<keyof IpcEvents, InputMap[string]>,
+    IpcCommands extends Record<keyof IpcCommands, InputMap[string]>,
+> extends IpcMain {
+    on<K extends keyof IpcEvents & string>(
         channel: K,
         listener: (event: IpcMainEvent, ...args: Parameters<IpcEvents[K]>) => void,
     ): this;
 
-    once<K extends keyof IpcEvents>(
+    once<K extends keyof IpcEvents & string>(
         channel: K,
         listener: (event: IpcMainEvent, ...args: Parameters<IpcEvents[K]>) => void,
     ): this;
 
-    removeListener<K extends keyof IpcEvents>(
+    removeListener<K extends keyof IpcEvents & string>(
         channel: K,
         listener: (event: IpcMainEvent, ...args: Parameters<IpcEvents[K]>) => void,
     ): this;
 
-    removeAllListeners<K extends keyof IpcEvents>(channel?: K): this;
+    removeAllListeners<K extends keyof IpcEvents & string>(channel?: K): this;
 
-    handle<K extends keyof IpcCommands>(
+    handle<K extends keyof IpcCommands & string>(
         channel: K,
         listener: (
             event: IpcMainInvokeEvent,
@@ -40,7 +42,7 @@ export interface TypedIpcMain<IpcEvents extends InputMap, IpcCommands extends In
         ) => OptionalPromise<ReturnType<IpcCommands[K]>>,
     ): void;
 
-    handleOnce<K extends keyof IpcCommands>(
+    handleOnce<K extends keyof IpcCommands & string>(
         channel: K,
         listener: (
             event: IpcMainInvokeEvent,
@@ -48,53 +50,56 @@ export interface TypedIpcMain<IpcEvents extends InputMap, IpcCommands extends In
         ) => OptionalPromise<ReturnType<IpcCommands[K]>>,
     ): void;
 
-    removeHandler<K extends keyof IpcCommands>(channel: K): void;
+    removeHandler<K extends keyof IpcCommands & string>(channel: K): void;
 }
 
 export interface TypedIpcRenderer<
-    CallEvents extends InputMap,
-    PushEvents extends InputMap,
-    MessageEvents extends InputMap,
-    Commands extends InputMap,
+    CallEvents extends Record<keyof CallEvents, InputMap[string]>,
+    PushEvents extends Record<keyof PushEvents, InputMap[string]>,
+    MessageEvents extends Record<keyof MessageEvents, InputMap[string]>,
+    Commands extends Record<keyof Commands, InputMap[string]>,
 > extends IpcRenderer {
-    on<K extends keyof PushEvents>(
+    on<K extends keyof PushEvents & string>(
         channel: K,
         listener: (event: IpcRendererEvent, ...args: Parameters<PushEvents[K]>) => void,
     ): this;
 
-    once<K extends keyof PushEvents>(
+    once<K extends keyof PushEvents & string>(
         channel: K,
         listener: (event: IpcRendererEvent, ...args: Parameters<PushEvents[K]>) => void,
     ): this;
 
-    removeListener<K extends keyof PushEvents>(
+    removeListener<K extends keyof PushEvents & string>(
         channel: K,
         listener: (event: IpcRendererEvent, ...args: Parameters<PushEvents[K]>) => void,
     ): this;
 
-    removeAllListeners<K extends keyof PushEvents>(channel?: K): this;
+    removeAllListeners<K extends keyof PushEvents & string>(channel?: K): this;
 
-    send<K extends keyof CallEvents>(channel: K, ...args: Parameters<CallEvents[K]>): void;
+    send<K extends keyof CallEvents & string>(channel: K, ...args: Parameters<CallEvents[K]>): void;
 
-    sendSync<K extends keyof CallEvents>(
+    sendSync<K extends keyof CallEvents & string>(
         channel: K,
         ...args: Parameters<CallEvents[K]>
     ): ReturnType<CallEvents[K]>;
 
-    sendTo<K extends keyof CallEvents>(
+    sendTo<K extends keyof CallEvents & string>(
         webContentsId: number,
         channel: K,
         ...args: Parameters<CallEvents[K]>
     ): void;
 
-    sendToHost<K extends keyof CallEvents>(channel: K, ...args: Parameters<CallEvents[K]>): void;
+    sendToHost<K extends keyof CallEvents & string>(
+        channel: K,
+        ...args: Parameters<CallEvents[K]>
+    ): void;
 
-    invoke<K extends keyof Commands>(
+    invoke<K extends keyof Commands & string>(
         channel: K,
         ...args: Parameters<Commands[K]>
     ): Promise<ReturnType<Commands[K]>>;
 
-    postMessage<K extends keyof MessageEvents>(
+    postMessage<K extends keyof MessageEvents & string>(
         channel: K,
         message: Parameters<MessageEvents[K]>[0],
         transfer?: MessagePort[],

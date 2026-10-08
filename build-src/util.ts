@@ -29,19 +29,18 @@ export function checksumOf(fp: string, alg: string): Promise<string> {
     const stream = fs.createReadStream(fp);
 
     stream.on("data", data => hash.update(data));
-    stream.on("end", () => resolve(hash.digest("hex").toLowerCase()));
-    stream.on("error", err => reject(err));
+    stream.on("end", () => resolve(hash.digest("hex")));
+    stream.on("error", reject);
 
     return promise;
 }
 
 /**
- * Invokes an async function, swallow and log any errors, and return the result.
- * Upon failure, `null` is returned.
+ * Returns the function's result, or logs an error and returns `null` if it fails.
  */
-export async function logOnFail<T>(foo: () => Promise<T>): Promise<T | null> {
+export async function logOnFail<T>(run: () => Promise<T>): Promise<T | null> {
     try {
-        return await foo();
+        return await run();
     } catch (e) {
         consola.error("Error: " + e);
         return null;

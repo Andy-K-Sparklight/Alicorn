@@ -29,7 +29,7 @@ pub struct EmbedConfig {
 }
 
 /// Supported embedded content formats.
-#[derive(Clone, Copy, Debug, Deserialize)]
+#[derive(Debug, Copy, Clone, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum EmbedType {
     /// Store the compressed file data.
@@ -52,7 +52,7 @@ fn make_embed(name: &str, entry: &EmbedConfig, root: &Path, output: &Path) {
     let input = root.join(&entry.path);
     println!("cargo:rerun-if-changed={}", input.display());
     let bytes = std::fs::read(&input)
-        .unwrap_or_else(|error| panic!("Can't read input file at {}: {error}", input.display()));
+        .unwrap_or_else(|ex| panic!("Can't read input file at {}: {ex}", input.display()));
 
     let mut encoder = ZlibEncoder::new(Vec::new(), Compression::best());
     encoder
@@ -93,8 +93,7 @@ mod {name} {{
         (format!("{name}.rs"), source.as_bytes()),
     ] {
         let path = output.join(file);
-        std::fs::write(&path, content).unwrap_or_else(|error| {
-            panic!("Can't write output file at {}: {error}", path.display())
-        });
+        std::fs::write(&path, content)
+            .unwrap_or_else(|ex| panic!("Can't write output file at {}: {ex}", path.display()));
     }
 }

@@ -1,9 +1,9 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { GameProfile } from "@/main/game/spec";
 
-type GameListSliceState = {
+interface GameListSliceState {
     games: Record<string, GameProfile>;
-};
+}
 export const gamesSlice = createSlice({
     name: "games",
     initialState: {

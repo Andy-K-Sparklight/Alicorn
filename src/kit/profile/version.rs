@@ -140,7 +140,7 @@ pub enum RuleAct {
 }
 
 impl RuleAct {
-    pub fn into_bool(self) -> bool { self == RuleAct::Allow }
+    pub fn into_bool(self) -> bool { self == Self::Allow }
 }
 
 impl From<RuleAct> for bool {

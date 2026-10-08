@@ -1,4 +1,4 @@
-use std::fmt::Formatter;
+use core::fmt::Formatter;
 
 use serde::Deserialize;
 use serde::de::MapAccess;

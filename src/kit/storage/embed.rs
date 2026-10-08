@@ -24,13 +24,9 @@ impl<'a> EmbeddedData<'a> {
     ///
     /// # Panics
     ///
-    /// Panics in debug mode if the data can't be decompressed or has incorrect
-    /// length. As the data are meant to be created during compilation, such
-    /// validity should always be hold. Panicking here helps to detect malformed
-    /// embeddings.
-    ///
-    /// Does not panic in optimized builds as malformed data won't affect
-    /// safety.
+    /// Panics if decompression fails. In debug builds, also panics if the
+    /// stream does not finish, has an incorrect decoded length, or has
+    /// trailing bytes.
     pub fn decode(&self) -> Box<[u8]> {
         let mut bytes = vec![0; self.decoded_len].into_boxed_slice();
         let mut decoder = Decompress::new(true);

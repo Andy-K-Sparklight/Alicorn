@@ -302,7 +302,9 @@ type ConfigSection =
     | number[]
     | boolean[]
     | ConfigSectionObject;
-type ConfigSectionObject = { [key: string]: ConfigSection };
+interface ConfigSectionObject {
+    [key: string]: ConfigSection;
+}
 
 /**
  * Applies the patch object on the base object if type matches.

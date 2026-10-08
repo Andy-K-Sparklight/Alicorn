@@ -33,12 +33,20 @@ pub trait HashProvider {
 }
 
 /// A hash algorithm.
-#[derive(Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub enum HashAlgo {
     Md5,
     Sha1,
     Sha256,
     Sha512,
+}
+
+/// An unsupported hash algorithm name.
+#[derive(Debug, Error)]
+#[error("Unknown hash algorithm: {name}")]
+pub struct HashAlgoParseError {
+    /// The unrecognized input.
+    pub name: String,
 }
 
 macro_rules! match_algo_by_name {
@@ -58,7 +66,15 @@ macro_rules! match_algo_by_name {
 }
 
 impl FromStr for HashAlgo {
-    type Err = ();
+    type Err = HashAlgoParseError;
+
+    /// Parses `md5`, `sha1`, `sha256`, or `sha512`, ignoring ASCII case.
+    ///
+    /// SHA names also accept a hyphen between `sha` and the number.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`HashAlgoParseError`] with the input name if it is unsupported.
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match_algo_by_name!(s;
           "md5" => Self::Md5
@@ -66,7 +82,7 @@ impl FromStr for HashAlgo {
           "sha256", "sha-256" => Self::Sha256
           "sha512", "sha-512" => Self::Sha512
         )
-        .ok_or(())
+        .ok_or_else(|| HashAlgoParseError { name: s.to_owned() })
     }
 }
 
@@ -170,14 +186,15 @@ fn read_hasher(reader: &mut impl Read, algo: HashAlgo) -> std::io::Result<impl H
         match reader.read(&mut buffer) {
             Ok(0) => return Ok(hasher),
             Ok(len) => hasher.update(&buffer[..len]),
-            Err(error) if error.kind() == ErrorKind::Interrupted => {}
-            Err(error) => return Err(error),
+            Err(ex) if ex.kind() == ErrorKind::Interrupted => {}
+            Err(ex) => return Err(ex),
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use core::assert_matches;
     use std::io::Write;
 
     use super::*;
@@ -213,6 +230,51 @@ mod tests {
             incorrect: "1a9840c27a5cf22dab060cdd8a83da2b0fbcb1aeb52d4f9d3894b639083e205a5ab3f6afaeeb21b8e99b5e0fe93daafaabeef274da5d6eadcc9db36e5b6f64c4",
         },
     ];
+
+    /// Algorithm names and SHA aliases parse without regard to ASCII case.
+    #[test]
+    fn hash_algo_parse_names() {
+        for name in ["md5", "MD5"] {
+            assert_matches!(
+                name.parse(),
+                Ok(HashAlgo::Md5),
+                "MD5 names should parse case-insensitively"
+            );
+        }
+        for name in ["sha1", "SHA1", "sha-1", "SHA-1"] {
+            assert_matches!(
+                name.parse(),
+                Ok(HashAlgo::Sha1),
+                "SHA-1 names should accept both spellings and cases"
+            );
+        }
+        for name in ["sha256", "SHA256", "sha-256", "SHA-256"] {
+            assert_matches!(
+                name.parse(),
+                Ok(HashAlgo::Sha256),
+                "SHA-256 names should accept both spellings and cases"
+            );
+        }
+        for name in ["sha512", "SHA512", "sha-512", "SHA-512"] {
+            assert_matches!(
+                name.parse(),
+                Ok(HashAlgo::Sha512),
+                "SHA-512 names should accept both spellings and cases"
+            );
+        }
+    }
+
+    /// Unsupported algorithm names retain their original input in a typed
+    /// error.
+    #[test]
+    fn hash_algo_parse_error() {
+        for name in ["", "MD-5", "sha-2", "sha999", " sha256", "sha256 "] {
+            let ex = name
+                .parse::<HashAlgo>()
+                .expect_err("Unsupported algorithm names should fail parsing");
+            assert_eq!(ex.name, name, "Parse errors should retain the input name");
+        }
+    }
 
     /// The selected backend accepts the known digest for each algorithm.
     #[test]
@@ -255,15 +317,6 @@ mod tests {
                 "Raw digest bytes should match the known vector"
             );
         }
-        assert!(
-            matches!("MD5".parse(), Ok(HashAlgo::Md5)),
-            "MD5 algorithm name should parse case-insensitively"
-        );
-
-        assert!(
-            "MD-5".parse::<HashAlgo>().is_err(),
-            "MD5 algorithm name should not accept hyphens"
-        );
     }
 
     /// The selected backend rejects a valid, same-length digest of different

@@ -6,31 +6,41 @@ import { useTranslation } from "react-i18next";
 import { useSessionStorage } from "react-use";
 import { VList, type VListHandle } from "virtua";
 import type { MpmAddonMeta, MpmAddonType } from "@/main/mpm/spec";
-import { uniqueBy } from "@/main/util/misc";
+import { createAddonSearch } from "@/renderer/services/addon-search";
 
 interface AddonSearchListProps {
     gameId: string;
 }
 
 export function AddonSearchList({ gameId }: AddonSearchListProps) {
+    return <SearchList key={gameId} gameId={gameId} />;
+}
+
+function SearchList({ gameId }: AddonSearchListProps) {
     const { t } = useTranslation("pages", { keyPrefix: "game-detail.manage.addons" });
-    const transactionId = useRef(0);
     const [fetching, setFetching] = useState(false);
-    const paginationRef = useRef<unknown>(null);
     const [results, setResults] = useSessionStorage<MpmAddonMeta[] | null>(
         `mod-search-results.${gameId}`,
         null,
     );
     const vlistRef = useRef<VListHandle | null>(null);
-    const searchDelayTimer = useRef<number | null>(null);
+
+    const [search] = useState(() =>
+        createAddonSearch({
+            search: (scope, query, pagination) =>
+                native.mpm.searchAddons(scope, query, gameId, pagination),
+            onResults: setResults,
+            onFetching: setFetching,
+        }),
+    );
 
     const query = useRef("");
     const scope = useRef<MpmAddonType>("mods");
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: Expected side effect to run once.
     useEffect(() => {
-        initiateFreshQuery();
-    }, []);
+        search.refresh();
+        return search.cancel;
+    }, [search]);
 
     function handleQueryChange(q: string) {
         query.current = q;
@@ -43,11 +53,7 @@ export function AddonSearchList({ gameId }: AddonSearchListProps) {
     }
 
     function initiateFreshQuery() {
-        if (searchDelayTimer.current !== null) {
-            window.clearTimeout(searchDelayTimer.current);
-        }
-
-        searchDelayTimer.current = window.setTimeout(() => fetchItems(true), 500);
+        search.refresh(scope.current, query.current);
     }
 
     function onScroll() {
@@ -61,27 +67,7 @@ export function AddonSearchList({ gameId }: AddonSearchListProps) {
                 results.length &&
             !fetching
         ) {
-            void fetchItems(false);
-        }
-    }
-
-    async function fetchItems(fresh: boolean) {
-        setFetching(true);
-        transactionId.current++;
-        const id = transactionId.current;
-
-        const res = await native.mpm.searchAddons(
-            scope.current,
-            query.current,
-            gameId,
-            fresh ? null : paginationRef.current,
-        );
-
-        paginationRef.current = res.pagination;
-
-        if (id === transactionId.current) {
-            setResults(fresh ? res.contents : uniqueBy(results!.concat(res.contents), r => r.id));
-            setFetching(false);
+            void search.loadMore();
         }
     }
 

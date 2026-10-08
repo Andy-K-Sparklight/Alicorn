@@ -264,7 +264,7 @@ async function notifyError(gid: string) {
 }
 
 function createToken() {
-    return crypto.randomUUID().toString().replaceAll("-", "");
+    return crypto.randomUUID().replaceAll("-", "");
 }
 
 function shutdown() {
