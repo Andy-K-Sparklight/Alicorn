@@ -1,8 +1,20 @@
+/// Derive [`Default`] by invoking `new`.
 #[macro_export]
-macro_rules! default_new {
+macro_rules! default_by_new {
     ($name:ty) => {
+        #[automatically_derived]
         impl Default for $name {
             fn default() -> Self { Self::new() }
+        }
+    };
+}
+
+/// Add `new` by invoking [`Default::default`].
+#[macro_export]
+macro_rules! new_by_default {
+    ($v:vis $name:ty) => {
+        impl $name {
+            $v fn new() -> Self { Default::default() }
         }
     };
 }

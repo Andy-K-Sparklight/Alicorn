@@ -12,7 +12,7 @@ use windows::Win32::Security::Cryptography::BCryptFinishHash;
 use windows::Win32::Security::Cryptography::BCryptHashData;
 
 use super::*;
-use crate::default_new; // Including generated macros needed by static-dispatch
+use crate::default_by_new; // Including generated macros needed by static-dispatch
 
 /// # Safety
 ///
@@ -48,7 +48,7 @@ macro_rules! impl_hash_unchecked {
             }
         }
 
-        default_new!($name);
+        default_by_new!($name);
 
         impl Drop for $name {
             fn drop(&mut self) {
