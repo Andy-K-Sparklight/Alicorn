@@ -1,7 +1,6 @@
 //! Native library classifiers and artifacts.
 
 use std::borrow::Cow;
-use std::rc::Rc;
 
 use super::env::OsName;
 use super::version::Library;
@@ -32,7 +31,7 @@ impl OsBits {
 /// According to values observed in 1.7.x, classifier names in the `natives` map
 /// accepts interpolation strings. Currently only `${arch}` is observed, which
 /// is set to 32 or 64 according to system bits version.
-pub fn interpret_classifier<'a>(name: impl Into<Cow<'a, str>>, bits: OsBits) -> Cow<'a, str> {
+fn interpret_classifier<'a>(name: impl Into<Cow<'a, str>>, bits: OsBits) -> Cow<'a, str> {
     interpret_ts(name, |key| (key == "arch").then_some(bits.as_value()))
 }
 

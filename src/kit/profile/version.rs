@@ -12,6 +12,7 @@ use serde::Serialize;
 use serde_with::skip_serializing_none;
 
 use super::env::OsName;
+use crate::as_self_ref;
 
 /// Profile of a game core.
 #[skip_serializing_none]
@@ -109,11 +110,39 @@ impl<'a> Deserialize<'a> for LaunchArg {
 }
 
 /// One or multiple arguments.
+///
+/// Owned iteration yields strings, while borrowed iteration yields references
+/// to them. Both preserve argument order.
 #[derive(Clone, Serialize)]
 #[serde(untagged)]
 pub enum ArgValue {
     Single(String),
     Multiple(Vec<String>),
+}
+
+impl IntoIterator for ArgValue {
+    type Item = String;
+    type IntoIter = core::iter::Chain<core::option::IntoIter<String>, std::vec::IntoIter<String>>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        let (single, multiple) = match self {
+            Self::Single(value) => (Some(value), Vec::new()),
+            Self::Multiple(values) => (None, values),
+        };
+        single.into_iter().chain(multiple)
+    }
+}
+
+impl<'a> IntoIterator for &'a ArgValue {
+    type Item = &'a String;
+    type IntoIter = core::slice::Iter<'a, String>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        match self {
+            ArgValue::Single(value) => core::slice::from_ref(value).iter(),
+            ArgValue::Multiple(values) => values.iter(),
+        }
+    }
 }
 
 impl<'de> Deserialize<'de> for ArgValue {
@@ -131,6 +160,8 @@ pub struct Rule {
     pub os: Option<OsRule>,
 }
 
+as_self_ref!(Rule);
+
 /// Rule action.
 #[derive(Copy, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -140,11 +171,11 @@ pub enum RuleAct {
 }
 
 impl RuleAct {
-    pub fn into_bool(self) -> bool { self == Self::Allow }
+    pub fn is_allowed(self) -> bool { self == Self::Allow }
 }
 
 impl From<RuleAct> for bool {
-    fn from(value: RuleAct) -> Self { value.into_bool() }
+    fn from(value: RuleAct) -> Self { value.is_allowed() }
 }
 
 /// A rule item that checks certain properties of the OS.

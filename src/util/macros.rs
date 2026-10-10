@@ -19,6 +19,22 @@ macro_rules! new_by_default {
     };
 }
 
+/// Provides [`AsRef`] and [`AsMut`] for the type using `&` and `&mut`.
+#[macro_export]
+macro_rules! as_self_ref {
+    ($name:ty) => {
+        #[automatically_derived]
+        impl AsRef<$name> for $name {
+            fn as_ref(&self) -> &$name { self }
+        }
+
+        #[automatically_derived]
+        impl AsMut<$name> for $name {
+            fn as_mut(&mut self) -> &mut $name { self }
+        }
+    };
+}
+
 /// Generates a chain of calls to [`core::fmt::Write::write_str`].
 #[macro_export]
 macro_rules! write_strs {

@@ -55,13 +55,17 @@ impl RuleEnv<'_> {
         true
     }
 
-    /// Returns the evaluated action of the given [`Rule`] array against this
-    /// environment.
+    /// Returns the evaluated action of the given optional [`Rule`] array
+    /// against this environment.
     ///
     /// According to the observed profiles, the last matched rule takes
     /// precedence using its own action (ignoring previous matches). When none
     /// is matched, the action defaults to [`RuleAct::Disallow`].
-    pub fn justify(&self, rules: &[Rule]) -> RuleAct {
+    pub fn justify(&self, rules: Option<&[Rule]>) -> RuleAct {
+        let Some(rules) = rules else {
+            return RuleAct::Allow
+        };
+
         rules
             .iter()
             .rev()
@@ -94,17 +98,21 @@ mod tests {
             {"action": "allow", "features": {"demo": true}}
         ]))
         .expect("Rule fixtures should deserialize");
-        assert!(!env.justify(&[]).into_bool(), "Empty rules should disallow");
+        assert!(env.justify(None).is_allowed(), "Absent rules should allow");
+        assert!(
+            !env.justify(Some(&[])).is_allowed(),
+            "Empty rules should disallow"
+        );
         assert!(
             env.can_satisfy(&rules[1]),
             "A disallow action should leave condition matching unchanged"
         );
         assert!(
-            !env.justify(&rules).into_bool(),
+            !env.justify(Some(&rules)).is_allowed(),
             "The last matching false feature rule should disallow"
         );
         assert!(
-            !env.justify(&rules[2..]).into_bool(),
+            !env.justify(Some(&rules[2..])).is_allowed(),
             "Unmatched nonempty rules should disallow"
         );
         let features = HashSet::from(["demo".into()]);
@@ -113,7 +121,7 @@ mod tests {
             ..env
         };
         assert!(
-            env.justify(&rules).into_bool(),
+            env.justify(Some(&rules)).is_allowed(),
             "The last matching true feature rule should allow"
         );
     }
@@ -172,17 +180,17 @@ mod tests {
                 "Invalid release patterns should never match"
             );
             assert!(
-                env.justify(&rules).into_bool(),
+                env.justify(Some(&rules)).is_allowed(),
                 "An earlier matching allow should remain effective"
             );
             rules[0].action = RuleAct::Disallow;
             rules[1].action = RuleAct::Allow;
             assert!(
-                !env.justify(&rules).into_bool(),
+                !env.justify(Some(&rules)).is_allowed(),
                 "An invalid allow pattern should leave an earlier disallow effective"
             );
             assert!(
-                !env.justify(&rules[1..]).into_bool(),
+                !env.justify(Some(&rules[1..])).is_allowed(),
                 "A list containing only an invalid pattern should disallow"
             );
         }
