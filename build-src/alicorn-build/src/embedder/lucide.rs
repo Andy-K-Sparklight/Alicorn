@@ -7,6 +7,7 @@ use super::Context;
 use crate::EmbedError;
 use crate::Embedder;
 use crate::Source;
+use crate::SourceData;
 use crate::config::GlobalConfig;
 use crate::config::LucideConfig;
 use crate::util::codegen;
@@ -64,7 +65,7 @@ impl Embedder for LucideEmbedder {
         Ok(Source {
             name,
             compression_level: self.context.global.compression_level,
-            data,
+            data: SourceData::Bytes(data),
             dependencies: vec![path],
         })
     }

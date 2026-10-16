@@ -23,6 +23,7 @@ pub use embedder::LucideDeclaration;
 pub use embedder::LucideEmbedder;
 pub use embedder::RawDeclaration;
 pub use embedder::RawEmbedder;
+use util::codegen::Storage;
 pub use util::svg::SvgError;
 
 /// Uncompressed resource and its output settings.
@@ -32,10 +33,28 @@ pub struct Source {
     pub name: String,
     /// XZ compression level captured when the resource was registered.
     pub compression_level: u32,
-    /// Uncompressed data content.
-    pub data: Vec<u8>,
+    /// Uncompressed resource input.
+    pub data: SourceData,
     /// Paths Cargo should watch for changes.
     pub dependencies: Vec<PathBuf>,
+}
+
+#[derive(Debug)]
+pub enum SourceData {
+    /// Data supplied by a file.
+    File(PathBuf),
+
+    /// Data supplied directly.
+    Bytes(Vec<u8>),
+}
+
+impl SourceData {
+    fn to_data(&self) -> Result<Cow<'_, [u8]>, EmbedError> {
+        match self {
+            Self::File(fp) => read_file(fp).map(Cow::Owned),
+            Self::Bytes(data) => Ok(Cow::Borrowed(data)),
+        }
+    }
 }
 
 /// Build options passed to [`AlicornBuild`].
@@ -69,6 +88,9 @@ pub enum EmbedError {
 
     #[error("XZ compression level {level} is outside 0..=9")]
     InvalidCompressionLevel { level: u32 },
+
+    #[error("Resource path is not valid UTF-8: {path}")]
+    NonUtf8Path { path: PathBuf },
 
     #[error("Could not render SVG for {name:?}: {source}")]
     Svg {
@@ -154,17 +176,25 @@ impl AlicornBuild {
     /// Writes embedded resources and Rust modules, and registers their Cargo
     /// dependencies.
     ///
-    /// When `debug` is true, all resources are written uncompressed. Otherwise,
-    /// each resource uses the compression level captured when it was
-    /// registered. Stored resources remain unchanged, so each call can
-    /// choose its own output mode.
+    /// With `debug` enabled, file sources are read from their absolute paths at
+    /// runtime, and byte sources are embedded uncompressed. Otherwise, both
+    /// source types are embedded with XZ compression.
+    ///
+    /// Enable `debug` only for builds with debug assertions. Runtime file paths
+    /// require the source files to remain available at their build-time
+    /// locations (absolute path), making the binary unportable.
     pub fn make_available(
         &self,
         directory: impl AsRef<Path>,
-        compressed: bool,
+        debug: bool,
     ) -> Result<(), EmbedError> {
-        let directory = directory.as_ref();
-        std::fs::create_dir_all(directory).map_err(|source| EmbedError::Io {
+        let directory =
+            std::path::absolute(directory.as_ref()).map_err(|source| EmbedError::Io {
+                path: directory.as_ref().to_owned(),
+                source,
+            })?;
+
+        std::fs::create_dir_all(&directory).map_err(|source| EmbedError::Io {
             path: directory.to_owned(),
             source,
         })?;
@@ -172,20 +202,32 @@ impl AlicornBuild {
             println!("cargo:rerun-if-changed={}", path.display());
         }
         self.sources.par_iter().try_for_each(|(name, source)| {
-            let data = if compressed {
-                Cow::Owned(
-                    util::compression::compress(&source.data, source.compression_level)
-                        .map_err(|source| EmbedError::Compression { source })?,
-                )
+            let output = directory.join(format!("{name}.arc"));
+            let code = if debug {
+                match &source.data {
+                    SourceData::File(path) => {
+                        let path =
+                            std::fs::canonicalize(path).map_err(|source| EmbedError::Io {
+                                path: path.clone(),
+                                source,
+                            })?;
+                        util::codegen::generate(name, Storage::Path(&path))?
+                    }
+                    SourceData::Bytes(bytes) => {
+                        write_file(&output, bytes)?;
+                        util::codegen::generate(name, Storage::Raw)?
+                    }
+                }
             } else {
-                Cow::Borrowed(source.data.as_slice())
+                let data = source.data.to_data()?;
+                let compressed = util::compression::compress(&data, source.compression_level)
+                    .map_err(|source| EmbedError::Compression { source })?;
+                write_file(&output, &compressed)?;
+                util::codegen::generate(name, Storage::Xz {
+                    decoded_len: data.len(),
+                })?
             };
-            let code = util::codegen::generate(source, compressed);
-            for (ext, bytes) in [("arc", &*data), ("rs", code.as_bytes())] {
-                let path = directory.join(format!("{name}.{ext}"));
-                std::fs::write(&path, bytes).map_err(|source| EmbedError::Io { path, source })?;
-            }
-            Ok(())
+            write_file(&directory.join(format!("{name}.rs")), code.as_bytes())
         })
     }
 
@@ -200,6 +242,14 @@ impl AlicornBuild {
 /// [`std::fs::read`] but throws [`EmbedError`].
 fn read_file(path: &Path) -> Result<Vec<u8>, EmbedError> {
     std::fs::read(path).map_err(|source| EmbedError::Io {
+        path: path.to_owned(),
+        source,
+    })
+}
+
+/// [`std::fs::write`] but throws [`EmbedError`].
+fn write_file(path: &Path, data: &[u8]) -> Result<(), EmbedError> {
+    std::fs::write(path, data).map_err(|source| EmbedError::Io {
         path: path.to_owned(),
         source,
     })

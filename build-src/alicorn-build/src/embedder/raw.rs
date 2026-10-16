@@ -8,6 +8,7 @@ use super::Context;
 use crate::EmbedError;
 use crate::Embedder;
 use crate::Source;
+use crate::SourceData;
 use crate::config::GlobalConfig;
 use crate::util::codegen;
 
@@ -57,9 +58,9 @@ impl Embedder for RawEmbedder {
         let (data, dependencies) = match declaration {
             RawDeclaration::File { path } => {
                 let path = self.context.root.join(path);
-                (crate::read_file(&path)?, vec![path])
+                (SourceData::File(path.clone()), vec![path])
             }
-            RawDeclaration::Bytes { data } => (data, Vec::new()),
+            RawDeclaration::Bytes { data } => (SourceData::Bytes(data), Vec::new()),
         };
         Ok(Source {
             name,
