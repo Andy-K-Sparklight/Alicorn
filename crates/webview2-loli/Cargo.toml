@@ -1,0 +1,15 @@
+[package]
+name = "webview2-loli"
+version = "0.1.0"
+edition = "2024"
+publish = false
+description = "Little open loader & initializer for WebView2."
+
+[lints]
+workspace = true
+
+[target.'cfg(windows)'.dependencies]
+thiserror = "2.0"
+webview2-com = "0.39.1"
+windows-registry = "0.100.0"
+windows = { version = "0.62.2", features = ["Win32_System_LibraryLoader"] }
