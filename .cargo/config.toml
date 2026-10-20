@@ -1,0 +1,8 @@
+[unstable]
+build-std = ["std", "panic_abort"]
+
+[env]
+MACOSX_DEPLOYMENT_TARGET = "11.0"
+
+[target.'cfg(all(windows, target_env = "gnu"))']
+rustflags = ["-C", "target-feature=+crt-static"]

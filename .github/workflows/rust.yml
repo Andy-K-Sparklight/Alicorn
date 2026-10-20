@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Test (${{ matrix.target }})
+    name: Check (${{ matrix.target }})
     strategy:
       fail-fast: false
       matrix:
@@ -18,9 +18,11 @@ jobs:
           - os: ubuntu-24.04-arm
             target: aarch64-unknown-linux-gnu
           - os: windows-2025
-            target: x86_64-pc-windows-msvc
+            target: x86_64-pc-windows-gnullvm
+            llvm_arch: x86_64
           - os: windows-11-arm
-            target: aarch64-pc-windows-msvc
+            target: aarch64-pc-windows-gnullvm
+            llvm_arch: aarch64
           - os: macos-15-intel
             target: x86_64-apple-darwin
           - os: macos-15
@@ -28,20 +30,87 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    env:
+      LLVM_MINGW_VERSION: "20261006"
+
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Install NPM Packages
+        run: npm ci
+
       - name: Install Linux Dependencies
         if: ${{ runner.os == 'Linux' }}
         run: |
           sudo apt-get update
           sudo apt-get install --yes pkg-config zlib1g-dev
+
       - name: Install Rust Toolchain
         run: rustup show
+
+      # LLVM-MinGW is needed for windows-gnullvm
+      - name: Cache LLVM-MinGW
+        if: ${{ runner.os == 'Windows' }}
+        id: llvm-mingw-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/llvm-mingw
+          key: llvm-mingw-${{ runner.os }}-${{ matrix.llvm_arch }}-ucrt-${{ env.LLVM_MINGW_VERSION }}
+
+      - name: Download LLVM-MinGW
+        if: ${{ runner.os == 'Windows' && steps.llvm-mingw-cache.outputs.cache-hit != 'true' }}
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: mstorsjo/llvm-mingw
+          tag: ${{ env.LLVM_MINGW_VERSION }}
+          fileName: llvm-mingw-${{ env.LLVM_MINGW_VERSION }}-ucrt-${{ matrix.llvm_arch }}.zip
+          out-file-path: ${{ runner.temp }}/llvm-mingw-download
+          extract: true
+          extract-path: ${{ runner.temp }}/llvm-mingw
+
+      - name: Configure LLVM-MinGW
+        if: ${{ runner.os == 'Windows' }}
+        uses: actions/github-script@v8
+        env:
+          LLVM_MINGW_ARCH: ${{ matrix.llvm_arch }}
+          LLVM_MINGW_ROOT: ${{ runner.temp }}/llvm-mingw
+          RUST_TARGET: ${{ matrix.target }}
+        with:
+          script: |
+            const { join } = await import("node:path");
+            const arch = process.env.LLVM_MINGW_ARCH;
+            const dist = `llvm-mingw-${process.env.LLVM_MINGW_VERSION}-ucrt-${arch}`;
+            const root = join(process.env.LLVM_MINGW_ROOT, dist);
+            const bin = join(root, "bin");
+            const prefix = `${arch}-w64-mingw32`;
+            const cc = join(bin, `${prefix}-clang.exe`);
+            const target = process.env.RUST_TARGET.replaceAll("-", "_");
+
+            core.exportVariable(`CARGO_TARGET_${target.toUpperCase()}_LINKER`, cc);
+            core.exportVariable(`CC_${target}`, cc);
+            core.exportVariable(`CXX_${target}`, join(bin, `${prefix}-clang++.exe`));
+            core.exportVariable(`AR_${target}`, join(bin, "llvm-ar.exe"));
+            core.exportVariable(`RANLIB_${target}`, join(bin, "llvm-ranlib.exe"));
+            core.addPath(bin);
+            core.addPath(join(root, prefix, "bin"));
+            await exec.exec(`"${cc}"`, ["--version"]);
+
       - uses: Swatinem/rust-cache@v2
         with:
           key: ${{ matrix.target }}
+          env-vars: ${{ runner.os == 'Windows' && 'LLVM_MINGW_VERSION' || '' }}
+
+      - name: Run Clippy
+        run: >-
+          cargo clippy --locked -p alicorn_r
+          --target ${{ matrix.target }}
 
       - name: Run Rust Tests
         run: >-
-          cargo test --locked --workspace --exclude alicorn-napi --tests
+          cargo test --locked -p alicorn_r
           --target ${{ matrix.target }}

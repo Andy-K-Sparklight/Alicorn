@@ -1,9 +1,55 @@
+[global]
+compression_level = 9
+
+[lucide]
+side = 64
+
 [embed]
-default_vm_args = { path = "src/refs/default-vm-args.json", type = "data" }
-jrt_linux_arm = { path = "src/refs/jrt-linux-arm.json", type = "data" }
-jrt_versions = { path = "src/refs/jrt-versions.json", type = "data" }
-legacy_assets = { path = "src/refs/legacy-assets.json", type = "data" }
-legacy_forge_compat = { path = "src/refs/legacy-forge-compat.json", type = "data" }
-legacy_forge_libs = { path = "src/refs/legacy-forge-libs.json", type = "data" }
-lwjgl_artifacts = { path = "src/refs/lwjgl-artifacts.json", type = "data" }
-rift_compat = { path = "src/refs/rift-compat.json", type = "data" }
+contrail_text = { by = "raw", path = "resources/contrail/text.json" }
+default_vm_args = { by = "raw", path = "src/refs/default-vm-args.json" }
+jrt_linux_arm = { by = "raw", path = "src/refs/jrt-linux-arm.json" }
+jrt_versions = { by = "raw", path = "src/refs/jrt-versions.json" }
+legacy_assets = { by = "raw", path = "src/refs/legacy-assets.json" }
+legacy_forge_compat = { by = "raw", path = "src/refs/legacy-forge-compat.json" }
+legacy_forge_libs = { by = "raw", path = "src/refs/legacy-forge-libs.json" }
+lwjgl_artifacts = { by = "raw", path = "src/refs/lwjgl-artifacts.json" }
+rift_compat = { by = "raw", path = "src/refs/rift-compat.json" }
+
+fonts = { by = "raw", path = "resources/contrail/fonts/maple-mono/MapleMono-Regular.ttf" }
+
+icon_box = { by = "lucide", name = "box" }
+icon_cog = { by = "lucide", name = "cog" }
+icon_info = { by = "lucide", name = "info" }
+icon_square_activity = { by = "lucide", name = "square-activity" }
+icon_x = { by = "lucide", name = "x" }
+icon_plus = { by = "lucide", name = "plus" }
+icon_circle_play = { by = "lucide", name = "circle-play" }
+icon_download = { by = "lucide", name = "download" }
+icon_ellipsis = { by = "lucide", name = "ellipsis" }
+icon_arrow_left = { by = "lucide", name = "arrow-left" }
+icon_save = { by = "lucide", name = "save" }
+icon_folder = { by = "lucide", name = "folder" }
+icon_folder_archive = { by = "lucide", name = "folder-archive" }
+icon_scroll_text = { by = "lucide", name = "scroll-text" }
+icon_octagon_x = { by = "lucide", name = "octagon-x" }
+icon_refresh_cw = { by = "lucide", name = "refresh-cw" }
+icon_cloud_download = { by = "lucide", name = "cloud-download" }
+icon_pickaxe = { by = "lucide", name = "pickaxe" }
+icon_unlink = { by = "lucide", name = "unlink" }
+icon_trash = { by = "lucide", name = "trash" }
+icon_git_merge = { by = "lucide", name = "git-merge" }
+icon_folder_symlink = { by = "lucide", name = "folder-symlink" }
+icon_layout_dashboard = { by = "lucide", name = "layout-dashboard" }
+icon_blocks = { by = "lucide", name = "blocks" }
+icon_file_clock = { by = "lucide", name = "file-clock" }
+icon_log_in = { by = "lucide", name = "log-in" }
+icon_user_round = { by = "lucide", name = "user-round" }
+icon_check = { by = "lucide", name = "check" }
+icon_search = { by = "lucide", name = "search" }
+icon_external_link = { by = "lucide", name = "external-link" }
+icon_shield_check = { by = "lucide", name = "shield-check" }
+icon_lock_open = { by = "lucide", name = "lock-open" }
+icon_monitor = { by = "lucide", name = "monitor" }
+icon_sun = { by = "lucide", name = "sun" }
+icon_moon = { by = "lucide", name = "moon" }
+icon_chevron_right = { by = "lucide", name = "chevron-right" }
