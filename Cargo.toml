@@ -3,17 +3,35 @@ name = "alicorn_r"
 authors = ["skjsjhb"]
 version = "0.1.0"
 edition = "2024"
+publish = false
+default-run = "alicorn"
 
 [[bin]]
 name = "alicorn"
 path = "src/main.rs"
 
+[[bin]]
+name = "oauth-prototype"
+path = "src/indev/oauth-prototype.rs"
+
 [workspace]
-members = ["crates/alicorn-napi", "crates/alicorn-build"]
+members = ["build-src/alicorn-build"]
 # Don't make block consider itself being in a workspace
 exclude = ["patches/block"]
 default-members = ["."]
 resolver = "3"
+
+[workspace.dependencies]
+base64 = "0.23.1"
+flate2 = { version = "1.1", default-features = false }
+lzma-rust2 = "0.22.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sha2 = "0.11.0"
+static-dispatch = "0.3.0"
+tar = "0.4.46"
+tempfile = "3.27"
+toml = "1.1"
 
 [lints]
 workspace = true
@@ -94,60 +112,179 @@ wildcard_dependencies = "warn"
 
 [features]
 prefer-rust-impl = []
+oauth-gtk = ["dep:gtk", "dep:webkit6", "dep:glib", "dep:async-io", "dep:futures-lite", "dep:libc"]
 
 [dependencies]
-lzma-rust2 = "0.21.0"
+lzma-rust2 = { workspace = true }
 thiserror = "2.0"
-tempfile = "3.27"
+tempfile = { workspace = true }
 delegate = "0.13.5"
-static-dispatch = "0.3.0"
+static-dispatch = { workspace = true }
 faster-hex = "1.0.0"
 digest = "0.11.3"
 derive_more = { version = "2.1", features = ["from"] }
 memchr = "2.8"
 sha1 = "0.11.0"
-sha2 = "0.11.0"
-serde = { version = "1.0", features = ["derive"] }
+sha2 = { workspace = true }
+serde = { workspace = true }
 serde-evolve = "0.1.0"
-serde_json = "1.0"
+serde_json = { workspace = true }
+serde_path_to_error = "0.1.20"
+encoding_rs = "0.8.42"
+sysinfo = { version = "0.38.4", default-features = false, features = ["system"] }
+jiff = { version = "0.2.38", default-features = false, features = ["std"] }
+node-semver = "2.2"
+tl = "0.7.8"
+html-escape = "0.2.15"
+secrecy = "0.10.3"
+zeroize = { version = "1.9", features = ["serde"] }
+base64 = { workspace = true }
+image = { version = "0.25.10", default-features = false, features = ["png", "jpeg"] }
 serde_with = "3.24"
-smol = "2.0.2"
+smol = "2.0"
+http = "1.0"
+compression-codecs = { version = "0.4.45", default-features = false, features = [
+    "gzip", "zlib", "deflate", "brotli",
+] }
 regex-lite = "0.1.9"
 url = "2.5"
+uuid = { version = "1.0", features = ["v4"] }
 urlencoding = "2.1"
 sanitise-file-name = "1.0"
 md-5 = "0.11.0"
 quick-xml = { version = "0.42.0", features = ["serialize"] }
 typed-path = "0.12.3"
-iced = { version = "0.14.0", default-features = false, features = ["x11", "wayland", "smol", "wgpu"] }
+cap-std = "3.4"
+cap-fs-ext = "3.4"
+cap-tempfile = "3.4"
+pathdiff = "0.2.3"
+zip = { version = "9.0", default-features = false, features = ["deflate-flate2"] }
+tar = { workspace = true }
+rc-zip = { version = "5.4", default-features = false }
+winnow = "0.5.40"
+resolvo = "0.12.2"
+iced = { version = "0.14.0", default-features = false, features = [
+    "advanced", "x11", "wayland", "smol", "wgpu-bare", "image-without-codecs",
+] }
+rfd = "0.17.2"
+open = "5"
+unicode-script = "0.5.8"
+
+[target.'cfg(not(target_os = "windows"))'.dependencies]
+iced = { version = "0.14.0", default-features = false, features = ["wgpu"] }
 
 [target.'cfg(target_vendor = "apple")'.dependencies]
 common-crypto = "0.3.0"
 
+[target.'cfg(target_os = "macos")'.dependencies]
+# Apple's libcurl supplies TLS and uses the system trust store.
+isahc = { version = "2.0", default-features = false }
+curl = { version = "0.4.51", default-features = false, features = ["force-system-lib-on-osx"] }
+core-foundation = "0.10.1"
+core-foundation-sys = "0.8.7"
+tracing = "0.1"
+objc2 = "0.6.5"
+dispatch2 = "0.3.1"
+objc2-app-kit = { version = "0.3.2", default-features = false, features = [
+    "std", "block2", "NSApplication", "NSWindow", "NSView", "NSResponder", "NSScreen", "NSGraphics",
+    "NSMenu", "NSMenuItem", "NSEvent",
+] }
+objc2-web-kit = { version = "0.3.2", default-features = false, features = [
+    "std", "block2", "objc2-app-kit", "objc2-core-foundation", "WKWebView", "WKWebViewConfiguration",
+    "WKWebsiteDataStore", "WKNavigation", "WKNavigationDelegate", "WKUIDelegate",
+    "WKNavigationAction", "WKNavigationResponse", "WKFrameInfo", "WKWindowFeatures", "WKSecurityOrigin",
+] }
+block2 = "0.6.2"
+objc2-foundation = { version = "0.3.2", default-features = false, features = [
+    "std", "block2", "NSObject", "NSOperation", "NSURLSession", "NSURL",
+    "NSURLRequest", "NSURLResponse", "NSString", "NSData", "NSDictionary",
+    "NSError", "NSURLError", "NSDate", "NSRange", "NSURLCache",
+    "NSURLCredentialStorage", "NSHTTPCookieStorage", "NSValue", "NSArray",
+    "NSURLAuthenticationChallenge", "NSURLCredential", "NSURLProtectionSpace",
+    "NSUUID", "NSProcessInfo", "NSGeometry", "NSSet",
+] }
+objc2-security = { version = "0.3.2", default-features = false, features = ["std", "SecItem", "SecBase"] }
+objc2-local-authentication = { version = "0.3.2", default-features = false, features = ["std", "LAContext"] }
+objc2-core-foundation = { version = "0.3.2", default-features = false, features = ["std", "CFData", "CFDictionary", "CFString", "CFNumber", "CFCGTypes"] }
+objc2-core-graphics = { version = "0.3.2", default-features = false, features = ["std", "CGBitmapContext", "CGColorSpace", "CGContext", "CGImage", "CGGeometry", "CGDataProvider"] }
+objc2-image-io = { version = "0.3.2", default-features = false, features = ["std", "CGImageSource", "objc2-core-graphics"] }
+
 [target.'cfg(target_os = "windows")'.dependencies]
-windows = { version = "0.62.2", default-features = false, features = ["Win32_Security_Cryptography"] }
-flate2 = { version = "1.1", default-features = false, features = ["zlib-rs", "runtime_detection"] }
+wgpu = { version = "27.0", default-features = false, features = [
+    "std", "parking_lot", "gles", "wgsl",
+] }
+webview2-com = "0.39.1"
+windows-registry = "0.6.1"
+windows = { version = "0.62.2", default-features = false, features = [
+    "std", "Win32_Security_Cryptography", "Win32_Security_Credentials", "Win32_Foundation", "Win32_Networking_WinHttp",
+    "Win32_Graphics_Imaging", "Win32_System_Com",
+    "Win32_Graphics_Gdi", "Win32_System_LibraryLoader", "Win32_System_Threading",
+    "Win32_UI_HiDpi", "Win32_UI_WindowsAndMessaging",
+    "Win32_Storage_FileSystem", "Win32_Storage_Packaging_Appx",
+    "Win32_System_Memory", "Win32_System_Registry",
+] }
+flate2 = { workspace = true, features = ["zlib-rs", "runtime_detection"] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+gtk = { package = "gtk4", version = "0.11.5", features = ["v4_10"], optional = true }
+webkit6 = { version = "0.6.1", optional = true }
+glib = { version = "0.22.10", optional = true }
+async-io = { version = "2", optional = true }
+futures-lite = { version = "2", optional = true }
+libc = { version = "0.2.190", optional = true }
+hyper = { version = "1.12", default-features = false, features = ["client", "http1", "http2"] }
+hyper-util = { version = "0.1.21", default-features = false, features = ["client-legacy", "http1", "http2", "client-proxy"] }
+smol-hyper = "0.1.1"
+async-net = "2.0"
+async-tungstenite = { version = "0.35.0", default-features = false, features = ["handshake"] }
+futures-rustls = { version = "0.26.0", default-features = false, features = ["ring", "tls12"] }
+rustls = { version = "0.23.45", default-features = false, features = ["std", "ring", "tls12"] }
+rustls-native-certs = "0.8.4"
+bytes = "1.12"
+http-body-util = "0.1.5"
+tower-service = "0.3.3"
+proxy-watch = { version = "0.3.0", default-features = false, features = ["resolve", "linux-gnome", "linux-kde"] }
+socker = { version = "1.0", default-features = false }
+oo7 = { version = "=0.6.0", default-features = false, features = ["async-std", "native_crypto", "unstable"] }
+zbus = { version = "5.19", default-features = false, features = ["async-io"] }
+
+[target.'cfg(not(any(target_os = "macos", target_os = "windows")))'.dependencies]
+zune-jpeg = "0.5.15"
+zune-core = "0.5.3"
 
 [target.'cfg(any(target_os = "macos", target_os = "linux"))'.dependencies]
-flate2 = { version = "1.1", default-features = false, features = ["zlib"] }
+flate2 = { workspace = true, features = ["zlib"] }
+
+[dev-dependencies]
+tiny_http = "0.12.0"
+ttf-parser = "0.25.1"
+tungstenite = { version = "0.28.0", default-features = false, features = ["handshake"] }
+
+[target.'cfg(target_os = "linux")'.dev-dependencies]
+async-tungstenite = { version = "0.35.0", default-features = false, features = ["handshake", "futures-03-sink"] }
+rcgen = { version = "0.14.10", default-features = false, features = ["ring"] }
+hyper = { version = "1.12", default-features = false, features = ["server"] }
 
 [build-dependencies]
-alicorn-build = { path = "crates/alicorn-build" }
+alicorn-build = { path = "build-src/alicorn-build" }
 cfg_aliases = "0.2.2"
 pkg-config = "0.3.33"
-toml = "1.1"
 
 [patch.crates-io]
 block = { path = "patches/block" } # Fix a soundness issue
 
+[profile.dev]
+debug = "limited"
+
 [profile.release]
 codegen-units = 1
-opt-level = "s"
+opt-level = "z"
 lto = "fat"
 strip = "symbols"
+panic = "abort"
 
 [profile.dev.package."*"]
-opt-level = 2
+opt-level = 1
 
 [profile.test.package."*"]
 opt-level = 0 # Makes CI faster
